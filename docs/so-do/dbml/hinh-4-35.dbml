@@ -31,5 +31,6 @@ Table CinemaSettings {
   SchedulerHeatSalesWeight double [not null]
   SchedulerHeatRatingWeight double [not null]
   SchedulerMaxRating double [not null]
+  DefaultEmployeePassword varchar
 }
 

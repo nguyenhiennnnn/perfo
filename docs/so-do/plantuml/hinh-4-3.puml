@@ -9,7 +9,7 @@ skinparam dpi 150
 ++ features
 +++ client (12)
 ++++ api · hooks · components · pages · types (· schemas · utils)
-+++ admin (17)
++++ admin (19)
 ++++ api · hooks · components · pages · types (· schemas · utils)
 +++ auth
 ++++ api · hooks · components · pages · types (· schemas · utils)

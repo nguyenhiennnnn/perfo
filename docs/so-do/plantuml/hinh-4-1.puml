@@ -11,10 +11,10 @@ node "Trình duyệt" {
   component "SPA React 19\n(Vite, TanStack Query, Zustand)" as SPA
 }
 node "Tiến trình ASP.NET Core (Cinema.Api)" {
-  component "Controllers REST\n/api/v1 (Client, Admin, Payments, Health)" as CTRL
-  component "ShowtimeHub\n/hubs/showtimes (SignalR)" as HUB
+  component "Controllers REST\n/api/v1 (Client, Admin, Payments, Health, Import/Export)" as CTRL
+  component "SignalR Hubs\n/hubs/showtimes, /hubs/import-export" as HUB
   component "Hangfire Server + Dashboard\n/admin/hangfire" as HF
-  component "Services\n(Cinema.Application)" as SVC
+  component "Services\n(Cinema.Application, QuestPDF, Import/Export Engine)" as SVC
   component "Cinema.Infrastructure\nAppDbContext, Gateways, Email, Storage" as INF
 }
 database "PostgreSQL\n(dữ liệu ứng dụng + kho Hangfire)" as DB

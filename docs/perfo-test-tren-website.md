@@ -15,6 +15,8 @@ Tài liệu này được biên soạn chuyên biệt để bạn có thể **te
   * Quan sát cookie bảo mật `perfo_refresh_token` (`HttpOnly`, `Secure`, `SameSite=Lax`, `Path=/api/v1/auth`).
   * Quan sát header chống tấn công CSRF: `X-Requested-With: XMLHttpRequest`.
   * Cơ chế tự động làm mới token ngầm (Silent Refresh) khi Access Token 15 phút hết hạn mà không gây đăng xuất gián đoạn người dùng.
+  * Theo dõi kết nối WebSocket qua SignalR Hubs: `/hubs/showtimes` (cập nhật ghế thời gian thực) và `/hubs/import-export` (thông báo tiến độ nhập/xuất file bất đồng bộ).
+  * Quan sát mã phản hồi HTTP `403 PASSWORD_CHANGE_REQUIRED` và claim `must_change_password` khi nhân viên mới chưa đổi mật khẩu mặc định.
 
 ---
 
@@ -24,6 +26,7 @@ Tài liệu này được biên soạn chuyên biệt để bạn có thể **te
 |:---|:---|:---|:---|:---|
 | **Admin** | `admin@cinema.local` | `Admin@123` | — | Toàn quyền cấu hình, phim, suất chiếu, người dùng, sơ đồ ghế, báo cáo |
 | **Nhân viên quầy** | `employee@cinema.local` | `Employee@123` | — | Bán vé tại quầy, soát vé check-in, xem lịch suất chiếu (bị chặn vào mục quản trị) |
+| **Nhân viên mới tạo** | Tạo trực tiếp từ Admin (Mục 3.5.2) | Cấu hình rạp (mặc định `Employee@123`) | — | Kiểm tra luồng bắt buộc đổi mật khẩu ở lần đầu đăng nhập (`MustChangePassword`) |
 | **Quản lý rạp** | `manager@cinema.local` | `Employee@123` | — | Vận hành lịch chiếu, quản lý nhân viên ca trực |
 | **Nhân viên đã nghỉ** | `employee.inactive@cinema.local` | `Employee@123` | — | Kiểm tra chặn đăng nhập nhân viên đã bị vô hiệu hóa profile |
 | **Khách - Thành viên** | `customer@cinema.local` | `Customer@123` | 300 điểm · Hạng Thường | Đặt vé, giữ ghế, tích điểm, kiểm tra hồ sơ |
@@ -165,6 +168,10 @@ Dán trực tiếp các đường dẫn sau vào thanh địa chỉ trình duy�
     * Hiển thị chi tiết: Mã đơn hàng (dạng `BK...`), Tên phim, Giờ chiếu, Phòng chiếu, Vị trí ghế.
     * Hiển thị **Mã QR điện tử độc bản** cho từng vé trong đơn hàng.
     * Ghi lại mã vé (ví dụ: `BK26...-E5`) để dùng cho bước soát vé tại quầy ở Mục 2.
+  * **Test Tải Vé điện tử định dạng PDF (QuestPDF)**:
+    * Bấm nút **Tải vé PDF** (hoặc vào `/account/tickets` &rarr; Chi tiết vé &rarr; **Tải vé PDF**).
+    * Endpoint gọi ngầm: `GET /api/v1/bookings/:id/tickets/pdf`.
+    * Kết quả mong đợi: File PDF sinh ra tức thì, hiển thị chuẩn in ấn: đầy đủ logo rạp, thông tin phim, suất chiếu, phòng chiếu, vị trí ghế, mã QR sắc nét và hiển thị chuẩn font tiếng Việt `BeVietnamPro` không hề bị vỡ ký tự.
 - [ ] **1.4.7 Hủy vé trực tuyến có hoàn tiền**:
   * Đăng nhập `customer@cinema.local`, vào `/account/tickets` &rarr; Chọn đơn vé vừa đặt (suất chiếu còn xa hơn 2 giờ).
   * Bấm nút **Yêu cầu hủy vé**:
@@ -196,6 +203,19 @@ Dán trực tiếp các đường dẫn sau vào thanh địa chỉ trình duy�
 - [ ] **2.1.2 Kiểm tra Menu điều hướng**:
   * Chỉ hiển thị các mục được phân quyền: **Bán vé tại quầy**, **Soát vé**, và **Lịch suất chiếu**.
   * Thử gõ trực tiếp URL quản trị: `/admin/settings`, `/admin/users`, `/admin/movies` &rarr; Hệ thống tự động chặn và điều hướng an toàn về `/admin/counter`.
+- [ ] **2.1.3 Quy trình Bắt buộc Đổi Mật khẩu Lần đầu (`MustChangePassword`)**:
+  * Đăng nhập bằng tài khoản nhân viên mới tạo trực tiếp (Mục 3.5.2) hoặc nhân viên vừa được Admin đặt lại mật khẩu (mật khẩu mặc định `Employee@123`).
+  * Quan sát hành vi hệ thống:
+    * Token JWT trả về mang claim `must_change_password: "true"`.
+    * Middleware `PasswordChangeRequiredMiddleware` tự động chặn mọi API nghiệp vụ (trả về HTTP `403 Forbidden` kèm mã lỗi `PASSWORD_CHANGE_REQUIRED`).
+    * Giao diện hiển thị modal bắt buộc đổi mật khẩu ngay lập tức, không cho phép tắt hay bỏ qua để vào màn hình bán vé.
+  * Nhập dữ liệu đổi mật khẩu mẫu:
+    ```text
+    Mật khẩu hiện tại:  Employee@123
+    Mật khẩu mới:       NhanVien@2026!
+    Xác nhận MK mới:    NhanVien@2026!
+    ```
+  * Bấm **Cập nhật mật khẩu**: Báo thành công, cờ `MustChangePassword` được giải phóng về `false`, giao diện mở khóa hoàn toàn quyền vào `/admin/counter`.
 
 ---
 
@@ -220,6 +240,12 @@ Dán trực tiếp các đường dẫn sau vào thanh địa chỉ trình duy�
   * Ghi lại mã vé vừa in (ví dụ: `BK...-F3`).
 - [ ] **2.2.4 Ràng buộc tối đa 5 đơn giữ vé quầy**:
   * Thử thực hiện giữ ghế liên tục 5 lần mà không thanh toán &rarr; Lần thứ 6 hệ thống chặn với thông báo: *"Mỗi nhân viên chỉ được giữ tối đa 5 đơn vé chờ thanh toán tại quầy"*.
+- [ ] **2.2.5 Tự động Giải phóng Ghế khi Rời màn hình Quầy (`useCounterLeaveCancel`)**:
+  * Tại quầy bán vé, chọn 2 ghế bất kỳ (ví dụ `G5`, `G6`) và bấm **Giữ ghế**.
+  * Khi đơn giữ ghế ở trạng thái chờ thanh toán (chưa bấm xác nhận thu tiền), thử một trong các thao tác:
+    * Đóng tab trình duyệt hoặc F5 tải lại trang.
+    * Bấm vào menu điều hướng khác (ví dụ `/admin/checkin` hoặc icon logo).
+  * Quan sát: Hook `useCounterLeaveCancel` tự động gửi request `POST /api/v1/admin/bookings/{id}/counter-cancel` giải phóng các ghế `G5`, `G6` trở về `Available` ngay lập tức, tránh tình trạng nhân viên chuyển ca hoặc tắt máy làm treo ghế của khách.
 
 ---
 
@@ -324,10 +350,18 @@ Dán trực tiếp các đường dẫn sau vào thanh địa chỉ trình duy�
   * **Test Cảnh báo khi rời trang chưa lưu (Unsaved Changes Guard)**:
     * Sửa ghế nhưng chưa bấm Lưu, thử bấm nút Back trình duyệt hoặc chuyển sang tab khác &rarr; Trình duyệt hiện hộp thoại cảnh báo: *"Bạn có thay đổi chưa lưu, bạn có chắc chắn muốn rời đi?"*.
   * Bấm **Lưu sơ đồ ghế** &rarr; Toast thông báo lưu thành công.
+- [ ] **3.4.3 Nhập & Xuất Sơ đồ ghế Phòng chiếu qua Excel / CSV (Seat Layout Import/Export)**:
+  * **Xuất sơ đồ ghế**: Tại giao diện phòng chiếu, bấm **Xuất sơ đồ ghế** &rarr; Tải về file Excel/CSV thể hiện ma trận cấu hình ghế phòng chiếu.
+  * **Tải file mẫu**: Bấm **Nhập sơ đồ ghế** &rarr; Chọn định dạng mong muốn:
+    * *Dạng Ma trận (Matrix)*: Thể hiện trực quan theo lưới ký hiệu (`S`: Standard, `V`: VIP, `C`: Couple, `_`: Lối đi, `X`: Vô hiệu).
+    * *Dạng Danh sách (List)*: Từng dòng gồm Hàng ghế, Số ghế, Loại ghế, Mã cặp ghế đôi.
+    * Bấm **Tải template mẫu** &rarr; Mở file kiểm tra mẫu dữ liệu chuẩn.
+  * **Tải lên & Xem trước (Dry-run Preview)**: Tải lên file sơ đồ &rarr; Hệ thống tự động phân tích và hiển thị bản đồ trực quan xem trước; báo cáo chi tiết tổng số ghế, số ghế Standard, VIP, Couple; tự động bắt lỗi nếu có ghế đôi bị lẻ hoặc sai định dạng.
+  * **Áp dụng (Apply)**: Bấm **Xác nhận nạp sơ đồ** &rarr; Toàn bộ sơ đồ ghế mới được nạp vào cơ sở dữ liệu phòng chiếu.
 
 ---
 
-### 3.5 Quản lý Nhân sự & Quy trình Mời qua Email (`/admin/employees`)
+### 3.5 Quản lý Nhân sự & Quy trình Mời qua Email / Tạo trực tiếp (`/admin/employees`)
 - [ ] **3.5.1 Mời nhân viên mới bằng Token Email bảo mật**:
   * Bấm **Thêm nhân viên** &rarr; Chọn Tab **Mời qua email**.
   * Nhập dữ liệu mẫu:
@@ -340,11 +374,28 @@ Dán trực tiếp các đường dẫn sau vào thanh địa chỉ trình duy�
   * Bấm **Gửi lời mời**:
     * Hệ thống tạo bản ghi nhân viên ở trạng thái `PendingActivation`.
     * Sinh mã token bảo mật gửi qua dịch vụ email, có hiệu lực trong 48 giờ.
-- [ ] **3.5.2 Gửi lại thư mời (Resend Invite)**:
+- [ ] **3.5.2 Tạo nhân viên trực tiếp (Direct Create)**:
+  * Bấm **Thêm nhân viên** &rarr; Chọn Tab **Tạo trực tiếp** (không cần qua bước gửi thư mời email).
+  * Nhập dữ liệu mẫu:
+    ```text
+    Email nhân viên:   thu.ngan.direct@cinema.local
+    Họ và tên:         Nguyễn Văn Thu Ngân
+    Chức vụ:           Nhân viên bán vé
+    Mức lương cơ bản:  8500000
+    ```
+  * Bấm **Tạo tài khoản**:
+    * Tài khoản được tạo và kích hoạt ngay lập tức với mật khẩu mặc định rạp (`Employee@123`).
+    * Hệ thống tự động gắn cờ `MustChangePassword = true`.
+    * Dùng tài khoản này đăng nhập ở Cửa sổ B để kiểm tra luồng bắt buộc đổi mật khẩu lần đầu (Mục 2.1.3).
+- [ ] **3.5.3 Gửi lại thư mời (Resend Invite)**:
   * Tại danh sách nhân viên chờ kích hoạt, bấm biểu tượng **Gửi lại lời mời** &rarr; Token mới được tái phát hành.
-- [ ] **3.5.3 Vô hiệu hóa tài khoản nhân viên**:
+- [ ] **3.5.4 Đặt lại Mật khẩu Nhân viên (Admin Reset Password)**:
+  * Tại danh sách nhân viên đang hoạt động, chọn 1 nhân viên &rarr; Bấm biểu tượng chìa khóa **Đặt lại mật khẩu**.
+  * Hộp thoại xác nhận hiển thị thông báo mật khẩu sẽ được đưa về mật khẩu mặc định rạp (`Employee@123`) và bắt buộc nhân viên đổi mật khẩu ở lần đăng nhập tiếp theo.
+  * Bấm **Xác nhận**: Mật khẩu được cập nhật lại, cờ `MustChangePassword` được kích hoạt và toàn bộ phiên đăng nhập cũ bị thu hồi.
+- [ ] **3.5.5 Vô hiệu hóa tài khoản nhân viên**:
   * Chọn một nhân viên đang làm việc &rarr; Bấm chuyển công tắc trạng thái sang **Ngừng hoạt động**.
-  * Chuyển sang Cửa sổ B thử đăng nhập bằng tài khoản nhân viên đó &rarr; Bị chặn ngay lập tức.
+  * Chuyển sang Cửa sổ B thử đăng nhập bằng tài khoản nhân viên đó &rarr; Bị chặn ngay lập tức với thông báo tài khoản bị khóa.
 
 ---
 
@@ -370,6 +421,7 @@ Dán trực tiếp các đường dẫn sau vào thanh địa chỉ trình duy�
     Hotline hỗ trợ:       1900 8888
     Email liên hệ:        contact@perfocinema.vn
     Địa chỉ rạp:          Tầng 5, Perfo Center, 123 Nguyễn Huệ, Quận 1, TP.HCM
+    Mật khẩu NV mặc định: Employee@123
     ```
 - [ ] **3.7.2 Cấu hình chính sách Giữ ghế & Hoàn tiền**:
   * `Thời gian giữ ghế`: Sửa thành `15` phút.
@@ -379,9 +431,34 @@ Dán trực tiếp các đường dẫn sau vào thanh địa chỉ trình duy�
     * `Strict`: Chặn tuyệt đối mọi trường hợp để lại 1 ghế trống lẻ.
     * `AllowEdge`: Cho phép ghế lẻ ở sát mép tường.
     * `Off`: Tắt kiểm tra ghế lẻ.
+  * `Mật khẩu nhân viên mặc định (DefaultEmployeePassword)`: Cấu hình mật khẩu cấp phát ban đầu khi tạo tài khoản nhân viên trực tiếp hoặc khi admin đặt lại mật khẩu (mặc định: `Employee@123`).
 - [ ] **3.7.3 Lưu & Kiểm chứng**:
   * Bấm **Lưu cấu hình hệ thống** &rarr; Thông báo thành công.
   * Mở trang chủ client F5 &rarr; Footer hiển thị đúng thông tin Tên rạp và Hotline vừa cập nhật.
+
+---
+
+### 3.8 Trung tâm Tác vụ Nhập / Xuất Dữ liệu & Báo cáo (`/admin/import-export`)
+- [ ] **3.8.1 Xuất dữ liệu nền (Async Export Jobs)**:
+  * Vào màn hình quản lý `/admin/bookings` hoặc `/admin/payments`, bấm **Xuất dữ liệu** &rarr; Chọn định dạng Excel (`.xlsx`) hoặc CSV (`.csv`).
+  * Đối với danh sách lớn: Hệ thống tiếp nhận tác vụ, đẩy vào hàng đợi tác vụ nền Hangfire (`ExportJob`), hiển thị thông báo đã xếp hàng kèm mã Job ID.
+  * Quan sát góc màn hình: Thanh tiến trình được cập nhật theo thời gian thực qua SignalR `ImportExportHub` (từ `0%` &rarr; `100%`).
+- [ ] **3.8.2 Nhập dữ liệu Phim & Suất chiếu 2 bước (Dry-run Preview &rarr; Background Apply)**:
+  * Vào `/admin/movies` &rarr; Bấm **Nhập danh sách phim**:
+    * Bấm **Tải file mẫu**: Hệ thống xuất file Excel mẫu có đầy đủ cấu trúc các cột yêu cầu.
+    * Tải lên file Excel mẫu &rarr; Hệ thống thực hiện Dry-run Preview (kiểm tra toàn bộ quy tắc nghiệp vụ mà chưa ghi đè vào DB), hiển thị bảng kết quả: số dòng hợp lệ, số dòng lỗi và lý do lỗi cụ thể.
+    * Thử tải lên file có lỗi (ví dụ thời lượng âm hoặc thiếu tên phim) &rarr; Bấm **Tải file chi tiết lỗi** để xem lại các dòng bị từ chối.
+    * Bấm **Xác nhận áp dụng**: Tác vụ được chuyển tới Hangfire (`ImportApplyJob`), áp dụng an toàn vào cơ sở dữ liệu.
+  * Vào `/admin/showtimes` &rarr; Thực hiện tương tự với tính năng **Nhập Suất chiếu**.
+- [ ] **3.8.3 Quản lý Lịch sử Tác vụ (`/admin/import-export`)**:
+  * Mở menu **Lịch sử nhập / xuất** (`/admin/import-export`).
+  * Bảng điều khiển hiển thị đầy đủ danh sách tác vụ:
+    * Loại tác vụ: `Import` hoặc `Export`.
+    * Phân hệ: `Movies`, `Showtimes`, `Bookings`, `Payments`, `SeatLayout`, `Reports`.
+    * Trạng thái: `Queued`, `Running`, `Completed`, `Failed`.
+    * Tiến độ thực tế (%), Số dòng thành công / Số dòng thất bại.
+    * Thời hạn lưu trữ file tạm (24 giờ trước khi tác vụ nền tự động dọn dẹp).
+  * Bấm **Tải file** tại các tác vụ Export đã hoàn tất &rarr; Mở file kiểm tra: Dữ liệu nhạy cảm cá nhân của khách hàng (Email, Số điện thoại) được tự động che mặt nạ bảo mật PII (ví dụ: `090****456`, `t***r@gmail.com`) nhờ tiện ích `PersonalDataMasker`.
 
 ---
 

@@ -23,6 +23,8 @@ class AdminEmployeesController <<Controller>> {
   +GetEmployees(positionId : int?, page : int, pageSize : int) : IActionResult
   +Create(request : CreateEmployeeRequest) : IActionResult
   +Invite(request : InviteEmployeeRequest) : IActionResult
+  +CreateDirect(request : CreateEmployeeDirectRequest) : IActionResult
+  +ResetPassword(id : int) : IActionResult
   +ResendInvite(id : int) : IActionResult
   +Update(id : int, request : UpdateEmployeeRequest) : IActionResult
 }
@@ -40,6 +42,8 @@ interface IEmployeeService {
   +GetEmployeesAdminAsync(positionId : int?, page : int, pageSize : int) : OffsetPageResult<AdminEmployeeDto>
   +CreateEmployeeAsync(request : CreateEmployeeRequest, currentUserId : int) : AdminEmployeeDto
   +InviteEmployeeAsync(request : InviteEmployeeRequest) : AdminEmployeeDto
+  +CreateEmployeeDirectAsync(request : CreateEmployeeDirectRequest) : AdminEmployeeDto
+  +ResetEmployeePasswordAsync(employeeId : int, currentUserId : int) : AdminEmployeeDto
   +ResendEmployeeInviteAsync(employeeId : int) : AdminEmployeeDto
   +UpdateEmployeeAsync(employeeId : int, request : UpdateEmployeeRequest, currentUserId : int) : AdminEmployeeDto
 }

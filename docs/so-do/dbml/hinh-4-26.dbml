@@ -88,6 +88,7 @@ Table CinemaSettings {
   SchedulerHeatSalesWeight double [not null]
   SchedulerHeatRatingWeight double [not null]
   SchedulerMaxRating double [not null]
+  DefaultEmployeePassword varchar
 }
 
 Table Combos {
@@ -306,7 +307,36 @@ Table Users {
   PasswordHash varchar [not null]
   Phone varchar
   RoleId int [not null]
+  MustChangePassword boolean [not null, default: false]
   UpdatedAt timestamp
+}
+
+Table ImportExportJobs {
+  JobId uuid [pk]
+  Type varchar(20) [not null, note: 'enum ImportExportJobType']
+  Module varchar(50) [not null]
+  Format varchar(20) [not null]
+  Status varchar(20) [not null, note: 'enum ImportExportJobStatus']
+  Progress int [not null, default: 0]
+  TotalRows int [not null, default: 0]
+  SuccessRows int [not null, default: 0]
+  FailedRows int [not null, default: 0]
+  FileName varchar(255)
+  StoragePath varchar(500)
+  FileUrl varchar(500)
+  ErrorMessage text
+  CreatedByUserId int [not null]
+  ActorRole varchar(50)
+  IpAddress varchar(45)
+  UserAgent varchar(500)
+  Parameters text
+  FileSizeBytes bigint
+  IsSensitive boolean [not null, default: false]
+  IsPiiMasked boolean [not null, default: false]
+  CreatedAt timestamp [not null]
+  StartedAt timestamp
+  CompletedAt timestamp
+  ExpiresAt timestamp
 }
 
 Ref: Users.RoleId > Roles.RoleId
@@ -345,3 +375,4 @@ Ref: ShowtimeSeats.ShowtimeId > Showtimes.ShowtimeId
 Ref: ShowtimeSeats.SeatId > Seats.SeatId
 Ref: ShowtimeSeats.HeldByUserId > Users.UserId
 Ref: ShowtimeSeats.HeldByBookingId > Bookings.BookingId
+Ref: ImportExportJobs.CreatedByUserId > Users.UserId

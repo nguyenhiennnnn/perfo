@@ -20,6 +20,7 @@ Table Users {
   PasswordHash varchar [not null]
   Phone varchar
   RoleId int [not null]
+  MustChangePassword boolean [not null, default: false]
   UpdatedAt timestamp
 }
 

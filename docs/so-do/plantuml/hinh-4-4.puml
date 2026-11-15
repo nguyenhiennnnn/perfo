@@ -90,6 +90,7 @@ class CinemaSettings <<Entity>> {
   -SchedulerHeatSalesWeight : double
   -SchedulerHeatRatingWeight : double
   -SchedulerMaxRating : double
+  -DefaultEmployeePassword : string?
 }
 class Combo <<Entity>> {
   -ComboId : int
@@ -270,7 +271,35 @@ class User <<Entity>> {
   -PasswordHash : string
   -Phone : string?
   -RoleId : int
+  -MustChangePassword : bool
   -UpdatedAt : DateTime?
+}
+class ImportExportJob <<Entity>> {
+  -JobId : Guid
+  -Type : ImportExportJobType
+  -Module : string
+  -Format : string
+  -Status : ImportExportJobStatus
+  -Progress : int
+  -TotalRows : int
+  -SuccessRows : int
+  -FailedRows : int
+  -FileName : string?
+  -StoragePath : string?
+  -FileUrl : string?
+  -ErrorMessage : string?
+  -CreatedByUserId : int
+  -ActorRole : string?
+  -IpAddress : string?
+  -UserAgent : string?
+  -Parameters : string?
+  -FileSizeBytes : long?
+  -IsSensitive : bool
+  -IsPiiMasked : bool
+  -CreatedAt : DateTime
+  -StartedAt : DateTime?
+  -CompletedAt : DateTime?
+  -ExpiresAt : DateTime?
 }
 enum BookingChannel {
   Online
@@ -323,6 +352,17 @@ enum VerificationTokenPurpose {
   EmailConfirmation
   PasswordReset
 }
+enum ImportExportJobType {
+  Import
+  Export
+}
+enum ImportExportJobStatus {
+  Queued
+  Processing
+  Completed
+  Failed
+  Cancelled
+}
 Booking "*" --> "0..1" User : User
 Booking "*" --> "1" Showtime : Showtime
 Booking "*" --> "0..1" Employee : CreatedByEmployee
@@ -358,6 +398,7 @@ ShowtimeSeat "*" --> "1" Seat : Seat
 ShowtimeSeat "*" --> "0..1" User : HeldByUser
 User "*" --> "1" Role : Role
 UserVerificationToken "*" --> "1" User : User
+ImportExportJob "*" --> "1" User : CreatedByUser
 Booking ..> BookingChannel
 Booking ..> BookingStatus
 User ..> Gender
@@ -368,4 +409,6 @@ CinemaSettings ..> SeatGapRuleMode
 ShowtimeSeat ..> ShowtimeSeatStatus
 Showtime ..> ShowtimeStatus
 UserVerificationToken ..> VerificationTokenPurpose
+ImportExportJob ..> ImportExportJobType
+ImportExportJob ..> ImportExportJobStatus
 @enduml

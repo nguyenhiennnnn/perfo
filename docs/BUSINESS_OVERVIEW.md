@@ -28,6 +28,7 @@
   * 4.17 Người dùng và nhân viên (`EmployeeService`)
   * 4.18 Upload file (`AdminUploadsController`, `CloudinaryFileStorage`)
   * 4.19 Chức năng không có trong code
+  * 4.20 Nhập xuất dữ liệu bất đồng bộ (Import/Export Engine)
 * [5. Các luồng xuyên suốt (end-to-end)](#s05)
 * [6. Thuật toán và logic đặc thù](#s06)
 * [7. Tác vụ nền và sự kiện](#s07)
@@ -56,10 +57,10 @@ Hệ thống quản lý và bán vé rạp chiếu phim, gồm:
 |---|---|---|
 | Web khách hàng | Xem phim, lịch chiếu, chọn ghế, giữ ghế, thanh toán online, xem vé QR, hủy vé, đánh giá phim, xem hạng thành viên, chat trợ lý AI | `frontend/src/app/routes/client-routes.tsx` |
 | Web quản trị / nhân viên | Dashboard, quản lý phim, suất chiếu, phòng/ghế, combo, đặt vé, thanh toán, báo cáo, người dùng, nhân viên, đánh giá, cài đặt, danh mục; bán vé tại quầy; soát vé QR | `frontend/src/app/routes/admin-routes.tsx` |
-| REST API | ASP.NET Core, tiền tố `/api/v1`, 142 endpoint (34 controllers, bảng đầy đủ ở [02](#s02)) | `backend/Cinema.Api/Controllers` |
-| Job nền | Hangfire (lưu trên PostgreSQL): giải phóng ghế hết hạn, vòng đời suất chiếu/phim, hoàn tiền khi hủy suất, gửi email, quét hết hạn điểm thành viên theo cửa sổ 12 tháng | `backend/Cinema.Application/BackgroundJobs` |
-| Realtime | SignalR hub `/hubs/showtimes` đẩy trạng thái ghế theo suất chiếu | `backend/Cinema.Infrastructure/Realtime` |
-| Tích hợp ngoài | VNPay, MoMo, Stripe (thanh toán/hoàn tiền); Resend và SMTP/MailKit (email); Cloudinary (ảnh/video); Google Sign-In; Gemini (trợ lý AI) | `backend/Cinema.Infrastructure`, `Cinema.Application/Services/Ai` |
+| REST API | ASP.NET Core, tiền tố `/api/v1`, 171 endpoint (35 controllers, bảng đầy đủ ở [02](#s02)) | `backend/Cinema.Api/Controllers` |
+| Job nền | Hangfire (lưu trên PostgreSQL): giải phóng ghế hết hạn, vòng đời suất chiếu/phim, hoàn tiền khi hủy suất, gửi email, quét hết hạn điểm thành viên 12 tháng, tác vụ xuất dữ liệu nền (`ExportJob`), nạp dữ liệu nền (`ImportApplyJob`), dọn dẹp file tạm và phiên nhập xuất (`CleanupImportExportFilesJob`, `CleanupImportSessionsJob`) | `backend/Cinema.Application/BackgroundJobs` |
+| Realtime | Hai SignalR hub gồm `/hubs/showtimes` (đẩy trạng thái ghế theo suất chiếu) và `/hubs/import-export` (thông báo tiến độ tác vụ nhập/xuất dữ liệu) | `backend/Cinema.Infrastructure/Realtime` |
+| Tích hợp ngoài | VNPay, MoMo, Stripe (thanh toán/hoàn tiền); Resend và SMTP/MailKit (email); Cloudinary (ảnh/video); Google Sign-In; Gemini (trợ lý AI); QuestPDF (xuất vé điện tử PDF) | `backend/Cinema.Infrastructure`, `Cinema.Application/Services/Ai` |
 
 Actor: khách vãng lai (chưa đăng nhập), khách hàng (`Customer`), nhân viên (`Employee`), quản trị (`Admin`). Chi tiết ở [02](#s02).
 
@@ -68,7 +69,7 @@ Actor: khách vãng lai (chưa đăng nhập), khách hàng (`Customer`), nhân 
 | Lớp | Công nghệ (phiên bản theo `csproj`/`package.json`) | Vai trò |
 |---|---|---|
 | Backend | .NET `net10.0`, ASP.NET Core | Web API (kiến trúc dịch vụ phân rã chuyên biệt) |
-| ORM / DB | EF Core 10 + `Npgsql.EntityFrameworkCore.PostgreSQL` 10.0.3; PostgreSQL 16 (`docker-compose.yml`: `postgres:16-alpine`) | Lưu dữ liệu, migration (1 migration duy nhất: `20261111061730_InitialCreate`) |
+| ORM / DB | EF Core 10 + `Npgsql.EntityFrameworkCore.PostgreSQL` 10.0.3; PostgreSQL 16 (`docker-compose.yml`: `postgres:16-alpine`) | Lưu dữ liệu, migration (1 migration hợp nhất: `20261115004003_InitialCreate` gồm 31 bảng, 37 FK, 57 index) |
 | Validation | FluentValidation 12.1.1 | Kiểm tra request (filter `ValidationActionFilter`) |
 | Mapping | Mapster 10.0.11 | DTO mapping (`MappingConfig`) |
 | Auth | `Microsoft.AspNetCore.Authentication.JwtBearer`, `System.IdentityModel.Tokens.Jwt`, `PasswordHasher<User>` (Identity.Core), `Google.Apis.Auth` | JWT, hash mật khẩu, đăng nhập Google |
@@ -77,12 +78,12 @@ Actor: khách vãng lai (chưa đăng nhập), khách hàng (`Customer`), nhân 
 | Thanh toán | `Stripe.net` 52.4.0; VNPay và MoMo gọi HTTP trực tiếp (`VnPayGateway`, `MomoGateway`) | Cổng thanh toán |
 | Email | MailKit 4.17.0, Resend (HTTP) | Gửi email |
 | File | CloudinaryDotNet 1.29.3 | Upload ảnh/video |
-| QR | QRCoder 1.8.0 | Sinh ảnh QR (data URI) trong DTO vé |
+| Tài liệu & QR | QuestPDF 2025.12.3 (xuất vé điện tử PDF sắc nét chuẩn in ấn kèm font BeVietnamPro); QRCoder 1.8.0 (sinh mã QR) | Dịch vụ xuất vé và tạo mã QR |
 | Log | Serilog.AspNetCore | Ghi log |
 | Múi giờ & Vùng | `BusinessTime` (mặc định `Asia/Ho_Chi_Minh` / UTC+7), `BrandOptions` (`Locale`, `CurrencyCode`, `CurrencySymbol`) | Chuẩn hóa thời gian và tiền tệ kinh doanh |
 | API doc | Swashbuckle (chỉ hiển thị khi `ASPNETCORE_ENVIRONMENT=Development`, theo comment trong `Program.cs`) | Swagger 2 doc: `client`, `admin` |
 | Frontend | React 19, `react-router` 7, TanStack Query 5, TanStack Table, Zustand 5, axios, react-hook-form + zod 3, `@microsoft/signalr` 10, recharts, tailwindcss 4, vite 8, `jsqr` (đọc QR bằng camera) | SPA |
-| Test | xUnit (`Cinema.UnitTests`, `Cinema.IntegrationTests` - 532 bài test gồm 420 test methods / 471 ca chạy unit test và 61 integration test pass 100% qua 55 tệp test), Playwright cho E2E | Kiểm thử |
+| Test | xUnit (`Cinema.UnitTests`, `Cinema.IntegrationTests` - 557 bài test gồm 440 test methods / 491 ca chạy unit test và 66 integration test pass 100% qua 60 tệp test), Playwright cho E2E | Kiểm thử |
 | Triển khai | Docker (`backend/Dockerfile`, `frontend/Dockerfile`), `docker-compose.yml`, `render.yaml` (Render: web service Docker + static site + PostgreSQL) | Chạy dev/prod |
 
 Lưu ý: comment trong `Program.cs` còn nhắc SQL Server và MediatR, nhưng code thực tế dùng PostgreSQL (`UsePostgreSqlStorage` cho Hangfire) và không dùng MediatR; một số script trong `package.json` (`docker:logs:db`, `docker:exec:db`) vẫn trỏ về `sqlserver`. Đây là phần còn sót, không phản ánh runtime hiện tại.
@@ -97,16 +98,16 @@ flowchart LR
   end
   subgraph API["Cinema.Api (ASP.NET Core)"]
     CT[Controllers /api/v1]
-    HUB[SignalR Hub<br/>/hubs/showtimes]
+    HUB[SignalR Hubs<br/>/hubs/showtimes<br/>/hubs/import-export]
     HF[Hangfire Server<br/>+ Dashboard]
   end
-  APP[Cinema.Application<br/>Services · Validators · Jobs]
-  INF[Cinema.Infrastructure<br/>EF Core · Gateways · Email · Storage]
+  APP[Cinema.Application<br/>Services · Validators · Jobs · Import/Export Engine]
+  INF[Cinema.Infrastructure<br/>EF Core · Gateways · Email · Storage · QuestPDF]
   DB[(PostgreSQL)]
   C -->|HTTPS JSON| CT
   A -->|HTTPS JSON| CT
   C <-.->|WebSocket seat.*| HUB
-  A <-.->|WebSocket seat.*| HUB
+  A <-.->|WebSocket seat.* & job.*| HUB
   CT --> APP
   HF --> APP
   APP --> INF
@@ -144,7 +145,7 @@ Chức năng từng project backend:
 
 | Project | Chức năng | Ghi chú |
 |---|---|---|
-| `Cinema.Domain` | 30 entity (`Cinema.Domain/Entities`) + 10 enum | Xem [03](#s03) |
+| `Cinema.Domain` | 31 entity (`Cinema.Domain/Entities`) + 12 enum | Xem [03](#s03) |
 | `Cinema.Shared` | `Roles` (`Customer`, `Admin`, `Employee`), `Policies`, `SignalREvents`, các `AppException` kèm HTTP status | Xem 4.0 ở [04-modules](#s04) |
 | `Cinema.Application` | Toàn bộ quy tắc nghiệp vụ; không phụ thuộc EF provider cụ thể ngoài `AppDbContext` | Xem [04](#s04) |
 | `Cinema.Infrastructure` | DbContext, cổng thanh toán, email, Cloudinary, SignalR notifier | Xem [08](#s08) |
@@ -191,10 +192,13 @@ Không có `FallbackPolicy`: endpoint không gắn `[Authorize]` là **công kha
 | Đặt lại mật khẩu | Hạn `Email:PasswordResetExpirationMinutes` = 30 phút, dùng một lần | `AuthService.ForgotPasswordAsync`, `ResetPasswordAsync` |
 | Mật khẩu | `PasswordHasher<User>` (ASP.NET Identity); tự rehash khi `SuccessRehashNeeded` | `AuthService.LoginAsync` |
 | Đăng nhập Google | `POST /auth/google` kiểm tra ID token qua `Google.Apis.Auth`; chỉ cho role `Customer`; email Google chưa xác thực bị từ chối; tài khoản đã có cùng email được liên kết | `GoogleLoginAsync`, `GoogleAuthService` |
-| Rate limit | Policy `auth` (theo IP, 5 lượt/60 s) cho register/login/admin-login/google/refresh/forgot/reset; `booking-hold` 10 lượt/60 s cho `POST /bookings/hold`; global 100 lượt/60 s | `Program.cs` (`AddRateLimiter`), `appsettings.json` mục `RateLimit` |
+| Bắt buộc đổi mật khẩu | Middleware `PasswordChangeRequiredMiddleware` kiểm tra claim `must_change_password`, chặn HTTP 403 `PASSWORD_CHANGE_REQUIRED` với mọi thao tác nghiệp vụ khi nhân viên chưa đổi mật khẩu ban đầu | `PasswordChangeRequiredMiddleware.cs` |
+| Rate limit | Policy `auth` (5 lượt/60 s); `booking-hold` (10 lượt/60 s); `export` (3 lượt/60 s); `import` (1 lượt/60 s); global sliding 100 lượt/60 s | `RateLimitingExtensions.cs`, `Program.cs`, `appsettings.json` |
+| Che giấu dữ liệu (PII) | `PersonalDataMasker` tự động che mặt nạ email (`v***e@domain`) và số điện thoại (`090****456`) khi xuất tệp dữ liệu nhạy cảm | `PersonalDataMasker.cs` |
 
 Quan sát khi đọc code:
 
+* Cơ chế bắt buộc đổi mật khẩu nhân viên: Tài khoản nhân viên tạo trực tiếp (`POST /admin/employees/direct`) hoặc được quản trị viên đặt lại mật khẩu (`POST /admin/employees/{id}/reset-password`) được gán mật khẩu mặc định rạp (`CinemaSettings.DefaultEmployeePassword`, mặc định `Employee@123`) và cờ `MustChangePassword = true`. Token JWT phát hành mang claim `must_change_password=true`, kích hoạt middleware `PasswordChangeRequiredMiddleware` chặn mọi endpoint nghiệp vụ (trả về 403 `PASSWORD_CHANGE_REQUIRED`), chỉ cho phép gọi `/auth/me`, `/auth/refresh`, `/auth/logout` và `/users/me/change-password` cho đến khi hoàn tất đổi mật khẩu.
 * `POST /auth/login` chỉ dành cho `Customer`; role khác bị `403` với thông báo "Vui lòng đăng nhập qua cổng quản trị". `POST /auth/admin-login` áp dụng cơ chế allow-list nghiêm ngặt: chỉ chấp nhận tài khoản có vai trò `Admin` hoặc `Employee` (nếu là `Customer` hoặc vai trò khác sẽ bị từ chối `403` với thông báo `Forbidden_CustomerCannotUseAdminPortal`). Đồng thời, đối với vai trò `Employee`, hệ thống kiểm tra trạng thái hồ sơ nhân viên (`user.Employee is { IsActive: true }`), nếu hồ sơ nhân viên bị vô hiệu hóa sẽ lập tức chặn truy cập với `403 Forbidden_AccountLocked`.
 * Đăng nhập (mọi cổng) yêu cầu `User.IsActive` và `EmailConfirmed`; refresh token cũng kiểm tra nghiêm ngặt hai điều kiện này.
 * Quản lý trạng thái và thu hồi token tập trung: Thư viện mở rộng `RefreshTokenRevocation` (`Revoke()`, `RevokeActiveTokensAsync()`) chuẩn hóa việc thu hồi toàn bộ refresh token đang hoạt động khi khóa tài khoản đơn lẻ hoặc hàng loạt (`EmployeeService.UpdateUserStatusAsync`, `BulkUpdateUserStatusAsync`), khi cập nhật vai trò người dùng (`UpdateUserRoleAsync`), khi vô hiệu hóa hồ sơ nhân viên (`UpdateEmployeeAsync`), cũng như khi đổi hoặc đặt lại mật khẩu (`AuthService`).
@@ -233,7 +237,10 @@ Ký hiệu: ✓ được gọi; – không được gọi. Cột "Khách" = chư
 | Method | Route | Policy | Khách | Customer | Employee | Admin | Rate limit | Hàm |
 |---|---|---|:-:|:-:|:-:|:-:|---|---|
 | GET | `/api/v1/admin/bookings` | StaffOnly | – | – | ✓ | ✓ |  | `GetBookings` |
+| GET | `/api/v1/admin/bookings/export` | StaffOnly | – | – | ✓ | ✓ | export | `ExportBookings` |
+| POST | `/api/v1/admin/bookings/export-jobs` | StaffOnly | – | – | ✓ | ✓ | export | `CreateExportJob` |
 | GET | `/api/v1/admin/bookings/{bookingId:int}` | StaffOnly | – | – | ✓ | ✓ |  | `GetBookingDetail` |
+| GET | `/api/v1/admin/bookings/{bookingId:int}/tickets/pdf` | StaffOnly | – | – | ✓ | ✓ |  | `DownloadTicketsPdf` |
 
 ### AdminCounterController
 
@@ -272,6 +279,14 @@ Ký hiệu: ✓ được gọi; – không được gọi. Cột "Khách" = chư
 | DELETE | `/api/v1/admin/directors/{id:int}` | AdminOnly | – | – | – | ✓ |  | `Delete` |
 | DELETE | `/api/v1/admin/directors/bulk` | AdminOnly | – | – | – | ✓ |  | `BulkDelete` |
 
+### AdminImportExportController
+
+| Method | Route | Policy | Khách | Customer | Employee | Admin | Rate limit | Hàm |
+|---|---|---|:-:|:-:|:-:|:-:|---|---|
+| GET | `/api/v1/admin/import-export/jobs` | AdminOnly | – | – | – | ✓ |  | `GetJobs` |
+| GET | `/api/v1/admin/import-export/jobs/{id:guid}` | AdminOnly | – | – | – | ✓ |  | `GetJob` |
+| GET | `/api/v1/admin/import-export/jobs/{id:guid}/download` | AdminOnly | – | – | – | ✓ | export | `DownloadJobFile` |
+
 ### AdminEmployeesController
 
 | Method | Route | Policy | Khách | Customer | Employee | Admin | Rate limit | Hàm |
@@ -279,6 +294,8 @@ Ký hiệu: ✓ được gọi; – không được gọi. Cột "Khách" = chư
 | GET | `/api/v1/admin/employees` | AdminOnly | – | – | – | ✓ |  | `GetEmployees` |
 | POST | `/api/v1/admin/employees` | AdminOnly | – | – | – | ✓ |  | `Create` |
 | POST | `/api/v1/admin/employees/invite` | AdminOnly | – | – | – | ✓ |  | `Invite` |
+| POST | `/api/v1/admin/employees/direct` | AdminOnly | – | – | – | ✓ |  | `CreateDirect` |
+| POST | `/api/v1/admin/employees/{id:int}/reset-password` | AdminOnly | – | – | – | ✓ |  | `ResetPassword` |
 | POST | `/api/v1/admin/employees/{id:int}/resend-invite` | AdminOnly | – | – | – | ✓ |  | `ResendInvite` |
 | PUT | `/api/v1/admin/employees/{id:int}` | AdminOnly | – | – | – | ✓ |  | `Update` |
 
@@ -318,12 +335,18 @@ Ký hiệu: ✓ được gọi; – không được gọi. Cột "Khách" = chư
 | PUT | `/api/v1/admin/movies/{id:int}` | AdminOnly | – | – | – | ✓ |  | `Update` |
 | DELETE | `/api/v1/admin/movies/{id:int}` | AdminOnly | – | – | – | ✓ |  | `Delete` |
 | DELETE | `/api/v1/admin/movies/bulk` | AdminOnly | – | – | – | ✓ |  | `BulkDelete` |
+| GET | `/api/v1/admin/movies/import/template` | AdminOnly | – | – | – | ✓ | import | `DownloadImportTemplate` |
+| POST | `/api/v1/admin/movies/import/preview` | AdminOnly | – | – | – | ✓ | import | `PreviewImport` |
+| POST | `/api/v1/admin/movies/import/apply` | AdminOnly | – | – | – | ✓ | import | `ApplyImport` |
+| GET | `/api/v1/admin/movies/import/errors/{previewId}` | AdminOnly | – | – | – | ✓ | import | `DownloadImportErrors` |
 
 ### AdminPaymentsController
 
 | Method | Route | Policy | Khách | Customer | Employee | Admin | Rate limit | Hàm |
 |---|---|---|:-:|:-:|:-:|:-:|---|---|
 | GET | `/api/v1/admin/payments` | AdminOnly | – | – | – | ✓ |  | `GetPayments` |
+| GET | `/api/v1/admin/payments/export` | AdminOnly | – | – | – | ✓ | export | `ExportPayments` |
+| POST | `/api/v1/admin/payments/export-jobs` | AdminOnly | – | – | – | ✓ | export | `CreateExportJob` |
 | GET | `/api/v1/admin/payments/{id:int}` | AdminOnly | – | – | – | ✓ |  | `GetDetail` |
 
 ### AdminPositionsController
@@ -340,8 +363,11 @@ Ký hiệu: ✓ được gọi; – không được gọi. Cột "Khách" = chư
 | Method | Route | Policy | Khách | Customer | Employee | Admin | Rate limit | Hàm |
 |---|---|---|:-:|:-:|:-:|:-:|---|---|
 | GET | `/api/v1/admin/reports/revenue` | AdminOnly | – | – | – | ✓ |  | `GetRevenue` |
+| GET | `/api/v1/admin/reports/revenue/export` | AdminOnly | – | – | – | ✓ | export | `ExportRevenue` |
 | GET | `/api/v1/admin/reports/top-movies` | AdminOnly | – | – | – | ✓ |  | `GetTopMovies` |
+| GET | `/api/v1/admin/reports/top-movies/export` | AdminOnly | – | – | – | ✓ | export | `ExportTopMovies` |
 | GET | `/api/v1/admin/reports/employee-performance` | AdminOnly | – | – | – | ✓ |  | `GetEmployeePerformance` |
+| GET | `/api/v1/admin/reports/employee-performance/export` | AdminOnly | – | – | – | ✓ | export | `ExportEmployeePerformance` |
 
 ### AdminReviewsController
 
@@ -362,6 +388,11 @@ Ký hiệu: ✓ được gọi; – không được gọi. Cột "Khách" = chư
 | DELETE | `/api/v1/admin/rooms/{id:int}` | AdminOnly | – | – | – | ✓ |  | `Delete` |
 | GET | `/api/v1/admin/rooms/{id:int}/seats` | AdminOnly | – | – | – | ✓ |  | `GetSeats` |
 | PUT | `/api/v1/admin/rooms/{id:int}/seats` | AdminOnly | – | – | – | ✓ |  | `UpdateSeatLayout` |
+| GET | `/api/v1/admin/rooms/{id:int}/seat-layout/export` | AdminOnly | – | – | – | ✓ | export | `ExportSeatLayout` |
+| GET | `/api/v1/admin/rooms/{id:int}/seat-layout/import/template` | AdminOnly | – | – | – | ✓ | import | `DownloadSeatLayoutImportTemplate` |
+| POST | `/api/v1/admin/rooms/{id:int}/seat-layout/import/preview` | AdminOnly | – | – | – | ✓ | import | `PreviewSeatLayoutImport` |
+| POST | `/api/v1/admin/rooms/{id:int}/seat-layout/import/apply` | AdminOnly | – | – | – | ✓ | import | `ApplySeatLayoutImport` |
+| GET | `/api/v1/admin/rooms/{id:int}/seat-layout/import/errors/{previewId}` | AdminOnly | – | – | – | ✓ | import | `DownloadSeatLayoutImportErrors` |
 
 ### AdminScreenTypesController
 
@@ -393,6 +424,8 @@ Ký hiệu: ✓ được gọi; – không được gọi. Cột "Khách" = chư
 | Method | Route | Policy | Khách | Customer | Employee | Admin | Rate limit | Hàm |
 |---|---|---|:-:|:-:|:-:|:-:|---|---|
 | GET | `/api/v1/admin/showtimes` | StaffOnly | – | – | ✓ | ✓ |  | `GetShowtimes` |
+| GET | `/api/v1/admin/showtimes/export` | StaffOnly | – | – | ✓ | ✓ | export | `ExportShowtimes` |
+| POST | `/api/v1/admin/showtimes/export-jobs` | StaffOnly | – | – | ✓ | ✓ | export | `CreateExportJob` |
 | GET | `/api/v1/admin/showtimes/calendar` | StaffOnly | – | – | ✓ | ✓ |  | `GetCalendar` |
 | POST | `/api/v1/admin/showtimes` | AdminOnly | – | – | – | ✓ |  | `Create` |
 | PUT | `/api/v1/admin/showtimes/{id:int}` | AdminOnly | – | – | – | ✓ |  | `Update` |
@@ -402,6 +435,10 @@ Ký hiệu: ✓ được gọi; – không được gọi. Cột "Khách" = chư
 | POST | `/api/v1/admin/showtimes/auto-schedule/apply` | AdminOnly | – | – | – | ✓ |  | `ApplyAutoSchedule` |
 | POST | `/api/v1/admin/showtimes/clone` | AdminOnly | – | – | – | ✓ |  | `CloneShowtimes` |
 | DELETE | `/api/v1/admin/showtimes/bulk` | AdminOnly | – | – | – | ✓ |  | `BulkDelete` |
+| GET | `/api/v1/admin/showtimes/import/template` | AdminOnly | – | – | – | ✓ | import | `DownloadImportTemplate` |
+| POST | `/api/v1/admin/showtimes/import/preview` | AdminOnly | – | – | – | ✓ | import | `PreviewImport` |
+| POST | `/api/v1/admin/showtimes/import/apply` | AdminOnly | – | – | – | ✓ | import | `ApplyImport` |
+| GET | `/api/v1/admin/showtimes/import/errors/{previewId}` | AdminOnly | – | – | – | ✓ | import | `DownloadImportErrors` |
 
 ### AdminUploadsController
 
@@ -544,7 +581,7 @@ Lưu ý: `GET /admin/movies`, `GET /admin/showtimes`, `GET /admin/showtimes/cale
 
 # 3. Mô hình dữ liệu
 
-Nguồn: `backend/Cinema.Domain/Entities/*.cs`, `backend/Cinema.Domain/Enums/*.cs`, `backend/Cinema.Infrastructure/Persistence/Configurations/*.cs`, migration duy nhất trong `backend/Cinema.Infrastructure/Migrations` (`20261111061730_InitialCreate.cs`). Enum trạng thái được lưu dạng **chuỗi** (`HasConversion<string>()`) kèm check constraint `IN (...)` cho 8/10 enum.
+Nguồn: `backend/Cinema.Domain/Entities/*.cs`, `backend/Cinema.Domain/Enums/*.cs`, `backend/Cinema.Infrastructure/Persistence/Configurations/*.cs`, migration duy nhất trong `backend/Cinema.Infrastructure/Migrations` (`20261115004003_InitialCreate.cs` hợp nhất 31 bảng, 37 khóa ngoại, 57 chỉ mục). Enum trạng thái được lưu dạng **chuỗi** (`HasConversion<string>()`) kèm check constraint `IN (...)` cho 10/12 enum.
 
 ## 3.1 Sơ đồ ERD
 
@@ -584,6 +621,7 @@ erDiagram
   Booking ||--o{ Payment : ""
   Booking ||--o| LoyaltyPointEntry : "BookingId (unique nullable)"
   ShowtimeSeat }o--o| User : "HeldByUserId"
+  User ||--o{ ImportExportJob : "CreatedByUserId"
 ```
 
 ## 3.2 Danh sách entity
@@ -591,7 +629,7 @@ erDiagram
 | Entity | Mục đích | Field quan trọng | Ràng buộc DB |
 |---|---|---|---|
 | `Role` | Vai trò | `RoleName` (`Customer`, `Admin`, `Employee`) | unique `RoleName` |
-| `User` | Tài khoản (khách, nhân viên, admin) | `Email`, `PasswordHash`, `GoogleId?`, `RoleId`, `IsActive`, `EmailConfirmed`, `Phone?`, `Gender?`, `DateOfBirth?`, `Avatar?` | unique `Email`; unique có lọc `GoogleId IS NOT NULL`; `CK_Users_Gender` ∈ Male/Female/Other |
+| `User` | Tài khoản (khách, nhân viên, admin) | `Email`, `PasswordHash`, `GoogleId?`, `RoleId`, `IsActive`, `EmailConfirmed`, `MustChangePassword`, `Phone?`, `Gender?`, `DateOfBirth?`, `Avatar?` | unique `Email`; unique có lọc `GoogleId IS NOT NULL`; `CK_Users_Gender` ∈ Male/Female/Other; `MustChangePassword` mặc định false |
 | `CustomerProfile` | Hồ sơ thành viên (PK = `UserId`, đóng vai trò bản cache điểm/hạng) | `Points`, `TotalSpent`, `TierId?` | cascade theo User; `Points` mặc định 0 |
 | `LoyaltyPointEntry` | Sổ giao dịch điểm tích lũy thành viên (cửa sổ 12 tháng) | `EntryId`, `UserId`, `BookingId?`, `Points`, `RevokedPoints` (default 0), `EarnedAt` (UTC) | PK `EntryId`; FK Users (Cascade); FK Bookings (Restrict, nullable); unique có lọc `UX_LoyaltyPointEntries_Booking` (`BookingId IS NOT NULL`); index `IX_LoyaltyPointEntries_User_EarnedAt` (`UserId, EarnedAt`); `CK_LoyaltyPointEntries_Points` (`Points >= 0`); `CK_LoyaltyPointEntries_Revoked` (`RevokedPoints >= 0 AND RevokedPoints <= Points`) |
 | `MembershipTier` | Hạng thành viên | `TierName`, `MinPoints`, `DiscountPercent` | unique `TierName`; `CK_MembershipTiers_Discount` 0–100 |
@@ -613,7 +651,8 @@ erDiagram
 | `Combo` / `BookingCombo` | Combo bắp nước / combo trong đơn | `Combo.Price`, `IsActive`; `BookingCombo.Quantity`, `UnitPrice` (giá chốt) | `CK_Combos_Price` ≥ 0; `CK_BookingCombos_Quantity` > 0 |
 | `Payment` | Giao dịch thanh toán/hoàn tiền | `PaymentMethod`, `TransactionId?`, `GatewayTransactionId?`, `GatewayResponseCode?`, `Amount`, `Status`, `PaidAt?`, `RefundTransactionId?`, `RefundedAmount?`, `RefundedAt?`, `AmountReceived?`, `ChangeGiven?` | `CK_Payments_Method/Amount/Status`; index `BookingId`, `Status` |
 | `Review` | Đánh giá phim | `Rating`, `Comment?` | unique (`UserId`,`MovieId`); **`CK_Reviews_Rating` 1–5** |
-| `CinemaSettings` | Cấu hình rạp (một dòng duy nhất `Id = 1`) | `OpeningTime?`, `ClosingTime?`, `PointsPerAmount`, `CancelRefundPercent`, `CancelDeadlineHours`, `StopSellingMinutesBefore`, `HoldDurationMinutes`, `CheckInOpenMinutes`, `SeatGapRuleMode`, thông tin liên hệ | `CK_CinemaSettings_Id` Id = 1; `HoldDurationMinutes` mặc định 15; `CheckInOpenMinutes` mặc định 30; `SeatGapRuleMode` mặc định `Strict` |
+| `CinemaSettings` | Cấu hình rạp (một dòng duy nhất `Id = 1`) | `OpeningTime?`, `ClosingTime?`, `DefaultEmployeePassword`, `PointsPerAmount`, `CancelRefundPercent`, `CancelDeadlineHours`, `StopSellingMinutesBefore`, `HoldDurationMinutes`, `CheckInOpenMinutes`, `SeatGapRuleMode`, thông tin liên hệ | `CK_CinemaSettings_Id` Id = 1; `DefaultEmployeePassword` varchar(100) default 'Employee@123'; `HoldDurationMinutes` mặc định 15; `CheckInOpenMinutes` mặc định 30; `SeatGapRuleMode` mặc định `Strict` |
+| `ImportExportJob` | Tác vụ nhập/xuất dữ liệu nền bất đồng bộ | `JobId (Guid)`, `Type`, `Module`, `Format`, `Status`, `Progress`, `TotalRows`, `SuccessRows`, `FailedRows`, `FileName?`, `StoragePath?`, `FileUrl?`, `ErrorMessage?`, `CreatedByUserId`, `ActorRole?`, `IpAddress?`, `UserAgent?`, `Parameters?`, `FileSizeBytes?`, `IsSensitive`, `IsPiiMasked`, `CreatedAt`, `StartedAt?`, `CompletedAt?`, `ExpiresAt?` | PK `JobId`; FK `Users` (Restrict); 4 chỉ mục IX; ràng buộc `CK_ImportExportJobs_Type`, `CK_ImportExportJobs_Status`, `CK_ImportExportJobs_Progress` (0..100), `CK_ImportExportJobs_Rows` |
 
 ### Enum
 
@@ -629,6 +668,8 @@ erDiagram
 | `ShowtimeSeatStatus` | `Available`, `Held`, `Booked` |
 | `ShowtimeStatus` | `Scheduled`, `Cancelled`, `Completed` |
 | `VerificationTokenPurpose` | `EmailConfirmation`, `PasswordReset` |
+| `ImportExportJobType` | `Import`, `Export` |
+| `ImportExportJobStatus` | `Queued`, `Running`, `Completed`, `Failed` |
 
 ### Ghi chú về ràng buộc và migration
 
@@ -718,12 +759,26 @@ stateDiagram-v2
 
 Không có chuyển tự động `ComingSoon → NowShowing` (đã tìm mọi chỗ gán `MovieStatus.*`). Admin có thể đặt bất kỳ trạng thái nào qua `PUT /admin/movies/{id}`; phim `Ended` không thể tạo/sửa suất chiếu.
 
+### `ImportExportJob.Status`
+
+```mermaid
+stateDiagram-v2
+  [*] --> Queued: Tạo job qua IImportExportJobTracker.CreateQueuedAsync
+  Queued --> Running: Hangfire Worker bắt đầu xử lý (MarkRunningAsync)
+  Running --> Completed: Hoàn tất toàn bộ/một phần (CompleteExportAsync / CompleteImportAsync)
+  Running --> Failed: Gặp ngoại lệ hoặc quá ngưỡng lỗi (FailAsync)
+  Queued --> Failed: Lỗi hàng đợi hoặc hủy job
+  Completed --> [*]: Hết hạn lưu trữ (ExpiresAt 24h) -> Tác vụ nền dọn tệp tạm
+  Failed --> [*]
+```
+
 ### Các thực thể có "trạng thái" dạng cờ (không có state machine phức tạp)
 
 | Thực thể | Cờ | Ý nghĩa |
 |---|---|---|
 | `User.IsActive` | khóa/mở | Khóa → thu hồi toàn bộ refresh token (`EmployeeService.UpdateUserStatusAsync`, test `EmployeeServiceUserStatusTests`) |
 | `User.EmailConfirmed` | xác thực email | Chưa xác thực → không đăng nhập được |
+| `User.MustChangePassword` | bắt buộc đổi mật khẩu | True → `PasswordChangeRequiredMiddleware` chặn mọi API nghiệp vụ bằng HTTP 403 `PASSWORD_CHANGE_REQUIRED` |
 | `CinemaRoom.IsActive` | phòng hoạt động | Không thể tắt khi có ghế đã đặt/giữ ở suất sắp tới |
 | `Combo.IsActive` | đang bán | `ToggleComboAsync` đảo cờ |
 | `Employee.IsActive` | còn làm việc | Chỉ được dùng để chặn hạ role xuống `Customer` (`EmployeeService.UpdateUserRoleAsync`) và hiển thị; **không có chỗ nào trong Application/Api chặn đăng nhập hay quyền theo cờ này** (đã tìm). Quầy bán vé yêu cầu claim `EmployeeId` (có hồ sơ `Employee`), không kiểm tra `IsActive` |
@@ -791,6 +846,7 @@ sequenceDiagram
 | AUTH-09 | Google: email phải được Google xác thực; liên kết tài khoản cùng email; chỉ role `Customer` | `/auth/google` | 401/403 | `GoogleLoginAsync`; `Infrastructure/Auth/GoogleAuthService.cs` |
 | AUTH-10 | Validator: `FullName` ≤ 100, `Email` ≤ 150 + định dạng, `Phone` ≤ 20 + regex `PhoneRegex`, mật khẩu `StrongPassword`: ≥ 8 ký tự, có chữ hoa, chữ thường và chữ số (`Validators/Auth/PasswordValidationExtensions.cs`) | Đăng ký | 400 | `Validators/Auth/AuthValidators.cs` |
 | AUTH-11 | Hồ sơ cá nhân: `FullName` ≤ 100, `Phone` regex, `Avatar` ≤ 255, `Gender` ∈ Male/Female/Other | `PUT /users/me` | 400 | `Validators/Users/UserValidators.cs`, `Services/Users/UserProfileService.cs::UpdateMyProfileAsync` |
+| AUTH-12 | Bắt buộc đổi mật khẩu nhân viên: khi `MustChangePassword=true`, middleware `PasswordChangeRequiredMiddleware` chặn mọi API nghiệp vụ bằng HTTP 403 `PASSWORD_CHANGE_REQUIRED` (chỉ cho phép gọi `/auth/me`, `/auth/refresh`, `/auth/logout`, `/users/me/change-password`). Đổi mật khẩu thành công sẽ giải phóng cờ này về `false` | Đăng nhập tài khoản nhân viên mới tạo trực tiếp hoặc sau khi được Admin reset mật khẩu | 403 Forbidden | `PasswordChangeRequiredMiddleware.cs`, `AuthService.cs` |
 
 **Tác dụng phụ:** email xác thực/đặt lại mật khẩu qua `SendEmailJob` (xem [11](#s11)).
 
@@ -917,6 +973,8 @@ sequenceDiagram
 | ROOM-05b | Không xóa phòng đang có suất chiếu sắp tới | `DELETE /admin/rooms/{id}` | 422 "Phòng đang có suất chiếu sắp tới, không thể xoá." (có kiểm tra thêm `hasAnyShowtimes`; nhánh xử lý phòng từng có suất: xem `DeleteRoomAsync`) | `RoomService.DeleteRoomAsync` |
 | ROOM-05c | Sửa sơ đồ ghế không được đụng ghế đang được đặt/giữ ở suất sắp tới; ghế đôi và tham chiếu loại ghế phải hợp lệ | `PUT /admin/rooms/{id}/seats` | 409 "Không thể thay đổi ghế đang được đặt hoặc giữ ở suất chiếu sắp tới."; 400 "Dữ liệu ghế đôi không hợp lệ." / "Dữ liệu tham chiếu không hợp lệ." | `RoomService.UpdateSeatLayoutAsync` |
 | ROOM-06 | Ghế `IsAisle` hoặc `IsActive=false` không sinh `ShowtimeSeat` | Tạo suất | — | `ShowtimeService.CreateShowtimeAsync` |
+| ROOM-07 | Xuất sơ đồ ghế phòng chiếu: hỗ trợ xuất cấu hình ghế hiện tại ra file Excel/CSV theo định dạng `Matrix` (ma trận trực quan) hoặc `List` (danh sách từng ghế) | `GET /admin/rooms/{id}/seat-layout/export` | File Excel/CSV | `SeatLayoutImportService.ExportAsync` |
+| ROOM-08 | Nhập sơ đồ ghế phòng chiếu 2 bước: tải template mẫu (`.../template`), gửi file phân tích kiểm tra (`.../preview`), kiểm tra hợp lệ không trùng ghế và ghép cặp ghế đôi (`CoupleId`), sau đó áp dụng (`.../apply`) nếu không xung đột với suất sắp tới | `POST /admin/rooms/{id}/seat-layout/import/*` | Báo cáo hợp lệ / cập nhật CSDL | `SeatLayoutImportService.cs`, `SeatLayoutImportProcessor.cs` |
 
 **Trình soạn sơ đồ ghế nâng cấp (Seat Editor UI):**
 Giao diện thiết kế sơ đồ ghế (`/admin/rooms/{id}/seats`) tích hợp bộ công cụ cọ vẽ Brush Tools (Select, Standard, VIP, Couple, Aisle, Inactive) với phím tắt nhanh `1..6`; thay đổi kích thước hàng/cột trực tiếp qua Size Inputs; tích hợp Bảng Validation Panel tự động kiểm tra tính hợp lệ của sơ đồ (tổng ghế, số ghế theo loại, bắt buộc ghế đôi chẵn cặp theo `CoupleId`, phát hiện ghế cô lập); hỗ trợ phím tắt hoàn tác `Ctrl+Z` (Undo) và `Ctrl+Y` (Redo); cùng cơ chế guard bảo vệ chống mất dữ liệu khi rời trang chưa lưu (`use-unsaved-changes-guard.ts`).
@@ -1118,6 +1176,8 @@ Email xác nhận ghi "có mặt trước 15 phút" trong khi mở check-in là 
 | CT-04 | `AmountReceived` phải ≥ `FinalAmount`; tiền thối = `AmountReceived − FinalAmount` | Thiếu | 422 "Số tiền nhận không đủ." | `CounterBookingService.CounterCheckoutAsync` |
 | CT-05 | Thành công: `Payment` `Cash` `Success` (lưu `AmountReceived`, `ChangeGiven`), xác nhận booking, sinh vé | — | — | `CounterBookingService.CounterCheckoutAsync`, `BookingFulfillmentService.ConfirmBookingAndGenerateTicketsAsync` |
 | CT-06 | **Hủy đơn Pending tại quầy**: Khi khách đổi ý hoặc không hoàn tất thanh toán, nhân viên có thể chủ động hủy đơn pending để nhả ghế tức thì qua `POST /admin/bookings/{id}/counter-cancel`. Hệ thống chuyển `Booking.Status` sang `Cancelled`, gọi `BookingSeatReleaser.ReleaseBookingSeatsAsync` (`ExecuteUpdateAsync`) trả ghế về `Available`, đồng thời phát sự kiện SignalR `seat.released`. Thao tác này giải tỏa trạng thái pending giúp nhân viên quầy có thể phục vụ khách tiếp theo ngay lập tức | Booking kênh `Counter`, `Pending`, đúng nhân viên tạo | `Cancelled`, nhả ghế tức thì | `AdminCounterController.CounterCancel`, `CounterBookingService.CounterCancelAsync`, `BookingSeatReleaser.cs` |
+| CT-07 | **Tự động hủy ghế khi rời quầy (`useCounterLeaveCancel`)**: Hook frontend lắng nghe sự kiện đóng trang hoặc điều hướng rời khỏi `/admin/bookings/counter`, tự động gửi request `counter-cancel` giải phóng các ghế `Held` về `Available` tức thời, không làm kẹt ghế của suất chiếu | Rời trang quầy khi có đơn Pending | Hủy pending và nhả ghế | `frontend/src/features/admin/hooks/use-counter-leave-cancel.ts` |
+| CT-08 | **Xuất vé điện tử dạng PDF (QuestPDF)**: Dịch vụ `BookingTicketPdfService` tạo tài liệu PDF độ phân giải cao cho đơn đặt vé, hiển thị logo rạp, thông tin suất chiếu, sơ đồ vị trí và mã QR độc bản cho từng vé với font tiếng Việt `BeVietnamPro` | `GET /bookings/{id}/tickets/pdf` hoặc `GET /admin/bookings/{id}/tickets/pdf` | File PDF chuẩn in ấn | `BookingTicketPdfService.cs`, `BookingTicketDocument.cs` |
 
 Giao diện quầy tính tổng tạm tính chỉ từ ghế (không gồm combo); số tiền chính thức lấy từ phản hồi giữ ghế (`use-counter-flow.ts`). Luồng bán vé quầy được bảo vệ bởi guard an toàn chống reset trạng thái của đơn đặt vé quầy đã hoàn tất thanh toán (tránh mất thông tin vé và mã QR vừa in). Đồng thời áp dụng ràng buộc an toàn giới hạn tối đa 5 đơn giữ vé quầy đang chờ thanh toán (Pending) cho mỗi nhân viên.
 
@@ -1256,6 +1316,7 @@ Một dòng duy nhất `CinemaSettings` (`Id = 1`, `CK_CinemaSettings_Id`).
 | ST-08 | `CheckInOpenMinutes`: thời gian mở check-in trước giờ chiếu, trong khoảng 0–240 phút (mặc định 30) | 400 | `SettingValidators.cs`, `CinemaSettings.DefaultCheckInOpenMinutes` |
 | ST-09 | `SeatGapRuleMode`: chế độ kiểm tra ghế lẻ khi đặt vé online (`Strict`: chặn mọi ghế lẻ; `AllowEdge`: cho phép ghế lẻ sát mép hàng hoặc lối đi; `Off`: tắt quy tắc ghế lẻ; mặc định `Strict`) | 400 | `SettingValidators.cs`, `Domain/Enums/SeatGapRuleMode.cs` |
 | ST-10 | **Thông tin khu vực, tiền tệ và múi giờ rạp**: `CinemaSettingsDto` bổ sung trả về các cấu hình thương hiệu và bản địa hóa: `TimeZoneId` (mặc định `Asia/Ho_Chi_Minh`), `Locale` (mặc định `vi-VN`), `CurrencyCode` (mặc định `VND`), `CurrencySymbol` (mặc định `VNĐ`). Múi giờ rạp tập trung qua tiện ích `BusinessTime`, đảm bảo mọi logic giờ mở/đóng cửa, ranh giới ngày báo cáo, và hạn hoàn tiền đều chuẩn xác bất kể máy chủ chạy ở UTC | — | `SettingsService.cs`, `BrandOptions.cs`, `Utils/BusinessTime.cs` |
+| ST-11 | **Mật khẩu nhân viên mặc định**: `DefaultEmployeePassword` cấu hình mật khẩu cấp phát ban đầu cho tài khoản nhân viên tạo trực tiếp hoặc khi admin đặt lại mật khẩu (chuỗi ≤ 100 ký tự, mặc định `'Employee@123'`) | `PUT /admin/settings` | 400 nếu rỗng | `CinemaSettings.cs`, `SettingValidators.cs` |
 
 `GET /settings` công khai (`SettingsController`); `GET`/`PUT /admin/settings` dành `AdminOnly`.
 
@@ -1298,6 +1359,8 @@ Trợ lý chỉ đọc dữ liệu (không đặt vé, không thay đổi dữ l
 | EMP-01 | Khóa/mở tài khoản đơn lẻ: khóa thu hồi toàn bộ refresh token; nếu có hồ sơ `Employee` thì cập nhật đồng bộ `Employee.IsActive = request.IsActive`. Chặn tự khóa bản thân (`Rule_CannotLockSelf`), chặn khóa Admin đang hoạt động cuối cùng (`Rule_CannotLockLastAdmin`) | `PUT /admin/users/{id}/status` | 400 nếu tự khóa hoặc khóa Admin cuối | `UpdateUserStatusAsync`; test `EmployeeServiceUserStatusTests` |
 | EMP-02 | Đổi role: `roleId` phải tồn tại | — | 400 "roleId không tồn tại." | `UpdateUserRoleAsync` |
 | EMP-03 | Không hạ role xuống `Customer` khi còn hồ sơ `Employee` đang hoạt động | — | 409 "Không thể hạ role xuống Customer khi còn hồ sơ Employee đang hoạt động — vô hiệu hóa Employee trước." | `UpdateUserRoleAsync` |
+| EMP-07 | Tạo nhân viên trực tiếp: quản trị viên tạo ngay tài khoản nhân viên kích hoạt sẵn với vai trò `Employee`, chức vụ được phân công, mật khẩu mặc định rạp (`DefaultEmployeePassword`) và cờ `MustChangePassword = true` mà không cần chờ gửi email kích hoạt | `POST /admin/employees/direct` | 201 Created | `EmployeeService.CreateEmployeeDirectAsync` |
+| EMP-08 | Đặt lại mật khẩu nhân viên: quản trị viên đặt lại mật khẩu nhân viên về mật khẩu mặc định rạp, kích hoạt lại `MustChangePassword = true` và thu hồi toàn bộ refresh token cũ của nhân viên | `POST /admin/employees/{id}/reset-password` | 200 OK | `EmployeeService.ResetEmployeePasswordAsync` |
 | EMP-04 | Tạo hồ sơ nhân viên: user phải tồn tại (404), chưa có hồ sơ (409 "userId đã có hồ sơ Employee."), role phải là Admin hoặc Employee (422), `positionId` tồn tại (404) | — | như cột trước | `CreateEmployeeAsync` |
 | EMP-05 | Sửa hồ sơ: `positionId` phải tồn tại | — | 400 "positionId không tồn tại." | `UpdateEmployeeAsync` |
 | EMP-06 | **Tra cứu khách hàng cho quầy vé**: nhân viên hoặc admin tìm kiếm khách hàng theo 4 số cuối điện thoại hoặc từ khóa tên/email (tối đa `limit` kết quả). Hạng thành viên và % giảm giá trả về được tính thời gian thực từ sổ điểm 12 tháng (`LoyaltyWindow.GetStandingsAsync`) | `GET /admin/users/customers` (StaffOnly) | Danh sách `CustomerLookupItemDto` | `EmployeeService.SearchCustomersAsync`, `AdminUsersController` |
@@ -1344,6 +1407,63 @@ Trợ lý chỉ đọc dữ liệu (không đặt vé, không thay đổi dữ l
 ---
 
 <a id="s05"></a>
+
+---
+
+## 4.20 Nhập xuất dữ liệu bất đồng bộ (Import/Export Engine)
+
+**Mục đích:** Cung cấp khung nhập/xuất dữ liệu lớn chuẩn hóa, hiệu năng cao cho các phân hệ quản trị (Phim, Suất chiếu, Sơ đồ ghế, Đơn đặt vé, Thanh toán, Báo cáo doanh thu), hỗ trợ Excel (`.xlsx`), CSV (`.csv`) và PDF.
+
+```mermaid
+flowchart TD
+  subgraph Client["Trình duyệt Quản trị viên"]
+    REQ[Gửi yêu cầu Nhập / Xuất]
+    PREVIEW[Xem kết quả Dry-Run Preview]
+    NOTIF[Lắng nghe tiến trình qua SignalR]
+    DOWN[Tải file kết quả]
+  end
+  subgraph Engine["Import/Export Engine"]
+    VAL[Trình xác thực dòng dữ liệu & Định dạng]
+    GUARD[Concurrency Guard kiểm soát song song]
+    TRACK[Job Tracker ghi nhận trạng thái CSDL]
+    MASK[PersonalDataMasker che giấu PII]
+  end
+  subgraph Hangfire["Hangfire Queue"]
+    EX_JOB[ExportJob]
+    IM_JOB[ImportApplyJob]
+    CLEAN_JOB[CleanupImportExportFilesJob]
+  end
+  DB[(PostgreSQL)]
+  STORAGE[(Kho lưu trữ tệp tạm)]
+
+  REQ --> GUARD --> VAL
+  VAL --> PREVIEW
+  PREVIEW -->|Xác nhận Apply| TRACK --> IM_JOB
+  REQ -->|Tác vụ Export lớn| TRACK --> EX_JOB
+  EX_JOB --> MASK --> STORAGE
+  IM_JOB --> DB
+  EX_JOB -.->|SignalR job.progress| NOTIF
+  IM_JOB -.->|SignalR job.progress| NOTIF
+  CLEAN_JOB --> STORAGE
+  DOWN --> STORAGE
+```
+
+| Mã | Mô tả | Điều kiện | Kết quả | Nguồn |
+|---|---|---|---|---|
+| IE-01 | Quy trình Nhập liệu 2 bước (Two-phase Wizard): Bước 1 gửi file qua `.../import/preview` để kiểm tra toàn bộ dữ liệu (Dry Run) không làm thay đổi DB, trả về số dòng đạt/lỗi và file chi tiết lỗi (`.../import/errors/{id}`). Bước 2 bấm `.../import/apply` để áp dụng ghi vào DB | Giới hạn dung lượng request `ImportLimits.MaxRequestBytes` (10 MB) | File mẫu, preview kết quả hoặc nạp DB | `IImportService<T>`, `MovieImportService`, `ShowtimeImportService` |
+| IE-02 | Xuất dữ liệu linh hoạt: Tập dữ liệu nhỏ xuất đồng bộ trả file trực tiếp (`.../export`). Tập dữ liệu lớn đưa vào tác vụ nền Hangfire (`POST .../export-jobs`) với thanh tiến độ thời gian thực | Policy `ExportPolicy` (3 req/phút) | Trả file trực tiếp hoặc mã `jobId` 202 Accepted | `IExportJobService.cs`, `ExportJob.cs` |
+| IE-03 | Quản lý tác vụ tập trung (`AdminImportExportController`): Tra cứu lịch sử tác vụ (`GET /admin/import-export/jobs`), xem chi tiết (`GET .../jobs/{id}`), tải file kết quả (`GET .../jobs/{id}/download`) | `AdminOnly` | Danh sách tác vụ, tiến độ %, trạng thái | `IImportExportJobService.cs`, `AdminImportExportController.cs` |
+| IE-04 | Bảo vệ dữ liệu cá nhân (PII Masking): Khi xuất danh sách đặt vé (`Bookings`) và thanh toán (`Payments`), email và số điện thoại của khách hàng được tự động che mặt nạ bảo vệ quyền riêng tư qua `PersonalDataMasker` | Tác vụ xuất dữ liệu nhạy cảm | Cột Email và Phone được mask tự động | `PersonalDataMasker.cs`, `BookingsExportService.cs` |
+| IE-05 | Kiểm soát đồng thời (Concurrency Guard): `ImportExportConcurrencyGuard` ngăn chặn một người dùng gửi lặp lại nhiều tác vụ import/export nặng cùng lúc | Có tác vụ đang chạy | Chặn với lỗi xung đột tác vụ nền | `ImportExportConcurrencyGuard.cs` |
+| IE-06 | Dọn dẹp tệp tạm tự động: File xuất lưu trên đĩa tạm có hạn mặc định 24 giờ (`ExpiresAt`). Hangfire job `CleanupImportExportFilesJob` và `CleanupImportSessionsJob` định kỳ hàng giờ dọn sạch các tệp và phiên quá hạn | Chạy định kỳ | Giải phóng tài nguyên lưu trữ | `CleanupImportExportFilesJob.cs` |
+
+**Endpoint Quản lý Tác vụ Nhập / Xuất (`AdminImportExportController`):**
+
+| Method | Route | Quyền | Hàm |
+|---|---|---|---|
+| GET | `/api/v1/admin/import-export/jobs` | AdminOnly | `AdminImportExport.GetJobs` |
+| GET | `/api/v1/admin/import-export/jobs/{id:guid}` | AdminOnly | `AdminImportExport.GetJob` |
+| GET | `/api/v1/admin/import-export/jobs/{id:guid}/download` | AdminOnly · RL `export` | `AdminImportExport.DownloadJobFile` |
 
 # 5. Các luồng xuyên suốt (end-to-end)
 
@@ -1608,6 +1728,10 @@ Cấu hình trong `Cinema.Api/Program.cs`: lưu trữ PostgreSQL (`Hangfire.Post
 | `ExpireLoyaltyPointsJob` (id `RecurringJobIds.ExpireLoyaltyPoints`) | Recurring, `BackgroundJobs:ExpireLoyaltyPointsCron` mặc định `5 * * * *` (phút thứ 5 mỗi giờ, múi giờ Việt Nam) | `LoyaltyExpiryService.RecalculateAllAsync`: quét toàn bộ sổ điểm `LoyaltyPointEntries` trong cửa sổ 12 tháng (`EarnedAt > now - 12 tháng`), tính lại tổng điểm và hạng cho toàn bộ `CustomerProfiles` có điểm hoặc hạng; cập nhật lại DB nếu phát hiện lệch điểm do hết hạn | Có (tính toán thuần túy dựa trên sổ điểm) | Retry toàn cục | `BackgroundJobs/ExpireLoyaltyPointsJob.cs`, `Services/Bookings/LoyaltyExpiryService.cs` |
 | `ShowtimeRefundJob` | Enqueue (một lần/payment) khi rạp hủy suất, từ `ShowtimeService.DeleteShowtimeAsync` | Hoàn **toàn bộ** `Payment.Amount` qua cổng; thành công → `Payment.Refunded` + email "đã hoàn tiền"; thất bại → ném lỗi để Hangfire retry; ở lần retry cuối (`RetryCount` bằng số lần cho phép) gửi email "hoàn tiền thủ công" (nếu booking có `User`) rồi vẫn ném lỗi để đánh dấu job thất bại | Có: chỉ hoàn khi `Payment.Status == Success`, booking `Cancelled`, suất `Cancelled` và phương thức không phải `Cash`; ngược lại thoát sớm (chạy lại không hoàn hai lần) | 3 lần, 30 giây / 2 phút / 10 phút | `BackgroundJobs/ShowtimeRefundJob.cs` |
 | `SendEmailJob` | Enqueue từ Auth, Booking, Payment, Showtime, `ShowtimeRefundJob` | Gọi `IEmailService.SendAsync(to, subject, html)` | Không (có thể gửi trùng nếu retry sau khi đã gửi) | Retry toàn cục 3 lần | `BackgroundJobs/SendEmailJob.cs` |
+| `ExportJob` | Enqueue từ các controller quản trị khi xuất dữ liệu lớn | Chạy truy vấn dữ liệu theo phân hệ, che giấu PII, xuất file Excel/CSV, cập nhật tiến độ qua JobTracker và SignalR, lưu file tạm 24h | Có: ghi đè file theo JobId | Retry 3 lần | `BackgroundJobs/ExportJob.cs` |
+| `ImportApplyJob` | Enqueue khi người dùng bấm áp dụng tác vụ nhập liệu lớn | Đọc dữ liệu từ phiên import tạm, kiểm tra hợp lệ và chèn hàng loạt vào CSDL, cập nhật tiến độ | Có | Retry 3 lần | `BackgroundJobs/ImportApplyJob.cs` |
+| `CleanupImportExportFilesJob` | Recurring `0 * * * *` (mỗi giờ) | Quét cơ sở dữ liệu tìm các job export đã quá hạn `ExpiresAt`, xóa file vật lý trên đĩa và đánh dấu hết hạn | Có | Retry toàn cục | `BackgroundJobs/CleanupImportExportFilesJob.cs` |
+| `CleanupImportSessionsJob` | Recurring `0 * * * *` (mỗi giờ) | Dọn dẹp các phiên import tạm thời (Dry Run) đã quá hạn mà người dùng không xác nhận áp dụng | Có | Retry toàn cục | `BackgroundJobs/CleanupImportSessionsJob.cs` |
 
 Ghi chú: có test cho `SeatExpirationService`, `ShowtimeLifecycle`, `LoyaltyExpiryService` (`LoyaltyWindowTests`) và `ShowtimeRefundJob` (thành công idempotent; cổng từ chối thì giữ ở hàng đợi thủ công, trong `ShowtimeServiceFixesTests`); `SendEmailJob` **chưa có unit test** (xem [13](#s13)).
 
@@ -1626,6 +1750,15 @@ Ghi chú: có test cho `SeatExpirationService`, `ShowtimeLifecycle`, `LoyaltyExp
 
 * Không phát realtime khi: hủy suất chiếu, `ReleaseStaleHeldSeatsAsync`, hoàn ghế sau khi khách hủy booking đã xác nhận (chỉ xác nhận có phát ở `CancelBookingAsync`: xem dòng gọi `NotifySeatReleasedAsync`; các nhánh khác **chưa xác định**).
 * Phía client: `use-showtime-hub.ts` quản lý kết nối, `use-realtime-seat-map.ts` cập nhật cache TanStack Query của sơ đồ ghế khi nhận sự kiện (chi tiết ở [10](#s10)).
+
+### Hub Quản lý Nhập / Xuất (`ImportExportHub`)
+
+* Hub `ImportExportHub` tại `/hubs/import-export` (`[Authorize]`, yêu cầu xác thực JWT qua query `?access_token=`).
+* Dùng để đẩy thông báo tiến độ tác vụ nhập/xuất bất đồng bộ trực tiếp tới người dùng sở hữu job (`Clients.User(userId)`).
+* Sự kiện phát:
+  * `job.progress`: Payload `{ jobId, progress, totalRows, processedRows }` — gửi định kỳ khi xử lý từng lô dòng dữ liệu.
+  * `job.completed`: Payload `{ jobId, fileUrl, fileName, successRows, failedRows }` — thông báo tác vụ hoàn tất, sẵn sàng tải xuống.
+  * `job.failed`: Payload `{ jobId, errorMessage }` — thông báo tác vụ gặp lỗi ngoại lệ.
 
 ---
 
@@ -1909,15 +2042,15 @@ Theo `docker-compose.yml`/`.env.example`: `docker compose up` (PostgreSQL 16 + A
 
 # 13. Kiểm thử
 
-Nguồn: `backend/tests/Cinema.UnitTests` (xUnit), `backend/tests/Cinema.IntegrationTests` (xUnit, host thử nghiệm). Đếm theo kết quả thực thi xUnit thực tế: **532 bài test backend** (420 test methods / 471 ca chạy unit test trong `Cinema.UnitTests` và 61 integration test trong `Cinema.IntegrationTests`) thuộc **55 file test**. 100% test đều vượt qua (0 failed, 0 skipped).
+Nguồn: `backend/tests/Cinema.UnitTests` (xUnit), `backend/tests/Cinema.IntegrationTests` (xUnit, host thử nghiệm). Đếm theo kết quả thực thi xUnit thực tế: **557 bài test backend** (440 test methods / 491 ca chạy unit test trong `Cinema.UnitTests` và 66 integration test trong `Cinema.IntegrationTests`) thuộc **60 file test**. 100% test đều vượt qua (0 failed, 0 skipped).
 
 ## 13.1 Tóm tắt theo module
 
 | Module | File test (số test) | Hành vi được bảo vệ (theo tên test/nội dung đọc) | Vùng chưa có test |
 |---|---|---|---|
-| Xác thực | `AuthServiceTests` (22), `RegistrationServiceTests` (7), `PasswordServiceTests` (6), `JwtTokenServiceTests` (9), `AuthValidatorsTests` (15), `AuthEndpointsTests` (15, tích hợp) | Đăng ký/đăng nhập, xác thực email, refresh xoay vòng token qua HttpOnly cookie, cửa sổ ân hạn Grace Window chống race condition, thu hồi chuỗi token khi phát hiện replay attack, đặt lại mật khẩu, JWT claims, allow-list cổng quản trị, kiểm tra bộ lọc CSRF (`X-Requested-With` và CORS Whitelist), chặn nhân viên bị vô hiệu hóa hồ sơ | Đăng nhập Google end-to-end; rate limit `auth` |
+| Xác thực & Đổi mật khẩu | `AuthServiceTests` (22), `RegistrationServiceTests` (7), `PasswordServiceTests` (6), `JwtTokenServiceTests` (9), `AuthValidatorsTests` (15), `EmployeeServicePasswordTests` (9), `JwtMustChangePasswordClaimTests` (2), `PasswordServiceMustChangeTests` (5), `PublicSettingsDoesNotLeakDefaultPasswordTests` (5), `AuthEndpointsTests` (15, tích hợp), `MustChangePasswordEnforcementTests` (5, tích hợp) | Đăng ký/đăng nhập, xác thực email, refresh xoay vòng token qua HttpOnly cookie, cửa sổ ân hạn Grace Window chống race condition, thu hồi chuỗi token khi phát hiện replay attack, đặt lại mật khẩu, JWT claims, bắt buộc đổi mật khẩu lần đầu với `PasswordChangeRequiredMiddleware`, kiểm tra không lộ mật khẩu nhân viên mặc định ra client, allow-list cổng quản trị, kiểm tra CSRF (`X-Requested-With` và CORS Whitelist), chặn nhân viên bị vô hiệu hóa hồ sơ | Đăng nhập Google end-to-end; rate limit `auth` |
 | Đặt vé/giữ ghế & Hủy | `BookingServiceTests` (22), `BookingServiceSeatHoldTests` (6), `BookingCancellationServiceTests` (3), `BookingValidatorsTests` (20), `BookingFlowEndpointsTests` (6) | Giữ ghế tạo booking `Pending`, xung đột ghế rollback toàn bộ (có test đồng thời), một khách một booking `Pending` mỗi suất, giảm giá theo hạng (chỉ trên vé ghế, không giảm combo), checkout (chủ sở hữu, hết hạn, cổng chưa cấu hình), xác nhận idempotent, ghế không còn giữ → hủy booking, hủy đơn online và hoàn tiền qua cổng (`BookingCancellationService`), nhả ghế tức thì bằng `BookingSeatReleaser` (`ExecuteUpdateAsync`), hoàn tiền làm tròn theo % cấu hình (mặc định 100%), `ProcessPaymentFailure` (giữ Pending nếu hold còn hạn để retry, release ghế nếu hold đã hết) | `GetBookingsAdminAsync` lọc nâng cao |
-| Quầy/soát vé | `BookingServiceCounterCheckinTests` (18), `AdminBookingsEndpointsTests` (9) | Giữ ghế quầy (khách vãng lai dùng tên/phone request; khách có `UserId` dùng thông tin tài khoản nếu role `Customer` và đang hoạt động, chặn nếu inactive hoặc sai role hoặc 404), thu tiền mặt và tính tiền thối, thiếu tiền → 422 và booking vẫn `Pending`, check-in hợp lệ trong cửa sổ động (`CheckInOpenMinutes`) / đã check-in 409 / QR lạ 404 / trước giờ mở cửa 422 / suất đã kết thúc 422, hủy đơn pending tại quầy nhả ghế tức thì qua `CounterBookingService.CounterCancelAsync` | Xung đột ghế giữa quầy và online |
+| Quầy/soát vé & Vé PDF | `BookingServiceCounterCheckinTests` (18), `AdminBookingsEndpointsTests` (9) | Giữ ghế quầy (khách vãng lai / thành viên), thu tiền mặt và tính tiền thối, check-in quét mã QR trong cửa sổ động (`CheckInOpenMinutes`), hủy đơn pending tại quầy nhả ghế tức thì qua `CounterBookingService.CounterCancelAsync`, tự động hủy ghế khi rời trang quầy (`useCounterLeaveCancel`), xuất vé điện tử PDF qua QuestPDF | Xung đột ghế giữa quầy và online |
 | Điểm thành viên & Cửa sổ 12 tháng | `LoyaltyWindowTests` (19), `BookingServiceLoyaltyTests` (4) | Cửa sổ trượt 12 tháng (`LoyaltyWindow`), điểm cũ > 12 tháng không tính vào hạng, điểm mới trong hạn áp dụng hạng ngay cả khi cache trống; bỏ qua cache cũ khi sổ cái trống; đảo điểm giảm hạng khi hoàn tiền; hoàn một phần chỉ chạm entry của chính booking đó; giảm giá chỉ trên vé ghế; làm tròn giá giảm; booking không có sổ cái vẫn giảm `TotalSpent`; `RecalculateAllAsync` dọn sạch điểm hết hạn và đồng bộ lại cache profile & tier idempotent | Đảo điểm khi hủy suất chiếu hàng loạt (chỉ được kiểm gián tiếp qua `ShowtimeRefundJob`) |
 | Sơ đồ ghế & Quy tắc khoảng trống | `SeatLayoutRulesTests` (19), `RoomServiceSeatLayoutTests` (8), `AdminRoomsEndpointsTests` (8) | 3 chế độ `SeatGapRuleMode` (`Strict`: bắt ghế đơn sát tường và chia hàng; `AllowEdge`: cho phép ghế đơn sát tường nhưng cấm giữa 2 khoảng trống; `Off`: cho phép mọi khoảng trống); ghế đôi bắt buộc chọn cả cặp bất kể mode; gợi ý ghế (`Suggest`) tìm ghế liền kề không để lại ghế đơn sát mép, tính tổng tiền, không tách ghế đôi, giới hạn top mỗi hàng; chặn đổi sơ đồ khi có suất sắp tới | — |
 | Cài đặt hệ thống | `SettingsServiceTests` (11), `CinemaSettingsPolicyTests` (10) | Đọc/cập nhật `CinemaSettings` (Id=1); cập nhật các tham số vận hành mở rộng; cấu hình thương hiệu và múi giờ `BrandOptions` (`TimeZoneId`, `Locale`, `CurrencyCode`, `CurrencySymbol`); kiểm tra chính sách fallback options khi DB thiếu cấu hình; kiểm tra giới hạn động đặt vé `EnsureWithinBookingLimitsAsync` (`MaxSeatsPerBooking`, `MaxComboQuantity`); kiểm tra biên `CancelRefundPercent` (0–100, mặc định 100%), `CancelDeadlineHours` (≥0, mặc định 2h), `OperatingTime` hợp lệ; giữ nguyên giá trị khi trường tùy chọn bị bỏ qua | — |
@@ -1931,6 +2064,7 @@ Nguồn: `backend/tests/Cinema.UnitTests` (xUnit), `backend/tests/Cinema.Integra
 | Tiện ích | `CodeGeneratorTests` (5), `DateTimeUtilsTests` (9), `EmailTemplatesTests` (7), `EnumConvertersTests` (10) | Sinh mã, thời gian, template email, enum | — |
 | Cấu hình | `ProductionOptionsValidatorTests` (5) | Kiểm tra cấu hình bắt buộc ở Production (kèm `BrandOptions`: `TimeZoneId`, `Locale`, `CurrencyCode`, `CurrencySymbol`) | — |
 | Realtime | `SignalRShowtimeHubTests` (3, tích hợp) | Nhận sự kiện theo nhóm suất | Xác thực hub |
+| Nhập / Xuất dữ liệu | `SeatLayoutImportProcessorTests` (6), `ImportExportJobTrackerTests` (8), `ImportConcurrencyGuardTests` (4), `PersonalDataMaskerTests` (6) | Quy trình nhập sơ đồ ghế dạng Matrix và List, ghép cặp ghế đôi tự động, theo dõi trạng thái tác vụ nền, che giấu dữ liệu PII (email, SĐT), chặn thao tác trùng lặp | Export báo cáo PDF lớn |
 
 ## 13.2 Vùng chưa có test
 

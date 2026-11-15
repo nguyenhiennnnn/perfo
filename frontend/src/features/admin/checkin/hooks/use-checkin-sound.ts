@@ -1,4 +1,5 @@
 import { useCallback, useRef } from "react";
+import { CHECKIN_SOUND } from "@/config/default-constants";
 
 export function useCheckinSound() {
   const contextRef = useRef<AudioContext | null>(null);
@@ -30,8 +31,8 @@ export function useCheckinSound() {
     [getContext],
   );
 
-  const playSuccess = useCallback(() => playTone(800, 0.15), [playTone]);
-  const playError = useCallback(() => playTone(200, 0.35), [playTone]);
+  const playSuccess = useCallback(() => playTone(CHECKIN_SOUND.success.frequencyHz, CHECKIN_SOUND.success.durationSeconds), [playTone]);
+  const playError = useCallback(() => playTone(CHECKIN_SOUND.error.frequencyHz, CHECKIN_SOUND.error.durationSeconds), [playTone]);
 
   return { playSuccess, playError };
 }

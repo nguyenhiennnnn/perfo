@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,8 +11,8 @@ public class AgeRatingConfiguration : IEntityTypeConfiguration<AgeRating>
     {
         builder.ToTable("AgeRatings");
         builder.HasKey(x => x.AgeRatingId);
-        builder.Property(x => x.Code).HasMaxLength(10).IsRequired();
+        builder.Property(x => x.Code).HasMaxLength(FieldLengths.AgeRatingCode).IsRequired();
         builder.HasIndex(x => x.Code).IsUnique();
-        builder.Property(x => x.Description).HasMaxLength(255);
+        builder.Property(x => x.Description).HasMaxLength(FieldLengths.Description);
     }
 }

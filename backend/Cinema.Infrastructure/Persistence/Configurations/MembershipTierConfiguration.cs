@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,7 +18,7 @@ public class MembershipTierConfiguration : IEntityTypeConfiguration<MembershipTi
                 )
         );
         builder.HasKey(x => x.TierId);
-        builder.Property(x => x.TierName).HasMaxLength(50).IsRequired();
+        builder.Property(x => x.TierName).HasMaxLength(FieldLengths.Name).IsRequired();
         builder.HasIndex(x => x.TierName).IsUnique();
         builder.Property(x => x.MinPoints).HasDefaultValue(0);
         builder.Property(x => x.DiscountPercent).HasColumnType("decimal(5,2)").HasDefaultValue(0m);

@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +11,7 @@ public class ScreenTypeConfiguration : IEntityTypeConfiguration<ScreenType>
     {
         builder.ToTable("ScreenTypes");
         builder.HasKey(x => x.ScreenTypeId);
-        builder.Property(x => x.Name).HasMaxLength(50).IsRequired();
+        builder.Property(x => x.Name).HasMaxLength(FieldLengths.Name).IsRequired();
         builder.HasIndex(x => x.Name).IsUnique();
     }
 }

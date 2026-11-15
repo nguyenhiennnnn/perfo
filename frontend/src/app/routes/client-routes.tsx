@@ -6,6 +6,7 @@ import AuthLayout from "@/layouts/client/auth-layout";
 import { CustomerProtectedRoute } from "./protected-route/customer-protected-route";
 import { GuestRoute } from "./protected-route/guest-route";
 import { lazyRoute } from "./lazy-route";
+import { ROUTES } from "@/config/routes";
 
 const BookingPage = lazyRoute(() => import("@/features/client/bookings/pages/booking-page"));
 const BookingResultPage = lazyRoute(() => import("@/features/client/bookings/pages/booking-result-page"));
@@ -58,8 +59,8 @@ export const clientRoutes: RouteObject[] = [
     ],
   },
   {
-    path: "/auth",
-    element: <GuestRoute redirectTo="/" />,
+    path: ROUTES.auth.root,
+    element: <GuestRoute redirectTo={ROUTES.home} />,
     children: [
       {
         element: <AuthLayout />,

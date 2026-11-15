@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { matchRoutes, type createBrowserRouter, type RouteObject } from "react-router";
+import { ROUTES } from "@/config/routes";
 
 type DataRouter = ReturnType<typeof createBrowserRouter>;
 
@@ -8,7 +9,7 @@ interface LazyEntry {
   lazy: NonNullable<RouteObject["lazy"]>;
 }
 
-const ADMIN_PREFIX = "/admin";
+const ADMIN_PREFIX = ROUTES.admin.root;
 const IDLE_TIMEOUT_MS = 3000;
 const IDLE_GAP_MS = 150;
 

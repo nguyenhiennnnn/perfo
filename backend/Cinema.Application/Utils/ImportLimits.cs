@@ -1,3 +1,5 @@
+using Cinema.Shared.Constants;
+
 namespace Cinema.Application.Utils;
 
 public static class ImportLimits
@@ -10,6 +12,6 @@ public static class ImportLimits
     public const int MaxCompressionRatio = 100;
     public const long RatioCheckMinBytes = 1024 * 1024;
     public const int MaxContentTypesBytes = 1024 * 1024;
-    public const int MaxFileNameLength = 255;
+    public const int MaxFileNameLength = FieldLengths.FileName;
     public static readonly TimeSpan PreviewTtl = TimeSpan.FromMinutes(30);
 }

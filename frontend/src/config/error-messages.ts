@@ -1,3 +1,4 @@
+import { HTTP_STATUS } from "./http-status";
 export interface StatusErrorRule {
   message: string;
   preferServerMessage?: boolean;
@@ -29,6 +30,6 @@ export const ERROR_MESSAGES = {
   toastTitle: "Đã có lỗi xảy ra",
 } as const;
 
-export const SILENT_TOAST_STATUSES: readonly number[] = [401];
+export const SILENT_TOAST_STATUSES: readonly number[] = [HTTP_STATUS.unauthorized];
 
 export const ERROR_TOAST_DEDUPE_MS = 3000;

@@ -13,6 +13,7 @@ import { ENV } from "@/config/env";
 import { ROUTES } from "@/config/routes";
 import { API_TIMEOUT_MS } from "@/config/default-constants";
 import { ENDPOINTS } from "@/api/endpoints";
+import { HTTP_STATUS } from "@/config/http-status";
 
 declare module "axios" {
   interface InternalAxiosRequestConfig {
@@ -184,7 +185,7 @@ apiClient.interceptors.response.use(
     }
 
     if (
-      error.response?.status === 401 &&
+      error.response?.status === HTTP_STATUS.unauthorized &&
       originalRequest &&
       !originalRequest._retry &&
       !isAuthExcludedUrl(originalRequest.url)
@@ -209,7 +210,7 @@ apiClient.interceptors.response.use(
 
         if (
           !isNetworkError &&
-          (!refreshStatus || refreshStatus === 401 || refreshStatus === 403)
+          (!refreshStatus || refreshStatus === HTTP_STATUS.unauthorized || refreshStatus === HTTP_STATUS.forbidden)
         ) {
           logDevError(refreshError, "Token Refresh — phiên đăng nhập hết hạn");
           useAuthStore.getState().logout();

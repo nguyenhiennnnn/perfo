@@ -1,6 +1,7 @@
 using Cinema.Application.DTOs.Users;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using FluentValidation;
 
@@ -12,13 +13,13 @@ public class UpdateProfileRequestValidator : AbstractValidator<UpdateProfileRequ
 
     public UpdateProfileRequestValidator()
     {
-        RuleFor(x => x.FullName).NotEmpty().MaximumLength(100);
+        RuleFor(x => x.FullName).NotEmpty().MaximumLength(FieldLengths.FullName);
         RuleFor(x => x.Phone)
             .Matches(PhoneRules.Pattern)
             .When(x => !string.IsNullOrEmpty(x.Phone))
             .WithMessage(Messages.Validation_Phone_Invalid)
-            .MaximumLength(20);
-        RuleFor(x => x.Avatar).MaximumLength(255);
+            .MaximumLength(FieldLengths.Phone);
+        RuleFor(x => x.Avatar).MaximumLength(FieldLengths.Url);
         RuleFor(x => x.Gender)
             .Must(g => ValidGenders.Contains(g))
             .When(x => x.Gender is not null)

@@ -1,5 +1,6 @@
 using Cinema.Application.DTOs.Auth;
 using Cinema.Application.Utils;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using FluentValidation;
 
@@ -9,14 +10,14 @@ public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 {
     public RegisterRequestValidator()
     {
-        RuleFor(x => x.FullName).NotEmpty().MaximumLength(100);
-        RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength(150);
+        RuleFor(x => x.FullName).NotEmpty().MaximumLength(FieldLengths.FullName);
+        RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength(FieldLengths.Email);
         RuleFor(x => x.Password).StrongPassword();
         RuleFor(x => x.Phone)
             .Matches(PhoneRules.Pattern)
             .When(x => !string.IsNullOrEmpty(x.Phone))
             .WithMessage(Messages.Validation_Phone_Invalid)
-            .MaximumLength(20);
+            .MaximumLength(FieldLengths.Phone);
     }
 }
 

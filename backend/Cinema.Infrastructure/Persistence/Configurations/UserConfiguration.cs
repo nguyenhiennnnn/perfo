@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,12 +14,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             t => t.HasCheckConstraint("CK_Users_Gender", "\"Gender\" IN ('Male','Female','Other')")
         );
         builder.HasKey(x => x.UserId);
-        builder.Property(x => x.FullName).HasMaxLength(100).IsRequired();
-        builder.Property(x => x.Email).HasMaxLength(150).IsRequired();
+        builder.Property(x => x.FullName).HasMaxLength(FieldLengths.FullName).IsRequired();
+        builder.Property(x => x.Email).HasMaxLength(FieldLengths.Email).IsRequired();
         builder.HasIndex(x => x.Email).IsUnique();
         builder.Property(x => x.PasswordHash).HasMaxLength(256).IsRequired();
-        builder.Property(x => x.Phone).HasMaxLength(20);
-        builder.Property(x => x.Avatar).HasMaxLength(255);
+        builder.Property(x => x.Phone).HasMaxLength(FieldLengths.Phone);
+        builder.Property(x => x.Avatar).HasMaxLength(FieldLengths.Url);
         builder.Property(x => x.GoogleId).HasMaxLength(64);
         builder
             .HasIndex(x => x.GoogleId)

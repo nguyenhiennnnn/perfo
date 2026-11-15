@@ -27,14 +27,14 @@ public class HoldSeatsRequestValidator : AbstractValidator<HoldSeatsRequest>
         RuleFor(x => x.CustomerName)
             .NotEmpty()
             .WithMessage(Messages.Validation_CustomerName_Required)
-            .MaximumLength(100)
+            .MaximumLength(FieldLengths.FullName)
             .WithMessage(Messages.Validation_CustomerName_MaxLength100);
 
         RuleFor(x => x.CustomerPhone)
             .Matches(PhoneRules.Pattern)
             .When(x => !string.IsNullOrEmpty(x.CustomerPhone))
             .WithMessage(Messages.Validation_Phone_Invalid)
-            .MaximumLength(20);
+            .MaximumLength(FieldLengths.Phone);
 
         RuleFor(x => x.SeatIds).NotEmpty().WithMessage(Messages.Validation_Seats_AtLeastOne);
 

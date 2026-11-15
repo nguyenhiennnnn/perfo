@@ -4,6 +4,7 @@ import { refreshAccessToken } from "@/api/axios";
 import { useAuthStore } from "@/stores/auth-store";
 import { sessionHint } from "@/lib/session-hint";
 import { logDevError } from "@/lib/error";
+import { HTTP_STATUS } from "@/config/http-status";
 
 async function restoreSession(source: string) {
   try {
@@ -12,7 +13,7 @@ async function restoreSession(source: string) {
     logDevError(err, source);
 
     const status = (err as AxiosError)?.response?.status;
-    if (status === 401 || status === 403) {
+    if (status === HTTP_STATUS.unauthorized || status === HTTP_STATUS.forbidden) {
       useAuthStore.getState().logout();
     }
   }

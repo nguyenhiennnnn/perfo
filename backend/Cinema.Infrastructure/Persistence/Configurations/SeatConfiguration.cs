@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,7 +14,7 @@ public class SeatConfiguration : IEntityTypeConfiguration<Seat>
             t => t.HasCheckConstraint("CK_Seats_SeatNumber", "\"SeatNumber\" > 0")
         );
         builder.HasKey(x => x.SeatId);
-        builder.Property(x => x.SeatRow).HasMaxLength(5).IsRequired();
+        builder.Property(x => x.SeatRow).HasMaxLength(FieldLengths.SeatRow).IsRequired();
         builder.Property(x => x.IsActive).HasDefaultValue(true);
 
         builder

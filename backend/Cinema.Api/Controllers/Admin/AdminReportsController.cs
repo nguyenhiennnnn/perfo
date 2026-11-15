@@ -165,7 +165,7 @@ public class AdminReportsController(
     }
 
     private static int ResolveLimit(int? limit) =>
-        Math.Clamp(limit ?? Pagination.DefaultPageSize, 1, 100);
+        Math.Clamp(limit ?? Pagination.DefaultPageSize, 1, Pagination.MaxPageSize);
 
     private FileStreamResult ToFileResult(ExportFileDto file) =>
         File(file.Content, file.ContentType, file.FileName);

@@ -9,6 +9,7 @@ import {
   SILENT_TOAST_STATUSES,
   STATUS_ERROR_RULES,
 } from "@/config/error-messages";
+import { HTTP_STATUS } from "@/config/http-status";
 
 export interface ApiErrorShape {
   message: string;
@@ -36,7 +37,7 @@ export function extractApiError(error: unknown): ApiErrorShape {
 /** 403 do backend chặn vì tài khoản phải đổi mật khẩu trước. */
 export function isPasswordChangeRequiredError(error: unknown): boolean {
   const { statusCode, errorCode } = extractApiError(error);
-  return statusCode === 403 && errorCode === API_ERROR_CODES.passwordChangeRequired;
+  return statusCode === HTTP_STATUS.forbidden && errorCode === API_ERROR_CODES.passwordChangeRequired;
 }
 
 export function logDevError(error: unknown, context?: string): void {
@@ -103,13 +104,13 @@ export function getDisplayMessage(
   }
 
   if (statusCode) {
-    if (options?.preferServerMessage && statusCode < 500) {
+    if (options?.preferServerMessage && statusCode < HTTP_STATUS.serverError) {
       const serverMessage = getServerMessage(error);
       if (serverMessage) return serverMessage;
     }
 
     const rule =
-      statusCode >= 500 ? SERVER_ERROR_RULE : STATUS_ERROR_RULES[statusCode];
+      statusCode >= HTTP_STATUS.serverError ? SERVER_ERROR_RULE : STATUS_ERROR_RULES[statusCode];
     if (rule) {
       return rule.preferServerMessage ? message || rule.message : rule.message;
     }

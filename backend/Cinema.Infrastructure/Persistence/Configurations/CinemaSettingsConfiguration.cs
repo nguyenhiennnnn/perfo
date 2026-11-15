@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,10 +17,10 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder.Property(x => x.Id).ValueGeneratedNever();
         builder.Property(x => x.Name).HasMaxLength(150).IsRequired();
         builder.Property(x => x.Address).HasMaxLength(255).IsRequired();
-        builder.Property(x => x.Phone).HasMaxLength(20);
-        builder.Property(x => x.Email).HasMaxLength(150);
-        builder.Property(x => x.TaxCode).HasMaxLength(50);
-        builder.Property(x => x.LogoUrl).HasMaxLength(255);
+        builder.Property(x => x.Phone).HasMaxLength(FieldLengths.Phone);
+        builder.Property(x => x.Email).HasMaxLength(FieldLengths.Email);
+        builder.Property(x => x.TaxCode).HasMaxLength(FieldLengths.Name);
+        builder.Property(x => x.LogoUrl).HasMaxLength(FieldLengths.Url);
         builder
             .Property(x => x.DefaultEmployeePassword)
             .HasMaxLength(100)

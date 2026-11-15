@@ -32,7 +32,7 @@ public sealed class SeatLayoutImportProcessor(
 ) : ImportProcessorBase<SeatLayoutImportRow>(fileReader)
 {
     private const int MaxCoupleGroupLength = 50;
-    private const int MaxSeatRowLength = 5;
+    private const int MaxSeatRowLength = FieldLengths.SeatRow;
     private const int SampleSeatCount = 5;
     private const string TrueKey = "true";
     private const string FalseKey = "false";

@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,7 +14,7 @@ public class ComboConfiguration : IEntityTypeConfiguration<Combo>
         builder.Property(x => x.Name).HasMaxLength(150).IsRequired();
         builder.Property(x => x.Description).HasMaxLength(500);
         builder.Property(x => x.Price).HasColumnType("decimal(18,2)");
-        builder.Property(x => x.ImageUrl).HasMaxLength(255);
+        builder.Property(x => x.ImageUrl).HasMaxLength(FieldLengths.Url);
         builder.Property(x => x.IsActive).HasDefaultValue(true);
     }
 }

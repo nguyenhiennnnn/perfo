@@ -28,6 +28,7 @@ import type {
   PositionDto,
   ScreenTypeDto,
 } from "@/features/admin/catalog/types";
+import { HTTP_STATUS } from "@/config/http-status";
 
 const QUICK_CREATE_ROLE = Role.Admin;
 
@@ -51,7 +52,7 @@ function useQuickCreate<TDto>(config: QuickCreateConfig<TDto>) {
       try {
         return await config.create(name);
       } catch (error) {
-        if (extractApiError(error).statusCode === 409 && config.findExisting) {
+        if (extractApiError(error).statusCode === HTTP_STATUS.conflict && config.findExisting) {
           const existing = await config.findExisting(name);
           if (existing) return existing;
         }

@@ -6,6 +6,7 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Services.Import;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using FluentValidation;
@@ -76,7 +77,7 @@ public class MovieImportProcessor(
         },
     ];
 
-    public override string Module => "movies";
+    public override string Module => ImportExportModules.Movies;
 
     public override string SheetName => Messages.Import_SheetMovies;
 

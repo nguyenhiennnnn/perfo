@@ -1,5 +1,6 @@
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -42,14 +43,14 @@ public class ImportExportJobConfiguration : IEntityTypeConfiguration<ImportExpor
         builder.Property(x => x.TotalRows).HasDefaultValue(0);
         builder.Property(x => x.SuccessRows).HasDefaultValue(0);
         builder.Property(x => x.FailedRows).HasDefaultValue(0);
-        builder.Property(x => x.FileName).HasMaxLength(255);
+        builder.Property(x => x.FileName).HasMaxLength(FieldLengths.FileName);
         builder.Property(x => x.StoragePath).HasMaxLength(500);
         builder.Property(x => x.FileUrl).HasMaxLength(1000);
-        builder.Property(x => x.ErrorMessage).HasMaxLength(2000);
-        builder.Property(x => x.ActorRole).HasMaxLength(50);
-        builder.Property(x => x.IpAddress).HasMaxLength(45);
-        builder.Property(x => x.UserAgent).HasMaxLength(500);
-        builder.Property(x => x.Parameters).HasMaxLength(4000);
+        builder.Property(x => x.ErrorMessage).HasMaxLength(FieldLengths.ErrorMessage);
+        builder.Property(x => x.ActorRole).HasMaxLength(FieldLengths.ActorRole);
+        builder.Property(x => x.IpAddress).HasMaxLength(FieldLengths.IpAddress);
+        builder.Property(x => x.UserAgent).HasMaxLength(FieldLengths.UserAgent);
+        builder.Property(x => x.Parameters).HasMaxLength(FieldLengths.JobParameters);
         builder.Property(x => x.IsSensitive).HasDefaultValue(false);
         builder.Property(x => x.IsPiiMasked).HasDefaultValue(false);
         builder

@@ -2,6 +2,7 @@ export const DEFAULT_PAGE = 1;
 export const DEFAULT_PAGE_SIZE = 10;
 
 export const SEARCH_DEBOUNCE_MS = 300;
+export const MS_PER_SECOND = 1000;
 
 export const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 export const MAX_VIDEO_SIZE_BYTES = 100 * 1024 * 1024;
@@ -84,6 +85,11 @@ export const COMBO_DESCRIPTION_MAX_LENGTH = 500;
 export const MOVIE_TITLE_MAX_LENGTH = 200;
 
 export const PERCENT_MAX = 100;
+export const TICKET_TITLE_MAX_CHARS = 25;
+export const TOP_MOVIES_CHART_LABEL_MAX_CHARS = 18;
+export const SEO_DESCRIPTION_MAX_LENGTH = 160;
+export const MOVIE_CARD_GENRES_LIMIT = 2;
+export const HERO_SLIDE_GENRES_LIMIT = 3;
 export const ROOM_CREATE_MAX_ROWS = 50;
 export const ROOM_CREATE_MAX_COLS = 50;
 export const SEAT_SUGGESTION_MAX_COUNT = 10;
@@ -93,6 +99,11 @@ export const SHOWTIME_CLONE_MAX_SOURCE_DAYS = 31;
 export const AUTO_SCHEDULE_MAX_SHOWS_PER_MOVIE = 20;
 
 export const VN_PHONE_REGEX = /^(0|\+84)[0-9]{9,10}$/;
+
+export const CHECKIN_SOUND = {
+  success: { frequencyHz: 800, durationSeconds: 0.15 },
+  error: { frequencyHz: 200, durationSeconds: 0.35 },
+} as const;
 
 export const URL_PLACEHOLDER = "https://...";
 export const YOUTUBE_EMBED_BASE_URL = "https://www.youtube.com/embed";

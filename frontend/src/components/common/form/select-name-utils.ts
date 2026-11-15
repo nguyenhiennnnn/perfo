@@ -3,6 +3,7 @@ import {
   getDisplayMessage,
   getFieldErrors,
 } from "@/lib/error";
+import { HTTP_STATUS } from "@/config/http-status";
 
 export function normalizeName(value: string): string {
   return value.normalize("NFC").replace(/\s+/g, " ").trim();
@@ -70,6 +71,6 @@ export function filterBySearch<T>(
 export function describeCreateError(error: unknown): string {
   const { statusCode } = extractApiError(error);
   const firstFieldError = Object.values(getFieldErrors(error))[0];
-  if (statusCode === 400 && firstFieldError) return firstFieldError;
+  if (statusCode === HTTP_STATUS.badRequest && firstFieldError) return firstFieldError;
   return getDisplayMessage(error);
 }

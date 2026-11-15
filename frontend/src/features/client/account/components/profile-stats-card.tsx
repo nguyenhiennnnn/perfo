@@ -1,13 +1,14 @@
 ﻿import { MembershipTierBadge } from "@/components/common/status-badge";
 import { formatCurrency, formatPoints } from "@/lib/formatters";
 import type { UserProfileDto } from "@/features/client/account/types";
+import { PERCENT_MAX } from "@/config/default-constants";
 
 interface ProfileStatsCardProps {
   profile: UserProfileDto;
 }
 
 export const ProfileStatsCard = ({ profile }: ProfileStatsCardProps) => {
-  const progress = profile.nextTier ? Math.min(100, (profile.points / (profile.points + profile.nextTier.pointsNeeded)) * 100) : 100;
+  const progress = profile.nextTier ? Math.min(PERCENT_MAX, (profile.points / (profile.points + profile.nextTier.pointsNeeded)) * PERCENT_MAX) : PERCENT_MAX;
 
   return (
     <div className="bg-card p-5">

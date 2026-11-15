@@ -1,6 +1,7 @@
 using Cinema.Application.DTOs.Employees;
 using Cinema.Application.Utils;
 using Cinema.Application.Validators.Auth;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using FluentValidation;
 
@@ -34,7 +35,7 @@ public class InviteEmployeeRequestValidator : AbstractValidator<InviteEmployeeRe
         RuleFor(x => x.FullName)
             .NotEmpty()
             .WithMessage(Messages.Validation_FullName_Required)
-            .MaximumLength(100);
+            .MaximumLength(FieldLengths.FullName);
 
         RuleFor(x => x.Email)
             .NotEmpty()
@@ -48,7 +49,7 @@ public class InviteEmployeeRequestValidator : AbstractValidator<InviteEmployeeRe
             .Matches(PhoneRules.Pattern)
             .When(x => !string.IsNullOrEmpty(x.Phone))
             .WithMessage(Messages.Validation_Phone_Invalid)
-            .MaximumLength(20)
+            .MaximumLength(FieldLengths.Phone)
             .WithMessage(Messages.Validation_Phone_MaxLength20);
 
         RuleFor(x => x.PositionId)
@@ -65,7 +66,7 @@ public class CreateEmployeeDirectRequestValidator : AbstractValidator<CreateEmpl
         RuleFor(x => x.FullName)
             .NotEmpty()
             .WithMessage(Messages.Validation_FullName_Required)
-            .MaximumLength(100);
+            .MaximumLength(FieldLengths.FullName);
 
         RuleFor(x => x.Email)
             .NotEmpty()
@@ -79,7 +80,7 @@ public class CreateEmployeeDirectRequestValidator : AbstractValidator<CreateEmpl
             .Matches(PhoneRules.Pattern)
             .When(x => !string.IsNullOrEmpty(x.Phone))
             .WithMessage(Messages.Validation_Phone_Invalid)
-            .MaximumLength(20)
+            .MaximumLength(FieldLengths.Phone)
             .WithMessage(Messages.Validation_Phone_MaxLength20);
 
         RuleFor(x => x.PositionId)

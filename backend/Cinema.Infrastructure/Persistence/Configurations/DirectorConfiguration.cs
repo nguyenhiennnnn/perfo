@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +11,7 @@ public class DirectorConfiguration : IEntityTypeConfiguration<Director>
     {
         builder.ToTable("Directors");
         builder.HasKey(x => x.DirectorId);
-        builder.Property(x => x.FullName).HasMaxLength(150).IsRequired();
-        builder.Property(x => x.AvatarUrl).HasMaxLength(255);
+        builder.Property(x => x.FullName).HasMaxLength(FieldLengths.PersonName).IsRequired();
+        builder.Property(x => x.AvatarUrl).HasMaxLength(FieldLengths.Url);
     }
 }

@@ -1,0 +1,26 @@
+namespace Cinema.Shared.Constants;
+
+/// <summary>
+/// Độ dài tối đa của các field chuỗi. Dùng chung cho validator (MaximumLength), EF configuration
+/// (HasMaxLength) và nơi cắt chuỗi, để hai phía luôn khớp nhau. Đổi giá trị ở đây cần migration.
+/// </summary>
+public static class FieldLengths
+{
+    public const int Name = 50;
+    public const int FullName = 100;
+    public const int PersonName = 150;
+    public const int Email = 150;
+    public const int Phone = 20;
+    public const int Url = 255;
+    public const int Description = 255;
+    public const int AgeRatingCode = 10;
+    public const int MovieTitle = 200;
+    public const int SeatRow = 5;
+
+    public const int FileName = 255;
+    public const int ErrorMessage = 2000;
+    public const int ActorRole = 50;
+    public const int IpAddress = 45;
+    public const int UserAgent = 500;
+    public const int JobParameters = 4000;
+}

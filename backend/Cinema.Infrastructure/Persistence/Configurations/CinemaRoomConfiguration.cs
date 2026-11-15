@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,7 +14,7 @@ public class CinemaRoomConfiguration : IEntityTypeConfiguration<CinemaRoom>
             t => t.HasCheckConstraint("CK_CinemaRooms_TotalSeats", "\"TotalSeats\" >= 0")
         );
         builder.HasKey(x => x.RoomId);
-        builder.Property(x => x.RoomName).HasMaxLength(50).IsRequired();
+        builder.Property(x => x.RoomName).HasMaxLength(FieldLengths.Name).IsRequired();
         builder.HasIndex(x => x.RoomName).IsUnique();
         builder.Property(x => x.IsActive).HasDefaultValue(true);
         builder.Property(x => x.TotalSeats).HasDefaultValue(0);

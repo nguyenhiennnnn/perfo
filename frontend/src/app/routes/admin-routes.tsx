@@ -58,7 +58,7 @@ export const adminRoutes: RouteObject[] = [
     children: [{ index: true, lazy: AdminResetPasswordPage }],
   },
   {
-    path: "/admin",
+    path: ROUTES.admin.root,
     element: <AdminProtectedRoute />,
     children: [
       { index: true, element: <AdminIndexRedirect /> },

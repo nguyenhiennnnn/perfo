@@ -2,6 +2,7 @@ using System.Globalization;
 using Cinema.Application.DTOs.Settings;
 using Cinema.Application.Validators.Auth;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using FluentValidation;
 
@@ -23,21 +24,21 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
             .MaximumLength(255)
             .WithMessage(Messages.Validation_Address_MaxLength255);
 
-        RuleFor(x => x.Phone).MaximumLength(20).WithMessage(Messages.Validation_Phone_MaxLength20);
+        RuleFor(x => x.Phone).MaximumLength(FieldLengths.Phone).WithMessage(Messages.Validation_Phone_MaxLength20);
 
         RuleFor(x => x.Email)
             .EmailAddress()
             .WithMessage(Messages.Validation_Email_Invalid)
-            .MaximumLength(150)
+            .MaximumLength(FieldLengths.Email)
             .WithMessage(Messages.Validation_Email_MaxLength150)
             .When(x => !string.IsNullOrEmpty(x.Email));
 
         RuleFor(x => x.TaxCode)
-            .MaximumLength(50)
+            .MaximumLength(FieldLengths.Name)
             .WithMessage(Messages.Validation_TaxCode_MaxLength50);
 
         RuleFor(x => x.LogoUrl)
-            .MaximumLength(255)
+            .MaximumLength(FieldLengths.Url)
             .WithMessage(Messages.Validation_LogoUrl_MaxLength255);
 
         RuleFor(x => x.OpeningTime)

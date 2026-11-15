@@ -1,4 +1,5 @@
 using Cinema.Application.DTOs.Rooms;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using FluentValidation;
 
@@ -11,7 +12,7 @@ public class CreateRoomRequestValidator : AbstractValidator<CreateRoomRequest>
         RuleFor(x => x.RoomName)
             .NotEmpty()
             .WithMessage(Messages.Validation_RoomName_Required)
-            .MaximumLength(50)
+            .MaximumLength(FieldLengths.Name)
             .WithMessage(Messages.Validation_RoomName_MaxLength50);
 
         RuleFor(x => x.ScreenTypeId)
@@ -28,7 +29,7 @@ public class UpdateRoomRequestValidator : AbstractValidator<UpdateRoomRequest>
         RuleFor(x => x.RoomName)
             .NotEmpty()
             .WithMessage(Messages.Validation_RoomName_Required)
-            .MaximumLength(50)
+            .MaximumLength(FieldLengths.Name)
             .WithMessage(Messages.Validation_RoomName_MaxLength50);
 
         RuleFor(x => x.ScreenTypeId)
@@ -45,7 +46,7 @@ public class SeatLayoutItemValidator : AbstractValidator<SeatLayoutItem>
         RuleFor(s => s.SeatRow)
             .NotEmpty()
             .WithMessage(Messages.Validation_SeatRow_Required)
-            .MaximumLength(5)
+            .MaximumLength(FieldLengths.SeatRow)
             .WithMessage(Messages.Validation_SeatRow_MaxLength5);
 
         RuleFor(s => s.SeatNumber)

@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,13 +25,13 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
             }
         );
         builder.HasKey(x => x.MovieId);
-        builder.Property(x => x.Title).HasMaxLength(200).IsRequired();
-        builder.Property(x => x.OriginalTitle).HasMaxLength(200);
+        builder.Property(x => x.Title).HasMaxLength(FieldLengths.MovieTitle).IsRequired();
+        builder.Property(x => x.OriginalTitle).HasMaxLength(FieldLengths.MovieTitle);
         builder.Property(x => x.Description);
         builder.Property(x => x.ReleaseDate).HasColumnType("date");
-        builder.Property(x => x.Subtitle).HasMaxLength(50);
-        builder.Property(x => x.PosterUrl).HasMaxLength(255);
-        builder.Property(x => x.TrailerUrl).HasMaxLength(255);
+        builder.Property(x => x.Subtitle).HasMaxLength(FieldLengths.Name);
+        builder.Property(x => x.PosterUrl).HasMaxLength(FieldLengths.Url);
+        builder.Property(x => x.TrailerUrl).HasMaxLength(FieldLengths.Url);
         builder
             .Property(x => x.Status)
             .HasConversion<string>()

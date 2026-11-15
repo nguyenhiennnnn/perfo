@@ -1,5 +1,6 @@
 using Cinema.Application.DTOs.Catalog;
 using Cinema.Application.Validators.Common;
+using Cinema.Shared.Constants;
 using FluentValidation;
 
 namespace Cinema.Application.Validators.Catalog;
@@ -8,7 +9,7 @@ public class UpsertLanguageRequestValidator : AbstractValidator<UpsertLanguageRe
 {
     public UpsertLanguageRequestValidator()
     {
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(50).NoControlCharacters();
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(FieldLengths.Name).NoControlCharacters();
     }
 }
 
@@ -16,7 +17,7 @@ public class UpsertGenreRequestValidator : AbstractValidator<UpsertGenreRequest>
 {
     public UpsertGenreRequestValidator()
     {
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(50).NoControlCharacters();
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(FieldLengths.Name).NoControlCharacters();
     }
 }
 
@@ -24,7 +25,7 @@ public class UpsertScreenTypeRequestValidator : AbstractValidator<UpsertScreenTy
 {
     public UpsertScreenTypeRequestValidator()
     {
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(50).NoControlCharacters();
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(FieldLengths.Name).NoControlCharacters();
     }
 }
 
@@ -32,7 +33,7 @@ public class UpsertSeatTypeRequestValidator : AbstractValidator<UpsertSeatTypeRe
 {
     public UpsertSeatTypeRequestValidator()
     {
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(50);
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(FieldLengths.Name);
         RuleFor(x => x.PriceMultiplier).GreaterThan(0);
     }
 }
@@ -41,7 +42,7 @@ public class UpsertMembershipTierRequestValidator : AbstractValidator<UpsertMemb
 {
     public UpsertMembershipTierRequestValidator()
     {
-        RuleFor(x => x.TierName).NotEmpty().MaximumLength(50);
+        RuleFor(x => x.TierName).NotEmpty().MaximumLength(FieldLengths.Name);
         RuleFor(x => x.MinPoints).GreaterThanOrEqualTo(0);
         RuleFor(x => x.DiscountPercent).InclusiveBetween(0, 100);
     }
@@ -51,8 +52,8 @@ public class UpsertAgeRatingRequestValidator : AbstractValidator<UpsertAgeRating
 {
     public UpsertAgeRatingRequestValidator()
     {
-        RuleFor(x => x.Code).NotEmpty().MaximumLength(10).NoControlCharacters();
-        RuleFor(x => x.Description).MaximumLength(255);
+        RuleFor(x => x.Code).NotEmpty().MaximumLength(FieldLengths.AgeRatingCode).NoControlCharacters();
+        RuleFor(x => x.Description).MaximumLength(FieldLengths.Description);
     }
 }
 
@@ -60,8 +61,8 @@ public class UpsertPersonRequestValidator : AbstractValidator<UpsertPersonReques
 {
     public UpsertPersonRequestValidator()
     {
-        RuleFor(x => x.FullName).NotEmpty().MaximumLength(150).NoControlCharacters();
-        RuleFor(x => x.AvatarUrl).MaximumLength(255);
+        RuleFor(x => x.FullName).NotEmpty().MaximumLength(FieldLengths.PersonName).NoControlCharacters();
+        RuleFor(x => x.AvatarUrl).MaximumLength(FieldLengths.Url);
     }
 }
 
@@ -69,7 +70,7 @@ public class UpsertPositionRequestValidator : AbstractValidator<UpsertPositionRe
 {
     public UpsertPositionRequestValidator()
     {
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(50).NoControlCharacters();
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(FieldLengths.Name).NoControlCharacters();
     }
 }
 
@@ -77,6 +78,6 @@ public class QuickCreatePersonRequestValidator : AbstractValidator<QuickCreatePe
 {
     public QuickCreatePersonRequestValidator()
     {
-        RuleFor(x => x.FullName).NotEmpty().MaximumLength(150).NoControlCharacters();
+        RuleFor(x => x.FullName).NotEmpty().MaximumLength(FieldLengths.PersonName).NoControlCharacters();
     }
 }

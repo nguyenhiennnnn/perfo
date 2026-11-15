@@ -1,6 +1,7 @@
 using Cinema.Application.DTOs.Movies;
 using Cinema.Application.Options;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using FluentValidation;
 using Microsoft.Extensions.Options;
@@ -14,7 +15,7 @@ public class MovieCastItemRequestValidator : AbstractValidator<MovieCastItemRequ
         RuleFor(x => x.ActorId).GreaterThan(0).WithMessage(Messages.Validation_ActorId_Positive);
 
         RuleFor(x => x.CharacterName)
-            .MaximumLength(150)
+            .MaximumLength(FieldLengths.PersonName)
             .WithMessage(Messages.Validation_CharacterName_MaxLength150);
     }
 }
@@ -28,11 +29,11 @@ public class UpsertMovieRequestValidator : AbstractValidator<UpsertMovieRequest>
         RuleFor(x => x.Title)
             .NotEmpty()
             .WithMessage(Messages.Validation_MovieTitle_Required)
-            .MaximumLength(200)
+            .MaximumLength(FieldLengths.MovieTitle)
             .WithMessage(Messages.Validation_MovieTitle_MaxLength200);
 
         RuleFor(x => x.OriginalTitle)
-            .MaximumLength(200)
+            .MaximumLength(FieldLengths.MovieTitle)
             .WithMessage(Messages.Validation_OriginalTitle_MaxLength200);
 
         RuleFor(x => x.DurationMinutes)
@@ -55,15 +56,15 @@ public class UpsertMovieRequestValidator : AbstractValidator<UpsertMovieRequest>
             .WithMessage(Messages.Validation_AgeRatingId_Positive);
 
         RuleFor(x => x.Subtitle)
-            .MaximumLength(50)
+            .MaximumLength(FieldLengths.Name)
             .WithMessage(Messages.Validation_Subtitle_MaxLength50);
 
         RuleFor(x => x.PosterUrl)
-            .MaximumLength(255)
+            .MaximumLength(FieldLengths.Url)
             .WithMessage(Messages.Validation_PosterUrl_MaxLength255);
 
         RuleFor(x => x.TrailerUrl)
-            .MaximumLength(255)
+            .MaximumLength(FieldLengths.Url)
             .WithMessage(Messages.Validation_TrailerUrl_MaxLength255);
 
         RuleFor(x => x.Status)

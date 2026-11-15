@@ -9,6 +9,7 @@ import type { HeroDirection } from "@/features/client/home/hooks/use-hero-carous
 import { ROUTES } from "@/config/routes";
 import { usePrefetchMovieDetail } from "@/features/client/movies/hooks/use-movies";
 import { usePrefetchIntent } from "@/hooks/use-prefetch-intent";
+import { HERO_SLIDE_GENRES_LIMIT } from "@/config/default-constants";
 
 interface HeroSlideProps {
   movie: MovieListItemDto;
@@ -63,7 +64,7 @@ export const HeroSlide = ({ movie, position, total, phase, direction }: HeroSlid
           className={cn("flex flex-wrap items-center gap-2", metaReveal.className)}
         >
           <AgeRatingBadge code={movie.ageRating?.code} onImage />
-          {movie.genres.slice(0, 3).map((g) => (
+          {movie.genres.slice(0, HERO_SLIDE_GENRES_LIMIT).map((g) => (
             <span
               key={g}
               className="cut-xs bg-scrim-foreground/15 px-2.5 py-1 text-[13px] font-medium tracking-wide text-scrim-foreground"

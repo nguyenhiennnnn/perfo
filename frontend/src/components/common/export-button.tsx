@@ -19,6 +19,7 @@ import {
   saveBlob,
 } from "@/lib/download";
 import { cn } from "@/lib/utils";
+import { HTTP_STATUS } from "@/config/http-status";
 
 export type ExportFormat = "xlsx" | "csv" | "pdf";
 
@@ -32,7 +33,7 @@ const FORMAT_LABELS: Record<ExportFormat, string> = {
 
 const DEFAULT_FORMATS: ExportFormat[] = ["xlsx", "csv"];
 
-const BACKGROUND_EXPORT_STATUS = 422;
+const BACKGROUND_EXPORT_STATUS = HTTP_STATUS.unprocessable;
 
 interface ExportButtonProps {
   endpoint: string;

@@ -33,10 +33,11 @@ import { ImportPreviewCell, ImportRowStatus } from "./import-preview-cell";
 import { ImportWizardFooter } from "./import-wizard-footer";
 import type { ImportWizardConfig } from "./import-wizard-types";
 import { useImportApply, useImportErrorFile } from "./use-import-wizard";
+import { HTTP_STATUS } from "@/config/http-status";
 
 const ROW_NUMBER_COLUMN_ID = "rowNumber";
 const STATUS_COLUMN_ID = "status";
-const NOT_FOUND_STATUS = 404;
+const NOT_FOUND_STATUS = HTTP_STATUS.notFound;
 
 type PreviewColumn = ColumnDef<DataTableFeatures, ImportPreviewRow>;
 

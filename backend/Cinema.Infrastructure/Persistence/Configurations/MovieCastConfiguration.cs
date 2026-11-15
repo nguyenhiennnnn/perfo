@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +11,7 @@ public class MovieCastConfiguration : IEntityTypeConfiguration<MovieCast>
     {
         builder.ToTable("MovieCast");
         builder.HasKey(x => new { x.MovieId, x.ActorId });
-        builder.Property(x => x.CharacterName).HasMaxLength(150);
+        builder.Property(x => x.CharacterName).HasMaxLength(FieldLengths.PersonName);
 
         builder
             .HasOne(x => x.Movie)

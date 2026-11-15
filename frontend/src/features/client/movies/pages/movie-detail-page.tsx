@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Seo } from "@/components/common/seo";
 import { BRAND } from "@/config/brand";
 import { ROUTES } from "@/config/routes";
+import { SEO_DESCRIPTION_MAX_LENGTH } from "@/config/default-constants";
 
 const MovieDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -46,7 +47,7 @@ const MovieDetailPage = () => {
   };
 
   const seoDescription = movie.description
-    ? movie.description.slice(0, 160)
+    ? movie.description.slice(0, SEO_DESCRIPTION_MAX_LENGTH)
     : `Xem thông tin và đặt vé phim ${movie.title} tại ${BRAND.name}. Chọn suất chiếu, ghế ngồi và thanh toán online nhanh chóng.`;
 
   return (

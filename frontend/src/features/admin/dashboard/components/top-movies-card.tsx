@@ -7,6 +7,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } f
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/common/empty-state";
 import type { DashboardTopMovieDto } from "@/features/admin/dashboard/types";
+import { TOP_MOVIES_CHART_LABEL_MAX_CHARS } from "@/config/default-constants";
 
 const chartConfig = {
   ticketsSold: { label: "Vé đã bán", color: "var(--chart-3)" },
@@ -20,7 +21,7 @@ interface TopMoviesCardProps {
 export const TopMoviesCard = ({ movies, isLoading }: TopMoviesCardProps) => {
   const data = (movies ?? []).map((m) => ({
     ...m,
-    label: m.title.length > 18 ? `${m.title.slice(0, 18)}…` : m.title,
+    label: m.title.length > TOP_MOVIES_CHART_LABEL_MAX_CHARS ? `${m.title.slice(0, TOP_MOVIES_CHART_LABEL_MAX_CHARS)}…` : m.title,
   }));
 
   return (

@@ -10,6 +10,7 @@ import type { MovieListItemDto } from "@/features/client/movies/types";
 import { ROUTES } from "@/config/routes";
 import { usePrefetchMovieDetail } from "@/features/client/movies/hooks/use-movies";
 import { usePrefetchIntent } from "@/hooks/use-prefetch-intent";
+import { MOVIE_CARD_GENRES_LIMIT } from "@/config/default-constants";
 
 interface MovieCardProps {
   movie: MovieListItemDto;
@@ -20,7 +21,7 @@ export const MovieCard = ({ movie, className }: MovieCardProps) => {
   const href = ROUTES.movies.detail(movie.movieId);
   const prefetchMovie = usePrefetchMovieDetail();
   const prefetchProps = usePrefetchIntent(() => prefetchMovie(movie.movieId));
-  const genreText = movie.genres.slice(0, 2).join(", ");
+  const genreText = movie.genres.slice(0, MOVIE_CARD_GENRES_LIMIT).join(", ");
   const durationText = formatDuration(movie.durationMinutes);
   const isNowShowing = movie.status === MovieStatus.NowShowing;
   const isComingSoon = movie.status === MovieStatus.ComingSoon;

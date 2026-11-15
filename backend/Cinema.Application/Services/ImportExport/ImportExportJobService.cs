@@ -5,6 +5,7 @@ using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ public class ImportExportJobService(
 ) : IImportExportJobService
 {
     private const string RawResourceType = "raw";
-    private const int MaxPageSize = 100;
+    private const int MaxPageSize = Pagination.MaxPageSize;
 
     public async Task<OffsetPageResult<ImportExportJobDto>> GetJobsAsync(
         int userId,

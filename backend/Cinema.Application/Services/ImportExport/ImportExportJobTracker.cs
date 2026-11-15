@@ -15,12 +15,12 @@ public class ImportExportJobTracker(
     ILogger<ImportExportJobTracker> logger
 ) : IImportExportJobTracker
 {
-    private const int MaxFileNameLength = 255;
-    private const int MaxErrorLength = 2000;
-    private const int MaxRoleLength = 50;
-    private const int MaxIpLength = 45;
-    private const int MaxUserAgentLength = 500;
-    private const int MaxParametersLength = 4000;
+    private const int MaxFileNameLength = FieldLengths.FileName;
+    private const int MaxErrorLength = FieldLengths.ErrorMessage;
+    private const int MaxRoleLength = FieldLengths.ActorRole;
+    private const int MaxIpLength = FieldLengths.IpAddress;
+    private const int MaxUserAgentLength = FieldLengths.UserAgent;
+    private const int MaxParametersLength = FieldLengths.JobParameters;
 
     public async Task<Guid> CreateQueuedAsync(
         ImportExportJobType type,

@@ -36,5 +36,5 @@ public abstract class AppControllerBase : ControllerBase
     }
 
     protected static int ClampLimit(int? limit) =>
-        Math.Clamp(limit ?? CursorPagination.DefaultLimit, 1, 50);
+        Math.Clamp(limit ?? CursorPagination.DefaultLimit, 1, CursorPagination.MaxLimit);
 }

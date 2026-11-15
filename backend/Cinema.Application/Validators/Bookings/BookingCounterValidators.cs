@@ -1,5 +1,6 @@
 using Cinema.Application.DTOs.Bookings;
 using Cinema.Application.Utils;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using FluentValidation;
 
@@ -34,13 +35,13 @@ public class CounterHoldRequestValidator : AbstractValidator<CounterHoldRequest>
             .WithMessage(Messages.Validation_UserIdOrCustomerNameRequired)
             .WithName("customerName");
 
-        RuleFor(x => x.CustomerName).MaximumLength(100).When(x => x.CustomerName is not null);
+        RuleFor(x => x.CustomerName).MaximumLength(FieldLengths.FullName).When(x => x.CustomerName is not null);
 
         RuleFor(x => x.CustomerPhone)
             .Matches(PhoneRules.Pattern)
             .When(x => !string.IsNullOrEmpty(x.CustomerPhone))
             .WithMessage(Messages.Validation_Phone_Invalid)
-            .MaximumLength(20);
+            .MaximumLength(FieldLengths.Phone);
     }
 }
 

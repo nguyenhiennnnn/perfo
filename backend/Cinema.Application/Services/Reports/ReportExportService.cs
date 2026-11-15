@@ -4,6 +4,7 @@ using Cinema.Application.DTOs.Reports;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Microsoft.Extensions.Options;
 
@@ -17,9 +18,9 @@ public class ReportExportService(
     IOptions<BrandOptions> brandOptions
 ) : IReportExportService
 {
-    private const string RevenueModule = "revenue";
-    private const string TopMoviesModule = "top-movies";
-    private const string EmployeePerformanceModule = "employee-performance";
+    private const string RevenueModule = ImportExportModules.RevenueReport;
+    private const string TopMoviesModule = ImportExportModules.TopMoviesReport;
+    private const string EmployeePerformanceModule = ImportExportModules.EmployeePerformanceReport;
 
     public async Task<ExportFileDto> ExportRevenueAsync(
         DateOnly fromDate,

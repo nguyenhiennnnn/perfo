@@ -1,5 +1,6 @@
 import { QRCodeSVG } from "qrcode.react";
 import { cn } from "@/lib/utils";
+import { TICKET_TITLE_MAX_CHARS } from "@/config/default-constants";
 
 interface PerfoTicketProps {
   movieTitle: string;
@@ -24,7 +25,7 @@ export const PerfoTicket = ({
   isCheckedIn = false,
   className,
 }: PerfoTicketProps) => {
-  const title = movieTitle.length > 25 ? movieTitle.slice(0, 24) + "…" : movieTitle;
+  const title = movieTitle.length > TICKET_TITLE_MAX_CHARS ? movieTitle.slice(0, TICKET_TITLE_MAX_CHARS - 1) + "…" : movieTitle;
   const isImageQr = qrValue.startsWith("data:image") || qrValue.startsWith("http");
 
   return (

@@ -6697,6 +6697,51 @@ namespace Cinema.Shared.Resources {
                 return ResourceManager.GetString("Import_Warn_SeatLayoutFutureShowtimes", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bạn đang có {0} tác vụ nhập/xuất đang chạy (tối đa {1}). Vui lòng chờ hoàn tất rồi thử lại..
+        /// </summary>
+        public static string Rule_ImportExportTooManyActiveJobs {
+            get {
+                return ResourceManager.GetString("Rule_ImportExportTooManyActiveJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loại nội dung của file không hợp lệ. Chỉ chấp nhận file .xlsx hoặc .csv..
+        /// </summary>
+        public static string Invalid_FileContentTypeNotAllowed {
+            get {
+                return ResourceManager.GetString("Invalid_FileContentTypeNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File chứa macro hoặc mã nhúng nên không được chấp nhận. Hãy lưu lại dưới dạng .xlsx không có macro..
+        /// </summary>
+        public static string Invalid_ImportMacroNotAllowed {
+            get {
+                return ResourceManager.GetString("Invalid_ImportMacroNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dung lượng của file sau khi giải nén vượt quá giới hạn cho phép..
+        /// </summary>
+        public static string Invalid_ImportFileExpandedTooLarge {
+            get {
+                return ResourceManager.GetString("Invalid_ImportFileExpandedTooLarge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tác vụ không hoàn tất trong thời gian cho phép nên đã bị đánh dấu thất bại. Vui lòng thử lại..
+        /// </summary>
+        public static string Job_StaleTimeout {
+            get {
+                return ResourceManager.GetString("Job_StaleTimeout", resourceCulture);
+            }
+        }
     
     }
 }

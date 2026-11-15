@@ -1,11 +1,23 @@
 using System.IO.Compression;
+using System.Text;
 using Cinema.Application.Interfaces;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 
 namespace Cinema.Application.Utils;
 
-public sealed record ImportUpload(MemoryStream Content, ImportFileFormat Format) : IDisposable
+public sealed record ImportFileInput(
+    string? FileName,
+    string? ContentType,
+    long Length,
+    Stream Content
+) : IAsyncDisposable
+{
+    public ValueTask DisposeAsync() => Content.DisposeAsync();
+}
+
+public sealed record ImportUpload(MemoryStream Content, ImportFileFormat Format, string FileName)
+    : IDisposable
 {
     public void Dispose() => Content.Dispose();
 }
@@ -13,10 +25,35 @@ public sealed record ImportUpload(MemoryStream Content, ImportFileFormat Format)
 public static class ImportFileGuard
 {
     private const int TextProbeBytes = 8192;
+    private const int ReadChunkBytes = 81920;
     private const string ContentTypesEntry = "[Content_Types].xml";
     private const string WorkbookEntry = "xl/workbook.xml";
+    private const string MacroContentTypeMarker = "macroEnabled";
+    private const string MacroExtension = ".xlsm";
 
     private static readonly byte[] ZipSignature = [0x50, 0x4B, 0x03, 0x04];
+
+    private static readonly string[] MacroEntryMarkers =
+    [
+        "xl/vbaproject.bin",
+        "xl/macrosheets/",
+        "xl/embeddings/",
+    ];
+
+    private static readonly HashSet<string> XlsxContentTypes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/octet-stream",
+    };
+
+    private static readonly HashSet<string> CsvContentTypes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "text/csv",
+        "application/csv",
+        "text/plain",
+        "application/vnd.ms-excel",
+        "application/octet-stream",
+    };
 
     private static readonly byte[][] BinarySignatures =
     [
@@ -33,29 +70,26 @@ public static class ImportFileGuard
     ];
 
     public static async Task<ImportUpload> ReadAsync(
-        string? fileName,
-        Stream content,
+        ImportFileInput input,
         CancellationToken cancellationToken
     )
     {
-        var format = ResolveFormat(fileName);
+        var format = ResolveFormat(input.FileName);
+        EnsureDeclaredLength(input.Length);
+        EnsureContentType(format, input.ContentType);
+
         var buffer = new MemoryStream();
 
         try
         {
-            var chunk = new byte[81920];
+            var chunk = new byte[ReadChunkBytes];
             int read;
             while (
-                (read = await content.ReadAsync(chunk.AsMemory(), cancellationToken)) > 0
+                (read = await input.Content.ReadAsync(chunk.AsMemory(), cancellationToken)) > 0
             )
             {
                 if (buffer.Length + read > ImportLimits.MaxFileBytes)
-                    throw Invalid(
-                        string.Format(
-                            Messages.Invalid_FileTooLarge,
-                            ImportLimits.MaxFileBytes / (1024 * 1024)
-                        )
-                    );
+                    throw TooLarge();
 
                 buffer.Write(chunk, 0, read);
             }
@@ -69,7 +103,7 @@ public static class ImportFileGuard
                 EnsureText(buffer);
 
             buffer.Position = 0;
-            return new ImportUpload(buffer, format);
+            return new ImportUpload(buffer, format, SafeFileName(input.FileName));
         }
         catch
         {
@@ -78,13 +112,40 @@ public static class ImportFileGuard
         }
     }
 
-    private static ImportFileFormat ResolveFormat(string? fileName) =>
-        Path.GetExtension(fileName ?? string.Empty).ToLowerInvariant() switch
+    private static ImportFileFormat ResolveFormat(string? fileName)
+    {
+        var extension = Path.GetExtension(fileName ?? string.Empty).ToLowerInvariant();
+
+        if (extension == MacroExtension)
+            throw Invalid(Messages.Invalid_ImportMacroNotAllowed);
+
+        return extension switch
         {
             ".xlsx" => ImportFileFormat.Xlsx,
             ".csv" => ImportFileFormat.Csv,
             _ => throw Invalid(string.Format(Messages.Invalid_FileExtensionNotAllowed, ".xlsx, .csv")),
         };
+    }
+
+    private static void EnsureDeclaredLength(long length)
+    {
+        if (length <= 0)
+            throw Invalid(Messages.Invalid_FileEmpty);
+
+        if (length > ImportLimits.MaxFileBytes)
+            throw TooLarge();
+    }
+
+    private static void EnsureContentType(ImportFileFormat format, string? contentType)
+    {
+        if (string.IsNullOrWhiteSpace(contentType))
+            return;
+
+        var mediaType = contentType.Split(';', 2)[0].Trim();
+        var allowed = format == ImportFileFormat.Xlsx ? XlsxContentTypes : CsvContentTypes;
+        if (!allowed.Contains(mediaType))
+            throw Invalid(Messages.Invalid_FileContentTypeNotAllowed);
+    }
 
     private static void EnsureWorkbook(MemoryStream buffer)
     {
@@ -96,15 +157,25 @@ public static class ImportFileGuard
         try
         {
             using var archive = new ZipArchive(buffer, ZipArchiveMode.Read, leaveOpen: true);
-            long total = 0;
+
+            if (archive.Entries.Count > ImportLimits.MaxArchiveEntries)
+                throw Invalid(Messages.Invalid_ImportFileContent);
+
             var hasContentTypes = false;
             var hasWorkbook = false;
+            long declaredTotal = 0;
 
             foreach (var entry in archive.Entries)
             {
-                total += entry.Length;
-                if (total > ImportLimits.MaxUncompressedBytes)
-                    throw Invalid(Messages.Invalid_ImportFileContent);
+                declaredTotal += entry.Length;
+                if (declaredTotal > ImportLimits.MaxUncompressedBytes)
+                    throw Invalid(Messages.Invalid_ImportFileExpandedTooLarge);
+
+                if (IsSuspiciousRatio(entry))
+                    throw Invalid(Messages.Invalid_ImportFileExpandedTooLarge);
+
+                if (IsMacroEntry(entry.FullName))
+                    throw Invalid(Messages.Invalid_ImportMacroNotAllowed);
 
                 if (entry.FullName == ContentTypesEntry)
                     hasContentTypes = true;
@@ -114,11 +185,71 @@ public static class ImportFileGuard
 
             if (!hasContentTypes || !hasWorkbook)
                 throw Invalid(Messages.Invalid_ImportFileContent);
+
+            MeasureActualSize(archive);
         }
-        catch (InvalidDataException)
+        catch (Exception ex) when (ex is InvalidDataException or EndOfStreamException)
         {
             throw Invalid(Messages.Invalid_ImportFileContent);
         }
+    }
+
+    private static void MeasureActualSize(ZipArchive archive)
+    {
+        var chunk = new byte[ReadChunkBytes];
+        long actualTotal = 0;
+
+        foreach (var entry in archive.Entries)
+        {
+            if (entry.Length == 0)
+                continue;
+
+            var isContentTypes = entry.FullName == ContentTypesEntry;
+            if (isContentTypes && entry.Length > ImportLimits.MaxContentTypesBytes)
+                throw Invalid(Messages.Invalid_ImportFileContent);
+
+            using var stream = entry.Open();
+            using var contentTypes = isContentTypes ? new MemoryStream() : null;
+
+            long entryTotal = 0;
+            int read;
+            while ((read = stream.Read(chunk, 0, chunk.Length)) > 0)
+            {
+                entryTotal += read;
+                actualTotal += read;
+
+                if (entryTotal > entry.Length || actualTotal > ImportLimits.MaxUncompressedBytes)
+                    throw Invalid(Messages.Invalid_ImportFileExpandedTooLarge);
+
+                contentTypes?.Write(chunk, 0, read);
+            }
+
+            if (entryTotal != entry.Length)
+                throw Invalid(Messages.Invalid_ImportFileContent);
+
+            if (
+                contentTypes is not null
+                && Encoding
+                    .UTF8.GetString(contentTypes.GetBuffer(), 0, (int)contentTypes.Length)
+                    .Contains(MacroContentTypeMarker, StringComparison.OrdinalIgnoreCase)
+            )
+                throw Invalid(Messages.Invalid_ImportMacroNotAllowed);
+        }
+    }
+
+    private static bool IsSuspiciousRatio(ZipArchiveEntry entry) =>
+        entry.Length > ImportLimits.RatioCheckMinBytes
+        && (
+            entry.CompressedLength <= 0
+            || entry.Length / entry.CompressedLength > ImportLimits.MaxCompressionRatio
+        );
+
+    private static bool IsMacroEntry(string fullName)
+    {
+        var name = fullName.Replace('\\', '/');
+        return MacroEntryMarkers.Any(marker =>
+            name.StartsWith(marker, StringComparison.OrdinalIgnoreCase)
+        );
     }
 
     private static void EnsureText(MemoryStream buffer)
@@ -131,6 +262,18 @@ public static class ImportFileGuard
 
         if (Array.IndexOf(bytes, (byte)0, 0, probe) >= 0)
             throw Invalid(Messages.Invalid_ImportFileContent);
+    }
+
+    private static string SafeFileName(string? fileName)
+    {
+        var name = Path.GetFileName((fileName ?? string.Empty).Replace('\\', '/'));
+        var cleaned = new string(name.Where(ch => !char.IsControl(ch)).ToArray()).Trim();
+        if (cleaned.Length == 0)
+            return "import";
+
+        return cleaned.Length > ImportLimits.MaxFileNameLength
+            ? cleaned[..ImportLimits.MaxFileNameLength]
+            : cleaned;
     }
 
     private static bool StartsWith(byte[] bytes, byte[] signature, int? available = null)
@@ -147,6 +290,11 @@ public static class ImportFileGuard
 
         return true;
     }
+
+    private static ValidationAppException TooLarge() =>
+        Invalid(
+            string.Format(Messages.Invalid_FileTooLarge, ImportLimits.MaxFileBytes / (1024 * 1024))
+        );
 
     private static ValidationAppException Invalid(string message) =>
         new(message, new Dictionary<string, string[]> { ["file"] = [message] });

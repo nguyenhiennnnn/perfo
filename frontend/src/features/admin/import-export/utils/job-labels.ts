@@ -6,6 +6,11 @@ const MODULE_LABELS: Record<string, string> = {
   showtimes: "Suất chiếu",
   bookings: "Đặt vé",
   payments: "Thanh toán",
+  users: "Người dùng",
+  "seat-layout": "Sơ đồ ghế",
+  revenue: "Báo cáo doanh thu",
+  "top-movies": "Báo cáo top phim",
+  "employee-performance": "Báo cáo hiệu suất nhân viên",
 };
 
 export const getJobModuleLabel = (module: string) =>

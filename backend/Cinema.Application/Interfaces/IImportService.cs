@@ -1,5 +1,6 @@
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Import;
+using Cinema.Application.Utils;
 
 namespace Cinema.Application.Interfaces;
 
@@ -8,14 +9,13 @@ public interface IImportService<TRow>
     Task<ExportFileDto> GetTemplateAsync(CancellationToken cancellationToken);
 
     Task<ImportPreviewResponse> PreviewAsync(
-        int userId,
-        string? fileName,
-        Stream content,
+        ActorContext actor,
+        ImportFileInput file,
         CancellationToken cancellationToken
     );
 
     Task<ImportApplyOutcome> ApplyAsync(
-        int userId,
+        ActorContext actor,
         ImportApplyRequest request,
         CancellationToken cancellationToken
     );

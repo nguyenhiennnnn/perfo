@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Cinema.Application.DTOs.Common;
 using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,14 @@ namespace Cinema.Api.Controllers;
 public abstract class AppControllerBase : ControllerBase
 {
     protected int CurrentUserId => int.Parse(User.FindFirstValue(AppClaimTypes.UserId)!);
+
+    protected ActorContext CurrentActor =>
+        new(
+            CurrentUserId,
+            User.FindFirstValue(AppClaimTypes.Role) ?? string.Empty,
+            HttpContext.Connection.RemoteIpAddress?.ToString(),
+            Request.Headers.UserAgent.ToString()
+        );
 
     protected int? CurrentUserIdOrNull
     {

@@ -437,6 +437,13 @@ namespace Cinema.Infrastructure.Migrations
                     FileUrl = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
                     ErrorMessage = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
                     CreatedByUserId = table.Column<int>(type: "integer", nullable: false),
+                    ActorRole = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    IpAddress = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: true),
+                    UserAgent = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    Parameters = table.Column<string>(type: "character varying(4000)", maxLength: 4000, nullable: true),
+                    FileSizeBytes = table.Column<long>(type: "bigint", nullable: true),
+                    IsSensitive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    IsPiiMasked = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()"),
                     StartedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     CompletedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
@@ -1484,6 +1491,11 @@ namespace Cinema.Infrastructure.Migrations
                 name: "IX_ImportExportJobs_User_CreatedAt",
                 table: "ImportExportJobs",
                 columns: new[] { "CreatedByUserId", "CreatedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ImportExportJobs_User_Status",
+                table: "ImportExportJobs",
+                columns: new[] { "CreatedByUserId", "Status" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Languages_Name",

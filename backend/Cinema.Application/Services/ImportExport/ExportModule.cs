@@ -14,12 +14,14 @@ public class ExportModule<TFilter>(IExportSource<TFilter> source) : IExportModul
     public Task<ExportFileDto> ExportAsync(
         string filterJson,
         ExportFormat format,
+        ExportContext context,
         IJobProgressReporter? progress,
         CancellationToken cancellationToken
     ) =>
         source.ExportAsync(
             ImportExportJson.Deserialize<TFilter>(filterJson),
             format,
+            context,
             progress,
             cancellationToken
         );

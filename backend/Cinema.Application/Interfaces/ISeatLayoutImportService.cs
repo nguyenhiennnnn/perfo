@@ -11,15 +11,14 @@ public interface ISeatLayoutImportService
 
     Task<ImportPreviewResponse> PreviewAsync(
         int roomId,
-        int userId,
-        string? fileName,
-        Stream content,
+        ActorContext actor,
+        ImportFileInput file,
         CancellationToken cancellationToken
     );
 
     Task<UpdateSeatLayoutResponse> ApplyAsync(
         int roomId,
-        int userId,
+        ActorContext actor,
         ImportApplyRequest request,
         CancellationToken cancellationToken
     );
@@ -33,6 +32,7 @@ public interface ISeatLayoutImportService
 
     Task<ExportFileDto> ExportAsync(
         int roomId,
+        ActorContext actor,
         ExportFormat format,
         CancellationToken cancellationToken
     );

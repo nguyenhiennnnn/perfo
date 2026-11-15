@@ -8,6 +8,7 @@ public class BackgroundJobOptions
     public string ShowtimeLifecycleCron { get; set; } = "* * * * *";
     public string ExpireLoyaltyPointsCron { get; set; } = "5 * * * *";
     public string CleanupImportExportFilesCron { get; set; } = "*/30 * * * *";
+    public string CleanupImportSessionsCron { get; set; } = "*/5 * * * *";
     public int RetryAttempts { get; set; } = 3;
     public int[] RetryDelaysSeconds { get; set; } = [30, 120, 600];
 }

@@ -5,7 +5,7 @@ namespace Cinema.Infrastructure.Export;
 
 internal static class ExportCellFormatter
 {
-    private static readonly char[] FormulaPrefixes = ['=', '+', '-', '@'];
+    private static readonly char[] FormulaPrefixes = ['=', '+', '-', '@', '\t', '\r', '\n'];
 
     public static string? ToSafeText(object? value)
     {

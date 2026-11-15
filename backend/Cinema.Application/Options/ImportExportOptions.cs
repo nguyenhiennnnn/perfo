@@ -10,6 +10,8 @@ public class ImportExportOptions
     public int ImportProgressBatchSize { get; set; } = 50;
     public int FileRetentionHours { get; set; } = 24;
     public int CleanupBatchSize { get; set; } = 100;
+    public int MaxActiveJobsPerUser { get; set; } = 2;
+    public int ActiveJobStaleMinutes { get; set; } = 60;
     public string StorageFolder { get; set; } = "import-export";
     public int[] SuperAdminUserIds { get; set; } = [];
 }

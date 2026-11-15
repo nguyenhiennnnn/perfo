@@ -1,3 +1,4 @@
+using Cinema.Application.DTOs.Common;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Application.Services.ImportExport;
@@ -48,14 +49,20 @@ public class ExportJob(
                 settings.ExportProgressBatchSize
             );
 
+            var exportContext = new ExportContext(
+                new ActorContext(context.UserId, context.ActorRole ?? string.Empty, null, null)
+            );
+
             var file = await handler.ExportAsync(
                 filterJson,
                 ExportFormats.Parse(format),
+                exportContext,
                 progress,
                 cancellationToken
             );
 
             await using var content = file.Content;
+            var fileSize = content.CanSeek ? content.Length : (long?)null;
             if (content.CanSeek)
                 content.Position = 0;
 
@@ -71,6 +78,7 @@ public class ExportJob(
                 jobId,
                 file.FileName,
                 uploaded,
+                fileSize,
                 progress.Processed,
                 settings.FileRetentionHours,
                 CancellationToken.None

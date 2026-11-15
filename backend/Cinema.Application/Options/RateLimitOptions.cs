@@ -13,4 +13,10 @@ public class RateLimitOptions
 
     public int BookingHoldPermitLimit { get; set; } = 10;
     public int BookingHoldWindowSeconds { get; set; } = 60;
+
+    public int ExportPermitLimit { get; set; } = 10;
+    public int ExportWindowSeconds { get; set; } = 60;
+
+    public int ImportPermitLimit { get; set; } = 10;
+    public int ImportWindowSeconds { get; set; } = 60;
 }

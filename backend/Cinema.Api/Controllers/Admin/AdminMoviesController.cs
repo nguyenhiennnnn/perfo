@@ -1,3 +1,4 @@
+using Cinema.Api.Extensions;
 using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Import;
 using Cinema.Application.DTOs.ImportExport;
@@ -9,6 +10,7 @@ using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Cinema.Api.Controllers.Admin;
 
@@ -81,6 +83,7 @@ public class AdminMoviesController(
         CancellationToken cancellationToken
     ) => Ok(await movieService.BulkDeleteMoviesAsync(request, cancellationToken));
 
+    [EnableRateLimiting(RateLimitingExtensions.ImportPolicy)]
     [HttpGet("import/template")]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> DownloadImportTemplate(CancellationToken cancellationToken)
@@ -89,6 +92,7 @@ public class AdminMoviesController(
         return File(file.Content, file.ContentType, file.FileName);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ImportPolicy)]
     [HttpPost("import/preview")]
     [Consumes("multipart/form-data")]
     [RequestSizeLimit(ImportLimits.MaxRequestBytes)]
@@ -98,23 +102,13 @@ public class AdminMoviesController(
         CancellationToken cancellationToken = default
     )
     {
-        if (file is null || file.Length == 0)
-            throw new ValidationAppException(
-                Messages.Invalid_UploadFileMissing,
-                new Dictionary<string, string[]> { ["file"] = [Messages.Invalid_FileEmpty] }
-            );
-
-        await using var stream = file.OpenReadStream();
-        var result = await movieImportService.PreviewAsync(
-            CurrentUserId,
-            file.FileName,
-            stream,
-            cancellationToken
-        );
+        await using var input = file.ToImportInput();
+        var result = await movieImportService.PreviewAsync(CurrentActor, input, cancellationToken);
 
         return Ok(result);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ImportPolicy)]
     [HttpPost("import/apply")]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> ApplyImport(
@@ -123,7 +117,7 @@ public class AdminMoviesController(
     )
     {
         var outcome = await movieImportService.ApplyAsync(
-            CurrentUserId,
+            CurrentActor,
             request,
             cancellationToken
         );
@@ -132,6 +126,7 @@ public class AdminMoviesController(
             : Ok(outcome.Result);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ImportPolicy)]
     [HttpGet("import/errors/{previewId}")]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> DownloadImportErrors(

@@ -7,7 +7,7 @@ namespace Cinema.Application.Interfaces;
 public interface IExportJobService
 {
     Task<ExportFileDto> ExportNowAsync<TFilter>(
-        int userId,
+        ActorContext actor,
         string module,
         TFilter filter,
         ExportFormat format,
@@ -15,10 +15,19 @@ public interface IExportJobService
     );
 
     Task<ImportExportJobAcceptedDto> EnqueueAsync<TFilter>(
-        int userId,
+        ActorContext actor,
         string module,
         TFilter filter,
         ExportFormat format,
+        CancellationToken cancellationToken
+    );
+
+    Task<ExportFileDto> RunTrackedAsync<TParameters>(
+        ActorContext actor,
+        string module,
+        ExportFormat format,
+        TParameters parameters,
+        Func<ExportContext, IJobProgressReporter, Task<ExportFileDto>> export,
         CancellationToken cancellationToken
     );
 }

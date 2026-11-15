@@ -9,6 +9,7 @@ using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Hangfire;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Cinema.Application.Services.Import;
@@ -18,8 +19,10 @@ public class ImportService<TRow>(
     IImportSessionStore sessions,
     IExportWriter exportWriter,
     IImportExportJobTracker jobTracker,
+    IImportExportConcurrencyGuard concurrencyGuard,
     IBackgroundJobClient backgroundJobClient,
-    IOptions<ImportExportOptions> options
+    IOptions<ImportExportOptions> options,
+    ILogger<ImportService<TRow>> logger
 ) : IImportService<TRow>
 {
     public async Task<ExportFileDto> GetTemplateAsync(CancellationToken cancellationToken)
@@ -36,13 +39,12 @@ public class ImportService<TRow>(
     }
 
     public async Task<ImportPreviewResponse> PreviewAsync(
-        int userId,
-        string? fileName,
-        Stream content,
+        ActorContext actor,
+        ImportFileInput file,
         CancellationToken cancellationToken
     )
     {
-        using var upload = await ImportFileGuard.ReadAsync(fileName, content, cancellationToken);
+        using var upload = await ReadUploadAsync(actor, file, cancellationToken);
 
         var parsed = await processor.ParseAsync(upload.Content, upload.Format, cancellationToken);
         if (parsed.Rows.Count == 0)
@@ -55,13 +57,23 @@ public class ImportService<TRow>(
         var validated = parsed.Rows.Select(row => processor.ValidateRow(row, context)).ToList();
 
         var session = sessions.Create(
-            userId,
-            fileName,
+            actor.UserId,
+            upload.FileName,
             upload.Format,
             parsed.Headers,
             validated
         );
         var validCount = validated.Count(row => row.IsValid);
+
+        ImportAuditLog.Previewed(
+            logger,
+            actor,
+            processor.Module,
+            upload.FileName,
+            upload.Content.Length,
+            validated.Count,
+            validCount
+        );
 
         return new ImportPreviewResponse(
             session.PreviewId,
@@ -79,13 +91,16 @@ public class ImportService<TRow>(
     }
 
     public async Task<ImportApplyOutcome> ApplyAsync(
-        int userId,
+        ActorContext actor,
         ImportApplyRequest request,
         CancellationToken cancellationToken
     )
     {
-        var session = sessions.Get<TRow>(request.PreviewId, userId);
+        var session = sessions.Get<TRow>(request.PreviewId, actor.UserId);
         var plan = PlanApply(session, request.SkipInvalidRows);
+        var parameters = BuildParameters(session, plan, request.SkipInvalidRows);
+
+        using var lease = await concurrencyGuard.AcquireAsync(actor.UserId, cancellationToken);
 
         if (!session.TryBeginApply())
             throw new ConflictAppException(Messages.Conflict_ImportApplyInProgress);
@@ -95,10 +110,11 @@ public class ImportService<TRow>(
             try
             {
                 var jobId = await EnqueueApplyAsync(
-                    userId,
+                    actor,
                     session,
                     request,
                     plan.ValidRows.Count,
+                    parameters,
                     cancellationToken
                 );
                 return new ImportApplyOutcome(null, jobId);
@@ -118,15 +134,31 @@ public class ImportService<TRow>(
                 ImportExportJobType.Import,
                 processor.Module,
                 FormatName(session),
-                userId,
+                actor,
                 session.FileName,
                 session.Rows.Count,
                 response.TotalSuccess,
                 response.TotalFailed,
-                cancellationToken
+                parameters,
+                null,
+                CancellationToken.None
             );
 
             return new ImportApplyOutcome(response, null);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            await jobTracker.RecordFailedAsync(
+                ImportExportJobType.Import,
+                processor.Module,
+                FormatName(session),
+                actor,
+                session.FileName,
+                parameters,
+                ImportExportJobErrors.Describe(ex),
+                CancellationToken.None
+            );
+            throw;
         }
         finally
         {
@@ -156,10 +188,11 @@ public class ImportService<TRow>(
     }
 
     private async Task<Guid> EnqueueApplyAsync(
-        int userId,
+        ActorContext actor,
         ImportSession<TRow> session,
         ImportApplyRequest request,
         int validRowCount,
+        string parameters,
         CancellationToken cancellationToken
     )
     {
@@ -171,9 +204,10 @@ public class ImportService<TRow>(
             ImportExportJobType.Import,
             module,
             FormatName(session),
-            userId,
+            actor,
             session.FileName,
             validRowCount,
+            parameters,
             cancellationToken
         );
 
@@ -232,6 +266,38 @@ public class ImportService<TRow>(
 
         return new ApplyPlan(validRows, invalidRows);
     }
+
+    private async Task<ImportUpload> ReadUploadAsync(
+        ActorContext actor,
+        ImportFileInput file,
+        CancellationToken cancellationToken
+    )
+    {
+        try
+        {
+            return await ImportFileGuard.ReadAsync(file, cancellationToken);
+        }
+        catch (ValidationAppException ex)
+        {
+            ImportAuditLog.Rejected(logger, actor, processor.Module, file.FileName, ex.Message);
+            throw;
+        }
+    }
+
+    private static string BuildParameters(
+        ImportSession<TRow> session,
+        ApplyPlan plan,
+        bool skipInvalidRows
+    ) =>
+        ImportExportJson.Serialize(
+            new
+            {
+                skipInvalidRows,
+                totalRows = session.Rows.Count,
+                validRows = plan.ValidRows.Count,
+                invalidRows = plan.InvalidRows.Count,
+            }
+        );
 
     private static string FormatName(ImportSession<TRow> session) =>
         session.Format.ToString().ToLowerInvariant();

@@ -16,12 +16,13 @@ namespace Cinema.Application.Services.ImportExport;
 public class ExportJobService(
     IEnumerable<IExportModule> modules,
     IImportExportJobTracker tracker,
+    IImportExportConcurrencyGuard concurrencyGuard,
     IBackgroundJobClient backgroundJobClient,
     IOptions<ImportExportOptions> options
 ) : IExportJobService
 {
     public async Task<ExportFileDto> ExportNowAsync<TFilter>(
-        int userId,
+        ActorContext actor,
         string module,
         TFilter filter,
         ExportFormat format,
@@ -32,6 +33,8 @@ public class ExportJobService(
         var filterJson = ImportExportJson.Serialize(filter);
         var threshold = options.Value.ExportBackgroundThreshold;
 
+        using var lease = await concurrencyGuard.AcquireAsync(actor.UserId, cancellationToken);
+
         var estimated = await handler.CountAsync(filterJson, cancellationToken);
         if (estimated > threshold)
             throw new BusinessRuleException(
@@ -41,26 +44,40 @@ public class ExportJobService(
                 )
             );
 
-        var counter = new RowCountReporter();
-        var file = await handler.ExportAsync(filterJson, format, counter, cancellationToken);
-
-        await tracker.RecordCompletedAsync(
-            ImportExportJobType.Export,
+        return await ExecuteTrackedAsync(
+            actor,
             module,
-            ExportFormats.Extension(format),
-            userId,
-            file.FileName,
-            counter.Count,
-            counter.Count,
-            0,
+            format,
+            filterJson,
+            (context, counter) =>
+                handler.ExportAsync(filterJson, format, context, counter, cancellationToken),
             cancellationToken
         );
+    }
 
-        return file;
+    public async Task<ExportFileDto> RunTrackedAsync<TParameters>(
+        ActorContext actor,
+        string module,
+        ExportFormat format,
+        TParameters parameters,
+        Func<ExportContext, IJobProgressReporter, Task<ExportFileDto>> export,
+        CancellationToken cancellationToken
+    )
+    {
+        using var lease = await concurrencyGuard.AcquireAsync(actor.UserId, cancellationToken);
+
+        return await ExecuteTrackedAsync(
+            actor,
+            module,
+            format,
+            ImportExportJson.Serialize(parameters),
+            export,
+            cancellationToken
+        );
     }
 
     public async Task<ImportExportJobAcceptedDto> EnqueueAsync<TFilter>(
-        int userId,
+        ActorContext actor,
         string module,
         TFilter filter,
         ExportFormat format,
@@ -70,6 +87,8 @@ public class ExportJobService(
         var handler = Resolve(module);
         var filterJson = ImportExportJson.Serialize(filter);
 
+        using var lease = await concurrencyGuard.AcquireAsync(actor.UserId, cancellationToken);
+
         var estimated = await handler.CountAsync(filterJson, cancellationToken);
         ExportLimits.EnsureWithinLimit(estimated);
 
@@ -78,9 +97,10 @@ public class ExportJobService(
             ImportExportJobType.Export,
             module,
             formatName,
-            userId,
+            actor,
             null,
             estimated,
+            filterJson,
             cancellationToken
         );
 
@@ -101,6 +121,54 @@ public class ExportJobService(
         }
 
         return new ImportExportJobAcceptedDto(jobId);
+    }
+
+    private async Task<ExportFileDto> ExecuteTrackedAsync(
+        ActorContext actor,
+        string module,
+        ExportFormat format,
+        string? parametersJson,
+        Func<ExportContext, IJobProgressReporter, Task<ExportFileDto>> export,
+        CancellationToken cancellationToken
+    )
+    {
+        var formatName = ExportFormats.Extension(format);
+        var counter = new RowCountReporter();
+
+        try
+        {
+            var file = await export(new ExportContext(actor), counter);
+
+            await tracker.RecordCompletedAsync(
+                ImportExportJobType.Export,
+                module,
+                formatName,
+                actor,
+                file.FileName,
+                counter.Count,
+                counter.Count,
+                0,
+                parametersJson,
+                file.Content.CanSeek ? file.Content.Length : null,
+                CancellationToken.None
+            );
+
+            return file;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            await tracker.RecordFailedAsync(
+                ImportExportJobType.Export,
+                module,
+                formatName,
+                actor,
+                null,
+                parametersJson,
+                ImportExportJobErrors.Describe(ex),
+                CancellationToken.None
+            );
+            throw;
+        }
     }
 
     private IExportModule Resolve(string module) =>

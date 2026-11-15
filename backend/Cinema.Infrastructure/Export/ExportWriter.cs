@@ -82,7 +82,9 @@ public class ExportWriter : IExportWriter
         var hasFraction = new bool[columns.Count];
 
         for (var c = 0; c < columns.Count; c++)
-            sheet.Cell(1, c + 1).Value = XLCellValue.FromObject(columns[c].Header);
+            sheet.Cell(1, c + 1).Value = XLCellValue.FromObject(
+                ExportCellFormatter.ToSafeText(columns[c].Header)
+            );
 
         var rowIndex = 1;
         await foreach (var row in rows.WithCancellation(cancellationToken))
@@ -152,7 +154,7 @@ public class ExportWriter : IExportWriter
         await using (var csv = new CsvWriter(writer, configuration))
         {
             foreach (var column in columns)
-                csv.WriteField(column.Header);
+                csv.WriteField(ExportCellFormatter.ToSafeText(column.Header));
             await csv.NextRecordAsync();
 
             await foreach (var row in rows.WithCancellation(cancellationToken))

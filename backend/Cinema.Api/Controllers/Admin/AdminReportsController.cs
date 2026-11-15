@@ -1,9 +1,11 @@
+using Cinema.Api.Extensions;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Cinema.Api.Controllers.Admin;
 
@@ -12,8 +14,9 @@ namespace Cinema.Api.Controllers.Admin;
 [Authorize(Policy = Policies.AdminOnly)]
 public class AdminReportsController(
     IReportService reportService,
-    IReportExportService reportExportService
-) : ControllerBase
+    IReportExportService reportExportService,
+    IExportJobService exportJobService
+) : AppControllerBase
 {
     [HttpGet("revenue")]
     public async Task<IActionResult> GetRevenue(
@@ -65,6 +68,7 @@ public class AdminReportsController(
         return Ok(result);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ExportPolicy)]
     [HttpGet("revenue/export")]
     public async Task<IActionResult> ExportRevenue(
         [FromQuery] DateOnly fromDate,
@@ -75,16 +79,30 @@ public class AdminReportsController(
     )
     {
         var exportFormat = ExportFormats.Parse(format, allowPdf: true);
-        var file = await reportExportService.ExportRevenueAsync(
-            fromDate,
-            toDate,
-            groupBy,
+        var file = await exportJobService.RunTrackedAsync(
+            CurrentActor,
+            ImportExportModules.RevenueReport,
             exportFormat,
+            new
+            {
+                fromDate,
+                toDate,
+                groupBy,
+            },
+            (_, _) =>
+                reportExportService.ExportRevenueAsync(
+                    fromDate,
+                    toDate,
+                    groupBy,
+                    exportFormat,
+                    cancellationToken
+                ),
             cancellationToken
         );
         return ToFileResult(file);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ExportPolicy)]
     [HttpGet("top-movies/export")]
     public async Task<IActionResult> ExportTopMovies(
         [FromQuery] DateOnly fromDate,
@@ -95,16 +113,31 @@ public class AdminReportsController(
     )
     {
         var exportFormat = ExportFormats.Parse(format, allowPdf: true);
-        var file = await reportExportService.ExportTopMoviesAsync(
-            fromDate,
-            toDate,
-            ResolveLimit(limit),
+        var resolvedLimit = ResolveLimit(limit);
+        var file = await exportJobService.RunTrackedAsync(
+            CurrentActor,
+            ImportExportModules.TopMoviesReport,
             exportFormat,
+            new
+            {
+                fromDate,
+                toDate,
+                limit = resolvedLimit,
+            },
+            (_, _) =>
+                reportExportService.ExportTopMoviesAsync(
+                    fromDate,
+                    toDate,
+                    resolvedLimit,
+                    exportFormat,
+                    cancellationToken
+                ),
             cancellationToken
         );
         return ToFileResult(file);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ExportPolicy)]
     [HttpGet("employee-performance/export")]
     public async Task<IActionResult> ExportEmployeePerformance(
         [FromQuery] DateOnly fromDate,
@@ -114,10 +147,18 @@ public class AdminReportsController(
     )
     {
         var exportFormat = ExportFormats.Parse(format, allowPdf: true);
-        var file = await reportExportService.ExportEmployeePerformanceAsync(
-            fromDate,
-            toDate,
+        var file = await exportJobService.RunTrackedAsync(
+            CurrentActor,
+            ImportExportModules.EmployeePerformanceReport,
             exportFormat,
+            new { fromDate, toDate },
+            (_, _) =>
+                reportExportService.ExportEmployeePerformanceAsync(
+                    fromDate,
+                    toDate,
+                    exportFormat,
+                    cancellationToken
+                ),
             cancellationToken
         );
         return ToFileResult(file);

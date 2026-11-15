@@ -34,10 +34,11 @@ public static class ApiPipelineExtensions
 
         app.UseCors(CorsExtensions.PolicyName);
 
+        app.UseAuthentication();
+
         if (!app.Environment.IsEnvironment("Testing"))
             app.UseRateLimiter();
 
-        app.UseAuthentication();
         app.UseMiddleware<PasswordChangeRequiredMiddleware>();
         app.UseAuthorization();
 

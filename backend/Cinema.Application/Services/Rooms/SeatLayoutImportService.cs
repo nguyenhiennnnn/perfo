@@ -3,11 +3,14 @@ using Cinema.Application.DTOs.Import;
 using Cinema.Application.DTOs.Rooms;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Services.Import;
+using Cinema.Application.Services.ImportExport;
 using Cinema.Application.Utils;
+using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Cinema.Application.Services.Rooms;
 
@@ -16,7 +19,11 @@ public class SeatLayoutImportService(
     IAppDbContext db,
     IRoomService roomService,
     IExportWriter exportWriter,
-    IImportSessionStore sessions
+    IImportSessionStore sessions,
+    IExportJobService exportJobService,
+    IImportExportJobTracker jobTracker,
+    IImportExportConcurrencyGuard concurrencyGuard,
+    ILogger<SeatLayoutImportService> logger
 ) : ISeatLayoutImportService
 {
     public async Task<ExportFileDto> GetTemplateAsync(
@@ -38,14 +45,13 @@ public class SeatLayoutImportService(
 
     public async Task<ImportPreviewResponse> PreviewAsync(
         int roomId,
-        int userId,
-        string? fileName,
-        Stream content,
+        ActorContext actor,
+        ImportFileInput file,
         CancellationToken cancellationToken
     )
     {
         var processor = CreateProcessor(roomId);
-        using var upload = await ImportFileGuard.ReadAsync(fileName, content, cancellationToken);
+        using var upload = await ReadUploadAsync(actor, processor.Module, file, cancellationToken);
 
         var parsed = await processor.ParseAsync(upload.Content, upload.Format, cancellationToken);
         if (parsed.Rows.Count == 0)
@@ -58,13 +64,23 @@ public class SeatLayoutImportService(
         var validated = parsed.Rows.Select(row => processor.ValidateRow(row, context)).ToList();
 
         var session = sessions.Create(
-            userId,
-            fileName,
+            actor.UserId,
+            upload.FileName,
             upload.Format,
             parsed.Headers,
             validated
         );
         var validCount = validated.Count(row => row.IsValid);
+
+        ImportAuditLog.Previewed(
+            logger,
+            actor,
+            processor.Module,
+            upload.FileName,
+            upload.Content.Length,
+            validated.Count,
+            validCount
+        );
 
         return new ImportPreviewResponse(
             session.PreviewId,
@@ -84,13 +100,13 @@ public class SeatLayoutImportService(
 
     public async Task<UpdateSeatLayoutResponse> ApplyAsync(
         int roomId,
-        int userId,
+        ActorContext actor,
         ImportApplyRequest request,
         CancellationToken cancellationToken
     )
     {
         var processor = CreateProcessor(roomId);
-        var session = GetSession(roomId, userId, request.PreviewId);
+        var session = GetSession(roomId, actor.UserId, request.PreviewId);
 
         var invalidRows = session.Rows.Where(row => !row.IsValid).ToList();
         if (invalidRows.Count > 0 && !request.SkipInvalidRows)
@@ -102,6 +118,20 @@ public class SeatLayoutImportService(
         if (validRows.Count == 0)
             throw new BusinessRuleException(Messages.Rule_ImportNoValidRows);
 
+        var parameters = ImportExportJson.Serialize(
+            new
+            {
+                roomId,
+                skipInvalidRows = request.SkipInvalidRows,
+                totalRows = session.Rows.Count,
+                validRows = validRows.Count,
+                invalidRows = invalidRows.Count,
+            }
+        );
+        var formatName = session.Format.ToString().ToLowerInvariant();
+
+        using var lease = await concurrencyGuard.AcquireAsync(actor.UserId, cancellationToken);
+
         if (!session.TryBeginApply())
             throw new ConflictAppException(Messages.Conflict_ImportApplyInProgress);
 
@@ -109,7 +139,36 @@ public class SeatLayoutImportService(
         {
             var response = await processor.ApplyLayoutAsync(validRows, cancellationToken);
             sessions.Remove(session.PreviewId);
+
+            await jobTracker.RecordCompletedAsync(
+                ImportExportJobType.Import,
+                processor.Module,
+                formatName,
+                actor,
+                session.FileName,
+                session.Rows.Count,
+                validRows.Count,
+                invalidRows.Count,
+                parameters,
+                null,
+                CancellationToken.None
+            );
+
             return response;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            await jobTracker.RecordFailedAsync(
+                ImportExportJobType.Import,
+                processor.Module,
+                formatName,
+                actor,
+                session.FileName,
+                parameters,
+                ImportExportJobErrors.Describe(ex),
+                CancellationToken.None
+            );
+            throw;
         }
         finally
         {
@@ -174,9 +233,25 @@ public class SeatLayoutImportService(
         );
     }
 
-    public async Task<ExportFileDto> ExportAsync(
+    public Task<ExportFileDto> ExportAsync(
+        int roomId,
+        ActorContext actor,
+        ExportFormat format,
+        CancellationToken cancellationToken
+    ) =>
+        exportJobService.RunTrackedAsync(
+            actor,
+            ImportExportModules.SeatLayout,
+            format,
+            new { roomId },
+            (_, counter) => BuildExportAsync(roomId, format, counter, cancellationToken),
+            cancellationToken
+        );
+
+    private async Task<ExportFileDto> BuildExportAsync(
         int roomId,
         ExportFormat format,
+        IJobProgressReporter counter,
         CancellationToken cancellationToken
     )
     {
@@ -229,6 +304,8 @@ public class SeatLayoutImportService(
             );
         }
 
+        await counter.ReportAsync(rows.Count, cancellationToken);
+
         var columns = new List<ExportColumn<SeatLayoutExportRow>>
         {
             new(SeatLayoutImportColumns.SeatRow, r => r.SeatRow),
@@ -258,6 +335,24 @@ public class SeatLayoutImportService(
                 ExportFormats.Extension(format)
             )
         );
+    }
+
+    private async Task<ImportUpload> ReadUploadAsync(
+        ActorContext actor,
+        string module,
+        ImportFileInput file,
+        CancellationToken cancellationToken
+    )
+    {
+        try
+        {
+            return await ImportFileGuard.ReadAsync(file, cancellationToken);
+        }
+        catch (ValidationAppException ex)
+        {
+            ImportAuditLog.Rejected(logger, actor, module, file.FileName, ex.Message);
+            throw;
+        }
     }
 
     private SeatLayoutImportProcessor CreateProcessor(int roomId) =>

@@ -45,6 +45,7 @@ public static class DependencyInjection
         services.AddScoped(typeof(IImportService<>), typeof(ImportService<>));
         services.AddScoped<IImportApplyModule, ImportApplyModule<MovieImportRow>>();
         services.AddScoped<IImportApplyModule, ImportApplyModule<ShowtimeImportRow>>();
+        services.AddSingleton<IImportExportConcurrencyGuard, ImportExportConcurrencyGuard>();
         services.AddScoped<IImportExportJobTracker, ImportExportJobTracker>();
         services.AddScoped<IImportExportJobService, ImportExportJobService>();
         services.AddScoped<IExportJobService, ExportJobService>();

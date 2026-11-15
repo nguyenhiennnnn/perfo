@@ -1,7 +1,9 @@
+using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.ImportExport;
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -15,36 +17,34 @@ public class ImportExportJobTracker(
 {
     private const int MaxFileNameLength = 255;
     private const int MaxErrorLength = 2000;
+    private const int MaxRoleLength = 50;
+    private const int MaxIpLength = 45;
+    private const int MaxUserAgentLength = 500;
+    private const int MaxParametersLength = 4000;
 
     public async Task<Guid> CreateQueuedAsync(
         ImportExportJobType type,
         string module,
         string format,
-        int userId,
+        ActorContext actor,
         string? fileName,
         int totalRows,
+        string? parameters,
         CancellationToken cancellationToken
     )
     {
         await using var scope = scopeFactory.CreateAsyncScope();
         var db = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
 
-        var job = new ImportExportJob
-        {
-            JobId = Guid.NewGuid(),
-            Type = type,
-            Module = module,
-            Format = format,
-            Status = ImportExportJobStatus.Queued,
-            Progress = 0,
-            TotalRows = totalRows,
-            FileName = Truncate(fileName, MaxFileNameLength),
-            CreatedByUserId = userId,
-            CreatedAt = DateTime.UtcNow,
-        };
+        var job = NewJob(type, module, format, actor, fileName, parameters);
+        job.Status = ImportExportJobStatus.Queued;
+        job.Progress = 0;
+        job.TotalRows = totalRows;
 
         db.ImportExportJobs.Add(job);
         await db.SaveChangesAsync(cancellationToken);
+
+        Audit("Queued", job);
         return job.JobId;
     }
 
@@ -67,6 +67,8 @@ public class ImportExportJobTracker(
         job.ErrorMessage = null;
         await db.SaveChangesAsync(cancellationToken);
 
+        Audit("Started", job);
+
         await NotifyAsync(
             scope,
             job,
@@ -78,7 +80,7 @@ public class ImportExportJobTracker(
                 )
         );
 
-        return new ImportExportJobRunContext(job.CreatedByUserId, job.TotalRows);
+        return new ImportExportJobRunContext(job.CreatedByUserId, job.TotalRows, job.ActorRole);
     }
 
     public async Task ReportProgressAsync(
@@ -113,6 +115,7 @@ public class ImportExportJobTracker(
         Guid jobId,
         string fileName,
         FileUploadResult file,
+        long? fileSizeBytes,
         int totalRows,
         int retentionHours,
         CancellationToken cancellationToken
@@ -132,12 +135,15 @@ public class ImportExportJobTracker(
         job.SuccessRows = totalRows;
         job.FailedRows = 0;
         job.FileName = Truncate(fileName, MaxFileNameLength);
+        job.FileSizeBytes = fileSizeBytes;
         job.StoragePath = file.PublicId;
         job.FileUrl = file.Url;
         job.ErrorMessage = null;
         job.CompletedAt = now;
         job.ExpiresAt = now.AddHours(retentionHours);
         await db.SaveChangesAsync(cancellationToken);
+
+        Audit("Completed", job);
 
         await NotifyAsync(
             scope,
@@ -176,6 +182,8 @@ public class ImportExportJobTracker(
         job.CompletedAt = DateTime.UtcNow;
         await db.SaveChangesAsync(cancellationToken);
 
+        Audit(failed ? "Failed" : "Completed", job);
+
         await NotifyAsync(
             scope,
             job,
@@ -212,6 +220,8 @@ public class ImportExportJobTracker(
         job.CompletedAt = DateTime.UtcNow;
         await db.SaveChangesAsync(cancellationToken);
 
+        Audit("Failed", job);
+
         await NotifyAsync(
             scope,
             job,
@@ -228,56 +238,137 @@ public class ImportExportJobTracker(
         ImportExportJobType type,
         string module,
         string format,
-        int userId,
+        ActorContext actor,
         string? fileName,
         int totalRows,
         int successRows,
         int failedRows,
+        string? parameters,
+        long? fileSizeBytes,
         CancellationToken cancellationToken
     )
+    {
+        var job = NewJob(type, module, format, actor, fileName, parameters);
+        var now = job.CreatedAt;
+        job.Status =
+            type == ImportExportJobType.Import
+                ? ResolveImportStatus(successRows, failedRows)
+                : ImportExportJobStatus.Completed;
+        job.Progress = 100;
+        job.TotalRows = totalRows;
+        job.SuccessRows = successRows;
+        job.FailedRows = failedRows;
+        job.FileSizeBytes = fileSizeBytes;
+        job.StartedAt = now;
+        job.CompletedAt = now;
+
+        await PersistRecordAsync(job, cancellationToken);
+    }
+
+    public async Task RecordFailedAsync(
+        ImportExportJobType type,
+        string module,
+        string format,
+        ActorContext actor,
+        string? fileName,
+        string? parameters,
+        string errorMessage,
+        CancellationToken cancellationToken
+    )
+    {
+        var job = NewJob(type, module, format, actor, fileName, parameters);
+        job.Status = ImportExportJobStatus.Failed;
+        job.Progress = 100;
+        job.ErrorMessage = Truncate(errorMessage, MaxErrorLength);
+        job.StartedAt = job.CreatedAt;
+        job.CompletedAt = job.CreatedAt;
+
+        await PersistRecordAsync(job, cancellationToken);
+    }
+
+    private async Task PersistRecordAsync(ImportExportJob job, CancellationToken cancellationToken)
     {
         try
         {
             await using var scope = scopeFactory.CreateAsyncScope();
             var db = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
 
-            var now = DateTime.UtcNow;
-            var status =
-                type == ImportExportJobType.Import
-                    ? ResolveImportStatus(successRows, failedRows)
-                    : ImportExportJobStatus.Completed;
-
-            db.ImportExportJobs.Add(
-                new ImportExportJob
-                {
-                    JobId = Guid.NewGuid(),
-                    Type = type,
-                    Module = module,
-                    Format = format,
-                    Status = status,
-                    Progress = 100,
-                    TotalRows = totalRows,
-                    SuccessRows = successRows,
-                    FailedRows = failedRows,
-                    FileName = Truncate(fileName, MaxFileNameLength),
-                    CreatedByUserId = userId,
-                    CreatedAt = now,
-                    StartedAt = now,
-                    CompletedAt = now,
-                }
-            );
+            db.ImportExportJobs.Add(job);
             await db.SaveChangesAsync(cancellationToken);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            logger.LogWarning(
+            logger.LogError(
                 ex,
                 "Không ghi được lịch sử {Type} {Module} của UserId {UserId}",
-                type,
-                module,
-                userId
+                job.Type,
+                job.Module,
+                job.CreatedByUserId
             );
         }
+
+        Audit(job.Status == ImportExportJobStatus.Failed ? "Failed" : "Completed", job);
+    }
+
+    private static ImportExportJob NewJob(
+        ImportExportJobType type,
+        string module,
+        string format,
+        ActorContext actor,
+        string? fileName,
+        string? parameters
+    ) =>
+        new()
+        {
+            JobId = Guid.NewGuid(),
+            Type = type,
+            Module = module,
+            Format = format,
+            FileName = Truncate(fileName, MaxFileNameLength),
+            CreatedByUserId = actor.UserId,
+            ActorRole = Truncate(actor.Role, MaxRoleLength),
+            IpAddress = Truncate(actor.IpAddress, MaxIpLength),
+            UserAgent = Truncate(actor.UserAgent, MaxUserAgentLength),
+            Parameters = Truncate(parameters, MaxParametersLength),
+            IsSensitive = ImportExportModules.IsSensitive(module),
+            IsPiiMasked =
+                type == ImportExportJobType.Export
+                && !actor.IsAdmin
+                && ImportExportModules.ContainsPersonalData(module),
+            CreatedAt = DateTime.UtcNow,
+        };
+
+    private void Audit(string auditEvent, ImportExportJob job)
+    {
+        var level = job.Status == ImportExportJobStatus.Failed ? LogLevel.Warning : LogLevel.Information;
+
+        logger.Log(
+            level,
+            "ImportExportAudit {AuditEvent} JobId {JobId} Type {JobType} Module {Module} Format {Format} "
+                + "Status {Status} UserId {UserId} Role {Role} Ip {IpAddress} UserAgent {UserAgent} "
+                + "Sensitive {IsSensitive} PiiMasked {IsPiiMasked} TotalRows {TotalRows} "
+                + "SuccessRows {SuccessRows} FailedRows {FailedRows} FileName {FileName} "
+                + "FileSizeBytes {FileSizeBytes} Parameters {Parameters} Error {ErrorMessage}",
+            auditEvent,
+            job.JobId,
+            job.Type,
+            job.Module,
+            job.Format,
+            job.Status,
+            job.CreatedByUserId,
+            job.ActorRole,
+            job.IpAddress,
+            job.UserAgent,
+            job.IsSensitive,
+            job.IsPiiMasked,
+            job.TotalRows,
+            job.SuccessRows,
+            job.FailedRows,
+            job.FileName,
+            job.FileSizeBytes,
+            job.Parameters,
+            job.ErrorMessage
+        );
     }
 
     private static ImportExportJobStatus ResolveImportStatus(int successRows, int failedRows) =>

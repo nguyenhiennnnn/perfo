@@ -2415,4 +2415,20 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
     <value>Phòng có {0} suất chiếu sắp tới; ghế thay đổi sẽ được đồng bộ vào các suất này, giá ghế tính lại theo loại ghế mới.</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Import_Warn_SeatLayoutFutureShowtimes, ...)</comment>
   </data>
+  <data name="Rule_ImportExportTooManyActiveJobs" xml:space="preserve">
+    <value>Bạn đang có {0} tác vụ nhập/xuất đang chạy (tối đa {1}). Vui lòng chờ hoàn tất rồi thử lại.</value>
+    <comment>Có 2 tham số: dùng string.Format(Messages.Rule_ImportExportTooManyActiveJobs, ...)</comment>
+  </data>
+  <data name="Invalid_FileContentTypeNotAllowed" xml:space="preserve">
+    <value>Loại nội dung của file không hợp lệ. Chỉ chấp nhận file .xlsx hoặc .csv.</value>
+  </data>
+  <data name="Invalid_ImportMacroNotAllowed" xml:space="preserve">
+    <value>File chứa macro hoặc mã nhúng nên không được chấp nhận. Hãy lưu lại dưới dạng .xlsx không có macro.</value>
+  </data>
+  <data name="Invalid_ImportFileExpandedTooLarge" xml:space="preserve">
+    <value>Dung lượng của file sau khi giải nén vượt quá giới hạn cho phép.</value>
+  </data>
+  <data name="Job_StaleTimeout" xml:space="preserve">
+    <value>Tác vụ không hoàn tất trong thời gian cho phép nên đã bị đánh dấu thất bại. Vui lòng thử lại.</value>
+  </data>
 </root>

@@ -12,6 +12,7 @@ public interface IExportSource<TFilter>
     Task<ExportFileDto> ExportAsync(
         TFilter filter,
         ExportFormat format,
+        ExportContext context,
         IJobProgressReporter? progress,
         CancellationToken cancellationToken
     );
@@ -26,6 +27,7 @@ public interface IExportModule
     Task<ExportFileDto> ExportAsync(
         string filterJson,
         ExportFormat format,
+        ExportContext context,
         IJobProgressReporter? progress,
         CancellationToken cancellationToken
     );

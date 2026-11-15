@@ -1125,6 +1125,10 @@ namespace Cinema.Infrastructure.Migrations
                     b.Property<Guid>("JobId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("ActorRole")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -1152,6 +1156,9 @@ namespace Cinema.Infrastructure.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<long?>("FileSizeBytes")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("FileUrl")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
@@ -1161,10 +1168,28 @@ namespace Cinema.Infrastructure.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("character varying(10)");
 
+                    b.Property<string>("IpAddress")
+                        .HasMaxLength(45)
+                        .HasColumnType("character varying(45)");
+
+                    b.Property<bool>("IsPiiMasked")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsSensitive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Module")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Parameters")
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
 
                     b.Property<int>("Progress")
                         .ValueGeneratedOnAdd()
@@ -1200,6 +1225,10 @@ namespace Cinema.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<string>("UserAgent")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
                     b.HasKey("JobId");
 
                     b.HasIndex("ExpiresAt")
@@ -1208,6 +1237,9 @@ namespace Cinema.Infrastructure.Migrations
 
                     b.HasIndex("CreatedByUserId", "CreatedAt")
                         .HasDatabaseName("IX_ImportExportJobs_User_CreatedAt");
+
+                    b.HasIndex("CreatedByUserId", "Status")
+                        .HasDatabaseName("IX_ImportExportJobs_User_Status");
 
                     b.HasIndex("Type", "Module", "Status")
                         .HasDatabaseName("IX_ImportExportJobs_Type_Module_Status");

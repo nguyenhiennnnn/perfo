@@ -169,7 +169,14 @@ public class CloudinaryFileStorage : IFileStorage
             ResourceType = ResolveResourceType(resourceType),
         };
 
-        await _cloudinary.DestroyAsync(deleteParams);
+        var result = await _cloudinary.DestroyAsync(deleteParams);
+        if (result.Error is not null || !(result.Result is "ok" or "not found"))
+            throw new BusinessRuleException(
+                string.Format(
+                    Messages.Rule_CloudinaryUploadFailed,
+                    result.Error?.Message ?? result.Result
+                )
+            );
     }
 
     private static ResourceType ResolveResourceType(string resourceType) =>

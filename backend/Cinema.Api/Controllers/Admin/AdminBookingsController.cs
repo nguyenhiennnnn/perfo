@@ -1,12 +1,14 @@
+using Cinema.Api.Extensions;
+using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Bookings;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
-using Cinema.Api.Filters;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Cinema.Api.Controllers.Admin;
 
@@ -37,6 +39,7 @@ public class AdminBookingsController(
         return Ok(result);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ExportPolicy)]
     [HttpGet("export")]
     [Authorize(Policy = Policies.StaffOnly)]
     public async Task<IActionResult> ExportBookings(
@@ -47,7 +50,7 @@ public class AdminBookingsController(
     {
         var exportFormat = ExportFormats.Parse(format);
         var file = await exportJobService.ExportNowAsync(
-            CurrentUserId,
+            CurrentActor,
             ImportExportModules.Bookings,
             filter,
             exportFormat,
@@ -56,6 +59,7 @@ public class AdminBookingsController(
         return File(file.Content, file.ContentType, file.FileName);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ExportPolicy)]
     [HttpPost("export-jobs")]
     [SuccessMessage(nameof(Messages.Success_ExportJobQueued))]
     [Authorize(Policy = Policies.AdminOnly)]
@@ -67,7 +71,7 @@ public class AdminBookingsController(
         StatusCode(
             StatusCodes.Status202Accepted,
             await exportJobService.EnqueueAsync(
-                CurrentUserId,
+                CurrentActor,
                 ImportExportModules.Bookings,
                 filter,
                 ExportFormats.Parse(format),

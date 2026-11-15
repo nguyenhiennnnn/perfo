@@ -25,6 +25,7 @@ public class PaymentExportService(IAppDbContext db, IExportWriter exportWriter)
     public async Task<ExportFileDto> ExportAsync(
         AdminPaymentListFilter filter,
         ExportFormat format,
+        ExportContext context,
         IJobProgressReporter? progress,
         CancellationToken cancellationToken
     )

@@ -25,6 +25,7 @@ public class BookingExportService(IAppDbContext db, IExportWriter exportWriter)
     public async Task<ExportFileDto> ExportAsync(
         AdminBookingListFilter filter,
         ExportFormat format,
+        ExportContext context,
         IJobProgressReporter? progress,
         CancellationToken cancellationToken
     )
@@ -65,18 +66,18 @@ public class BookingExportService(IAppDbContext db, IExportWriter exportWriter)
             Module,
             Messages.Export_SheetBookings,
             format,
-            Columns(),
+            Columns(context),
             rows,
             cancellationToken,
             progress
         );
     }
 
-    private static IReadOnlyList<ExportColumn<BookingExportRow>> Columns() =>
+    private static IReadOnlyList<ExportColumn<BookingExportRow>> Columns(ExportContext context) =>
         [
             new(Messages.Export_ColBookingCode, x => x.BookingCode),
             new(Messages.Export_ColCustomer, x => x.CustomerName),
-            new(Messages.Export_ColPhone, x => x.CustomerPhone),
+            new(Messages.Export_ColPhone, x => context.Phone(x.CustomerPhone)),
             new(Messages.Export_ColMovieTitle, x => x.MovieTitle),
             new(Messages.Export_ColShowtime, x => x.ShowtimeStart, ExportColumnType.DateTime),
             new(

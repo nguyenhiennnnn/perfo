@@ -1,8 +1,10 @@
+using Cinema.Api.Extensions;
 using Cinema.Application.DTOs.ImportExport;
 using Cinema.Application.Interfaces;
 using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Cinema.Api.Controllers.Admin;
 
@@ -25,6 +27,7 @@ public class AdminImportExportController(IImportExportJobService jobService) : A
     public async Task<IActionResult> GetJob(Guid id, CancellationToken cancellationToken) =>
         Ok(await jobService.GetJobAsync(CurrentUserId, id, cancellationToken));
 
+    [EnableRateLimiting(RateLimitingExtensions.ExportPolicy)]
     [HttpGet("jobs/{id:guid}/download")]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> DownloadJobFile(Guid id, CancellationToken cancellationToken)

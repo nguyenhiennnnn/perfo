@@ -79,6 +79,12 @@ public static class BackgroundJobExtensions
             options.CleanupImportExportFilesCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<CleanupImportSessionsJob>(
+            RecurringJobIds.CleanupImportSessions,
+            j => j.RunAsync(CancellationToken.None),
+            options.CleanupImportSessionsCron,
+            jobOptions
+        );
 
         return app;
     }

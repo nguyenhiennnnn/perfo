@@ -18,6 +18,13 @@ public class ImportExportJob
     public string? FileUrl { get; set; }
     public string? ErrorMessage { get; set; }
     public int CreatedByUserId { get; set; }
+    public string? ActorRole { get; set; }
+    public string? IpAddress { get; set; }
+    public string? UserAgent { get; set; }
+    public string? Parameters { get; set; }
+    public long? FileSizeBytes { get; set; }
+    public bool IsSensitive { get; set; }
+    public bool IsPiiMasked { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? StartedAt { get; set; }
     public DateTime? CompletedAt { get; set; }

@@ -166,10 +166,36 @@ public class ImportExportJobService(
                 break;
         }
 
-        if (cleaned > 0)
-            logger.LogInformation("ImportExportCleanup: đã xoá {Count} file hết hạn.", cleaned);
+        var staleFailed = await FailStaleJobsAsync(cancellationToken);
+
+        if (cleaned > 0 || staleFailed > 0)
+            logger.LogInformation(
+                "ImportExportCleanup: đã xoá {Count} file hết hạn, đóng {StaleCount} tác vụ treo.",
+                cleaned,
+                staleFailed
+            );
 
         return cleaned;
+    }
+
+    private async Task<int> FailStaleJobsAsync(CancellationToken cancellationToken)
+    {
+        var now = DateTime.UtcNow;
+        var staleBefore = now.AddMinutes(-Math.Max(1, options.Value.ActiveJobStaleMinutes));
+
+        return await db
+            .ImportExportJobs.Where(j =>
+                (j.Status == ImportExportJobStatus.Queued || j.Status == ImportExportJobStatus.Running)
+                && j.CreatedAt < staleBefore
+            )
+            .ExecuteUpdateAsync(
+                setters =>
+                    setters
+                        .SetProperty(j => j.Status, ImportExportJobStatus.Failed)
+                        .SetProperty(j => j.ErrorMessage, Messages.Job_StaleTimeout)
+                        .SetProperty(j => j.CompletedAt, now),
+                cancellationToken
+            );
     }
 
     private bool CanViewAll(int userId) => options.Value.SuperAdminUserIds.Contains(userId);

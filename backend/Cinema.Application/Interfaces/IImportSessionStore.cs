@@ -15,4 +15,6 @@ public interface IImportSessionStore
     ImportSession<TRow> Get<TRow>(string previewId, int userId);
 
     void Remove(string previewId);
+
+    int PurgeExpired();
 }

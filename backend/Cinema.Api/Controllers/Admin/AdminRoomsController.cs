@@ -1,3 +1,4 @@
+using Cinema.Api.Extensions;
 using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Import;
 using Cinema.Application.DTOs.Rooms;
@@ -8,6 +9,7 @@ using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Cinema.Api.Controllers.Admin;
 
@@ -73,6 +75,7 @@ public class AdminRoomsController(
         CancellationToken cancellationToken
     ) => Ok(await roomService.UpdateSeatLayoutAsync(id, request, cancellationToken));
 
+    [EnableRateLimiting(RateLimitingExtensions.ExportPolicy)]
     [HttpGet("{id:int}/seat-layout/export")]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> ExportSeatLayout(
@@ -83,12 +86,14 @@ public class AdminRoomsController(
     {
         var file = await seatLayoutImportService.ExportAsync(
             id,
+            CurrentActor,
             ExportFormats.Parse(format),
             cancellationToken
         );
         return File(file.Content, file.ContentType, file.FileName);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ImportPolicy)]
     [HttpGet("{id:int}/seat-layout/import/template")]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> DownloadSeatLayoutImportTemplate(
@@ -100,6 +105,7 @@ public class AdminRoomsController(
         return File(file.Content, file.ContentType, file.FileName);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ImportPolicy)]
     [HttpPost("{id:int}/seat-layout/import/preview")]
     [Consumes("multipart/form-data")]
     [RequestSizeLimit(ImportLimits.MaxRequestBytes)]
@@ -110,24 +116,11 @@ public class AdminRoomsController(
         CancellationToken cancellationToken = default
     )
     {
-        if (file is null || file.Length == 0)
-            throw new ValidationAppException(
-                Messages.Invalid_UploadFileMissing,
-                new Dictionary<string, string[]> { ["file"] = [Messages.Invalid_FileEmpty] }
-            );
-
-        await using var stream = file.OpenReadStream();
-        return Ok(
-            await seatLayoutImportService.PreviewAsync(
-                id,
-                CurrentUserId,
-                file.FileName,
-                stream,
-                cancellationToken
-            )
-        );
+        await using var input = file.ToImportInput();
+        return Ok(await seatLayoutImportService.PreviewAsync(id, CurrentActor, input, cancellationToken));
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ImportPolicy)]
     [HttpPost("{id:int}/seat-layout/import/apply")]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> ApplySeatLayoutImport(
@@ -135,8 +128,9 @@ public class AdminRoomsController(
         [FromBody] ImportApplyRequest request,
         CancellationToken cancellationToken
     ) =>
-        Ok(await seatLayoutImportService.ApplyAsync(id, CurrentUserId, request, cancellationToken));
+        Ok(await seatLayoutImportService.ApplyAsync(id, CurrentActor, request, cancellationToken));
 
+    [EnableRateLimiting(RateLimitingExtensions.ImportPolicy)]
     [HttpGet("{id:int}/seat-layout/import/errors/{previewId}")]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> DownloadSeatLayoutImportErrors(

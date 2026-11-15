@@ -46,6 +46,12 @@ public class ImportExportJobConfiguration : IEntityTypeConfiguration<ImportExpor
         builder.Property(x => x.StoragePath).HasMaxLength(500);
         builder.Property(x => x.FileUrl).HasMaxLength(1000);
         builder.Property(x => x.ErrorMessage).HasMaxLength(2000);
+        builder.Property(x => x.ActorRole).HasMaxLength(50);
+        builder.Property(x => x.IpAddress).HasMaxLength(45);
+        builder.Property(x => x.UserAgent).HasMaxLength(500);
+        builder.Property(x => x.Parameters).HasMaxLength(4000);
+        builder.Property(x => x.IsSensitive).HasDefaultValue(false);
+        builder.Property(x => x.IsPiiMasked).HasDefaultValue(false);
         builder
             .Property(x => x.CreatedAt)
             .HasColumnType("timestamp without time zone")
@@ -63,6 +69,9 @@ public class ImportExportJobConfiguration : IEntityTypeConfiguration<ImportExpor
         builder
             .HasIndex(x => new { x.CreatedByUserId, x.CreatedAt })
             .HasDatabaseName("IX_ImportExportJobs_User_CreatedAt");
+        builder
+            .HasIndex(x => new { x.CreatedByUserId, x.Status })
+            .HasDatabaseName("IX_ImportExportJobs_User_Status");
         builder
             .HasIndex(x => new
             {

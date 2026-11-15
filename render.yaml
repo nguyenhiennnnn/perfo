@@ -82,6 +82,20 @@ services:
         value: "30"
       - key: RateLimit__GlobalSegmentsPerWindow
         value: "4"
+      - key: RateLimit__ExportPermitLimit
+        value: "10"
+      - key: RateLimit__ExportWindowSeconds
+        value: "60"
+      - key: RateLimit__ImportPermitLimit
+        value: "10"
+      - key: RateLimit__ImportWindowSeconds
+        value: "60"
+
+      # ── Import / Export ──────────────────────────────────────────────────
+      - key: ImportExport__MaxActiveJobsPerUser
+        value: "2"
+      - key: ImportExport__ActiveJobStaleMinutes
+        value: "60"
 
       # ── Scheduler ────────────────────────────────────────────────────────
       - key: Scheduler__DefaultWindowMinutes
@@ -98,6 +112,8 @@ services:
         value: "* * * * *"
       - key: BackgroundJobs__ShowtimeLifecycleCron
         value: "* * * * *"
+      - key: BackgroundJobs__CleanupImportSessionsCron
+        value: "*/5 * * * *"
       - key: BackgroundJobs__RetryAttempts
         value: "3"
 

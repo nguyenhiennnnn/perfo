@@ -1,8 +1,9 @@
+using Cinema.Application.DTOs.Common;
 using Cinema.Domain.Enums;
 
 namespace Cinema.Application.Interfaces;
 
-public sealed record ImportExportJobRunContext(int UserId, int TotalRows);
+public sealed record ImportExportJobRunContext(int UserId, int TotalRows, string? ActorRole);
 
 public interface IImportExportJobTracker
 {
@@ -10,9 +11,10 @@ public interface IImportExportJobTracker
         ImportExportJobType type,
         string module,
         string format,
-        int userId,
+        ActorContext actor,
         string? fileName,
         int totalRows,
+        string? parameters,
         CancellationToken cancellationToken
     );
 
@@ -27,6 +29,7 @@ public interface IImportExportJobTracker
         Guid jobId,
         string fileName,
         FileUploadResult file,
+        long? fileSizeBytes,
         int totalRows,
         int retentionHours,
         CancellationToken cancellationToken
@@ -46,11 +49,24 @@ public interface IImportExportJobTracker
         ImportExportJobType type,
         string module,
         string format,
-        int userId,
+        ActorContext actor,
         string? fileName,
         int totalRows,
         int successRows,
         int failedRows,
+        string? parameters,
+        long? fileSizeBytes,
+        CancellationToken cancellationToken
+    );
+
+    Task RecordFailedAsync(
+        ImportExportJobType type,
+        string module,
+        string format,
+        ActorContext actor,
+        string? fileName,
+        string? parameters,
+        string errorMessage,
         CancellationToken cancellationToken
     );
 }

@@ -1,3 +1,4 @@
+using Cinema.Api.Extensions;
 using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Import;
 using Cinema.Application.DTOs.ImportExport;
@@ -9,6 +10,7 @@ using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Cinema.Api.Controllers.Admin;
 
@@ -39,6 +41,7 @@ public class AdminShowtimesController(
         );
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ExportPolicy)]
     [HttpGet("export")]
     [Authorize(Policy = Policies.StaffOnly)]
     public async Task<IActionResult> ExportShowtimes(
@@ -49,7 +52,7 @@ public class AdminShowtimesController(
     {
         var exportFormat = ExportFormats.Parse(format);
         var file = await exportJobService.ExportNowAsync(
-            CurrentUserId,
+            CurrentActor,
             ImportExportModules.Showtimes,
             filter,
             exportFormat,
@@ -58,6 +61,7 @@ public class AdminShowtimesController(
         return File(file.Content, file.ContentType, file.FileName);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ExportPolicy)]
     [HttpPost("export-jobs")]
     [SuccessMessage(nameof(Messages.Success_ExportJobQueued))]
     [Authorize(Policy = Policies.AdminOnly)]
@@ -69,7 +73,7 @@ public class AdminShowtimesController(
         StatusCode(
             StatusCodes.Status202Accepted,
             await exportJobService.EnqueueAsync(
-                CurrentUserId,
+                CurrentActor,
                 ImportExportModules.Showtimes,
                 filter,
                 ExportFormats.Parse(format),
@@ -161,6 +165,7 @@ public class AdminShowtimesController(
         CancellationToken cancellationToken
     ) => Ok(await showtimeBatchService.BulkDeleteShowtimesAsync(request, cancellationToken));
 
+    [EnableRateLimiting(RateLimitingExtensions.ImportPolicy)]
     [HttpGet("import/template")]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> DownloadImportTemplate(CancellationToken cancellationToken)
@@ -169,6 +174,7 @@ public class AdminShowtimesController(
         return File(file.Content, file.ContentType, file.FileName);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ImportPolicy)]
     [HttpPost("import/preview")]
     [Consumes("multipart/form-data")]
     [RequestSizeLimit(ImportLimits.MaxRequestBytes)]
@@ -178,23 +184,13 @@ public class AdminShowtimesController(
         CancellationToken cancellationToken = default
     )
     {
-        if (file is null || file.Length == 0)
-            throw new ValidationAppException(
-                Messages.Invalid_UploadFileMissing,
-                new Dictionary<string, string[]> { ["file"] = [Messages.Invalid_FileEmpty] }
-            );
-
-        await using var stream = file.OpenReadStream();
-        var result = await showtimeImportService.PreviewAsync(
-            CurrentUserId,
-            file.FileName,
-            stream,
-            cancellationToken
-        );
+        await using var input = file.ToImportInput();
+        var result = await showtimeImportService.PreviewAsync(CurrentActor, input, cancellationToken);
 
         return Ok(result);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ImportPolicy)]
     [HttpPost("import/apply")]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> ApplyImport(
@@ -203,7 +199,7 @@ public class AdminShowtimesController(
     )
     {
         var outcome = await showtimeImportService.ApplyAsync(
-            CurrentUserId,
+            CurrentActor,
             request,
             cancellationToken
         );
@@ -212,6 +208,7 @@ public class AdminShowtimesController(
             : Ok(outcome.Result);
     }
 
+    [EnableRateLimiting(RateLimitingExtensions.ImportPolicy)]
     [HttpGet("import/errors/{previewId}")]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> DownloadImportErrors(

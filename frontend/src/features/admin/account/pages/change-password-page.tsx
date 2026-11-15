@@ -6,7 +6,8 @@ import { toast } from "@/components/ui/toast";
 import { ROUTES, getAdminHomePath } from "@/config/routes";
 import { useLogoutConfirm } from "@/hooks/use-logout-confirm";
 import { useAuthStore } from "@/stores/auth-store";
-import { ChangePasswordForm } from "@/features/auth/components/change-password-form";
+
+import { AdminChangePasswordForm } from "../components/admin-change-password-form";
 
 const AdminChangePasswordPage = () => {
   const navigate = useNavigate();
@@ -35,8 +36,7 @@ const AdminChangePasswordPage = () => {
         </p>
       </div>
 
-      <ChangePasswordForm
-        layout="stack"
+      <AdminChangePasswordForm
         submitLabel="Đổi mật khẩu"
         submitIcon={<KeyRound className="size-4" />}
         skipSuccessToast

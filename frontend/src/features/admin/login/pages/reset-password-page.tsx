@@ -3,9 +3,10 @@ import { useNavigate, useSearchParams } from "react-router";
 
 import { toast } from "@/components/ui/toast";
 import { ROUTES } from "@/config/routes";
-import { InvalidLinkNotice } from "@/features/auth/components/invalid-link-notice";
-import { SetPasswordForm } from "@/features/auth/components/set-password-form";
-import { isInvalidResetTokenError } from "@/features/auth/utils/reset-token-error";
+
+import { AdminInvalidLinkNotice } from "../components/admin-invalid-link-notice";
+import { AdminSetPasswordForm } from "../components/admin-set-password-form";
+import { isInvalidResetTokenError } from "../utils/reset-token-error";
 
 const CONTACT_ADMIN_HINT = "Hãy liên hệ quản trị viên để được mời lại.";
 
@@ -17,7 +18,7 @@ const AdminResetPasswordPage = () => {
 
   if (!token) {
     return (
-      <InvalidLinkNotice
+      <AdminInvalidLinkNotice
         title="Liên kết không hợp lệ"
         description={`Đường dẫn thiếu mã đặt mật khẩu. Hãy mở đúng liên kết trong email mời. ${CONTACT_ADMIN_HINT}`}
         actionLabel="Về trang đăng nhập"
@@ -28,7 +29,7 @@ const AdminResetPasswordPage = () => {
 
   if (tokenRejected) {
     return (
-      <InvalidLinkNotice
+      <AdminInvalidLinkNotice
         title="Liên kết đã hết hạn hoặc đã được dùng"
         description={`Không thể đặt mật khẩu bằng liên kết này. ${CONTACT_ADMIN_HINT}`}
         actionLabel="Về trang đăng nhập"
@@ -45,12 +46,8 @@ const AdminResetPasswordPage = () => {
           Đặt mật khẩu cho tài khoản quản trị của bạn để đăng nhập lần đầu
         </p>
       </div>
-      <SetPasswordForm
+      <AdminSetPasswordForm
         token={token}
-        submitLabel="Đặt mật khẩu"
-        newPasswordLabel="Mật khẩu"
-        confirmPasswordLabel="Xác nhận mật khẩu"
-        skipSuccessToast
         onSuccess={() => {
           toast.add({
             title: "Đã đặt mật khẩu",

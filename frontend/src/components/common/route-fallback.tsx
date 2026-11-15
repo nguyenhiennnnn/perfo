@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { PageLoader } from "@/components/common/spinner";
-
-const DEFAULT_DELAY_MS = 300;
+import { ROUTE_FALLBACK_DELAY_MS } from "@/config/default-constants";
 
 interface RouteFallbackProps {
   delay?: number;
 }
 
-export const RouteFallback = ({ delay = DEFAULT_DELAY_MS }: RouteFallbackProps) => {
+export const RouteFallback = ({ delay = ROUTE_FALLBACK_DELAY_MS }: RouteFallbackProps) => {
   const [visible, setVisible] = useState(delay <= 0);
 
   useEffect(() => {

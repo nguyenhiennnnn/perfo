@@ -30,6 +30,14 @@ export const ERROR_MESSAGES = {
   toastTitle: "Đã có lỗi xảy ra",
 } as const;
 
+export const VALIDATION_MESSAGES = {
+  emailInvalid: "Email không hợp lệ.",
+  emailRequired: "Vui lòng nhập email.",
+  fullNameRequired: "Vui lòng nhập họ tên.",
+  phoneInvalid: "Số điện thoại không hợp lệ.",
+  passwordMismatch: "Mật khẩu xác nhận không khớp.",
+} as const;
+
 export const SILENT_TOAST_STATUSES: readonly number[] = [HTTP_STATUS.unauthorized];
 
 export const ERROR_TOAST_DEDUPE_MS = 3000;

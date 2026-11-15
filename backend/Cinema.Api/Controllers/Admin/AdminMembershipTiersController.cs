@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/membership-tiers")]
+[Route(ApiPaths.AdminRoutePrefix + "/membership-tiers")]
 [Authorize(Policy = Policies.AdminOnly)]
 public class AdminMembershipTiersController(ICatalogService catalogService) : ControllerBase
 {

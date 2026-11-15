@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/payments")]
+[Route(ApiPaths.AdminRoutePrefix + "/payments")]
 [Authorize]
 public class AdminPaymentsController(
     IPaymentAdminService paymentAdminService,

@@ -1,3 +1,4 @@
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +13,7 @@ const customerFormSchema = z.object({
   customerPhone: z
     .string()
     .optional()
-    .refine((v) => !v || /^0\d{9,10}$/.test(v), "Số điện thoại không hợp lệ."),
+    .refine((v) => !v || /^0\d{9,10}$/.test(v), VALIDATION_MESSAGES.phoneInvalid),
 });
 
 type CustomerFormValues = z.infer<typeof customerFormSchema>;

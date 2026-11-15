@@ -1,3 +1,4 @@
+import { PERCENT_MAX } from "@/config/default-constants";
 import { cn } from "@/lib/utils";
 
 interface JobProgressBarProps {
@@ -13,14 +14,14 @@ export const JobProgressBar = ({
   indeterminate = false,
   className,
 }: JobProgressBarProps) => {
-  const clamped = Math.min(Math.max(Math.round(value), 0), 100);
+  const clamped = Math.min(Math.max(Math.round(value), 0), PERCENT_MAX);
 
   return (
     <div
       role="progressbar"
       aria-label={label}
       aria-valuemin={0}
-      aria-valuemax={100}
+      aria-valuemax={PERCENT_MAX}
       aria-valuenow={indeterminate ? undefined : clamped}
       className={cn("h-1.5 w-full overflow-hidden bg-secondary", className)}
     >

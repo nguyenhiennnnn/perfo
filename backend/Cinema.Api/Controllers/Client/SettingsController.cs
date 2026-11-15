@@ -1,11 +1,12 @@
 using Cinema.Application.DTOs.Settings;
 using Cinema.Application.Interfaces;
+using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Api.Controllers.Client;
 
 [ApiController]
-[Route("api/v1/settings")]
+[Route(ApiPaths.ApiVersionPrefix + "/settings")]
 public class SettingsController(ISettingsService settingsService) : ControllerBase
 {
     [HttpGet]

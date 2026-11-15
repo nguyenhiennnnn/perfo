@@ -1,3 +1,4 @@
+using Cinema.Shared.Constants;
 using System.Text.Json;
 using Cinema.Api.Filters;
 using Cinema.Application.Interfaces;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/payments")]
+[Route(ApiPaths.ApiVersionPrefix + "/payments")]
 public class PaymentsController(IPaymentService paymentService) : ControllerBase
 {
     [HttpGet("vnpay/ipn")]

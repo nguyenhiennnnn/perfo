@@ -1,4 +1,5 @@
 using Cinema.Application.Interfaces;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Client;
 
 [ApiController]
-[Route("api/v1/combos")]
+[Route(ApiPaths.ApiVersionPrefix + "/combos")]
 public class CombosController(IComboService comboService) : ControllerBase
 {
     [HttpGet]

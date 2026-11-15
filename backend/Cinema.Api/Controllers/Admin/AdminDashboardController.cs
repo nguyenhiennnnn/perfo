@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/dashboard")]
+[Route(ApiPaths.AdminRoutePrefix + "/dashboard")]
 [Authorize(Policy = Policies.AdminOnly)]
 public class AdminDashboardController(IDashboardService dashboardService) : ControllerBase
 {

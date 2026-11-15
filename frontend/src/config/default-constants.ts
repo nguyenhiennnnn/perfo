@@ -63,6 +63,9 @@ export const IMPORT_EXPORT_RESYNC_INTERVAL_MS = 15_000;
 export const IMPORT_EXPORT_PANEL_MAX_ITEMS = 20;
 export const HERO_INTERVAL_MS = 7000;
 export const HERO_TRANSITION_MS = 480;
+export const HERO_LEAVE_GRACE_MS = 40;
+export const ROUTE_FALLBACK_DELAY_MS = 300;
+export const GOOGLE_SIGN_IN_BUTTON_WIDTH_PX = 336;
 
 export const FORM_PENDING_LABEL = "Đang lưu...";
 export const FORM_CANCEL_LABEL = "Hủy";

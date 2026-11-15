@@ -1,3 +1,4 @@
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,7 +16,7 @@ import { useForgotPassword } from "../hooks/use-auth";
 import { ROUTES } from "@/config/routes";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().min(1, "Vui lòng nhập email.").email("Email không hợp lệ."),
+  email: z.string().min(1, VALIDATION_MESSAGES.emailRequired).email(VALIDATION_MESSAGES.emailInvalid),
 });
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 

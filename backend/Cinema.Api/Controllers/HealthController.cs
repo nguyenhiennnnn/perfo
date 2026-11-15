@@ -1,9 +1,10 @@
+using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/health")]
+[Route(ApiPaths.ApiVersionPrefix + "/health")]
 public class HealthController : ControllerBase
 {
     [HttpGet]

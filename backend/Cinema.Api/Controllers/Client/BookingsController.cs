@@ -3,6 +3,7 @@ using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Bookings;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.Interfaces;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace Cinema.Api.Controllers.Client;
 
 [ApiController]
-[Route("api/v1/bookings")]
+[Route(ApiPaths.ApiVersionPrefix + "/bookings")]
 [Authorize]
 public class BookingsController(
     IBookingHoldService bookingHoldService,

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { IMPORT_EXPORT_PANEL_MAX_ITEMS } from "@/config/default-constants";
+import { ImportExportJobStatus } from "@/types/enum";
 import type { ImportExportJobDto } from "@/types/import-export";
 
 export interface TrackedImportExportJob {
@@ -19,7 +20,8 @@ interface ImportExportJobStore {
 }
 
 const isFinished = (job: ImportExportJobDto | null) =>
-  job?.status === "Completed" || job?.status === "Failed";
+  job?.status === ImportExportJobStatus.Completed ||
+  job?.status === ImportExportJobStatus.Failed;
 
 export const useImportExportJobStore = create<ImportExportJobStore>()(
   (set) => ({

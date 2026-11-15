@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/languages")]
+[Route(ApiPaths.AdminRoutePrefix + "/languages")]
 [Authorize]
 public class AdminLanguagesController(ICatalogService catalogService) : ControllerBase
 {

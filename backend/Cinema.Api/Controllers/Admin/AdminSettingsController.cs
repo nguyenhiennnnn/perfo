@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/settings")]
+[Route(ApiPaths.AdminRoutePrefix + "/settings")]
 [Authorize]
 public class AdminSettingsController(ISettingsService settingsService) : ControllerBase
 {

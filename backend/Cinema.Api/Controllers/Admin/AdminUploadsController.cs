@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/uploads")]
+[Route(ApiPaths.AdminRoutePrefix + "/uploads")]
 [Authorize(Policy = Policies.AdminOnly)]
 public class AdminUploadsController(IFileStorage fileStorage) : ControllerBase
 {

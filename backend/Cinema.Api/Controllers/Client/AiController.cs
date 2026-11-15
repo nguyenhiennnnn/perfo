@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Client;
 
 [ApiController]
-[Route("api/v1/ai")]
+[Route(ApiPaths.ApiVersionPrefix + "/ai")]
 public class AiController(IAiAssistantService aiAssistantService) : ControllerBase
 {
     [HttpPost("chat")]

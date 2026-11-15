@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/genres")]
+[Route(ApiPaths.AdminRoutePrefix + "/genres")]
 [Authorize]
 public class AdminGenresController(ICatalogService catalogService) : ControllerBase
 {

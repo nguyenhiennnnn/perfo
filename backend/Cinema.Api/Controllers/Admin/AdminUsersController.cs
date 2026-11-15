@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/users")]
+[Route(ApiPaths.AdminRoutePrefix + "/users")]
 [Authorize]
 public class AdminUsersController(IUserAdminService userAdminService) : AppControllerBase
 {

@@ -1,3 +1,4 @@
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -29,7 +30,7 @@ const settingsFormSchema = z.object({
   name: z.string().min(1, "Vui lòng nhập tên rạp."),
   address: z.string().min(1, "Vui lòng nhập địa chỉ."),
   phone: z.string().optional().or(z.literal("")),
-  email: z.string().email("Email không hợp lệ.").optional().or(z.literal("")),
+  email: z.string().email(VALIDATION_MESSAGES.emailInvalid).optional().or(z.literal("")),
   taxCode: z.string().optional().or(z.literal("")),
   logoUrl: z.string().optional().or(z.literal("")),
   openingTime: z.string().optional().or(z.literal("")),
@@ -239,7 +240,7 @@ const AdminSettingsPage = () => {
             label="% hoàn vé"
             type="number"
             min={0}
-            max={100}
+            max={PERCENT_MAX}
           />
           <FormInputField
             name="cancelDeadlineHours"
@@ -254,7 +255,7 @@ const AdminSettingsPage = () => {
             label="Ngừng bán online trước giờ chiếu (phút)"
             type="number"
             min={0}
-            max={1440}
+            max={SETTINGS_FIELD_MAX.stopSellingMinutesBefore}
           />
           <div className="sm:col-span-2">
             <FormSelectField
@@ -275,7 +276,7 @@ const AdminSettingsPage = () => {
             label="Khoảng nghỉ giữa các suất (phút)"
             type="number"
             min={0}
-            max={120}
+            max={SETTINGS_FIELD_MAX.roomBufferMinutes}
           />
           <FormInputField
             name="maxSeatsPerBooking"
@@ -283,7 +284,7 @@ const AdminSettingsPage = () => {
             label="Số ghế tối đa / booking"
             type="number"
             min={1}
-            max={50}
+            max={SETTINGS_FIELD_MAX.maxSeatsPerBooking}
           />
           <FormInputField
             name="maxComboQuantity"
@@ -291,7 +292,7 @@ const AdminSettingsPage = () => {
             label="Số lượng tối đa mỗi combo"
             type="number"
             min={1}
-            max={50}
+            max={SETTINGS_FIELD_MAX.maxComboQuantity}
           />
           <FormInputField
             name="loyaltyWindowMonths"
@@ -299,7 +300,7 @@ const AdminSettingsPage = () => {
             label="Hiệu lực điểm thưởng (tháng)"
             type="number"
             min={1}
-            max={120}
+            max={SETTINGS_FIELD_MAX.loyaltyWindowMonths}
           />
           <FormInputField
             name="movieEndGraceDays"
@@ -307,7 +308,7 @@ const AdminSettingsPage = () => {
             label="Gia hạn phim Ended sau suất cuối (ngày)"
             type="number"
             min={0}
-            max={365}
+            max={SETTINGS_FIELD_MAX.movieEndGraceDays}
           />
           <FormInputField
             name="showtimeLookaheadDays"
@@ -315,7 +316,7 @@ const AdminSettingsPage = () => {
             label="Số ngày lịch chiếu hiển thị"
             type="number"
             min={1}
-            max={60}
+            max={SETTINGS_FIELD_MAX.showtimeLookaheadDays}
           />
         </SettingsSection>
 
@@ -326,7 +327,7 @@ const AdminSettingsPage = () => {
             label="Xếp lịch: bước dò giờ (phút)"
             type="number"
             min={1}
-            max={60}
+            max={SETTINGS_FIELD_MAX.schedulerStepMinutes}
           />
           <FormInputField
             name="schedulerMinSameMovieGapMinutes"
@@ -334,7 +335,7 @@ const AdminSettingsPage = () => {
             label="Xếp lịch: giãn cách cùng phim (phút)"
             type="number"
             min={0}
-            max={1440}
+            max={SETTINGS_FIELD_MAX.schedulerMinSameMovieGapMinutes}
           />
           <FormInputField
             name="schedulerHeatLookbackDays"
@@ -342,7 +343,7 @@ const AdminSettingsPage = () => {
             label="Heat: số ngày tính doanh số vé"
             type="number"
             min={1}
-            max={365}
+            max={SETTINGS_FIELD_MAX.schedulerHeatLookbackDays}
           />
           <FormInputField
             name="schedulerMaxRating"
@@ -351,7 +352,7 @@ const AdminSettingsPage = () => {
             type="number"
             step={0.5}
             min={1}
-            max={10}
+            max={SETTINGS_FIELD_MAX.schedulerMaxRating}
           />
           <FormInputField
             name="schedulerHeatSalesWeight"
@@ -360,7 +361,7 @@ const AdminSettingsPage = () => {
             type="number"
             step={0.05}
             min={0}
-            max={10}
+            max={SETTINGS_FIELD_MAX.schedulerHeatSalesWeight}
           />
           <FormInputField
             name="schedulerHeatRatingWeight"
@@ -369,7 +370,7 @@ const AdminSettingsPage = () => {
             type="number"
             step={0.05}
             min={0}
-            max={10}
+            max={SETTINGS_FIELD_MAX.schedulerHeatRatingWeight}
           />
         </SettingsSection>
 

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/import-export")]
+[Route(ApiPaths.AdminRoutePrefix + "/import-export")]
 [Authorize]
 public class AdminImportExportController(IImportExportJobService jobService) : AppControllerBase
 {

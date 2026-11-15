@@ -15,15 +15,15 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         );
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedNever();
-        builder.Property(x => x.Name).HasMaxLength(150).IsRequired();
-        builder.Property(x => x.Address).HasMaxLength(255).IsRequired();
+        builder.Property(x => x.Name).HasMaxLength(FieldLengths.CinemaName).IsRequired();
+        builder.Property(x => x.Address).HasMaxLength(FieldLengths.CinemaAddress).IsRequired();
         builder.Property(x => x.Phone).HasMaxLength(FieldLengths.Phone);
         builder.Property(x => x.Email).HasMaxLength(FieldLengths.Email);
         builder.Property(x => x.TaxCode).HasMaxLength(FieldLengths.Name);
         builder.Property(x => x.LogoUrl).HasMaxLength(FieldLengths.Url);
         builder
             .Property(x => x.DefaultEmployeePassword)
-            .HasMaxLength(100)
+            .HasMaxLength(FieldLengths.DefaultEmployeePassword)
             .IsRequired()
             .HasDefaultValue(CinemaSettings.DefaultEmployeePasswordValue);
         builder.Property(x => x.OpeningTime).HasColumnType("time");

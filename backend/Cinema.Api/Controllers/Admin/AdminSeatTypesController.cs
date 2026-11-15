@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/seat-types")]
+[Route(ApiPaths.AdminRoutePrefix + "/seat-types")]
 [Authorize]
 public class AdminSeatTypesController(ICatalogService catalogService) : ControllerBase
 {

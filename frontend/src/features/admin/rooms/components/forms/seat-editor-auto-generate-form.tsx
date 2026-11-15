@@ -98,7 +98,7 @@ export const SeatEditorAutoGenerateForm = ({
               label="Số hàng"
               type="number"
               min={1}
-              max={52}
+              max={SEAT_GRID_MAX_ROWS}
             />
           </div>
           <div className="flex-1">
@@ -108,7 +108,7 @@ export const SeatEditorAutoGenerateForm = ({
               label="Số cột"
               type="number"
               min={1}
-              max={60}
+              max={SEAT_GRID_MAX_COLS}
             />
           </div>
         </div>

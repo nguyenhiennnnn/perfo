@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/bookings")]
+[Route(ApiPaths.AdminRoutePrefix + "/bookings")]
 [Authorize]
 public class AdminCounterController(ICounterBookingService counterBookingService)
     : AppControllerBase

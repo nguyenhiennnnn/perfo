@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { BRAND } from "@/config/brand";
 
 type Theme = "dark" | "light" | "system";
 
@@ -23,7 +24,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 export const ThemeProvider = ({
   children,
   defaultTheme = "system",
-  storageKey = "vite-ui-theme",
+  storageKey = BRAND.storageKeys.theme,
   ...props
 }: ThemeProviderProps) => {
   const [theme, setTheme] = useState<Theme>(

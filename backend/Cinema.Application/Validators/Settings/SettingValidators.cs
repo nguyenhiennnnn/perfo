@@ -15,13 +15,13 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithMessage(Messages.Validation_CinemaName_Required)
-            .MaximumLength(150)
+            .MaximumLength(FieldLengths.CinemaName)
             .WithMessage(Messages.Validation_CinemaName_MaxLength150);
 
         RuleFor(x => x.Address)
             .NotEmpty()
             .WithMessage(Messages.Validation_Address_Required)
-            .MaximumLength(255)
+            .MaximumLength(FieldLengths.CinemaAddress)
             .WithMessage(Messages.Validation_Address_MaxLength255);
 
         RuleFor(x => x.Phone).MaximumLength(FieldLengths.Phone).WithMessage(Messages.Validation_Phone_MaxLength20);
@@ -84,7 +84,7 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
 
         RuleFor(x => x.DefaultEmployeePassword!)
             .StrongPassword()
-            .MaximumLength(100)
+            .MaximumLength(FieldLengths.DefaultEmployeePassword)
             .WithMessage(Messages.Validation_DefaultEmployeePassword_MaxLength100)
             .When(x => x.DefaultEmployeePassword is not null);
 

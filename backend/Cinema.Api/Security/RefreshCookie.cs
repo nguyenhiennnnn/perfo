@@ -1,4 +1,5 @@
 using Cinema.Application.Options;
+using Cinema.Shared.Constants;
 using Microsoft.Extensions.Options;
 
 namespace Cinema.Api.Security;
@@ -8,7 +9,7 @@ public class RefreshCookieOptions
     public const string SectionName = "Auth:RefreshCookie";
 
     public string Name { get; set; } = "perfo_refresh_token";
-    public string Path { get; set; } = "/api/v1/auth";
+    public string Path { get; set; } = ApiPaths.AuthPath;
     public string? Domain { get; set; }
     public string SameSite { get; set; } = "Lax";
     public bool Secure { get; set; } = true;

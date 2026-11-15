@@ -1,3 +1,4 @@
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 import { z } from "zod";
 
 import { strongPasswordSchema } from "@/lib/validators";
@@ -8,7 +9,7 @@ export const adminSetPasswordSchema = z
     confirmPassword: z.string().min(1, "Vui lòng xác nhận mật khẩu."),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Mật khẩu xác nhận không khớp.",
+    message: VALIDATION_MESSAGES.passwordMismatch,
     path: ["confirmPassword"],
   });
 

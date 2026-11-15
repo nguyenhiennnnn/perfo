@@ -8,7 +8,10 @@ import type { GoogleCredentialResponse } from "@/types/google-identity";
 
 import { useGoogleLogin } from "../hooks/use-auth";
 import { ENV } from "@/config/env";
-import { GOOGLE_SDK_POLL_INTERVAL_MS } from "@/config/default-constants";
+import {
+  GOOGLE_SDK_POLL_INTERVAL_MS,
+  GOOGLE_SIGN_IN_BUTTON_WIDTH_PX,
+} from "@/config/default-constants";
 import { getSafeRedirect } from "@/lib/utils";
 
 const GOOGLE_CLIENT_ID = ENV.GOOGLE_CLIENT_ID;
@@ -73,7 +76,7 @@ export const GoogleSignInButton = ({ redirectTo }: GoogleSignInButtonProps) => {
         size: "large",
         text: "continue_with",
         shape: "rectangular",
-        width: 336,
+        width: GOOGLE_SIGN_IN_BUTTON_WIDTH_PX,
       });
     };
 

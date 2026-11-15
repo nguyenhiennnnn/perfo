@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/positions")]
+[Route(ApiPaths.AdminRoutePrefix + "/positions")]
 [Authorize(Policy = Policies.AdminOnly)]
 public class AdminPositionsController(ICatalogService catalogService) : ControllerBase
 {

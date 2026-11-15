@@ -1,3 +1,4 @@
+using Cinema.Shared.Constants;
 using Microsoft.OpenApi;
 
 namespace Cinema.Api.Extensions;
@@ -6,7 +7,6 @@ public static class SwaggerExtensions
 {
     private const string ClientDoc = "client";
     private const string AdminDoc = "admin";
-    private const string AdminRoutePrefix = "api/v1/admin";
 
     public static IServiceCollection AddSwaggerDocs(
         this IServiceCollection services,
@@ -29,7 +29,7 @@ public static class SwaggerExtensions
                 (docName, apiDesc) =>
                 {
                     var isAdminRoute = (apiDesc.RelativePath ?? string.Empty).StartsWith(
-                        AdminRoutePrefix,
+                        ApiPaths.AdminRoutePrefix,
                         StringComparison.OrdinalIgnoreCase
                     );
                     return docName switch

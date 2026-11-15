@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
-import { HERO_TRANSITION_MS } from "@/config/default-constants";
+import {
+  HERO_LEAVE_GRACE_MS,
+  HERO_TRANSITION_MS,
+} from "@/config/default-constants";
 
 export type HeroDirection = "next" | "prev";
 
@@ -82,7 +85,7 @@ export function useHeroCarousel(count: number) {
 
   useEffect(() => {
     if (!leaving) return;
-    const wait = reducedMotion ? 0 : HERO_TRANSITION_MS + 40;
+    const wait = reducedMotion ? 0 : HERO_TRANSITION_MS + HERO_LEAVE_GRACE_MS;
     const id = window.setTimeout(() => {
       setState((prev) => ({ ...prev, leaving: null }));
     }, wait);

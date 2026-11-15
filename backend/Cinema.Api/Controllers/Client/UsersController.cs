@@ -4,6 +4,7 @@ using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Reviews;
 using Cinema.Application.DTOs.Users;
 using Cinema.Application.Interfaces;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Cinema.Shared.Results;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Client;
 
 [ApiController]
-[Route("api/v1/users")]
+[Route(ApiPaths.ApiVersionPrefix + "/users")]
 [Authorize]
 public class UsersController(
     IUserProfileService userProfileService,

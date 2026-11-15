@@ -1,3 +1,4 @@
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useSearchParams } from "react-router";
@@ -15,7 +16,7 @@ import { ROUTES, getAdminHomePath } from "@/config/routes";
 import { getSafeRedirect } from "@/lib/utils";
 
 const adminLoginSchema = z.object({
-  email: z.string().min(1, "Vui lòng nhập email.").email("Email không hợp lệ."),
+  email: z.string().min(1, VALIDATION_MESSAGES.emailRequired).email(VALIDATION_MESSAGES.emailInvalid),
   password: loginPasswordSchema,
 });
 

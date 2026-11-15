@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/reports")]
+[Route(ApiPaths.AdminRoutePrefix + "/reports")]
 [Authorize(Policy = Policies.AdminOnly)]
 public class AdminReportsController(
     IReportService reportService,

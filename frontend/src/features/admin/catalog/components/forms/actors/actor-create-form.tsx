@@ -1,3 +1,4 @@
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -13,7 +14,7 @@ import { useServerFieldErrors } from "@/hooks/use-server-field-errors";
 const actorFormSchema = z.object({
   fullName: z
     .string()
-    .min(1, "Vui lòng nhập họ tên.")
+    .min(1, VALIDATION_MESSAGES.fullNameRequired)
     .max(PERSON_NAME_MAX_LENGTH, `Họ tên tối đa ${PERSON_NAME_MAX_LENGTH} ký tự.`),
   avatarUrl: z
     .string()

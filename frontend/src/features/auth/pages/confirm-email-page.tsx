@@ -1,3 +1,4 @@
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 import { useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router";
 import { Controller, useForm } from "react-hook-form";
@@ -13,7 +14,7 @@ import { getDisplayMessage } from "@/lib/error";
 import { ROUTES } from "@/config/routes";
 
 const resendSchema = z.object({
-  email: z.string().min(1, "Vui lòng nhập email.").email("Email không hợp lệ."),
+  email: z.string().min(1, VALIDATION_MESSAGES.emailRequired).email(VALIDATION_MESSAGES.emailInvalid),
 });
 type ResendFormValues = z.infer<typeof resendSchema>;
 

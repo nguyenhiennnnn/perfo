@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/combos")]
+[Route(ApiPaths.AdminRoutePrefix + "/combos")]
 [Authorize]
 public class AdminCombosController(IComboService comboService) : ControllerBase
 {

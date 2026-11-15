@@ -1,3 +1,4 @@
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -26,7 +27,7 @@ const GENDER_OPTIONS = [
 ];
 
 const profileFormSchema = z.object({
-  fullName: z.string().min(1, "Vui lòng nhập họ tên.").max(PERSON_NAME_MAX_LENGTH, `Họ tên tối đa ${PERSON_NAME_MAX_LENGTH} ký tự.`),
+  fullName: z.string().min(1, VALIDATION_MESSAGES.fullNameRequired).max(PERSON_NAME_MAX_LENGTH, `Họ tên tối đa ${PERSON_NAME_MAX_LENGTH} ký tự.`),
   phone: z.string().max(PHONE_MAX_LENGTH, `Số điện thoại tối đa ${PHONE_MAX_LENGTH} ký tự.`).optional().or(z.literal("")),
   dateOfBirth: z.string().nullable().optional(),
   gender: z.string().nullable().optional(),

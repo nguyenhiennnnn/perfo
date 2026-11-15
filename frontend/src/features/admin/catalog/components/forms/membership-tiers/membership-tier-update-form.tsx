@@ -95,7 +95,7 @@ export const MembershipTierUpdateForm = ({
           label="Phần trăm giảm giá"
           type="number"
           min={0}
-          max={100}
+          max={PERCENT_MAX}
           step={0.5}
         />
       </FieldGroup>

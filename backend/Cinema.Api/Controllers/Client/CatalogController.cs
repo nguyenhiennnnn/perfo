@@ -1,10 +1,11 @@
 using Cinema.Application.Interfaces;
+using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Api.Controllers.Client;
 
 [ApiController]
-[Route("api/v1")]
+[Route(ApiPaths.ApiVersionPrefix)]
 public class CatalogController(ICatalogService catalogService) : ControllerBase
 {
     [HttpGet("genres")]

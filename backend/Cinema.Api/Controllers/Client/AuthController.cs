@@ -3,6 +3,7 @@ using Cinema.Api.Filters;
 using Cinema.Api.Security;
 using Cinema.Application.DTOs.Auth;
 using Cinema.Application.Interfaces;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Results;
 using Microsoft.AspNetCore.Authorization;
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace Cinema.Api.Controllers.Client;
 
 [ApiController]
-[Route("api/v1/auth")]
+[Route(ApiPaths.ApiVersionPrefix + "/auth")]
 public class AuthController(
     IAuthService authService,
     IRegistrationService registrationService,

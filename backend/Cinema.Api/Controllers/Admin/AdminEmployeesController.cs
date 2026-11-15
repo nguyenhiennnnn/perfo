@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/employees")]
+[Route(ApiPaths.AdminRoutePrefix + "/employees")]
 [Authorize]
 public class AdminEmployeesController(IEmployeeService employeeService) : AppControllerBase
 {

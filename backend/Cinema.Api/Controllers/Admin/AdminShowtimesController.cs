@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/showtimes")]
+[Route(ApiPaths.AdminRoutePrefix + "/showtimes")]
 [Authorize]
 public class AdminShowtimesController(
     IShowtimeService showtimeService,

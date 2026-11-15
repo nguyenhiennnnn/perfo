@@ -268,7 +268,7 @@ export const ShowtimeAutoScheduleForm = ({ onSuccess }: ShowtimeAutoScheduleForm
                           {...field}
                           type="number"
                           min={1}
-                          max={20}
+                          max={AUTO_SCHEDULE_MAX_SHOWS_PER_MOVIE}
                           aria-invalid={fieldState.invalid}
                         />
                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

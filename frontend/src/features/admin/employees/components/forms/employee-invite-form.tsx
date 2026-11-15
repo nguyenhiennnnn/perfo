@@ -1,3 +1,4 @@
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,12 +18,12 @@ import { useAdminPositions } from "@/features/admin/catalog/hooks/use-admin-posi
 import { usePositionQuickCreate } from "@/features/admin/catalog/hooks/use-quick-create";
 
 const inviteFormSchema = z.object({
-  fullName: z.string().trim().min(1, "Vui lòng nhập họ tên.").max(NAME_MAX_LENGTH, `Họ tên tối đa ${NAME_MAX_LENGTH} ký tự.`),
-  email: z.string().trim().min(1, "Vui lòng nhập email.").email("Email không hợp lệ.").max(EMAIL_MAX_LENGTH),
+  fullName: z.string().trim().min(1, VALIDATION_MESSAGES.fullNameRequired).max(NAME_MAX_LENGTH, `Họ tên tối đa ${NAME_MAX_LENGTH} ký tự.`),
+  email: z.string().trim().min(1, VALIDATION_MESSAGES.emailRequired).email(VALIDATION_MESSAGES.emailInvalid).max(EMAIL_MAX_LENGTH),
   phone: z
     .string()
     .trim()
-    .regex(VN_PHONE_REGEX, "Số điện thoại không hợp lệ.")
+    .regex(VN_PHONE_REGEX, VALIDATION_MESSAGES.phoneInvalid)
     .optional()
     .or(z.literal("")),
   positionId: z.coerce.number().optional(),

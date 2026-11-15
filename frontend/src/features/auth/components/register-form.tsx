@@ -1,3 +1,4 @@
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,20 +23,20 @@ const registerSchema = z
     fullName: z.string().min(2, "Họ tên phải có ít nhất 2 ký tự."),
     email: z
       .string()
-      .min(1, "Vui lòng nhập email.")
-      .email("Email không hợp lệ."),
+      .min(1, VALIDATION_MESSAGES.emailRequired)
+      .email(VALIDATION_MESSAGES.emailInvalid),
     phone: z
       .string()
       .optional()
       .refine(
         (v) => !v || /^0\d{9,10}$/.test(v),
-        "Số điện thoại không hợp lệ.",
+        VALIDATION_MESSAGES.phoneInvalid,
       ),
     password: strongPasswordSchema,
     confirmPassword: z.string().min(1, "Vui lòng xác nhận mật khẩu."),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Mật khẩu xác nhận không khớp.",
+    message: VALIDATION_MESSAGES.passwordMismatch,
     path: ["confirmPassword"],
   });
 

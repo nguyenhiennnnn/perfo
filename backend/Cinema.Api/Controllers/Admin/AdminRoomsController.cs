@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/rooms")]
+[Route(ApiPaths.AdminRoutePrefix + "/rooms")]
 [Authorize]
 public class AdminRoomsController(
     IRoomService roomService,

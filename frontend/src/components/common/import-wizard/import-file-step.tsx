@@ -3,7 +3,11 @@ import { Download, FileSpreadsheet, Upload, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/common/spinner";
-import { IMPORT_ACCEPT, IMPORT_MAX_FILE_BYTES } from "@/config/default-constants";
+import {
+  IMPORT_ACCEPT,
+  IMPORT_MAX_FILE_BYTES,
+  PERCENT_MAX,
+} from "@/config/default-constants";
 import { useBlockDialogClose } from "@/hooks/use-block-dialog-close";
 import { cn } from "@/lib/utils";
 import type { ImportPreviewResponse } from "@/types/import";
@@ -24,7 +28,7 @@ interface ImportFileStepProps {
   onCancel: () => void;
 }
 
-const UPLOAD_COMPLETE_PERCENT = 100;
+const UPLOAD_COMPLETE_PERCENT = PERCENT_MAX;
 
 export const ImportFileStep = ({
   config,
@@ -134,7 +138,7 @@ export const ImportFileStep = ({
               <div
                 role="progressbar"
                 aria-valuemin={0}
-                aria-valuemax={100}
+                aria-valuemax={PERCENT_MAX}
                 aria-valuenow={isAnalyzing ? undefined : progress}
                 className="h-1.5 w-full overflow-hidden bg-muted"
               >

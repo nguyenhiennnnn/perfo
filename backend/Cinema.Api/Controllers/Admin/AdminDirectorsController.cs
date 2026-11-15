@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/directors")]
+[Route(ApiPaths.AdminRoutePrefix + "/directors")]
 [Authorize]
 public class AdminDirectorsController(ICatalogService catalogService) : ControllerBase
 {

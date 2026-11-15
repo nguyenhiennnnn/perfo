@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/screen-types")]
+[Route(ApiPaths.AdminRoutePrefix + "/screen-types")]
 [Authorize]
 public class AdminScreenTypesController(ICatalogService catalogService) : ControllerBase
 {

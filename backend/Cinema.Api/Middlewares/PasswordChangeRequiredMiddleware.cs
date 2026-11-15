@@ -9,10 +9,10 @@ public class PasswordChangeRequiredMiddleware(RequestDelegate next)
 {
     private static readonly (string Method, string Path)[] AllowedEndpoints =
     [
-        ("GET", "/api/v1/auth/me"),
-        ("POST", "/api/v1/auth/refresh"),
-        ("POST", "/api/v1/auth/logout"),
-        ("POST", "/api/v1/users/me/change-password"),
+        ("GET", ApiPaths.AuthPath + "/me"),
+        ("POST", ApiPaths.AuthPath + "/refresh"),
+        ("POST", ApiPaths.AuthPath + "/logout"),
+        ("POST", "/" + ApiPaths.ApiVersionPrefix + "/users/me/change-password"),
     ];
 
     public Task InvokeAsync(HttpContext context)

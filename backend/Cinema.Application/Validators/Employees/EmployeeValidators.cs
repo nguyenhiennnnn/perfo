@@ -42,7 +42,7 @@ public class InviteEmployeeRequestValidator : AbstractValidator<InviteEmployeeRe
             .WithMessage(Messages.Validation_Email_Required)
             .EmailAddress()
             .WithMessage(Messages.Validation_Email_Invalid)
-            .MaximumLength(150)
+            .MaximumLength(FieldLengths.Email)
             .WithMessage(Messages.Validation_Email_MaxLength150);
 
         RuleFor(x => x.Phone)
@@ -73,7 +73,7 @@ public class CreateEmployeeDirectRequestValidator : AbstractValidator<CreateEmpl
             .WithMessage(Messages.Validation_Email_Required)
             .EmailAddress()
             .WithMessage(Messages.Validation_Email_Invalid)
-            .MaximumLength(150)
+            .MaximumLength(FieldLengths.Email)
             .WithMessage(Messages.Validation_Email_MaxLength150);
 
         RuleFor(x => x.Phone)

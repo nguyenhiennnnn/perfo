@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Client;
 
 [ApiController]
-[Route("api/v1/movies")]
+[Route(ApiPaths.ApiVersionPrefix + "/movies")]
 public class MoviesController(IMovieService movieService, IReviewService reviewService)
     : AppControllerBase
 {

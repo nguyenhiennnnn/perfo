@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cinema.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/v1/admin/reviews")]
+[Route(ApiPaths.AdminRoutePrefix + "/reviews")]
 [Authorize]
 public class AdminReviewsController(IReviewService reviewService) : ControllerBase
 {

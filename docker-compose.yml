@@ -1,9 +1,5 @@
 name: cinema
 
-# Môi trường PHÁT TRIỂN: hot-reload cho BE (dotnet watch) và FE (Vite HMR).
-# Database: Neon PostgreSQL Cloud (không dùng postgres local nữa).
-# Copy .env.example thành .env trước khi chạy: `docker compose up --build -d`
-
 services:
   api:
     build:
@@ -116,10 +112,10 @@ services:
       test:
         [
           "CMD",
-          "wget",
-          "--no-verbose",
-          "--tries=1",
-          "--spider",
+          "curl",
+          "-fsS",
+          "-o",
+          "/dev/null",
           "http://127.0.0.1:8080/api/v1/health",
         ]
       interval: 15s

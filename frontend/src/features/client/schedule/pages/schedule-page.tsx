@@ -1,4 +1,5 @@
 ﻿import { useEffect } from "react";
+import { cn } from "@/lib/utils";
 import { addDays } from "date-fns";
 import { CalendarX } from "lucide-react";
 import { DateStrip } from "@/components/common/date-strip";
@@ -28,7 +29,7 @@ const SchedulePage = () => {
     if (isOutOfRange) setScheduleParams({ date: null, format: null });
   }, [isOutOfRange, setScheduleParams]);
 
-  const { data, isLoading } = useSchedule(selectedDate, format);
+  const { data, isLoading, isPlaceholderData } = useSchedule(selectedDate, format);
   const movies = data?.movies ?? [];
 
   return (
@@ -57,7 +58,10 @@ const SchedulePage = () => {
         />
       </div>
 
-      <div className="mt-6 space-y-4">
+      <div
+        aria-busy={isPlaceholderData || undefined}
+        className={cn("mt-6 space-y-4", isPlaceholderData && "pointer-events-none opacity-60 transition-opacity")}
+      >
         {isLoading ? (
           Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-40 w-full" />)
         ) : movies.length === 0 ? (

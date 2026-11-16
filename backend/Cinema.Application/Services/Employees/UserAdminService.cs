@@ -31,8 +31,10 @@ public class UserAdminService(IAppDbContext db, IOptions<BookingOptions>? bookin
 
         if (roleId is not null)
             query = query.Where(u => u.RoleId == roleId);
-        if (!string.IsNullOrWhiteSpace(search))
-            query = query.Where(u => u.FullName.Contains(search) || u.Email.Contains(search));
+        query = query.ApplySearch(search, (q, pattern) =>
+            q.Where(u =>
+                EF.Functions.ILike(EF.Functions.Unaccent(u.FullName), EF.Functions.Unaccent(pattern))
+                || EF.Functions.ILike(u.Email, pattern)));
         query = query.OrderByDescending(u => u.CreatedAt);
 
         var total = await query.CountAsync(cancellationToken);
@@ -73,11 +75,10 @@ public class UserAdminService(IAppDbContext db, IOptions<BookingOptions>? bookin
             query = query.Where(u => !employeeUserIds.Contains(u.UserId));
         }
 
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            var trimmed = search.Trim();
-            query = query.Where(u => u.FullName.Contains(trimmed) || u.Email.Contains(trimmed));
-        }
+        query = query.ApplySearch(search, (q, pattern) =>
+            q.Where(u =>
+                EF.Functions.ILike(EF.Functions.Unaccent(u.FullName), EF.Functions.Unaccent(pattern))
+                || EF.Functions.ILike(u.Email, pattern)));
 
         return await query
             .OrderBy(u => u.FullName)
@@ -94,23 +95,25 @@ public class UserAdminService(IAppDbContext db, IOptions<BookingOptions>? bookin
         if (string.IsNullOrWhiteSpace(query))
             return [];
 
-        var trimmed = query.Trim();
         var limit = _bookingOptions.CustomerLookupLimit;
 
-        var users = await db
+        var usersQuery = db
             .Users.AsNoTracking()
             .Include(u => u.Role)
             .Include(u => u.CustomerProfile)
                 .ThenInclude(cp => cp!.Tier)
-            .Where(u =>
-                u.Role.RoleName == Roles.Customer
-                && u.IsActive
-                && (
-                    (u.Phone != null && u.Phone.Contains(trimmed))
-                    || u.Email.Contains(trimmed)
-                    || u.FullName.Contains(trimmed)
-                )
-            )
+            .Where(u => u.Role.RoleName == Roles.Customer && u.IsActive);
+
+        usersQuery = usersQuery.ApplySearch(query, (q, textPattern, phonePattern) =>
+            q.Where(u =>
+                EF.Functions.ILike(EF.Functions.Unaccent(u.FullName), EF.Functions.Unaccent(textPattern))
+                || EF.Functions.ILike(u.Email, textPattern)
+                || (u.Phone != null
+                    && (EF.Functions.ILike(u.Phone, textPattern)
+                        || EF.Functions.ILike(u.Phone, phonePattern)))
+            ));
+
+        var users = await usersQuery
             .OrderBy(u => u.FullName)
             .Take(limit)
             .ToListAsync(cancellationToken);

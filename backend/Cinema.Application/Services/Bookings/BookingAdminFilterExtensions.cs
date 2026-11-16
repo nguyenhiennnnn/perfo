@@ -2,6 +2,7 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Services.Bookings;
 
@@ -30,12 +31,14 @@ internal static class BookingAdminFilterExtensions
             query = query.Where(b =>
                 b.CreatedAt < BusinessTime.StartOfNextDayUtc(filter.ToDate.Value)
             );
-        if (!string.IsNullOrWhiteSpace(filter.Search))
-            query = query.Where(b =>
-                b.BookingCode.Contains(filter.Search)
-                || b.CustomerName.Contains(filter.Search)
-                || (b.CustomerPhone != null && b.CustomerPhone.Contains(filter.Search))
-            );
+        query = query.ApplySearch(filter.Search, (q, textPattern, phonePattern) =>
+            q.Where(b =>
+                EF.Functions.ILike(b.BookingCode, textPattern)
+                || EF.Functions.ILike(EF.Functions.Unaccent(b.CustomerName), EF.Functions.Unaccent(textPattern))
+                || (b.CustomerPhone != null
+                    && (EF.Functions.ILike(b.CustomerPhone, textPattern)
+                        || EF.Functions.ILike(b.CustomerPhone, phonePattern)))
+            ));
 
         return query;
     }

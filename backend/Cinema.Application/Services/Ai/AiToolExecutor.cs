@@ -118,7 +118,6 @@ public class AiToolExecutor(IAppDbContext db, ILogger<AiToolExecutor> logger)
     {
         var now = DateTime.UtcNow;
         var movieId = GetInt(args, "movie_id");
-        var title = GetString(args, "movie_title")?.Trim().ToLowerInvariant();
 
         var query = db
             .Showtimes.AsNoTracking()
@@ -149,13 +148,11 @@ public class AiToolExecutor(IAppDbContext db, ILogger<AiToolExecutor> logger)
 
         if (movieId.HasValue)
             query = query.Where(s => s.MovieId == movieId.Value);
-        else if (!string.IsNullOrEmpty(title))
-            query = query.Where(s =>
-                s.Movie.Title.ToLower().Contains(title)
-                || (
-                    s.Movie.OriginalTitle != null && s.Movie.OriginalTitle.ToLower().Contains(title)
-                )
-            );
+        else
+            query = query.ApplySearch(GetString(args, "movie_title"), (q, pattern) =>
+                q.Where(s =>
+                    EF.Functions.ILike(EF.Functions.Unaccent(s.Movie.Title), EF.Functions.Unaccent(pattern))
+                    || EF.Functions.ILike(EF.Functions.Unaccent(s.Movie.OriginalTitle ?? ""), EF.Functions.Unaccent(pattern))));
 
         var rows = await query
             .OrderBy(s => s.StartTime)

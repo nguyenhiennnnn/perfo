@@ -241,11 +241,8 @@ public class CatalogService(IAppDbContext db) : ICatalogService
     )
     {
         var query = db.Directors.AsQueryable();
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            var term = NameNormalizer.Normalize(search).ToLowerInvariant();
-            query = query.Where(d => d.FullName.ToLower().Contains(term));
-        }
+        query = query.ApplySearch(search, (q, pattern) =>
+            q.Where(d => EF.Functions.ILike(EF.Functions.Unaccent(d.FullName), EF.Functions.Unaccent(pattern))));
         query = query.OrderBy(d => d.FullName);
 
         var total = await query.CountAsync(cancellationToken);
@@ -335,11 +332,8 @@ public class CatalogService(IAppDbContext db) : ICatalogService
     )
     {
         var query = db.Actors.AsQueryable();
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            var term = NameNormalizer.Normalize(search).ToLowerInvariant();
-            query = query.Where(a => a.FullName.ToLower().Contains(term));
-        }
+        query = query.ApplySearch(search, (q, pattern) =>
+            q.Where(a => EF.Functions.ILike(EF.Functions.Unaccent(a.FullName), EF.Functions.Unaccent(pattern))));
         query = query.OrderBy(a => a.FullName);
 
         var total = await query.CountAsync(cancellationToken);

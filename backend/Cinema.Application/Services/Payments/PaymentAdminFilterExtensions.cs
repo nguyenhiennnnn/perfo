@@ -2,6 +2,7 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Services.Payments;
 
@@ -30,11 +31,11 @@ internal static class PaymentAdminFilterExtensions
             query = query.Where(p =>
                 p.CreatedAt < DateTimeUtils.GetStartOfNextDay(filter.ToDate.Value)
             );
-        if (!string.IsNullOrWhiteSpace(filter.Search))
-            query = query.Where(p =>
-                (p.TransactionId != null && p.TransactionId.Contains(filter.Search))
-                || p.Booking.BookingCode.Contains(filter.Search)
-            );
+        query = query.ApplySearch(filter.Search, (q, pattern) =>
+            q.Where(p =>
+                (p.TransactionId != null && EF.Functions.ILike(p.TransactionId, pattern))
+                || EF.Functions.ILike(p.Booking.BookingCode, pattern)
+            ));
 
         return query;
     }

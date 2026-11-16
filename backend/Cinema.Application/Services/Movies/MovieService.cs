@@ -42,8 +42,10 @@ public class MovieService : IMovieService
             query = query.Where(m => m.LanguageId == filter.LanguageId);
         if (filter.AgeRatingId is not null)
             query = query.Where(m => m.AgeRatingId == filter.AgeRatingId);
-        if (!string.IsNullOrWhiteSpace(filter.Search))
-            query = query.Where(m => m.Title.Contains(filter.Search));
+        query = query.ApplySearch(filter.Search, (q, pattern) =>
+            q.Where(m =>
+                EF.Functions.ILike(EF.Functions.Unaccent(m.Title), EF.Functions.Unaccent(pattern))
+                || EF.Functions.ILike(EF.Functions.Unaccent(m.OriginalTitle ?? ""), EF.Functions.Unaccent(pattern))));
 
         var cursorId = CursorCodec.Decode(cursor);
         if (cursorId is not null)
@@ -152,8 +154,10 @@ public class MovieService : IMovieService
             query = query.Where(m => m.LanguageId == filter.LanguageId);
         if (filter.AgeRatingId is not null)
             query = query.Where(m => m.AgeRatingId == filter.AgeRatingId);
-        if (!string.IsNullOrWhiteSpace(filter.Search))
-            query = query.Where(m => m.Title.Contains(filter.Search));
+        query = query.ApplySearch(filter.Search, (q, pattern) =>
+            q.Where(m =>
+                EF.Functions.ILike(EF.Functions.Unaccent(m.Title), EF.Functions.Unaccent(pattern))
+                || EF.Functions.ILike(EF.Functions.Unaccent(m.OriginalTitle ?? ""), EF.Functions.Unaccent(pattern))));
 
         query = query.OrderByDescending(m => m.CreatedAt);
 

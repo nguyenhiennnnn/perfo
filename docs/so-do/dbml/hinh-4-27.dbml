@@ -90,6 +90,11 @@ Table ShowtimeSeats {
   HeldByUserId int
 }
 
+Table ImportExportJobs {
+  JobId uuid [pk]
+  CreatedByUserId int
+}
+
 Ref: Users.RoleId > Roles.RoleId
 Ref: CustomerProfiles.UserId - Users.UserId
 Ref: CustomerProfiles.TierId > MembershipTiers.TierId
@@ -103,3 +108,4 @@ Ref: Bookings.UserId > Users.UserId
 Ref: Bookings.CreatedByEmployeeId > Employees.EmployeeId
 Ref: Reviews.UserId > Users.UserId
 Ref: ShowtimeSeats.HeldByUserId > Users.UserId
+Ref: ImportExportJobs.CreatedByUserId > Users.UserId

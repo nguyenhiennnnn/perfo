@@ -38,6 +38,7 @@ actor "Cổng Stripe" <<Hệ thống>> as A_STR
 actor "Dịch vụ email" <<Hệ thống>> as A_MAIL
 A_KVL -- UC_HT_07
 A_QTV -- UC_HT_06
+A_QTV -- UC_HT_07
 UC_HT_01 -- A_NEN
 UC_HT_02 -- A_NEN
 UC_HT_03 -- A_NEN

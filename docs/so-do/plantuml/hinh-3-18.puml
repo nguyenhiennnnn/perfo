@@ -33,4 +33,6 @@ A_QTV -- UC_QN_05
 A_QTV -- UC_QN_06
 A_QTV -- UC_QN_07
 UC_QN_03 ..> UC_BQ_01 : <<extend>>
+UC_QN_06 ..> UC_QN_04 : <<include>>
+UC_QN_07 ..> UC_QN_02 : <<include>>
 @enduml

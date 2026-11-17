@@ -1,76 +1,60 @@
-// Hình 4.32. ERD module Đặt vé
+// Hình 4.31. ERD module Suất chiếu
 // Dán vào https://dbdiagram.io/d để vẽ; xuất PNG/SVG/PDF.
 
-Table Bookings {
-  BookingId int [pk]
-  BookingCode varchar [not null, unique]
-  Channel varchar [not null, note: 'enum BookingChannel']
+Table Showtimes {
+  ShowtimeId int [pk]
+  BasePrice decimal [not null]
   CreatedAt timestamp [not null]
-  CreatedByEmployeeId int
-  CustomerName varchar [not null]
-  CustomerPhone varchar
-  DiscountAmount decimal [not null]
-  ExpiresAt timestamp
-  FinalAmount decimal [not null]
+  EndTime timestamp [not null]
+  MovieId int [not null]
+  RoomId int [not null]
+  StartTime timestamp [not null]
+  Status varchar [not null, note: 'enum ShowtimeStatus']
+}
+
+Table ShowtimeSeats {
+  ShowtimeSeatId int [pk]
+  HeldByBookingId int
+  HeldByUserId int
+  HeldUntil timestamp
+  Price decimal [not null]
+  SeatId int [not null]
   ShowtimeId int [not null]
-  Status varchar [not null, note: 'enum BookingStatus']
-  TotalAmount decimal [not null]
-  UserId int
+  Status varchar [not null, note: 'enum ShowtimeSeatStatus']
+  indexes {
+    (SeatId, ShowtimeId) [unique]
+  }
 }
 
-Table BookingTickets {
-  TicketId int [pk]
-  BookingId int [not null]
-  CheckedInAt timestamp
-  IsCheckedIn boolean [not null]
-  Price decimal [not null]
-  QrCode varchar
-  ShowtimeSeatId int [not null, unique]
+Table Movies {
+  MovieId int [pk]
 }
 
-Table BookingCombos {
-  BookingComboId int [pk]
-  BookingId int [not null]
-  ComboId int [not null]
-  Quantity int [not null]
-  UnitPrice decimal [not null]
+Table CinemaRooms {
+  RoomId int [pk]
 }
 
-Table Combos {
-  ComboId int [pk]
-  Description varchar
-  ImageUrl varchar
-  IsActive boolean [not null]
-  Name varchar [not null]
-  Price decimal [not null]
+Table Seats {
+  SeatId int [pk]
 }
 
 Table Users {
   UserId int [pk]
 }
 
-Table Employees {
-  EmployeeId int [pk]
+Table Bookings {
+  BookingId int [pk]
 }
 
-Table Showtimes {
-  ShowtimeId int [pk]
+Table BookingTickets {
+  TicketId int [pk]
+  ShowtimeSeatId int
 }
 
-Table ShowtimeSeats {
-  ShowtimeSeatId int [pk]
-}
-
-Table Payments {
-  PaymentId int [pk]
-  BookingId int
-}
-
-Ref: Bookings.UserId > Users.UserId
-Ref: Bookings.CreatedByEmployeeId > Employees.EmployeeId
-Ref: Bookings.ShowtimeId > Showtimes.ShowtimeId
-Ref: BookingTickets.BookingId > Bookings.BookingId
-Ref: BookingCombos.BookingId > Bookings.BookingId
+Ref: Showtimes.MovieId > Movies.MovieId
+Ref: Showtimes.RoomId > CinemaRooms.RoomId
+Ref: ShowtimeSeats.ShowtimeId > Showtimes.ShowtimeId
+Ref: ShowtimeSeats.SeatId > Seats.SeatId
+Ref: ShowtimeSeats.HeldByUserId > Users.UserId
+Ref: ShowtimeSeats.HeldByBookingId > Bookings.BookingId
 Ref: BookingTickets.ShowtimeSeatId - ShowtimeSeats.ShowtimeSeatId
-Ref: BookingCombos.ComboId > Combos.ComboId
-Ref: Payments.BookingId > Bookings.BookingId

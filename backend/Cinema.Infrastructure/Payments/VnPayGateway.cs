@@ -223,6 +223,8 @@ public class VnPayGateway(
         string? vnp_TransactionNo
     );
 
+    // VNPAY spec: sign data phải dùng giá trị RAW (không URL-encode)
+    // URL-encoding chỉ áp dụng khi build query string thực tế
     private static string BuildSignData(SortedDictionary<string, string> sortedParams) =>
-        string.Join("&", sortedParams.Select(kv => $"{kv.Key}={HttpUtility.UrlEncode(kv.Value)}"));
+        string.Join("&", sortedParams.Select(kv => $"{kv.Key}={kv.Value}"));
 }

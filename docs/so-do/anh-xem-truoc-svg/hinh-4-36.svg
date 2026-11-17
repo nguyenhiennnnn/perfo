@@ -1,32 +1,184 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="862.5px" preserveAspectRatio="none" style="width:2015px;height:862px;" version="1.1" viewBox="0 0 2015 862" width="2015.625px" zoomAndPan="magnify"><defs/><g><ellipse cx="845.5" cy="28.125" fill="#000000" rx="15.625" ry="15.625" style="stroke: none; stroke-width: 1.5625;"/><rect fill="#F8F8F8" height="62.5" rx="19.5313" ry="19.5313" style="stroke: #383838; stroke-width: 2.34375;" width="85.9375" x="802.5313" y="209.375"/><text fill="#000000" font-family="Times New Roman" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="70.3125" x="810.3438" y="248.4703">Pending</text><rect fill="#F8F8F8" height="62.5" rx="19.5313" ry="19.5313" style="stroke: #383838; stroke-width: 2.34375;" width="109.375" x="1090.8125" y="437.5"/><text fill="#000000" font-family="Times New Roman" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="93.75" x="1098.625" y="476.5953">Confirmed</text><rect fill="#F8F8F8" height="62.5" rx="19.5313" ry="19.5313" style="stroke: #383838; stroke-width: 2.34375;" width="82.8125" x="133.7813" y="546.875"/><text fill="#000000" font-family="Times New Roman" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="67.1875" x="141.5938" y="585.9703">Expired</text><rect fill="#F8F8F8" height="62.5" rx="19.5313" ry="19.5313" style="stroke: #383838; stroke-width: 2.34375;" width="100" x="739.25" y="656.25"/><text fill="#000000" font-family="Times New Roman" font-size="21.875" lengthAdjust="spacingAndGlyphs" textLength="84.375" x="747.0625" y="695.3453">Cancelled</text><ellipse cx="520.5" cy="829.6875" fill="none" rx="15.625" ry="15.625" style="stroke: #000000; stroke-width: 1.5625;"/><ellipse cx="521.2813" cy="830.4688" fill="#000000" rx="9.375" ry="9.375" style="stroke: none; stroke-width: 1.5625;"/><!--link *start to Pending--><path d="M845.5,44.0781 C845.5,75.6406 845.5,151.9219 845.5,199.1719 " fill="none" id="*start-Pending" style="stroke: #383838; stroke-width: 1.5625;"/><polygon fill="#383838" points="845.5,206.4219,851.75,192.3594,845.5,198.6094,839.25,192.3594,845.5,206.4219" style="stroke: #383838; stroke-width: 1.5625;"/><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="220.3125" x="847.0625" y="111.1511">CreateHoldBookingAsync</text><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="153.125" x="880.6563" y="134.5085">(HoldSeatsAsync,</text><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="215.625" x="851.75" y="157.8659">CounterHoldSeatsAsync)</text><!--link Pending to Confirmed--><path d="M868.7188,272.625 C894.6094,305.0469 939.0938,356.3125 986.125,390.625 C1015.125,411.7656 1050.875,429.5625 1081.1563,442.6719 " fill="none" id="Pending-Confirmed" style="stroke: #383838; stroke-width: 1.5625;"/><polygon fill="#383838" points="1088.2031,445.6563,1077.71,434.3996,1081.0142,442.5976,1072.8162,445.9018,1088.2031,445.6563" style="stroke: #383838; stroke-width: 1.5625;"/><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="364.0625" x="987.6875" y="339.2761">ConfirmBookingAndGenerateTicketsAsync</text><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="201.5625" x="1066.5938" y="362.6335">(thanh toán thành công,</text><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="209.375" x="1065.0313" y="385.9909">CounterCheckoutAsync)</text><!--link Pending to Expired--><path d="M802.0469,242.9219 C640.6563,246.1094 82.25,261.2344 29.875,318.75 C-32.4531,387.2031 64.9375,487 128.0938,540.125 " fill="none" id="Pending-Expired" style="stroke: #383838; stroke-width: 1.5625;"/><polygon fill="#383838" points="133.7969,544.8594,126.9899,531.0579,127.7933,539.8601,118.9911,540.6636,133.7969,544.8594" style="stroke: #383838; stroke-width: 1.5625;"/><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="312.5" x="31.4375" y="350.9949">ExpireDueBookingsAsync (ExpiresAt</text><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="142.1875" x="118.9375" y="374.3523">nhỏ hơn hiện tại)</text><!--link Pending to Cancelled--><path d="M802.1875,247.4219 C713.8438,260.7031 514.3281,304.7188 433,437.5 C355.4375,564.1406 608.1094,642.9844 728.7813,672.5938 " fill="none" id="Pending-Cancelled" style="stroke: #383838; stroke-width: 1.5625;"/><polygon fill="#383838" points="736.3281,674.4219,724.1229,665.0491,728.7334,672.5902,721.1922,677.2007,736.3281,674.4219" style="stroke: #383838; stroke-width: 1.5625;"/><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="198.4375" x="434.5625" y="465.0574">khách hủy đơn Pending</text><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="195.3125" x="438.4688" y="488.4148">(CancelBookingAsync)</text><!--link Pending to Cancelled--><path d="M821.6094,272.4531 C794.3594,309.0781 751.4063,373.7813 734.5625,437.5 C715.1406,511.0625 746.625,598.125 769.2969,647.2031 " fill="none" id="Pending-Cancelled-1" style="stroke: #383838; stroke-width: 1.5625;"/><polygon fill="#383838" points="772.4063,653.7813,772.0221,638.3972,769.0561,646.7235,760.7297,643.7575,772.4063,653.7813" style="stroke: #383838; stroke-width: 1.5625;"/><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="321.875" x="736.125" y="465.0574">thanh toán thất bại và quá hạn giữ ghế</text><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="262.5" x="768.1563" y="488.4148">(ProcessPaymentFailureAsync)</text><!--link Pending to Cancelled--><path d="M888.9063,241.75 C1001.5625,241.6406 1298.7344,248.1875 1359.5625,318.75 C1401.3281,367.1875 1455.875,491.5781 1347.0625,609.375 C1280.9688,680.9375 979.6875,687.4688 849.4844,686.8594 " fill="none" id="Pending-Cancelled-2" style="stroke: #383838; stroke-width: 1.5625;"/><polygon fill="#383838" points="842.0313,686.8125,856.0578,693.1428,849.8436,686.8571,856.1292,680.643,842.0313,686.8125" style="stroke: #383838; stroke-width: 1.5625;"/><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="343.75" x="1412.3906" y="465.0574">thanh toán thành công nhưng không còn</text><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="329.6875" x="1419.4219" y="488.4148">ghế giữ (SeatsNoLongerHeldException)</text><!--link Pending to Cancelled--><path d="M888.5781,245.0469 C984.9531,252.0625 1224.875,273 1420.5,318.75 C1591.0781,358.6406 1874.9688,359.375 1770.5,500 C1659.6563,649.2188 1046.1563,678.9219 849.75,684.625 " fill="none" id="Pending-Cancelled-3" style="stroke: #383838; stroke-width: 1.5625;"/><polygon fill="#383838" points="841.9844,684.8438,856.2196,690.6896,849.7937,684.6206,855.8626,678.1947,841.9844,684.8438" style="stroke: #383838; stroke-width: 1.5625;"/><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="154.6875" x="1816.4063" y="465.0574">rạp hủy suất chiếu</text><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="203.125" x="1794.5313" y="488.4148">(DeleteShowtimeAsync)</text><!--link Confirmed to Cancelled--><path d="M1090.5,488.4375 C1076.9063,492.5625 1062.3125,496.7031 1048.625,500 C990.6875,513.9688 822.8438,501.2031 784.5625,546.875 C761.8906,573.9375 766.6406,615.4375 774.8906,646.0625 " fill="none" id="Confirmed-Cancelled" style="stroke: #383838; stroke-width: 1.5625;"/><polygon fill="#383838" points="777,653.3125,779.0625,638.0625,774.8125,645.8125,767.0625,641.5625,777,653.3125" style="stroke: #383838; stroke-width: 1.5625;"/><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="292.1875" x="786.125" y="574.4324">khách hủy theo điều kiện hoàn tiền</text><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="195.3125" x="836.9063" y="597.7898">(CancelBookingAsync)</text><!--link Confirmed to Cancelled--><path d="M1141.7656,500.3906 C1136.2031,532.0781 1122.7344,581.25 1090.8125,609.375 C1023.5469,668.6563 916.75,683.25 849.9375,686.1875 " fill="none" id="Confirmed-Cancelled-1" style="stroke: #383838; stroke-width: 1.5625;"/><polygon fill="#383838" points="842.3438,686.4688,856.6122,692.2332,850.1517,686.2011,856.1838,679.7406,842.3438,686.4688" style="stroke: #383838; stroke-width: 1.5625;"/><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="154.6875" x="1152.4531" y="574.4324">rạp hủy suất chiếu</text><text fill="#000000" font-family="Times New Roman" font-size="20.3125" lengthAdjust="spacingAndGlyphs" textLength="203.125" x="1130.5781" y="597.7898">(DeleteShowtimeAsync)</text><!--link Expired to *end--><path d="M216.8438,609.6563 C291.4219,663.3125 445.1094,773.8906 500.25,813.5625 " fill="none" id="Expired-*end" style="stroke: #383838; stroke-width: 1.5625;"/><polygon fill="#383838" points="506.3125,817.9219,498.5153,804.6546,499.9597,813.3746,491.2397,814.819,506.3125,817.9219" style="stroke: #383838; stroke-width: 1.5625;"/><!--link Cancelled to *end--><path d="M738.7031,715.2188 C679.9063,745.6406 585.4375,794.5313 542.7344,816.625 " fill="none" id="Cancelled-*end" style="stroke: #383838; stroke-width: 1.5625;"/><polygon fill="#383838" points="536.0625,820.0781,551.4241,819.1635,543.0004,816.4865,545.6775,808.0628,536.0625,820.0781" style="stroke: #383838; stroke-width: 1.5625;"/><!--
-@startuml
-skinparam monochrome true
-skinparam shadowing false
-skinparam defaultFontName "Times New Roman"
-skinparam dpi 150
-skinparam maxMessageSize 220
-hide empty description
-  [*] - -> Pending : CreateHoldBookingAsync (HoldSeatsAsync, CounterHoldSeatsAsync)
-  Pending - -> Confirmed : ConfirmBookingAndGenerateTicketsAsync (thanh toán thành công, CounterCheckoutAsync)
-  Pending - -> Expired : ExpireDueBookingsAsync (ExpiresAt nhỏ hơn hiện tại)
-  Pending - -> Cancelled : khách hủy đơn Pending (CancelBookingAsync)
-  Pending - -> Cancelled : thanh toán thất bại và quá hạn giữ ghế (ProcessPaymentFailureAsync)
-  Pending - -> Cancelled : thanh toán thành công nhưng không còn ghế giữ (SeatsNoLongerHeldException)
-  Pending - -> Cancelled : rạp hủy suất chiếu (DeleteShowtimeAsync)
-  Confirmed - -> Cancelled : khách hủy theo điều kiện hoàn tiền (CancelBookingAsync)
-  Confirmed - -> Cancelled : rạp hủy suất chiếu (DeleteShowtimeAsync)
-  Expired - -> [*]
-  Cancelled - -> [*]
-@enduml
-
-PlantUML version 1.2019.06(Sat May 25 00:10:25 ICT 2019)
-(GPL source distribution)
-Java Runtime: Java(TM) SE Runtime Environment
-JVM: Java HotSpot(TM) 64-Bit Server VM
-Java Version: 21.0.2+13-LTS-58
-Operating System: Windows 11
-OS Version: 10.0
-Default Encoding: UTF-8
-Language: en
-Country: US
---></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.47.0 (20210316.0004)
+ -->
+<!-- Title: dbml Pages: 1 -->
+<svg width="956pt" height="2644pt"
+ viewBox="0.00 0.00 955.52 2644.09" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 2640.09)">
+<title>dbml</title>
+<!-- CinemaSettings -->
+<g id="CinemaSettings" class="node">
+<title>CinemaSettings</title>
+<ellipse fill="none" stroke="black" stroke-width="0" cx="473.76" cy="-1318.05" rx="473.52" ry="1318.09"/>
+<polygon fill="#1d71b8" stroke="transparent" points="140.76,-2188.05 140.76,-2248.05 806.76,-2248.05 806.76,-2188.05 140.76,-2188.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-2188.05 140.76,-2248.05 806.76,-2248.05 806.76,-2188.05 140.76,-2188.05"/>
+<text text-anchor="start" x="298.6" y="-2209.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#ffffff"> &#160;&#160;&#160;&#160;&#160;&#160;CinemaSettings &#160;&#160;&#160;&#160;&#160;&#160;</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-2128.05 140.76,-2188.05 806.76,-2188.05 806.76,-2128.05 140.76,-2128.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-2128.05 140.76,-2188.05 806.76,-2188.05 806.76,-2128.05 140.76,-2128.05"/>
+<text text-anchor="start" x="151.76" y="-2149.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">Id</text>
+<text text-anchor="start" x="178.44" y="-2149.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> &#160;&#160;&#160;</text>
+<text text-anchor="start" x="761.98" y="-2149.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-2068.05 140.76,-2128.05 806.76,-2128.05 806.76,-2068.05 140.76,-2068.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-2068.05 140.76,-2128.05 806.76,-2128.05 806.76,-2068.05 140.76,-2068.05"/>
+<text text-anchor="start" x="151.76" y="-2088.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">Name &#160;&#160;&#160;</text>
+<text text-anchor="start" x="650" y="-2089.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">varchar</text>
+<text text-anchor="start" x="756.67" y="-2089.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-2089.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-2008.05 140.76,-2068.05 806.76,-2068.05 806.76,-2008.05 140.76,-2008.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-2008.05 140.76,-2068.05 806.76,-2068.05 806.76,-2008.05 140.76,-2008.05"/>
+<text text-anchor="start" x="151.76" y="-2028.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">Address &#160;&#160;&#160;</text>
+<text text-anchor="start" x="650" y="-2029.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">varchar</text>
+<text text-anchor="start" x="756.67" y="-2029.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-2029.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1948.05 140.76,-2008.05 806.76,-2008.05 806.76,-1948.05 140.76,-1948.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1948.05 140.76,-2008.05 806.76,-2008.05 806.76,-1948.05 140.76,-1948.05"/>
+<text text-anchor="start" x="151.76" y="-1968.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">Phone &#160;&#160;&#160;</text>
+<text text-anchor="start" x="689.09" y="-1969.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">varchar</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1888.05 140.76,-1948.05 806.76,-1948.05 806.76,-1888.05 140.76,-1888.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1888.05 140.76,-1948.05 806.76,-1948.05 806.76,-1888.05 140.76,-1888.05"/>
+<text text-anchor="start" x="151.76" y="-1908.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">Email &#160;&#160;&#160;</text>
+<text text-anchor="start" x="689.09" y="-1909.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">varchar</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1828.05 140.76,-1888.05 806.76,-1888.05 806.76,-1828.05 140.76,-1828.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1828.05 140.76,-1888.05 806.76,-1888.05 806.76,-1828.05 140.76,-1828.05"/>
+<text text-anchor="start" x="151.76" y="-1848.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">TaxCode &#160;&#160;&#160;</text>
+<text text-anchor="start" x="689.09" y="-1849.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">varchar</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1768.05 140.76,-1828.05 806.76,-1828.05 806.76,-1768.05 140.76,-1768.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1768.05 140.76,-1828.05 806.76,-1828.05 806.76,-1768.05 140.76,-1768.05"/>
+<text text-anchor="start" x="151.76" y="-1788.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">LogoUrl &#160;&#160;&#160;</text>
+<text text-anchor="start" x="689.09" y="-1789.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">varchar</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1708.05 140.76,-1768.05 806.76,-1768.05 806.76,-1708.05 140.76,-1708.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1708.05 140.76,-1768.05 806.76,-1768.05 806.76,-1708.05 140.76,-1708.05"/>
+<text text-anchor="start" x="151.76" y="-1728.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">OpeningTime &#160;&#160;&#160;</text>
+<text text-anchor="start" x="735.33" y="-1729.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">time</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1648.05 140.76,-1708.05 806.76,-1708.05 806.76,-1648.05 140.76,-1648.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1648.05 140.76,-1708.05 806.76,-1708.05 806.76,-1648.05 140.76,-1648.05"/>
+<text text-anchor="start" x="151.76" y="-1668.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">ClosingTime &#160;&#160;&#160;</text>
+<text text-anchor="start" x="735.33" y="-1669.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">time</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1588.05 140.76,-1648.05 806.76,-1648.05 806.76,-1588.05 140.76,-1588.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1588.05 140.76,-1648.05 806.76,-1648.05 806.76,-1588.05 140.76,-1588.05"/>
+<text text-anchor="start" x="151.76" y="-1608.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">UpdatedAt &#160;&#160;&#160;</text>
+<text text-anchor="start" x="648.2" y="-1609.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">timestamp</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1528.05 140.76,-1588.05 806.76,-1588.05 806.76,-1528.05 140.76,-1528.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1528.05 140.76,-1588.05 806.76,-1588.05 806.76,-1528.05 140.76,-1528.05"/>
+<text text-anchor="start" x="151.76" y="-1548.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">PointsPerAmount &#160;&#160;&#160;</text>
+<text text-anchor="start" x="646.45" y="-1549.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">decimal</text>
+<text text-anchor="start" x="756.67" y="-1549.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-1549.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1468.05 140.76,-1528.05 806.76,-1528.05 806.76,-1468.05 140.76,-1468.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1468.05 140.76,-1528.05 806.76,-1528.05 806.76,-1468.05 140.76,-1468.05"/>
+<text text-anchor="start" x="151.76" y="-1488.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">CancelRefundPercent &#160;&#160;&#160;</text>
+<text text-anchor="start" x="646.45" y="-1489.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">decimal</text>
+<text text-anchor="start" x="756.67" y="-1489.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-1489.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1408.05 140.76,-1468.05 806.76,-1468.05 806.76,-1408.05 140.76,-1408.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1408.05 140.76,-1468.05 806.76,-1468.05 806.76,-1408.05 140.76,-1408.05"/>
+<text text-anchor="start" x="151.76" y="-1428.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">CancelDeadlineHours &#160;&#160;&#160;</text>
+<text text-anchor="start" x="722.89" y="-1429.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<text text-anchor="start" x="756.67" y="-1429.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-1429.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1348.05 140.76,-1408.05 806.76,-1408.05 806.76,-1348.05 140.76,-1348.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1348.05 140.76,-1408.05 806.76,-1408.05 806.76,-1348.05 140.76,-1348.05"/>
+<text text-anchor="start" x="151.76" y="-1368.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">StopSellingMinutesBefore &#160;&#160;&#160;</text>
+<text text-anchor="start" x="722.89" y="-1369.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<text text-anchor="start" x="756.67" y="-1369.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-1369.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1288.05 140.76,-1348.05 806.76,-1348.05 806.76,-1288.05 140.76,-1288.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1288.05 140.76,-1348.05 806.76,-1348.05 806.76,-1288.05 140.76,-1288.05"/>
+<text text-anchor="start" x="151.76" y="-1308.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">HoldDurationMinutes &#160;&#160;&#160;</text>
+<text text-anchor="start" x="722.89" y="-1309.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<text text-anchor="start" x="756.67" y="-1309.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-1309.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1228.05 140.76,-1288.05 806.76,-1288.05 806.76,-1228.05 140.76,-1228.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1228.05 140.76,-1288.05 806.76,-1288.05 806.76,-1228.05 140.76,-1228.05"/>
+<text text-anchor="start" x="151.76" y="-1248.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">CheckInOpenMinutes &#160;&#160;&#160;</text>
+<text text-anchor="start" x="722.89" y="-1249.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<text text-anchor="start" x="756.67" y="-1249.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-1249.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1168.05 140.76,-1228.05 806.76,-1228.05 806.76,-1168.05 140.76,-1168.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1168.05 140.76,-1228.05 806.76,-1228.05 806.76,-1168.05 140.76,-1168.05"/>
+<text text-anchor="start" x="151.76" y="-1188.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">SeatGapRuleMode &#160;&#160;&#160;</text>
+<text text-anchor="start" x="650" y="-1189.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">varchar</text>
+<text text-anchor="start" x="756.67" y="-1189.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-1189.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1108.05 140.76,-1168.05 806.76,-1168.05 806.76,-1108.05 140.76,-1108.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1108.05 140.76,-1168.05 806.76,-1168.05 806.76,-1108.05 140.76,-1108.05"/>
+<text text-anchor="start" x="151.76" y="-1128.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">RoomBufferMinutes &#160;&#160;&#160;</text>
+<text text-anchor="start" x="722.89" y="-1129.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<text text-anchor="start" x="756.67" y="-1129.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-1129.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-1048.05 140.76,-1108.05 806.76,-1108.05 806.76,-1048.05 140.76,-1048.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-1048.05 140.76,-1108.05 806.76,-1108.05 806.76,-1048.05 140.76,-1048.05"/>
+<text text-anchor="start" x="151.76" y="-1068.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">MaxSeatsPerBooking &#160;&#160;&#160;</text>
+<text text-anchor="start" x="722.89" y="-1069.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<text text-anchor="start" x="756.67" y="-1069.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-1069.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-988.05 140.76,-1048.05 806.76,-1048.05 806.76,-988.05 140.76,-988.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-988.05 140.76,-1048.05 806.76,-1048.05 806.76,-988.05 140.76,-988.05"/>
+<text text-anchor="start" x="151.76" y="-1008.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">MaxComboQuantity &#160;&#160;&#160;</text>
+<text text-anchor="start" x="722.89" y="-1009.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<text text-anchor="start" x="756.67" y="-1009.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-1009.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-928.05 140.76,-988.05 806.76,-988.05 806.76,-928.05 140.76,-928.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-928.05 140.76,-988.05 806.76,-988.05 806.76,-928.05 140.76,-928.05"/>
+<text text-anchor="start" x="151.76" y="-948.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">LoyaltyWindowMonths &#160;&#160;&#160;</text>
+<text text-anchor="start" x="722.89" y="-949.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<text text-anchor="start" x="756.67" y="-949.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-949.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-868.05 140.76,-928.05 806.76,-928.05 806.76,-868.05 140.76,-868.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-868.05 140.76,-928.05 806.76,-928.05 806.76,-868.05 140.76,-868.05"/>
+<text text-anchor="start" x="151.76" y="-888.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">MovieEndGraceDays &#160;&#160;&#160;</text>
+<text text-anchor="start" x="722.89" y="-889.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<text text-anchor="start" x="756.67" y="-889.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-889.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-808.05 140.76,-868.05 806.76,-868.05 806.76,-808.05 140.76,-808.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-808.05 140.76,-868.05 806.76,-868.05 806.76,-808.05 140.76,-808.05"/>
+<text text-anchor="start" x="151.76" y="-828.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">ShowtimeLookaheadDays &#160;&#160;&#160;</text>
+<text text-anchor="start" x="722.89" y="-829.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<text text-anchor="start" x="756.67" y="-829.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-829.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-748.05 140.76,-808.05 806.76,-808.05 806.76,-748.05 140.76,-748.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-748.05 140.76,-808.05 806.76,-808.05 806.76,-748.05 140.76,-748.05"/>
+<text text-anchor="start" x="151.76" y="-768.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">SchedulerStepMinutes &#160;&#160;&#160;</text>
+<text text-anchor="start" x="722.89" y="-769.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<text text-anchor="start" x="756.67" y="-769.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-769.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-688.05 140.76,-748.05 806.76,-748.05 806.76,-688.05 140.76,-688.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-688.05 140.76,-748.05 806.76,-748.05 806.76,-688.05 140.76,-688.05"/>
+<text text-anchor="start" x="151.49" y="-708.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">SchedulerMinSameMovieGapMinutes &#160;&#160;&#160;</text>
+<text text-anchor="start" x="723.32" y="-709.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<text text-anchor="start" x="757.11" y="-709.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="766" y="-709.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-628.05 140.76,-688.05 806.76,-688.05 806.76,-628.05 140.76,-628.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-628.05 140.76,-688.05 806.76,-688.05 806.76,-628.05 140.76,-628.05"/>
+<text text-anchor="start" x="151.76" y="-648.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">SchedulerHeatLookbackDays &#160;&#160;&#160;</text>
+<text text-anchor="start" x="722.89" y="-649.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">int</text>
+<text text-anchor="start" x="756.67" y="-649.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-649.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-568.05 140.76,-628.05 806.76,-628.05 806.76,-568.05 140.76,-568.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-568.05 140.76,-628.05 806.76,-628.05 806.76,-568.05 140.76,-568.05"/>
+<text text-anchor="start" x="151.76" y="-588.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">SchedulerHeatSalesWeight &#160;&#160;&#160;</text>
+<text text-anchor="start" x="660.63" y="-589.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">double</text>
+<text text-anchor="start" x="756.67" y="-589.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-589.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-508.05 140.76,-568.05 806.76,-568.05 806.76,-508.05 140.76,-508.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-508.05 140.76,-568.05 806.76,-568.05 806.76,-508.05 140.76,-508.05"/>
+<text text-anchor="start" x="151.76" y="-528.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">SchedulerHeatRatingWeight &#160;&#160;&#160;</text>
+<text text-anchor="start" x="660.63" y="-529.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">double</text>
+<text text-anchor="start" x="756.67" y="-529.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-529.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-448.05 140.76,-508.05 806.76,-508.05 806.76,-448.05 140.76,-448.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-448.05 140.76,-508.05 806.76,-508.05 806.76,-448.05 140.76,-448.05"/>
+<text text-anchor="start" x="151.76" y="-468.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">SchedulerMaxRating &#160;&#160;&#160;</text>
+<text text-anchor="start" x="660.63" y="-469.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">double</text>
+<text text-anchor="start" x="756.67" y="-469.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c"> </text>
+<text text-anchor="start" x="765.56" y="-469.25" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="32.00" fill="#29235c">(!)</text>
+<polygon fill="#e7e2dd" stroke="transparent" points="140.76,-388.05 140.76,-448.05 806.76,-448.05 806.76,-388.05 140.76,-388.05"/>
+<polygon fill="none" stroke="#29235c" points="140.76,-388.05 140.76,-448.05 806.76,-448.05 806.76,-388.05 140.76,-388.05"/>
+<text text-anchor="start" x="151.76" y="-408.25" font-family="Helvetica,sans-Serif" font-size="32.00" fill="#29235c">DefaultEmployeePassword &#160;&#160;&#160;</text>
+<text text-anchor="start" x="689.09" y="-409.25" font-family="Helvetica,sans-Serif" font-style="italic" font-size="32.00" fill="#29235c">varchar</text>
+<polygon fill="none" stroke="#29235c" stroke-width="2" points="139.76,-387.05 139.76,-2249.05 807.76,-2249.05 807.76,-387.05 139.76,-387.05"/>
+</g>
+</g>
+</svg>

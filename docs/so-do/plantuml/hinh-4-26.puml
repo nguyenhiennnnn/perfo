@@ -1,0 +1,84 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam classAttributeIconSize 0
+skinparam dpi 150
+skinparam nodesep 35
+skinparam ranksep 55
+left to right direction
+hide circle
+hide empty members
+
+class AdminImportExportController <<Controller>> {
+  +GetJobs(filter : ImportExportJobListFilter, page : int, pageSize : int) : IActionResult
+  +GetJob(id : Guid) : IActionResult
+  +DownloadJobFile(id : Guid) : IActionResult
+}
+
+interface IImportExportJobService {
+  +GetJobsAsync(userId : int, filter : ImportExportJobListFilter, page : int, pageSize : int) : Task<OffsetPageResult<ImportExportJobDto>>
+  +GetJobAsync(userId : int, id : Guid) : Task<ImportExportJobDto>
+  +DownloadAsync(userId : int, id : Guid) : Task<FileDownloadResult>
+}
+
+interface IExportJobService {
+  +EnqueueExportAsync(type : ExportJobType, options : ExportOptions) : Task<Guid>
+}
+
+interface IImportProcessor {
+  +ProcessAsync(jobId : Guid, fileStream : Stream) : Task<ImportResult>
+}
+
+interface IImportExportJobTracker {
+  +UpdateProgressAsync(jobId : Guid, progress : int, totalRows : int) : Task
+  +MarkCompletedAsync(jobId : Guid, summary : ImportExportSummary) : Task
+  +MarkFailedAsync(jobId : Guid, error : string) : Task
+}
+
+interface IImportSessionStore {
+  +SaveSessionAsync(sessionId : string, data : object) : Task
+  +GetSessionAsync<T>(sessionId : string) : Task<T?>
+}
+
+class ImportExportJobService <<Service>>
+class ExportJobService <<Service>>
+class ImportProcessorBase <<Service>>
+class MovieImportProcessor <<Service>>
+class ShowtimeImportProcessor <<Service>>
+class SeatLayoutImportProcessor <<Service>>
+class ReportExportService <<Service>>
+class ImportExportJobTracker <<Service>>
+class ExportJob <<HangfireJob>>
+class ImportApplyJob <<HangfireJob>>
+class CleanupImportExportFilesJob <<HangfireJob>>
+class CleanupImportSessionsJob <<HangfireJob>>
+
+class ImportExportJob <<Entity>> {
+  +JobId : Guid
+  +Type : ImportExportJobType
+  +Module : string
+  +Format : string
+  +Status : ImportExportJobStatus
+  +Progress : int
+  +TotalRows : int
+  +SuccessRows : int
+  +FailedRows : int
+  +FileName : string?
+  +CreatedByUserId : int
+  +CreatedAt : DateTime
+}
+
+AdminImportExportController ..> IImportExportJobService : uses
+ImportExportJobService ..|> IImportExportJobService : implements
+ImportExportJobService ..> IImportExportJobTracker : uses
+ExportJobService ..|> IExportJobService : implements
+ImportProcessorBase ..|> IImportProcessor : implements
+MovieImportProcessor --|> ImportProcessorBase : inherits
+ShowtimeImportProcessor --|> ImportProcessorBase : inherits
+SeatLayoutImportProcessor --|> ImportProcessorBase : inherits
+
+ExportJob ..> IExportJobService : runs
+ImportApplyJob ..> IImportProcessor : runs
+ImportExportJobService ..> ImportExportJob : manages
+@enduml

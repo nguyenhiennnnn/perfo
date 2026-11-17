@@ -3889,12 +3889,104 @@ ShowtimeRefundJob ..> IAppDbContext
 @enduml
 ```
 
-### Hình 4.26. Sơ đồ ERD đầy đủ của hệ thống
+### Hình 4.26. Sơ đồ lớp package Nhập/xuất dữ liệu
 
-- **Tệp nguồn:** `docs/so-do/dbml/hinh-4-26.dbml`
-- **Ảnh xem trước:** `docs/so-do/anh-xem-truoc-svg/hinh-4-26.svg`
+- **Tệp nguồn:** docs/so-do/plantuml/hinh-4-26.puml
+- **Ảnh xem trước:** docs/so-do/anh-xem-truoc-svg/hinh-4-26.svg
 
-```dbml
+`plantuml
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam classAttributeIconSize 0
+skinparam dpi 150
+skinparam nodesep 35
+skinparam ranksep 55
+left to right direction
+hide circle
+hide empty members
+
+class AdminImportExportController <<Controller>> {
+  +GetJobs(filter : ImportExportJobListFilter, page : int, pageSize : int) : IActionResult
+  +GetJob(id : Guid) : IActionResult
+  +DownloadJobFile(id : Guid) : IActionResult
+}
+
+interface IImportExportJobService {
+  +GetJobsAsync(userId : int, filter : ImportExportJobListFilter, page : int, pageSize : int) : Task<OffsetPageResult<ImportExportJobDto>>
+  +GetJobAsync(userId : int, id : Guid) : Task<ImportExportJobDto>
+  +DownloadAsync(userId : int, id : Guid) : Task<FileDownloadResult>
+}
+
+interface IExportJobService {
+  +EnqueueExportAsync(type : ExportJobType, options : ExportOptions) : Task<Guid>
+}
+
+interface IImportProcessor {
+  +ProcessAsync(jobId : Guid, fileStream : Stream) : Task<ImportResult>
+}
+
+interface IImportExportJobTracker {
+  +UpdateProgressAsync(jobId : Guid, progress : int, totalRows : int) : Task
+  +MarkCompletedAsync(jobId : Guid, summary : ImportExportSummary) : Task
+  +MarkFailedAsync(jobId : Guid, error : string) : Task
+}
+
+interface IImportSessionStore {
+  +SaveSessionAsync(sessionId : string, data : object) : Task
+  +GetSessionAsync<T>(sessionId : string) : Task<T?>
+}
+
+class ImportExportJobService <<Service>>
+class ExportJobService <<Service>>
+class ImportProcessorBase <<Service>>
+class MovieImportProcessor <<Service>>
+class ShowtimeImportProcessor <<Service>>
+class SeatLayoutImportProcessor <<Service>>
+class ReportExportService <<Service>>
+class ImportExportJobTracker <<Service>>
+class ExportJob <<HangfireJob>>
+class ImportApplyJob <<HangfireJob>>
+class CleanupImportExportFilesJob <<HangfireJob>>
+class CleanupImportSessionsJob <<HangfireJob>>
+
+class ImportExportJob <<Entity>> {
+  +JobId : Guid
+  +Type : ImportExportJobType
+  +Module : string
+  +Format : string
+  +Status : ImportExportJobStatus
+  +Progress : int
+  +TotalRows : int
+  +SuccessRows : int
+  +FailedRows : int
+  +FileName : string?
+  +CreatedByUserId : int
+  +CreatedAt : DateTime
+}
+
+AdminImportExportController ..> IImportExportJobService : uses
+ImportExportJobService ..|> IImportExportJobService : implements
+ImportExportJobService ..> IImportExportJobTracker : uses
+ExportJobService ..|> IExportJobService : implements
+ImportProcessorBase ..|> IImportProcessor : implements
+MovieImportProcessor --|> ImportProcessorBase : inherits
+ShowtimeImportProcessor --|> ImportProcessorBase : inherits
+SeatLayoutImportProcessor --|> ImportProcessorBase : inherits
+
+ExportJob ..> IExportJobService : runs
+ImportApplyJob ..> IImportProcessor : runs
+ImportExportJobService ..> ImportExportJob : manages
+@enduml
+`
+
+### Hình 4.27. Sơ đồ ERD đầy đủ của hệ thống
+
+- **Tệp nguồn:** docs/so-do/dbml/hinh-4-27.dbml
+- **Ảnh xem trước:** docs/so-do/anh-xem-truoc-svg/hinh-4-27.svg
+
+`dbml
 // Hình 4.26. Sơ đồ ERD đầy đủ của hệ thống
 // Dán vào https://dbdiagram.io/d để vẽ; xuất PNG/SVG/PDF.
 
@@ -4273,14 +4365,14 @@ Ref: ShowtimeSeats.SeatId > Seats.SeatId
 Ref: ShowtimeSeats.HeldByUserId > Users.UserId
 Ref: ShowtimeSeats.HeldByBookingId > Bookings.BookingId
 Ref: ImportExportJobs.CreatedByUserId > Users.UserId
-```
+`
 
-### Hình 4.27. ERD module Tài khoản người dùng
+### Hình 4.28. ERD module Tài khoản người dùng
 
-- **Tệp nguồn:** `docs/so-do/dbml/hinh-4-27.dbml`
-- **Ảnh xem trước:** `docs/so-do/anh-xem-truoc-svg/hinh-4-27.svg`
+- **Tệp nguồn:** docs/so-do/dbml/hinh-4-28.dbml
+- **Ảnh xem trước:** docs/so-do/anh-xem-truoc-svg/hinh-4-28.svg
 
-```dbml
+`dbml
 // Hình 4.27. ERD module Tài khoản người dùng
 // Dán vào https://dbdiagram.io/d để vẽ; xuất PNG/SVG/PDF.
 
@@ -4392,14 +4484,14 @@ Ref: Bookings.CreatedByEmployeeId > Employees.EmployeeId
 Ref: Reviews.UserId > Users.UserId
 Ref: ShowtimeSeats.HeldByUserId > Users.UserId
 Ref: ImportExportJobs.CreatedByUserId > Users.UserId
-```
+`
 
-### Hình 4.28. ERD module Danh mục phim
+### Hình 4.29. ERD module Danh mục phim
 
-- **Tệp nguồn:** `docs/so-do/dbml/hinh-4-28.dbml`
-- **Ảnh xem trước:** `docs/so-do/anh-xem-truoc-svg/hinh-4-28.svg`
+- **Tệp nguồn:** docs/so-do/dbml/hinh-4-29.dbml
+- **Ảnh xem trước:** docs/so-do/anh-xem-truoc-svg/hinh-4-29.svg
 
-```dbml
+`dbml
 // Hình 4.28. ERD module Danh mục phim
 // Dán vào https://dbdiagram.io/d để vẽ; xuất PNG/SVG/PDF.
 
@@ -4459,14 +4551,14 @@ Ref: Movies.LanguageId > Languages.LanguageId
 Ref: Movies.AgeRatingId > AgeRatings.AgeRatingId
 Ref: MovieGenres.GenreId > Genres.GenreId
 Ref: MovieCast.ActorId > Actors.ActorId
-```
+`
 
-### Hình 4.29. ERD module Phim
+### Hình 4.30. ERD module Phim
 
-- **Tệp nguồn:** `docs/so-do/dbml/hinh-4-29.dbml`
-- **Ảnh xem trước:** `docs/so-do/anh-xem-truoc-svg/hinh-4-29.svg`
+- **Tệp nguồn:** docs/so-do/dbml/hinh-4-30.dbml
+- **Ảnh xem trước:** docs/so-do/anh-xem-truoc-svg/hinh-4-30.svg
 
-```dbml
+`dbml
 // Hình 4.29. ERD module Phim
 // Dán vào https://dbdiagram.io/d để vẽ; xuất PNG/SVG/PDF.
 
@@ -4556,14 +4648,14 @@ Ref: MovieCast.ActorId > Actors.ActorId
 Ref: Reviews.MovieId > Movies.MovieId
 Ref: Reviews.UserId > Users.UserId
 Ref: Showtimes.MovieId > Movies.MovieId
-```
+`
 
-### Hình 4.30. ERD module Phòng chiếu
+### Hình 4.31. ERD module Phòng chiếu
 
-- **Tệp nguồn:** `docs/so-do/dbml/hinh-4-30.dbml`
-- **Ảnh xem trước:** `docs/so-do/anh-xem-truoc-svg/hinh-4-30.svg`
+- **Tệp nguồn:** docs/so-do/dbml/hinh-4-31.dbml
+- **Ảnh xem trước:** docs/so-do/anh-xem-truoc-svg/hinh-4-31.svg
 
-```dbml
+`dbml
 // Hình 4.30. ERD module Phòng chiếu
 // Dán vào https://dbdiagram.io/d để vẽ; xuất PNG/SVG/PDF.
 
@@ -4617,14 +4709,14 @@ Ref: Seats.RoomId > CinemaRooms.RoomId
 Ref: Seats.SeatTypeId > SeatTypes.SeatTypeId
 Ref: Showtimes.RoomId > CinemaRooms.RoomId
 Ref: ShowtimeSeats.SeatId > Seats.SeatId
-```
+`
 
-### Hình 4.31. ERD module Suất chiếu
+### Hình 4.32. ERD module Suất chiếu
 
-- **Tệp nguồn:** `docs/so-do/dbml/hinh-4-31.dbml`
-- **Ảnh xem trước:** `docs/so-do/anh-xem-truoc-svg/hinh-4-31.svg`
+- **Tệp nguồn:** docs/so-do/dbml/hinh-4-32.dbml
+- **Ảnh xem trước:** docs/so-do/anh-xem-truoc-svg/hinh-4-32.svg
 
-```dbml
+`dbml
 // Hình 4.31. ERD module Suất chiếu
 // Dán vào https://dbdiagram.io/d để vẽ; xuất PNG/SVG/PDF.
 
@@ -4685,14 +4777,14 @@ Ref: ShowtimeSeats.SeatId > Seats.SeatId
 Ref: ShowtimeSeats.HeldByUserId > Users.UserId
 Ref: ShowtimeSeats.HeldByBookingId > Bookings.BookingId
 Ref: BookingTickets.ShowtimeSeatId - ShowtimeSeats.ShowtimeSeatId
-```
+`
 
-### Hình 4.32. ERD module Đặt vé
+### Hình 4.33. ERD module Đặt vé
 
-- **Tệp nguồn:** `docs/so-do/dbml/hinh-4-32.dbml`
-- **Ảnh xem trước:** `docs/so-do/anh-xem-truoc-svg/hinh-4-32.svg`
+- **Tệp nguồn:** docs/so-do/dbml/hinh-4-33.dbml
+- **Ảnh xem trước:** docs/so-do/anh-xem-truoc-svg/hinh-4-33.svg
 
-```dbml
+`dbml
 // Hình 4.32. ERD module Đặt vé
 // Dán vào https://dbdiagram.io/d để vẽ; xuất PNG/SVG/PDF.
 
@@ -4769,14 +4861,14 @@ Ref: BookingCombos.BookingId > Bookings.BookingId
 Ref: BookingTickets.ShowtimeSeatId - ShowtimeSeats.ShowtimeSeatId
 Ref: BookingCombos.ComboId > Combos.ComboId
 Ref: Payments.BookingId > Bookings.BookingId
-```
+`
 
-### Hình 4.33. ERD module Thanh toán
+### Hình 4.34. ERD module Thanh toán
 
-- **Tệp nguồn:** `docs/so-do/dbml/hinh-4-33.dbml`
-- **Ảnh xem trước:** `docs/so-do/anh-xem-truoc-svg/hinh-4-33.svg`
+- **Tệp nguồn:** docs/so-do/dbml/hinh-4-34.dbml
+- **Ảnh xem trước:** docs/so-do/anh-xem-truoc-svg/hinh-4-34.svg
 
-```dbml
+`dbml
 // Hình 4.33. ERD module Thanh toán
 // Dán vào https://dbdiagram.io/d để vẽ; xuất PNG/SVG/PDF.
 
@@ -4803,14 +4895,14 @@ Table Bookings {
 }
 
 Ref: Payments.BookingId > Bookings.BookingId
-```
+`
 
-### Hình 4.34. ERD module Thành viên
+### Hình 4.35. ERD module Thành viên
 
-- **Tệp nguồn:** `docs/so-do/dbml/hinh-4-34.dbml`
-- **Ảnh xem trước:** `docs/so-do/anh-xem-truoc-svg/hinh-4-34.svg`
+- **Tệp nguồn:** docs/so-do/dbml/hinh-4-35.dbml
+- **Ảnh xem trước:** docs/so-do/anh-xem-truoc-svg/hinh-4-35.svg
 
-```dbml
+`dbml
 // Hình 4.34. ERD module Thành viên
 // Dán vào https://dbdiagram.io/d để vẽ; xuất PNG/SVG/PDF.
 
@@ -4846,14 +4938,14 @@ Table CustomerProfiles {
 Ref: LoyaltyPointEntries.UserId > Users.UserId
 Ref: LoyaltyPointEntries.BookingId - Bookings.BookingId
 Ref: CustomerProfiles.TierId > MembershipTiers.TierId
-```
+`
 
-### Hình 4.35. ERD module Cấu hình rạp
+### Hình 4.36. ERD module Cấu hình rạp
 
-- **Tệp nguồn:** `docs/so-do/dbml/hinh-4-35.dbml`
-- **Ảnh xem trước:** `docs/so-do/anh-xem-truoc-svg/hinh-4-35.svg`
+- **Tệp nguồn:** docs/so-do/dbml/hinh-4-36.dbml
+- **Ảnh xem trước:** docs/so-do/anh-xem-truoc-svg/hinh-4-36.svg
 
-```dbml
+`dbml
 // Hình 4.35. ERD module Cấu hình rạp
 // Dán vào https://dbdiagram.io/d để vẽ; xuất PNG/SVG/PDF.
 
@@ -4889,7 +4981,7 @@ Table CinemaSettings {
   SchedulerMaxRating double [not null]
   DefaultEmployeePassword varchar
 }
-```
+`
 
 ### Hình 4.36. Máy trạng thái Booking
 

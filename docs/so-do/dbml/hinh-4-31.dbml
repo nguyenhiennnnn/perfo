@@ -1,60 +1,53 @@
-// Hình 4.31. ERD module Suất chiếu
+// Hình 4.30. ERD module Phòng chiếu
 // Dán vào https://dbdiagram.io/d để vẽ; xuất PNG/SVG/PDF.
-
-Table Showtimes {
-  ShowtimeId int [pk]
-  BasePrice decimal [not null]
-  CreatedAt timestamp [not null]
-  EndTime timestamp [not null]
-  MovieId int [not null]
-  RoomId int [not null]
-  StartTime timestamp [not null]
-  Status varchar [not null, note: 'enum ShowtimeStatus']
-}
-
-Table ShowtimeSeats {
-  ShowtimeSeatId int [pk]
-  HeldByBookingId int
-  HeldByUserId int
-  HeldUntil timestamp
-  Price decimal [not null]
-  SeatId int [not null]
-  ShowtimeId int [not null]
-  Status varchar [not null, note: 'enum ShowtimeSeatStatus']
-  indexes {
-    (SeatId, ShowtimeId) [unique]
-  }
-}
-
-Table Movies {
-  MovieId int [pk]
-}
 
 Table CinemaRooms {
   RoomId int [pk]
+  Cols int [not null]
+  IsActive boolean [not null]
+  RoomName varchar [not null, unique]
+  Rows int [not null]
+  ScreenTypeId int
+  TotalSeats int [not null]
 }
 
 Table Seats {
   SeatId int [pk]
+  CoupleId uuid
+  IsActive boolean [not null]
+  IsAisle boolean [not null]
+  RoomId int [not null]
+  SeatNumber int [not null]
+  SeatRow varchar [not null]
+  SeatTypeId int
+  indexes {
+    (RoomId, SeatNumber, SeatRow) [unique]
+  }
 }
 
-Table Users {
-  UserId int [pk]
+Table ScreenTypes {
+  ScreenTypeId int [pk]
+  Name varchar [not null, unique]
 }
 
-Table Bookings {
-  BookingId int [pk]
+Table SeatTypes {
+  SeatTypeId int [pk]
+  Name varchar [not null, unique]
+  PriceMultiplier decimal [not null]
 }
 
-Table BookingTickets {
-  TicketId int [pk]
-  ShowtimeSeatId int
+Table Showtimes {
+  ShowtimeId int [pk]
+  RoomId int
 }
 
-Ref: Showtimes.MovieId > Movies.MovieId
+Table ShowtimeSeats {
+  ShowtimeSeatId int [pk]
+  SeatId int
+}
+
+Ref: CinemaRooms.ScreenTypeId > ScreenTypes.ScreenTypeId
+Ref: Seats.RoomId > CinemaRooms.RoomId
+Ref: Seats.SeatTypeId > SeatTypes.SeatTypeId
 Ref: Showtimes.RoomId > CinemaRooms.RoomId
-Ref: ShowtimeSeats.ShowtimeId > Showtimes.ShowtimeId
 Ref: ShowtimeSeats.SeatId > Seats.SeatId
-Ref: ShowtimeSeats.HeldByUserId > Users.UserId
-Ref: ShowtimeSeats.HeldByBookingId > Bookings.BookingId
-Ref: BookingTickets.ShowtimeSeatId - ShowtimeSeats.ShowtimeSeatId

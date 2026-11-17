@@ -15,10 +15,26 @@ public sealed record ExportColumn<T>(
     ExportColumnType Type = ExportColumnType.Text
 );
 
+public sealed record ExportDropdown(
+    string Header,
+    IReadOnlyList<string>? Values = null,
+    string? SourceSheet = null,
+    string? SourceHeader = null
+);
+
+public sealed record ExportSheetOptions(
+    IReadOnlyCollection<string>? RequiredHeaders = null,
+    IReadOnlyList<ExportDropdown>? Dropdowns = null,
+    int ExampleRowCount = 0,
+    int InputRowCapacity = 0,
+    bool WrapText = false
+);
+
 public sealed record ExportSheet(
     string Name,
     IReadOnlyList<string> Headers,
-    IReadOnlyList<IReadOnlyList<object?>> Rows
+    IReadOnlyList<IReadOnlyList<object?>> Rows,
+    ExportSheetOptions? Options = null
 );
 
 public interface IExportWriter

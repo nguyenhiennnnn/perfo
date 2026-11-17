@@ -15,6 +15,12 @@ public class ExportWriter : IExportWriter
     private const string MoneyFormat = "#,##0\" ₫\"";
     private const string DateFormat = "dd/MM/yyyy";
     private const string DateTimeFormat = "dd/MM/yyyy HH:mm:ss";
+    private const string HeaderFill = "#E5E7EB";
+    private const string RequiredHeaderFill = "#FECACA";
+    private const string ExampleFill = "#FEF9C3";
+    private const string ExampleFont = "#6B7280";
+    private const double FilterPadding = 3;
+    private const int MaxInlineListLength = 255;
 
     public Task<Stream> WriteXlsxAsync<T>(
         string sheetName,
@@ -33,7 +39,7 @@ public class ExportWriter : IExportWriter
     )
     {
         using var workbook = new XLWorkbook();
-        await AddSheetAsync(workbook, sheetName, columns, rows, totalRow, cancellationToken);
+        await AddSheetAsync(workbook, sheetName, columns, rows, totalRow, true, cancellationToken);
         return SaveWorkbook(workbook);
     }
 
@@ -62,9 +68,13 @@ public class ExportWriter : IExportWriter
                 columns,
                 ToAsyncEnumerable(exportSheet.Rows),
                 null,
+                false,
                 cancellationToken
             );
         }
+
+        foreach (var exportSheet in sheets)
+            ApplySheetOptions(workbook, exportSheet, sheets);
 
         return SaveWorkbook(workbook);
     }
@@ -75,6 +85,7 @@ public class ExportWriter : IExportWriter
         IReadOnlyList<ExportColumn<T>> columns,
         IAsyncEnumerable<T> rows,
         IReadOnlyList<object?>? totalRow,
+        bool autoFilter,
         CancellationToken cancellationToken
     )
     {
@@ -97,6 +108,8 @@ public class ExportWriter : IExportWriter
             }
         }
 
+        var dataLastRow = rowIndex;
+
         if (totalRow is not null)
         {
             rowIndex++;
@@ -112,16 +125,157 @@ public class ExportWriter : IExportWriter
         ApplyColumnFormats(sheet, columns, hasFraction, rowIndex);
 
         if (columns.Count > 0)
-            sheet.Range(1, 1, 1, columns.Count).Style.Font.Bold = true;
+        {
+            var header = sheet.Range(1, 1, 1, columns.Count);
+            header.Style.Font.Bold = true;
+            header.Style.Fill.BackgroundColor = XLColor.FromHtml(HeaderFill);
+            header.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+            header.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+            if (autoFilter && dataLastRow >= 2)
+                sheet.Range(1, 1, dataLastRow, columns.Count).SetAutoFilter();
+        }
 
         sheet.SheetView.FreezeRows(1);
 
         foreach (var column in sheet.ColumnsUsed())
         {
             column.AdjustToContents();
-            if (column.Width > MaxColumnWidth)
-                column.Width = MaxColumnWidth;
+            var width = column.Width + (autoFilter ? FilterPadding : 0);
+            column.Width = Math.Min(width, MaxColumnWidth);
         }
+    }
+
+    private static void ApplySheetOptions(
+        XLWorkbook workbook,
+        ExportSheet exportSheet,
+        IReadOnlyList<ExportSheet> allSheets
+    )
+    {
+        var options = exportSheet.Options;
+        if (options is null || exportSheet.Headers.Count == 0)
+            return;
+
+        var sheet = workbook.Worksheet(SanitizeSheetName(exportSheet.Name));
+        var headers = exportSheet.Headers;
+
+        if (options.RequiredHeaders is { Count: > 0 } required)
+        {
+            for (var c = 0; c < headers.Count; c++)
+            {
+                if (required.Contains(headers[c]))
+                    sheet.Cell(1, c + 1).Style.Fill.BackgroundColor = XLColor.FromHtml(
+                        RequiredHeaderFill
+                    );
+            }
+        }
+
+        var exampleCount = Math.Min(options.ExampleRowCount, exportSheet.Rows.Count);
+        if (exampleCount > 0)
+        {
+            var examples = sheet.Range(2, 1, 1 + exampleCount, headers.Count);
+            examples.Style.Font.Italic = true;
+            examples.Style.Font.FontColor = XLColor.FromHtml(ExampleFont);
+            examples.Style.Fill.BackgroundColor = XLColor.FromHtml(ExampleFill);
+        }
+
+        if (options.WrapText)
+        {
+            var used = sheet.RangeUsed();
+            if (used is not null)
+            {
+                used.Style.Alignment.WrapText = true;
+                used.Style.Alignment.Vertical = XLAlignmentVerticalValues.Top;
+            }
+        }
+
+        if (options.Dropdowns is { Count: > 0 } dropdowns)
+        {
+            var lastRow = 1 + Math.Max(Math.Max(options.InputRowCapacity, exportSheet.Rows.Count), 1);
+            foreach (var dropdown in dropdowns)
+                ApplyDropdown(workbook, sheet, exportSheet, dropdown, allSheets, lastRow);
+        }
+    }
+
+    private static void ApplyDropdown(
+        XLWorkbook workbook,
+        IXLWorksheet sheet,
+        ExportSheet exportSheet,
+        ExportDropdown dropdown,
+        IReadOnlyList<ExportSheet> allSheets,
+        int lastRow
+    )
+    {
+        var column = IndexOfHeader(exportSheet.Headers, dropdown.Header);
+        if (column < 0)
+            return;
+
+        string? inlineList = null;
+        IXLRange? sourceRange = null;
+
+        if (dropdown.Values is { Count: > 0 } values)
+        {
+            var list = string.Join(",", values);
+            if (values.Any(v => v.Contains(',')) || list.Length > MaxInlineListLength)
+                return;
+            inlineList = list;
+        }
+        else if (dropdown.SourceSheet is not null && dropdown.SourceHeader is not null)
+        {
+            var source = allSheets.FirstOrDefault(s => s.Name == dropdown.SourceSheet);
+            if (source is null)
+                return;
+
+            var sourceColumn = IndexOfHeader(source.Headers, dropdown.SourceHeader);
+            if (sourceColumn < 0)
+                return;
+
+            var sourceLastRow = LastFilledRow(source, sourceColumn);
+            if (sourceLastRow < 2)
+                return;
+
+            sourceRange = workbook
+                .Worksheet(SanitizeSheetName(source.Name))
+                .Range(2, sourceColumn + 1, sourceLastRow, sourceColumn + 1);
+        }
+        else
+        {
+            return;
+        }
+
+        var validation = sheet.Range(2, column + 1, lastRow, column + 1).CreateDataValidation();
+        if (inlineList is not null)
+            validation.List(inlineList, true);
+        else
+            validation.List(sourceRange!, true);
+
+        validation.IgnoreBlanks = true;
+        validation.ShowErrorMessage = true;
+        validation.ErrorStyle = XLErrorStyle.Warning;
+    }
+
+    private static int IndexOfHeader(IReadOnlyList<string> headers, string header)
+    {
+        for (var i = 0; i < headers.Count; i++)
+        {
+            if (string.Equals(headers[i], header, StringComparison.Ordinal))
+                return i;
+        }
+
+        return -1;
+    }
+
+    private static int LastFilledRow(ExportSheet sheet, int columnIndex)
+    {
+        var last = 0;
+        for (var i = 0; i < sheet.Rows.Count; i++)
+        {
+            var row = sheet.Rows[i];
+            if (columnIndex < row.Count && row[columnIndex] is not null)
+                last = i + 2;
+        }
+
+        return last;
     }
 
     private static Stream SaveWorkbook(XLWorkbook workbook)

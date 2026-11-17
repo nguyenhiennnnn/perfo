@@ -31,12 +31,12 @@ export const MoviesFilterBar = ({ params, setParams }: MoviesFilterBarProps) => 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative w-full sm:w-80">
+        <div className="relative w-full sm:w-96">
           <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={params.search}
             onChange={(e) => setParams({ search: e.target.value, cursor: null })}
-            placeholder="Tìm tên phim, diễn viên..."
+            placeholder="Tìm tên phim, diễn viên, đạo diễn, thể loại..."
             className="pl-9"
           />
         </div>

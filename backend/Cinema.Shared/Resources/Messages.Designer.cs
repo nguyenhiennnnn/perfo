@@ -5439,6 +5439,15 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tiêu đề cột màu đỏ nhạt là cột bắt buộc; dòng nền vàng là dòng ví dụ. Ô có mũi tên cho phép chọn nhanh giá trị hợp lệ từ danh sách..
+        /// </summary>
+        public static string Import_Note_RequiredColumns {
+            get {
+                return ResourceManager.GetString("Import_Note_RequiredColumns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tên phim..
         /// </summary>
         public static string Import_Movie_Title_Desc {

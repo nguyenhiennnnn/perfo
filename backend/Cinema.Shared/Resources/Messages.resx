@@ -1969,6 +1969,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Import_Note_Examples" xml:space="preserve">
     <value>Hãy xóa các dòng ví dụ trong sheet "Phim" trước khi nhập dữ liệu thật.</value>
   </data>
+  <data name="Import_Note_RequiredColumns" xml:space="preserve">
+    <value>Tiêu đề cột màu đỏ nhạt là cột bắt buộc; dòng nền vàng là dòng ví dụ. Ô có mũi tên cho phép chọn nhanh giá trị hợp lệ từ danh sách.</value>
+  </data>
   <data name="Import_Movie_Title_Desc" xml:space="preserve">
     <value>Tên phim.</value>
   </data>

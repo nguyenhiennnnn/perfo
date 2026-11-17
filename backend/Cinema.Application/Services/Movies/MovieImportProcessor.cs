@@ -193,7 +193,30 @@ public class MovieImportProcessor(
 
         var sheets = new List<ExportSheet>
         {
-            new(SheetName, Columns.Select(c => c.Name).ToList(), ExampleRows()),
+            new(
+                SheetName,
+                Columns.Select(c => c.Name).ToList(),
+                ExampleRows(),
+                InputSheetOptions(
+                    ExampleData.Length,
+                    new ExportDropdown(
+                        MovieImportColumns.Director,
+                        SourceSheet: Messages.Import_SheetCatalog,
+                        SourceHeader: Messages.Import_LabelDirector
+                    ),
+                    new ExportDropdown(
+                        MovieImportColumns.Language,
+                        SourceSheet: Messages.Import_SheetCatalog,
+                        SourceHeader: Messages.Import_LabelLanguage
+                    ),
+                    new ExportDropdown(
+                        MovieImportColumns.AgeRating,
+                        SourceSheet: Messages.Import_SheetCatalog,
+                        SourceHeader: Messages.Import_LabelAgeRating
+                    ),
+                    new ExportDropdown(MovieImportColumns.Status, StatusNames)
+                )
+            ),
             new(
                 Messages.Import_SheetGuide,
                 [
@@ -202,7 +225,8 @@ public class MovieImportProcessor(
                     Messages.Import_GuideColDescription,
                     Messages.Import_GuideColFormat,
                 ],
-                GuideRows()
+                GuideRows(),
+                GuideSheetOptions
             ),
             new(
                 Messages.Import_SheetCatalog,
@@ -638,6 +662,7 @@ public class MovieImportProcessor(
         );
         rows.Add(GuideNote(Messages.Import_Note_Upsert));
         rows.Add(GuideNote(Messages.Import_Note_Lookup));
+        rows.Add(GuideNote(Messages.Import_Note_RequiredColumns));
         rows.Add(GuideNote(Messages.Import_Note_Examples));
 
         return rows;

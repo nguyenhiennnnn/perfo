@@ -139,6 +139,23 @@ public class ShowtimeImportProcessor(
                 ExampleRows(
                     movies.FirstOrDefault()?.Title ?? "Phim ví dụ",
                     rooms.FirstOrDefault()?.RoomName ?? "Phòng ví dụ"
+                ),
+                InputSheetOptions(
+                    2,
+                    new ExportDropdown(
+                        ShowtimeImportColumns.Movie,
+                        SourceSheet: Messages.Import_SheetCatalog,
+                        SourceHeader: Messages.Import_LabelMovie
+                    ),
+                    new ExportDropdown(
+                        ShowtimeImportColumns.Room,
+                        SourceSheet: Messages.Import_SheetCatalog,
+                        SourceHeader: Messages.Import_LabelRoom
+                    ),
+                    new ExportDropdown(
+                        ShowtimeImportColumns.AllowAfterHours,
+                        [Messages.Import_Yes, Messages.Import_No]
+                    )
                 )
             ),
             new(
@@ -149,7 +166,8 @@ public class ShowtimeImportProcessor(
                     Messages.Import_GuideColDescription,
                     Messages.Import_GuideColFormat,
                 ],
-                GuideRows()
+                GuideRows(),
+                GuideSheetOptions
             ),
             new(
                 Messages.Import_SheetCatalog,
@@ -676,6 +694,7 @@ public class ShowtimeImportProcessor(
         );
         rows.Add(GuideNote(Messages.Import_Note_Showtime_Create));
         rows.Add(GuideNote(Messages.Import_Note_Showtime_Lookup));
+        rows.Add(GuideNote(Messages.Import_Note_RequiredColumns));
         rows.Add(GuideNote(Messages.Import_Note_Showtime_Examples));
 
         return rows;

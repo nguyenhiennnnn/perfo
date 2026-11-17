@@ -112,7 +112,23 @@ public sealed class SeatLayoutImportProcessor(
             new(
                 SheetName,
                 Columns.Select(c => c.Name).ToList(),
-                ExampleRows(first, second)
+                ExampleRows(first, second),
+                InputSheetOptions(
+                    5,
+                    new ExportDropdown(
+                        SeatLayoutImportColumns.SeatType,
+                        SourceSheet: Messages.Import_SheetCatalog,
+                        SourceHeader: Messages.Import_LabelSeatType
+                    ),
+                    new ExportDropdown(
+                        SeatLayoutImportColumns.IsActive,
+                        [Messages.Import_Yes, Messages.Import_No]
+                    ),
+                    new ExportDropdown(
+                        SeatLayoutImportColumns.IsAisle,
+                        [Messages.Import_Yes, Messages.Import_No]
+                    )
+                )
             ),
             new(
                 Messages.Import_SheetGuide,
@@ -122,7 +138,8 @@ public sealed class SeatLayoutImportProcessor(
                     Messages.Import_GuideColDescription,
                     Messages.Import_GuideColFormat,
                 ],
-                GuideRows(room)
+                GuideRows(room),
+                GuideSheetOptions
             ),
             new(
                 Messages.Import_SheetCatalog,
@@ -774,6 +791,7 @@ public sealed class SeatLayoutImportProcessor(
         rows.Add(GuideNote(Messages.Import_Note_SeatLayout_Replace));
         rows.Add(GuideNote(Messages.Import_Note_SeatLayout_Contiguous));
         rows.Add(GuideNote(Messages.Import_Note_SeatLayout_Couple));
+        rows.Add(GuideNote(Messages.Import_Note_RequiredColumns));
 
         return rows;
     }

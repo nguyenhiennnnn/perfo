@@ -16,6 +16,19 @@ public abstract class ImportProcessorBase<TRow>(IImportFileReader fileReader)
 
     protected abstract TRow MapRow(IReadOnlyDictionary<string, string?> values);
 
+    protected static ExportSheetOptions GuideSheetOptions => new(WrapText: true);
+
+    protected ExportSheetOptions InputSheetOptions(
+        int exampleRowCount,
+        params ExportDropdown[] dropdowns
+    ) =>
+        new(
+            Columns.Where(c => c.Required).Select(c => c.Name).ToList(),
+            dropdowns,
+            exampleRowCount,
+            ImportLimits.MaxRows + 1
+        );
+
     public abstract Task<Stream> BuildTemplateAsync(CancellationToken cancellationToken);
 
     public abstract Task<IImportContext> CreateContextAsync(

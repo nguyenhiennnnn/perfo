@@ -45,7 +45,20 @@ public class MovieService : IMovieService
         query = query.ApplySearch(filter.Search, (q, pattern) =>
             q.Where(m =>
                 EF.Functions.ILike(EF.Functions.Unaccent(m.Title), EF.Functions.Unaccent(pattern))
-                || EF.Functions.ILike(EF.Functions.Unaccent(m.OriginalTitle ?? ""), EF.Functions.Unaccent(pattern))));
+                || EF.Functions.ILike(EF.Functions.Unaccent(m.OriginalTitle ?? ""), EF.Functions.Unaccent(pattern))
+                || EF.Functions.ILike(EF.Functions.Unaccent(m.Description ?? ""), EF.Functions.Unaccent(pattern))
+                || EF.Functions.ILike(EF.Functions.Unaccent(m.Subtitle ?? ""), EF.Functions.Unaccent(pattern))
+                || (m.Director != null
+                    && EF.Functions.ILike(EF.Functions.Unaccent(m.Director.FullName), EF.Functions.Unaccent(pattern)))
+                || (m.Language != null
+                    && EF.Functions.ILike(EF.Functions.Unaccent(m.Language.Name), EF.Functions.Unaccent(pattern)))
+                || (m.AgeRating != null
+                    && EF.Functions.ILike(EF.Functions.Unaccent(m.AgeRating.Code), EF.Functions.Unaccent(pattern)))
+                || m.MovieGenres.Any(mg =>
+                    EF.Functions.ILike(EF.Functions.Unaccent(mg.Genre.Name), EF.Functions.Unaccent(pattern)))
+                || m.MovieCast.Any(mc =>
+                    EF.Functions.ILike(EF.Functions.Unaccent(mc.Actor.FullName), EF.Functions.Unaccent(pattern))
+                    || EF.Functions.ILike(EF.Functions.Unaccent(mc.CharacterName ?? ""), EF.Functions.Unaccent(pattern)))));
 
         var cursorId = CursorCodec.Decode(cursor);
         if (cursorId is not null)

@@ -1,18 +1,7 @@
 namespace Cinema.Application.Utils;
 
-/// <summary>
-/// Extension methods that apply multi-keyword, accent-insensitive, case-insensitive search
-/// to <see cref="IQueryable{T}"/> using PostgreSQL <c>unaccent()</c> + <c>ILIKE</c>.
-/// </summary>
 public static class SearchExtensions
 {
-    /// <summary>
-    /// Splits <paramref name="search"/> into tokens and for each token invokes
-    /// <paramref name="applyToken"/>(query, pattern) where <c>pattern</c> is the
-    /// ILike containment pattern <c>%token%</c>.
-    /// All tokens must match (AND semantics); returns <paramref name="query"/> unchanged
-    /// when <paramref name="search"/> is null/whitespace.
-    /// </summary>
     public static IQueryable<T> ApplySearch<T>(
         this IQueryable<T> query,
         string? search,
@@ -24,10 +13,6 @@ public static class SearchExtensions
         return query;
     }
 
-    /// <summary>
-    /// Variant that passes both a plain-text pattern and a phone-normalised pattern to
-    /// <paramref name="applyToken"/> so callers can OR them on phone columns.
-    /// </summary>
     public static IQueryable<T> ApplySearch<T>(
         this IQueryable<T> query,
         string? search,

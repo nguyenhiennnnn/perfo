@@ -1,7 +1,8 @@
 using System.Globalization;
+using System.Net;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
-using System.Web;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
@@ -36,12 +37,25 @@ public class VnPayGateway(
     private const decimal AmountScale = 100m;
     private const string CurrencyCode = "VND";
     private static readonly TimeSpan VnPayOffset = TimeSpan.FromHours(7);
+    private static readonly TimeSpan PaymentExpiry = TimeSpan.FromMinutes(15);
 
     private static string FormatVnPayDate(DateTime utc) =>
         DateTime
             .SpecifyKind(utc, DateTimeKind.Utc)
             .Add(VnPayOffset)
             .ToString(DateFormat, CultureInfo.InvariantCulture);
+
+    private static string ToAscii(string value)
+    {
+        var builder = new StringBuilder(value.Length);
+        foreach (var c in value.Normalize(NormalizationForm.FormD))
+        {
+            if (CharUnicodeInfo.GetUnicodeCategory(c) == UnicodeCategory.NonSpacingMark)
+                continue;
+            builder.Append(c switch { 'đ' => 'd', 'Đ' => 'D', _ => c });
+        }
+        return builder.ToString().Normalize(NormalizationForm.FormC);
+    }
 
     private static string ToVnpAmount(decimal amount) => ((long)(amount * AmountScale)).ToString();
 
@@ -50,31 +64,28 @@ public class VnPayGateway(
         CancellationToken cancellationToken = default
     )
     {
-        var returnUrl = $"{_options.ReturnUrl}?bookingId={request.BookingId}";
+        var returnUrl = $"{_options.ReturnUrl.Trim()}?bookingId={request.BookingId}";
+        var nowUtc = _time.GetUtcNow().UtcDateTime;
 
         var vnpParams = new SortedDictionary<string, string>(StringComparer.Ordinal)
         {
             ["vnp_Version"] = ApiVersion,
             ["vnp_Command"] = "pay",
-            ["vnp_TmnCode"] = _options.TmnCode,
+            ["vnp_TmnCode"] = _options.TmnCode.Trim(),
             ["vnp_Amount"] = ToVnpAmount(request.Amount),
             ["vnp_CurrCode"] = CurrencyCode,
             ["vnp_TxnRef"] = request.TransactionId,
-            ["vnp_OrderInfo"] = request.OrderInfo,
+            ["vnp_OrderInfo"] = ToAscii(request.OrderInfo),
             ["vnp_OrderType"] = "other",
             ["vnp_Locale"] = "vn",
             ["vnp_ReturnUrl"] = returnUrl,
             ["vnp_IpAddr"] = DefaultIpAddress,
-            ["vnp_CreateDate"] = FormatVnPayDate(_time.GetUtcNow().UtcDateTime),
+            ["vnp_CreateDate"] = FormatVnPayDate(nowUtc),
+            ["vnp_ExpireDate"] = FormatVnPayDate(nowUtc.Add(PaymentExpiry)),
         };
 
-        var signData = BuildSignData(vnpParams);
-        var secureHash = HmacSigner.Sha512Hex(_options.HashSecret, signData);
-
-        var query = string.Join(
-            "&",
-            vnpParams.Select(kv => $"{kv.Key}={HttpUtility.UrlEncode(kv.Value)}")
-        );
+        var query = BuildSignData(vnpParams);
+        var secureHash = HmacSigner.Sha512Hex(_options.HashSecret.Trim(), query);
         var paymentUrl = $"{_options.BaseUrl}?{query}&vnp_SecureHash={secureHash}";
 
         return Task.FromResult(new CreatePaymentResult(paymentUrl, request.TransactionId));
@@ -97,7 +108,7 @@ public class VnPayGateway(
         }
 
         var signData = BuildSignData(paramsForSigning);
-        var computedHash = HmacSigner.Sha512Hex(_options.HashSecret, signData);
+        var computedHash = HmacSigner.Sha512Hex(_options.HashSecret.Trim(), signData);
         var signatureValid = string.Equals(
             computedHash,
             receivedHash,
@@ -223,8 +234,6 @@ public class VnPayGateway(
         string? vnp_TransactionNo
     );
 
-    // VNPAY spec: sign data phải dùng giá trị RAW (không URL-encode)
-    // URL-encoding chỉ áp dụng khi build query string thực tế
     private static string BuildSignData(SortedDictionary<string, string> sortedParams) =>
-        string.Join("&", sortedParams.Select(kv => $"{kv.Key}={kv.Value}"));
+        string.Join("&", sortedParams.Select(kv => $"{WebUtility.UrlEncode(kv.Key)}={WebUtility.UrlEncode(kv.Value)}"));
 }

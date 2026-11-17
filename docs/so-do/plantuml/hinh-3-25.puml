@@ -1,0 +1,64 @@
+@startuml
+left to right direction
+skinparam linetype polyline
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam packageStyle rectangle
+skinparam dpi 150
+skinparam ArrowColor Black
+skinparam actorBackgroundColor White
+skinparam actorBorderColor Black
+skinparam usecaseBackgroundColor White
+skinparam usecaseBorderColor Black
+skinparam rectangleBackgroundColor White
+skinparam rectangleBorderColor Black
+
+actor "Quản trị viên" as A_QTV
+actor "Nhân viên" as A_NV
+
+rectangle "Package Nhập/xuất dữ liệu (NX) — 12 use case" as PK {
+  usecase "UC-NX-01\nTải tệp mẫu nhập" as UC_NX_01
+  usecase "UC-NX-02\nXem trước tệp nhập" as UC_NX_02
+  usecase "UC-NX-03\nÁp dụng nhập đồng bộ" as UC_NX_03
+  usecase "UC-NX-04\nÁp dụng nhập nền" as UC_NX_04
+  usecase "UC-NX-05\nTải tệp lỗi nhập" as UC_NX_05
+  usecase "UC-NX-06\nNhập sơ đồ ghế phòng chiếu" as UC_NX_06
+  usecase "UC-NX-07\nXuất dữ liệu đồng bộ" as UC_NX_07
+  usecase "UC-NX-08\nTạo tác vụ xuất nền" as UC_NX_08
+  usecase "UC-NX-09\nTheo dõi tiến độ tác vụ" as UC_NX_09
+  usecase "UC-NX-10\nXem lịch sử và tải tệp xuất" as UC_NX_10
+  usecase "UC-NX-11\nDọn tệp xuất hết hạn & tác vụ treo" as UC_NX_11
+  usecase "UC-NX-12\nDọn phiên xem trước nhập" as UC_NX_12
+}
+
+actor "Hệ thống tác vụ nền" <<Hệ thống>> as A_NEN
+actor "Cloudinary" <<Hệ thống>> as A_CLD
+
+A_QTV -- UC_NX_01
+A_QTV -- UC_NX_02
+A_QTV -- UC_NX_03
+A_QTV -- UC_NX_04
+A_QTV -- UC_NX_05
+A_QTV -- UC_NX_06
+A_QTV -- UC_NX_07
+A_QTV -- UC_NX_08
+A_QTV -- UC_NX_09
+A_QTV -- UC_NX_10
+
+A_NV -- UC_NX_07
+
+UC_NX_04 -- A_NEN
+UC_NX_08 -- A_NEN
+UC_NX_11 -- A_NEN
+UC_NX_12 -- A_NEN
+
+UC_NX_08 -- A_CLD
+UC_NX_10 -- A_CLD
+UC_NX_11 -- A_CLD
+
+UC_NX_03 ..> UC_NX_02 : <<include>>
+UC_NX_04 ..> UC_NX_02 : <<include>>
+UC_NX_05 ..> UC_NX_02 : <<include>>
+UC_NX_08 ..> UC_NX_09 : <<include>>
+
+@enduml

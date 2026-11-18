@@ -7,6 +7,7 @@ import { BookingShowtimeHeader } from "../components/booking/booking-showtime-he
 import { BookingSelectionStep } from "../components/booking/booking-selection-step";
 import { BookingPaymentStep } from "../components/booking/booking-payment-step";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PageContainer } from "@/components/common/page-container";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/config/routes";
 
@@ -26,7 +27,7 @@ const BookingPage = () => {
   const flow = useBookingFlow(Number(showtimeId), resumeBookingId);
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8">
+    <PageContainer size="md" className="flex flex-col gap-6">
       <BookingShowtimeHeader data={flow.showtimeSeats.data} isLoading={flow.showtimeSeats.isLoading} />
 
       <BookingStepper step={flow.step} />
@@ -99,7 +100,7 @@ const BookingPage = () => {
           />
         </>
       )}
-    </div>
+    </PageContainer>
   );
 };
 

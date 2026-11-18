@@ -21,7 +21,7 @@ export const BookingCustomerForm = ({
 
   return (
     <div className="flex flex-col gap-3 bg-card p-4">
-      <h3 className="font-heading text-sm font-semibold text-foreground">Thông tin nhận vé</h3>
+      <h3 className="t-h3 text-foreground">Thông tin nhận vé</h3>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="booking-customer-name">
           Họ và tên <span className="text-destructive">*</span>

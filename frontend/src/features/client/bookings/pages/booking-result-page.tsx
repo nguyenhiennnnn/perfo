@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router";
-import { RefreshCw } from "lucide-react";
+import { useSearchParams } from "react-router";
+import { Ticket as TicketIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ButtonLink } from "@/components/common/button-link";
 import { Confetti } from "@/components/common/confetti";
+import { EmptyState } from "@/components/common/empty-state";
+import { PageContainer } from "@/components/common/page-container";
+import { QueryState } from "@/components/common/query-state";
 import { BookingStatus } from "@/types/enum";
 import { BOOKING_RESULT_POLL_INTERVAL_MS } from "@/config/default-constants";
 
@@ -41,37 +44,42 @@ const BookingResultPage = () => {
   }, [status]);
 
   return (
-    <div className="mx-auto flex min-h-[60vh] w-full max-w-lg flex-col items-center justify-center gap-6 px-4 py-12">
+    <PageContainer size="sm" className="flex min-h-[60vh] max-w-lg flex-col items-center justify-center gap-6 py-12">
       <Confetti active={celebrate} />
       {!bookingId ? (
         <p className="text-sm text-muted-foreground">Thiếu thông tin đơn đặt vé.</p>
-      ) : bookingDetail.isLoading ? (
-        <Skeleton className="h-64 w-full " />
-      ) : !bookingDetail.data ? (
-        <div className="flex flex-col items-center gap-3">
-          <p className="text-sm text-muted-foreground">Không tìm thấy đơn đặt vé này.</p>
-          <Button variant="outline" onClick={() => bookingDetail.refetch()}>
-            <RefreshCw className="size-4" />
-            <span>Thử lại</span>
-          </Button>
-        </div>
       ) : (
-        <>
-          <BookingResultStatus status={bookingDetail.data.status} bookingCode={bookingDetail.data.bookingCode} />
-          {bookingDetail.data.status === BookingStatus.Confirmed && (
-            <BookingResultTickets booking={bookingDetail.data} />
+        <QueryState
+          query={bookingDetail}
+          skeleton={<Skeleton className="h-64 w-full" />}
+          empty={
+            <EmptyState
+              icon={TicketIcon}
+              title="Không tìm thấy đơn đặt vé này"
+              actionLabel="Thử lại"
+              onAction={() => void refetch()}
+              className="w-full"
+            />
+          }
+          errorTitle="Không tải được đơn đặt vé"
+          errorDescription="Kiểm tra kết nối mạng rồi thử lại."
+          errorClassName="w-full"
+        >
+          {(booking) => (
+            <>
+              <BookingResultStatus status={booking.status} bookingCode={booking.bookingCode} />
+              {booking.status === BookingStatus.Confirmed && <BookingResultTickets booking={booking} />}
+              <div className="flex gap-3">
+                <ButtonLink to={ROUTES.account.tickets}>Xem vé của tôi</ButtonLink>
+                <ButtonLink to={ROUTES.home} variant="outline">
+                  Về trang chủ
+                </ButtonLink>
+              </div>
+            </>
           )}
-          <div className="flex gap-3">
-            <Button>
-              <Link to={ROUTES.account.tickets}>Xem vé của tôi</Link>
-            </Button>
-            <Button variant="outline">
-              <Link to="/">Về trang chủ</Link>
-            </Button>
-          </div>
-        </>
+        </QueryState>
       )}
-    </div>
+    </PageContainer>
   );
 };
 

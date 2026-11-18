@@ -7,6 +7,7 @@ import { EnumSelectFilter } from "@/components/common/filter/enum-select-filter"
 import { EmptyState } from "@/components/common/empty-state";
 import { SelectField } from "@/components/common/select-field";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SkeletonList } from "@/components/common/skeleton-list";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getBusinessTodayDate } from "@/lib/business-time";
 import { showtimeStatusOptions } from "@/lib/enum-options";
@@ -111,9 +112,7 @@ export const ShowtimeCalendarView = ({
       {calendar.isLoading && (
         <div className="flex flex-col gap-2" aria-busy>
           <Skeleton className="h-12 w-full" />
-          {Array.from({ length: 4 }, (_, i) => (
-            <Skeleton key={i} className="h-20 w-full" />
-          ))}
+          <SkeletonList count={4} className="h-20 w-full" />
         </div>
       )}
 

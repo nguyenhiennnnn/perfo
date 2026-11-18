@@ -40,7 +40,7 @@ export const MovieShowtimeSelector = ({ showtimes }: MovieShowtimeSelectorProps)
 
   return (
     <div id="showtimes" className="scroll-mt-24">
-      <h2 className="font-heading text-2xl font-semibold tracking-tight text-foreground md:text-3xl">Lịch chiếu & Đặt vé</h2>
+      <h2 className="t-h2 text-foreground">Lịch chiếu & Đặt vé</h2>
 
       <DateStrip
         value={selectedDate}

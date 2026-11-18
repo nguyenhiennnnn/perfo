@@ -8,6 +8,7 @@ import { ExpandableText } from "@/components/common/expandable-text";
 import { useMovieDetail } from "@/features/client/movies/hooks/use-movies";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/common/empty-state";
+import { PageContainer } from "@/components/common/page-container";
 import { Seo } from "@/components/common/seo";
 import { BRAND } from "@/config/brand";
 import { ROUTES } from "@/config/routes";
@@ -22,7 +23,7 @@ const MovieDetailPage = () => {
 
   if (!isLoading && !movie) {
     return (
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <PageContainer size="lg">
         <EmptyState
           icon={Film}
           title="Không tải được phim này"
@@ -30,16 +31,16 @@ const MovieDetailPage = () => {
           actionLabel={isError ? "Thử lại" : "Xem danh sách phim"}
           onAction={isError ? () => void refetch() : () => navigate(ROUTES.movies.list)}
         />
-      </div>
+      </PageContainer>
     );
   }
 
   if (isLoading || !movie) {
     return (
-      <div className="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+      <PageContainer size="lg" className="space-y-6">
         <Skeleton className="h-96 w-full" />
         <Skeleton className="h-40 w-full" />
-      </div>
+      </PageContainer>
     );
   }
 
@@ -68,7 +69,7 @@ const MovieDetailPage = () => {
     : `Xem thông tin và đặt vé phim ${movie.title} tại ${BRAND.name}. Chọn suất chiếu, ghế ngồi và thanh toán online nhanh chóng.`;
 
   return (
-    <div className="mx-auto max-w-6xl space-y-10 px-4 py-8 sm:px-6 lg:px-8">
+    <PageContainer size="lg" className="space-y-10">
       <Seo
         title={movie.title}
         description={seoDescription}
@@ -95,7 +96,7 @@ const MovieDetailPage = () => {
       <MovieShowtimeSelector showtimes={movie.upcomingShowtimes} />
 
       <MovieReviews movieId={movie.movieId} />
-    </div>
+    </PageContainer>
   );
 }
 

@@ -7,24 +7,23 @@ import type { MovieListItemDto } from "@/features/client/movies/types";
 
 interface MoviesGridProps {
   movies: MovieListItemDto[];
-  isLoading: boolean;
   hasNextPage: boolean | undefined;
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
   onResetFilters?: () => void;
 }
 
-export const MoviesGrid = ({ movies, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage, onResetFilters }: MoviesGridProps) => {
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <MovieCardSkeleton key={i} />
-        ))}
-      </div>
-    );
-  }
+const MOVIES_GRID_CLASS = "grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5";
 
+export const MoviesGridSkeleton = () => (
+  <div className={MOVIES_GRID_CLASS}>
+    {Array.from({ length: 5 }).map((_, i) => (
+      <MovieCardSkeleton key={i} />
+    ))}
+  </div>
+);
+
+export const MoviesGrid = ({ movies, hasNextPage, isFetchingNextPage, fetchNextPage, onResetFilters }: MoviesGridProps) => {
   if (movies.length === 0) {
     return (
       <EmptyState
@@ -39,7 +38,7 @@ export const MoviesGrid = ({ movies, isLoading, hasNextPage, isFetchingNextPage,
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      <div className={MOVIES_GRID_CLASS}>
         {movies.map((movie) => (
           <MovieCard key={movie.movieId} movie={movie} />
         ))}

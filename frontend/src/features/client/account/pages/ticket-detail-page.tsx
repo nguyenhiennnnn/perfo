@@ -1,7 +1,9 @@
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import { Copy, Ticket as TicketIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/common/button-link";
+import { PageContainer } from "@/components/common/page-container";
 import { BookingStatusBadge, PaymentMethodBadge, PaymentStatusBadge } from "@/components/common/status-badge";
 import { PerfoTicket } from "@/components/common/perfo-ticket";
 import { DownloadTicketsPdfButton } from "@/components/common/download-tickets-pdf-button";
@@ -28,10 +30,10 @@ const AccountTicketDetailPage = () => {
 
   if (isLoading || !booking) {
     return (
-      <div className="mx-auto max-w-4xl space-y-4 px-4 py-8">
-        <Skeleton className="h-24 w-full " />
-        <Skeleton className="h-64 w-full " />
-      </div>
+      <PageContainer size="sm" className="space-y-4">
+        <Skeleton className="h-24 w-full" />
+        <Skeleton className="h-64 w-full" />
+      </PageContainer>
     );
   }
 
@@ -58,7 +60,7 @@ const AccountTicketDetailPage = () => {
   };
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6 px-4 py-8">
+    <PageContainer size="sm" className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3 bg-card p-4">
         <div>
           <div className="flex items-center gap-2">
@@ -87,15 +89,13 @@ const AccountTicketDetailPage = () => {
             )}
           </div>
           {canResumePayment ? (
-            <Button>
-              <Link to={`${ROUTES.booking.detail(booking.showtime.showtimeId)}?resume=${booking.bookingId}`}>
-                Thanh toán ngay
-              </Link>
-            </Button>
+            <ButtonLink to={`${ROUTES.booking.detail(booking.showtime.showtimeId)}?resume=${booking.bookingId}`}>
+              Thanh toán ngay
+            </ButtonLink>
           ) : (
-            <Button variant="outline">
-              <Link to={ROUTES.booking.detail(booking.showtime.showtimeId)}>Đặt vé mới</Link>
-            </Button>
+            <ButtonLink to={ROUTES.booking.detail(booking.showtime.showtimeId)} variant="outline">
+              Đặt vé mới
+            </ButtonLink>
           )}
         </div>
       )}
@@ -111,14 +111,14 @@ const AccountTicketDetailPage = () => {
           )}
         </div>
         <div>
-          <h1 className="font-heading text-lg font-semibold text-foreground">{booking.movie.title}</h1>
+          <h1 className="t-h1 text-foreground">{booking.movie.title}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{booking.showtime.roomName}</p>
           <p className="mt-1 text-sm text-muted-foreground">{formatDateTime(booking.showtime.startTime)}</p>
         </div>
       </div>
 
       <div className="bg-card p-4">
-        <h2 className="font-heading text-base font-semibold text-foreground">Ghế & Combo</h2>
+        <h2 className="t-h2 text-foreground">Ghế & Combo</h2>
         <div className="mt-3 space-y-1.5 text-sm">
           {booking.seats.map((seat, i) => (
             <div key={i} className="flex justify-between text-foreground">
@@ -158,7 +158,7 @@ const AccountTicketDetailPage = () => {
 
       {booking.payments.length > 0 && (
         <div className="bg-card p-4">
-          <h2 className="font-heading text-base font-semibold text-foreground">Thanh toán</h2>
+          <h2 className="t-h2 text-foreground">Thanh toán</h2>
           <div className="mt-3 space-y-2">
             {booking.payments.map((payment) => (
               <div key={payment.paymentId} className="flex items-center justify-between text-sm">
@@ -173,7 +173,7 @@ const AccountTicketDetailPage = () => {
 
       <div>
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-heading text-base font-semibold text-foreground">Vé điện tử & Mã QR</h2>
+          <h2 className="t-h2 text-foreground">Vé điện tử & Mã QR</h2>
           {booking.status === BookingStatus.Confirmed && (
             <DownloadTicketsPdfButton
               endpoint={ENDPOINTS.bookings.ticketsPdf(booking.bookingId)}
@@ -205,7 +205,7 @@ const AccountTicketDetailPage = () => {
           </Button>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }
 

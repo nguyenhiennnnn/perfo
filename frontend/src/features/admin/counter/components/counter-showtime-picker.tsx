@@ -2,6 +2,7 @@ import { Film } from "lucide-react";
 import { ShowtimeStatus } from "@/types/enum";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/common/empty-state";
 import { formatCurrency } from "@/lib/formatters";
 import { useSchedule } from "@/features/client/showtimes/hooks/use-showtimes";
 import { formatShowtimeRange } from "@/lib/cinema-format";
@@ -34,10 +35,7 @@ export const CounterShowtimePicker = ({ date, onDateChange, onPickShowtime }: Co
       )}
 
       {!schedule.isLoading && (schedule.data?.movies.length ?? 0) === 0 && (
-        <div className="flex flex-col items-center gap-2 border border-dashed border-border py-12 text-muted-foreground">
-          <Film className="size-6" />
-          <p className="text-sm">Không có suất chiếu nào trong ngày này.</p>
-        </div>
+        <EmptyState icon={Film} title="Không có suất chiếu nào trong ngày này" />
       )}
 
       <div className="flex flex-col gap-4">
@@ -51,7 +49,7 @@ export const CounterShowtimePicker = ({ date, onDateChange, onPickShowtime }: Co
                   className="h-16 w-11 object-cover"
                 />
               )}
-              <h3 className="font-heading text-base font-medium text-foreground">
+              <h3 className="t-h3 text-foreground">
                 {movie.movieTitle}
               </h3>
             </div>

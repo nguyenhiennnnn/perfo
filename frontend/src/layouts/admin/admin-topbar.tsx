@@ -69,7 +69,7 @@ export const AdminTopbar = ({ onToggle }: { onToggle: () => void }) => {
                 size="icon"
                 nativeButton={false}
                 aria-label="Xem trang khách hàng"
-                render={<a href="/" target="_blank" rel="noreferrer" />}
+                render={<a href={ROUTES.home} target="_blank" rel="noreferrer" />}
               />
             }
           >

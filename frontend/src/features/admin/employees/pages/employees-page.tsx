@@ -20,7 +20,7 @@ import {
   useAdminResetEmployeePassword,
   useAdminUpdateEmployee,
 } from "../hooks/use-admin-employee";
-import type { AdminEmployeeDto } from "../types";
+import type { AdminEmployeeDto } from "@/features/admin/employees/types";
 import { createEmployeeColumns } from "../components/employee-columns";
 import { EmployeeDirectForm } from "../components/forms/employee-direct-form";
 import { EmployeeFromAccountForm } from "../components/forms/employee-from-account-form";

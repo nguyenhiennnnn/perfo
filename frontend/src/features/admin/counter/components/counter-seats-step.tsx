@@ -28,7 +28,7 @@ export function CounterSeatsStep({ flow }: CounterSeatsStepProps) {
 
       <div className="flex flex-col gap-4">
         <div className="bg-card p-4">
-          <h3 className="mb-3 font-heading text-sm font-semibold text-foreground">Combo</h3>
+          <h3 className="t-h3 mb-3 text-foreground">Combo</h3>
           <ComboPicker
             combos={activeCombos.data}
             isLoading={activeCombos.isLoading}
@@ -38,7 +38,7 @@ export function CounterSeatsStep({ flow }: CounterSeatsStepProps) {
         </div>
 
         <div className="bg-card p-4">
-          <h3 className="mb-3 font-heading text-sm font-semibold text-foreground">Thông tin khách</h3>
+          <h3 className="t-h3 mb-3 text-foreground">Thông tin khách</h3>
           <CounterCustomerForm
             customerName={flow.customerName}
             onCustomerNameChange={flow.setCustomerName}

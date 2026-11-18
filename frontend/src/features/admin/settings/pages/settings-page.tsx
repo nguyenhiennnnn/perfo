@@ -75,7 +75,7 @@ const SettingsSection = ({
   children: ReactNode;
 }) => (
   <section className="bg-card p-5">
-    <h2 className="font-heading text-base font-semibold text-foreground">{title}</h2>
+    <h2 className="t-h2 text-foreground">{title}</h2>
     <FieldGroup
       disabled={disabled}
       className="mt-4 grid items-start gap-x-4 gap-y-4 sm:grid-cols-2"

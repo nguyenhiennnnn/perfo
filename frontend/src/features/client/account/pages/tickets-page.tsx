@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Ticket as TicketIcon } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/common/empty-state";
+import { PageTitle } from "@/components/common/page-title";
+import { QueryState } from "@/components/common/query-state";
+import { SkeletonList } from "@/components/common/skeleton-list";
 import { InfiniteScrollTrigger } from "@/components/common/infinite-scroll-trigger";
 import { TicketCard } from "@/features/client/account/components/ticket-card";
 import { useMyBookings, useCancelBooking } from "@/features/client/bookings/hooks/use-bookings";
@@ -14,7 +16,8 @@ const TABS = [{ value: null as string | null, label: "Tất cả" }, ...bookingS
 
 const AccountTicketsPage = () => {
   const [status, setStatus] = useState<string | null>(null);
-  const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useMyBookings({ status: status ?? undefined, limit: ACCOUNT_LIST_PAGE_LIMIT });
+  const bookingsQuery = useMyBookings({ status: status ?? undefined, limit: ACCOUNT_LIST_PAGE_LIMIT });
+  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = bookingsQuery;
   const cancelBooking = useCancelBooking();
   const openAlert = useAlertDialogOpen();
 
@@ -32,9 +35,9 @@ const AccountTicketsPage = () => {
 
   return (
     <div>
-      <h1 className="font-heading text-xl font-semibold text-foreground">Vé của tôi</h1>
+      <PageTitle title="Vé của tôi" />
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2">
         {TABS.map((tab) => (
           <button
             key={tab.label}
@@ -53,20 +56,19 @@ const AccountTicketsPage = () => {
       </div>
 
       <div className="mt-5 space-y-3">
-        {isLoading ? (
-          Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 w-full " />
-          ))
-        ) : bookings.length === 0 ? (
-          <EmptyState icon={TicketIcon} title="Chưa có vé nào" description="Hãy đặt vé để bắt đầu trải nghiệm điện ảnh." />
-        ) : (
-          <>
-            {bookings.map((booking) => (
-              <TicketCard key={booking.bookingId} booking={booking} onCancel={() => handleCancel(booking.bookingId)} />
-            ))}
-            <InfiniteScrollTrigger hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} fetchNextPage={fetchNextPage} />
-          </>
-        )}
+        <QueryState
+          query={bookingsQuery}
+          skeleton={<SkeletonList count={3} className="h-24 w-full" />}
+          isEmpty={bookings.length === 0}
+          empty={<EmptyState icon={TicketIcon} title="Chưa có vé nào" description="Hãy đặt vé để bắt đầu trải nghiệm điện ảnh." />}
+          errorTitle="Không tải được danh sách vé"
+          errorDescription="Kiểm tra kết nối mạng rồi thử lại."
+        >
+          {bookings.map((booking) => (
+            <TicketCard key={booking.bookingId} booking={booking} onCancel={() => handleCancel(booking.bookingId)} />
+          ))}
+          <InfiniteScrollTrigger hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} fetchNextPage={fetchNextPage} />
+        </QueryState>
       </div>
     </div>
   );

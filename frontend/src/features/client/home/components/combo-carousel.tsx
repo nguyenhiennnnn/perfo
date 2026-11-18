@@ -10,7 +10,7 @@ export const ComboCarousel = () => {
 
   return (
     <section>
-      <h2 className="font-heading text-2xl font-semibold tracking-tight text-foreground md:text-3xl">Combo bắp nước bán chạy</h2>
+      <h2 className="t-h2 text-foreground">Combo bắp nước bán chạy</h2>
 
       <div className="mt-5 flex gap-4 overflow-x-auto pb-2">
         {isLoading

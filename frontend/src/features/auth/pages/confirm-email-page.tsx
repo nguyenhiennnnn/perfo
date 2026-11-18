@@ -51,7 +51,7 @@ const ConfirmEmailPage = () => {
     return (
       <div className="flex flex-col items-center gap-3 text-center">
         <XCircle className="size-10 text-destructive" />
-        <h1 className="font-heading text-xl font-bold text-foreground">
+        <h1 className="t-h2 text-foreground">
           Liên kết không hợp lệ
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -76,7 +76,7 @@ const ConfirmEmailPage = () => {
     return (
       <div className="flex flex-col items-center gap-3 text-center">
         <CheckCircle2 className="size-10 text-success" />
-        <h1 className="font-heading text-xl font-bold text-foreground">
+        <h1 className="t-h2 text-foreground">
           Xác thực thành công
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -96,7 +96,7 @@ const ConfirmEmailPage = () => {
     return (
       <div className="flex flex-col items-center gap-4 text-center">
         <XCircle className="size-10 text-destructive" />
-        <h1 className="font-heading text-xl font-bold text-foreground">
+        <h1 className="t-h2 text-foreground">
           Xác thực thất bại
         </h1>
         <p className="text-sm text-muted-foreground">

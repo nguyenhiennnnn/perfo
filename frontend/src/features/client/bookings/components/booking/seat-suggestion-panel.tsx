@@ -41,7 +41,7 @@ export const SeatSuggestionPanel = ({
   return (
     <div className="flex flex-col gap-3 bg-card p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h3 className="font-heading text-sm font-semibold text-foreground">Gợi ý ghế liền kề</h3>
+        <h3 className="t-h3 text-foreground">Gợi ý ghế liền kề</h3>
         <div className="flex items-center gap-3">
           <span className="text-xs text-muted-foreground">Số người</span>
           <ComboQuantityStepper value={count} max={SEAT_SUGGESTION_MAX_COUNT} onChange={(v) => setCount(Math.max(1, v))} />

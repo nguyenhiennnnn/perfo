@@ -2,12 +2,13 @@ import { useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Plus, Trash2 } from "lucide-react";
+import { CalendarX, Plus, Trash2 } from "lucide-react";
 
 import { toast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { EmptyState } from "@/components/common/empty-state";
 import { FormActions } from "@/components/common/form/form-actions";
 import { FormInputField } from "@/components/common/form/form-input-field";
 import { FormDatePickerField } from "@/components/common/form/form-date-picker-field";
@@ -142,7 +143,7 @@ export const ShowtimeAutoScheduleForm = ({ onSuccess }: ShowtimeAutoScheduleForm
         )}
 
         {draft.items.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Không có suất chiếu nào để áp dụng.</p>
+          <EmptyState icon={CalendarX} title="Không có suất chiếu nào để áp dụng" className="py-8" />
         ) : (
           <ul className="divide-y divide-border border border-border">
             {draft.items.map((item, index) => (

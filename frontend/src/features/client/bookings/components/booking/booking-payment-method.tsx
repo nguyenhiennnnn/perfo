@@ -15,7 +15,7 @@ interface BookingPaymentMethodProps {
 export const BookingPaymentMethod = ({ value, onChange }: BookingPaymentMethodProps) => {
   return (
     <div className="flex flex-col gap-3 bg-card p-4">
-      <h3 className="font-heading text-sm font-semibold text-foreground">Phương thức thanh toán</h3>
+      <h3 className="t-h3 text-foreground">Phương thức thanh toán</h3>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {ONLINE_PAYMENT_METHODS.map((method) => (
           <button

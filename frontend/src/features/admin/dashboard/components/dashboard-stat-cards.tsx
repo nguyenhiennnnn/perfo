@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { SkeletonList } from "@/components/common/skeleton-list";
 import { cn } from "@/lib/utils";
 import { formatCurrency, formatNumber, formatPercent } from "@/lib/formatters";
 import type { DashboardSummaryDto } from "@/features/admin/dashboard/types";
@@ -47,9 +47,7 @@ export const DashboardStatCards = ({ summary, isLoading }: DashboardStatCardsPro
   if (isLoading || !summary) {
     return (
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-24 w-full" />
-        ))}
+        <SkeletonList count={5} className="h-24 w-full" />
       </div>
     );
   }

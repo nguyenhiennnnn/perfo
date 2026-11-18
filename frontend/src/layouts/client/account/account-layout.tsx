@@ -1,13 +1,14 @@
 import { Outlet } from "react-router";
+import { PageContainer } from "@/components/common/page-container";
 import { AccountSidebar } from "./account-sidebar";
 
 const AccountLayout = () => (
-  <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 md:flex-row">
+  <PageContainer size="xl" className="flex flex-col gap-6 md:flex-row">
     <AccountSidebar />
     <div className="min-w-0 flex-1">
       <Outlet />
     </div>
-  </div>
+  </PageContainer>
 );
 
 export default AccountLayout;

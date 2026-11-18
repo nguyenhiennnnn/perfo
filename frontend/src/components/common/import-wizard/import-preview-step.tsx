@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Download, TriangleAlert } from "lucide-react";
+import { ArrowLeft, Download, FileX, TriangleAlert } from "lucide-react";
 import { useTable, type ColumnDef, type PaginationState } from "@tanstack/react-table";
 
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { EmptyState } from "@/components/common/empty-state";
 import { Spinner } from "@/components/common/spinner";
 import { DataTablePagination } from "@/components/common/data-table/data-table-pagination";
 import {
@@ -220,11 +221,8 @@ export const ImportPreviewStep = ({
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={config.columns.length + 2}
-                  className="h-24 text-center text-muted-foreground"
-                >
-                  Không có dòng nào.
+                <TableCell colSpan={config.columns.length + 2} className="p-0">
+                  <EmptyState icon={FileX} title="Không có dòng nào" className="bg-transparent py-8" />
                 </TableCell>
               </TableRow>
             )}

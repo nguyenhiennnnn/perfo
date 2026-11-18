@@ -2,7 +2,7 @@ import { Trophy } from "lucide-react";
 import type { ReactNode } from "react";
 import { Card, CardAction, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
+import { SkeletonList } from "@/components/common/skeleton-list";
 import { EmptyState } from "@/components/common/empty-state";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
 import type { TopMovieDto } from "../types";
@@ -24,9 +24,7 @@ export const TopMoviesReportTable = ({ movies, isLoading, action }: TopMoviesRep
       <CardContent>
         {isLoading ? (
           <div className="space-y-2">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="h-10 w-full" />
-            ))}
+            <SkeletonList count={5} className="h-10 w-full" />
           </div>
         ) : !movies || movies.length === 0 ? (
           <EmptyState icon={Trophy} title="Không có dữ liệu" description="Chưa có phim nào bán vé trong khoảng này." />

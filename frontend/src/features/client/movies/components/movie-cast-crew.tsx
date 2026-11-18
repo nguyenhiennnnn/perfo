@@ -13,7 +13,7 @@ export const MovieCastCrew = ({ director, cast }: MovieCastCrewProps) => {
     <div className="space-y-5">
       {director && (
         <div>
-          <h3 className="font-heading text-base font-medium text-foreground">Đạo diễn</h3>
+          <h3 className="t-h3 text-foreground">Đạo diễn</h3>
           <div className="mt-3 flex items-center gap-3">
             <UserAvatar src={director.avatarUrl} name={director.fullName} size="lg" />
             <span className="text-sm font-medium text-foreground">{director.fullName}</span>
@@ -23,7 +23,7 @@ export const MovieCastCrew = ({ director, cast }: MovieCastCrewProps) => {
 
       {cast.length > 0 && (
         <div>
-          <h3 className="font-heading text-base font-medium text-foreground">Diễn viên</h3>
+          <h3 className="t-h3 text-foreground">Diễn viên</h3>
           <div className="mt-3 flex gap-4 overflow-x-auto pb-2">
             {cast.map((actor) => (
               <div key={actor.actorId} className="flex w-20 shrink-0 flex-col items-center gap-2 text-center">

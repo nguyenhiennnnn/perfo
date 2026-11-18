@@ -7,7 +7,10 @@ import { EmptyState } from "@/components/common/empty-state";
 import { ScheduleFilterBar } from "@/features/client/schedule/components/schedule-filter-bar";
 import { ScheduleMovieRow } from "@/features/client/schedule/components/schedule-movie-row";
 import { useSchedule } from "@/features/client/showtimes/hooks/use-showtimes";
-import { Skeleton } from "@/components/ui/skeleton";
+import { PageContainer } from "@/components/common/page-container";
+import { PageTitle } from "@/components/common/page-title";
+import { QueryState } from "@/components/common/query-state";
+import { SkeletonList } from "@/components/common/skeleton-list";
 import { useScheduleParams } from "@/hooks/use-query-params";
 import { getBusinessToday, getBusinessTodayDate } from "@/lib/business-time";
 import { toDateKey } from "@/lib/cinema-format";
@@ -29,20 +32,18 @@ const SchedulePage = () => {
     if (isOutOfRange) setScheduleParams({ date: null, format: null });
   }, [isOutOfRange, setScheduleParams]);
 
-  const { data, isLoading, isPlaceholderData } = useSchedule(selectedDate, format);
+  const scheduleQuery = useSchedule(selectedDate, format);
+  const { data, isPlaceholderData } = scheduleQuery;
   const movies = data?.movies ?? [];
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+    <PageContainer size="md">
       <Seo
         title="Lịch chiếu phim"
         description={`Tra cứu lịch chiếu toàn bộ phim tại rạp ${BRAND.name} theo từng ngày. Chọn suất chiếu yêu thích và đặt vé ngay.`}
         canonical="/schedule"
       />
-      <div className="mb-6">
-        <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground md:text-3xl">Lịch chiếu phim</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Tra cứu lịch chiếu toàn bộ phim tại rạp theo từng ngày.</p>
-      </div>
+      <PageTitle title="Lịch chiếu phim" description="Tra cứu lịch chiếu toàn bộ phim tại rạp theo từng ngày." />
 
       <DateStrip
         value={selectedDate}
@@ -62,15 +63,20 @@ const SchedulePage = () => {
         aria-busy={isPlaceholderData || undefined}
         className={cn("mt-6 space-y-4", isPlaceholderData && "pointer-events-none opacity-60 transition-opacity")}
       >
-        {isLoading ? (
-          Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-40 w-full" />)
-        ) : movies.length === 0 ? (
-          <EmptyState icon={CalendarX} title="Không có suất chiếu" description="Không có phim nào chiếu vào ngày đã chọn." />
-        ) : (
-          movies.map((movie) => <ScheduleMovieRow key={movie.movieId} movie={movie} />)
-        )}
+        <QueryState
+          query={scheduleQuery}
+          skeleton={<SkeletonList count={4} className="h-40 w-full" />}
+          isEmpty={movies.length === 0}
+          empty={<EmptyState icon={CalendarX} title="Không có suất chiếu" description="Không có phim nào chiếu vào ngày đã chọn." />}
+          errorTitle="Không tải được lịch chiếu"
+          errorDescription="Kiểm tra kết nối mạng rồi thử lại."
+        >
+          {movies.map((movie) => (
+            <ScheduleMovieRow key={movie.movieId} movie={movie} />
+          ))}
+        </QueryState>
       </div>
-    </div>
+    </PageContainer>
   );
 }
 

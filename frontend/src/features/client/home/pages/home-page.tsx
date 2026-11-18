@@ -3,6 +3,7 @@ import { MovieSection } from "@/features/client/home/components/movie-section";
 import { ComboCarousel } from "@/features/client/home/components/combo-carousel";
 import { CinemaExperienceSection } from "@/features/client/home/components/cinema-experience-section";
 import { MovieStatus } from "@/types/enum";
+import { PageContainer } from "@/components/common/page-container";
 import { Seo } from "@/components/common/seo";
 import { BRAND } from "@/config/brand";
 import { ROUTES } from "@/config/routes";
@@ -34,7 +35,7 @@ const HomePage = () => {
       />
       <HeroCarousel />
 
-      <div className="mx-auto max-w-7xl space-y-14 px-4 pb-14 sm:px-6 lg:px-8">
+      <PageContainer size="xl" className="space-y-14 pt-0 pb-14">
 
         <MovieSection
           title="Phim đang chiếu"
@@ -53,7 +54,7 @@ const HomePage = () => {
         <ComboCarousel />
 
         <CinemaExperienceSection />
-      </div>
+      </PageContainer>
     </div>
   );
 }

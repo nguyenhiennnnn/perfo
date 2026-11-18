@@ -7,7 +7,7 @@ import { useDialogOpen } from "@/stores/dialog-store";
 
 import { useAdminPaymentParams } from "@/hooks/use-query-params";
 import { useAdminPayments } from "../hooks/use-admin-payments";
-import type { AdminPaymentListItemDto } from "../types";
+import type { AdminPaymentListItemDto } from "@/features/admin/payments/types";
 import { createPaymentColumns } from "../components/payment-columns";
 import { PaymentDetailView } from "../components/payment-detail-view";
 import { useTablePagination } from "@/hooks/use-table-pagination";

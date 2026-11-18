@@ -27,7 +27,7 @@ export const MovieReviews = ({ movieId }: MovieReviewsProps) => {
 
   return (
     <div>
-      <h2 className="font-heading text-2xl font-semibold tracking-tight text-foreground md:text-3xl">Đánh giá & Bình luận</h2>
+      <h2 className="t-h2 text-foreground">Đánh giá & Bình luận</h2>
 
       {user && canReviewData?.canReview && !editingId && (
         <div className="mt-4">

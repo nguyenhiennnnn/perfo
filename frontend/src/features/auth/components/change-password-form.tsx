@@ -112,7 +112,7 @@ export const ChangePasswordForm = ({
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="bg-card p-5">
       {heading && (
-        <h2 className="font-heading text-lg font-semibold text-foreground">{heading}</h2>
+        <h2 className="t-h2 text-foreground">{heading}</h2>
       )}
 
       <FieldGroup

@@ -99,7 +99,7 @@ export const BookingSelectionStep = ({
         />
 
         <div className="bg-card p-4">
-          <h3 className="mb-3 font-heading text-sm font-semibold text-foreground">Chọn combo (tuỳ chọn)</h3>
+          <h3 className="t-h3 mb-3 text-foreground">Chọn combo (tuỳ chọn)</h3>
           <ComboPicker
             combos={sortedCombos}
             isLoading={activeCombos.isLoading}

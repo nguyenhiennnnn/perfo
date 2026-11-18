@@ -1,4 +1,6 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { PageContainer } from "@/components/common/page-container";
+import { QueryState } from "@/components/common/query-state";
+import { SkeletonList } from "@/components/common/skeleton-list";
 import { TierCard } from "../components/tier-card";
 import { TierCompareTable } from "../components/tier-compare-table";
 import { MembershipFaq } from "../components/membership-faq";
@@ -8,15 +10,18 @@ import { BRAND } from "@/config/brand";
 import { formatCurrency } from "@/lib/formatters";
 import { ROUTES } from "@/config/routes";
 
+const TIER_GRID_CLASS = "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4";
+
 const MembershipPage = () => {
-  const { data: tiers, isLoading, isError } = useMembershipTiers();
+  const tiersQuery = useMembershipTiers();
+  const { data: tiers, isLoading } = tiersQuery;
 
   const sortedTiers = [...(tiers ?? [])].sort(
     (a, b) => a.minPoints - b.minPoints,
   );
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 md:py-14">
+    <PageContainer size="lg">
       <Seo
         title={`Chương trình thành viên ${BRAND.name} Rewards`}
         description={`Tích điểm mỗi lần đặt vé và nhận quyền lợi độc quyền theo hạng thành viên ${BRAND.name} Rewards: Bronze, Silver, Gold, Platinum.`}
@@ -24,7 +29,7 @@ const MembershipPage = () => {
       />
       <section className="mb-10 border border-border/60 bg-card p-6 text-center md:p-10">
         <p className="mb-3 text-sm font-medium text-accent">{BRAND.name} Rewards</p>
-        <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground md:text-4xl">
+        <h1 className="t-h1 text-foreground">
           Chương trình Khách hàng Thân thiết {BRAND.name}
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground md:text-base">
@@ -35,32 +40,31 @@ const MembershipPage = () => {
       </section>
 
       <section className="mb-14">
-        <h2 className="mb-5 font-heading text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+        <h2 className="t-h2 mb-5 text-foreground">
           Các hạng thẻ hội viên
         </h2>
 
-        {isError && (
-          <p className="border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
-            Không thể tải dữ liệu hạng thẻ. Vui lòng thử lại sau.
-          </p>
-        )}
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {isLoading &&
-            Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-56 w-full" />
-            ))}
-
-          {!isLoading &&
-            sortedTiers.map((tier, index) => (
+        <QueryState
+          query={tiersQuery}
+          skeleton={
+            <div className={TIER_GRID_CLASS}>
+              <SkeletonList count={4} className="h-56 w-full" />
+            </div>
+          }
+          errorTitle="Không tải được các hạng thẻ"
+          errorDescription="Kiểm tra kết nối mạng rồi thử lại."
+        >
+          <div className={TIER_GRID_CLASS}>
+            {sortedTiers.map((tier, index) => (
               <TierCard key={tier.tierId} tier={tier} index={index} />
             ))}
-        </div>
+          </div>
+        </QueryState>
       </section>
 
       {!isLoading && sortedTiers.length > 0 && (
         <section className="mb-14">
-          <h2 className="mb-5 font-heading text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+          <h2 className="t-h2 mb-5 text-foreground">
             So sánh quyền lợi chi tiết
           </h2>
           <TierCompareTable tiers={sortedTiers} />
@@ -68,12 +72,12 @@ const MembershipPage = () => {
       )}
 
       <section>
-        <h2 className="mb-5 font-heading text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+        <h2 className="t-h2 mb-5 text-foreground">
           Câu hỏi thường gặp
         </h2>
         <MembershipFaq />
       </section>
-    </div>
+    </PageContainer>
   );
 };
 

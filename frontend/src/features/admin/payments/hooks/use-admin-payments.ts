@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { paymentsAdminApi } from "../api/payments-admin-api";
 import { queryKeys } from "@/api/query-keys";
-import type { AdminPaymentListParams } from "../types";
+import type { AdminPaymentListParams } from "@/features/admin/payments/types";
 
 export function useAdminPayments(params: AdminPaymentListParams) {
   return useQuery({

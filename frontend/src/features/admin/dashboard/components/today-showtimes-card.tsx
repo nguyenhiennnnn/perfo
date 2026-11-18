@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { SkeletonList } from "@/components/common/skeleton-list";
 import { EmptyState } from "@/components/common/empty-state";
 import type { DashboardShowtimeItemDto } from "@/features/admin/dashboard/types";
 import { Film } from "lucide-react";
@@ -20,7 +20,7 @@ export const TodayShowtimesCard = ({ showtimes, isLoading }: TodayShowtimesCardP
       </CardHeader>
       <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {isLoading ? (
-          Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-16 w-full" />)
+          <SkeletonList count={6} className="h-16 w-full" />
         ) : !showtimes || showtimes.length === 0 ? (
           <div className="col-span-full">
             <EmptyState icon={Film} title="Không có suất chiếu" description="Chưa có suất chiếu nào hôm nay." />

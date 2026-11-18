@@ -1,7 +1,7 @@
 import { PackageOpen } from "lucide-react";
 import { formatCurrency } from "@/lib/formatters";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { SkeletonList } from "@/components/common/skeleton-list";
 import { ComboQuantityStepper } from "./combo-quantity-stepper";
 
 export interface ComboOption {
@@ -24,9 +24,7 @@ export const ComboPicker = ({ combos, quantities, onChange, isLoading, labels }:
   if (isLoading) {
     return (
       <div className="@container grid grid-cols-1 gap-3 @sm:grid-cols-2">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className="h-20 w-full" />
-        ))}
+        <SkeletonList count={4} className="h-20 w-full" />
       </div>
     );
   }

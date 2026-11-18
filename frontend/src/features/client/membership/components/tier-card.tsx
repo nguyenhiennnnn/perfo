@@ -28,7 +28,7 @@ export const TierCard = ({ tier, index }: TierCardProps) => {
         <Icon className="size-5" />
       </div>
 
-      <h3 className="font-heading text-lg font-semibold text-foreground">
+      <h3 className="t-h3 text-foreground">
         Hạng {tier.tierName}
       </h3>
 

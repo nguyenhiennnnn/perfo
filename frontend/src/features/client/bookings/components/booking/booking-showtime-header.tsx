@@ -15,7 +15,7 @@ export const BookingShowtimeHeader = ({
 
   return (
     <div>
-      <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground">
+      <h1 className="t-h1 text-foreground">
         {data.movieTitle}
       </h1>
       <p className="text-sm text-muted-foreground">

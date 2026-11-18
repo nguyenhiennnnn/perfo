@@ -1,4 +1,5 @@
 import { Link, Navigate, useParams } from "react-router";
+import { PageContainer } from "@/components/common/page-container";
 import { Seo } from "@/components/common/seo";
 import { cn } from "@/lib/utils";
 import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings";
@@ -10,7 +11,7 @@ const PolicyPage = () => {
   const policy = getPolicy(slug);
   const { data: settings } = useCinemaSettings();
 
-  if (!policy) return <Navigate to="/404" replace />;
+  if (!policy) return <Navigate to={ROUTES.notFound} replace />;
 
   const sections = policy.sections({
     cancelDeadlineHours: settings?.cancelDeadlineHours,
@@ -19,7 +20,7 @@ const PolicyPage = () => {
   });
 
   return (
-    <div className="mx-auto grid max-w-5xl gap-8 px-4 py-10 md:grid-cols-[14rem_1fr] md:py-14">
+    <PageContainer size="md" className="grid gap-8 md:grid-cols-[14rem_1fr]">
       <Seo
         title={policy.title}
         description={policy.description}
@@ -47,7 +48,7 @@ const PolicyPage = () => {
       </aside>
 
       <article className="min-w-0 border border-border/60 bg-card p-6 md:p-10">
-        <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+        <h1 className="t-h1 text-foreground">
           {policy.title}
         </h1>
         <p className="mt-1 text-xs text-muted-foreground">
@@ -58,7 +59,7 @@ const PolicyPage = () => {
         <div className="flex flex-col gap-6">
           {sections.map((section) => (
             <section key={section.heading}>
-              <h2 className="mb-2 font-heading text-lg font-semibold tracking-tight text-foreground">
+              <h2 className="t-h2 mb-2 text-foreground">
                 {section.heading}
               </h2>
               {section.list ? (
@@ -81,7 +82,7 @@ const PolicyPage = () => {
           ))}
         </div>
       </article>
-    </div>
+    </PageContainer>
   );
 };
 

@@ -1,6 +1,6 @@
 import { apiGet } from "@/api/axios";
 import type { ApiResponse, OffsetPageResult } from "@/types/api";
-import type { AdminPaymentListParams, AdminPaymentListItemDto, AdminPaymentDetailDto } from "../types";
+import type { AdminPaymentListParams, AdminPaymentListItemDto, AdminPaymentDetailDto } from "@/features/admin/payments/types";
 import { ENDPOINTS } from "@/api/endpoints";
 
 export const paymentsAdminApi = {

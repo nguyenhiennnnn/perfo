@@ -35,7 +35,7 @@ export const ForgotPasswordForm = () => {
     return (
       <div className="flex flex-col items-center gap-3 text-center">
         <CheckCircle2 className="size-10 text-success" />
-        <h2 className="font-heading text-lg font-bold text-foreground">
+        <h2 className="t-h2 text-foreground">
           Đã gửi yêu cầu
         </h2>
         <p className="text-sm text-muted-foreground">

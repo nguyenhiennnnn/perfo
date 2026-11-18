@@ -30,7 +30,7 @@ export const BookingPriceSummary = ({ seats, combos, comboQuantities, hold }: Bo
 
   return (
     <div className="flex flex-col gap-2 bg-card p-4">
-      <h3 className="mb-1 font-heading text-sm font-semibold text-foreground">Chi tiết đơn hàng</h3>
+      <h3 className="t-h3 mb-1 text-foreground">Chi tiết đơn hàng</h3>
       <div className="flex items-center justify-between text-sm">
         <span className="text-muted-foreground">
           Ghế ({seats.length}): {seats.map((s) => `${s.seatRow}${s.seatNumber}`).join(", ")}

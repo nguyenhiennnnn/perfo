@@ -89,7 +89,7 @@ const AccountProfilePage = () => {
       <ProfileStatsCard profile={profile} />
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="bg-card p-5">
-        <h2 className="font-heading text-lg font-semibold text-foreground">Thông tin cá nhân</h2>
+        <h2 className="t-h2 text-foreground">Thông tin cá nhân</h2>
 
         <FieldGroup
           disabled={updateProfile.isPending}

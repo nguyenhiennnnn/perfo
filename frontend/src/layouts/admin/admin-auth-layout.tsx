@@ -1,5 +1,6 @@
 import { Link, Outlet } from "react-router";
 import { BrandMark, BrandWordmark } from "@/components/common/brand-mark";
+import { ROUTES } from "@/config/routes";
 
 const AdminAuthLayout = () => {
   return (
@@ -13,7 +14,7 @@ const AdminAuthLayout = () => {
       <div className="absolute inset-0 bg-scrim/60" />
 
       <div className="relative z-10 flex w-full max-w-sm flex-col items-center gap-5">
-        <Link to="/" className="flex items-center gap-2">
+        <Link to={ROUTES.home} className="flex items-center gap-2">
           <BrandMark className="size-8 shrink-0" />
           <BrandWordmark className="h-5 w-auto" />
         </Link>

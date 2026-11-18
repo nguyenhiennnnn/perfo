@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { BrandMark, BrandWordmark } from "@/components/common/brand-mark";
 import { buttonVariants } from "@/components/ui/button";
 import { BRAND } from "@/config/brand";
+import { ROUTES } from "@/config/routes";
 
 export interface StatusPageAction {
   label: string;
@@ -23,7 +24,7 @@ interface StatusPageProps {
 export const StatusPage = ({ code, icon: Icon, title, description, actions = [] }: StatusPageProps) => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-16">
-      <Link to="/" className="mb-10 flex items-center gap-2">
+      <Link to={ROUTES.home} className="mb-10 flex items-center gap-2">
         <BrandMark className="size-8 shrink-0" />
         <BrandWordmark className="h-5 w-auto" />
       </Link>
@@ -37,7 +38,7 @@ export const StatusPage = ({ code, icon: Icon, title, description, actions = [] 
         <div className="notch-x perf-h" />
 
         <div className="flex flex-col items-center gap-2 px-6 py-6 text-center">
-          <h1 className="font-heading text-lg font-semibold tracking-tight text-foreground">{title}</h1>
+          <h1 className="t-h2 text-foreground">{title}</h1>
           <p className="max-w-xs text-sm text-muted-foreground">{description}</p>
         </div>
 

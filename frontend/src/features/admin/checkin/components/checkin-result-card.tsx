@@ -1,5 +1,6 @@
 import { CheckCircle2, XCircle, Film, Armchair, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/common/empty-state";
 import { formatDateTime, formatTime } from "@/lib/formatters";
 import type { CheckinResponse } from "@/features/admin/bookings/types";
 
@@ -13,10 +14,7 @@ interface CheckinResultCardProps {
 export const CheckinResultCard = ({ status, result, errorMessage }: CheckinResultCardProps) => {
   if (status === "idle") {
     return (
-      <div className="flex h-full min-h-55 flex-col items-center justify-center gap-2 border border-dashed border-border text-muted-foreground">
-        <Film className="size-8" />
-        <p className="text-sm">Chưa có vé nào được soát</p>
-      </div>
+      <EmptyState icon={Film} title="Chưa có vé nào được soát" className="h-full min-h-55" />
     );
   }
 

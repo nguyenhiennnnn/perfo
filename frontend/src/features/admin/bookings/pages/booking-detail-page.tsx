@@ -57,7 +57,7 @@ const AdminBookingDetailPage = () => {
       <div className="grid gap-4 md:grid-cols-3">
         <div className="md:col-span-2 space-y-4">
           <div className="cut-md bg-card p-4">
-            <h3 className="font-heading text-base font-medium text-foreground mb-3">Phim & Suất chiếu</h3>
+            <h3 className="t-h3 text-foreground mb-3">Phim & Suất chiếu</h3>
             <div className="flex items-center gap-3">
               {b.movie.posterUrl && (
                 <img
@@ -76,7 +76,7 @@ const AdminBookingDetailPage = () => {
           </div>
 
           <div className="cut-md bg-card p-4">
-            <h3 className="font-heading text-base font-medium text-foreground mb-3">Ghế đã chọn</h3>
+            <h3 className="t-h3 text-foreground mb-3">Ghế đã chọn</h3>
             <div className="flex flex-wrap gap-2">
               {b.seats.map((s) => (
                 <Badge
@@ -92,7 +92,7 @@ const AdminBookingDetailPage = () => {
 
           {b.combos.length > 0 && (
             <div className="cut-md bg-card p-4">
-              <h3 className="font-heading text-base font-medium text-foreground mb-3">Combo bắp nước</h3>
+              <h3 className="t-h3 text-foreground mb-3">Combo bắp nước</h3>
               <div className="space-y-2">
                 {b.combos.map((c, i) => (
                   <div key={`${c.name}-${i}`} className="flex items-center justify-between text-sm">
@@ -108,7 +108,7 @@ const AdminBookingDetailPage = () => {
 
           {b.tickets && b.tickets.length > 0 && (
             <div className="cut-md bg-card p-4">
-              <h3 className="font-heading text-base font-medium text-foreground mb-3">Vé</h3>
+              <h3 className="t-h3 text-foreground mb-3">Vé</h3>
               <div className="space-y-2">
                 {b.tickets.map((t) => (
                   <div key={t.ticketId} className="flex items-center justify-between text-sm">
@@ -133,7 +133,7 @@ const AdminBookingDetailPage = () => {
           )}
 
           <div className="cut-md bg-card p-4">
-            <h3 className="font-heading text-base font-medium text-foreground mb-3">Thanh toán</h3>
+            <h3 className="t-h3 text-foreground mb-3">Thanh toán</h3>
             <div className="space-y-2">
               {b.payments.map((p) => (
                 <div key={p.paymentId} className="flex items-center justify-between text-sm">

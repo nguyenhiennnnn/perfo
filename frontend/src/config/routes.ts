@@ -3,6 +3,7 @@ import { Role } from "@/types/enum";
 export const ROUTES = {
   home: "/",
   forbidden: "/403",
+  notFound: "/404",
   schedule: "/schedule",
   membership: "/membership",
   policy: (slug: string) => `/policies/${slug}`,

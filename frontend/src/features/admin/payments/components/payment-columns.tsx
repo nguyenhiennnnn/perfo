@@ -12,7 +12,7 @@ import { DataTableColumnHeader } from "@/components/common/data-table/data-table
 import type { DataTableFeatures } from "@/components/common/data-table/data-table-features";
 import { formatCurrency, formatDate } from "@/lib/formatters";
 
-import type { AdminPaymentListItemDto } from "../types";
+import type { AdminPaymentListItemDto } from "@/features/admin/payments/types";
 import { PaymentStatusBadge } from "@/components/common/status-badge";
 import type { PaymentStatus } from "@/types/enum";
 

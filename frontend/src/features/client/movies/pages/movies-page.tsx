@@ -1,12 +1,13 @@
-import { Film } from "lucide-react";
 import { useClientMovieParams } from "@/hooks/use-query-params";
 import { MoviesFilterBar } from "@/features/client/movies/components/movies-filter-bar";
-import { MoviesGrid } from "@/features/client/movies/components/movies-grid";
+import { MoviesGrid, MoviesGridSkeleton } from "@/features/client/movies/components/movies-grid";
 import { useMovies } from "@/features/client/movies/hooks/use-movies";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import type { MovieStatus } from "@/types/enum";
 import { Seo } from "@/components/common/seo";
-import { EmptyState } from "@/components/common/empty-state";
+import { PageContainer } from "@/components/common/page-container";
+import { PageTitle } from "@/components/common/page-title";
+import { QueryState } from "@/components/common/query-state";
 import { BRAND } from "@/config/brand";
 import { ROUTES } from "@/config/routes";
 
@@ -14,7 +15,7 @@ const MoviesPage = () => {
   const [params, setParams] = useClientMovieParams();
   const debouncedSearch = useDebouncedValue(params.search);
 
-  const { data, isLoading, isError, refetch, isFetchingNextPage, hasNextPage, fetchNextPage } = useMovies({
+  const moviesQuery = useMovies({
     search: debouncedSearch || undefined,
     status: (params.status as MovieStatus) || undefined,
     genreId: params.genreId ?? undefined,
@@ -22,42 +23,36 @@ const MoviesPage = () => {
     ageRatingId: params.ageRatingId ?? undefined,
     limit: params.limit,
   });
+  const { data, isFetchingNextPage, hasNextPage, fetchNextPage } = moviesQuery;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <PageContainer size="xl">
       <Seo
         title="Danh sách phim"
         description={`Xem tất cả phim đang và sắp chiếu tại ${BRAND.name}. Lọc theo thể loại, ngôn ngữ và nhiều tiêu chí khác.`}
         canonical={ROUTES.movies.list}
       />
-      <div className="mb-6">
-        <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground md:text-3xl">Danh sách phim</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Phim đang chiếu và sắp chiếu tại rạp.</p>
-      </div>
+      <PageTitle title="Danh sách phim" description="Phim đang chiếu và sắp chiếu tại rạp." />
 
       <MoviesFilterBar params={params} setParams={setParams} />
 
       <div className="mt-6">
-        {isError && !data ? (
-          <EmptyState
-            icon={Film}
-            title="Không tải được danh sách phim"
-            description="Kiểm tra kết nối mạng rồi thử lại."
-            actionLabel="Thử lại"
-            onAction={() => void refetch()}
-          />
-        ) : (
+        <QueryState
+          query={moviesQuery}
+          skeleton={<MoviesGridSkeleton />}
+          errorTitle="Không tải được danh sách phim"
+          errorDescription="Kiểm tra kết nối mạng rồi thử lại."
+        >
           <MoviesGrid
             movies={data?.pages ?? []}
-            isLoading={isLoading}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}
             fetchNextPage={fetchNextPage}
             onResetFilters={() => setParams({ search: "", status: null, genreId: null, languageId: null, ageRatingId: null, cursor: null })}
           />
-        )}
+        </QueryState>
       </div>
-    </div>
+    </PageContainer>
   );
 }
 

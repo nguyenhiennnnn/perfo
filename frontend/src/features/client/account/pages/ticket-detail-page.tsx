@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { Copy, Ticket as TicketIcon } from "lucide-react";
+import { Ticket as TicketIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { NotFoundState } from "@/components/common/not-found-state";
 import { QueryState } from "@/components/common/query-state";
@@ -7,20 +7,19 @@ import { Button } from "@/components/ui/button";
 import { ButtonLink } from "@/components/common/button-link";
 import { PageContainer } from "@/components/common/page-container";
 import { BookingStatusBadge, PaymentMethodBadge, PaymentStatusBadge } from "@/components/common/status-badge";
+import { CopyButton } from "@/components/common/copy-button";
 import { PerfoTicket } from "@/components/common/perfo-ticket";
 import { DownloadTicketsPdfButton } from "@/components/common/download-tickets-pdf-button";
 import { useBookingDetail, useCancelBooking } from "@/features/client/bookings/hooks/use-bookings";
+import { useCancelPolicy } from "@/features/client/bookings/hooks/use-cancel-policy";
 import type { BookingDetailDto } from "@/features/client/bookings/types";
 import { useAlertDialogOpen } from "@/stores/alert-dialog-store";
 import { useCountdown } from "@/hooks/use-countdown";
-import { formatCurrency, formatDate, formatDateTime, formatTime } from "@/lib/formatters";
+import { formatCurrency, formatDateTime } from "@/lib/formatters";
 import { BookingStatus } from "@/types/enum";
-import { useNow } from "@/hooks/use-now";
-import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings";
 import { ROUTES } from "@/config/routes";
 import { ENDPOINTS } from "@/api/endpoints";
 
-import { MS_PER_HOUR } from "@/config/default-constants";
 const TicketDetailSkeleton = () => (
   <div className="space-y-6" aria-busy="true">
     <div className="flex items-center justify-between gap-3 bg-card p-4">
@@ -30,6 +29,7 @@ const TicketDetailSkeleton = () => (
       </div>
       <Skeleton className="h-6 w-24 cut-xs" />
     </div>
+    <Skeleton className="h-[30rem] w-full cut-lg sm:h-72" />
     <div className="flex gap-4 bg-card p-4">
       <Skeleton className="aspect-2/3 w-24 shrink-0" />
       <div className="flex-1 space-y-3">
@@ -38,38 +38,72 @@ const TicketDetailSkeleton = () => (
         <Skeleton className="h-4 w-1/2 cut-xs" />
       </div>
     </div>
-    <Skeleton className="notch-y aspect-[920/380] w-full" />
   </div>
 );
 
 const TicketDetailContent = ({ booking }: { booking: BookingDetailDto }) => {
-  const now = useNow();
-  const { data: settings } = useCinemaSettings();
   const cancelBooking = useCancelBooking();
   const openAlert = useAlertDialogOpen();
   const holdCountdown = useCountdown(booking.holdExpiresAt ?? null);
+  const cancelPolicy = useCancelPolicy(booking.status, booking.showtime.startTime, booking.finalAmount);
 
-  const cancelDeadlineHours = settings?.cancelDeadlineHours ?? 2;
-  const isRefundable = settings ? settings.cancelRefundPercent > 0 : true;
-
-  const canCancel =
-    booking.status === BookingStatus.Confirmed &&
-    isRefundable &&
-    new Date(booking.showtime.startTime).getTime() - now > cancelDeadlineHours * MS_PER_HOUR;
-
+  const isConfirmed = booking.status === BookingStatus.Confirmed;
   const isPending = booking.status === BookingStatus.Pending;
   const isHoldExpired = isPending && (!booking.holdExpiresAt || holdCountdown.remainingMs <= 0);
   const canResumePayment = isPending && !isHoldExpired;
 
+  const seatPrices = new Map(booking.seats.map((seat) => [`${seat.seatRow}${seat.seatNumber}`, seat.price]));
+
+  const cancelNotice =
+    cancelPolicy.blockReason === "nonRefundable"
+      ? "Rạp hiện không hoàn tiền khi hủy vé nên đơn này không thể hủy."
+      : cancelPolicy.blockReason === "deadlinePassed"
+        ? `Đã quá hạn hủy vé. Bạn chỉ có thể hủy trước giờ chiếu ít nhất ${cancelPolicy.deadlineHours} giờ.`
+        : null;
+
   const handleCancel = () => {
     openAlert({
       title: "Hủy vé & hoàn tiền",
-      description: "Bạn có chắc muốn hủy vé này? Số tiền sẽ được hoàn theo chính sách của rạp.",
+      description: `Bạn sẽ được hoàn ${formatCurrency(cancelPolicy.refundAmount)} (${cancelPolicy.refundPercent}% giá trị đơn) theo chính sách của rạp. Thao tác này không thể hoàn tác.`,
       confirmText: "Hủy vé",
       variant: "destructive",
       onConfirm: () => cancelBooking.mutate(booking.bookingId),
     });
   };
+
+  const ticketsSection = booking.tickets.length > 0 && (
+    <section aria-labelledby="ticket-section-title">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 id="ticket-section-title" className="t-h2 text-foreground">
+          Vé điện tử & Mã QR
+        </h2>
+        {isConfirmed && (
+          <DownloadTicketsPdfButton
+            endpoint={ENDPOINTS.bookings.ticketsPdf(booking.bookingId)}
+            fallbackFilename={`tickets-${booking.bookingCode}.pdf`}
+          />
+        )}
+      </div>
+      <div className="mt-3 flex flex-col gap-4">
+        {booking.tickets.map((ticket) => {
+          const seatLabel = `${ticket.seatRow}${ticket.seatNumber}`;
+          return (
+            <PerfoTicket
+              key={ticket.ticketId}
+              movieTitle={booking.movie.title}
+              startTime={booking.showtime.startTime}
+              room={booking.showtime.roomName}
+              seat={seatLabel}
+              price={seatPrices.get(seatLabel) ?? 0}
+              ticketCode={`${booking.bookingCode}-${seatLabel}`}
+              qrValue={ticket.qrCodeImage}
+              isCheckedIn={ticket.isCheckedIn}
+            />
+          );
+        })}
+      </div>
+    </section>
+  );
 
   return (
     <div className="space-y-6">
@@ -77,14 +111,14 @@ const TicketDetailContent = ({ booking }: { booking: BookingDetailDto }) => {
         <div>
           <div className="flex items-center gap-2">
             <span className="t-code text-lg text-foreground">{booking.bookingCode}</span>
-            <button onClick={() => navigator.clipboard.writeText(booking.bookingCode)} className="text-muted-foreground hover:text-foreground">
-              <Copy className="size-4" />
-            </button>
+            <CopyButton value={booking.bookingCode} label="mã đặt vé" />
           </div>
           <p className="mt-1 text-xs text-muted-foreground">Đặt lúc {formatDateTime(booking.createdAt)}</p>
         </div>
         <BookingStatusBadge status={booking.status} />
       </div>
+
+      {isConfirmed && ticketsSection}
 
       {isPending && (
         <div className="flex flex-wrap items-center justify-between gap-3 bg-warning/10 p-4">
@@ -183,40 +217,16 @@ const TicketDetailContent = ({ booking }: { booking: BookingDetailDto }) => {
         </div>
       )}
 
-      <div>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="t-h2 text-foreground">Vé điện tử & Mã QR</h2>
-          {booking.status === BookingStatus.Confirmed && (
-            <DownloadTicketsPdfButton
-              endpoint={ENDPOINTS.bookings.ticketsPdf(booking.bookingId)}
-              fallbackFilename={`tickets-${booking.bookingCode}.pdf`}
-            />
-          )}
-        </div>
-        <div className="mt-3 flex flex-col gap-4">
-          {booking.tickets.map((ticket) => (
-            <PerfoTicket
-              key={ticket.ticketId}
-              movieTitle={booking.movie.title}
-              showtime={`${formatTime(booking.showtime.startTime)}, ${formatDate(booking.showtime.startTime)}`}
-              room={booking.showtime.roomName}
-              seat={`${ticket.seatRow}${ticket.seatNumber}`}
-              totalAmount={formatCurrency(booking.finalAmount)}
-              ticketCode={`${booking.bookingCode}-${ticket.seatRow}${ticket.seatNumber}`}
-              qrValue={ticket.qrCodeImage}
-              isCheckedIn={ticket.isCheckedIn}
-            />
-          ))}
-        </div>
-      </div>
+      {!isConfirmed && ticketsSection}
 
-      {canCancel && (
+      {cancelPolicy.canCancel && (
         <div className="flex justify-end">
           <Button variant="destructive" onClick={handleCancel}>
             Hủy vé & Hoàn tiền
           </Button>
         </div>
       )}
+      {isConfirmed && cancelNotice && <p className="text-sm text-muted-foreground">{cancelNotice}</p>}
     </div>
   );
 };

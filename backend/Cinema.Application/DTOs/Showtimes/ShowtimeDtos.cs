@@ -21,7 +21,10 @@ public record ShowtimeSeatsResponseDto(
     int Rows,
     int Cols,
     List<AislePositionDto> Aisles,
-    List<ShowtimeSeatItemDto> Seats
+    List<ShowtimeSeatItemDto> Seats,
+    string? MoviePosterUrl = null,
+    string? AgeRatingCode = null,
+    string? ScreenType = null
 );
 
 public record SeatSuggestionDto(

@@ -31,8 +31,8 @@ const RESUME_NOTICE = {
 } as const;
 
 const SeatSelectionSkeleton = () => (
-  <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-    <Skeleton className="h-96 w-full lg:col-span-2" />
+  <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_22.5rem]">
+    <Skeleton className="h-96 w-full" />
     <CardSkeleton className="h-48" />
   </div>
 );
@@ -45,7 +45,7 @@ const BookingPage = () => {
   const flow = useBookingFlow(Number(showtimeId), resumeBookingId);
 
   return (
-    <PageContainer size="md" className="flex flex-col gap-6">
+    <PageContainer size="xl" className="flex flex-col gap-6">
       <BookingShowtimeHeader data={flow.showtimeSeats.data} isLoading={flow.showtimeSeats.isLoading} />
 
       <BookingStepper step={flow.step} />
@@ -134,6 +134,7 @@ const BookingPage = () => {
           )}
           <BookingPaymentStep
             seats={flow.selectedSeatsInfo}
+            comboItems={flow.holdComboItems}
             hold={flow.holdResult}
             paymentMethod={flow.paymentMethod}
             onPaymentMethodChange={flow.setPaymentMethod}

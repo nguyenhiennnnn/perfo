@@ -360,6 +360,43 @@
         bottom / 100% 51% no-repeat;
   }
 
+  .notch-stub {
+    --stub-w: 12.5rem;
+    --stub-h: 4.5rem;
+    --y: calc(100% - var(--stub-h));
+    mask:
+      radial-gradient(
+          circle var(--notch) at 0 var(--y),
+          #0000 calc(var(--notch) - 0.5px),
+          #000 var(--notch)
+        )
+        left / 51% 100% no-repeat,
+      radial-gradient(
+          circle var(--notch) at 100% var(--y),
+          #0000 calc(var(--notch) - 0.5px),
+          #000 var(--notch)
+        )
+        right / 51% 100% no-repeat;
+  }
+  @container (min-width: 28rem) {
+    .notch-stub {
+      --x: calc(100% - var(--stub-w));
+      mask:
+        radial-gradient(
+            circle var(--notch) at var(--x) 0,
+            #0000 calc(var(--notch) - 0.5px),
+            #000 var(--notch)
+          )
+          top / 100% 51% no-repeat,
+        radial-gradient(
+            circle var(--notch) at var(--x) 100%,
+            #0000 calc(var(--notch) - 0.5px),
+            #000 var(--notch)
+          )
+          bottom / 100% 51% no-repeat;
+    }
+  }
+
   .perf-h {
     height: 4px;
     color: var(--muted-foreground);

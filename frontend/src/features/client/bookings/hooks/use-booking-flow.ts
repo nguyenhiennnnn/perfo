@@ -14,6 +14,7 @@ import {
   SeatGapRuleMode,
 } from "@/types/enum";
 import { findLoneSeats } from "@/components/common/seat-map/seat-map-utils";
+import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
 import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings";
 import { useShowtimeSeats } from "@/features/client/showtimes/hooks/use-showtimes";
 import { useRealtimeSeatMap } from "@/hooks/use-realtime-seat-map";
@@ -28,6 +29,7 @@ import {
 } from "./use-bookings";
 import { bookingsApi } from "../api/bookings-api";
 import type { HoldBookingResponse, PricedSeat } from "../types";
+import type { BookingComboLine } from "../components/booking/booking-price-summary";
 import { ROUTES } from "@/config/routes";
 import { getServerNow } from "@/lib/server-clock";
 
@@ -176,6 +178,15 @@ export function useBookingFlow(showtimeId: number, resumeBookingId?: number) {
         .map(([comboId, quantity]) => ({ comboId: Number(comboId), quantity })),
     [comboQuantities],
   );
+
+  const activeCombos = useActiveCombos();
+  const holdComboItems = useMemo<BookingComboLine[]>(() => {
+    if (isResumeMode) return resumeBookingQuery.data?.combos ?? [];
+    return Object.entries(comboQuantities).flatMap(([comboId, quantity]) => {
+      const combo = activeCombos.data?.find((c) => c.comboId === Number(comboId));
+      return combo && quantity > 0 ? [{ name: combo.name, quantity, unitPrice: combo.price }] : [];
+    });
+  }, [isResumeMode, resumeBookingQuery.data, comboQuantities, activeCombos.data]);
 
   const toggleSeat = (showtimeSeatId: number) => {
     const allSeats = showtimeSeats.data?.seats ?? [];
@@ -347,6 +358,7 @@ export function useBookingFlow(showtimeId: number, resumeBookingId?: number) {
     holdAndContinue,
     isHolding: holdSeatsMutation.isPending,
     holdResult,
+    holdComboItems,
     cancelHold,
     isCancelling: cancelBookingMutation.isPending,
     submitPayment,

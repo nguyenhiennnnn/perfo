@@ -1,11 +1,8 @@
-import { useMemo, useCallback } from "react";
-import { useNavigate } from "react-router";
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
-import { formatShowtimeRange } from "@/lib/cinema-format";
-import { formatCurrency } from "@/lib/formatters";
-import { useAuthStore, useIsAuthenticated } from "@/stores/auth-store";
-import { useAlertDialogOpen } from "@/stores/alert-dialog-store";
-import { ROUTES } from "@/config/routes";
+import { ShowtimeRow } from "@/components/common/showtime-row";
+import { useBookShowtime } from "@/features/client/bookings/hooks/use-book-showtime";
+import { DEFAULT_SCREEN_TYPE } from "@/config/default-constants";
 
 export interface ShowtimeSlotItem {
   showtimeId: number;
@@ -24,36 +21,12 @@ interface ShowtimeGroupListProps {
 }
 
 export const ShowtimeGroupList = ({ showtimes, className }: ShowtimeGroupListProps) => {
-  const navigate = useNavigate();
-  const isAuthenticated = useIsAuthenticated();
-  const isInitialized = useAuthStore((s) => s.isInitialized);
-  const openAlertDialog = useAlertDialogOpen();
-
-  const handleBooking = useCallback(
-    (showtimeId: number) => {
-      if (isAuthenticated) {
-        navigate(ROUTES.booking.detail(showtimeId));
-        return;
-      }
-
-      const redirectTo = encodeURIComponent(ROUTES.booking.detail(showtimeId));
-      openAlertDialog({
-        title: "Yêu cầu đăng nhập",
-        description: "Bạn cần đăng nhập để đặt vé. Bạn có muốn đăng nhập ngay không?",
-        confirmText: "Đăng nhập ngay",
-        cancelText: "Để sau",
-        onConfirm: () => {
-          navigate(`${ROUTES.auth.login}?redirect=${redirectTo}`);
-        },
-      });
-    },
-    [isAuthenticated, navigate, openAlertDialog],
-  );
+  const { bookShowtime, isReady } = useBookShowtime();
 
   const groups = useMemo(() => {
     const map = new Map<string, ShowtimeSlotItem[]>();
     for (const item of showtimes) {
-      const key = item.screenType ?? "2D";
+      const key = item.screenType ?? DEFAULT_SCREEN_TYPE;
       if (!map.has(key)) map.set(key, []);
       map.get(key)!.push(item);
     }
@@ -63,39 +36,16 @@ export const ShowtimeGroupList = ({ showtimes, className }: ShowtimeGroupListPro
   if (groups.length === 0) return null;
 
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn("@container space-y-6", className)}>
       {groups.map(([format, items]) => (
-        <div key={format} className="flex flex-col gap-2.5 sm:flex-row sm:items-start">
-          <span className="w-24 shrink-0 pt-2 text-[13px] font-semibold text-muted-foreground">{format}</span>
-          <div className="flex flex-wrap gap-2.5">
-            {items.map((item) => {
-              const soldOut = item.availableSeats === 0;
-              return (
-                <button
-                  key={item.showtimeId}
-                  type="button"
-                  data-slot="showtime-slot"
-                  disabled={soldOut || !isInitialized}
-                  onClick={() => handleBooking(item.showtimeId)}
-                  className={cn(
-                    "flex flex-col gap-0.5 cut-sm bg-card px-3.5 py-2 text-left transition-colors cursor-pointer hover:bg-muted outline-none",
-                    soldOut && "cursor-not-allowed opacity-40 hover:bg-card",
-                  )}
-                >
-                  <span className="t-numeral text-base font-bold text-foreground">
-                    {formatShowtimeRange(item.startTime, item.endTime)}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    Phòng {item.roomName}, còn {item.availableSeats}/{item.totalSeats} ghế
-                  </span>
-                  <span className="t-numeral text-xs font-semibold text-primary">
-                    {formatCurrency(item.basePrice)}
-                  </span>
-                </button>
-              );
-            })}
+        <section key={format} aria-label={`Suất chiếu ${format}`}>
+          <h3 className="t-h3 text-foreground">{format}</h3>
+          <div className="mt-3 grid gap-3 @5xl:grid-cols-2">
+            {items.map((item) => (
+              <ShowtimeRow key={item.showtimeId} item={item} disabled={!isReady} onBook={bookShowtime} />
+            ))}
           </div>
-        </div>
+        </section>
       ))}
     </div>
   );

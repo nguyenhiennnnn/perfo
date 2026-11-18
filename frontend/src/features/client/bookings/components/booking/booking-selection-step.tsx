@@ -71,8 +71,8 @@ export const BookingSelectionStep = ({
     : undefined;
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-      <div className="flex flex-col gap-4 lg:col-span-2">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_22.5rem]">
+      <div className="flex flex-col gap-4">
         <SeatSuggestionPanel
           showtimeId={data.showtimeId}
           statusMap={statusMap}
@@ -137,7 +137,7 @@ export const BookingSelectionStep = ({
         )}
       </div>
 
-      <div className="sticky bottom-0 z-30 -mx-4 border-t border-border bg-background pt-3 pr-20 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pl-4 lg:hidden">
+      <div className="sticky bottom-0 z-30 -mx-4 border-t border-border bg-background px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] lg:hidden">
         {loneSeats.length > 0 && (
           <p className="mb-2 flex items-center gap-1.5 text-xs text-warning">
             <AlertTriangle className="size-3.5 shrink-0" />

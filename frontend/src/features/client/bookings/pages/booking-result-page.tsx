@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router";
 import { Ticket as TicketIcon } from "lucide-react";
 
 import { ButtonLink } from "@/components/common/button-link";
-import { Confetti } from "@/components/common/confetti";
 import { NotFoundState } from "@/components/common/not-found-state";
 import { PageContainer } from "@/components/common/page-container";
 import { QueryState } from "@/components/common/query-state";
@@ -35,8 +34,7 @@ const BookingResultPage = () => {
   }, [status]);
 
   return (
-    <PageContainer size="sm" className="flex min-h-[60vh] max-w-lg flex-col items-center justify-center gap-6 py-12">
-      <Confetti active={celebrate} />
+    <PageContainer size="sm" className="flex min-h-[60vh] max-w-2xl flex-col items-center justify-center gap-6 py-12">
       {!bookingId ? (
         <NotFoundState
           entity="đơn đặt vé"
@@ -65,8 +63,8 @@ const BookingResultPage = () => {
           {(booking) => (
             <>
               <BookingResultStatus status={booking.status} bookingCode={booking.bookingCode} />
-              {booking.status === BookingStatus.Confirmed && <BookingResultTickets booking={booking} />}
-              <div className="flex gap-3">
+              {booking.status === BookingStatus.Confirmed && <BookingResultTickets booking={booking} isTorn={celebrate} />}
+              <div className="flex w-full flex-wrap gap-3">
                 <ButtonLink to={ROUTES.account.tickets}>Xem vé của tôi</ButtonLink>
                 <ButtonLink to={ROUTES.home} variant="outline">
                   Về trang chủ

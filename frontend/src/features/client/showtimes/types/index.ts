@@ -49,6 +49,9 @@ export interface ShowtimeSeatsResponseDto {
   cols: number;
   aisles: AislePositionDto[];
   seats: ShowtimeSeatItemDto[];
+  moviePosterUrl?: string | null;
+  ageRatingCode?: string | null;
+  screenType?: string | null;
 }
 
 export interface SeatSuggestionDto {

@@ -4,7 +4,7 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import { PerfoTicket } from "@/components/common/perfo-ticket";
 import { QueryState } from "@/components/common/query-state";
 import { TicketSkeleton } from "@/components/common/skeleton-shapes";
-import { formatCurrency, formatDate, formatTime } from "@/lib/formatters";
+import { formatCurrency } from "@/lib/formatters";
 import type {
   AdminBookingDetailDto,
   CounterCheckoutResponse,
@@ -18,12 +18,7 @@ interface CounterTicketResultProps {
 
 export const CounterTicketResult = ({ bookingQuery, checkout, onNewSale }: CounterTicketResultProps) => {
   const booking = bookingQuery.data;
-  const seats = booking?.seats?.map((s) => `${s.seatRow}${s.seatNumber}`).join(", ") ?? "";
-  const showtime = booking?.showtime
-    ? `${formatTime(booking.showtime.startTime)}, ${formatDate(booking.showtime.startTime)}`
-    : "";
-  const room = booking?.showtime?.roomName ?? "";
-  const total = booking ? formatCurrency(booking.finalAmount) : "";
+  const seatPrices = new Map((booking?.seats ?? []).map((seat) => [`${seat.seatRow}${seat.seatNumber}`, seat.price]));
 
   return (
     <div className="flex flex-col items-center gap-6 cut-lg bg-card p-6 text-center">
@@ -45,10 +40,10 @@ export const CounterTicketResult = ({ bookingQuery, checkout, onNewSale }: Count
             <PerfoTicket
               key={ticket.ticketId}
               movieTitle={booking.movie?.title ?? ""}
-              showtime={showtime}
-              room={room}
+              startTime={booking.showtime.startTime}
+              room={booking.showtime.roomName}
               seat={`${ticket.seatRow}${ticket.seatNumber}`}
-              totalAmount={total}
+              price={seatPrices.get(`${ticket.seatRow}${ticket.seatNumber}`) ?? 0}
               ticketCode={`${booking.bookingCode}-${ticket.seatRow}${ticket.seatNumber}`}
               qrValue={ticket.qrCodeImage}
               isCheckedIn={ticket.isCheckedIn}
@@ -58,10 +53,10 @@ export const CounterTicketResult = ({ bookingQuery, checkout, onNewSale }: Count
         ) : booking ? (
           <PerfoTicket
             movieTitle={booking.movie?.title ?? ""}
-            showtime={showtime}
-            room={room}
-            seat={seats}
-            totalAmount={total}
+            startTime={booking.showtime.startTime}
+            room={booking.showtime.roomName}
+            seat={Array.from(seatPrices.keys()).join(", ")}
+            price={booking.seats.reduce((sum, seat) => sum + seat.price, 0)}
             ticketCode={booking.bookingCode}
             qrValue={booking.bookingCode}
           />

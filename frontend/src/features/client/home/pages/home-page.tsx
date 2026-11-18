@@ -36,6 +36,7 @@ const HomePage = () => {
       <HeroCarousel />
 
       <PageContainer size="xl" className="space-y-14 pt-0 pb-14">
+        <CinemaExperienceSection />
 
         <MovieSection
           title="Phim đang chiếu"
@@ -52,8 +53,6 @@ const HomePage = () => {
         />
 
         <ComboCarousel />
-
-        <CinemaExperienceSection />
       </PageContainer>
     </div>
   );

@@ -54,6 +54,9 @@ export const SEAT_SUGGESTIONS_STALE_TIME_MS = 0;
 export const SEAT_SUGGESTIONS_GC_TIME_MS = 0;
 export const SETTINGS_STALE_TIME_MS = 5 * 60 * 1000;
 export const NOW_TICK_INTERVAL_MS = 60_000;
+export const DEFAULT_CANCEL_DEADLINE_HOURS = 2;
+export const COPY_FEEDBACK_MS = 2000;
+export const DEFAULT_SCREEN_TYPE = "2D";
 export const BUSINESS_TIME_ZONE_BOOT_TIMEOUT_MS = 3_000;
 export const FALLBACK_OPENING_MINUTES = 8 * 60;
 export const FALLBACK_CLOSING_MINUTES = 23 * 60;
@@ -95,16 +98,6 @@ export const COMBO_DESCRIPTION_MAX_LENGTH = 500;
 export const MOVIE_TITLE_MAX_LENGTH = 200;
 
 export const PERCENT_MAX = 100;
-export const TICKET_TITLE_MAX_CHARS = 25;
-export const TICKET_COLORS = {
-  ink: "#170C09",
-  muted: "#60524B",
-  primary: "#970013",
-  accent: "#B97F12",
-  stub: "#F5EFE6",
-  paper: "#F9F5F0",
-  card: "#FFFDFB",
-} as const;
 export const TOP_MOVIES_CHART_LABEL_MAX_CHARS = 18;
 export const SEO_DESCRIPTION_MAX_LENGTH = 160;
 export const MOVIE_CARD_GENRES_LIMIT = 2;

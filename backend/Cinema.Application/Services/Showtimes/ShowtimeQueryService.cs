@@ -20,7 +20,9 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
         var showtime =
             await db
                 .Showtimes.Include(s => s.Room)
+                    .ThenInclude(r => r.ScreenType)
                 .Include(s => s.Movie)
+                    .ThenInclude(m => m.AgeRating)
                 .FirstOrDefaultAsync(s => s.ShowtimeId == showtimeId, cancellationToken)
             ?? throw new NotFoundException(Messages.NotFound_Showtime);
 
@@ -71,7 +73,10 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
             effectiveRows,
             effectiveCols,
             aisles,
-            seats
+            seats,
+            showtime.Movie.PosterUrl,
+            showtime.Movie.AgeRating?.Code,
+            showtime.Room.ScreenType?.Name
         );
     }
 

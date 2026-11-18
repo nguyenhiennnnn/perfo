@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useMatch } from "react-router";
 import { Sparkles, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAiChat } from "../hooks/use-ai-chat";
@@ -8,6 +9,7 @@ import { AiChatCards } from "./ai-chat-cards";
 import { AiChatInput } from "./ai-chat-input";
 import { AiTypingIndicator } from "./ai-typing-indicator";
 import { BRAND } from "@/config/brand";
+import { ROUTES } from "@/config/routes";
 
 interface AiMessage {
   id: string;
@@ -35,6 +37,7 @@ export const AiAssistantWidget = () => {
   const [messages, setMessages] = useState<AiMessage[]>([GREETING]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const chat = useAiChat();
+  const isBookingFlow = useMatch(`${ROUTES.booking.root}/:showtimeId`) !== null;
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -83,7 +86,8 @@ export const AiAssistantWidget = () => {
     <>
       <div
         className={cn(
-          "fixed bottom-24 right-4 z-50 flex w-95 max-w-[calc(100vw-2rem)] origin-bottom-right flex-col overflow-hidden border border-border bg-card transition-all duration-200 sm:right-6",
+          "fixed right-4 z-50 flex w-95 max-w-[calc(100vw-2rem)] origin-bottom-right flex-col overflow-hidden border border-border bg-card transition-all duration-200 sm:right-6",
+          isBookingFlow ? "bottom-24 max-lg:bottom-44" : "bottom-24",
           open
             ? "h-140 max-h-[calc(100vh-8rem)] scale-100 opacity-100"
             : "pointer-events-none h-0 scale-95 opacity-0",
@@ -146,7 +150,10 @@ export const AiAssistantWidget = () => {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="cut-md fixed bottom-6 right-4 z-50 flex size-14 items-center justify-center bg-primary text-primary-foreground transition-colors hover:bg-primary/90 sm:right-6"
+        className={cn(
+          "cut-md fixed right-4 z-50 flex size-14 items-center justify-center bg-primary text-primary-foreground transition-colors hover:bg-primary/90 sm:right-6",
+          isBookingFlow ? "bottom-6 max-lg:bottom-28" : "bottom-6",
+        )}
         aria-label={open ? "Đóng trợ lý AI" : "Mở trợ lý AI"}
       >
         {open ? <X className="size-6" /> : <Sparkles className="size-6" />}

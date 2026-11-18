@@ -24,15 +24,8 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
   };
 
   return (
-    <div className="relative overflow-hidden bg-card cut-md">
-      {movie.posterUrl && (
-        <div className="absolute inset-0 overflow-hidden">
-          <img src={movie.posterUrl} alt="" className="h-full w-full scale-110 object-cover opacity-10" />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, var(--color-card) 30%, color-mix(in oklch, var(--color-card) 80%, transparent) 70%, color-mix(in oklch, var(--color-card) 50%, transparent) 100%)" }} />
-        </div>
-      )}
-
-      <div className="relative flex flex-col gap-6 p-5 sm:flex-row sm:p-8">
+    <div className="bg-card cut-md">
+      <div className="flex flex-col gap-6 p-5 sm:flex-row sm:p-8">
         <div className="mx-auto aspect-2/3 w-40 shrink-0 overflow-hidden cut-md sm:mx-0 sm:w-56">
           {movie.posterUrl ? (
             <img src={movie.posterUrl} alt={movie.title} className="h-full w-full object-cover" />

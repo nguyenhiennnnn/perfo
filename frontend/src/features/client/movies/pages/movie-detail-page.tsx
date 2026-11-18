@@ -61,8 +61,8 @@ const MovieDetailContent = ({ movie }: { movie: MovieDetailDto }) => {
 
       <MovieHero movie={movie} />
 
-      <div className="grid gap-10 lg:grid-cols-3">
-        <div className="space-y-8 lg:col-span-2">
+      <div className="grid gap-10 lg:grid-cols-[1fr_22.5rem]">
+        <div className="space-y-8">
           {movie.description && (
             <div>
               <h2 className="t-h2 text-foreground">Nội dung phim</h2>
@@ -71,9 +71,10 @@ const MovieDetailContent = ({ movie }: { movie: MovieDetailDto }) => {
           )}
           <MovieCastCrew director={movie.director} cast={movie.cast} />
         </div>
+        <aside className="lg:sticky lg:top-24 lg:max-h-[calc(100dvh-8rem)] lg:self-start lg:overflow-y-auto">
+          <MovieShowtimeSelector showtimes={movie.upcomingShowtimes} />
+        </aside>
       </div>
-
-      <MovieShowtimeSelector showtimes={movie.upcomingShowtimes} />
 
       <MovieReviews movieId={movie.movieId} />
     </div>

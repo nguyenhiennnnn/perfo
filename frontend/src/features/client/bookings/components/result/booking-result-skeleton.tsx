@@ -9,7 +9,7 @@ export const BookingResultSkeleton = () => (
         <Skeleton className="h-4 w-1/2 cut-xs" />
       </div>
     </div>
-    <Skeleton className="notch-y aspect-[920/380] w-full" />
+    <Skeleton className="h-[30rem] w-full cut-lg sm:h-72" />
     <div className="flex gap-3">
       <Skeleton className="h-10 w-36 cut-sm" />
       <Skeleton className="h-10 w-32 cut-sm" />

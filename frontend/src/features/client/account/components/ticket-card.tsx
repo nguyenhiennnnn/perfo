@@ -3,28 +3,17 @@ import { QrCode, Ticket as TicketIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BookingStatusBadge } from "@/components/common/status-badge";
 import { formatCurrency, formatDateTime } from "@/lib/formatters";
-import { BookingStatus } from "@/types/enum";
 import type { BookingListItemDto } from "@/features/client/bookings/types";
-import { useNow } from "@/hooks/use-now";
-import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings";
+import { useCancelPolicy } from "@/features/client/bookings/hooks/use-cancel-policy";
 import { ROUTES } from "@/config/routes";
 
-import { MS_PER_HOUR } from "@/config/default-constants";
 interface TicketCardProps {
   booking: BookingListItemDto;
   onCancel?: () => void;
 }
 
 export const TicketCard = ({ booking, onCancel }: TicketCardProps) => {
-  const now = useNow();
-  const { data: settings } = useCinemaSettings();
-  const cancelDeadlineHours = settings?.cancelDeadlineHours ?? 2;
-  const isRefundable = settings ? settings.cancelRefundPercent > 0 : true;
-
-  const canCancel =
-    booking.status === BookingStatus.Confirmed &&
-    isRefundable &&
-    new Date(booking.startTime).getTime() - now > cancelDeadlineHours * MS_PER_HOUR;
+  const { canCancel } = useCancelPolicy(booking.status, booking.startTime, booking.finalAmount);
 
   return (
     <div className="flex flex-col gap-4 bg-card p-4 sm:flex-row sm:items-center sm:justify-between">

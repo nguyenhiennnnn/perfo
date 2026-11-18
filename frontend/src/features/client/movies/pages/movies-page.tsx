@@ -1,3 +1,4 @@
+import { Film } from "lucide-react";
 import { useClientMovieParams } from "@/hooks/use-query-params";
 import { MoviesFilterBar } from "@/features/client/movies/components/movies-filter-bar";
 import { MoviesGrid } from "@/features/client/movies/components/movies-grid";
@@ -5,6 +6,7 @@ import { useMovies } from "@/features/client/movies/hooks/use-movies";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import type { MovieStatus } from "@/types/enum";
 import { Seo } from "@/components/common/seo";
+import { EmptyState } from "@/components/common/empty-state";
 import { BRAND } from "@/config/brand";
 import { ROUTES } from "@/config/routes";
 
@@ -12,7 +14,7 @@ const MoviesPage = () => {
   const [params, setParams] = useClientMovieParams();
   const debouncedSearch = useDebouncedValue(params.search);
 
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useMovies({
+  const { data, isLoading, isError, refetch, isFetchingNextPage, hasNextPage, fetchNextPage } = useMovies({
     search: debouncedSearch || undefined,
     status: (params.status as MovieStatus) || undefined,
     genreId: params.genreId ?? undefined,
@@ -36,14 +38,24 @@ const MoviesPage = () => {
       <MoviesFilterBar params={params} setParams={setParams} />
 
       <div className="mt-6">
-        <MoviesGrid
-          movies={data?.pages ?? []}
-          isLoading={isLoading}
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-          fetchNextPage={fetchNextPage}
-          onResetFilters={() => setParams({ search: "", status: null, genreId: null, languageId: null, ageRatingId: null, cursor: null })}
-        />
+        {isError && !data ? (
+          <EmptyState
+            icon={Film}
+            title="Không tải được danh sách phim"
+            description="Kiểm tra kết nối mạng rồi thử lại."
+            actionLabel="Thử lại"
+            onAction={() => void refetch()}
+          />
+        ) : (
+          <MoviesGrid
+            movies={data?.pages ?? []}
+            isLoading={isLoading}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            fetchNextPage={fetchNextPage}
+            onResetFilters={() => setParams({ search: "", status: null, genreId: null, languageId: null, ageRatingId: null, cursor: null })}
+          />
+        )}
       </div>
     </div>
   );

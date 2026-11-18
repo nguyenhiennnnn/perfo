@@ -68,7 +68,7 @@ export const DateStrip = ({ value, onChange, daysCount = 14, availableDates, cla
             >
               <span
                 className={cn(
-                  "text-[11px] font-semibold uppercase leading-none",
+                  "text-[11px] font-semibold leading-none",
                   !showMonth && "invisible",
                   active ? "text-primary-foreground/90" : "text-primary",
                 )}

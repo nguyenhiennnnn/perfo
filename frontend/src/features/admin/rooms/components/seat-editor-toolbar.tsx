@@ -145,7 +145,7 @@ export const SeatEditorToolbar = ({
 
   return (
     <>
-      <div className="sticky top-16 z-20 flex flex-wrap items-end gap-4 bg-card p-4 shadow-sm">
+      <div className="sticky top-16 z-20 flex flex-wrap items-end gap-4 bg-card p-4">
         <SeatEditorSizeInputs
           rows={rows}
           cols={cols}

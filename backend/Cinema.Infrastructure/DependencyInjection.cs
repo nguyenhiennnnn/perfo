@@ -1,4 +1,5 @@
 using Cinema.Application.Interfaces;
+using Cinema.Application.Options;
 using Cinema.Infrastructure.Ai;
 using Cinema.Infrastructure.Auth;
 using Cinema.Infrastructure.Email;

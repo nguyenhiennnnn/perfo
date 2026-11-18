@@ -1,4 +1,4 @@
-namespace Cinema.Infrastructure.Ai;
+namespace Cinema.Application.Options;
 
 public class GeminiOptions
 {

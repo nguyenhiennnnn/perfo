@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { CONFETTI_DURATION_MS } from "@/config/default-constants";
 import { readThemePalette } from "@/lib/theme-palette";
 
 const COLOR_TOKENS = ["--primary", "--accent", "--success", "--couple", "--held"];
@@ -15,7 +16,7 @@ interface Particle {
   shape: "rect" | "circle";
 }
 
-export const Confetti = ({ active, duration = 3200 }: { active: boolean; duration?: number }) => {
+export const Confetti = ({ active, duration = CONFETTI_DURATION_MS }: { active: boolean; duration?: number }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

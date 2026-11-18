@@ -36,7 +36,6 @@ public class VnPayGateway(
     private const decimal AmountScale = 100m;
     private const string CurrencyCode = "VND";
     private static readonly TimeSpan VnPayOffset = TimeSpan.FromHours(7);
-    private static readonly TimeSpan PaymentExpiry = TimeSpan.FromMinutes(15);
 
     private static string FormatVnPayDate(DateTime utc) =>
         DateTime
@@ -80,7 +79,7 @@ public class VnPayGateway(
             ["vnp_ReturnUrl"] = returnUrl,
             ["vnp_IpAddr"] = DefaultIpAddress,
             ["vnp_CreateDate"] = FormatVnPayDate(nowUtc),
-            ["vnp_ExpireDate"] = FormatVnPayDate(nowUtc.Add(PaymentExpiry)),
+            ["vnp_ExpireDate"] = FormatVnPayDate(nowUtc.AddMinutes(_options.PaymentExpiryMinutes)),
         };
 
         var query = BuildSignData(vnpParams);

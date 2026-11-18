@@ -36,6 +36,8 @@ export const VALIDATION_MESSAGES = {
   fullNameRequired: "Vui lòng nhập họ tên.",
   phoneInvalid: "Số điện thoại không hợp lệ.",
   passwordMismatch: "Mật khẩu xác nhận không khớp.",
+  movieRequired: "Vui lòng chọn phim.",
+  userRequired: "Vui lòng chọn người dùng.",
 } as const;
 
 export const SILENT_TOAST_STATUSES: readonly number[] = [HTTP_STATUS.unauthorized];

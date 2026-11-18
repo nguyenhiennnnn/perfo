@@ -1,13 +1,16 @@
-import { Home, TriangleAlert } from "lucide-react";
+import { Home, RefreshCw, TriangleAlert } from "lucide-react";
 import { StatusPage } from "@/components/common/status-page";
 
 const ErrorPage = () => (
   <StatusPage
     code="500"
     icon={TriangleAlert}
-    title="Đã xảy ra lỗi"
-    description="Trang gặp sự cố khi hiển thị. Vui lòng quay về trang chủ và thử lại."
-    actions={[{ label: "Về trang chủ", to: "/", icon: Home }]}
+    title="Trang không hiển thị được"
+    description="Trang gặp lỗi khi hiển thị. Hãy tải lại trang, nếu vẫn lỗi thì quay về trang chủ."
+    actions={[
+      { label: "Tải lại trang", icon: RefreshCw, onClick: () => window.location.reload() },
+      { label: "Về trang chủ", to: "/", icon: Home, variant: "outline" },
+    ]}
   />
 );
 

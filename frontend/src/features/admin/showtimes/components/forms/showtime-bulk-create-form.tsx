@@ -24,12 +24,13 @@ import { FormSwitchField } from "@/components/common/form/form-switch-field";
 import { FormSearchSelectField } from "@/components/common/form/form-search-select-field";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getCurrencyLabel } from "@/lib/regional-settings";
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 
 const WEEKDAY_VALUES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const REFERENCE_MONDAY = new Date(2024, 0, 1);
 
 const bulkFormSchema = z.object({
-  movieId: z.coerce.number({ message: "Vui lòng chọn phim." }),
+  movieId: z.coerce.number({ message: VALIDATION_MESSAGES.movieRequired }),
   roomId: z.coerce.number({ message: "Vui lòng chọn phòng chiếu." }),
   fromDate: z.string().min(1, "Vui lòng chọn ngày bắt đầu."),
   toDate: z.string().min(1, "Vui lòng chọn ngày kết thúc."),

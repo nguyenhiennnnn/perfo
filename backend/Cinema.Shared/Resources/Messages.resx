@@ -442,6 +442,9 @@
   <data name="Rule_CounterPaymentOnlyForCounterBooking" xml:space="preserve">
     <value>Chỉ có thể thu tiền tại quầy cho booking tạo tại quầy.</value>
   </data>
+  <data name="Rule_CounterPendingLimit" xml:space="preserve">
+    <value>Bạn đang giữ tối đa 5 đơn bán tại quầy chưa thanh toán. Hãy thanh toán hoặc huỷ bớt đơn trước khi giữ ghế mới.</value>
+  </data>
   <data name="Rule_CustomerAccountDisabled" xml:space="preserve">
     <value>Tài khoản khách hàng đã bị vô hiệu hóa.</value>
   </data>

@@ -19,9 +19,10 @@ import { FormActions } from "@/components/common/form/form-actions";
 import { useServerFieldErrors } from "@/hooks/use-server-field-errors";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getCurrencyLabel } from "@/lib/regional-settings";
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 
 const showtimeFormSchema = z.object({
-  movieId: z.coerce.number({ message: "Vui lòng chọn phim." }),
+  movieId: z.coerce.number({ message: VALIDATION_MESSAGES.movieRequired }),
   roomId: z.coerce.number({ message: "Vui lòng chọn phòng chiếu." }),
   startTime: z.string().min(1, "Vui lòng chọn thời gian chiếu."),
   basePrice: z.coerce.number().min(0, "Giá vé không hợp lệ."),

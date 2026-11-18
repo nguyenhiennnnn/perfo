@@ -73,7 +73,7 @@ export const CinemaScreen = ({ className }: { className?: string }) => {
           vectorEffect="non-scaling-stroke"
         />
       </svg>
-      <p className="absolute inset-x-0 top-[40%] text-center text-[12px] uppercase tracking-[0.35em] text-muted-foreground">
+      <p className="absolute inset-x-0 top-[40%] text-center text-[12px] text-muted-foreground">
         Màn hình
       </p>
     </div>

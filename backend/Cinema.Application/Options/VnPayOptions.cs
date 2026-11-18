@@ -12,4 +12,6 @@ public class VnPayOptions
 
     public string ApiUrl { get; set; } =
         "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+
+    public int PaymentExpiryMinutes { get; set; } = 15;
 }

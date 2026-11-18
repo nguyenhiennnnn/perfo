@@ -65,6 +65,7 @@ export const HERO_INTERVAL_MS = 7000;
 export const HERO_TRANSITION_MS = 480;
 export const HERO_LEAVE_GRACE_MS = 40;
 export const ROUTE_FALLBACK_DELAY_MS = 300;
+export const CONFETTI_DURATION_MS = 3200;
 export const GOOGLE_SIGN_IN_BUTTON_WIDTH_PX = 336;
 
 export const FORM_PENDING_LABEL = "Đang lưu...";
@@ -89,6 +90,15 @@ export const MOVIE_TITLE_MAX_LENGTH = 200;
 
 export const PERCENT_MAX = 100;
 export const TICKET_TITLE_MAX_CHARS = 25;
+export const TICKET_COLORS = {
+  ink: "#170C09",
+  muted: "#60524B",
+  primary: "#970013",
+  accent: "#B97F12",
+  stub: "#F5EFE6",
+  paper: "#F9F5F0",
+  card: "#FFFDFB",
+} as const;
 export const TOP_MOVIES_CHART_LABEL_MAX_CHARS = 18;
 export const SEO_DESCRIPTION_MAX_LENGTH = 160;
 export const MOVIE_CARD_GENRES_LIMIT = 2;

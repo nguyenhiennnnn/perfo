@@ -139,7 +139,7 @@ export const BookingSelectionStep = ({
         )}
       </div>
 
-      <div className="sticky bottom-0 z-30 -mx-4 border-t border-border bg-background/95 pt-3 pr-20 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pl-4 backdrop-blur lg:hidden">
+      <div className="sticky bottom-0 z-30 -mx-4 border-t border-border bg-background pt-3 pr-20 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pl-4 lg:hidden">
         {loneSeats.length > 0 && (
           <p className="mb-2 flex items-center gap-1.5 text-xs text-warning">
             <AlertTriangle className="size-3.5 shrink-0" />

@@ -37,6 +37,17 @@ public sealed class PostgresAppDbContextHandle : IDisposable
             .Options;
 
         Db = new AppDbContext(options);
+
+        // Enable the unaccent extension before EnsureCreated so that any
+        // queries using EF.Functions.Unaccent work in the isolated test DB.
+        using (var setupConn = new NpgsqlConnection(connStr))
+        {
+            setupConn.Open();
+            using var extCmd = setupConn.CreateCommand();
+            extCmd.CommandText = "CREATE EXTENSION IF NOT EXISTS unaccent;";
+            extCmd.ExecuteNonQuery();
+        }
+
         Db.Database.EnsureCreated();
     }
 

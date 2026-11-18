@@ -57,7 +57,7 @@ export const CustomerSearchCombobox = ({
             </span>
             <span className="text-xs text-muted-foreground">
               {selected.phoneLast4 ? `****${selected.phoneLast4}` : "Chưa có SĐT"}
-              {" · "}
+              {", "}
               {selected.maskedEmail}
             </span>
             {selected.tierName && (
@@ -121,7 +121,7 @@ export const CustomerSearchCombobox = ({
       </div>
 
       {open && debouncedQuery.trim().length > 0 && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-1 cut-sm border border-border bg-popover shadow-sm">
+        <div className="absolute left-0 right-0 top-full z-50 mt-1 cut-sm border border-border bg-popover">
           {results.length === 0 && !isFetching && (
             <div className="flex items-center gap-2 px-3 py-4 text-sm text-muted-foreground">
               <UserIcon className="size-4" />
@@ -148,11 +148,12 @@ export const CustomerSearchCombobox = ({
                 {customer.phoneLast4
                   ? `****${customer.phoneLast4}`
                   : "Chưa có SĐT"}
-                {" · "}
+                {", "}
                 {customer.maskedEmail}
                 {customer.tierName && (
-                  <span className="ml-1 text-accent-foreground">
-                    · {customer.tierName}
+                  <span className="text-accent-foreground">
+                    {", "}
+                    {customer.tierName}
                     {customer.discountPercent > 0 &&
                       ` (−${formatNumber(customer.discountPercent)}%)`}
                   </span>

@@ -1198,6 +1198,15 @@ namespace Cinema.Shared.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Bạn đang giữ tối đa 5 đơn bán tại quầy chưa thanh toán. Hãy thanh toán hoặc huỷ bớt đơn trước khi giữ ghế mới..
+        /// </summary>
+        public static string Rule_CounterPendingLimit {
+            get {
+                return ResourceManager.GetString("Rule_CounterPendingLimit", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Tài khoản khách hàng đã bị vô hiệu hóa..
         /// </summary>
         public static string Rule_CustomerAccountDisabled {

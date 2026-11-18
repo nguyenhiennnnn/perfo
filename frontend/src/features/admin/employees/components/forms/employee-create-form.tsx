@@ -16,11 +16,12 @@ import { LOOKUP_PAGE_SIZE } from "@/config/default-constants";
 import { FormSearchSelectField } from "@/components/common/form/form-search-select-field";
 import { FormActions } from "@/components/common/form/form-actions";
 import { useServerFieldErrors } from "@/hooks/use-server-field-errors";
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 
 const employeeFormSchema = z.object({
   userId: z.coerce
-    .number({ message: "Vui lòng chọn người dùng." })
-    .min(1, "Vui lòng chọn người dùng."),
+    .number({ message: VALIDATION_MESSAGES.userRequired })
+    .min(1, VALIDATION_MESSAGES.userRequired),
   positionId: z.coerce.number().optional(),
   hireDate: z.string().optional().or(z.literal("")),
 });

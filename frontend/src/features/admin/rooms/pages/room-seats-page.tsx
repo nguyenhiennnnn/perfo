@@ -274,7 +274,7 @@ const SeatEditorReady = ({
 
       {selectionMode && !previewMode && (
         <SeatEditorSelectionBar
-          className="sticky bottom-4 z-20 shadow-lg"
+          className="sticky bottom-4 z-20"
           selectedCount={editor.selectedKeys.size}
           brushLabel={describeBrush(brush, seatTypes).label}
           onApply={handleApplyToSelection}

@@ -92,7 +92,7 @@ export const HeroSlide = ({ movie, position, total, phase, direction }: HeroSlid
             <span className="t-numeral text-2xl text-scrim-foreground">
               {formatDuration(movie.durationMinutes)}
             </span>
-            <span className="flex items-center gap-1 text-[11px] uppercase tracking-widest text-scrim-foreground/50">
+            <span className="flex items-center gap-1 text-[11px] text-scrim-foreground/50">
               <Clock className="size-3" />
               thời lượng
             </span>
@@ -111,7 +111,7 @@ export const HeroSlide = ({ movie, position, total, phase, direction }: HeroSlid
                 </span>
                 <span className="text-[13px] text-scrim-foreground/50">/&nbsp;5</span>
               </span>
-              <span className="text-[11px] uppercase tracking-widest text-scrim-foreground/50">
+              <span className="text-[11px] text-scrim-foreground/50">
                 đánh giá
               </span>
             </div>

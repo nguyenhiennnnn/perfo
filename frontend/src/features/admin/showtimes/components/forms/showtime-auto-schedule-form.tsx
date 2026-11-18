@@ -28,6 +28,7 @@ import type { AutoScheduleResponseDto } from "@/features/admin/showtimes/types";
 import { FormSwitchField } from "@/components/common/form/form-switch-field";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getCurrencyLabel } from "@/lib/regional-settings";
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
 
 const formSchema = z.object({
   date: z.string().min(1, "Vui lòng chọn ngày."),
@@ -35,7 +36,7 @@ const formSchema = z.object({
   movies: z
     .array(
       z.object({
-        movieId: z.coerce.number({ message: "Vui lòng chọn phim." }),
+        movieId: z.coerce.number({ message: VALIDATION_MESSAGES.movieRequired }),
         shows: z.coerce
           .number()
           .int("Số suất không hợp lệ.")
@@ -174,7 +175,7 @@ export const ShowtimeAutoScheduleForm = ({ onSuccess }: ShowtimeAutoScheduleForm
 
         <div className="flex items-center justify-between gap-2 pt-2">
           <p className="text-sm text-muted-foreground">
-            {draft.toDate ? `${draft.date} – ${draft.toDate}` : draft.date} · {draft.items.length} suất
+            {draft.toDate ? `${draft.date} – ${draft.toDate}` : draft.date}, {draft.items.length} suất
           </p>
           <div className="flex gap-2">
             <Button type="button" variant="outline" onClick={() => setDraft(null)} disabled={apply.isPending}>

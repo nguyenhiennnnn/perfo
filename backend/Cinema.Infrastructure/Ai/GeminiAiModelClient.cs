@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json.Nodes;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Options;
 using Cinema.Application.Services.Ai;
 using Cinema.Shared.Resources;
 using Microsoft.Extensions.Logging;

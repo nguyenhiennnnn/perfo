@@ -111,7 +111,7 @@ public abstract class BookingServiceTestBase : IDisposable
         return new(
             Db,
             RealtimeNotifierMock.Object,
-            [new OnlineHoldPolicy(Db), new CounterHoldPolicy()],
+            [new OnlineHoldPolicy(Db), new CounterHoldPolicy(Db)],
             CreateFulfillment(),
             NullLogger<BookingHoldService>.Instance
         );

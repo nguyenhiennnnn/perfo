@@ -116,7 +116,7 @@ export const ShowtimeCloneForm = ({ onSuccess }: ShowtimeCloneFormProps) => {
     return (
       <div className="space-y-4">
         <p className="text-sm text-foreground">
-          Đã tạo <strong>{result.totalCreated}</strong> suất · bỏ qua <strong>{result.totalSkipped}</strong> suất:
+          Đã tạo <strong>{result.totalCreated}</strong> suất, bỏ qua <strong>{result.totalSkipped}</strong> suất:
         </p>
         <ul className="max-h-72 divide-y divide-border overflow-y-auto border border-border">
           {result.skipped.map((s, i) => (

@@ -5,7 +5,6 @@ using System.Text;
 using System.Text.Json;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
-using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Microsoft.Extensions.Logging;

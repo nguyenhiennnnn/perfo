@@ -2,7 +2,6 @@ import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { accountApi } from "../api/account-api";
 import { queryKeys } from "@/api/query-keys";
 import { useAuthStore } from "@/stores/auth-store";
-import { Role } from "@/types/enum";
 import type { MyReviewListParams, UpdateProfileRequest } from "@/features/client/account/types";
 import type { ChangePasswordRequest } from "@/features/auth/types";
 
@@ -20,18 +19,10 @@ export function useUpdateMyProfile() {
     mutationFn: (body: UpdateProfileRequest) =>
       accountApi.updateMyProfile(body),
     onSuccess: (res) => {
-      const { setCredentials } = useAuthStore.getState();
-      const { accessToken } = useAuthStore.getState();
-      const user = res.data;
-      if (accessToken) {
-        setCredentials(accessToken, {
-          userId: user.userId,
-          email: user.email,
-          fullName: user.fullName,
-          role: Role.Customer,
-          avatar: user.avatar,
-        });
-      }
+      // Chỉ cập nhật phần đã đổi. Trước đây ghi đè cả user bằng setCredentials nên mất
+      // membershipTierName/points/mustChangePassword/hasPassword sau khi lưu hồ sơ.
+      const { fullName, avatar } = res.data;
+      useAuthStore.getState().updateUser({ fullName, avatar });
     },
   });
 }

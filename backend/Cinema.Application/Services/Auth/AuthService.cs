@@ -117,15 +117,16 @@ public class AuthService(
         if (!googleUser.EmailVerified)
             throw new UnauthorizedAppException(Messages.Unauthorized_GoogleEmailNotVerified);
 
+        var googleEmail = googleUser.Email.ToLower();
+
         var user = await db
             .Users.Include(u => u.Role)
             .Include(u => u.Employee)
             .Include(u => u.CustomerProfile!)
                 .ThenInclude(cp => cp.Tier)
-            .FirstOrDefaultAsync(
-                u => u.GoogleId == googleUser.GoogleId || u.Email == googleUser.Email,
-                cancellationToken
-            );
+            .Where(u => u.GoogleId == googleUser.GoogleId || u.Email.ToLower() == googleEmail)
+            .OrderBy(u => u.GoogleId == googleUser.GoogleId ? 0 : 1)
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (user is null)
         {
@@ -147,10 +148,9 @@ public class AuthService(
                 CreatedAt = DateTime.UtcNow,
             };
 
-            user.PasswordHash = passwordHasher.HashPassword(
-                user,
-                tokenService.GenerateOpaqueToken()
-            );
+            // Tài khoản Google chưa có mật khẩu: không sinh mật khẩu ngẫu nhiên nữa để
+            // User.HasPassword phản ánh đúng (ẩn "Đổi mật khẩu"; muốn đặt thì dùng "Quên mật khẩu").
+            user.PasswordHash = User.PendingPasswordHash;
 
             db.Users.Add(user);
             db.CustomerProfiles.Add(
@@ -191,7 +191,13 @@ public class AuthService(
 
             if (!user.EmailConfirmed)
             {
+                // Tài khoản đăng ký bằng email nhưng chưa xác thực: người đăng ký ban đầu có thể
+                // không phải chủ email. Google đã xác minh chủ email nên xóa mật khẩu cũ và thu
+                // hồi phiên để người đăng ký giả mạo không còn đăng nhập được.
                 user.EmailConfirmed = true;
+                user.PasswordHash = User.PendingPasswordHash;
+                user.MustChangePassword = false;
+                await db.RevokeActiveTokensAsync(user.UserId, cancellationToken);
                 isDirty = true;
             }
 

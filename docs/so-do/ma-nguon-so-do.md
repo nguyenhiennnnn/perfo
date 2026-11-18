@@ -5965,60 +5965,150 @@ flowchart TB
   classDef sold fill:#bbb,stroke:#666,color:#555;
 ```
 
-### Hình 4.61. Minh họa cửa sổ gợi ý ghế
+### Hình 4.61. Tuần tự tạo tác vụ xuất nền
 
-- **Tệp nguồn:** `docs/so-do/mermaid/hinh-4-61.mmd`
-- **Ảnh xem trước:** `docs/so-do/anh-xem-truoc-svg/hinh-4-61.svg`
+- **Tệp nguồn:** docs/so-do/plantuml/hinh-4-61.puml
+- **Ảnh xem trước:** docs/so-do/anh-xem-truoc-svg/hinh-4-61.svg
 
-```mermaid
-flowchart TB
-  subgraph r["Hàng 8 ghế, ghế 4 đã bán, count = 2: tách thành đoạn {1,2,3} và {5,6,7,8}"]
-    direction LR
-    r1["1"]:::free
-    r2["2"]:::free
-    r3["3"]:::free
-    r4["4"]:::sold
-    r5["5"]:::free
-    r6["6"]:::free
-    r7["7"]:::free
-    r8["8"]:::free
-    r1 ~~~ r2 ~~~ r3 ~~~ r4 ~~~ r5 ~~~ r6 ~~~ r7 ~~~ r8
-  end
-  subgraph W["Cửa sổ 2 ghế"]
-    direction TB
-    w1["{1,2}: loại (để lại ghế 3 lẻ ở cuối đoạn)"]:::bad
-    w2["{2,3}: loại (i = 1, để lại ghế 1 lẻ ở đầu đoạn)"]:::bad
-    w3["{5,6}: giữ"]:::ok
-    w4["{6,7}: loại (i = 1 và để lại ghế 8 lẻ ở cuối)"]:::bad
-    w5["{7,8}: giữ"]:::ok
-  end
-  r8 ~~~ W
-  classDef free fill:#fff,stroke:#333;
-  classDef sold fill:#bbb,stroke:#666,color:#555;
-  classDef ok fill:#d8f3dc,stroke:#2d6a4f;
-  classDef bad fill:#fad9d9,stroke:#a33;
-```
+`plantuml
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam sequenceMessageAlign left
+skinparam maxMessageSize 300
+skinparam ParticipantPadding 10
+skinparam dpi 150
+autonumber
 
-### Hình 4.62. Lưu đồ xếp lịch chiếu tự động
+actor "Quản trị viên" as A
+participant "AdminBookingsController" as C
+participant "ExportJobService" as S
+participant "ImportExportConcurrencyGuard" as CG
+participant "IExportModule\n(BookingExportService)" as M
+participant "IImportExportJobTracker" as TR
+participant "IBackgroundJobClient\n(Hangfire)" as Q
+participant "ExportJob\n(Worker)" as W
+participant "IFileStorage\n(Cloudinary)" as FS
+participant "IRealtimeNotifier\n(SignalR)" as R
 
-- **Tệp nguồn:** `docs/so-do/mermaid/hinh-4-62.mmd`
-- **Ảnh xem trước:** `docs/so-do/anh-xem-truoc-svg/hinh-4-62.svg`
+== Pha 1: Tiếp nhận yêu cầu & Tạo tác vụ xuất nền ==
+A -> C : POST /api/v1/admin/bookings/export-jobs?format=xlsx (filter)
+C -> S : EnqueueAsync(CurrentActor, "bookings", filter, format)
+S -> CG : AcquireAsync(actor.UserId)
+alt Số tác vụ Queued/Running của user >= 2
+  CG --> A : 422 BusinessRuleException (Rule_ActiveJobLimitExceeded)
+end
 
-```mermaid
-flowchart TD
-  A(["ShowtimeScheduler.Build cho một ngày"]) --> B["Khởi tạo: cửa sổ (open, close) từ OperatingHours.Window; maxSeats;<br/>khoảng bận theo phòng; hàng đợi phim theo độ nóng giảm dần (hòa: MovieId tăng);<br/>số suất còn lại; các thời điểm lý tưởng t_i của từng phim (4.12)"]
-  B --> C{"Còn phim có số suất còn lại > 0?"}
-  C -- Không --> Z["Sắp kết quả theo Start rồi RoomId"] --> END(["Trả danh sách SchedulerSlot"])
-  C -- Có --> D["Lấy phim kế tiếp trong hàng đợi (còn suất)"]
-  D --> E["Với mọi phòng: Candidates (giờ mở cửa, t_i, close − thời lượng,<br/>End và Start − (thời lượng + đệm) của từng khoảng bận)"]
-  E --> F["Lọc theo ràng buộc:<br/>(a) trong giờ hoạt động; (b) không trùng khoảng bận với block = thời lượng + RoomBufferMinutes;<br/>(c) cách suất cùng phim ít nhất MinSameMovieGapMinutes"]
-  F --> G{"Còn ứng viên hợp lệ?"}
-  G -- Không --> H["Đặt số suất còn lại của phim = 0"] --> C
-  G -- Có --> I["Chấm điểm: Score = −Khoảng cách / SpreadMinutes + Fit·FitWeight − Tải·LoadWeight (4.14)"]
-  I --> J["Chọn điểm cao nhất (hòa: sớm hơn, rồi RoomId nhỏ hơn)"]
-  J --> K["Loại mốc lý tưởng gần nhất; ghi [Start, Start + block) vào phòng;<br/>thêm vào kết quả; giảm số suất còn lại"]
-  K --> C
-```
+S -> M : CountAsync(filterJson)
+M --> S : estimatedRows
+S -> S : ExportLimits.EnsureWithinLimit(estimatedRows)
+alt estimatedRows > 20,000 dòng
+  S --> A : 400 ValidationAppException (Validation_ExportMaxRowsExceeded)
+end
+
+S -> TR : CreateQueuedAsync(Export, "bookings", "xlsx", actor, estimatedRows, filterJson)
+TR --> S : jobId
+S -> Q : Enqueue<ExportJob>(j => j.RunAsync(jobId, "bookings", filterJson, "xlsx"))
+S --> C : ImportExportJobAcceptedDto(jobId)
+C --> A : 202 Accepted { jobId }
+
+== Pha 2: Thực thi tác vụ nền & Báo cáo tiến độ ==
+Q -> W : RunAsync(jobId, "bookings", filterJson, "xlsx")
+W -> TR : MarkRunningAsync(jobId)
+TR -> R : NotifyProgressAsync(user-{userId}, 0%, Running)
+
+W -> M : ExportAsync(filterJson, format, exportContext, progressReporter)
+loop Xuất theo từng lô 1.000 dòng (ExportProgressBatchSize)
+  M -> W : ReportProgress(processedRows)
+  W -> TR : UpdateProgressAsync(jobId, progressPercent, processedRows)
+  TR -> R : NotifyProgressAsync(user-{userId}, progressPercent, Running)
+end
+M --> W : ExportFileDto (MemoryStream, FileName, ContentType)
+
+W -> FS : UploadRawAsync(content, fileName, "import-export/bookings")
+FS --> W : uploadedUrl
+W -> TR : CompleteExportAsync(jobId, fileName, uploadedUrl, fileSize, retention=24h)
+TR -> R : NotifyCompletedAsync(user-{userId}, status=Completed, downloadUrl)
+
+@enduml
+`
+
+### Hình 4.62. Tuần tự nhập dữ liệu (preview và apply)
+
+- **Tệp nguồn:** docs/so-do/plantuml/hinh-4-62.puml
+- **Ảnh xem trước:** docs/so-do/anh-xem-truoc-svg/hinh-4-62.svg
+
+`plantuml
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam sequenceMessageAlign left
+skinparam maxMessageSize 300
+skinparam ParticipantPadding 10
+skinparam dpi 150
+autonumber
+
+actor "Quản trị viên" as A
+participant "AdminMoviesController" as C
+participant "ImportFileGuard" as G
+participant "ImportService" as S
+participant "IImportProcessor\n(MovieImportProcessor)" as P
+participant "IImportSessionStore" as SS
+participant "ImportExportConcurrencyGuard" as CG
+participant "IImportExportJobTracker" as TR
+participant "IBackgroundJobClient\n(Hangfire)" as Q
+
+== Bước 1: Xem trước tệp nhập (Preview) ==
+A -> C : POST /api/v1/admin/movies/import/preview (File multipart .xlsx/.csv)
+C -> S : PreviewAsync(CurrentActor, fileInput)
+S -> G : ValidateAsync(file) (<= 5MB, <= 1.000 dòng, chặn macro .xlsm)
+alt Tệp vi phạm kích thước / định dạng / macro
+  G --> A : 400 ValidationAppException & ghi ImportAuditLog
+end
+
+S -> P : ParseAsync(content, format)
+P --> S : parsedRows, headers
+S -> P : CreateContextAsync(rows) & ValidateRow(row, context)
+P --> S : danh sách dòng validated (IsValid, Errors)
+
+S -> SS : Create(userId, fileName, format, headers, validated) [TTL 30 phút]
+SS --> S : session (PreviewId)
+S -> S : ImportAuditLog.Previewed(totalRows, validCount)
+S --> C : ImportPreviewResponse (previewId, totalRows, validCount, invalidCount, previewRows)
+C --> A : 200 OK ImportPreviewResponse
+
+== Bước 2: Áp dụng tệp nhập (Apply) ==
+A -> C : POST /api/v1/admin/movies/import/apply { previewId, skipInvalidRows }
+C -> S : ApplyAsync(CurrentActor, request)
+S -> SS : Get(previewId, userId)
+alt Phiên không tồn tại hoặc quá hạn 30 phút
+  SS --> A : 404 NotFound (NotFound_ImportSessionExpired)
+end
+
+S -> CG : AcquireAsync(actor.UserId)
+S -> SS : TryBeginApply()
+alt Phiên đang được xử lý đồng thời
+  SS --> A : 409 ConflictAppException (Conflict_ImportApplyInProgress)
+end
+
+alt Số dòng hợp lệ <= 500 dòng (Áp dụng đồng bộ)
+  S -> P : ApplyBatchAsync(validRows, dbContext)
+  P --> S : BulkActionResponse (totalSuccess, totalFailed)
+  S -> TR : RecordCompletedAsync(Import, "movies", totalRows, totalSuccess)
+  S --> C : ImportApplyOutcome (BulkActionResponse)
+  C --> A : 200 OK { totalSuccess, totalFailed }
+else Số dòng hợp lệ > 500 dòng (Áp dụng qua tác vụ nền)
+  S -> TR : CreateQueuedAsync(Import, "movies", "xlsx", actor, validCount)
+  TR --> S : jobId
+  S -> Q : Enqueue<ImportApplyJob>(j => j.RunAsync(jobId, previewId, skipInvalidRows))
+  S --> C : ImportApplyOutcome (jobId)
+  C --> A : 202 Accepted { jobId }
+end
+
+@enduml
+`
 
 ### Hình 4.63. Minh họa điều kiện trùng lịch phòng
 

@@ -1,0 +1,61 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam sequenceMessageAlign left
+skinparam maxMessageSize 300
+skinparam ParticipantPadding 10
+skinparam dpi 150
+autonumber
+
+actor "Quản trị viên" as A
+participant "AdminBookingsController" as C
+participant "ExportJobService" as S
+participant "ImportExportConcurrencyGuard" as CG
+participant "IExportModule\n(BookingExportService)" as M
+participant "IImportExportJobTracker" as TR
+participant "IBackgroundJobClient\n(Hangfire)" as Q
+participant "ExportJob\n(Worker)" as W
+participant "IFileStorage\n(Cloudinary)" as FS
+participant "IRealtimeNotifier\n(SignalR)" as R
+
+== Pha 1: Tiếp nhận yêu cầu & Tạo tác vụ xuất nền ==
+A -> C : POST /api/v1/admin/bookings/export-jobs?format=xlsx (filter)
+C -> S : EnqueueAsync(CurrentActor, "bookings", filter, format)
+S -> CG : AcquireAsync(actor.UserId)
+alt Số tác vụ Queued/Running của user >= 2
+  CG --> A : 422 BusinessRuleException (Rule_ActiveJobLimitExceeded)
+end
+
+S -> M : CountAsync(filterJson)
+M --> S : estimatedRows
+S -> S : ExportLimits.EnsureWithinLimit(estimatedRows)
+alt estimatedRows > 20,000 dòng
+  S --> A : 400 ValidationAppException (Validation_ExportMaxRowsExceeded)
+end
+
+S -> TR : CreateQueuedAsync(Export, "bookings", "xlsx", actor, estimatedRows, filterJson)
+TR --> S : jobId
+S -> Q : Enqueue<ExportJob>(j => j.RunAsync(jobId, "bookings", filterJson, "xlsx"))
+S --> C : ImportExportJobAcceptedDto(jobId)
+C --> A : 202 Accepted { jobId }
+
+== Pha 2: Thực thi tác vụ nền & Báo cáo tiến độ ==
+Q -> W : RunAsync(jobId, "bookings", filterJson, "xlsx")
+W -> TR : MarkRunningAsync(jobId)
+TR -> R : NotifyProgressAsync(user-{userId}, 0%, Running)
+
+W -> M : ExportAsync(filterJson, format, exportContext, progressReporter)
+loop Xuất theo từng lô 1.000 dòng (ExportProgressBatchSize)
+  M -> W : ReportProgress(processedRows)
+  W -> TR : UpdateProgressAsync(jobId, progressPercent, processedRows)
+  TR -> R : NotifyProgressAsync(user-{userId}, progressPercent, Running)
+end
+M --> W : ExportFileDto (MemoryStream, FileName, ContentType)
+
+W -> FS : UploadRawAsync(content, fileName, "import-export/bookings")
+FS --> W : uploadedUrl
+W -> TR : CompleteExportAsync(jobId, fileName, uploadedUrl, fileSize, retention=24h)
+TR -> R : NotifyCompletedAsync(user-{userId}, status=Completed, downloadUrl)
+
+@enduml

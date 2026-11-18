@@ -36,6 +36,7 @@ export interface LoginUserDto {
   points?: number | null;
   isEmailConfirmed: boolean;
   mustChangePassword?: boolean;
+  hasPassword?: boolean;
 }
 
 export interface LoginResponse {
@@ -81,6 +82,7 @@ export interface MeResponse {
   avatar?: string | null;
   role: Role;
   mustChangePassword?: boolean;
+  hasPassword?: boolean;
 }
 
 export interface MessageResponse {

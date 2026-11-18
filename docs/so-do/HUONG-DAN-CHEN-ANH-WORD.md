@@ -63,6 +63,15 @@ Tài liệu này tổng hợp bảng ánh xạ chuẩn 1:1 giữa file mã ngu�
 
 ---
 
+
+### Bảng C: Sơ đồ Tuần tự Nhập/Xuất Dữ liệu (Hình 4.61 & Hình 4.62)
+
+| Số hiệu Word | Tên hình trong báo cáo Word | File mã nguồn | File ảnh trong nh-chuan-theo-word/ | File ảnh trong nh-xem-truoc-svg/ |
+| :--- | :--- | :--- | :--- | :--- |
+| **Hình 4.61** | Tuần tự tạo tác vụ xuất nền | plantuml/hinh-4-61.puml | hinh-4-61-tuan-tu-tao-tac-vu-xuat-nen.svg | hinh-4-61.svg |
+| **Hình 4.62** | Tuần tự nhập dữ liệu (preview và apply) | plantuml/hinh-4-62.puml | hinh-4-62-tuan-tu-nhap-du-lieu-preview-va-apply.svg | hinh-4-62.svg |
+
+
 ## 4. QUY TẮC ĐỊNH DẠNG TRONG WORD TRÁNH LỖI LỆCH LỀ
 
 1. **Wrap Text:** Chuột phải vào ảnh -> chọn **In Line with Text** (Trong dòng văn bản).

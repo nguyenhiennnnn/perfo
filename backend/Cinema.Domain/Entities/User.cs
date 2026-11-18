@@ -21,6 +21,8 @@ public class User
     public bool MustChangePassword { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    
+    public bool HasPassword => PasswordHash != PendingPasswordHash;
 
     public Role Role { get; set; } = null!;
     public CustomerProfile? CustomerProfile { get; set; }

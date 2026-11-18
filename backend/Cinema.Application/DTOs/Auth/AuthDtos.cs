@@ -21,7 +21,8 @@ public record LoginUserDto(
     string? MembershipTierName,
     int? Points,
     bool IsEmailConfirmed,
-    bool MustChangePassword = false
+    bool MustChangePassword = false,
+    bool HasPassword = true
 );
 
 public record LoginResponse(string AccessToken, int ExpiresIn, LoginUserDto User);
@@ -47,5 +48,6 @@ public record MeResponse(
     string? Phone,
     string? Avatar,
     string Role,
-    bool MustChangePassword = false
+    bool MustChangePassword = false,
+    bool HasPassword = true
 );

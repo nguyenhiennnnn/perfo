@@ -484,6 +484,9 @@
     <value>Đã ngừng bán vé online cho suất chiếu này (trước giờ chiếu {0} phút).</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Rule_OnlineSalesClosed, ...)</comment>
   </data>
+  <data name="Rule_PasswordNotSet" xml:space="preserve">
+    <value>Tài khoản này đăng nhập bằng Google và chưa đặt mật khẩu. Hãy dùng "Quên mật khẩu" để tạo mật khẩu.</value>
+  </data>
   <data name="Rule_PaymentGatewayNotConfigured" xml:space="preserve">
     <value>Payment gateway '{0}' chưa được cấu hình.</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Rule_PaymentGatewayNotConfigured, ...)</comment>

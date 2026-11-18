@@ -25,6 +25,7 @@ function mapLoginUserToAuthUser(dto: LoginUserDto): AuthUser {
     points: dto.points ?? undefined,
     isEmailConfirmed: dto.isEmailConfirmed,
     mustChangePassword: dto.mustChangePassword ?? false,
+    hasPassword: dto.hasPassword ?? true,
   };
 }
 
@@ -36,6 +37,7 @@ function applyMeToAuthUser(me: MeResponse): Partial<AuthUser> {
     role: me.role,
     isEmailConfirmed: true,
     mustChangePassword: me.mustChangePassword ?? false,
+    hasPassword: me.hasPassword ?? true,
   };
 }
 

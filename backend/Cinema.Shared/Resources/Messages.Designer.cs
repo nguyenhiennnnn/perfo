@@ -1306,6 +1306,15 @@ namespace Cinema.Shared.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Tài khoản này đăng nhập bằng Google và chưa đặt mật khẩu. Hãy dùng "Quên mật khẩu" để tạo mật khẩu..
+        /// </summary>
+        public static string Rule_PasswordNotSet {
+            get {
+                return ResourceManager.GetString("Rule_PasswordNotSet", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Payment gateway '{0}' chưa được cấu hình..
         /// </summary>
         public static string Rule_PaymentGatewayNotConfigured {

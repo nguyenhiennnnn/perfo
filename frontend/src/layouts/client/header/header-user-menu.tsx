@@ -20,6 +20,7 @@ interface HeaderUserMenuUser {
   membershipTierName?: string | null;
   points?: number;
   role?: string;
+  hasPassword?: boolean;
 }
 
 interface HeaderUserMenuProps {
@@ -74,9 +75,11 @@ export const HeaderUserMenu = ({ user }: HeaderUserMenuProps) => {
           <DropdownMenuItem>
             <Link to={ROUTES.account.reviews}>Đánh giá của tôi</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link to={ROUTES.account.changePassword}>Đổi mật khẩu</Link>
-          </DropdownMenuItem>
+          {user.hasPassword !== false && (
+            <DropdownMenuItem>
+              <Link to={ROUTES.account.changePassword}>Đổi mật khẩu</Link>
+            </DropdownMenuItem>
+          )}
           {user.role === Role.Admin && (
             <DropdownMenuItem>
               <Link to={ROUTES.admin.dashboard}>Trang quản trị</Link>

@@ -14,8 +14,8 @@ export interface AuthUser {
   membershipTierName?: string | null;
   points?: number;
   isEmailConfirmed?: boolean;
-  /** Tài khoản đang dùng mật khẩu tạm/mặc định, buộc đổi trước khi dùng tiếp. */
   mustChangePassword?: boolean;
+  hasPassword?: boolean;
 }
 
 interface AuthStore {

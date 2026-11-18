@@ -85,11 +85,12 @@ export const AiAssistantWidget = () => {
   return (
     <>
       <div
+        inert={!open}
         className={cn(
           "fixed right-4 z-50 flex w-95 max-w-[calc(100vw-2rem)] origin-bottom-right flex-col overflow-hidden border border-border bg-card transition-all duration-200 sm:right-6",
           isBookingFlow ? "bottom-24 max-lg:bottom-44" : "bottom-24",
           open
-            ? "h-140 max-h-[calc(100vh-8rem)] scale-100 opacity-100"
+            ? "h-140 max-h-[calc(100dvh-8rem)] scale-100 opacity-100"
             : "pointer-events-none h-0 scale-95 opacity-0",
         )}
       >

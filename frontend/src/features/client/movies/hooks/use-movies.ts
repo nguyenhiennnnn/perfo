@@ -20,6 +20,7 @@ export function useMovies(params: Omit<MovieListParams, "cursor">) {
     select: (data) => ({
       pages: data.pages.flatMap((p) => p.data.items),
       hasMore: data.pages.at(-1)?.data.hasMore ?? false,
+      totalCount: data.pages[0]?.data.totalCount ?? null,
     }),
   });
 }

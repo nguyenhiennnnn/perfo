@@ -12,7 +12,6 @@ interface DataTableToolbarProps<TData extends RowData> {
   onSearchChange: (value: string) => void;
   searchPlaceholder?: string;
   filters?: ReactNode;
-  bulkActions?: ReactNode;
 }
 
 export const DataTableToolbar = <TData extends RowData>({
@@ -21,7 +20,6 @@ export const DataTableToolbar = <TData extends RowData>({
   onSearchChange,
   searchPlaceholder = "Tìm kiếm...",
   filters,
-  bulkActions,
 }: DataTableToolbarProps<TData>) => {
   return (
     <div className="flex items-center justify-between gap-2">
@@ -38,7 +36,6 @@ export const DataTableToolbar = <TData extends RowData>({
         {filters}
       </div>
       <div className="flex items-center gap-2">
-        {bulkActions}
         <DataTableViewOptions table={table} />
       </div>
     </div>

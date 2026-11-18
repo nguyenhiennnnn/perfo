@@ -3,10 +3,12 @@ import { MovieCard } from "@/features/client/movies/components/movie-card";
 import { MovieCardSkeleton } from "@/features/client/movies/components/movie-card-skeleton";
 import { EmptyState } from "@/components/common/empty-state";
 import { InfiniteScrollTrigger } from "@/components/common/infinite-scroll-trigger";
+import { formatNumber } from "@/lib/formatters";
 import type { MovieListItemDto } from "@/features/client/movies/types";
 
 interface MoviesGridProps {
   movies: MovieListItemDto[];
+  totalCount: number | null;
   hasNextPage: boolean | undefined;
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
@@ -26,6 +28,7 @@ export const MoviesGridSkeleton = () => (
 
 export const MoviesGrid = ({
   movies,
+  totalCount,
   hasNextPage,
   isFetchingNextPage,
   fetchNextPage,
@@ -45,13 +48,21 @@ export const MoviesGrid = ({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
+      <p aria-live="polite" className="text-[13px] text-muted-foreground">
+        {formatNumber(totalCount ?? movies.length)} phim{hasActiveFilters ? " phù hợp" : ""}
+      </p>
       <div className={MOVIES_GRID_CLASS}>
         {movies.map((movie) => (
           <MovieCard key={movie.movieId} movie={movie} />
         ))}
       </div>
-      <InfiniteScrollTrigger hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} fetchNextPage={fetchNextPage} />
+      <InfiniteScrollTrigger
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        fetchNextPage={fetchNextPage}
+        endMessage={<p className="py-6 text-center text-[13px] text-muted-foreground">Đã hết danh sách</p>}
+      />
     </div>
   );
 };

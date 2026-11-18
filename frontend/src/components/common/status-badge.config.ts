@@ -89,14 +89,14 @@ export const movieStatusMap: Record<MovieStatus, BadgeItem> = {
 
 export const showtimeStatusMap: Record<ShowtimeStatus, BadgeItem> = {
   [ShowtimeStatus.Scheduled]: { label: "Đã lên lịch", variant: "success" },
-  [ShowtimeStatus.Cancelled]: { label: "Đã huỷ", variant: "destructive" },
+  [ShowtimeStatus.Cancelled]: { label: "Đã hủy", variant: "destructive" },
   [ShowtimeStatus.Completed]: { label: "Đã chiếu xong", variant: "secondary" },
 };
 
 export const bookingStatusMap: Record<BookingStatus, BadgeItem> = {
   [BookingStatus.Pending]: { label: "Chờ thanh toán", variant: "warning", icon: Clock },
   [BookingStatus.Confirmed]: { label: "Đã xác nhận", variant: "success", icon: CheckCircle2 },
-  [BookingStatus.Cancelled]: { label: "Đã huỷ", variant: "destructive", icon: XCircle },
+  [BookingStatus.Cancelled]: { label: "Đã hủy", variant: "destructive", icon: XCircle },
   [BookingStatus.Expired]: { label: "Hết hạn giữ vé", variant: "outline", icon: XCircle },
 };
 
@@ -200,8 +200,8 @@ export const bookingResultStatusConfig: Record<BookingStatus, StatusResultConfig
   },
   [BookingStatus.Cancelled]: {
     icon: XCircle,
-    label: "Đơn đặt vé đã bị huỷ",
-    description: "Giao dịch không thành công hoặc đã bị huỷ. Vui lòng đặt lại vé.",
+    label: "Đơn đặt vé đã bị hủy",
+    description: "Giao dịch không thành công hoặc đã bị hủy. Vui lòng đặt lại vé.",
     className: "text-destructive",
   },
   [BookingStatus.Expired]: {

@@ -44,7 +44,7 @@ export const BookingPaymentStep = ({
         {isSubmitting ? "Đang chuyển đến cổng thanh toán..." : `Thanh toán ${formatCurrency(hold.finalAmount)}`}
       </Button>
       <Button variant="outline" disabled={isCancelling} onClick={onCancel}>
-        {isCancelling ? "Đang huỷ..." : "Huỷ, chọn lại ghế"}
+        {isCancelling ? "Đang hủy..." : "Hủy, chọn lại ghế"}
       </Button>
     </div>
   );

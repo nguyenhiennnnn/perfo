@@ -1,26 +1,20 @@
 import { cn } from "@/lib/utils";
-import { getVisual } from "../utils";
+import { TIER_ROLE_LAYOUT } from "../constants";
+import { getTierRole, getVisual } from "../utils";
 import { formatPoints } from "@/lib/formatters";
 import type { MembershipTierDto } from "@/features/admin/catalog/types";
 
 interface TierCardProps {
   tier: MembershipTierDto;
   index: number;
+  count: number;
 }
 
-const FEATURED_INDEX = 2;
-
-const SIZE_BY_INDEX = [
-  { shape: "cut-sm", pad: "p-4", number: "text-4xl" },
-  { shape: "cut-md", pad: "p-5", number: "text-5xl" },
-  { shape: "cut-lg", pad: "p-6 md:p-8", number: "text-6xl md:text-7xl" },
-  { shape: "cut-md", pad: "p-5 md:p-6", number: "text-5xl" },
-] as const;
-
-export const TierCard = ({ tier, index }: TierCardProps) => {
+export const TierCard = ({ tier, index, count }: TierCardProps) => {
   const visual = getVisual(index);
-  const size = SIZE_BY_INDEX[index] ?? SIZE_BY_INDEX[SIZE_BY_INDEX.length - 1];
-  const featured = index === FEATURED_INDEX;
+  const role = getTierRole(index, count);
+  const size = TIER_ROLE_LAYOUT[role];
+  const featured = role === "featured";
 
   return (
     <div
@@ -30,7 +24,7 @@ export const TierCard = ({ tier, index }: TierCardProps) => {
         size.pad,
         featured
           ? "bg-primary text-primary-foreground"
-          : index === SIZE_BY_INDEX.length - 1
+          : role === "last"
             ? "bg-secondary text-foreground"
             : "bg-card text-foreground",
       )}

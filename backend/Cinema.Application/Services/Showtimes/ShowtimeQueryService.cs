@@ -131,6 +131,7 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
             .Include(s => s.Room)
                 .ThenInclude(r => r.ScreenType)
             .Include(s => s.Movie)
+                .ThenInclude(m => m.AgeRating)
             .OrderBy(s => s.Movie.Title)
             .ThenBy(s => s.StartTime)
             .ToListAsync(cancellationToken);
@@ -155,6 +156,8 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
                 g.Key.MovieId,
                 g.Key.Title,
                 g.Key.PosterUrl,
+                g.Key.DurationMinutes,
+                g.Key.AgeRating?.Code,
                 g.Select(s =>
                     {
                         var counts = seatCountLookup.GetValueOrDefault(s.ShowtimeId);

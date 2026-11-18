@@ -1,6 +1,8 @@
 import { Link } from "react-router";
 import { Ticket } from "lucide-react";
+import { AgeRatingBadge } from "@/components/common/status-badge";
 import { ShowtimeGroupList } from "@/components/common/showtime-group-list";
+import { formatDuration } from "@/lib/cinema-format";
 import type { WholeCinemaMovieDto } from "@/features/client/showtimes/types";
 import { ROUTES } from "@/config/routes";
 import { usePrefetchMovieDetail } from "@/features/client/movies/hooks/use-movies";
@@ -30,6 +32,11 @@ export const ScheduleMovieRow = ({ movie }: ScheduleMovieRowProps) => {
         <Link to={ROUTES.movies.detail(movie.movieId)} {...prefetchProps} className="t-h3 text-base text-foreground hover:underline md:text-lg">
           {movie.movieTitle}
         </Link>
+
+        <div className="mt-2 flex items-center gap-2">
+          {movie.ageRatingCode && <AgeRatingBadge code={movie.ageRatingCode} />}
+          <span className="text-[13px] text-muted-foreground">{formatDuration(movie.durationMinutes)}</span>
+        </div>
 
         <div className="mt-3">
           <ShowtimeGroupList

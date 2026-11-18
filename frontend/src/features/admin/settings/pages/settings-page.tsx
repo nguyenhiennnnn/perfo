@@ -75,8 +75,8 @@ const SettingsSection = ({
   disabled: boolean;
   children: ReactNode;
 }) => (
-  <section className="bg-card p-5">
-    <h2 className="t-h2 text-foreground">{title}</h2>
+  <section>
+    <h2 className="t-h3 text-foreground">{title}</h2>
     <FieldGroup
       disabled={disabled}
       className="mt-4 grid items-start gap-x-4 gap-y-4 sm:grid-cols-2"
@@ -87,11 +87,9 @@ const SettingsSection = ({
 );
 
 const SettingsSkeleton = () => (
-  <div className="max-w-4xl space-y-6">
+  <div className="max-w-4xl space-y-8">
     {[0, 1, 2].map((index) => (
-      <div key={index} className="bg-card p-5">
-        <FormSkeleton fields={4} />
-      </div>
+      <FormSkeleton key={index} fields={4} />
     ))}
   </div>
 );
@@ -210,7 +208,7 @@ const AdminSettingsPage = () => {
         skeleton={<SettingsSkeleton />}
         errorTitle="Không tải được cấu hình rạp"
       >
-          <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-4xl space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-4xl space-y-8">
             <SettingsSection title="Thông tin rạp" disabled={updateSettings.isPending}>
               <FormImageField
                 name="logoUrl"
@@ -397,7 +395,10 @@ const AdminSettingsPage = () => {
               </div>
             </SettingsSection>
 
-            <div className="flex justify-end">
+            <div className="sticky bottom-0 z-20 flex items-center justify-between gap-3 cut-md bg-secondary px-4 py-3">
+              <p aria-live="polite" className="text-[13px] text-muted-foreground">
+                {form.formState.isDirty ? "Có thay đổi chưa lưu." : ""}
+              </p>
               <SubmitButton
                 isPending={updateSettings.isPending}
                 label="Lưu cấu hình"

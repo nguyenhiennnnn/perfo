@@ -124,6 +124,7 @@ export const DataTable = <TData extends RowData>({
   const hasFilters = hasActiveFilters ?? (Boolean(searchValue) || (columnFilters?.length ?? 0) > 0);
   const clearFilters = onClearFilters ?? (onSearchChange ? () => onSearchChange("") : undefined);
   const rows = table.getRowModel().rows;
+  const selectedCount = table.getSelectedRowModel().rows.length;
   const showError = Boolean(isError) && !isLoading && rows.length === 0;
 
   const renderMessageRow = (content: ReactNode) => (
@@ -143,16 +144,11 @@ export const DataTable = <TData extends RowData>({
           onSearchChange={onSearchChange ?? (() => { })}
           searchPlaceholder={searchPlaceholder}
           filters={toolbarFilters}
-          bulkActions={
-            bulkActions && table.getSelectedRowModel().rows.length > 0
-              ? bulkActions(table.getSelectedRowIds())
-              : undefined
-          }
         />
       )}
 
       <div className="overflow-hidden border">
-        <Table>
+        <Table containerClassName="max-h-[75dvh] overflow-y-auto">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -214,6 +210,16 @@ export const DataTable = <TData extends RowData>({
       </div>
 
       <DataTablePagination table={table} totalItems={totalItems} />
+
+      {bulkActions && selectedCount > 0 && (
+        <div
+          role="toolbar"
+          aria-label="Thao tác hàng loạt"
+          className="sticky bottom-0 z-20 flex flex-wrap items-center justify-end gap-2 cut-md bg-secondary px-4 py-3"
+        >
+          {bulkActions(table.getSelectedRowIds())}
+        </div>
+      )}
     </div>
   );
 };

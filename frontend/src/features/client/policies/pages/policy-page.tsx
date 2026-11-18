@@ -63,7 +63,7 @@ const PolicyPage = () => {
                 {section.heading}
               </h2>
               {section.list ? (
-                <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
+                <ul className="list-disc space-y-1.5 pl-5 text-[15px] leading-relaxed text-foreground md:text-base">
                   {section.body.map((line) => (
                     <li key={line}>{line}</li>
                   ))}
@@ -72,7 +72,7 @@ const PolicyPage = () => {
                 section.body.map((line) => (
                   <p
                     key={line}
-                    className="text-sm leading-relaxed text-muted-foreground"
+                    className="text-[15px] leading-relaxed text-foreground md:text-base"
                   >
                     {line}
                   </p>

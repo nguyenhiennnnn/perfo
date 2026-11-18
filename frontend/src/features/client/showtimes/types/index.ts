@@ -15,6 +15,8 @@ export interface WholeCinemaMovieDto {
   movieId: number;
   movieTitle: string;
   moviePosterUrl?: string | null;
+  durationMinutes: number;
+  ageRatingCode?: string | null;
   showtimes: WholeCinemaShowtimeSlotDto[];
 }
 

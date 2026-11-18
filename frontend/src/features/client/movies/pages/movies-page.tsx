@@ -47,6 +47,7 @@ const MoviesPage = () => {
         >
           <MoviesGrid
             movies={data?.pages ?? []}
+            totalCount={data?.totalCount ?? null}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}
             fetchNextPage={fetchNextPage}

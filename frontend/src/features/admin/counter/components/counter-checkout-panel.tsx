@@ -39,9 +39,9 @@ export const CounterCheckoutPanel = ({
 
   const handleCancelOrder = () => {
     openAlertDialog({
-      title: `Huỷ đơn ${hold.bookingCode}?`,
-      description: "Ghế đang giữ sẽ được nhả ngay và đơn này sẽ bị huỷ.",
-      confirmText: "Huỷ đơn",
+      title: `Hủy đơn ${hold.bookingCode}?`,
+      description: "Ghế đang giữ sẽ được nhả ngay và đơn này sẽ bị hủy.",
+      confirmText: "Hủy đơn",
       cancelText: "Giữ lại",
       variant: "destructive",
       onConfirm: onCancelOrder,
@@ -97,7 +97,7 @@ export const CounterCheckoutPanel = ({
         </Button>
         <Button variant="outline" onClick={handleCancelOrder} disabled={isSubmitting}>
           <X className="size-4" />
-          <span>Huỷ đơn</span>
+          <span>Hủy đơn</span>
         </Button>
       </div>
       {isInsufficient && (

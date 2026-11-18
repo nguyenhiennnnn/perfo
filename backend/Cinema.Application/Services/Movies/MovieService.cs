@@ -61,6 +61,7 @@ public class MovieService : IMovieService
                     || EF.Functions.ILike(EF.Functions.Unaccent(mc.CharacterName ?? ""), EF.Functions.Unaccent(pattern)))));
 
         var cursorId = CursorCodec.Decode(cursor);
+        int? totalCount = cursorId is null ? await query.CountAsync(cancellationToken) : null;
         if (cursorId is not null)
             query = query.Where(m => m.MovieId > cursorId);
 
@@ -80,6 +81,7 @@ public class MovieService : IMovieService
             Items = items,
             NextCursor = nextCursor,
             HasMore = hasMore,
+            TotalCount = totalCount,
         };
     }
 

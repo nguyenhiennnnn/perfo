@@ -32,33 +32,33 @@ export const ClientFooter = () => {
           <p className="text-sm text-muted-foreground">
             Đặt vé xem phim nhanh, chọn ghế realtime, nhận vé điện tử ngay.
           </p>
-          <div className="flex items-center gap-3 text-muted-foreground">
-            <FaFacebook className="size-4 hover:text-primary cursor-pointer" />
-            <FaYoutube className="size-4 hover:text-primary cursor-pointer" />
-            <FaInstagram className="size-4 hover:text-primary cursor-pointer" />
+          <div aria-hidden className="flex items-center gap-3 text-muted-foreground">
+            <FaFacebook className="size-4" />
+            <FaYoutube className="size-4" />
+            <FaInstagram className="size-4" />
           </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <p className="text-[13px] font-medium text-foreground">Danh mục</p>
+        <div className="flex flex-col">
+          <p className="mb-1 text-[13px] font-medium text-foreground">Danh mục</p>
           {FOOTER_CATEGORIES.map((item) => (
             <Link
               key={item.label}
               to={item.to}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="inline-flex min-h-11 items-center text-sm text-muted-foreground hover:text-foreground hover:underline"
             >
               {item.label}
             </Link>
           ))}
         </div>
 
-        <div className="flex flex-col gap-2">
-          <p className="text-[13px] font-medium text-foreground">Chính sách</p>
+        <div className="flex flex-col">
+          <p className="mb-1 text-[13px] font-medium text-foreground">Chính sách</p>
           {FOOTER_POLICIES.map((item) => (
             <Link
               key={item.label}
               to={item.to}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="inline-flex min-h-11 items-center text-sm text-muted-foreground hover:text-foreground hover:underline"
             >
               {item.label}
             </Link>

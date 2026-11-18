@@ -44,7 +44,7 @@ export const StatusPage = ({ code, icon: Icon, title, description, actions = [] 
 
         {actions.length > 0 && (
           <>
-            <div className="perforation" />
+            <div className="notch-x perf-h" />
             <div className="flex flex-wrap items-center justify-center gap-3 px-6 py-5">
               {actions.map((action) => {
                 const content = (

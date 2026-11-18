@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { Chip, ChipGroup } from "@/components/common/chip";
 
 interface ScheduleFilterBarProps {
   formats: string[];
@@ -10,34 +10,15 @@ export const ScheduleFilterBar = ({ formats, activeFormat, onFormatChange }: Sch
   if (formats.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <button
-        type="button"
-        onClick={() => onFormatChange(null)}
-        className={cn(
-          "border px-4 py-1.5 text-sm font-medium transition-colors",
-          activeFormat === null
-            ? "border-primary bg-primary text-primary-foreground"
-            : "border-border bg-secondary text-secondary-foreground hover:border-primary/50 hover:bg-muted",
-        )}
-      >
+    <ChipGroup aria-label="Định dạng chiếu">
+      <Chip selected={activeFormat === null} onClick={() => onFormatChange(null)}>
         Tất cả định dạng
-      </button>
+      </Chip>
       {formats.map((format) => (
-        <button
-          key={format}
-          type="button"
-          onClick={() => onFormatChange(format)}
-          className={cn(
-            "border px-4 py-1.5 text-sm font-medium transition-colors",
-            activeFormat === format
-              ? "border-primary bg-primary text-primary-foreground"
-              : "border-border bg-secondary text-secondary-foreground hover:border-primary/50 hover:bg-muted",
-          )}
-        >
+        <Chip key={format} selected={activeFormat === format} onClick={() => onFormatChange(format)}>
           {format}
-        </button>
+        </Chip>
       ))}
-    </div>
+    </ChipGroup>
   );
 }

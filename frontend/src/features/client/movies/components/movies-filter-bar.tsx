@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SelectField } from "@/components/common/select-field";
 import { useGenres, useLanguages, useAgeRatings } from "@/features/client/catalog/hooks/use-catalog";
-import { cn } from "@/lib/utils";
+import { Chip, ChipGroup } from "@/components/common/chip";
 import { MovieStatus } from "@/types/enum";
 import type { useClientMovieParams } from "@/hooks/use-query-params";
 
@@ -41,23 +41,17 @@ export const MoviesFilterBar = ({ params, setParams }: MoviesFilterBarProps) => 
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <ChipGroup aria-label="Trạng thái phim">
           {STATUS_TABS.map((tab) => (
-            <button
+            <Chip
               key={tab.label}
-              type="button"
+              selected={params.status === tab.value}
               onClick={() => setParams({ status: tab.value, cursor: null })}
-              className={cn(
-                "border px-4 py-1.5 text-sm font-medium transition-colors",
-                params.status === tab.value
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-secondary text-secondary-foreground hover:border-primary/50 hover:bg-muted",
-              )}
             >
               {tab.label}
-            </button>
+            </Chip>
           ))}
-        </div>
+        </ChipGroup>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">

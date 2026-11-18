@@ -92,6 +92,8 @@ public record WholeCinemaMovieDto(
     int MovieId,
     string MovieTitle,
     string? MoviePosterUrl,
+    int DurationMinutes,
+    string? AgeRatingCode,
     List<WholeCinemaShowtimeSlotDto> Showtimes
 );
 

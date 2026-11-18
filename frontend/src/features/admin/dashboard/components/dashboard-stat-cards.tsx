@@ -14,14 +14,15 @@ interface StatItem {
   icon: LucideIcon;
   hint?: string;
   trend?: "up" | "down" | "neutral";
+  wide?: boolean;
 }
 
-const StatCard = ({ label, value, hint, trend }: StatItem) => {
+const StatCard = ({ label, value, hint, trend, wide }: StatItem) => {
   return (
-    <Card className="py-4">
+    <Card className={cn("py-4", wide && "col-span-2")}>
       <CardContent className="px-4">
         <div className="min-w-0">
-          <p className="t-numeral text-2xl font-bold tracking-tight text-foreground md:text-3xl">{value}</p>
+          <p className="t-numeral text-[44px] text-foreground">{value}</p>
           <p className="mt-1 text-xs text-muted-foreground">{label}</p>
           {hint && (
             <p
@@ -45,7 +46,7 @@ interface DashboardStatCardsProps {
   query: UseQueryResult<DashboardSummaryDto>;
 }
 
-const STATS_GRID_CLASS = "grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5";
+const STATS_GRID_CLASS = "grid grid-cols-2 gap-3 lg:grid-cols-6";
 
 const buildItems = (summary: DashboardSummaryDto): StatItem[] => {
   const changePercent = summary.revenueChangePercent;
@@ -59,6 +60,7 @@ const buildItems = (summary: DashboardSummaryDto): StatItem[] => {
       icon: Wallet,
       hint: changePercent == null ? undefined : `${formatPercent(changePercent, { showSign: true })} so với hôm qua`,
       trend: changeTrend,
+      wide: true,
     },
     { label: "Vé bán hôm nay", value: formatNumber(summary.ticketsSoldToday), icon: Ticket },
     { label: "Đơn đã xác nhận", value: formatNumber(summary.confirmedBookingsToday), icon: CalendarCheck },
@@ -82,7 +84,7 @@ export const DashboardStatCards = ({ query }: DashboardStatCardsProps) => (
     query={query}
     skeleton={
       <div className={STATS_GRID_CLASS}>
-        <SkeletonList count={5} shape={CardSkeleton} className="h-24" />
+        <SkeletonList count={5} shape={CardSkeleton} className="h-32" />
       </div>
     }
     errorTitle="Không tải được số liệu tổng quan"

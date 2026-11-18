@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Ticket as TicketIcon } from "lucide-react";
+import { Chip, ChipGroup } from "@/components/common/chip";
 import { EmptyState } from "@/components/common/empty-state";
 import { PageTitle } from "@/components/common/page-title";
 import { QueryState } from "@/components/common/query-state";
@@ -11,20 +12,23 @@ import { TicketCard } from "@/features/client/account/components/ticket-card";
 import { useMyBookings, useCancelBooking } from "@/features/client/bookings/hooks/use-bookings";
 import { useAlertDialogOpen } from "@/stores/alert-dialog-store";
 import { bookingStatusOptions } from "@/lib/enum-options";
-import { cn } from "@/lib/utils";
 import { ACCOUNT_LIST_PAGE_LIMIT } from "@/config/default-constants";
 import { ROUTES } from "@/config/routes";
+
+const TAB_ALL_KEY = "all";
 
 const TABS = [{ value: null as string | null, label: "Tất cả" }, ...bookingStatusOptions.map((o) => ({ value: o.value as string | null, label: o.label }))];
 
 const AccountTicketsPage = () => {
   const [status, setStatus] = useState<string | null>(null);
+  const tabsId = useId();
   const bookingsQuery = useMyBookings({ status: status ?? undefined, limit: ACCOUNT_LIST_PAGE_LIMIT });
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = bookingsQuery;
   const cancelBooking = useCancelBooking();
   const openAlert = useAlertDialogOpen();
 
   const bookings = data?.bookings ?? [];
+  const getTabId = (value: string | null) => `${tabsId}-${value ?? TAB_ALL_KEY}`;
 
   const handleCancel = (bookingId: number) => {
     openAlert({
@@ -40,25 +44,21 @@ const AccountTicketsPage = () => {
     <div>
       <PageTitle title="Vé của tôi" />
 
-      <div className="flex flex-wrap gap-2">
+      <ChipGroup role="tablist" aria-label="Trạng thái vé">
         {TABS.map((tab) => (
-          <button
+          <Chip
             key={tab.label}
-            type="button"
+            role="tab"
+            id={getTabId(tab.value)}
+            selected={status === tab.value}
             onClick={() => setStatus(tab.value)}
-            className={cn(
-              "border px-3.5 py-1.5 text-sm font-medium transition-colors",
-              status === tab.value
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-border bg-secondary text-secondary-foreground hover:border-primary/50 hover:bg-muted",
-            )}
           >
             {tab.label}
-          </button>
+          </Chip>
         ))}
-      </div>
+      </ChipGroup>
 
-      <div className="mt-5 space-y-3">
+      <div role="tabpanel" aria-labelledby={getTabId(status)} className="mt-5 space-y-3">
         <QueryState
           query={bookingsQuery}
           skeleton={<SkeletonList count={3} shape={TicketSkeleton} />}

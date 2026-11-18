@@ -1,4 +1,5 @@
-import { cn } from "@/lib/utils";
+import { useId } from "react";
+import { Chip, ChipGroup } from "@/components/common/chip";
 import { PaymentMethod } from "@/types/enum";
 
 const ONLINE_PAYMENT_METHODS = [
@@ -13,32 +14,24 @@ interface BookingPaymentMethodProps {
 }
 
 export const BookingPaymentMethod = ({ value, onChange }: BookingPaymentMethodProps) => {
+  const legendId = useId();
+
   return (
-    <fieldset className="flex flex-col gap-3 bg-card p-4">
-      <legend className="t-h3 float-left mb-3 w-full text-foreground">Phương thức thanh toán</legend>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <div className="flex flex-col gap-3 bg-card p-4">
+      <h3 id={legendId} className="t-h3 mb-3 text-foreground">Phương thức thanh toán</h3>
+      <ChipGroup role="radiogroup" aria-labelledby={legendId} className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {ONLINE_PAYMENT_METHODS.map((method) => (
-          <label
+          <Chip
             key={method.value}
-            className={cn(
-              "flex h-12 cursor-pointer items-center justify-center cut-sm px-4 text-center text-sm font-medium transition-colors has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring",
-              value === method.value
-                ? "bg-primary text-primary-foreground"
-                : "bg-secondary text-secondary-foreground hover:bg-muted",
-            )}
+            role="radio"
+            selected={value === method.value}
+            onClick={() => onChange(method.value)}
+            className="text-center"
           >
-            <input
-              type="radio"
-              name="payment-method"
-              value={method.value}
-              checked={value === method.value}
-              onChange={() => onChange(method.value)}
-              className="sr-only"
-            />
             {method.label}
-          </label>
+          </Chip>
         ))}
-      </div>
-    </fieldset>
+      </ChipGroup>
+    </div>
   );
 };

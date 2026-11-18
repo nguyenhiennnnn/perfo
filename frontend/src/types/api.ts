@@ -15,6 +15,7 @@ export interface CursorPageResult<T> {
   items: T[];
   nextCursor: string | null;
   hasMore: boolean;
+  totalCount?: number | null;
 }
 
 export interface OffsetPageResult<T> {

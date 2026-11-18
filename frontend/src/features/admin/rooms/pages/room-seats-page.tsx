@@ -2,7 +2,10 @@ import { useMemo, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router";
 
+import { ErrorState } from "@/components/common/error-state";
+import { NotFoundState } from "@/components/common/not-found-state";
 import { PageHeader } from "@/components/common/page-header";
+import { QueryState } from "@/components/common/query-state";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
@@ -292,20 +295,30 @@ const SeatEditorReady = ({
   );
 };
 
+const SeatEditorSkeleton = () => (
+  <div aria-hidden className="space-y-4">
+    <Skeleton className="h-12 w-full" />
+    <Skeleton className="h-96 w-full" />
+  </div>
+);
+
 const SeatEditorLoader = ({ room }: { room: AdminRoomDto }) => {
   const [layoutVersion, setLayoutVersion] = useState(0);
   const roomSeats = useAdminRoomSeats(room.roomId);
   const seatTypes = useAdminSeatTypes();
 
   if (roomSeats.isLoading || seatTypes.isLoading) {
-    return <Skeleton className="h-96 w-full " />;
+    return <SeatEditorSkeleton />;
   }
 
-  if (roomSeats.isError) {
+  const failed = roomSeats.isError ? roomSeats : seatTypes.isError ? seatTypes : null;
+  if (failed) {
     return (
-      <p className="border border-dashed border-destructive/40 py-10 text-center text-sm text-destructive">
-        Không tải được sơ đồ ghế hiện tại, vui lòng thử tải lại trang.
-      </p>
+      <ErrorState
+        title="Không tải được sơ đồ ghế"
+        error={failed.error}
+        onRetry={() => void failed.refetch()}
+      />
     );
   }
 
@@ -322,7 +335,6 @@ const SeatEditorLoader = ({ room }: { room: AdminRoomDto }) => {
 
 const AdminRoomSeatsPage = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const roomId = Number(id);
   const room = useAdminRoom(roomId);
 
@@ -333,19 +345,20 @@ const AdminRoomSeatsPage = () => {
         description="Chỉnh loại ghế, ghế đôi, lối đi và bật/tắt từng ghế trong phòng chiếu."
       />
 
-      {room.isLoading ? (
-        <Skeleton className="h-96 w-full " />
-      ) : !room.data ? (
-        <div className="flex flex-col items-center gap-3 border border-dashed border-border py-16 text-center">
-          <p className="text-sm text-muted-foreground">Không tìm thấy phòng chiếu này.</p>
-          <Button onClick={() => navigate(ROUTES.admin.rooms)}>
-            <ArrowLeft className="size-4" />
-            <span>Về danh sách phòng chiếu</span>
-          </Button>
-        </div>
-      ) : (
-        <SeatEditorLoader room={room.data} />
-      )}
+      <QueryState
+        query={room}
+        skeleton={<SeatEditorSkeleton />}
+        errorTitle="Không tải được thông tin phòng chiếu"
+        notFound={
+          <NotFoundState
+            entity="phòng chiếu"
+            backLabel="Về danh sách phòng chiếu"
+            backTo={ROUTES.admin.rooms}
+          />
+        }
+      >
+        {(roomData) => <SeatEditorLoader room={roomData} />}
+      </QueryState>
     </div>
   );
 };

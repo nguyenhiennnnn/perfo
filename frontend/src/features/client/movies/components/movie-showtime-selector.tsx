@@ -52,7 +52,11 @@ export const MovieShowtimeSelector = ({ showtimes }: MovieShowtimeSelectorProps)
 
       <div className="mt-5">
         {filtered.length === 0 ? (
-          <EmptyState icon={CalendarX} title="Chưa có suất chiếu" description="Vui lòng chọn ngày khác để xem lịch chiếu." />
+          <EmptyState
+            icon={CalendarX}
+            title="Chưa có suất chiếu"
+            description={showtimes.length === 0 ? "Phim này chưa có lịch chiếu sắp tới." : "Chọn ngày khác để xem lịch chiếu."}
+          />
         ) : (
           <ShowtimeGroupList
             showtimes={filtered}

@@ -151,7 +151,7 @@ export const ImportPreviewStep = ({
       )}
 
       {hasInvalidRows && (
-        <div className="flex flex-col gap-3 border border-border p-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 bg-secondary p-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6">
             <label className="flex cursor-pointer items-center gap-2 text-sm">
               <Checkbox
@@ -222,7 +222,12 @@ export const ImportPreviewStep = ({
             ) : (
               <TableRow>
                 <TableCell colSpan={config.columns.length + 2} className="p-0">
-                  <EmptyState icon={FileX} title="Không có dòng nào" className="bg-transparent py-8" />
+                  <EmptyState
+                    icon={FileX}
+                    title="File chưa có dòng dữ liệu"
+                    description="Chọn file khác có ít nhất một dòng dữ liệu."
+                    className="bg-transparent py-8"
+                  />
                 </TableCell>
               </TableRow>
             )}

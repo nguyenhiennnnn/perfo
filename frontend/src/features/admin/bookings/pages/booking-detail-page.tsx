@@ -3,8 +3,10 @@ import { ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { NotFoundState } from "@/components/common/not-found-state";
 import { PageHeader } from "@/components/common/page-header";
+import { QueryState } from "@/components/common/query-state";
+import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { DownloadTicketsPdfButton } from "@/components/common/download-tickets-pdf-button";
 import { formatCurrency, formatDate } from "@/lib/formatters";
 
@@ -14,6 +16,17 @@ import { ROUTES } from "@/config/routes";
 import { ENDPOINTS } from "@/api/endpoints";
 import { BookingStatus } from "@/types/enum";
 
+const BookingDetailSkeleton = () => (
+  <div className="grid gap-4 md:grid-cols-3">
+    <div className="space-y-4 md:col-span-2">
+      <CardSkeleton className="h-32 cut-md" />
+      <CardSkeleton className="h-24 cut-md" />
+      <CardSkeleton className="h-32 cut-md" />
+    </div>
+    <CardSkeleton className="h-40 cut-md" />
+  </div>
+);
+
 const AdminBookingDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -21,11 +34,24 @@ const AdminBookingDetailPage = () => {
 
   const detail = useAdminBookingDetail(bookingId);
 
-  if (detail.isLoading || !detail.data) {
+  if (!detail.data) {
     return (
       <div>
         <PageHeader title="Chi tiết đơn đặt vé" description="" />
-        <Skeleton className="h-64 w-full " />
+        <QueryState
+          query={detail}
+          skeleton={<BookingDetailSkeleton />}
+          notFound={
+            <NotFoundState
+              entity="đơn đặt vé"
+              backLabel="Về danh sách đơn đặt vé"
+              backTo={ROUTES.admin.bookings}
+            />
+          }
+          errorTitle="Không tải được chi tiết đơn đặt vé"
+        >
+          {null}
+        </QueryState>
       </div>
     );
   }

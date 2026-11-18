@@ -10,6 +10,7 @@ export interface CatalogCardProps {
   description: string;
   count?: number;
   isLoading: boolean;
+  isError?: boolean;
   accent: string;
 }
 
@@ -20,20 +21,21 @@ export const CatalogCard = ({
   description,
   count,
   isLoading,
+  isError = false,
   accent,
 }: CatalogCardProps) => {
   return (
     <Link
       to={to}
       className={cn(
-        "group relative flex flex-col justify-between overflow-hidden border border-border bg-card p-5 transition-colors duration-150",
-        "hover:border-primary",
+        "group relative flex flex-col justify-between overflow-hidden bg-card p-5 transition-colors duration-150",
+        "hover:bg-secondary",
       )}
     >
       <div className="flex items-center justify-between">
         <div
           className={cn(
-            "flex size-11 items-center justify-center border border-border",
+            "flex size-11 items-center justify-center",
             accent,
           )}
         >
@@ -44,10 +46,12 @@ export const CatalogCard = ({
             <Skeleton className="ml-auto h-7 w-10" />
           ) : (
             <span className="font-heading text-2xl font-semibold tabular text-foreground">
-              {count ?? 0}
+              {isError ? "—" : (count ?? 0)}
             </span>
           )}
-          <p className="text-xs text-muted-foreground">bản ghi</p>
+          <p className={cn("text-xs", isError ? "text-destructive" : "text-muted-foreground")}>
+            {isError ? "Không tải được" : "bản ghi"}
+          </p>
         </div>
       </div>
 

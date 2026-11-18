@@ -1,22 +1,25 @@
 import { Clapperboard, Home, Ticket } from "lucide-react";
 import { StatusPage } from "@/components/common/status-page";
 import { Seo } from "@/components/common/seo";
+import { STATE_MESSAGES } from "@/config/error-messages";
 import { ROUTES } from "@/config/routes";
 
 const NotFoundPage = () => {
+  const { notFound, home } = STATE_MESSAGES.page;
+
   return (
     <>
-      <Seo title="Không tìm thấy trang" noIndex />
+      <Seo title={notFound.title} noIndex />
       <StatusPage
-      code="404"
-      icon={Clapperboard}
-      title="Không tìm thấy trang"
-      description="Suất chiếu hoặc đường dẫn bạn tìm không tồn tại. Có thể trang đã bị gỡ hoặc địa chỉ không chính xác."
-      actions={[
-        { label: "Về trang chủ", to: "/", icon: Home },
-        { label: "Xem lịch chiếu", to: ROUTES.schedule, icon: Ticket, variant: "outline" },
-      ]}
-    />
+        code="404"
+        icon={Clapperboard}
+        title={notFound.title}
+        description={notFound.description}
+        actions={[
+          { label: home, to: ROUTES.home, icon: Home },
+          { label: "Xem lịch chiếu", to: ROUTES.schedule, icon: Ticket, variant: "outline" },
+        ]}
+      />
     </>
   );
 };

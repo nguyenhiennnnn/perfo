@@ -21,15 +21,15 @@ const AdminReportsPage = () => {
 
   const hasValidRange = Boolean(fromDate && toDate);
 
-  const { data: revenueReport, isLoading: isRevenueLoading } = useRevenueReport(
+  const revenueReport = useRevenueReport(
     { fromDate, toDate, groupBy },
     hasValidRange,
   );
-  const { data: topMovies, isLoading: isTopMoviesLoading } = useTopMoviesReport(
+  const topMovies = useTopMoviesReport(
     { fromDate, toDate, limit: TOP_MOVIES_REPORT_LIMIT },
     hasValidRange,
   );
-  const { data: employeePerformance, isLoading: isEmployeeLoading } = useEmployeePerformanceReport(
+  const employeePerformance = useEmployeePerformanceReport(
     { fromDate, toDate },
     hasValidRange,
   );
@@ -55,11 +55,10 @@ const AdminReportsPage = () => {
         onReset={handleReset}
       />
 
-      <RevenueSummaryCards summary={revenueReport?.summary} isLoading={isRevenueLoading} />
+      <RevenueSummaryCards query={revenueReport} />
 
       <RevenueReportChart
-        items={revenueReport?.items}
-        isLoading={isRevenueLoading}
+        query={revenueReport}
         action={
           <ExportButton
             endpoint={ENDPOINTS.admin.reports.revenueExport}
@@ -73,8 +72,7 @@ const AdminReportsPage = () => {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <TopMoviesReportTable
-          movies={topMovies}
-          isLoading={isTopMoviesLoading}
+          query={topMovies}
           action={
             <ExportButton
               endpoint={ENDPOINTS.admin.reports.topMoviesExport}
@@ -86,8 +84,7 @@ const AdminReportsPage = () => {
           }
         />
         <EmployeePerformanceTable
-          employees={employeePerformance}
-          isLoading={isEmployeeLoading}
+          query={employeePerformance}
           action={
             <ExportButton
               endpoint={ENDPOINTS.admin.reports.employeePerformanceExport}

@@ -2,18 +2,19 @@ import { Users } from "lucide-react";
 import type { ReactNode } from "react";
 import { Card, CardAction, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { SkeletonList } from "@/components/common/skeleton-list";
+import type { UseQueryResult } from "@tanstack/react-query";
+import { QueryState } from "@/components/common/query-state";
+import { TableRowsSkeleton } from "@/components/common/skeleton-shapes";
 import { EmptyState } from "@/components/common/empty-state";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
 import type { EmployeePerformanceDto } from "../types";
 
 interface EmployeePerformanceTableProps {
-  employees: EmployeePerformanceDto[] | undefined;
-  isLoading: boolean;
+  query: UseQueryResult<EmployeePerformanceDto[]>;
   action?: ReactNode;
 }
 
-export const EmployeePerformanceTable = ({ employees, isLoading, action }: EmployeePerformanceTableProps) => {
+export const EmployeePerformanceTable = ({ query, action }: EmployeePerformanceTableProps) => {
   return (
     <Card>
       <CardHeader>
@@ -22,13 +23,20 @@ export const EmployeePerformanceTable = ({ employees, isLoading, action }: Emplo
         {action && <CardAction>{action}</CardAction>}
       </CardHeader>
       <CardContent>
-        {isLoading ? (
-          <div className="space-y-2">
-            <SkeletonList count={5} className="h-10 w-full" />
-          </div>
-        ) : !employees || employees.length === 0 ? (
-          <EmptyState icon={Users} title="Không có dữ liệu" description="Không có hoạt động nào trong khoảng thời gian này." />
-        ) : (
+        <QueryState
+          query={query}
+          skeleton={
+            <Table>
+              <TableBody>
+                <TableRowsSkeleton rows={5} columns={4} />
+              </TableBody>
+            </Table>
+          }
+          isEmpty={(employees) => employees.length === 0}
+          empty={<EmptyState icon={Users} title="Chưa có hoạt động nhân viên" description="Chưa có hoạt động bán vé nào trong khoảng thời gian này." />}
+          errorTitle="Không tải được hiệu suất nhân viên"
+        >
+          {(employees) => (
           <Table>
             <TableHeader>
               <TableRow>
@@ -51,7 +59,8 @@ export const EmployeePerformanceTable = ({ employees, isLoading, action }: Emplo
               ))}
             </TableBody>
           </Table>
-        )}
+          )}
+        </QueryState>
       </CardContent>
     </Card>
   );

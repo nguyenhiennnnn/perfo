@@ -10,8 +10,8 @@ import { DashboardDaysFilter } from "../components/dashboard-days-filter";
 const AdminDashboardPage = () => {
   const [days, setDays] = useState(14);
 
-  const { data: summary, isLoading: isSummaryLoading } = useDashboardSummary();
-  const { data: insights, isLoading: isInsightsLoading } = useDashboardInsights({ days });
+  const summary = useDashboardSummary();
+  const insights = useDashboardInsights({ days });
 
   return (
     <div className="space-y-6">
@@ -21,14 +21,14 @@ const AdminDashboardPage = () => {
         action={<DashboardDaysFilter value={days} onChange={setDays} />}
       />
 
-      <DashboardStatCards summary={summary} isLoading={isSummaryLoading} />
+      <DashboardStatCards query={summary} />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <RevenueTrendChart data={insights?.revenueTrend} isLoading={isInsightsLoading} />
-        <TopMoviesCard movies={insights?.topMovies} isLoading={isInsightsLoading} />
+        <RevenueTrendChart query={insights} />
+        <TopMoviesCard query={insights} />
       </div>
 
-      <TodayShowtimesCard showtimes={insights?.todayShowtimes} isLoading={isInsightsLoading} />
+      <TodayShowtimesCard query={insights} />
     </div>
   );
 };

@@ -4,7 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { ErrorState } from "@/components/common/error-state";
+import { FormSkeleton } from "@/components/common/skeleton-shapes";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { FormActions } from "@/components/common/form/form-actions";
 import { FormInputField } from "@/components/common/form/form-input-field";
@@ -152,7 +153,18 @@ export const MovieUpdateForm = ({ movie, onSuccess }: MovieUpdateFormProps) => {
   };
 
   if (movieDetail.isLoading) {
-    return <Skeleton className="h-64 w-full " />;
+    return <FormSkeleton fields={6} />;
+  }
+
+  if (movieDetail.isError) {
+    return (
+      <ErrorState
+        title="Không tải được thông tin phim"
+        error={movieDetail.error}
+        onRetry={() => void movieDetail.refetch()}
+        className="py-8"
+      />
+    );
   }
 
   return (

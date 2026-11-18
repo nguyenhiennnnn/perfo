@@ -1,8 +1,10 @@
 import { Film } from "lucide-react";
 import { ShowtimeStatus } from "@/types/enum";
 import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/common/empty-state";
+import { QueryState } from "@/components/common/query-state";
+import { SkeletonList } from "@/components/common/skeleton-list";
+import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { formatCurrency } from "@/lib/formatters";
 import { useSchedule } from "@/features/client/showtimes/hooks/use-showtimes";
 import { formatShowtimeRange } from "@/lib/cinema-format";
@@ -30,16 +32,22 @@ export const CounterShowtimePicker = ({ date, onDateChange, onPickShowtime }: Co
         />
       </div>
 
-      {schedule.isLoading && (
-        <Skeleton className="h-64 w-full " />
-      )}
-
-      {!schedule.isLoading && (schedule.data?.movies.length ?? 0) === 0 && (
-        <EmptyState icon={Film} title="Không có suất chiếu nào trong ngày này" />
-      )}
-
+      <QueryState
+        query={schedule}
+        skeleton={<SkeletonList count={2} shape={CardSkeleton} className="h-32" />}
+        isEmpty={(data) => data.movies.length === 0}
+        empty={
+          <EmptyState
+            icon={Film}
+            title="Chưa có suất chiếu trong ngày này"
+            description="Chọn ngày khác để xem suất chiếu."
+          />
+        }
+        errorTitle="Không tải được lịch chiếu"
+      >
+        {(data) => (
       <div className="flex flex-col gap-4">
-        {schedule.data?.movies.map((movie) => (
+        {data.movies.map((movie) => (
           <div key={movie.movieId} className="bg-card p-4">
             <div className="mb-3 flex items-center gap-3">
               {movie.moviePosterUrl && (
@@ -75,6 +83,8 @@ export const CounterShowtimePicker = ({ date, onDateChange, onPickShowtime }: Co
           </div>
         ))}
       </div>
+        )}
+      </QueryState>
     </div>
   );
 }

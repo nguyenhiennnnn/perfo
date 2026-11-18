@@ -7,7 +7,8 @@ import { Save, BadgeCheck } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Skeleton } from "@/components/ui/skeleton";
+import { QueryState } from "@/components/common/query-state";
+import { CardSkeleton, FormSkeleton } from "@/components/common/skeleton-shapes";
 import { FormInputField } from "@/components/common/form/form-input-field";
 import { SubmitButton } from "@/components/common/form/submit-button";
 import { FormSelectField } from "@/components/common/form/form-select-field";
@@ -36,8 +37,18 @@ const profileFormSchema = z.object({
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
+const ProfileSkeleton = () => (
+  <div className="space-y-6">
+    <CardSkeleton className="h-40" />
+    <div className="bg-card p-5">
+      <FormSkeleton fields={4} />
+    </div>
+  </div>
+);
+
 const AccountProfilePage = () => {
-  const { data: profile, isLoading } = useMyProfile();
+  const profileQuery = useMyProfile();
+  const profile = profileQuery.data;
   const updateProfile = useUpdateMyProfile();
 
   const form = useForm<ProfileFormValues>({
@@ -76,90 +87,89 @@ const AccountProfilePage = () => {
     }, { onError: applyServerErrors });
   };
 
-  if (isLoading || !profile) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-40 w-full " />
-        <Skeleton className="h-72 w-full " />
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-6">
-      <ProfileStatsCard profile={profile} />
+    <QueryState
+      query={profileQuery}
+      skeleton={<ProfileSkeleton />}
+      errorTitle="Không tải được hồ sơ"
+    >
+      {(loaded) => (
+        <div className="space-y-6">
+          <ProfileStatsCard profile={loaded} />
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="bg-card p-5">
-        <h2 className="t-h2 text-foreground">Thông tin cá nhân</h2>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="bg-card p-5">
+            <h2 className="t-h2 text-foreground">Thông tin cá nhân</h2>
 
-        <FieldGroup
-          disabled={updateProfile.isPending}
-          className="mt-5 flex-row items-center gap-4"
-        >
-          <Controller
-            name="avatar"
-            control={form.control}
-            render={({ field }) => (
-              <AvatarUpload
-                value={field.value ?? null}
-                name={form.watch("fullName")}
-                onChange={(url) => field.onChange(url)}
-                folder="avatars"
+            <FieldGroup
+              disabled={updateProfile.isPending}
+              className="mt-5 flex-row items-center gap-4"
+            >
+              <Controller
+                name="avatar"
+                control={form.control}
+                render={({ field }) => (
+                  <AvatarUpload
+                    value={field.value ?? null}
+                    name={form.watch("fullName")}
+                    onChange={(url) => field.onChange(url)}
+                    folder="avatars"
+                  />
+                )}
               />
-            )}
-          />
-        </FieldGroup>
+            </FieldGroup>
 
-        <FieldGroup
-          disabled={updateProfile.isPending}
-          className="mt-5 grid gap-4 sm:grid-cols-2"
-        >
-          <FormInputField name="fullName" control={form.control} label="Họ và tên" autoComplete="off" />
+            <FieldGroup
+              disabled={updateProfile.isPending}
+              className="mt-5 grid gap-4 sm:grid-cols-2"
+            >
+              <FormInputField name="fullName" control={form.control} label="Họ và tên" autoComplete="off" />
 
-          <FormInputField name="phone" control={form.control} label="Số điện thoại" autoComplete="off" />
+              <FormInputField name="phone" control={form.control} label="Số điện thoại" autoComplete="off" />
 
-          <FormDatePickerField
-            name="dateOfBirth"
-            control={form.control}
-            label="Ngày sinh"
-            placeholder="Chọn ngày sinh"
-            captionLayout="dropdown"
-            fromYear={getBusinessTodayDate().getFullYear() - 100}
-            toYear={getBusinessTodayDate().getFullYear()}
-            emptyValue={null}
-          />
+              <FormDatePickerField
+                name="dateOfBirth"
+                control={form.control}
+                label="Ngày sinh"
+                placeholder="Chọn ngày sinh"
+                captionLayout="dropdown"
+                fromYear={getBusinessTodayDate().getFullYear() - 100}
+                toYear={getBusinessTodayDate().getFullYear()}
+                emptyValue={null}
+              />
 
-          <FormSelectField
-            name="gender"
-            control={form.control}
-            label="Giới tính"
-            placeholder="Chọn giới tính"
-            options={GENDER_OPTIONS}
-            getOptionValue={(o) => o.value}
-            getOptionLabel={(o) => o.label}
-          />
+              <FormSelectField
+                name="gender"
+                control={form.control}
+                label="Giới tính"
+                placeholder="Chọn giới tính"
+                options={GENDER_OPTIONS}
+                getOptionValue={(o) => o.value}
+                getOptionLabel={(o) => o.label}
+              />
 
-          <Field className="sm:col-span-2">
-            <FieldLabel>Email</FieldLabel>
-            <div className="flex items-center gap-2">
-              <Input value={profile.email} disabled className="flex-1" />
-              <span className="flex items-center gap-1 cut-xs bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
-                <BadgeCheck className="size-3.5" />
-                Đã xác thực
-              </span>
+              <Field className="sm:col-span-2">
+                <FieldLabel>Email</FieldLabel>
+                <div className="flex items-center gap-2">
+                  <Input value={loaded.email} disabled className="flex-1" />
+                  <span className="flex items-center gap-1 cut-xs bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                    <BadgeCheck className="size-3.5" />
+                    Đã xác thực
+                  </span>
+                </div>
+              </Field>
+            </FieldGroup>
+
+            <div className="mt-6 flex justify-end">
+              <SubmitButton
+                isPending={updateProfile.isPending}
+                label={FORM_SAVE_CHANGES_LABEL}
+                icon={<Save className="size-4" />}
+              />
             </div>
-          </Field>
-        </FieldGroup>
-
-        <div className="mt-6 flex justify-end">
-          <SubmitButton
-            isPending={updateProfile.isPending}
-            label={FORM_SAVE_CHANGES_LABEL}
-            icon={<Save className="size-4" />}
-          />
+          </form>
         </div>
-      </form>
-    </div>
+      )}
+    </QueryState>
   );
 };
 

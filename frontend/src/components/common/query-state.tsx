@@ -14,15 +14,9 @@ interface QueryLike<TData> {
 
 interface QueryStateProps<TData> {
   query: QueryLike<TData>;
-  /** Skeleton đúng hình khối nội dung sẽ hiển thị. */
   skeleton: ReactNode;
   isEmpty?: boolean | ((data: TData) => boolean);
-  /** Trạng thái trống: EmptyState "chưa có dữ liệu" hoặc "không có kết quả lọc". */
   empty?: ReactNode;
-  /**
-   * Dùng cho truy vấn một thực thể (chi tiết). Hiện khi API trả 404 hoặc không có dữ liệu.
-   * Không truyền thì 404 hiện NotFoundState chung.
-   */
   notFound?: ReactNode;
   errorTitle?: string;
   errorClassName?: string;

@@ -5,9 +5,11 @@ import { CalendarX, TriangleAlert } from "lucide-react";
 import { DateFilterPicker } from "@/components/common/filter/date-filter-picker";
 import { EnumSelectFilter } from "@/components/common/filter/enum-select-filter";
 import { EmptyState } from "@/components/common/empty-state";
+import { ErrorState } from "@/components/common/error-state";
 import { SelectField } from "@/components/common/select-field";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonList } from "@/components/common/skeleton-list";
+import { RowSkeleton } from "@/components/common/skeleton-shapes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getBusinessTodayDate } from "@/lib/business-time";
 import { showtimeStatusOptions } from "@/lib/enum-options";
@@ -66,6 +68,7 @@ export const ShowtimeCalendarView = ({
   };
 
   const calendar = useAdminShowtimesCalendar(queryParams);
+  const hasActiveFilters = params.roomId != null || params.status != null;
 
   const days = useMemo(() => calendar.data?.days ?? [], [calendar.data]);
   const layouts = useMemo(
@@ -114,26 +117,32 @@ export const ShowtimeCalendarView = ({
       {calendar.isLoading && (
         <div className="flex flex-col gap-2" aria-busy>
           <Skeleton className="h-12 w-full" />
-          <SkeletonList count={4} className="h-20 w-full" />
+          <SkeletonList count={4} shape={RowSkeleton} className="h-20" />
         </div>
       )}
 
       {calendar.isError && (
-        <EmptyState
-          icon={CalendarX}
+        <ErrorState
           title="Không tải được lịch chiếu"
-          description="Kiểm tra kết nối rồi thử lại."
-          actionLabel="Thử lại"
-          onAction={() => void calendar.refetch()}
+          error={calendar.error}
+          onRetry={() => void calendar.refetch()}
         />
       )}
 
       {!calendar.isLoading && !calendar.isError && days.length === 0 && (
-        <EmptyState
-          icon={CalendarX}
-          title="Không có suất chiếu"
-          description="Chưa có suất chiếu nào trong khoảng thời gian và bộ lọc đã chọn."
-        />
+        hasActiveFilters ? (
+          <EmptyState
+            variant="filtered"
+            icon={CalendarX}
+            onClearFilters={() => void setParams({ roomId: null, status: null })}
+          />
+        ) : (
+          <EmptyState
+            icon={CalendarX}
+            title="Chưa có suất chiếu"
+            description="Chưa có suất chiếu nào trong khoảng ngày đã chọn. Chọn khoảng ngày khác hoặc tạo suất chiếu mới."
+          />
+        )
       )}
 
       {!calendar.isLoading && days.length > 0 && currentDay && (

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { AlertTriangle } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { SelectableSeatMap } from "@/components/common/seat-map/selectable-seat-map";
 import { formatSeatCodes } from "@/components/common/seat-map/seat-map-utils";
@@ -16,7 +15,6 @@ import { BookingPriceSummary, calcBookingEstimate } from "./booking-price-summar
 import { SeatSuggestionPanel } from "./seat-suggestion-panel";
 
 interface BookingSelectionStepProps {
-  isLoading: boolean;
   data: ShowtimeSeatsResponseDto | undefined;
   statusMap: Map<number, ShowtimeSeatStatus>;
   selectedIds: Set<number>;
@@ -36,7 +34,6 @@ interface BookingSelectionStepProps {
 }
 
 export const BookingSelectionStep = ({
-  isLoading,
   data,
   statusMap,
   selectedIds,
@@ -59,9 +56,7 @@ export const BookingSelectionStep = ({
   const comboSuggestions = useComboSuggestions(data?.showtimeId ?? 0, selectedIds.size);
   const [highlightedIds, setHighlightedIds] = useState<Set<number>>(new Set());
 
-  if (isLoading || !data) {
-    return <Skeleton className="h-96 w-full " />;
-  }
+  if (!data) return null;
 
   const selectedSeats = data.seats.filter((s) => selectedIds.has(s.showtimeSeatId));
   const { total } = calcBookingEstimate(selectedSeats, activeCombos.data, comboQuantities);
@@ -103,6 +98,9 @@ export const BookingSelectionStep = ({
           <ComboPicker
             combos={sortedCombos}
             isLoading={activeCombos.isLoading}
+            isError={activeCombos.isError}
+            error={activeCombos.error}
+            onRetry={() => void activeCombos.refetch()}
             quantities={comboQuantities}
             onChange={onComboChange}
             labels={comboLabels}

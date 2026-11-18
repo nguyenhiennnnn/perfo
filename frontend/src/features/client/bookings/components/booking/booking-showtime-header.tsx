@@ -10,7 +10,12 @@ export const BookingShowtimeHeader = ({
   isLoading: boolean;
 }) => {
   if (isLoading) {
-    return <Skeleton className="h-10 w-2/3" />;
+    return (
+      <div aria-hidden className="space-y-2">
+        <Skeleton className="h-9 w-2/3 cut-xs" />
+        <Skeleton className="h-4 w-1/3 cut-xs" />
+      </div>
+    );
   }
 
   if (!data) return null;

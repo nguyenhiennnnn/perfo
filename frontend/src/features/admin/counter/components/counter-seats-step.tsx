@@ -18,8 +18,7 @@ export function CounterSeatsStep({ flow }: CounterSeatsStepProps) {
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <div className="lg:col-span-2">
         <CounterSeatPanel
-          isLoading={flow.showtimeSeats.isLoading}
-          data={flow.showtimeSeats.data}
+          query={flow.showtimeSeats}
           statusMap={flow.seatStatusMap}
           selectedIds={flow.selectedSeatIds}
           onToggleSeat={flow.toggleSeat}
@@ -32,6 +31,9 @@ export function CounterSeatsStep({ flow }: CounterSeatsStepProps) {
           <ComboPicker
             combos={activeCombos.data}
             isLoading={activeCombos.isLoading}
+            isError={activeCombos.isError}
+            error={activeCombos.error}
+            onRetry={() => void activeCombos.refetch()}
             quantities={flow.comboQuantities}
             onChange={flow.setComboQuantity}
           />

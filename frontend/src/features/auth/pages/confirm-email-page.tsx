@@ -9,6 +9,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PageLoader, Spinner } from "@/components/common/spinner";
+import { InvalidLinkNotice } from "../components/invalid-link-notice";
 import { useConfirmEmail, useResendConfirmation } from "../hooks/use-auth";
 import { getDisplayMessage } from "@/lib/error";
 import { ROUTES } from "@/config/routes";
@@ -49,22 +50,12 @@ const ConfirmEmailPage = () => {
 
   if (!token) {
     return (
-      <div className="flex flex-col items-center gap-3 text-center">
-        <XCircle className="size-10 text-destructive" />
-        <h1 className="t-h2 text-foreground">
-          Liên kết không hợp lệ
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Thiếu mã xác thực trong đường dẫn.
-        </p>
-        <Button
-          variant="outline"
-          render={<Link to={ROUTES.auth.login} />}
-          nativeButton={false}
-        >
-          Về trang đăng nhập
-        </Button>
-      </div>
+      <InvalidLinkNotice
+        title="Liên kết không hợp lệ"
+        description="Thiếu mã xác thực trong đường dẫn."
+        actionLabel="Về trang đăng nhập"
+        actionTo={ROUTES.auth.login}
+      />
     );
   }
 

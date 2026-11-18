@@ -36,7 +36,6 @@ export function extractApiError(error: unknown): ApiErrorShape {
   return { message: ERROR_MESSAGES.unknown };
 }
 
-/** Nguyên nhân và cách sửa cho trạng thái lỗi tải dữ liệu (ErrorState). */
 export function describeLoadError(error: unknown): LoadErrorCopy {
   if (axios.isAxiosError(error)) {
     const status = error.response?.status;
@@ -52,12 +51,10 @@ export function describeLoadError(error: unknown): LoadErrorCopy {
   return LOAD_ERROR_COPY.fallback;
 }
 
-/** Lỗi 404 từ API: thực thể không tồn tại, không phải lỗi tải. */
 export function isNotFoundError(error: unknown): boolean {
   return extractApiError(error).statusCode === HTTP_STATUS.notFound;
 }
 
-/** 403 do backend chặn vì tài khoản phải đổi mật khẩu trước. */
 export function isPasswordChangeRequiredError(error: unknown): boolean {
   const { statusCode, errorCode } = extractApiError(error);
   return statusCode === HTTP_STATUS.forbidden && errorCode === API_ERROR_CODES.passwordChangeRequired;

@@ -4,6 +4,10 @@ import { Spinner } from "@/components/common/spinner";
 import { ImportExportJobStatusBadge } from "@/components/common/status-badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { NotFoundState } from "@/components/common/not-found-state";
+import { QueryState } from "@/components/common/query-state";
+import { SkeletonList } from "@/components/common/skeleton-list";
+import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { formatDateTime, formatNumber } from "@/lib/formatters";
 import { useAuthUser } from "@/stores/auth-store";
 import { ImportExportJobType } from "@/types/enum";
@@ -31,17 +35,29 @@ const DetailItem = ({ label, value }: { label: string; value: string }) => (
 );
 
 export const ImportExportJobDetail = ({ jobId }: ImportExportJobDetailProps) => {
-  const { data: job, isLoading } = useImportExportJob(jobId);
+  const jobQuery = useImportExportJob(jobId);
+  const job = jobQuery.data;
   const user = useAuthUser();
   const download = useDownloadImportExportJob();
 
-  if (isLoading || !job) {
+  if (!job) {
     return (
-      <div className="space-y-3">
-        <Skeleton className="h-6 w-1/3" />
-        <Skeleton className="h-24 w-full" />
-        <Skeleton className="h-16 w-full" />
-      </div>
+      <QueryState
+        query={jobQuery}
+        skeleton={
+          <div aria-hidden className="space-y-3">
+            <Skeleton className="h-6 w-1/3 cut-xs" />
+            <div className="grid grid-cols-3 gap-3">
+              <SkeletonList count={3} shape={CardSkeleton} className="h-16" />
+            </div>
+          </div>
+        }
+        notFound={<NotFoundState entity="tác vụ nhập xuất" />}
+        errorTitle="Không tải được chi tiết tác vụ"
+        errorClassName="py-8"
+      >
+        {null}
+      </QueryState>
     );
   }
 
@@ -70,17 +86,17 @@ export const ImportExportJobDetail = ({ jobId }: ImportExportJobDetailProps) => 
       )}
 
       <div className="grid grid-cols-3 gap-3">
-        <div className="border border-border p-3">
+        <div className="bg-secondary p-3">
           <p className="text-xs text-muted-foreground">Tổng số dòng</p>
           <p className="text-xl font-semibold tabular-nums">{formatNumber(job.totalRows)}</p>
         </div>
-        <div className="border border-border p-3">
+        <div className="bg-secondary p-3">
           <p className="text-xs text-muted-foreground">Thành công</p>
           <p className="text-xl font-semibold text-success tabular-nums">
             {formatNumber(job.successRows)}
           </p>
         </div>
-        <div className="border border-border p-3">
+        <div className="bg-secondary p-3">
           <p className="text-xs text-muted-foreground">Lỗi</p>
           <p
             className={cn(
@@ -112,7 +128,7 @@ export const ImportExportJobDetail = ({ jobId }: ImportExportJobDetailProps) => 
       {hasError && (
         <div className="space-y-2">
           <p className="text-sm font-medium">Chi tiết lỗi</p>
-          <div className="space-y-1 border border-border p-3">
+          <div className="space-y-1 bg-secondary p-3">
             {job.errorMessage && (
               <p className="text-sm break-words text-destructive">{job.errorMessage}</p>
             )}

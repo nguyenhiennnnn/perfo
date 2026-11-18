@@ -50,7 +50,7 @@ export const ShowtimeCalendarDay = ({
     return (
       <EmptyState
         icon={CalendarX}
-        title="Không có suất chiếu"
+        title="Chưa có suất chiếu"
         description={`Ngày ${day.date} chưa có suất chiếu nào.`}
       />
     );

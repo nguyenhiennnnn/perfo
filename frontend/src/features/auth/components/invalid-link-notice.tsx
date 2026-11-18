@@ -1,7 +1,7 @@
-import { Link } from "react-router";
-import { AlertTriangle } from "lucide-react";
+import { TriangleAlert } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/common/button-link";
+import { EmptyState } from "@/components/common/empty-state";
 
 interface InvalidLinkNoticeProps {
   title: string;
@@ -16,12 +16,15 @@ export const InvalidLinkNotice = ({
   actionLabel,
   actionTo,
 }: InvalidLinkNoticeProps) => (
-  <div className="flex flex-col items-center gap-3 text-center">
-    <AlertTriangle className="size-10 text-destructive" />
-    <h2 className="t-h2 text-foreground">{title}</h2>
-    <p className="text-sm text-muted-foreground">{description}</p>
-    <Button variant="outline" render={<Link to={actionTo} />} nativeButton={false}>
-      {actionLabel}
-    </Button>
-  </div>
+  <EmptyState
+    icon={TriangleAlert}
+    title={title}
+    description={description}
+    action={
+      <ButtonLink to={actionTo} variant="secondary">
+        {actionLabel}
+      </ButtonLink>
+    }
+    className="bg-transparent px-0 py-6"
+  />
 );

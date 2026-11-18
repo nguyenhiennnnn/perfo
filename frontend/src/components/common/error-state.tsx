@@ -7,16 +7,11 @@ import { STATE_MESSAGES } from "@/config/error-messages";
 import { describeLoadError } from "@/lib/error";
 
 interface ErrorStateProps {
-  /** Tiêu đề nêu việc không làm được, ví dụ "Không tải được danh sách phim". */
   title?: string;
-  /** Lỗi gốc, dùng để chọn nguyên nhân và cách sửa phù hợp. */
   error?: unknown;
-  /** Ghi đè nguyên nhân (một câu). */
   cause?: string;
-  /** Ghi đè cách sửa (một câu). */
   fix?: string;
   onRetry: () => void;
-  /** section: vùng trong trang. page: toàn trang (error-page, errorElement của route). */
   variant?: "section" | "page";
   className?: string;
 }

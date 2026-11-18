@@ -12,10 +12,12 @@ import {
   ChartLegendContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import type { UseQueryResult } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryState } from "@/components/common/query-state";
 import { EmptyState } from "@/components/common/empty-state";
 import { formatCurrency } from "@/lib/formatters";
-import type { RevenueReportItemDto } from "../types";
+import type { RevenueReportDto } from "../types";
 
 const chartConfig = {
   ticketRevenue: { label: "Doanh thu vé", color: "var(--chart-1)" },
@@ -24,12 +26,11 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 interface RevenueReportChartProps {
-  items: RevenueReportItemDto[] | undefined;
-  isLoading: boolean;
+  query: UseQueryResult<RevenueReportDto>;
   action?: ReactNode;
 }
 
-export const RevenueReportChart = ({ items, isLoading, action }: RevenueReportChartProps) => {
+export const RevenueReportChart = ({ query, action }: RevenueReportChartProps) => {
   return (
     <Card>
       <CardHeader>
@@ -38,17 +39,22 @@ export const RevenueReportChart = ({ items, isLoading, action }: RevenueReportCh
         {action && <CardAction>{action}</CardAction>}
       </CardHeader>
       <CardContent>
-        {isLoading ? (
-          <Skeleton className="h-80 w-full" />
-        ) : !items || items.length === 0 ? (
-          <EmptyState
-            icon={TrendingUp}
-            title="Không có dữ liệu"
-            description="Không có doanh thu trong khoảng thời gian đã chọn."
-          />
-        ) : (
+        <QueryState
+          query={query}
+          skeleton={<Skeleton className="h-80 w-full" />}
+          isEmpty={(report) => report.items.length === 0}
+          empty={
+            <EmptyState
+              icon={TrendingUp}
+              title="Chưa có doanh thu"
+              description="Chưa có doanh thu trong khoảng thời gian đã chọn. Thử mở rộng khoảng ngày."
+            />
+          }
+          errorTitle="Không tải được biểu đồ doanh thu"
+        >
+          {(report) => (
           <ChartContainer config={chartConfig} className="h-80 w-full">
-            <ComposedChart accessibilityLayer data={items}>
+            <ComposedChart accessibilityLayer data={report.items}>
               <CartesianGrid vertical={false} />
               <XAxis dataKey="period" tickLine={false} axisLine={false} tickMargin={10} />
               <YAxis
@@ -61,12 +67,13 @@ export const RevenueReportChart = ({ items, isLoading, action }: RevenueReportCh
               <YAxis yAxisId="count" orientation="right" tickLine={false} axisLine={false} width={40} />
               <ChartTooltip content={<ChartTooltipContent />} />
               <ChartLegend content={<ChartLegendContent />} />
-              <Bar yAxisId="revenue" dataKey="ticketRevenue" stackId="revenue" fill="var(--color-ticketRevenue)" radius={[0, 0, 4, 4]} />
-              <Bar yAxisId="revenue" dataKey="comboRevenue" stackId="revenue" fill="var(--color-comboRevenue)" radius={[4, 4, 0, 0]} />
+              <Bar yAxisId="revenue" dataKey="ticketRevenue" stackId="revenue" fill="var(--color-ticketRevenue)" radius={0} />
+              <Bar yAxisId="revenue" dataKey="comboRevenue" stackId="revenue" fill="var(--color-comboRevenue)" radius={0} />
               <Line yAxisId="count" dataKey="bookingCount" stroke="var(--color-bookingCount)" strokeWidth={2} dot={false} />
             </ComposedChart>
           </ChartContainer>
-        )}
+          )}
+        </QueryState>
       </CardContent>
     </Card>
   );

@@ -6,7 +6,6 @@ interface ShapeProps {
   className?: string;
 }
 
-/** Dòng danh sách: khối dẫn đầu, hai dòng chữ, khối cuối. */
 export const RowSkeleton = ({ className }: ShapeProps) => (
   <div aria-hidden className={cn("flex items-center gap-4 bg-card p-4", className)}>
     <Skeleton className="size-12 shrink-0 cut-sm" />
@@ -18,7 +17,6 @@ export const RowSkeleton = ({ className }: ShapeProps) => (
   </div>
 );
 
-/** Thẻ vé và đơn đặt vé: ô biểu tượng, tên phim, giờ, mã; trạng thái và giá bên phải. */
 export const TicketSkeleton = ({ className }: ShapeProps) => (
   <div aria-hidden className={cn("flex flex-col gap-4 bg-card p-4 sm:flex-row sm:items-center sm:justify-between", className)}>
     <div className="flex items-center gap-3">
@@ -36,7 +34,6 @@ export const TicketSkeleton = ({ className }: ShapeProps) => (
   </div>
 );
 
-/** Một khối nội dung có tiêu đề và vài dòng: thẻ đánh giá, panel thông tin. */
 export const CardSkeleton = ({ className }: ShapeProps) => (
   <div aria-hidden className={cn("space-y-3 bg-card p-4", className)}>
     <Skeleton className="h-5 w-1/3 cut-xs" />
@@ -50,7 +47,6 @@ interface TableRowsSkeletonProps {
   columns: number;
 }
 
-/** Các hàng bảng giả, dùng trong TableBody khi đang tải. */
 export const TableRowsSkeleton = ({ rows, columns }: TableRowsSkeletonProps) => (
   <>
     {Array.from({ length: rows }, (_, rowIndex) => (
@@ -69,7 +65,6 @@ interface FormSkeletonProps extends ShapeProps {
   fields?: number;
 }
 
-/** Form trong dialog hoặc sheet khi đang tải dữ liệu: nhãn, ô nhập, hàng nút. */
 export const FormSkeleton = ({ fields = 3, className }: FormSkeletonProps) => (
   <div aria-hidden aria-busy="true" className={cn("space-y-5", className)}>
     {Array.from({ length: fields }, (_, index) => (

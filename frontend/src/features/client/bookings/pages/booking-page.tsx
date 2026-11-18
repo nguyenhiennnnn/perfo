@@ -30,6 +30,13 @@ const RESUME_NOTICE = {
   },
 } as const;
 
+const SeatSelectionSkeleton = () => (
+  <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <Skeleton className="h-96 w-full lg:col-span-2" />
+    <CardSkeleton className="h-48" />
+  </div>
+);
+
 const BookingPage = () => {
   const { showtimeId } = useParams<{ showtimeId: string }>();
   const [searchParams] = useSearchParams();
@@ -83,7 +90,7 @@ const BookingPage = () => {
       {flow.step === "select" && !flow.isResumeMode && (
         <QueryState
           query={flow.showtimeSeats}
-          skeleton={<Skeleton className="h-96 w-full" />}
+          skeleton={<SeatSelectionSkeleton />}
           notFound={
             <NotFoundState
               entity="suất chiếu"
@@ -95,7 +102,6 @@ const BookingPage = () => {
           errorTitle="Không tải được sơ đồ ghế"
         >
           <BookingSelectionStep
-            isLoading={flow.showtimeSeats.isLoading}
             data={flow.showtimeSeats.data}
             statusMap={flow.seatStatusMap}
             selectedIds={flow.selectedSeatIds}

@@ -3,8 +3,8 @@ import { useNavigate, useSearchParams } from "react-router";
 
 import { toast } from "@/components/ui/toast";
 import { ROUTES } from "@/config/routes";
+import { InvalidLinkNotice } from "@/features/auth/components/invalid-link-notice";
 
-import { AdminInvalidLinkNotice } from "../components/admin-invalid-link-notice";
 import { AdminSetPasswordForm } from "../components/admin-set-password-form";
 import { isInvalidResetTokenError } from "../utils/reset-token-error";
 
@@ -18,7 +18,7 @@ const AdminResetPasswordPage = () => {
 
   if (!token) {
     return (
-      <AdminInvalidLinkNotice
+      <InvalidLinkNotice
         title="Liên kết không hợp lệ"
         description={`Đường dẫn thiếu mã đặt mật khẩu. Hãy mở đúng liên kết trong email mời. ${CONTACT_ADMIN_HINT}`}
         actionLabel="Về trang đăng nhập"
@@ -29,7 +29,7 @@ const AdminResetPasswordPage = () => {
 
   if (tokenRejected) {
     return (
-      <AdminInvalidLinkNotice
+      <InvalidLinkNotice
         title="Liên kết đã hết hạn hoặc đã được dùng"
         description={`Không thể đặt mật khẩu bằng liên kết này. ${CONTACT_ADMIN_HINT}`}
         actionLabel="Về trang đăng nhập"

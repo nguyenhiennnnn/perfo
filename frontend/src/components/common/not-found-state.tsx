@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { STATE_MESSAGES } from "@/config/error-messages";
 
 interface NotFoundStateProps {
-  /** Tên thực thể không tồn tại, viết thường: "phim", "đơn đặt vé", "suất chiếu". */
   entity: string;
   icon?: LucideIcon;
   description?: string;

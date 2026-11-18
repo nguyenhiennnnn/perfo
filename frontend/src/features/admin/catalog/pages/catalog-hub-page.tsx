@@ -34,6 +34,7 @@ interface CatalogCardConfig {
   description: string;
   count?: number;
   isLoading: boolean;
+  isError: boolean;
   accent: string;
 }
 
@@ -59,6 +60,7 @@ const CatalogHubPage = () => {
       description: "Hành động, Kinh dị, Hoạt hình...",
       count: genres.data?.totalItems,
       isLoading: genres.isLoading,
+      isError: genres.isError,
       accent: "text-primary bg-primary/10",
     },
     {
@@ -69,6 +71,7 @@ const CatalogHubPage = () => {
       description: "Ngôn ngữ & hình thức dịch phim.",
       count: languages.data?.totalItems,
       isLoading: languages.isLoading,
+      isError: languages.isError,
       accent: "text-chart-3 bg-chart-3/10",
     },
     {
@@ -79,6 +82,7 @@ const CatalogHubPage = () => {
       description: "P, K, T13, T16, T18, C.",
       count: ageRatings.data?.totalItems,
       isLoading: ageRatings.isLoading,
+      isError: ageRatings.isError,
       accent: "text-destructive bg-destructive/10",
     },
     {
@@ -89,6 +93,7 @@ const CatalogHubPage = () => {
       description: "Thường, VIP, Sweetbox và hệ số phụ thu.",
       count: seatTypes.data?.totalItems,
       isLoading: seatTypes.isLoading,
+      isError: seatTypes.isError,
       accent: "text-accent bg-accent/10",
     },
     {
@@ -99,6 +104,7 @@ const CatalogHubPage = () => {
       description: "2D, 3D, IMAX Laser, ScreenX.",
       count: screenTypes.data?.totalItems,
       isLoading: screenTypes.isLoading,
+      isError: screenTypes.isError,
       accent: "text-couple bg-couple/10",
     },
     {
@@ -109,6 +115,7 @@ const CatalogHubPage = () => {
       description: "Bronze, Silver, Gold, Platinum.",
       count: membershipTiers.data?.totalItems,
       isLoading: membershipTiers.isLoading,
+      isError: membershipTiers.isError,
       accent: "text-warning bg-warning/10",
     },
     {
@@ -119,6 +126,7 @@ const CatalogHubPage = () => {
       description: "Danh sách chức vụ nhân viên rạp.",
       count: positions.data?.totalItems,
       isLoading: positions.isLoading,
+      isError: positions.isError,
       accent: "text-success bg-success/10",
     },
     {
@@ -129,6 +137,7 @@ const CatalogHubPage = () => {
       description: "Hồ sơ diễn viên & ảnh đại diện.",
       count: actors.data?.totalItems,
       isLoading: actors.isLoading,
+      isError: actors.isError,
       accent: "text-couple bg-couple/10",
     },
     {
@@ -139,6 +148,7 @@ const CatalogHubPage = () => {
       description: "Hồ sơ đạo diễn & tiểu sử.",
       count: directors.data?.totalItems,
       isLoading: directors.isLoading,
+      isError: directors.isError,
       accent: "text-chart-3 bg-chart-3/10",
     },
   ];

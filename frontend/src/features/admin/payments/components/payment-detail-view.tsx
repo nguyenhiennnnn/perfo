@@ -1,4 +1,6 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { NotFoundState } from "@/components/common/not-found-state";
+import { QueryState } from "@/components/common/query-state";
+import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { formatCurrency, formatDate } from "@/lib/formatters";
 
 import { useAdminPaymentDetail } from "../hooks/use-admin-payments";
@@ -12,8 +14,18 @@ interface PaymentDetailViewProps {
 export const PaymentDetailView = ({ paymentId }: PaymentDetailViewProps) => {
   const detail = useAdminPaymentDetail(paymentId);
 
-  if (detail.isLoading || !detail.data) {
-    return <Skeleton className="h-48 w-full " />;
+  if (!detail.data) {
+    return (
+      <QueryState
+        query={detail}
+        skeleton={<CardSkeleton className="h-48" />}
+        notFound={<NotFoundState entity="giao dịch" />}
+        errorTitle="Không tải được chi tiết giao dịch"
+        errorClassName="py-8"
+      >
+        {null}
+      </QueryState>
+    );
   }
 
   const p = detail.data;
@@ -37,7 +49,7 @@ export const PaymentDetailView = ({ paymentId }: PaymentDetailViewProps) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between border border-border bg-muted/30 p-3">
+      <div className="flex items-center justify-between bg-muted/30 p-3">
         <span className="text-sm text-muted-foreground">Trạng thái</span>
         <PaymentStatusBadge status={p.status as PaymentStatus} />
       </div>
@@ -51,7 +63,7 @@ export const PaymentDetailView = ({ paymentId }: PaymentDetailViewProps) => {
         ))}
       </div>
 
-      <div className="flex items-center justify-between border border-border bg-muted/30 p-3 text-sm">
+      <div className="flex items-center justify-between bg-muted/30 p-3 text-sm">
         <span className="text-muted-foreground">Tổng đơn đặt vé</span>
         <span className="font-semibold tabular-nums text-primary">
           {formatCurrency(p.booking.finalAmount)}

@@ -1,7 +1,10 @@
 import { PackageOpen } from "lucide-react";
 import { formatCurrency } from "@/lib/formatters";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/common/empty-state";
+import { ErrorState } from "@/components/common/error-state";
 import { SkeletonList } from "@/components/common/skeleton-list";
+import { RowSkeleton } from "@/components/common/skeleton-shapes";
 import { ComboQuantityStepper } from "./combo-quantity-stepper";
 
 export interface ComboOption {
@@ -17,24 +20,40 @@ interface ComboPickerProps {
   quantities: Record<number, number>;
   onChange: (comboId: number, quantity: number) => void;
   isLoading?: boolean;
+  isError?: boolean;
+  error?: unknown;
+  onRetry?: () => void;
   labels?: Record<number, string>;
 }
 
-export const ComboPicker = ({ combos, quantities, onChange, isLoading, labels }: ComboPickerProps) => {
+export const ComboPicker = ({ combos, quantities, onChange, isLoading, isError, error, onRetry, labels }: ComboPickerProps) => {
   if (isLoading) {
     return (
       <div className="@container grid grid-cols-1 gap-3 @sm:grid-cols-2">
-        <SkeletonList count={4} className="h-20 w-full" />
+        <SkeletonList count={4} shape={RowSkeleton} />
       </div>
+    );
+  }
+
+  if (isError && !combos) {
+    return (
+      <ErrorState
+        title="Không tải được danh sách combo"
+        error={error}
+        onRetry={onRetry ?? (() => window.location.reload())}
+        className="py-8"
+      />
     );
   }
 
   if (!combos || combos.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-2 border border-dashed border-border py-8 text-muted-foreground">
-        <PackageOpen className="size-6" />
-        <p className="text-sm">Hiện chưa có combo nào đang bán.</p>
-      </div>
+      <EmptyState
+        icon={PackageOpen}
+        title="Chưa có combo đang bán"
+        description="Combo bắp nước sẽ hiện ở đây khi rạp mở bán."
+        className="py-8"
+      />
     );
   }
 

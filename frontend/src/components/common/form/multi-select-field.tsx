@@ -1,5 +1,6 @@
 "use client";
 
+import { STATE_MESSAGES } from "@/config/error-messages";
 import { useState } from "react";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { Spinner } from "@/components/common/spinner";
@@ -54,7 +55,7 @@ export const MultiSelectField = <T,>({
   isLoading = false,
   placeholder = "Chọn...",
   searchPlaceholder = "Tìm kiếm...",
-  emptyText = "Không tìm thấy kết quả.",
+  emptyText = STATE_MESSAGES.filtered.title,
   disabled,
   maxBadges = 3,
   className,

@@ -1,7 +1,9 @@
 import { CheckCircle2, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import type { UseQueryResult } from "@tanstack/react-query";
 import { PerfoTicket } from "@/components/common/perfo-ticket";
+import { QueryState } from "@/components/common/query-state";
+import { TicketSkeleton } from "@/components/common/skeleton-shapes";
 import { formatCurrency, formatDate, formatTime } from "@/lib/formatters";
 import type {
   AdminBookingDetailDto,
@@ -9,13 +11,13 @@ import type {
 } from "@/features/admin/bookings/types";
 
 interface CounterTicketResultProps {
-  isLoading: boolean;
-  booking: AdminBookingDetailDto | undefined;
+  bookingQuery: UseQueryResult<AdminBookingDetailDto>;
   checkout: CounterCheckoutResponse;
   onNewSale: () => void;
 }
 
-export const CounterTicketResult = ({ isLoading, booking, checkout, onNewSale }: CounterTicketResultProps) => {
+export const CounterTicketResult = ({ bookingQuery, checkout, onNewSale }: CounterTicketResultProps) => {
+  const booking = bookingQuery.data;
   const seats = booking?.seats?.map((s) => `${s.seatRow}${s.seatNumber}`).join(", ") ?? "";
   const showtime = booking?.showtime
     ? `${formatTime(booking.showtime.startTime)}, ${formatDate(booking.showtime.startTime)}`
@@ -31,9 +33,13 @@ export const CounterTicketResult = ({ isLoading, booking, checkout, onNewSale }:
         <p className="text-sm text-muted-foreground">Tiền thừa trả khách: {formatCurrency(checkout.change)}</p>
       </div>
 
-      {isLoading ? (
-        <Skeleton className="h-48 w-full max-w-3xl" />
-      ) : booking && booking.tickets && booking.tickets.length > 0 ? (
+      <QueryState
+        query={bookingQuery}
+        skeleton={<TicketSkeleton className="w-full max-w-3xl" />}
+        errorTitle="Không tải được vé vừa bán"
+        errorClassName="w-full max-w-3xl"
+      >
+        {booking && booking.tickets && booking.tickets.length > 0 ? (
         <div className="flex w-full max-w-3xl flex-col gap-4">
           {booking.tickets.map((ticket) => (
             <PerfoTicket
@@ -49,17 +55,18 @@ export const CounterTicketResult = ({ isLoading, booking, checkout, onNewSale }:
             />
           ))}
         </div>
-      ) : booking ? (
-        <PerfoTicket
-          movieTitle={booking.movie?.title ?? ""}
-          showtime={showtime}
-          room={room}
-          seat={seats}
-          totalAmount={total}
-          ticketCode={booking.bookingCode}
-          qrValue={booking.bookingCode}
-        />
-      ) : null}
+        ) : booking ? (
+          <PerfoTicket
+            movieTitle={booking.movie?.title ?? ""}
+            showtime={showtime}
+            room={room}
+            seat={seats}
+            totalAmount={total}
+            ticketCode={booking.bookingCode}
+            qrValue={booking.bookingCode}
+          />
+        ) : null}
+      </QueryState>
 
       <Button onClick={onNewSale}>
         <PlusCircle className="size-4" />

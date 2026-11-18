@@ -2,18 +2,19 @@ import { Trophy } from "lucide-react";
 import type { ReactNode } from "react";
 import { Card, CardAction, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { SkeletonList } from "@/components/common/skeleton-list";
+import type { UseQueryResult } from "@tanstack/react-query";
+import { QueryState } from "@/components/common/query-state";
+import { TableRowsSkeleton } from "@/components/common/skeleton-shapes";
 import { EmptyState } from "@/components/common/empty-state";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
 import type { TopMovieDto } from "../types";
 
 interface TopMoviesReportTableProps {
-  movies: TopMovieDto[] | undefined;
-  isLoading: boolean;
+  query: UseQueryResult<TopMovieDto[]>;
   action?: ReactNode;
 }
 
-export const TopMoviesReportTable = ({ movies, isLoading, action }: TopMoviesReportTableProps) => {
+export const TopMoviesReportTable = ({ query, action }: TopMoviesReportTableProps) => {
   return (
     <Card>
       <CardHeader>
@@ -22,13 +23,20 @@ export const TopMoviesReportTable = ({ movies, isLoading, action }: TopMoviesRep
         {action && <CardAction>{action}</CardAction>}
       </CardHeader>
       <CardContent>
-        {isLoading ? (
-          <div className="space-y-2">
-            <SkeletonList count={5} className="h-10 w-full" />
-          </div>
-        ) : !movies || movies.length === 0 ? (
-          <EmptyState icon={Trophy} title="Không có dữ liệu" description="Chưa có phim nào bán vé trong khoảng này." />
-        ) : (
+        <QueryState
+          query={query}
+          skeleton={
+            <Table>
+              <TableBody>
+                <TableRowsSkeleton rows={5} columns={4} />
+              </TableBody>
+            </Table>
+          }
+          isEmpty={(movies) => movies.length === 0}
+          empty={<EmptyState icon={Trophy} title="Chưa có phim bán chạy" description="Chưa có phim nào bán vé trong khoảng này." />}
+          errorTitle="Không tải được phim bán chạy"
+        >
+          {(movies) => (
           <Table>
             <TableHeader>
               <TableRow>
@@ -51,7 +59,8 @@ export const TopMoviesReportTable = ({ movies, isLoading, action }: TopMoviesRep
               ))}
             </TableBody>
           </Table>
-        )}
+          )}
+        </QueryState>
       </CardContent>
     </Card>
   );

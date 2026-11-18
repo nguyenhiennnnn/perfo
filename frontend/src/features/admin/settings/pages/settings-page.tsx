@@ -6,7 +6,8 @@ import { useEffect, type ReactNode } from "react";
 
 import { PageHeader } from "@/components/common/page-header";
 import { FieldGroup } from "@/components/ui/field";
-import { Skeleton } from "@/components/ui/skeleton";
+import { QueryState } from "@/components/common/query-state";
+import { FormSkeleton } from "@/components/common/skeleton-shapes";
 import { FormInputField } from "@/components/common/form/form-input-field";
 import { SubmitButton } from "@/components/common/form/submit-button";
 import { FormSelectField } from "@/components/common/form/form-select-field";
@@ -83,6 +84,16 @@ const SettingsSection = ({
       {children}
     </FieldGroup>
   </section>
+);
+
+const SettingsSkeleton = () => (
+  <div className="max-w-4xl space-y-6">
+    {[0, 1, 2].map((index) => (
+      <div key={index} className="bg-card p-5">
+        <FormSkeleton fields={4} />
+      </div>
+    ))}
+  </div>
 );
 
 const AdminSettingsPage = () => {
@@ -190,214 +201,211 @@ const AdminSettingsPage = () => {
     );
   };
 
-  if (settings.isLoading) {
-    return (
-      <div>
-        <PageHeader title="Cấu hình rạp" description="Thông tin chung, giờ hoạt động và chính sách." />
-        <Skeleton className="h-64 w-full max-w-4xl" />
-      </div>
-    );
-  }
-
   return (
     <div>
       <PageHeader title="Cấu hình rạp" description="Thông tin chung, giờ hoạt động và chính sách." />
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-4xl space-y-6">
-        <SettingsSection title="Thông tin rạp" disabled={updateSettings.isPending}>
-          <FormImageField
-            name="logoUrl"
-            control={form.control}
-            label="Logo rạp"
-            folder="settings"
-            className="sm:col-span-2"
-          />
-          <FormInputField name="name" control={form.control} label="Tên rạp" />
-          <FormInputField name="taxCode" control={form.control} label="Mã số thuế" />
-          <div className="sm:col-span-2">
-            <FormInputField name="address" control={form.control} label="Địa chỉ" />
-          </div>
-          <FormInputField name="phone" control={form.control} label="Số điện thoại" />
-          <FormInputField name="email" control={form.control} label="Email" />
-        </SettingsSection>
+      <QueryState
+        query={settings}
+        skeleton={<SettingsSkeleton />}
+        errorTitle="Không tải được cấu hình rạp"
+      >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-4xl space-y-6">
+            <SettingsSection title="Thông tin rạp" disabled={updateSettings.isPending}>
+              <FormImageField
+                name="logoUrl"
+                control={form.control}
+                label="Logo rạp"
+                folder="settings"
+                className="sm:col-span-2"
+              />
+              <FormInputField name="name" control={form.control} label="Tên rạp" />
+              <FormInputField name="taxCode" control={form.control} label="Mã số thuế" />
+              <div className="sm:col-span-2">
+                <FormInputField name="address" control={form.control} label="Địa chỉ" />
+              </div>
+              <FormInputField name="phone" control={form.control} label="Số điện thoại" />
+              <FormInputField name="email" control={form.control} label="Email" />
+            </SettingsSection>
 
-        <SettingsSection
-          title="Giờ hoạt động & chính sách bán vé"
-          disabled={updateSettings.isPending}
-        >
-          <FormTimePickerField name="openingTime" control={form.control} label="Giờ mở cửa" />
-          <FormTimePickerField name="closingTime" control={form.control} label="Giờ đóng cửa" />
-          <FormInputField
-            name="pointsPerAmount"
-            control={form.control}
-            label={`Điểm / ${getCurrencyLabel()}`}
-            type="number"
-            min={0}
-          />
-          <FormInputField
-            name="cancelRefundPercent"
-            control={form.control}
-            label="% hoàn vé"
-            type="number"
-            min={0}
-            max={PERCENT_MAX}
-          />
-          <FormInputField
-            name="cancelDeadlineHours"
-            control={form.control}
-            label="Hạn hủy (giờ)"
-            type="number"
-            min={0}
-          />
-          <FormInputField
-            name="stopSellingMinutesBefore"
-            control={form.control}
-            label="Ngừng bán online trước giờ chiếu (phút)"
-            type="number"
-            min={0}
-            max={SETTINGS_FIELD_MAX.stopSellingMinutesBefore}
-          />
-          <div className="sm:col-span-2">
-            <FormSelectField
-              name="seatGapRuleMode"
-              control={form.control}
-              label="Quy tắc ghế lẻ (bán online)"
-              options={SEAT_GAP_RULE_OPTIONS}
-              getOptionValue={(o) => o.value}
-              getOptionLabel={(o) => o.label}
-            />
-          </div>
-        </SettingsSection>
+            <SettingsSection
+              title="Giờ hoạt động & chính sách bán vé"
+              disabled={updateSettings.isPending}
+            >
+              <FormTimePickerField name="openingTime" control={form.control} label="Giờ mở cửa" />
+              <FormTimePickerField name="closingTime" control={form.control} label="Giờ đóng cửa" />
+              <FormInputField
+                name="pointsPerAmount"
+                control={form.control}
+                label={`Điểm / ${getCurrencyLabel()}`}
+                type="number"
+                min={0}
+              />
+              <FormInputField
+                name="cancelRefundPercent"
+                control={form.control}
+                label="% hoàn vé"
+                type="number"
+                min={0}
+                max={PERCENT_MAX}
+              />
+              <FormInputField
+                name="cancelDeadlineHours"
+                control={form.control}
+                label="Hạn hủy (giờ)"
+                type="number"
+                min={0}
+              />
+              <FormInputField
+                name="stopSellingMinutesBefore"
+                control={form.control}
+                label="Ngừng bán online trước giờ chiếu (phút)"
+                type="number"
+                min={0}
+                max={SETTINGS_FIELD_MAX.stopSellingMinutesBefore}
+              />
+              <div className="sm:col-span-2">
+                <FormSelectField
+                  name="seatGapRuleMode"
+                  control={form.control}
+                  label="Quy tắc ghế lẻ (bán online)"
+                  options={SEAT_GAP_RULE_OPTIONS}
+                  getOptionValue={(o) => o.value}
+                  getOptionLabel={(o) => o.label}
+                />
+              </div>
+            </SettingsSection>
 
-        <SettingsSection title="Lịch chiếu & đặt vé" disabled={updateSettings.isPending}>
-          <FormInputField
-            name="roomBufferMinutes"
-            control={form.control}
-            label="Khoảng nghỉ giữa các suất (phút)"
-            type="number"
-            min={0}
-            max={SETTINGS_FIELD_MAX.roomBufferMinutes}
-          />
-          <FormInputField
-            name="maxSeatsPerBooking"
-            control={form.control}
-            label="Số ghế tối đa / booking"
-            type="number"
-            min={1}
-            max={SETTINGS_FIELD_MAX.maxSeatsPerBooking}
-          />
-          <FormInputField
-            name="maxComboQuantity"
-            control={form.control}
-            label="Số lượng tối đa mỗi combo"
-            type="number"
-            min={1}
-            max={SETTINGS_FIELD_MAX.maxComboQuantity}
-          />
-          <FormInputField
-            name="loyaltyWindowMonths"
-            control={form.control}
-            label="Hiệu lực điểm thưởng (tháng)"
-            type="number"
-            min={1}
-            max={SETTINGS_FIELD_MAX.loyaltyWindowMonths}
-          />
-          <FormInputField
-            name="movieEndGraceDays"
-            control={form.control}
-            label="Gia hạn phim Ended sau suất cuối (ngày)"
-            type="number"
-            min={0}
-            max={SETTINGS_FIELD_MAX.movieEndGraceDays}
-          />
-          <FormInputField
-            name="showtimeLookaheadDays"
-            control={form.control}
-            label="Số ngày lịch chiếu hiển thị"
-            type="number"
-            min={1}
-            max={SETTINGS_FIELD_MAX.showtimeLookaheadDays}
-          />
-        </SettingsSection>
+            <SettingsSection title="Lịch chiếu & đặt vé" disabled={updateSettings.isPending}>
+              <FormInputField
+                name="roomBufferMinutes"
+                control={form.control}
+                label="Khoảng nghỉ giữa các suất (phút)"
+                type="number"
+                min={0}
+                max={SETTINGS_FIELD_MAX.roomBufferMinutes}
+              />
+              <FormInputField
+                name="maxSeatsPerBooking"
+                control={form.control}
+                label="Số ghế tối đa / booking"
+                type="number"
+                min={1}
+                max={SETTINGS_FIELD_MAX.maxSeatsPerBooking}
+              />
+              <FormInputField
+                name="maxComboQuantity"
+                control={form.control}
+                label="Số lượng tối đa mỗi combo"
+                type="number"
+                min={1}
+                max={SETTINGS_FIELD_MAX.maxComboQuantity}
+              />
+              <FormInputField
+                name="loyaltyWindowMonths"
+                control={form.control}
+                label="Hiệu lực điểm thưởng (tháng)"
+                type="number"
+                min={1}
+                max={SETTINGS_FIELD_MAX.loyaltyWindowMonths}
+              />
+              <FormInputField
+                name="movieEndGraceDays"
+                control={form.control}
+                label="Gia hạn phim Ended sau suất cuối (ngày)"
+                type="number"
+                min={0}
+                max={SETTINGS_FIELD_MAX.movieEndGraceDays}
+              />
+              <FormInputField
+                name="showtimeLookaheadDays"
+                control={form.control}
+                label="Số ngày lịch chiếu hiển thị"
+                type="number"
+                min={1}
+                max={SETTINGS_FIELD_MAX.showtimeLookaheadDays}
+              />
+            </SettingsSection>
 
-        <SettingsSection title="Xếp lịch tự động & Heat" disabled={updateSettings.isPending}>
-          <FormInputField
-            name="schedulerStepMinutes"
-            control={form.control}
-            label="Xếp lịch: bước dò giờ (phút)"
-            type="number"
-            min={1}
-            max={SETTINGS_FIELD_MAX.schedulerStepMinutes}
-          />
-          <FormInputField
-            name="schedulerMinSameMovieGapMinutes"
-            control={form.control}
-            label="Xếp lịch: giãn cách cùng phim (phút)"
-            type="number"
-            min={0}
-            max={SETTINGS_FIELD_MAX.schedulerMinSameMovieGapMinutes}
-          />
-          <FormInputField
-            name="schedulerHeatLookbackDays"
-            control={form.control}
-            label="Heat: số ngày tính doanh số vé"
-            type="number"
-            min={1}
-            max={SETTINGS_FIELD_MAX.schedulerHeatLookbackDays}
-          />
-          <FormInputField
-            name="schedulerMaxRating"
-            control={form.control}
-            label="Heat: điểm đánh giá tối đa"
-            type="number"
-            step={0.5}
-            min={1}
-            max={SETTINGS_FIELD_MAX.schedulerMaxRating}
-          />
-          <FormInputField
-            name="schedulerHeatSalesWeight"
-            control={form.control}
-            label="Heat: trọng số doanh số"
-            type="number"
-            step={0.05}
-            min={0}
-            max={SETTINGS_FIELD_MAX.schedulerHeatSalesWeight}
-          />
-          <FormInputField
-            name="schedulerHeatRatingWeight"
-            control={form.control}
-            label="Heat: trọng số đánh giá"
-            type="number"
-            step={0.05}
-            min={0}
-            max={SETTINGS_FIELD_MAX.schedulerHeatRatingWeight}
-          />
-        </SettingsSection>
+            <SettingsSection title="Xếp lịch tự động & Heat" disabled={updateSettings.isPending}>
+              <FormInputField
+                name="schedulerStepMinutes"
+                control={form.control}
+                label="Xếp lịch: bước dò giờ (phút)"
+                type="number"
+                min={1}
+                max={SETTINGS_FIELD_MAX.schedulerStepMinutes}
+              />
+              <FormInputField
+                name="schedulerMinSameMovieGapMinutes"
+                control={form.control}
+                label="Xếp lịch: giãn cách cùng phim (phút)"
+                type="number"
+                min={0}
+                max={SETTINGS_FIELD_MAX.schedulerMinSameMovieGapMinutes}
+              />
+              <FormInputField
+                name="schedulerHeatLookbackDays"
+                control={form.control}
+                label="Heat: số ngày tính doanh số vé"
+                type="number"
+                min={1}
+                max={SETTINGS_FIELD_MAX.schedulerHeatLookbackDays}
+              />
+              <FormInputField
+                name="schedulerMaxRating"
+                control={form.control}
+                label="Heat: điểm đánh giá tối đa"
+                type="number"
+                step={0.5}
+                min={1}
+                max={SETTINGS_FIELD_MAX.schedulerMaxRating}
+              />
+              <FormInputField
+                name="schedulerHeatSalesWeight"
+                control={form.control}
+                label="Heat: trọng số doanh số"
+                type="number"
+                step={0.05}
+                min={0}
+                max={SETTINGS_FIELD_MAX.schedulerHeatSalesWeight}
+              />
+              <FormInputField
+                name="schedulerHeatRatingWeight"
+                control={form.control}
+                label="Heat: trọng số đánh giá"
+                type="number"
+                step={0.05}
+                min={0}
+                max={SETTINGS_FIELD_MAX.schedulerHeatRatingWeight}
+              />
+            </SettingsSection>
 
-        <SettingsSection title="Tài khoản nhân viên" disabled={updateSettings.isPending}>
-          <div className="space-y-1.5 sm:col-span-2">
-            <FormInputField
-              name="defaultEmployeePassword"
-              control={form.control}
-              label="Mật khẩu mặc định khi reset cho nhân viên"
-              type="password"
-              autoComplete="new-password"
-            />
-            <p className="text-xs text-muted-foreground">
-              Chỉ dùng khi admin đặt lại mật khẩu nhân viên. Nhân viên phải đổi mật khẩu ngay ở lần đăng nhập kế
-              tiếp. Đổi cấu hình này không ảnh hưởng tới các tài khoản đã được đặt lại trước đó.
-            </p>
-          </div>
-        </SettingsSection>
+            <SettingsSection title="Tài khoản nhân viên" disabled={updateSettings.isPending}>
+              <div className="space-y-1.5 sm:col-span-2">
+                <FormInputField
+                  name="defaultEmployeePassword"
+                  control={form.control}
+                  label="Mật khẩu mặc định khi reset cho nhân viên"
+                  type="password"
+                  autoComplete="new-password"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Chỉ dùng khi admin đặt lại mật khẩu nhân viên. Nhân viên phải đổi mật khẩu ngay ở lần đăng nhập kế
+                  tiếp. Đổi cấu hình này không ảnh hưởng tới các tài khoản đã được đặt lại trước đó.
+                </p>
+              </div>
+            </SettingsSection>
 
-        <div className="flex justify-end">
-          <SubmitButton
-            isPending={updateSettings.isPending}
-            label="Lưu cấu hình"
-            pendingLabel={FORM_PENDING_LABEL}
-          />
-        </div>
-      </form>
+            <div className="flex justify-end">
+              <SubmitButton
+                isPending={updateSettings.isPending}
+                label="Lưu cấu hình"
+                pendingLabel={FORM_PENDING_LABEL}
+              />
+            </div>
+          </form>
+      </QueryState>
     </div>
   );
 };

@@ -5,7 +5,6 @@ import { STATE_MESSAGES } from "@/config/error-messages";
 import { cn } from "@/lib/utils";
 
 interface EmptyVariantProps {
-  /** Chưa có dữ liệu: kèm nút tạo mới hoặc hành động tiếp theo. */
   variant?: "empty";
   icon: LucideIcon;
   title: string;
@@ -16,7 +15,6 @@ interface EmptyVariantProps {
 }
 
 interface FilteredVariantProps {
-  /** Có dữ liệu nhưng bộ lọc hoặc từ khóa không khớp: kèm nút xóa bộ lọc. */
   variant: "filtered";
   icon?: LucideIcon;
   title?: string;

@@ -38,8 +38,7 @@ const AdminCounterPage = () => {
 
       {flow.step === "done" && flow.checkoutResult && (
         <CounterTicketResult
-          isLoading={flow.bookingDetail.isLoading}
-          booking={flow.bookingDetail.data}
+          bookingQuery={flow.bookingDetail}
           checkout={flow.checkoutResult}
           onNewSale={flow.resetFlow}
         />

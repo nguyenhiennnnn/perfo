@@ -1,22 +1,25 @@
 import { Home, LogIn, ShieldAlert } from "lucide-react";
 import { StatusPage } from "@/components/common/status-page";
 import { Seo } from "@/components/common/seo";
+import { STATE_MESSAGES } from "@/config/error-messages";
 import { ROUTES } from "@/config/routes";
 
 const ForbiddenPage = () => {
+  const { forbidden, home } = STATE_MESSAGES.page;
+
   return (
     <>
-      <Seo title="Không có quyền truy cập" noIndex />
+      <Seo title={forbidden.title} noIndex />
       <StatusPage
-      code="403"
-      icon={ShieldAlert}
-      title="Không có quyền truy cập"
-      description="Tài khoản hiện tại không đủ quyền để xem trang này. Vui lòng đăng nhập bằng tài khoản phù hợp."
-      actions={[
-        { label: "Về trang chủ", to: "/", icon: Home },
-        { label: "Đăng nhập lại", to: ROUTES.admin.login, icon: LogIn, variant: "outline" },
-      ]}
-    />
+        code="403"
+        icon={ShieldAlert}
+        title={forbidden.title}
+        description={forbidden.description}
+        actions={[
+          { label: home, to: ROUTES.home, icon: Home },
+          { label: "Đăng nhập lại", to: ROUTES.admin.login, icon: LogIn, variant: "outline" },
+        ]}
+      />
     </>
   );
 };

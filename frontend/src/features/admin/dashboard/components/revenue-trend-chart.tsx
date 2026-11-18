@@ -11,10 +11,12 @@ import {
   ChartLegendContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import type { UseQueryResult } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryState } from "@/components/common/query-state";
 import { EmptyState } from "@/components/common/empty-state";
 import { formatCurrency } from "@/lib/formatters";
-import type { DashboardRevenueTrendItemDto } from "@/features/admin/dashboard/types";
+import type { DashboardInsightsDto } from "@/features/admin/dashboard/types";
 
 const chartConfig = {
   ticketRevenue: { label: "Doanh thu vé", color: "var(--chart-1)" },
@@ -22,11 +24,10 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 interface RevenueTrendChartProps {
-  data: DashboardRevenueTrendItemDto[] | undefined;
-  isLoading: boolean;
+  query: UseQueryResult<DashboardInsightsDto>;
 }
 
-export const RevenueTrendChart = ({ data, isLoading }: RevenueTrendChartProps) => {
+export const RevenueTrendChart = ({ query }: RevenueTrendChartProps) => {
   return (
     <Card className="lg:col-span-2">
       <CardHeader>
@@ -34,17 +35,22 @@ export const RevenueTrendChart = ({ data, isLoading }: RevenueTrendChartProps) =
         <CardDescription>Vé và combo trong khoảng thời gian đã chọn</CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading ? (
-          <Skeleton className="h-70 w-full" />
-        ) : !data || data.length === 0 ? (
-          <EmptyState
-            icon={TrendingUp}
-            title="Chưa có dữ liệu doanh thu"
-            description="Không có giao dịch nào trong khoảng thời gian này."
-          />
-        ) : (
+        <QueryState
+          query={query}
+          skeleton={<Skeleton className="h-70 w-full" />}
+          isEmpty={(insights) => insights.revenueTrend.length === 0}
+          empty={
+            <EmptyState
+              icon={TrendingUp}
+              title="Chưa có dữ liệu doanh thu"
+              description="Chưa có giao dịch nào trong khoảng thời gian này."
+            />
+          }
+          errorTitle="Không tải được doanh thu theo ngày"
+        >
+          {(insights) => (
           <ChartContainer config={chartConfig} className="h-70 w-full">
-            <BarChart accessibilityLayer data={data}>
+            <BarChart accessibilityLayer data={insights.revenueTrend}>
               <CartesianGrid vertical={false} />
               <XAxis dataKey="period" tickLine={false} axisLine={false} tickMargin={10} />
               <YAxis
@@ -75,7 +81,8 @@ export const RevenueTrendChart = ({ data, isLoading }: RevenueTrendChartProps) =
               <Bar dataKey="comboRevenue" stackId="revenue" fill="var(--color-comboRevenue)" radius={0} />
             </BarChart>
           </ChartContainer>
-        )}
+          )}
+        </QueryState>
       </CardContent>
     </Card>
   );

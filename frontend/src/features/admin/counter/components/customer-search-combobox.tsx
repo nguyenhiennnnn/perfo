@@ -2,6 +2,9 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { SearchIcon, XIcon, UserIcon, TagIcon } from "lucide-react";
 
 import { Spinner } from "@/components/common/spinner";
+import { Button } from "@/components/ui/button";
+import { STATE_MESSAGES } from "@/config/error-messages";
+import { describeLoadError } from "@/lib/error";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { COMBOBOX_BLUR_CLOSE_DELAY_MS } from "@/config/default-constants";
@@ -26,9 +29,10 @@ export const CustomerSearchCombobox = ({
 
   useEffect(() => () => clearTimeout(blurTimerRef.current), []);
 
-  const { data: results = [], isFetching } = useCustomerLookup({
+  const lookup = useCustomerLookup({
     q: debouncedQuery,
   });
+  const { data: results = [], isFetching } = lookup;
 
   const handleSelect = useCallback(
     (customer: CustomerLookupItemDto) => {
@@ -122,10 +126,27 @@ export const CustomerSearchCombobox = ({
 
       {open && debouncedQuery.trim().length > 0 && (
         <div className="absolute left-0 right-0 top-full z-50 mt-1 cut-sm bg-popover">
-          {results.length === 0 && !isFetching && (
+          {lookup.isError && !isFetching && (
+            <div className="flex items-center justify-between gap-3 px-3 py-3 text-sm text-muted-foreground">
+              <span>
+                Không tải được danh sách khách hàng. {describeLoadError(lookup.error).fix}
+              </span>
+              <Button
+                size="sm"
+                variant="secondary"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  void lookup.refetch();
+                }}
+              >
+                {STATE_MESSAGES.retry}
+              </Button>
+            </div>
+          )}
+          {!lookup.isError && results.length === 0 && !isFetching && (
             <div className="flex items-center gap-2 px-3 py-4 text-sm text-muted-foreground">
               <UserIcon className="size-4" />
-              Không tìm thấy khách hàng.
+              {STATE_MESSAGES.filtered.title}
             </div>
           )}
           {results.map((customer) => (

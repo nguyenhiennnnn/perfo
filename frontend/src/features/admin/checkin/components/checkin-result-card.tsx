@@ -20,11 +20,11 @@ export const CheckinResultCard = ({ status, result, errorMessage }: CheckinResul
 
   if (status === "error") {
     return (
-      <div className="flex h-full min-h-55 flex-col items-center justify-center gap-3 border border-destructive/40 bg-destructive/5 px-4 text-center">
+      <div className="flex h-full min-h-55 flex-col items-center justify-center gap-3 cut-md bg-destructive/10 px-4 text-center">
         <XCircle className="size-10 text-destructive" />
         <p className="font-heading text-lg font-semibold text-destructive">Soát vé thất bại</p>
         <p className="text-sm text-muted-foreground">
-          {errorMessage ?? "Mã vé không hợp lệ hoặc đã được sử dụng"}
+          {errorMessage ?? "Mã vé không hợp lệ hoặc đã được sử dụng. Kiểm tra mã vé rồi quét lại."}
         </p>
       </div>
     );
@@ -33,7 +33,7 @@ export const CheckinResultCard = ({ status, result, errorMessage }: CheckinResul
   if (!result) return null;
 
   return (
-    <div className="flex h-full min-h-55 flex-col gap-3 border border-success/40 bg-success/5 p-4">
+    <div className="flex h-full min-h-55 flex-col gap-3 cut-md bg-success/10 p-4">
       <div className="flex items-center gap-2">
         <CheckCircle2 className="size-8 text-success" />
         <div>

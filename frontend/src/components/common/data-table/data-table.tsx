@@ -35,7 +35,6 @@ export interface DataTableEmpty {
   icon?: LucideIcon;
   title: string;
   description?: string;
-  /** Nút tạo mới hoặc hành động tiếp theo khi bảng chưa có dữ liệu. */
   actionLabel?: string;
   onAction?: () => void;
 }
@@ -47,7 +46,6 @@ interface DataTableProps<TData extends RowData> {
   isRefreshing?: boolean;
   isError?: boolean;
   error?: unknown;
-  /** Gọi refetch của truy vấn; hiện ở nút "Thử lại" khi tải lỗi. */
   onRetry?: () => void;
   totalItems: number;
   pagination: PaginationState;
@@ -56,7 +54,6 @@ interface DataTableProps<TData extends RowData> {
   onSortingChange?: OnChangeFn<SortingState>;
   columnFilters?: ColumnFiltersState;
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>;
-  /** Trạng thái "chưa có dữ liệu". Khi đang tìm hoặc lọc, bảng tự hiện "không có kết quả". */
   empty?: DataTableEmpty;
   hasActiveFilters?: boolean;
   onClearFilters?: () => void;

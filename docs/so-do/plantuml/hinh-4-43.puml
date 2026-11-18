@@ -29,7 +29,7 @@ S --> K : 401 Unauthorized_GoogleEmailNotVerified
 end
 S -> DB : tìm User theo GoogleId hoặc Email
 alt chưa có tài khoản
-S -> DB : tạo User Customer (EmailConfirmed=true, GoogleId, Avatar) và CustomerProfile
+S -> DB : tạo User Customer (EmailConfirmed=true, GoogleId, Avatar,\nPasswordHash = PendingPasswordHash, HasPassword = false) và CustomerProfile
 else đã có tài khoản
 alt bị khóa
 S --> K : 403 Forbidden_AccountLocked

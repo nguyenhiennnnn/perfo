@@ -1,4 +1,4 @@
-﻿import { createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 import { Eye, MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";

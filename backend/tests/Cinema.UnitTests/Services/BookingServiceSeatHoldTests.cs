@@ -261,9 +261,9 @@ public class BookingServiceSeatHoldTests(PostgresContainerFixture fixture) : Boo
     }
 
     [Fact]
-    public async Task CounterHoldSeatsAsync_MoreThanFivePendingCounterBookingsOfSameEmployee_IsNotBlocked()
+    public async Task CounterHoldSeatsAsync_FivePendingCounterBookingsOfSameEmployee_AllSucceed()
     {
-        const int holdCount = 7;
+        const int holdCount = 5;
         var (user, employee, showtime, seats) = SeedCounter(holdCount);
         var sut = CreateCounterSut();
 
@@ -285,6 +285,39 @@ public class BookingServiceSeatHoldTests(PostgresContainerFixture fixture) : Boo
                 && b.CreatedByEmployeeId == employee.EmployeeId
             )
         ).ShouldBe(holdCount);
+    }
+
+    [Fact]
+    public async Task CounterHoldSeatsAsync_SixthPendingCounterBookingOfSameEmployee_ThrowsConflict()
+    {
+        const int holdCount = 6;
+        var (user, employee, showtime, seats) = SeedCounter(holdCount);
+        var sut = CreateCounterSut();
+
+        for (var i = 0; i < holdCount - 1; i++)
+            await sut.CounterHoldSeatsAsync(
+                employee.EmployeeId,
+                user.UserId,
+                HoldRequest(showtime, seats[i]),
+                CancellationToken.None
+            );
+
+        await Should.ThrowAsync<ConflictAppException>(() =>
+            sut.CounterHoldSeatsAsync(
+                employee.EmployeeId,
+                user.UserId,
+                HoldRequest(showtime, seats[holdCount - 1]),
+                CancellationToken.None
+            )
+        );
+
+        (
+            await Db.Bookings.CountAsync(b =>
+                b.Channel == BookingChannel.Counter
+                && b.Status == BookingStatus.Pending
+                && b.CreatedByEmployeeId == employee.EmployeeId
+            )
+        ).ShouldBe(5);
     }
 
     [Fact]

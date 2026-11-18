@@ -50,6 +50,7 @@ export function useAdminResetEmployeePassword() {
 
 export function useAdminResendEmployeeInvite() {
   return useMutation({
+    meta: { invalidates: "employeeChanged" },
     mutationFn: (id: number) => employeesAdminApi.resendInvite(id),
   });
 }

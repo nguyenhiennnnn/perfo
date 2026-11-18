@@ -1,7 +1,7 @@
 import { QueryCache, QueryClient, MutationCache } from "@tanstack/react-query";
 import { extractApiError, handleApiError } from "@/lib/error";
 import { getApiSuccessMessage } from "@/lib/api-response";
-import { invalidateRelated } from "@/api/query-invalidation";
+import { invalidateRelated, type AppMutationMeta, type AppQueryMeta } from "@/api/query-invalidation";
 import { toast } from "@/components/ui/toast";
 import {
   MUTATION_MAX_RETRIES,
@@ -13,19 +13,18 @@ import {
 } from "@/config/default-constants";
 
 function handleGlobalError(context: "Query" | "Mutation") {
-  return (error: unknown, query: { meta?: Record<string, unknown> }) => {
-    const title = query?.meta?.errorTitle;
+  return (error: unknown, target: { meta?: AppQueryMeta }) => {
     handleApiError(error, {
       context,
-      silent: Boolean(query?.meta?.skipErrorToast),
-      title: typeof title === "string" ? title : undefined,
+      silent: Boolean(target.meta?.skipErrorToast),
+      title: target.meta?.errorTitle,
     });
   };
 }
 
 function handleGlobalSuccess(
   data: unknown,
-  mutation: { meta?: Record<string, unknown> },
+  mutation: { meta?: AppMutationMeta },
 ) {
   if (mutation.meta?.skipSuccessToast) return;
   const message = getApiSuccessMessage(data);

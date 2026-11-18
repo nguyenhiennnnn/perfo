@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "@/components/ui/toast";
 import { BOOKING_HOLD_POLL_INTERVAL_MS } from "@/config/default-constants";

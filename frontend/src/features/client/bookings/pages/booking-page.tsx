@@ -1,4 +1,4 @@
-﻿import { Link, useParams, useSearchParams } from "react-router";
+import { Link, useParams, useSearchParams } from "react-router";
 import { AlertTriangle } from "lucide-react";
 
 import { useBookingFlow } from "../hooks/use-booking-flow";

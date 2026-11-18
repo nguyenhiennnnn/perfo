@@ -2,6 +2,9 @@ import { format } from "date-fns";
 import { toWallDate } from "@/lib/business-time";
 import { getCurrencyLabel, getLocale } from "@/lib/regional-settings";
 
+export const BYTES_PER_KB = 1024;
+export const BYTES_PER_MB = BYTES_PER_KB * BYTES_PER_KB;
+
 export function formatPoints(points: number) {
   return new Intl.NumberFormat(getLocale()).format(points);
 }
@@ -29,6 +32,11 @@ export function formatNumber(
 ): string {
   if (value == null || isNaN(value)) return "0";
   return new Intl.NumberFormat(getLocale(), options).format(value);
+}
+
+export function formatFileSize(bytes: number): string {
+  if (bytes >= BYTES_PER_MB) return `${(bytes / BYTES_PER_MB).toFixed(1)} MB`;
+  return `${Math.max(1, Math.round(bytes / BYTES_PER_KB))} KB`;
 }
 
 export function formatShowtimeHour(iso: string) {

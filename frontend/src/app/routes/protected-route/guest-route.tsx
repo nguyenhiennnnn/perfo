@@ -1,4 +1,4 @@
-﻿import { Outlet, Navigate, useSearchParams } from "react-router";
+import { Outlet, Navigate, useSearchParams } from "react-router";
 import { useAuthStore } from "@/stores/auth-store";
 import { Role } from "@/types/enum";
 import { AuthLoadingGuard } from "./auth-loading-guard";

@@ -1,3 +1,4 @@
+// Factory tạo HubConnection (xác thực token, tự reconnect, log level) dùng cho các hook hub.
 import {
   HubConnectionBuilder,
   LogLevel,

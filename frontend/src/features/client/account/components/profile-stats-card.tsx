@@ -1,4 +1,4 @@
-﻿import { MembershipTierBadge } from "@/components/common/status-badge";
+import { MembershipTierBadge } from "@/components/common/status-badge";
 import { formatCurrency, formatPoints } from "@/lib/formatters";
 import type { UserProfileDto } from "@/features/client/account/types";
 import { PERCENT_MAX } from "@/config/default-constants";

@@ -1,3 +1,4 @@
+// Hằng số hub, tên sự kiện và kiểu payload SignalR dùng chung (không chứa logic kết nối).
 import { ENV } from "@/config/env";
 
 export const SIGNALR_HUB_URL = `${ENV.API_BASE_URL.replace("/api/v1", "")}/hubs/showtimes`;

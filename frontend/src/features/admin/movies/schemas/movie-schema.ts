@@ -1,4 +1,4 @@
-﻿import { z } from "zod";
+import { z } from "zod";
 import { MOVIE_TITLE_MAX_LENGTH } from "@/config/default-constants";
 
 export const castSchema = z.object({

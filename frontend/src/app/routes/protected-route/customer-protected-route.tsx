@@ -1,4 +1,4 @@
-﻿import { Outlet, Navigate, useLocation } from "react-router";
+import { Outlet, Navigate, useLocation } from "react-router";
 import { useAuthStore } from "@/stores/auth-store";
 import { AuthLoadingGuard } from "./auth-loading-guard";
 import { ROUTES } from "@/config/routes";

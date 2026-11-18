@@ -258,6 +258,7 @@ class UserVerificationToken <<Entity>> {
   -UserId : int
 }
 class User <<Entity>> {
+  {static} +PendingPasswordHash : string = ""
   -UserId : int
   -Avatar : string?
   -CreatedAt : DateTime
@@ -273,6 +274,7 @@ class User <<Entity>> {
   -RoleId : int
   -MustChangePassword : bool
   -UpdatedAt : DateTime?
+  +HasPassword : bool {readOnly}
 }
 class ImportExportJob <<Entity>> {
   -JobId : Guid

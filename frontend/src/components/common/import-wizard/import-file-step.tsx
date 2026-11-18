@@ -9,16 +9,13 @@ import {
   PERCENT_MAX,
 } from "@/config/default-constants";
 import { useBlockDialogClose } from "@/hooks/use-block-dialog-close";
+import { formatFileSize } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import type { ImportPreviewResponse } from "@/types/import";
 
 import { ImportWizardFooter } from "./import-wizard-footer";
 import type { ImportWizardConfig } from "./import-wizard-types";
-import {
-  describeImportError,
-  formatFileSize,
-  validateImportFile,
-} from "./import-wizard-utils";
+import { describeImportError, validateImportFile } from "./import-wizard-utils";
 import { useImportPreview, useImportTemplate } from "./use-import-wizard";
 
 interface ImportFileStepProps {

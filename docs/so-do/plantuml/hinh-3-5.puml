@@ -12,6 +12,8 @@ skinparam usecaseBackgroundColor White
 skinparam usecaseBorderColor Black
 skinparam rectangleBackgroundColor White
 skinparam rectangleBorderColor Black
+skinparam noteBackgroundColor White
+skinparam noteBorderColor Black
 actor "Người dùng đã đăng nhập" as A_NDN
 rectangle "Package Hồ sơ cá nhân (HS) — 4 use case" as PK {
   usecase "UC-HS-01\nXem hồ sơ cá nhân" as UC_HS_01
@@ -23,4 +25,5 @@ A_NDN -- UC_HS_01
 A_NDN -- UC_HS_02
 A_NDN -- UC_HS_03
 A_NDN -- UC_HS_04
+note right of UC_HS_03 : Chỉ áp dụng cho\ntài khoản có mật khẩu
 @enduml

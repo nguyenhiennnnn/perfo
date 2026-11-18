@@ -46,7 +46,7 @@ export function useMyReviews(params: Omit<MyReviewListParams, "cursor"> = {}) {
 
 export function useChangePassword(options?: { skipSuccessToast?: boolean }) {
   return useMutation({
-    meta: { skipSuccessToast: options?.skipSuccessToast },
+    meta: { invalidates: "passwordChanged", skipSuccessToast: options?.skipSuccessToast },
     mutationFn: (body: ChangePasswordRequest) =>
       accountApi.changePassword(body),
   });

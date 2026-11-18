@@ -110,6 +110,12 @@ export const invalidations = {
     k.auth.me(),
     k.adminUsers.all(),
   ],
+  passwordChanged: (): KeyList => [
+    k.users.me(),
+    k.auth.me(),
+    k.adminUsers.all(),
+    k.adminEmployees.all(),
+  ],
 
   reviewChanged: (): KeyList => [
     k.adminReviews.all(),
@@ -123,15 +129,21 @@ export const invalidations = {
 
 export type InvalidationName = keyof typeof invalidations;
 
-export type AppMutationMeta = {
+type CommonMeta = {
   errorTitle?: string;
   skipErrorToast?: boolean;
+};
+
+export type AppQueryMeta = CommonMeta;
+
+export type AppMutationMeta = CommonMeta & {
   skipSuccessToast?: boolean;
   invalidates?: InvalidationName;
 };
 
 declare module "@tanstack/react-query" {
   interface Register {
+    queryMeta: AppQueryMeta;
     mutationMeta: AppMutationMeta;
   }
 }

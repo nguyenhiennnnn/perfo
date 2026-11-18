@@ -3,21 +3,15 @@ import {
   IMPORT_MAX_FILE_BYTES,
 } from "@/config/default-constants";
 import { extractApiError, getDisplayMessage } from "@/lib/error";
+import { BYTES_PER_MB } from "@/lib/formatters";
 import type { ImportApplyResponse } from "@/types/import";
 
-const BYTES_PER_KB = 1024;
-const BYTES_PER_MB = BYTES_PER_KB * BYTES_PER_KB;
 const MAX_LISTED_ROWS = 20;
 const UNKNOWN_REASON = "Không rõ lý do.";
 
 export interface ImportFailureGroup {
   reason: string;
   rows: number[];
-}
-
-export function formatFileSize(bytes: number): string {
-  if (bytes >= BYTES_PER_MB) return `${(bytes / BYTES_PER_MB).toFixed(1)} MB`;
-  return `${Math.max(1, Math.round(bytes / BYTES_PER_KB))} KB`;
 }
 
 export function validateImportFile(file: File): string | null {

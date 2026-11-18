@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { bookingsApi } from "../api/bookings-api";
 import { queryKeys } from "@/api/query-keys";
+import { BookingStatus } from "@/types/enum";
 import type {
   HoldSeatsRequest,
   CheckoutRequest,
@@ -24,11 +25,22 @@ export function useMyBookings(params: Omit<BookingListParams, "cursor">) {
   });
 }
 
-export function useBookingDetail(bookingId: number) {
+export function useBookingDetail(
+  bookingId: number,
+  options?: { pollWhilePendingMs?: number },
+) {
+  const pollWhilePendingMs = options?.pollWhilePendingMs;
   return useQuery({
     queryKey: queryKeys.bookings.detail(bookingId),
     queryFn: () => bookingsApi.getBookingDetail(bookingId),
     enabled: bookingId > 0,
+    refetchInterval: pollWhilePendingMs
+      ? (query) =>
+          query.state.data?.data.status === BookingStatus.Pending
+            ? pollWhilePendingMs
+            : false
+      : false,
+    refetchIntervalInBackground: true,
     select: (res) => res.data,
   });
 }

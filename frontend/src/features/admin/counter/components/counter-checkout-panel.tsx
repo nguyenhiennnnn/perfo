@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Armchair, Clock, HandCoins, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,9 +27,11 @@ export const CounterCheckoutPanel = ({
   const [amountReceived, setAmountReceived] = useState(hold.finalAmount);
   const { remainingMs, label } = useCountdown(hold.expiresAt);
 
-  useEffect(() => {
+  const [prevFinalAmount, setPrevFinalAmount] = useState(hold.finalAmount);
+  if (prevFinalAmount !== hold.finalAmount) {
+    setPrevFinalAmount(hold.finalAmount);
     setAmountReceived(hold.finalAmount);
-  }, [hold.finalAmount]);
+  }
 
   const change = Math.max(0, amountReceived - hold.finalAmount);
   const isInsufficient = amountReceived < hold.finalAmount;

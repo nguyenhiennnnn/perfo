@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { CalendarX, TriangleAlert } from "lucide-react";
 
 import { EmptyState } from "@/components/common/empty-state";
@@ -19,24 +18,16 @@ import { ShowtimeCalendarAgenda } from "./showtime-calendar-agenda";
 import { LANE_HEIGHT, ShowtimeCalendarItem } from "./showtime-calendar-item";
 
 import { NOW_TICK_INTERVAL_MS } from "@/config/default-constants";
+import { useNow } from "@/hooks/use-now";
 
 const MIN_HOUR_WIDTH = 88;
 const ROOM_COLUMN_WIDTH = 144;
 const GAP_LABEL_MIN_PERCENT = 6;
 
-const currentMinutes = () => {
-  const now = getBusinessNow();
-  return now.getHours() * 60 + now.getMinutes();
-};
-
 function useNowMinutes(enabled: boolean) {
-  const [now, setNow] = useState(currentMinutes);
-  useEffect(() => {
-    if (!enabled) return;
-    const id = window.setInterval(() => setNow(currentMinutes()), NOW_TICK_INTERVAL_MS);
-    return () => window.clearInterval(id);
-  }, [enabled]);
-  return now;
+  const now = useNow(NOW_TICK_INTERVAL_MS, enabled);
+  const wall = getBusinessNow(new Date(now));
+  return wall.getHours() * 60 + wall.getMinutes();
 }
 
 interface ShowtimeCalendarDayProps {

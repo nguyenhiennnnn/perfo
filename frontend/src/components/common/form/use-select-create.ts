@@ -29,7 +29,10 @@ export function useSelectCreate<T>({
   onCreated,
 }: UseSelectCreateOptions<T>) {
   const [isCreating, setIsCreating] = useState(false);
-  const [createError, setCreateError] = useState<string | null>(null);
+  const [createErrorState, setCreateErrorState] = useState<{
+    searchValue: string;
+    message: string;
+  } | null>(null);
   const [created, setCreated] = useState<T[]>([]);
   const lockRef = useRef(false);
   const mountedRef = useRef(true);
@@ -41,9 +44,8 @@ export function useSelectCreate<T>({
     };
   }, []);
 
-  useEffect(() => {
-    setCreateError(null);
-  }, [searchValue]);
+  const createError =
+    createErrorState?.searchValue === searchValue ? createErrorState.message : null;
 
   const allOptions = [
     ...options,
@@ -70,14 +72,19 @@ export function useSelectCreate<T>({
 
     lockRef.current = true;
     setIsCreating(true);
-    setCreateError(null);
+    setCreateErrorState(null);
     try {
       const option = await onCreate(term);
       if (!mountedRef.current) return;
       setCreated((prev) => [...prev, option]);
       onCreated(option);
     } catch (error) {
-      if (mountedRef.current) setCreateError(describeCreateError(error));
+      if (mountedRef.current) {
+        setCreateErrorState({
+          searchValue,
+          message: describeCreateError(error),
+        });
+      }
     } finally {
       lockRef.current = false;
       if (mountedRef.current) setIsCreating(false);

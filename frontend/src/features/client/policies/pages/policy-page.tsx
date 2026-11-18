@@ -36,9 +36,9 @@ const PolicyPage = () => {
               to={ROUTES.policy(item.slug)}
               aria-current={item.slug === policy.slug ? "page" : undefined}
               className={cn(
-                "border border-transparent px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground",
+                "px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground",
                 item.slug === policy.slug &&
-                  "border-border bg-card font-medium text-foreground",
+                  "bg-sidebar-primary font-medium text-sidebar-primary-foreground hover:bg-sidebar-primary hover:text-sidebar-primary-foreground",
               )}
             >
               {item.title}
@@ -47,7 +47,7 @@ const PolicyPage = () => {
         </nav>
       </aside>
 
-      <article className="min-w-0 border border-border/60 bg-card p-6 md:p-10">
+      <article className="min-w-0 cut-md bg-card p-6 md:p-10">
         <h1 className="t-h1 text-foreground">
           {policy.title}
         </h1>

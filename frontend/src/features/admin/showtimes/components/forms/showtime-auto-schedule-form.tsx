@@ -148,7 +148,7 @@ export const ShowtimeAutoScheduleForm = ({ onSuccess }: ShowtimeAutoScheduleForm
           <ul className="divide-y divide-border border border-border">
             {draft.items.map((item, index) => (
               <li key={`${item.roomId}-${item.startTime}`} className="flex items-center gap-3 px-3 py-2">
-                <span className="w-28 shrink-0 font-mono text-sm font-medium tabular-nums text-foreground">
+                <span className="w-28 shrink-0 t-code text-sm text-foreground">
                   {draft.toDate && <span className="mr-1 text-xs text-muted-foreground">{formatDayMonth(item.startTime)}</span>}
                   {formatTime(item.startTime)} - {formatTime(item.endTime)}
                 </span>

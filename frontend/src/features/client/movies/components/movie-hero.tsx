@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { AgeRatingBadge } from "@/components/common/status-badge";
 import { TrailerPlayer } from "@/features/client/movies/components/trailer-player";
 import { formatDuration } from "@/lib/cinema-format";
-import { formatDate } from "@/lib/formatters";
+import { formatDate, formatRating } from "@/lib/formatters";
 import { useDialogOpen } from "@/stores/dialog-store";
 import type { MovieDetailDto } from "@/features/client/movies/types";
 
@@ -47,7 +47,7 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
           <div className="flex flex-wrap items-center gap-2">
             <AgeRatingBadge code={movie.ageRating?.code} />
             {movie.genres.map((g) => (
-              <span key={g.genreId} className="cut-xs border border-border bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground">
+              <span key={g.genreId} className="cut-xs bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground">
                 {g.name}
               </span>
             ))}
@@ -76,7 +76,7 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
             {movie.averageRating > 0 && (
               <span className="flex items-center gap-1.5 font-semibold text-accent">
                 <Star className="size-4 fill-accent text-accent" />
-                {movie.averageRating.toFixed(1)}/5.0
+                {formatRating(movie.averageRating)}/5.0
               </span>
             )}
           </div>

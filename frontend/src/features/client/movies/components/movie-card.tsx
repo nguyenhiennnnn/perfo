@@ -3,7 +3,7 @@ import { CalendarDays, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AgeRatingBadge } from "@/components/common/status-badge";
 import { formatDuration } from "@/lib/cinema-format";
-import { formatDate } from "@/lib/formatters";
+import { formatDate, formatRating } from "@/lib/formatters";
 import { MovieStatus } from "@/types/enum";
 import { cn } from "@/lib/utils";
 import type { MovieListItemDto } from "@/features/client/movies/types";
@@ -44,11 +44,11 @@ export const MovieCard = ({ movie, className }: MovieCardProps) => {
             src={movie.posterUrl}
             alt={movie.title}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-            <span className="t-code text-2xl">?</span>
+          <div className="flex h-full w-full items-center justify-center bg-secondary p-4">
+            <span className="t-h3 line-clamp-4 text-center text-secondary-foreground">{movie.title}</span>
           </div>
         )}
 
@@ -61,7 +61,7 @@ export const MovieCard = ({ movie, className }: MovieCardProps) => {
 
       <div className="flex flex-1 flex-col justify-between p-3.5">
         <div>
-          <h3 className="t-h3 text-sm text-foreground line-clamp-2 group-hover:text-primary">
+          <h3 className="t-h3 text-sm text-foreground line-clamp-2 group-hover:underline">
             <Link to={href} {...prefetchProps}>{movie.title}</Link>
           </h3>
           <p className="mt-1 line-clamp-1 text-[13px] text-muted-foreground">
@@ -72,7 +72,7 @@ export const MovieCard = ({ movie, className }: MovieCardProps) => {
         {movie.averageRating > 0 && (
           <div className="mt-2.5 flex items-center gap-1 text-xs font-semibold text-accent">
             <Star className="size-3.5 fill-accent text-accent" />
-            <span className="t-numeral text-sm font-bold">{movie.averageRating.toFixed(1)}</span>
+            <span className="t-numeral text-sm font-bold">{formatRating(movie.averageRating)}</span>
           </div>
         )}
 

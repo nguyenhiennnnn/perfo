@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -8,10 +9,11 @@ interface EmptyStateProps {
   description?: string;
   actionLabel?: string;
   onAction?: () => void;
+  action?: ReactNode;
   className?: string;
 }
 
-export const EmptyState = ({ icon: Icon, title, description, actionLabel, onAction, className }: EmptyStateProps) => {
+export const EmptyState = ({ icon: Icon, title, description, actionLabel, onAction, action, className }: EmptyStateProps) => {
   return (
     <div className={cn("flex flex-col items-center justify-center gap-3 cut-md bg-card px-6 py-14 text-center", className)}>
       <div className="flex size-12 items-center justify-center cut-sm bg-secondary text-muted-foreground">
@@ -21,10 +23,15 @@ export const EmptyState = ({ icon: Icon, title, description, actionLabel, onActi
         <h3 className="t-h3 text-foreground">{title}</h3>
         {description && <p className="text-sm text-muted-foreground">{description}</p>}
       </div>
-      {actionLabel && onAction && (
-        <Button variant="secondary" onClick={onAction} className="mt-2">
-          {actionLabel}
-        </Button>
+      {action ? (
+        <div className="mt-2">{action}</div>
+      ) : (
+        actionLabel &&
+        onAction && (
+          <Button variant="secondary" onClick={onAction} className="mt-2">
+            {actionLabel}
+          </Button>
+        )
       )}
     </div>
   );

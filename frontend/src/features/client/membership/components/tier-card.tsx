@@ -8,50 +8,57 @@ interface TierCardProps {
   index: number;
 }
 
+const FEATURED_INDEX = 2;
+
+const SIZE_BY_INDEX = [
+  { shape: "cut-sm", pad: "p-4", number: "text-4xl" },
+  { shape: "cut-md", pad: "p-5", number: "text-5xl" },
+  { shape: "cut-lg", pad: "p-6 md:p-8", number: "text-6xl md:text-7xl" },
+  { shape: "cut-md", pad: "p-5 md:p-6", number: "text-5xl" },
+] as const;
+
 export const TierCard = ({ tier, index }: TierCardProps) => {
   const visual = getVisual(index);
-  const Icon = visual.icon;
+  const size = SIZE_BY_INDEX[index] ?? SIZE_BY_INDEX[SIZE_BY_INDEX.length - 1];
+  const featured = index === FEATURED_INDEX;
 
   return (
     <div
       className={cn(
-        "group relative flex flex-col overflow-hidden border border-border bg-card p-5 transition-colors",
-        visual.ring,
+        "flex flex-col text-left",
+        size.shape,
+        size.pad,
+        featured
+          ? "bg-primary text-primary-foreground"
+          : index === SIZE_BY_INDEX.length - 1
+            ? "bg-secondary text-foreground"
+            : "bg-card text-foreground",
       )}
     >
-      <div
-        className={cn(
-          "mb-4 flex size-11 items-center justify-center bg-muted",
-          visual.accent,
-        )}
-      >
-        <Icon className="size-5" />
-      </div>
+      <h3 className="t-h3">Hạng {tier.tierName}</h3>
 
-      <h3 className="t-h3 text-foreground">
-        Hạng {tier.tierName}
-      </h3>
-
-      <p className="mt-1 text-xs text-muted-foreground">
+      <p className={cn("mt-1 text-xs", featured ? "text-primary-foreground" : "text-muted-foreground")}>
         Yêu cầu{" "}
-        <span className="font-medium text-foreground">
+        <span className={cn("font-medium", !featured && "text-foreground")}>
           {formatPoints(tier.minPoints)} điểm
         </span>
       </p>
 
-      <div className="mt-4 flex items-baseline gap-1">
-        <span
-          className={cn(
-            "font-heading text-3xl font-bold tabular",
-            visual.accent,
-          )}
-        >
+      <div className="mt-6 flex items-baseline gap-2">
+        <span className={cn("t-numeral", size.number, !featured && visual.accent)}>
           {tier.discountPercent}%
         </span>
-        <span className="text-xs text-muted-foreground">chiết khấu</span>
+        <span className={cn("text-sm", featured ? "text-primary-foreground" : "text-muted-foreground")}>
+          chiết khấu
+        </span>
       </div>
 
-      <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+      <p
+        className={cn(
+          "mt-4 text-xs leading-relaxed",
+          featured ? "text-primary-foreground" : "text-muted-foreground",
+        )}
+      >
         {visual.perk}
       </p>
     </div>

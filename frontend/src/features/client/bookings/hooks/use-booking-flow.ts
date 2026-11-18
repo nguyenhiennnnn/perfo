@@ -1,7 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "@/components/ui/toast";
-import { BOOKING_HOLD_POLL_INTERVAL_MS } from "@/config/default-constants";
+import {
+  BOOKING_HOLD_POLL_INTERVAL_MS,
+  BOOKING_HOLD_POLL_MAX_FAILURES,
+} from "@/config/default-constants";
+import { queryKeys } from "@/api/query-keys";
 import {
   ShowtimeSeatStatus,
   PaymentMethod,
@@ -45,6 +50,9 @@ export function useBookingFlow(showtimeId: number, resumeBookingId?: number) {
   );
   const [freshHoldResult, setFreshHoldResult] =
     useState<HoldBookingResponse | null>(null);
+
+  const expiredNotifiedRef = useRef(false);
+  const pollFailureCountRef = useRef(0);
 
   const authUser = useAuthUser();
   const isAuthenticated = useIsAuthenticated();
@@ -124,7 +132,6 @@ export function useBookingFlow(showtimeId: number, resumeBookingId?: number) {
     onHoldExpired: () => {
       if (expiredNotifiedRef.current) return;
       expiredNotifiedRef.current = true;
-      stopPolling();
       toast.add({
         title: "Thời gian giữ ghế đã hết hạn, vui lòng chọn lại.",
         type: "warning",
@@ -241,54 +248,50 @@ export function useBookingFlow(showtimeId: number, resumeBookingId?: number) {
     setFreshHoldResult(null);
   };
 
-  const expiredNotifiedRef = useRef(false);
-  const pollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const stopPolling = useCallback(() => {
-    if (pollIntervalRef.current !== null) {
-      clearInterval(pollIntervalRef.current);
-      pollIntervalRef.current = null;
-    }
-  }, []);
+  const holdPollBookingId = freshHoldResult?.bookingId ?? 0;
+  const isHoldPolling = holdPollBookingId > 0 && step === "payment";
 
   useEffect(() => {
-    const bookingId = freshHoldResult?.bookingId;
+    if (!isHoldPolling) expiredNotifiedRef.current = false;
+  }, [isHoldPolling]);
 
-    if (!bookingId || step !== "payment") {
-      stopPolling();
-      expiredNotifiedRef.current = false;
-      return;
-    }
-
-    if (pollIntervalRef.current !== null) return;
-
-    const poll = async () => {
-      if (expiredNotifiedRef.current) {
-        stopPolling();
-        return;
-      }
+  useQuery({
+    queryKey: [...queryKeys.bookings.detail(holdPollBookingId), "hold-poll"],
+    enabled: isHoldPolling,
+    retry: false,
+    meta: { skipErrorToast: true },
+    refetchIntervalInBackground: true,
+    refetchInterval: () =>
+      expiredNotifiedRef.current ? false : BOOKING_HOLD_POLL_INTERVAL_MS,
+    queryFn: async () => {
       try {
-        const res = await bookingsApi.getBookingDetail(bookingId);
-        if (res.data.status === BookingStatus.Expired) {
+        const res = await bookingsApi.getBookingDetail(holdPollBookingId);
+        pollFailureCountRef.current = 0;
+        if (
+          res.data.status === BookingStatus.Expired &&
+          !expiredNotifiedRef.current
+        ) {
           expiredNotifiedRef.current = true;
-          stopPolling();
           toast.add({
             title: "Thời gian giữ ghế đã hết hạn, vui lòng chọn lại.",
             type: "warning",
           });
           if (!isResumeMode) resetToSelection();
         }
-      } catch {
-        // ignore transient errors, keep polling
+        return res.data.status;
+      } catch (error) {
+        pollFailureCountRef.current += 1;
+        if (pollFailureCountRef.current === BOOKING_HOLD_POLL_MAX_FAILURES) {
+          toast.add({
+            title: "Không kiểm tra được trạng thái giữ ghế.",
+            description: "Kiểm tra kết nối mạng. Ghế vẫn được giữ đến khi hết hạn.",
+            type: "warning",
+          });
+        }
+        throw error;
       }
-    };
-
-    poll();
-    pollIntervalRef.current = setInterval(poll, BOOKING_HOLD_POLL_INTERVAL_MS);
-
-    return stopPolling;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [freshHoldResult?.bookingId, step]);
+    },
+  });
 
   const cancelHold = () => {
     if (!holdResult) return;

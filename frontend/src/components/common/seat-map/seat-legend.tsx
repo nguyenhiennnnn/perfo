@@ -41,7 +41,7 @@ export const SeatLegend = ({ items, className }: { items: SeatLegendItem[]; clas
               )}
             </span>
             {item.hint && (
-              <span className="t-code whitespace-nowrap text-[11px] text-muted-foreground">{item.hint}</span>
+              <span className="t-code whitespace-nowrap text-xs text-muted-foreground">{item.hint}</span>
             )}
           </span>
         </li>
@@ -73,7 +73,7 @@ export const CinemaScreen = ({ className }: { className?: string }) => {
           vectorEffect="non-scaling-stroke"
         />
       </svg>
-      <p className="absolute inset-x-0 top-[40%] text-center text-[12px] text-muted-foreground">
+      <p className="absolute inset-x-0 top-[40%] text-center text-xs text-muted-foreground">
         Màn hình
       </p>
     </div>

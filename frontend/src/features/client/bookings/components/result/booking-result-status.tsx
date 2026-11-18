@@ -12,15 +12,13 @@ export const BookingResultStatus = ({ status, bookingCode }: BookingResultStatus
   const Icon = config.icon;
 
   return (
-    <div className="flex flex-col items-center gap-2 text-center">
-      <Icon className={cn("size-12", config.className)} />
-      <h1 className="t-h1 text-foreground">
-        {config.label}
-      </h1>
-      <p className="max-w-md text-sm text-muted-foreground">{config.description}</p>
-      <p className="text-xs text-muted-foreground tabular">
-        Mã đặt vé: {bookingCode}
-      </p>
+    <div className="flex w-full items-start gap-4">
+      <Icon className={cn("mt-1 size-10 shrink-0", config.className)} />
+      <div className="space-y-1">
+        <h1 className="t-h2 text-foreground">{config.label}</h1>
+        <p className="max-w-md text-sm text-muted-foreground">{config.description}</p>
+        <p className="t-code text-sm text-foreground">Mã đặt vé: {bookingCode}</p>
+      </div>
     </div>
   );
 };

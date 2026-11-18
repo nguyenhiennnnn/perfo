@@ -53,17 +53,18 @@ const AccountProfilePage = () => {
 
   const applyServerErrors = useServerFieldErrors(form);
 
+  const { reset } = form;
+
   useEffect(() => {
     if (!profile) return;
-    form.reset({
+    reset({
       fullName: profile.fullName,
       phone: profile.phone ?? "",
       dateOfBirth: toDateInputValue(profile.dateOfBirth),
       gender: profile.gender ?? null,
       avatar: profile.avatar ?? null,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile]);
+  }, [profile, reset]);
 
   const onSubmit = (values: ProfileFormValues) => {
     updateProfile.mutate({

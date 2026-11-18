@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useEffectEvent, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import { useTheme } from "@/app/providers/theme-provider";
@@ -33,31 +33,31 @@ export const GoogleSignInButton = ({ redirectTo }: GoogleSignInButtonProps) => {
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-color-scheme: dark)").matches);
 
+  const onCredential = useEffectEvent((response: GoogleCredentialResponse) => {
+    googleLogin(
+      { idToken: response.credential },
+      {
+        onSuccess: () => {
+          navigate(getSafeRedirect(redirectTo ?? searchParams.get("redirect")), {
+            replace: true,
+          });
+        },
+        onError: (error) => {
+          toast.add({
+            title: "Đăng nhập Google thất bại",
+            description: extractApiError(error).message,
+            type: "error",
+          });
+        },
+      },
+    );
+  });
+
   useEffect(() => {
     if (!GOOGLE_CLIENT_ID) return;
 
     let cancelled = false;
     let pollId: ReturnType<typeof setInterval> | undefined;
-
-    const handleCredential = (response: GoogleCredentialResponse) => {
-      googleLogin(
-        { idToken: response.credential },
-        {
-          onSuccess: () => {
-            navigate(getSafeRedirect(redirectTo ?? searchParams.get("redirect")), {
-              replace: true,
-            });
-          },
-          onError: (error) => {
-            toast.add({
-              title: "Đăng nhập Google thất bại",
-              description: extractApiError(error).message,
-              type: "error",
-            });
-          },
-        },
-      );
-    };
 
     const renderButton = () => {
       if (cancelled || !containerRef.current || !window.google) return;
@@ -66,7 +66,7 @@ export const GoogleSignInButton = ({ redirectTo }: GoogleSignInButtonProps) => {
 
       window.google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
-        callback: handleCredential,
+        callback: (response) => onCredential(response),
         cancel_on_tap_outside: true,
       });
 
@@ -95,7 +95,6 @@ export const GoogleSignInButton = ({ redirectTo }: GoogleSignInButtonProps) => {
       cancelled = true;
       if (pollId) clearInterval(pollId);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDark]);
 
   if (!GOOGLE_CLIENT_ID) return null;

@@ -1,4 +1,4 @@
-import { useEffect, useState, type KeyboardEvent } from "react";
+import { useState, type KeyboardEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SEAT_GRID_MAX_COLS, SEAT_GRID_MAX_ROWS } from "@/config/default-constants";
@@ -19,13 +19,16 @@ export const SeatEditorSizeInputs = ({ rows, cols, disabled, onResize }: SeatEdi
   const [draftRows, setDraftRows] = useState(String(rows));
   const [draftCols, setDraftCols] = useState(String(cols));
 
-  useEffect(() => {
+  const [prevRows, setPrevRows] = useState(rows);
+  const [prevCols, setPrevCols] = useState(cols);
+  if (prevRows !== rows) {
+    setPrevRows(rows);
     setDraftRows(String(rows));
-  }, [rows]);
-
-  useEffect(() => {
+  }
+  if (prevCols !== cols) {
+    setPrevCols(cols);
     setDraftCols(String(cols));
-  }, [cols]);
+  }
 
   const resetDrafts = () => {
     setDraftRows(String(rows));

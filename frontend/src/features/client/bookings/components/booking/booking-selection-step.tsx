@@ -161,7 +161,7 @@ export const BookingSelectionStep = ({
             <p className="flex items-baseline gap-2">
               <span className="text-lg font-bold tabular-nums text-primary">{formatCurrency(total)}</span>
               {holdDurationMinutes != null && seatCodes.length > 0 && (
-                <span className="text-[11px] text-muted-foreground">giữ ghế {holdDurationMinutes} phút</span>
+                <span className="text-xs text-muted-foreground">giữ ghế {holdDurationMinutes} phút</span>
               )}
             </p>
           </div>

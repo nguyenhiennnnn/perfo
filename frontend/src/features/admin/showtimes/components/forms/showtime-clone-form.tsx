@@ -121,7 +121,7 @@ export const ShowtimeCloneForm = ({ onSuccess }: ShowtimeCloneFormProps) => {
         <ul className="max-h-72 divide-y divide-border overflow-y-auto border border-border">
           {result.skipped.map((s, i) => (
             <li key={`${s.date}-${s.time}-${i}`} className="flex items-start gap-3 px-3 py-2 text-sm">
-              <span className="w-32 shrink-0 font-mono tabular-nums text-foreground">
+              <span className="w-32 shrink-0 t-code text-foreground">
                 {s.date} {s.time}
               </span>
               <span className="text-muted-foreground">{s.reason}</span>

@@ -16,7 +16,7 @@ interface TierCompareTableProps {
 
 export const TierCompareTable = ({ tiers }: TierCompareTableProps) => {
   return (
-    <div className="overflow-x-auto border border-border/60">
+    <div className="overflow-x-auto cut-md bg-card">
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/40 hover:bg-muted/40">

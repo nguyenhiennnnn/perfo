@@ -10,7 +10,8 @@ import { BRAND } from "@/config/brand";
 import { formatCurrency } from "@/lib/formatters";
 import { ROUTES } from "@/config/routes";
 
-const TIER_GRID_CLASS = "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4";
+const TIER_GRID_CLASS =
+  "grid grid-cols-1 items-end gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1.1fr_1.6fr_1.2fr]";
 
 const MembershipPage = () => {
   const tiersQuery = useMembershipTiers();
@@ -27,16 +28,20 @@ const MembershipPage = () => {
         description={`Tích điểm mỗi lần đặt vé và nhận quyền lợi độc quyền theo hạng thành viên ${BRAND.name} Rewards: Bronze, Silver, Gold, Platinum.`}
         canonical={ROUTES.membership}
       />
-      <section className="mb-10 border border-border/60 bg-card p-6 text-center md:p-10">
-        <p className="mb-3 text-sm font-medium text-accent">{BRAND.name} Rewards</p>
-        <h1 className="t-h1 text-foreground">
-          Chương trình Khách hàng Thân thiết {BRAND.name}
-        </h1>
-        <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground md:text-base">
-          Mỗi <span className="font-semibold text-foreground">{formatCurrency(10000)}</span>{" "}
-          chi tiêu = <span className="font-semibold text-foreground">1</span>{" "}
-          điểm thưởng tích lũy. Càng xem nhiều, quyền lợi càng lớn.
-        </p>
+      <section className="mb-14 grid gap-6 md:grid-cols-[1.4fr_1fr] md:items-end">
+        <div className="text-left">
+          <h1 className="t-h1 text-foreground">
+            Chương trình Khách hàng Thân thiết {BRAND.name}
+          </h1>
+          <p className="mt-3 max-w-xl text-sm text-muted-foreground md:text-base">
+            Điểm thưởng được cộng tự động sau mỗi đơn vé hoặc bắp nước hoàn tất. Càng xem nhiều, quyền lợi càng lớn.
+          </p>
+        </div>
+        <div className="cut-lg bg-card p-6 text-left md:p-8">
+          <p className="t-numeral text-5xl text-primary md:text-6xl">{formatCurrency(10000)}</p>
+          <p className="t-numeral mt-1 text-3xl text-foreground md:text-4xl">= 1 điểm</p>
+          <p className="mt-3 text-xs text-muted-foreground">chi tiêu cho mỗi điểm thưởng tích lũy</p>
+        </div>
       </section>
 
       <section className="mb-14">
@@ -48,7 +53,7 @@ const MembershipPage = () => {
           query={tiersQuery}
           skeleton={
             <div className={TIER_GRID_CLASS}>
-              <SkeletonList count={4} className="h-56 w-full" />
+              <SkeletonList count={4} className="h-56 w-full cut-md" />
             </div>
           }
           errorTitle="Không tải được các hạng thẻ"

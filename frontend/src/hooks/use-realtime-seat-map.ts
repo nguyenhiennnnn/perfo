@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useShowtimeHub } from "./use-showtime-hub";
 import { ShowtimeSeatStatus } from "@/types/enum";
 import type {
@@ -26,9 +26,11 @@ export function useRealtimeSeatMap({
     Map<number, ShowtimeSeatStatus>
   >(() => new Map());
 
-  useEffect(() => {
+  const [prevInitialSeats, setPrevInitialSeats] = useState(initialSeats);
+  if (prevInitialSeats !== initialSeats) {
+    setPrevInitialSeats(initialSeats);
     setStatusOverrides(new Map());
-  }, [initialSeats]);
+  }
 
   const applyStatus = (ids: number[], status: ShowtimeSeatStatus) => {
     setStatusOverrides((prev) => {

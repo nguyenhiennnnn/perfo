@@ -142,7 +142,7 @@ export const JobProgressPanel = () => {
   return (
     <section
       aria-label="Tác vụ nền"
-      className="fixed right-4 bottom-4 z-60 w-[calc(100vw-2rem)] max-w-sm cut-md border border-border bg-card text-card-foreground"
+      className="fixed right-4 bottom-4 z-60 w-[calc(100vw-2rem)] max-w-sm cut-md bg-card text-card-foreground"
     >
       <header className="flex items-center gap-1 px-3 py-1.5">
         <button

@@ -45,9 +45,11 @@ export const MediaUploader = ({
 
   const previewUrl = localPreview ?? value ?? null;
 
-  useEffect(() => {
+  const [prevPreviewUrl, setPrevPreviewUrl] = useState(previewUrl);
+  if (prevPreviewUrl !== previewUrl) {
+    setPrevPreviewUrl(previewUrl);
     setImageError(false);
-  }, [previewUrl]);
+  }
 
   useEffect(() => {
     return () => {

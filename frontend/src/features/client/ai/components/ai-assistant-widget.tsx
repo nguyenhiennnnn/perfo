@@ -146,7 +146,7 @@ export const AiAssistantWidget = () => {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="cut-md fixed bottom-6 right-4 z-50 flex size-14 items-center justify-center border border-primary bg-primary text-primary-foreground transition-colors hover:bg-primary/90 sm:right-6"
+        className="cut-md fixed bottom-6 right-4 z-50 flex size-14 items-center justify-center bg-primary text-primary-foreground transition-colors hover:bg-primary/90 sm:right-6"
         aria-label={open ? "Đóng trợ lý AI" : "Mở trợ lý AI"}
       >
         {open ? <X className="size-6" /> : <Sparkles className="size-6" />}

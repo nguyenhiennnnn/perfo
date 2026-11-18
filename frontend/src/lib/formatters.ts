@@ -9,6 +9,11 @@ export function formatPoints(points: number) {
   return new Intl.NumberFormat(getLocale()).format(points);
 }
 
+export function formatRating(value?: number | null): string {
+  const safe = value == null || isNaN(value) ? 0 : value;
+  return new Intl.NumberFormat(getLocale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(safe);
+}
+
 export function formatCurrency(amount?: number | null): string {
   const value = amount == null || isNaN(amount) ? 0 : Math.round(amount);
   return `${new Intl.NumberFormat(getLocale()).format(value)} ${getCurrencyLabel()}`.trim();

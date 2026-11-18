@@ -29,7 +29,7 @@ const tabsListVariants = cva(
     variants: {
       variant: {
         default:
-          "h-10 w-fit items-center justify-center gap-1 cut-sm bg-secondary/80 border border-border p-1",
+          "h-10 w-fit items-center justify-center gap-1 cut-sm bg-secondary p-1",
         line:
           "h-auto w-full flex-wrap items-center justify-start gap-1 border-b border-border bg-transparent pb-0",
       },

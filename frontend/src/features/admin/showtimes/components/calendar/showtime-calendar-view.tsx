@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { endOfWeek, startOfWeek } from "date-fns";
 import { CalendarX, TriangleAlert } from "lucide-react";
 
@@ -38,7 +38,10 @@ export const ShowtimeCalendarView = ({
   const [params, setParams] = useAdminShowtimeCalendarParams();
   const [activeDay, setActiveDay] = useState<string>();
 
+  const defaultRangeAppliedRef = useRef(false);
   useEffect(() => {
+    if (defaultRangeAppliedRef.current) return;
+    defaultRangeAppliedRef.current = true;
     if (!params.from || !params.to) {
       const today = getBusinessTodayDate();
       void setParams({
@@ -46,8 +49,7 @@ export const ShowtimeCalendarView = ({
         to: toDateInputValue(endOfWeek(today, { weekStartsOn: 1 })) ?? "",
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [params.from, params.to, setParams]);
 
   // GET /admin/rooms chỉ dành cho Admin; Employee gọi sẽ bị 403 và hiện toast lỗi.
   const canFilterByRoom = useAuthRole() === Role.Admin;

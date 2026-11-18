@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer } from "react";
 import {
   counterFlowReducer,
   initialCounterStep,
@@ -14,12 +14,6 @@ export type { CounterStep };
 export function useCounterFlow() {
   const [step, dispatch] = useReducer(counterFlowReducer, initialCounterStep);
 
-  const stepRef = useRef(step);
-
-  useEffect(() => {
-    stepRef.current = step;
-  }, [stepRef, step]);
-
   const leave = useCounterLeaveCancel({
     onRestoredAfterCancel: () => resetLocalFlow(),
   });
@@ -28,7 +22,7 @@ export function useCounterFlow() {
     showtimeId: selection.showtimeId,
     initialSeats: selection.showtimeSeats.data?.seats,
     onHoldExpired: () => {
-      if (stepRef.current !== "done") resetLocalFlow();
+      if (step !== "done") resetLocalFlow();
     },
     leave,
   });

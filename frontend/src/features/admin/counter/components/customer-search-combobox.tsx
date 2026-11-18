@@ -50,7 +50,7 @@ export const CustomerSearchCombobox = ({
         <span className="text-xs font-medium text-muted-foreground">
           Khách hàng
         </span>
-        <div className="flex items-start justify-between gap-2 cut-sm border border-border bg-muted px-3 py-2">
+        <div className="flex items-start justify-between gap-2 cut-sm bg-muted px-3 py-2">
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
             <span className="truncate text-sm font-medium text-foreground">
               {selected.fullName}
@@ -121,7 +121,7 @@ export const CustomerSearchCombobox = ({
       </div>
 
       {open && debouncedQuery.trim().length > 0 && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-1 cut-sm border border-border bg-popover">
+        <div className="absolute left-0 right-0 top-full z-50 mt-1 cut-sm bg-popover">
           {results.length === 0 && !isFetching && (
             <div className="flex items-center gap-2 px-3 py-4 text-sm text-muted-foreground">
               <UserIcon className="size-4" />

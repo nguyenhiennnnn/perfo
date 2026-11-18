@@ -43,7 +43,7 @@ public class MovieImportProcessor(
     ILogger<MovieImportProcessor> logger
 ) : ImportProcessorBase<MovieImportRow>(fileReader)
 {
-    private static readonly string[] DateFormats = ["dd/MM/yyyy", "d/M/yyyy"];
+    private static readonly string[] DateFormats = [DateTimePatterns.Date, "d/M/yyyy"];
     private static readonly string[] StatusNames = Enum.GetNames<MovieStatus>();
 
     private static readonly Dictionary<string, string>[] ExampleData =
@@ -726,7 +726,7 @@ public class MovieImportProcessor(
     }
 
     private static string MovieKey(string? title, DateOnly? releaseDate) =>
-        $"{NameLookup.Key(title)}|{releaseDate?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}";
+        $"{NameLookup.Key(title)}|{releaseDate?.ToString(DateTimePatterns.IsoDate, CultureInfo.InvariantCulture)}";
 
     private enum LookupStatus
     {

@@ -3,6 +3,8 @@ export const DEFAULT_PAGE_SIZE = 10;
 
 export const SEARCH_DEBOUNCE_MS = 300;
 export const MS_PER_SECOND = 1000;
+export const MS_PER_MINUTE = 60 * MS_PER_SECOND;
+export const MS_PER_HOUR = 60 * MS_PER_MINUTE;
 
 export const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 export const MAX_VIDEO_SIZE_BYTES = 100 * 1024 * 1024;
@@ -56,6 +58,9 @@ export const BUSINESS_TIME_ZONE_BOOT_TIMEOUT_MS = 3_000;
 export const FALLBACK_OPENING_MINUTES = 8 * 60;
 export const FALLBACK_CLOSING_MINUTES = 23 * 60;
 export const DEFAULT_PICKER_OFFSET_FROM_OPENING_MINUTES = 2 * 60;
+export const DEFAULT_SHOWTIME_BASE_PRICE = 75_000;
+export const PRICE_INPUT_STEP = 1000;
+export const DEFAULT_MOVIE_DURATION_MINUTES = 120;
 export const QR_SCAN_REPEAT_GUARD_MS = 2500;
 export const COMBOBOX_BLUR_CLOSE_DELAY_MS = 150;
 export const GOOGLE_SDK_POLL_INTERVAL_MS = 100;
@@ -120,6 +125,8 @@ export const CHECKIN_SOUND = {
 } as const;
 
 export const URL_PLACEHOLDER = "https://...";
+export const PERSON_NAME_PLACEHOLDER = "Nguyễn Văn A";
+export const PASSWORD_PLACEHOLDER = "••••••••";
 export const YOUTUBE_EMBED_BASE_URL = "https://www.youtube.com/embed";
 
 export const MOVIE_LIST_STATUS_QUERY = {

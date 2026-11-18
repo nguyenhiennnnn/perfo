@@ -18,6 +18,7 @@ import type { RegisterRequest } from "../types";
 import { PasswordStrengthMeter } from "@/components/common/form/password-strength-meter";
 import { ROUTES } from "@/config/routes";
 
+import { PERSON_NAME_PLACEHOLDER, PASSWORD_PLACEHOLDER } from "@/config/default-constants";
 const registerSchema = z
   .object({
     fullName: z.string().min(2, "Họ tên phải có ít nhất 2 ký tự."),
@@ -107,7 +108,7 @@ export const RegisterForm = () => {
           name="fullName"
           control={form.control}
           label="Họ và tên"
-          placeholder="Nguyễn Văn A"
+          placeholder={PERSON_NAME_PLACEHOLDER}
         />
 
         <FormInputField
@@ -133,7 +134,7 @@ export const RegisterForm = () => {
             label="Mật khẩu"
             type="password"
             autoComplete="new-password"
-            placeholder="••••••••"
+            placeholder={PASSWORD_PLACEHOLDER}
           />
           <PasswordStrengthMeter password={password} />
         </div>
@@ -144,7 +145,7 @@ export const RegisterForm = () => {
           label="Xác nhận mật khẩu"
           type="password"
           autoComplete="new-password"
-          placeholder="••••••••"
+          placeholder={PASSWORD_PLACEHOLDER}
         />
       </FieldGroup>
 

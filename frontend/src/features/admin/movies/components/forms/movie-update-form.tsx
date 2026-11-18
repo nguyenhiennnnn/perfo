@@ -29,7 +29,7 @@ import {
 } from "@/features/admin/catalog/hooks/use-quick-create";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useServerFieldErrors } from "@/hooks/use-server-field-errors";
-import { LOOKUP_PAGE_SIZE, FORM_SAVE_CHANGES_LABEL } from "@/config/default-constants";
+import { LOOKUP_PAGE_SIZE, FORM_SAVE_CHANGES_LABEL, DEFAULT_MOVIE_DURATION_MINUTES } from "@/config/default-constants";
 
 import { useAdminMovieDetail, useAdminUpdateMovie } from "@/features/admin/movies/hooks/use-admin-movies";
 import type { AdminMovieListItemDto } from "@/features/admin/movies/types";
@@ -72,7 +72,7 @@ export const MovieUpdateForm = ({ movie, onSuccess }: MovieUpdateFormProps) => {
       originalTitle: "",
       description: "",
       directorId: undefined,
-      durationMinutes: 120,
+      durationMinutes: DEFAULT_MOVIE_DURATION_MINUTES,
       releaseDate: movie.releaseDate ?? "",
       languageId: undefined,
       subtitle: "",
@@ -101,7 +101,7 @@ export const MovieUpdateForm = ({ movie, onSuccess }: MovieUpdateFormProps) => {
           originalTitle: d.originalTitle ?? "",
           description: d.description ?? "",
           directorId: d.director?.directorId ?? undefined,
-          durationMinutes: d.durationMinutes ?? 120,
+          durationMinutes: d.durationMinutes ?? DEFAULT_MOVIE_DURATION_MINUTES,
           releaseDate: d.releaseDate ? String(d.releaseDate) : "",
           languageId: d.language?.languageId ?? undefined,
           subtitle: d.subtitle ?? "",

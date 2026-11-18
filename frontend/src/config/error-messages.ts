@@ -5,16 +5,16 @@ export interface StatusErrorRule {
 }
 
 export const STATUS_ERROR_RULES: Readonly<Record<number, StatusErrorRule>> = {
-  400: { message: "Dữ liệu không hợp lệ.", preferServerMessage: true },
-  401: { message: "Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại." },
-  403: { message: "Bạn không có quyền thực hiện thao tác này." },
-  404: { message: "Không tìm thấy dữ liệu yêu cầu." },
-  409: {
+  [HTTP_STATUS.badRequest]: { message: "Dữ liệu không hợp lệ.", preferServerMessage: true },
+  [HTTP_STATUS.unauthorized]: { message: "Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại." },
+  [HTTP_STATUS.forbidden]: { message: "Bạn không có quyền thực hiện thao tác này." },
+  [HTTP_STATUS.notFound]: { message: "Không tìm thấy dữ liệu yêu cầu." },
+  [HTTP_STATUS.conflict]: {
     message: "Dữ liệu bị xung đột. Vui lòng thử lại.",
     preferServerMessage: true,
   },
-  422: { message: "Dữ liệu không hợp lệ.", preferServerMessage: true },
-  429: { message: "Bạn thao tác quá nhanh. Vui lòng thử lại sau." },
+  [HTTP_STATUS.unprocessable]: { message: "Dữ liệu không hợp lệ.", preferServerMessage: true },
+  [HTTP_STATUS.tooManyRequests]: { message: "Bạn thao tác quá nhanh. Vui lòng thử lại sau." },
 };
 
 export const SERVER_ERROR_RULE: StatusErrorRule = {
@@ -104,6 +104,10 @@ export const VALIDATION_MESSAGES = {
   passwordMismatch: "Mật khẩu xác nhận không khớp.",
   movieRequired: "Vui lòng chọn phim.",
   userRequired: "Vui lòng chọn người dùng.",
+  basePriceInvalid: "Giá vé không hợp lệ.",
+  imageUrlInvalid: "Đường dẫn ảnh không hợp lệ.",
+  imageUrlTooLong: (max: number) => `Đường dẫn ảnh tối đa ${max} ký tự.`,
+  fullNameTooLong: (max: number) => `Họ tên tối đa ${max} ký tự.`,
 } as const;
 
 export const SILENT_TOAST_STATUSES: readonly number[] = [HTTP_STATUS.unauthorized];

@@ -15,11 +15,11 @@ const actorFormSchema = z.object({
   fullName: z
     .string()
     .min(1, VALIDATION_MESSAGES.fullNameRequired)
-    .max(PERSON_NAME_MAX_LENGTH, `Họ tên tối đa ${PERSON_NAME_MAX_LENGTH} ký tự.`),
+    .max(PERSON_NAME_MAX_LENGTH, VALIDATION_MESSAGES.fullNameTooLong(PERSON_NAME_MAX_LENGTH)),
   avatarUrl: z
     .string()
-    .url("Đường dẫn ảnh không hợp lệ.")
-    .max(IMAGE_URL_MAX_LENGTH, `Đường dẫn ảnh tối đa ${IMAGE_URL_MAX_LENGTH} ký tự.`)
+    .url(VALIDATION_MESSAGES.imageUrlInvalid)
+    .max(IMAGE_URL_MAX_LENGTH, VALIDATION_MESSAGES.imageUrlTooLong(IMAGE_URL_MAX_LENGTH))
     .optional()
     .or(z.literal("")),
 });

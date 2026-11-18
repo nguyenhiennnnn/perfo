@@ -8,7 +8,7 @@ export const PASSWORD_DIGIT_REGEX = /[0-9]/;
 
 export const strongPasswordSchema = z
   .string()
-  .min(PASSWORD_MIN_LENGTH, "Mật khẩu phải có ít nhất 8 ký tự.")
+  .min(PASSWORD_MIN_LENGTH, `Mật khẩu phải có ít nhất ${PASSWORD_MIN_LENGTH} ký tự.`)
   .regex(PASSWORD_UPPERCASE_REGEX, "Mật khẩu phải có ít nhất 1 chữ hoa.")
   .regex(PASSWORD_LOWERCASE_REGEX, "Mật khẩu phải có ít nhất 1 chữ thường.")
   .regex(PASSWORD_DIGIT_REGEX, "Mật khẩu phải có ít nhất 1 chữ số.");

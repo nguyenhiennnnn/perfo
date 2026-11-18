@@ -15,6 +15,7 @@ import { BRAND } from "@/config/brand";
 import { ROUTES, getAdminHomePath } from "@/config/routes";
 import { getSafeRedirect } from "@/lib/utils";
 
+import { PASSWORD_PLACEHOLDER } from "@/config/default-constants";
 const adminLoginSchema = z.object({
   email: z.string().min(1, VALIDATION_MESSAGES.emailRequired).email(VALIDATION_MESSAGES.emailInvalid),
   password: loginPasswordSchema,
@@ -71,7 +72,7 @@ export const AdminLoginForm = () => {
           label="Mật khẩu"
           type="password"
           autoComplete="current-password"
-          placeholder="••••••••"
+          placeholder={PASSWORD_PLACEHOLDER}
         />
       </FieldGroup>
 

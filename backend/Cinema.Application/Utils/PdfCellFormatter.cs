@@ -1,13 +1,14 @@
 using System.Globalization;
 using Cinema.Application.Interfaces;
+using Cinema.Shared.Constants;
 
 namespace Cinema.Application.Utils;
 
 public static class PdfCellFormatter
 {
     private const string NumberFormat = "#,##0.##";
-    private const string DateFormat = "dd/MM/yyyy";
-    private const string DateTimeFormat = "dd/MM/yyyy HH:mm";
+    private const string DateFormat = DateTimePatterns.Date;
+    private const string DateTimeFormat = DateTimePatterns.DateHourMinute;
 
     private static readonly CultureInfo Culture = CultureInfo.InvariantCulture;
 

@@ -16,6 +16,7 @@ import { GoogleSignInButton } from "./google-sign-in-button";
 import { ROUTES } from "@/config/routes";
 import { getSafeRedirect } from "@/lib/utils";
 
+import { PASSWORD_PLACEHOLDER } from "@/config/default-constants";
 const loginSchema = z.object({
   email: z.string().min(1, VALIDATION_MESSAGES.emailRequired).email(VALIDATION_MESSAGES.emailInvalid),
   password: loginPasswordSchema,
@@ -77,7 +78,7 @@ export const LoginForm = () => {
                 {...field}
                 id="password"
                 autoComplete="current-password"
-                placeholder="••••••••"
+                placeholder={PASSWORD_PLACEHOLDER}
                 aria-invalid={fieldState.invalid}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

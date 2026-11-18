@@ -28,7 +28,7 @@ const GENDER_OPTIONS = [
 ];
 
 const profileFormSchema = z.object({
-  fullName: z.string().min(1, VALIDATION_MESSAGES.fullNameRequired).max(PERSON_NAME_MAX_LENGTH, `Họ tên tối đa ${PERSON_NAME_MAX_LENGTH} ký tự.`),
+  fullName: z.string().min(1, VALIDATION_MESSAGES.fullNameRequired).max(PERSON_NAME_MAX_LENGTH, VALIDATION_MESSAGES.fullNameTooLong(PERSON_NAME_MAX_LENGTH)),
   phone: z.string().max(PHONE_MAX_LENGTH, `Số điện thoại tối đa ${PHONE_MAX_LENGTH} ký tự.`).optional().or(z.literal("")),
   dateOfBirth: z.string().nullable().optional(),
   gender: z.string().nullable().optional(),

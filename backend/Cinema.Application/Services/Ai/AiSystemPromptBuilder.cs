@@ -3,6 +3,7 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -29,10 +30,10 @@ public class AiSystemPromptBuilder(IAppDbContext db, IOptions<BrandOptions> bran
         var address = settings?.Address ?? Messages.Ai_Prompt_NotUpdated;
         var phone = settings?.Phone ?? Messages.Ai_Prompt_NotUpdated;
         var opening =
-            settings?.OpeningTime?.ToString("HH:mm", CultureInfo.InvariantCulture)
+            settings?.OpeningTime?.ToString(DateTimePatterns.HourMinute, CultureInfo.InvariantCulture)
             ?? FallbackOpeningTime;
         var closing =
-            settings?.ClosingTime?.ToString("HH:mm", CultureInfo.InvariantCulture)
+            settings?.ClosingTime?.ToString(DateTimePatterns.HourMinute, CultureInfo.InvariantCulture)
             ?? FallbackClosingTime;
 
         var now = DateTime.UtcNow;

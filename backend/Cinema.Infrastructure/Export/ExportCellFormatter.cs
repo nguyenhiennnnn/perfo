@@ -1,5 +1,6 @@
 using System.Globalization;
 using Cinema.Application.Utils;
+using Cinema.Shared.Constants;
 
 namespace Cinema.Infrastructure.Export;
 
@@ -48,7 +49,7 @@ internal static class ExportCellFormatter
         value.ToString("0.##", CultureInfo.InvariantCulture);
 
     public static string FormatDate(DateTime value) =>
-        value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        value.ToString(DateTimePatterns.IsoDate, CultureInfo.InvariantCulture);
 
     public static string FormatDateTime(DateTime value) =>
         value.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);

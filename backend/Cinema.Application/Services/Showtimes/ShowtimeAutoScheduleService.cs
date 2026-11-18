@@ -4,6 +4,7 @@ using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -195,10 +196,10 @@ public class ShowtimeAutoScheduleService(
             .ToList();
 
         return new AutoScheduleResponseDto(
-            request.Date.ToString("dd/MM/yyyy"),
+            request.Date.ToString(DateTimePatterns.Date),
             items,
             unplaced,
-            dayCount > 1 ? toDate.ToString("dd/MM/yyyy") : null
+            dayCount > 1 ? toDate.ToString(DateTimePatterns.Date) : null
         );
     }
 

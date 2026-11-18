@@ -128,7 +128,7 @@ public class AiToolExecutor(IAppDbContext db, ILogger<AiToolExecutor> logger)
             if (
                 !DateOnly.TryParseExact(
                     dateStr,
-                    "yyyy-MM-dd",
+                    DateTimePatterns.IsoDate,
                     CultureInfo.InvariantCulture,
                     DateTimeStyles.None,
                     out var date
@@ -188,7 +188,7 @@ public class AiToolExecutor(IAppDbContext db, ILogger<AiToolExecutor> logger)
                     ["screenType"] = r.ScreenType,
                     ["startTime"] = BusinessTime
                         .ToLocal(r.StartTime)
-                        .ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                        .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture),
                     ["basePriceVnd"] = r.BasePrice,
                     ["availableSeats"] = r.AvailableSeats,
                 }
@@ -293,7 +293,7 @@ public class AiToolExecutor(IAppDbContext db, ILogger<AiToolExecutor> logger)
             ["room"] = showtime.RoomName,
             ["startTime"] = BusinessTime
                 .ToLocal(showtime.StartTime)
-                .ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture),
             ["totalSeats"] = seats.Count,
             ["availableSeats"] = free.Count,
             ["bySeatType"] = byType,
@@ -383,7 +383,7 @@ public class AiToolExecutor(IAppDbContext db, ILogger<AiToolExecutor> logger)
                     ["room"] = r.RoomName,
                     ["startTime"] = BusinessTime
                         .ToLocal(r.StartTime)
-                        .ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture),
+                        .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture),
                     ["seats"] = new JsonArray(seats.Select(s => (JsonNode?)s).ToArray()),
                     ["finalAmountVnd"] = r.FinalAmount,
                 }

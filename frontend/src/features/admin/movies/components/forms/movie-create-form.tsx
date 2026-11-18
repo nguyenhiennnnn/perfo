@@ -26,7 +26,7 @@ import {
 } from "@/features/admin/catalog/hooks/use-quick-create";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useServerFieldErrors } from "@/hooks/use-server-field-errors";
-import { LOOKUP_PAGE_SIZE } from "@/config/default-constants";
+import { LOOKUP_PAGE_SIZE, DEFAULT_MOVIE_DURATION_MINUTES } from "@/config/default-constants";
 
 import { useAdminCreateMovie } from "@/features/admin/movies/hooks/use-admin-movies";
 import { movieFormSchema, type MovieCreateFormValues } from "@/features/admin/movies/schemas/movie-schema";
@@ -64,7 +64,7 @@ export const MovieCreateForm = ({ onSuccess }: MovieCreateFormProps) => {
       title: "",
       originalTitle: "",
       description: "",
-      durationMinutes: 120,
+      durationMinutes: DEFAULT_MOVIE_DURATION_MINUTES,
       releaseDate: "",
       subtitle: "",
       posterUrl: "",

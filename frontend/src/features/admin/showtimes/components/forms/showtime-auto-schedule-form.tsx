@@ -14,7 +14,7 @@ import { FormInputField } from "@/components/common/form/form-input-field";
 import { FormDatePickerField } from "@/components/common/form/form-date-picker-field";
 import { SingleSelectField } from "@/components/common/form/single-select-field";
 import { getBusinessTodayDate } from "@/lib/business-time";
-import { SEARCH_LOOKUP_PAGE_SIZE, AUTO_SCHEDULE_MAX_SHOWS_PER_MOVIE } from "@/config/default-constants";
+import { SEARCH_LOOKUP_PAGE_SIZE, AUTO_SCHEDULE_MAX_SHOWS_PER_MOVIE, PRICE_INPUT_STEP, DEFAULT_SHOWTIME_BASE_PRICE } from "@/config/default-constants";
 import { useBlockDialogClose } from "@/hooks/use-block-dialog-close";
 import { useServerFieldErrors } from "@/hooks/use-server-field-errors";
 import { formatDayMonth } from "@/lib/cinema-format";
@@ -43,11 +43,11 @@ const formSchema = z.object({
           .int("Số suất không hợp lệ.")
           .min(1, "Tối thiểu 1 suất.")
           .max(AUTO_SCHEDULE_MAX_SHOWS_PER_MOVIE, `Tối đa ${AUTO_SCHEDULE_MAX_SHOWS_PER_MOVIE} suất.`),
-        basePrice: z.coerce.number().min(0, "Giá vé không hợp lệ.").optional(),
+        basePrice: z.coerce.number().min(0, VALIDATION_MESSAGES.basePriceInvalid).optional(),
       }),
     )
     .min(1, "Thêm ít nhất một phim."),
-  basePrice: z.coerce.number().min(0, "Giá vé không hợp lệ."),
+  basePrice: z.coerce.number().min(0, VALIDATION_MESSAGES.basePriceInvalid),
   allowAfterHours: z.boolean(),
 });
 
@@ -75,7 +75,7 @@ export const ShowtimeAutoScheduleForm = ({ onSuccess }: ShowtimeAutoScheduleForm
       date: "",
       toDate: "",
       movies: [{ movieId: undefined, shows: 3, basePrice: undefined }],
-      basePrice: 75000,
+      basePrice: DEFAULT_SHOWTIME_BASE_PRICE,
       allowAfterHours: false,
     },
   });
@@ -251,7 +251,7 @@ export const ShowtimeAutoScheduleForm = ({ onSuccess }: ShowtimeAutoScheduleForm
                           }
                           type="number"
                           min={0}
-                          step={1000}
+                          step={PRICE_INPUT_STEP}
                           placeholder="Giá riêng"
                           aria-invalid={fieldState.invalid}
                         />
@@ -308,7 +308,7 @@ export const ShowtimeAutoScheduleForm = ({ onSuccess }: ShowtimeAutoScheduleForm
           label={`Giá vé mặc định (${getCurrencyLabel()})`}
           type="number"
           min={0}
-          step={1000}
+          step={PRICE_INPUT_STEP}
         />
 
         <FormSwitchField name="allowAfterHours" control={form.control} label="Cho phép suất khuya (kết thúc sau giờ đóng cửa)" />

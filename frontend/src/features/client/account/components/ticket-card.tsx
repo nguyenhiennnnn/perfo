@@ -9,6 +9,7 @@ import { useNow } from "@/hooks/use-now";
 import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings";
 import { ROUTES } from "@/config/routes";
 
+import { MS_PER_HOUR } from "@/config/default-constants";
 interface TicketCardProps {
   booking: BookingListItemDto;
   onCancel?: () => void;
@@ -23,7 +24,7 @@ export const TicketCard = ({ booking, onCancel }: TicketCardProps) => {
   const canCancel =
     booking.status === BookingStatus.Confirmed &&
     isRefundable &&
-    new Date(booking.startTime).getTime() - now > cancelDeadlineHours * 60 * 60 * 1000;
+    new Date(booking.startTime).getTime() - now > cancelDeadlineHours * MS_PER_HOUR;
 
   return (
     <div className="flex flex-col gap-4 bg-card p-4 sm:flex-row sm:items-center sm:justify-between">

@@ -37,9 +37,9 @@ public class ShowtimeImportProcessor(
 
     private static readonly string[] DateTimeFormats =
     [
-        "dd/MM/yyyy HH:mm",
+        DateTimePatterns.DateHourMinute,
         "d/M/yyyy H:mm",
-        "dd/MM/yyyy HH:mm:ss",
+        DateTimePatterns.DateHourMinuteSecond,
         "d/M/yyyy H:mm:ss",
     ];
 
@@ -657,8 +657,8 @@ public class ShowtimeImportProcessor(
     private static IReadOnlyList<IReadOnlyList<object?>> ExampleRows(string movie, string room)
     {
         var day = BusinessTime.Today().AddDays(1);
-        var first = day.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
-        var second = day.AddDays(1).ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+        var first = day.ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture);
+        var second = day.AddDays(1).ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture);
 
         return
         [

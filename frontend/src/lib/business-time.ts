@@ -2,6 +2,7 @@ import { isValid, parseISO } from "date-fns";
 import { ENV } from "@/config/env";
 import { getServerNow } from "@/lib/server-clock";
 
+import { MS_PER_MINUTE } from "@/config/default-constants";
 const FALLBACK_TIME_ZONE = "UTC";
 
 const ZONE_DESIGNATOR = /T.*(Z|[+-]\d{2}:?\d{2})$/i;
@@ -126,7 +127,7 @@ function getBusinessOffsetMinutes(instant: Date): number {
     p.second,
   );
   const instantSeconds = Math.floor(instant.getTime() / 1000) * 1000;
-  return Math.round((asUtc - instantSeconds) / 60000);
+  return Math.round((asUtc - instantSeconds) / MS_PER_MINUTE);
 }
 
 function formatOffset(minutes: number): string {

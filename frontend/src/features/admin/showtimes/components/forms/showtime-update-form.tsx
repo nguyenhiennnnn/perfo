@@ -13,7 +13,7 @@ import { useAdminMovies } from "@/features/admin/movies/hooks/use-admin-movies";
 import { useAdminRooms } from "@/features/admin/rooms/hooks/use-admin-rooms";
 import { useAdminUpdateShowtime } from "@/features/admin/showtimes/hooks/use-admin-showtimes";
 import type { AdminShowtimeDto } from "@/features/admin/showtimes/types";
-import { LOOKUP_PAGE_SIZE, SEARCH_LOOKUP_PAGE_SIZE, FORM_SAVE_CHANGES_LABEL } from "@/config/default-constants";
+import { LOOKUP_PAGE_SIZE, SEARCH_LOOKUP_PAGE_SIZE, FORM_SAVE_CHANGES_LABEL, PRICE_INPUT_STEP } from "@/config/default-constants";
 import { FormSearchSelectField } from "@/components/common/form/form-search-select-field";
 import { FormActions } from "@/components/common/form/form-actions";
 import { useServerFieldErrors } from "@/hooks/use-server-field-errors";
@@ -25,7 +25,7 @@ const showtimeFormSchema = z.object({
   movieId: z.coerce.number({ message: VALIDATION_MESSAGES.movieRequired }),
   roomId: z.coerce.number({ message: "Vui lòng chọn phòng chiếu." }),
   startTime: z.string().min(1, "Vui lòng chọn thời gian chiếu."),
-  basePrice: z.coerce.number().min(0, "Giá vé không hợp lệ."),
+  basePrice: z.coerce.number().min(0, VALIDATION_MESSAGES.basePriceInvalid),
 });
 
 type ShowtimeFormValues = z.infer<typeof showtimeFormSchema>;
@@ -116,7 +116,7 @@ export const ShowtimeUpdateForm = ({ showtime, onSuccess }: ShowtimeUpdateFormPr
           label={`Giá vé (${getCurrencyLabel()})`}
           type="number"
           min={0}
-          step={1000}
+          step={PRICE_INPUT_STEP}
         />
       </FieldGroup>
 

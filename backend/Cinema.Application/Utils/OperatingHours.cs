@@ -1,4 +1,5 @@
 using System.Globalization;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 
 namespace Cinema.Application.Utils;
@@ -43,9 +44,9 @@ public static class OperatingHours
         }
 
         var range =
-            $"{opening?.ToString("HH:mm", CultureInfo.InvariantCulture) ?? "--"} - {closing?.ToString("HH:mm", CultureInfo.InvariantCulture) ?? "--"}";
-        var startText = BusinessTime.ToLocal(start).ToString("HH:mm", CultureInfo.InvariantCulture);
-        var endText = BusinessTime.ToLocal(end).ToString("HH:mm", CultureInfo.InvariantCulture);
+            $"{opening?.ToString(DateTimePatterns.HourMinute, CultureInfo.InvariantCulture) ?? "--"} - {closing?.ToString(DateTimePatterns.HourMinute, CultureInfo.InvariantCulture) ?? "--"}";
+        var startText = BusinessTime.ToLocal(start).ToString(DateTimePatterns.HourMinute, CultureInfo.InvariantCulture);
+        var endText = BusinessTime.ToLocal(end).ToString(DateTimePatterns.HourMinute, CultureInfo.InvariantCulture);
         return string.Format(
             Messages.Rule_ShowtimeOutsideOperatingHours,
             startText,

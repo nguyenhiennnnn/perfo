@@ -2,6 +2,7 @@ using Cinema.Application.DTOs.Showtimes;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Mapster;
@@ -114,7 +115,7 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
         var lookaheadDays = await db.LoadShowtimeLookaheadDaysAsync(cancellationToken);
         var maxDate = BusinessTime.LocalDate(DateTime.UtcNow.AddDays(lookaheadDays));
         if (date > maxDate)
-            return new WholeCinemaScheduleDto(date.ToString("dd/MM/yyyy"), [], formats);
+            return new WholeCinemaScheduleDto(date.ToString(DateTimePatterns.Date), [], formats);
 
         if (!string.IsNullOrWhiteSpace(screenType))
             dayQuery = dayQuery.Where(s =>
@@ -163,7 +164,7 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
             ))
             .ToList();
 
-        return new WholeCinemaScheduleDto(date.ToString("dd/MM/yyyy"), movies, formats);
+        return new WholeCinemaScheduleDto(date.ToString(DateTimePatterns.Date), movies, formats);
     }
 
     public async Task<ShowtimeCalendarResponseDto> GetShowtimesCalendarAsync(
@@ -213,7 +214,7 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
             .GroupBy(s => BusinessTime.LocalDate(s.StartTime))
             .OrderBy(g => g.Key)
             .Select(g => new ShowtimeCalendarDayDto(
-                g.Key.ToString("dd/MM/yyyy"),
+                g.Key.ToString(DateTimePatterns.Date),
                 g.Select(s =>
                     {
                         var counts = seatCountLookup.GetValueOrDefault(s.ShowtimeId);
@@ -229,8 +230,8 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
             .ToList();
 
         return new ShowtimeCalendarResponseDto(
-            filter.From.ToString("dd/MM/yyyy"),
-            filter.To.ToString("dd/MM/yyyy"),
+            filter.From.ToString(DateTimePatterns.Date),
+            filter.To.ToString(DateTimePatterns.Date),
             days
         );
     }

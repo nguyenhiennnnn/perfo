@@ -2,6 +2,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { isValidVnPhone } from "@/lib/validators";
 
+import { VALIDATION_MESSAGES } from "@/config/error-messages";
+import { PERSON_NAME_PLACEHOLDER } from "@/config/default-constants";
 interface BookingCustomerFormProps {
   customerName: string;
   onCustomerNameChange: (value: string) => void;
@@ -31,7 +33,7 @@ export const BookingCustomerForm = ({
           value={customerName}
           onChange={(e) => onCustomerNameChange(e.target.value)}
           disabled={isAuthenticated}
-          placeholder="Nguyễn Văn A"
+          placeholder={PERSON_NAME_PLACEHOLDER}
         />
       </div>
       <div className="flex flex-col gap-1.5">
@@ -51,7 +53,7 @@ export const BookingCustomerForm = ({
         />
         {phoneInvalid && (
           <p id="booking-customer-phone-error" className="text-xs text-destructive">
-            Số điện thoại không hợp lệ.
+            {VALIDATION_MESSAGES.phoneInvalid}
           </p>
         )}
       </div>

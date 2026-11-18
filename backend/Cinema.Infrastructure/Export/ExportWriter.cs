@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using Cinema.Application.Interfaces;
+using Cinema.Shared.Constants;
 using ClosedXML.Excel;
 using CsvHelper;
 using CsvHelper.Configuration;
@@ -13,8 +14,8 @@ public class ExportWriter : IExportWriter
     private const string IntegerFormat = "#,##0";
     private const string DecimalFormat = "#,##0.00";
     private const string MoneyFormat = "#,##0\" ₫\"";
-    private const string DateFormat = "dd/MM/yyyy";
-    private const string DateTimeFormat = "dd/MM/yyyy HH:mm:ss";
+    private const string DateFormat = DateTimePatterns.Date;
+    private const string DateTimeFormat = DateTimePatterns.DateHourMinuteSecond;
     private const string HeaderFill = "#E5E7EB";
     private const string RequiredHeaderFill = "#FECACA";
     private const string ExampleFill = "#FEF9C3";

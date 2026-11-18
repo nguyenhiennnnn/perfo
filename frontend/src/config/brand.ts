@@ -3,6 +3,7 @@ import { ENV } from "./env";
 export const BRAND = {
   name: "Perfo",
   siteName: "Perfo",
+  copyrightYear: 2026,
   tagline: "Đặt vé xem phim trực tuyến",
   defaultDescription:
     "Đặt vé xem phim nhanh chóng: chọn phim, suất chiếu, chọn ghế và thanh toán online chỉ trong vài phút.",

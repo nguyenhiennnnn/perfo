@@ -76,7 +76,7 @@ export const ClientFooter = () => {
       </div>
       <div className="perf-h" />
       <div className="px-4 py-4 text-center text-xs text-muted-foreground">
-        © 2026 {BRAND.name}. Toàn bộ bản quyền thuộc về {BRAND.name}.
+        © {BRAND.copyrightYear} {BRAND.name}. Toàn bộ bản quyền thuộc về {BRAND.name}.
       </div>
     </footer>
   );

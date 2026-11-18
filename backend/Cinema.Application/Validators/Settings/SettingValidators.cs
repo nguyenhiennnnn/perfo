@@ -147,7 +147,7 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         value is not null
         && TimeOnly.TryParseExact(
             value,
-            "HH:mm",
+            DateTimePatterns.HourMinute,
             CultureInfo.InvariantCulture,
             DateTimeStyles.None,
             out _

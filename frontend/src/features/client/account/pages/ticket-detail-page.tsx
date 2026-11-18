@@ -20,6 +20,7 @@ import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings
 import { ROUTES } from "@/config/routes";
 import { ENDPOINTS } from "@/api/endpoints";
 
+import { MS_PER_HOUR } from "@/config/default-constants";
 const TicketDetailSkeleton = () => (
   <div className="space-y-6" aria-busy="true">
     <div className="flex items-center justify-between gap-3 bg-card p-4">
@@ -54,7 +55,7 @@ const TicketDetailContent = ({ booking }: { booking: BookingDetailDto }) => {
   const canCancel =
     booking.status === BookingStatus.Confirmed &&
     isRefundable &&
-    new Date(booking.showtime.startTime).getTime() - now > cancelDeadlineHours * 60 * 60 * 1000;
+    new Date(booking.showtime.startTime).getTime() - now > cancelDeadlineHours * MS_PER_HOUR;
 
   const isPending = booking.status === BookingStatus.Pending;
   const isHoldExpired = isPending && (!booking.holdExpiresAt || holdCountdown.remainingMs <= 0);

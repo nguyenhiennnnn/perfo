@@ -14,6 +14,7 @@ import { useResetPassword } from "../hooks/use-auth";
 import { setPasswordSchema, type SetPasswordFormValues } from "../schemas/password-schemas";
 import { InvalidLinkNotice } from "./invalid-link-notice";
 
+import { PASSWORD_PLACEHOLDER } from "@/config/default-constants";
 export const ResetPasswordForm = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -59,7 +60,7 @@ export const ResetPasswordForm = () => {
           label="Mật khẩu mới"
           type="password"
           autoComplete="new-password"
-          placeholder="••••••••"
+          placeholder={PASSWORD_PLACEHOLDER}
         />
 
         <FormInputField
@@ -68,7 +69,7 @@ export const ResetPasswordForm = () => {
           label="Xác nhận mật khẩu mới"
           type="password"
           autoComplete="new-password"
-          placeholder="••••••••"
+          placeholder={PASSWORD_PLACEHOLDER}
         />
 
         <PasswordStrengthMeter password={newPassword} />

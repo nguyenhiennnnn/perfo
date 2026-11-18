@@ -1,13 +1,14 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 
 namespace Cinema.Application.Utils;
 
 public class DateOnlyJsonConverter : JsonConverter<DateOnly>
 {
-    private const string Format = "yyyy-MM-dd";
+    private const string Format = DateTimePatterns.IsoDate;
 
     public override DateOnly Read(
         ref Utf8JsonReader reader,
@@ -22,7 +23,7 @@ public class DateOnlyJsonConverter : JsonConverter<DateOnly>
         if (
             DateOnly.TryParseExact(
                 value,
-                "yyyy-MM-dd",
+                DateTimePatterns.IsoDate,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
                 out var date
@@ -33,7 +34,7 @@ public class DateOnlyJsonConverter : JsonConverter<DateOnly>
         if (
             DateOnly.TryParseExact(
                 value,
-                "dd/MM/yyyy",
+                DateTimePatterns.Date,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
                 out date
@@ -70,7 +71,7 @@ public class DateTimeJsonConverter : JsonConverter<DateTime>
         if (
             DateTime.TryParseExact(
                 value,
-                "dd/MM/yyyy HH:mm:ss",
+                DateTimePatterns.DateHourMinuteSecond,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
                 out dt
@@ -81,7 +82,7 @@ public class DateTimeJsonConverter : JsonConverter<DateTime>
         if (
             DateTime.TryParseExact(
                 value,
-                "dd/MM/yyyy HH:mm",
+                DateTimePatterns.DateHourMinute,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
                 out dt
@@ -92,7 +93,7 @@ public class DateTimeJsonConverter : JsonConverter<DateTime>
         if (
             DateTime.TryParseExact(
                 value,
-                "dd/MM/yyyy",
+                DateTimePatterns.Date,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.None,
                 out dt

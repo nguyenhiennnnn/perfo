@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { COMBO_NAME_MAX_LENGTH, COMBO_DESCRIPTION_MAX_LENGTH, FORM_SAVE_CHANGES_LABEL } from "@/config/default-constants";
+import { COMBO_NAME_MAX_LENGTH, COMBO_DESCRIPTION_MAX_LENGTH, FORM_SAVE_CHANGES_LABEL, PRICE_INPUT_STEP } from "@/config/default-constants";
 
 import {
   FieldGroup,
@@ -104,7 +104,7 @@ export const ComboUpdateForm = ({ combo, onSuccess }: ComboUpdateFormProps) => {
           label={`Giá (${getCurrencyLabel()})`}
           type="number"
           min={0}
-          step={1000}
+          step={PRICE_INPUT_STEP}
         />
       </FieldGroup>
 

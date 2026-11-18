@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using Cinema.Application.Interfaces;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using ClosedXML.Excel;
@@ -12,8 +13,8 @@ namespace Cinema.Infrastructure.Import;
 
 public partial class ImportFileReader : IImportFileReader
 {
-    private const string DateFormat = "dd/MM/yyyy";
-    private const string DateTimeFormat = "dd/MM/yyyy HH:mm:ss";
+    private const string DateFormat = DateTimePatterns.Date;
+    private const string DateTimeFormat = DateTimePatterns.DateHourMinuteSecond;
 
     public async Task<ImportTable> ReadAsync(
         Stream content,

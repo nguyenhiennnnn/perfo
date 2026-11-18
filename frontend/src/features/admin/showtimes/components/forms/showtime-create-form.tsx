@@ -10,7 +10,7 @@ import { FormDateTimePickerField } from "@/components/common/form/form-datetime-
 import { useAdminMovies } from "@/features/admin/movies/hooks/use-admin-movies";
 import { useAdminRooms } from "@/features/admin/rooms/hooks/use-admin-rooms";
 import { useAdminCreateShowtime } from "@/features/admin/showtimes/hooks/use-admin-showtimes";
-import { LOOKUP_PAGE_SIZE, SEARCH_LOOKUP_PAGE_SIZE } from "@/config/default-constants";
+import { LOOKUP_PAGE_SIZE, SEARCH_LOOKUP_PAGE_SIZE, PRICE_INPUT_STEP, DEFAULT_SHOWTIME_BASE_PRICE } from "@/config/default-constants";
 import { getBusinessTodayDate, toBusinessIso } from "@/lib/business-time";
 import { MovieStatus } from "@/types/enum";
 import { FormSearchSelectField } from "@/components/common/form/form-search-select-field";
@@ -25,7 +25,7 @@ const showtimeFormSchema = z.object({
   movieId: z.coerce.number({ message: VALIDATION_MESSAGES.movieRequired }),
   roomId: z.coerce.number({ message: "Vui lòng chọn phòng chiếu." }),
   startTime: z.string().min(1, "Vui lòng chọn thời gian chiếu."),
-  basePrice: z.coerce.number().min(0, "Giá vé không hợp lệ."),
+  basePrice: z.coerce.number().min(0, VALIDATION_MESSAGES.basePriceInvalid),
   allowAfterHours: z.boolean(),
 });
 
@@ -46,7 +46,7 @@ export const ShowtimeCreateForm = ({ onSuccess }: ShowtimeCreateFormProps) => {
 
   const form = useForm<ShowtimeFormValues>({
     resolver: zodResolver(showtimeFormSchema),
-    defaultValues: { startTime: "", basePrice: 75000, allowAfterHours: false },
+    defaultValues: { startTime: "", basePrice: DEFAULT_SHOWTIME_BASE_PRICE, allowAfterHours: false },
   });
 
   const applyServerErrors = useServerFieldErrors(form);
@@ -108,7 +108,7 @@ export const ShowtimeCreateForm = ({ onSuccess }: ShowtimeCreateFormProps) => {
           label={`Giá vé (${getCurrencyLabel()})`}
           type="number"
           min={0}
-          step={1000}
+          step={PRICE_INPUT_STEP}
         />
 
         <FormSwitchField name="allowAfterHours" control={form.control} label="Cho phép suất khuya (kết thúc sau giờ đóng cửa)" />

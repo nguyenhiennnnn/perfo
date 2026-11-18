@@ -4,6 +4,7 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -84,7 +85,7 @@ public class ShowtimeBatchService(
 
             foreach (var timeStr in request.Times)
             {
-                var timeOfDay = TimeOnly.ParseExact(timeStr, "HH:mm");
+                var timeOfDay = TimeOnly.ParseExact(timeStr, DateTimePatterns.HourMinute);
                 drafts.Add(
                     new ShowtimeDraft(
                         request.MovieId,
@@ -325,10 +326,10 @@ public class ShowtimeBatchService(
                     new BulkSkippedShowtimeItem(
                         BusinessTime
                             .ToLocal(draft.StartTime)
-                            .ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
+                            .ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture),
                         BusinessTime
                             .ToLocal(draft.StartTime)
-                            .ToString("HH:mm", CultureInfo.InvariantCulture),
+                            .ToString(DateTimePatterns.HourMinute, CultureInfo.InvariantCulture),
                         reason ?? Messages.Invalid_ShowtimeInvalid
                     )
                 );

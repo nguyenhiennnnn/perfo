@@ -1,11 +1,12 @@
 using System.Globalization;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 
 namespace Cinema.Application.Utils;
 
 public static class DateTimeUtils
 {
-    public static TimeOnly? ParseTimeOnly(string? value, string format = "HH:mm")
+    public static TimeOnly? ParseTimeOnly(string? value, string format = DateTimePatterns.HourMinute)
     {
         if (string.IsNullOrWhiteSpace(value))
             return null;
@@ -23,10 +24,10 @@ public static class DateTimeUtils
         var local = BusinessTime.ToLocal(createdAt);
         return groupBy switch
         {
-            "day" => local.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
+            "day" => local.ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture),
             "week" => $"{ISOWeek.GetYear(local)}-W{ISOWeek.GetWeekOfYear(local):D2}",
             "month" => local.ToString("MM/yyyy", CultureInfo.InvariantCulture),
-            _ => local.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture),
+            _ => local.ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture),
         };
     }
 

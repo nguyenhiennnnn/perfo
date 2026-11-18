@@ -8,6 +8,7 @@ import { FormInputField } from "@/components/common/form/form-input-field";
 import { CustomerSearchCombobox } from "./customer-search-combobox";
 import type { CustomerLookupItemDto } from "@/features/admin/users/types";
 
+import { PERSON_NAME_PLACEHOLDER } from "@/config/default-constants";
 const customerFormSchema = z.object({
   customerName: z.string().min(1, "Vui lòng nhập tên khách hàng."),
   customerPhone: z
@@ -94,7 +95,7 @@ export const CounterCustomerForm = ({
           name="customerName"
           control={form.control}
           label={isLinked ? "Tên khách hàng (từ tài khoản)" : "Tên khách hàng"}
-          placeholder="Nguyễn Văn A"
+          placeholder={PERSON_NAME_PLACEHOLDER}
           min={2}
           disabled={isLinked}
         />

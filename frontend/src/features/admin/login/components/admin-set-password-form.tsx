@@ -14,6 +14,7 @@ import {
   type AdminSetPasswordFormValues,
 } from "../schemas/set-password-schema";
 
+import { PASSWORD_PLACEHOLDER } from "@/config/default-constants";
 interface AdminSetPasswordFormProps {
   token: string;
   onSuccess: () => void;
@@ -62,7 +63,7 @@ export const AdminSetPasswordForm = ({
           label="Mật khẩu"
           type="password"
           autoComplete="new-password"
-          placeholder="••••••••"
+          placeholder={PASSWORD_PLACEHOLDER}
         />
 
         <FormInputField
@@ -71,7 +72,7 @@ export const AdminSetPasswordForm = ({
           label="Xác nhận mật khẩu"
           type="password"
           autoComplete="new-password"
-          placeholder="••••••••"
+          placeholder={PASSWORD_PLACEHOLDER}
         />
 
         <PasswordStrengthMeter password={newPassword} />

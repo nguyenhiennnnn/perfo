@@ -1,5 +1,5 @@
 import type { ColumnFiltersState } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
+import { Plus, Armchair } from "lucide-react";
 
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
@@ -87,6 +87,9 @@ const SeatTypesPage = () => {
         columns={columns}
         data={seatTypes.data?.items ?? []}
         isLoading={seatTypes.isLoading}
+        isError={seatTypes.isError}
+        error={seatTypes.error}
+        onRetry={() => void seatTypes.refetch()}
         isRefreshing={seatTypes.isPlaceholderData}
         totalItems={seatTypes.data?.totalItems ?? 0}
         pagination={pagination}
@@ -95,7 +98,13 @@ const SeatTypesPage = () => {
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         searchPlaceholder="Tìm theo tên loại ghế..."
-        emptyMessage="Chưa có loại ghế nào."
+        empty={{
+          icon: Armchair,
+          title: "Chưa có loại ghế",
+          description: "Thêm loại ghế để dựng sơ đồ phòng chiếu.",
+          actionLabel: "Thêm loại ghế",
+          onAction: handleCreate,
+        }}
       />
     </div>
   );

@@ -17,6 +17,7 @@ import { paymentMethodOptions, paymentStatusOptions } from "@/lib/enum-options";
 import { DateFilterPicker } from "@/components/common/filter/date-filter-picker";
 import { DEFAULT_PAGE } from "@/config/default-constants";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { CreditCard } from "lucide-react";
 
 const AdminPaymentsPage = () => {
   const [params, setParams] = useAdminPaymentParams();
@@ -94,11 +95,20 @@ const AdminPaymentsPage = () => {
         columns={columns}
         data={payments.data?.items ?? []}
         isLoading={payments.isLoading}
+        isError={payments.isError}
+        error={payments.error}
+        onRetry={() => void payments.refetch()}
         isRefreshing={payments.isPlaceholderData}
         totalItems={payments.data?.totalItems ?? 0}
         pagination={pagination}
         onPaginationChange={onPaginationChange}
-        emptyMessage="Chưa có giao dịch nào."
+        empty={{
+          icon: CreditCard,
+          title: "Chưa có giao dịch",
+          description: "Giao dịch hiện ở đây sau khi khách thanh toán đơn đặt vé.",
+        }}
+        hasActiveFilters={Boolean(params.search) || params.status !== null || params.paymentMethod !== null || params.fromDate !== null || params.toDate !== null}
+        onClearFilters={() => setParams({ search: "", status: null, paymentMethod: null, fromDate: null, toDate: null, page: DEFAULT_PAGE })}
       />
     </div>
   );

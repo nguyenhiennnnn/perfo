@@ -2,11 +2,14 @@ import { Star } from "lucide-react";
 import { EmptyState } from "@/components/common/empty-state";
 import { PageTitle } from "@/components/common/page-title";
 import { QueryState } from "@/components/common/query-state";
+import { ButtonLink } from "@/components/common/button-link";
 import { SkeletonList } from "@/components/common/skeleton-list";
+import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { InfiniteScrollTrigger } from "@/components/common/infinite-scroll-trigger";
 import { AccountReviewCard } from "@/features/client/account/components/account-review-card";
 import { useMyReviews } from "@/features/client/account/hooks/use-account";
 import { ACCOUNT_LIST_PAGE_LIMIT } from "@/config/default-constants";
+import { ROUTES } from "@/config/routes";
 
 const AccountReviewsPage = () => {
   const reviewsQuery = useMyReviews({ limit: ACCOUNT_LIST_PAGE_LIMIT });
@@ -20,11 +23,17 @@ const AccountReviewsPage = () => {
       <div className="space-y-3">
         <QueryState
           query={reviewsQuery}
-          skeleton={<SkeletonList count={3} className="h-24 w-full" />}
+          skeleton={<SkeletonList count={3} shape={CardSkeleton} />}
           isEmpty={reviews.length === 0}
-          empty={<EmptyState icon={Star} title="Bạn chưa có đánh giá nào" description="Hãy chia sẻ cảm nhận sau khi xem phim tại rạp." />}
+          empty={
+            <EmptyState
+              icon={Star}
+              title="Bạn chưa có đánh giá nào"
+              description="Đánh giá phim sau khi xem để nó hiện ở đây."
+              action={<ButtonLink to={ROUTES.movies.list} variant="secondary">Xem danh sách phim</ButtonLink>}
+            />
+          }
           errorTitle="Không tải được đánh giá"
-          errorDescription="Kiểm tra kết nối mạng rồi thử lại."
         >
           {reviews.map((review) => (
             <AccountReviewCard key={review.reviewId} review={review} />

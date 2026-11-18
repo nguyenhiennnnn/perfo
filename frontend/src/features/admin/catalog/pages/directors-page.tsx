@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Clapperboard } from "lucide-react";
 import type { RowSelectionState } from "@tanstack/react-table";
 
 import { PageHeader } from "@/components/common/page-header";
@@ -104,6 +104,9 @@ const DirectorsPage = () => {
         columns={columns}
         data={directors.data?.items ?? []}
         isLoading={directors.isLoading}
+        isError={directors.isError}
+        error={directors.error}
+        onRetry={() => void directors.refetch()}
         isRefreshing={directors.isPlaceholderData}
         totalItems={directors.data?.totalItems ?? 0}
         pagination={pagination}
@@ -111,7 +114,13 @@ const DirectorsPage = () => {
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         searchPlaceholder="Tìm theo tên đạo diễn..."
-        emptyMessage="Chưa có đạo diễn nào."
+        empty={{
+          icon: Clapperboard,
+          title: "Chưa có đạo diễn",
+          description: "Thêm đạo diễn để gán cho phim.",
+          actionLabel: "Thêm đạo diễn",
+          onAction: handleCreate,
+        }}
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         getRowId={(row) => String(row.directorId)}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Upload } from "lucide-react";
+import { Plus, Upload, Film } from "lucide-react";
 import type { RowSelectionState } from "@tanstack/react-table";
 
 import { PageHeader } from "@/components/common/page-header";
@@ -156,6 +156,9 @@ const AdminMoviesPage = () => {
         columns={columns}
         data={movies.data?.items ?? []}
         isLoading={movies.isLoading}
+        isError={movies.isError}
+        error={movies.error}
+        onRetry={() => void movies.refetch()}
         isRefreshing={movies.isPlaceholderData}
         totalItems={movies.data?.totalItems ?? 0}
         pagination={pagination}
@@ -163,7 +166,15 @@ const AdminMoviesPage = () => {
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         searchPlaceholder="Tìm theo tên phim..."
-        emptyMessage="Chưa có bộ phim nào."
+        empty={{
+          icon: Film,
+          title: "Chưa có bộ phim",
+          description: "Thêm phim thủ công hoặc nhập từ tệp.",
+          actionLabel: "Thêm phim",
+          onAction: canManage ? handleCreate : undefined,
+        }}
+        hasActiveFilters={Boolean(params.search) || params.status !== null || params.directorId !== null || params.languageId !== null || params.ageRatingId !== null || params.genreId !== null}
+        onClearFilters={() => setParams({ search: "", status: null, directorId: null, languageId: null, ageRatingId: null, genreId: null, page: DEFAULT_PAGE })}
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         getRowId={(row) => String(row.movieId)}

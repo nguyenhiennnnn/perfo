@@ -1,5 +1,5 @@
 import type { ColumnFiltersState } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
+import { Plus, Award } from "lucide-react";
 
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
@@ -87,6 +87,9 @@ const MembershipTiersPage = () => {
         columns={columns}
         data={membershipTiers.data?.items ?? []}
         isLoading={membershipTiers.isLoading}
+        isError={membershipTiers.isError}
+        error={membershipTiers.error}
+        onRetry={() => void membershipTiers.refetch()}
         isRefreshing={membershipTiers.isPlaceholderData}
         totalItems={membershipTiers.data?.totalItems ?? 0}
         pagination={pagination}
@@ -95,7 +98,13 @@ const MembershipTiersPage = () => {
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         searchPlaceholder="Tìm theo tên hạng..."
-        emptyMessage="Chưa có hạng thành viên nào."
+        empty={{
+          icon: Award,
+          title: "Chưa có hạng thành viên",
+          description: "Thêm hạng để áp dụng quyền lợi tích điểm.",
+          actionLabel: "Thêm hạng",
+          onAction: handleCreate,
+        }}
       />
     </div>
   );

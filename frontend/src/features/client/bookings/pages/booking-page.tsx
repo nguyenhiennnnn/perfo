@@ -1,5 +1,5 @@
-import { Link, useParams, useSearchParams } from "react-router";
-import { AlertTriangle } from "lucide-react";
+import { useParams, useSearchParams } from "react-router";
+import { CalendarX, Clock, Ticket } from "lucide-react";
 
 import { useBookingFlow } from "../hooks/use-booking-flow";
 import { BookingStepper } from "../components/booking/booking-stepper";
@@ -7,17 +7,28 @@ import { BookingShowtimeHeader } from "../components/booking/booking-showtime-he
 import { BookingSelectionStep } from "../components/booking/booking-selection-step";
 import { BookingPaymentStep } from "../components/booking/booking-payment-step";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ButtonLink } from "@/components/common/button-link";
+import { EmptyState } from "@/components/common/empty-state";
+import { NotFoundState } from "@/components/common/not-found-state";
 import { PageContainer } from "@/components/common/page-container";
-import { Button } from "@/components/ui/button";
+import { QueryState } from "@/components/common/query-state";
+import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { ROUTES } from "@/config/routes";
 
-const RESUME_INVALID_MESSAGE: Record<string, string> = {
-  "not-pending":
-    "Booking này không còn ở trạng thái chờ thanh toán (có thể đã được thanh toán hoặc đã huỷ).",
-  expired: "Thời gian giữ ghế cho booking này đã hết hạn.",
-  "load-error":
-    "Không tải được thông tin booking. Booking có thể không tồn tại hoặc không thuộc về bạn.",
-};
+const RESUME_NOTICE = {
+  "not-pending": {
+    icon: Ticket,
+    title: "Đơn không còn chờ thanh toán",
+    description: "Đơn này đã được thanh toán hoặc đã hủy. Xem vé của bạn hoặc đặt vé mới.",
+    restartLabel: "Đặt vé mới",
+  },
+  expired: {
+    icon: Clock,
+    title: "Hết thời gian giữ ghế",
+    description: "Thời gian giữ ghế cho đơn này đã hết. Chọn lại ghế để tiếp tục.",
+    restartLabel: "Chọn lại ghế",
+  },
+} as const;
 
 const BookingPage = () => {
   const { showtimeId } = useParams<{ showtimeId: string }>();
@@ -34,48 +45,75 @@ const BookingPage = () => {
 
       {flow.isResumeLoading && (
         <div className="mx-auto w-full max-w-lg space-y-3">
-          <Skeleton className="h-16 w-full " />
-          <Skeleton className="h-40 w-full " />
+          <CardSkeleton />
+          <CardSkeleton />
         </div>
       )}
 
       {flow.isResumeMode && !flow.isResumeLoading && flow.resumeInvalidReason && (
-        <div className="mx-auto flex w-full max-w-lg flex-col items-center gap-3 bg-card p-6 text-center">
-          <AlertTriangle className="size-8 text-warning" />
-          <p className="text-sm text-foreground">
-            {RESUME_INVALID_MESSAGE[flow.resumeInvalidReason]}
-          </p>
-          <div className="flex gap-2">
-            <Button variant="outline" nativeButton={false} render={<Link to={ROUTES.account.tickets} />}>
-              Xem vé của tôi
-            </Button>
-            <Button nativeButton={false} render={<Link to={ROUTES.booking.detail(showtimeId)} />}>
-              Đặt vé mới
-            </Button>
-          </div>
+        <div className="mx-auto w-full max-w-lg">
+          {flow.resumeInvalidReason === "load-error" ? (
+            <NotFoundState
+              entity="đơn đặt vé"
+              icon={Ticket}
+              description="Đơn không tồn tại hoặc không thuộc tài khoản của bạn."
+              backLabel="Xem vé của tôi"
+              backTo={ROUTES.account.tickets}
+            />
+          ) : (
+            <EmptyState
+              icon={RESUME_NOTICE[flow.resumeInvalidReason].icon}
+              title={RESUME_NOTICE[flow.resumeInvalidReason].title}
+              description={RESUME_NOTICE[flow.resumeInvalidReason].description}
+              action={
+                <div className="flex gap-2">
+                  <ButtonLink to={ROUTES.account.tickets} variant="outline">
+                    Xem vé của tôi
+                  </ButtonLink>
+                  <ButtonLink to={ROUTES.booking.detail(showtimeId)}>
+                    {RESUME_NOTICE[flow.resumeInvalidReason].restartLabel}
+                  </ButtonLink>
+                </div>
+              }
+            />
+          )}
         </div>
       )}
 
       {flow.step === "select" && !flow.isResumeMode && (
-        <BookingSelectionStep
-          isLoading={flow.showtimeSeats.isLoading}
-          data={flow.showtimeSeats.data}
-          statusMap={flow.seatStatusMap}
-          selectedIds={flow.selectedSeatIds}
-          onToggleSeat={flow.toggleSeat}
-          onSelectSeats={flow.selectSeats}
-          comboQuantities={flow.comboQuantities}
-          onComboChange={flow.setComboQuantity}
-          customerName={flow.customerName}
-          onCustomerNameChange={flow.setCustomerName}
-          customerPhone={flow.customerPhone}
-          onCustomerPhoneChange={flow.setCustomerPhone}
-          isAuthenticated={flow.isAuthenticated}
-          canHold={flow.canHold}
-          loneSeats={flow.loneSeats}
-          isHolding={flow.isHolding}
-          onContinue={flow.holdAndContinue}
-        />
+        <QueryState
+          query={flow.showtimeSeats}
+          skeleton={<Skeleton className="h-96 w-full" />}
+          notFound={
+            <NotFoundState
+              entity="suất chiếu"
+              icon={CalendarX}
+              backLabel="Xem lịch chiếu"
+              backTo={ROUTES.schedule}
+            />
+          }
+          errorTitle="Không tải được sơ đồ ghế"
+        >
+          <BookingSelectionStep
+            isLoading={flow.showtimeSeats.isLoading}
+            data={flow.showtimeSeats.data}
+            statusMap={flow.seatStatusMap}
+            selectedIds={flow.selectedSeatIds}
+            onToggleSeat={flow.toggleSeat}
+            onSelectSeats={flow.selectSeats}
+            comboQuantities={flow.comboQuantities}
+            onComboChange={flow.setComboQuantity}
+            customerName={flow.customerName}
+            onCustomerNameChange={flow.setCustomerName}
+            customerPhone={flow.customerPhone}
+            onCustomerPhoneChange={flow.setCustomerPhone}
+            isAuthenticated={flow.isAuthenticated}
+            canHold={flow.canHold}
+            loneSeats={flow.loneSeats}
+            isHolding={flow.isHolding}
+            onContinue={flow.holdAndContinue}
+          />
+        </QueryState>
       )}
 
       {flow.step === "payment" && flow.holdResult && !flow.resumeInvalidReason && (

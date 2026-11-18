@@ -1,5 +1,5 @@
 import type { ColumnFiltersState } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
+import { Plus, ShieldCheck } from "lucide-react";
 
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
@@ -90,6 +90,9 @@ const AgeRatingsPage = () => {
         columns={columns}
         data={ageRatings.data?.items ?? []}
         isLoading={ageRatings.isLoading}
+        isError={ageRatings.isError}
+        error={ageRatings.error}
+        onRetry={() => void ageRatings.refetch()}
         isRefreshing={ageRatings.isPlaceholderData}
         totalItems={ageRatings.data?.totalItems ?? 0}
         pagination={pagination}
@@ -98,7 +101,13 @@ const AgeRatingsPage = () => {
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         searchPlaceholder="Tìm theo mã phân loại..."
-        emptyMessage="Chưa có phân loại độ tuổi nào."
+        empty={{
+          icon: ShieldCheck,
+          title: "Chưa có phân loại độ tuổi",
+          description: "Thêm phân loại để gán cho phim.",
+          actionLabel: "Thêm phân loại",
+          onAction: handleCreate,
+        }}
       />
     </div>
   );

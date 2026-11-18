@@ -19,7 +19,7 @@ actor "Khách hàng" as A_KH
 actor "Nhân viên" as A_NV
 actor "Quản trị viên" as A_QTV
 
-rectangle "Hệ thống Perfo — 21 package use case (103 use case)" as SYS {
+rectangle "Hệ thống Perfo — 22 package use case (119 use case)" as SYS {
   package "Phân hệ Khách hàng (Client Portal)" as PKG_KH {
     rectangle "XT, Xác thực\n(11 use case)" as P_XT
     rectangle "HS, Hồ sơ cá nhân\n(4 use case)" as P_HS
@@ -31,7 +31,7 @@ rectangle "Hệ thống Perfo — 21 package use case (103 use case)" as SYS {
   }
 
   package "Phân hệ Nghiệp vụ Quầy & Quản trị Rạp" as PKG_NV {
-    rectangle "BQ, Bán vé tại quầy\n(1 use case)" as P_BQ
+    rectangle "BQ, Bán vé tại quầy\n(2 use case)" as P_BQ
     rectangle "SV, Soát vé\n(1 use case)" as P_SV
     rectangle "QB, Quản lý booking\n(2 use case)" as P_QB
     rectangle "QP, Quản lý phim\n(5 use case)" as P_QP
@@ -41,13 +41,14 @@ rectangle "Hệ thống Perfo — 21 package use case (103 use case)" as SYS {
   }
 
   package "Phân hệ Quản trị Hệ thống & Dịch vụ Nền" as PKG_QT {
-    rectangle "QN, Quản lý người dùng\n(7 use case)" as P_QN
+    rectangle "QN, Quản lý người dùng\n(10 use case)" as P_QN
     rectangle "QV, Quản lý đánh giá\n(3 use case)" as P_QV
     rectangle "QT, Quản lý thanh toán\n(2 use case)" as P_QT
     rectangle "BC, Báo cáo thống kê\n(5 use case)" as P_BC
     rectangle "CH, Cấu hình rạp\n(2 use case)" as P_CH
     rectangle "TP, Tải tệp\n(2 use case)" as P_TP
     rectangle "HT, Vận hành hệ thống\n(8 use case)" as P_HT
+    rectangle "NX, Nhập/xuất dữ liệu\n(12 use case)" as P_NX
   }
 }
 
@@ -69,8 +70,6 @@ A_KVL -- P_HT
 A_NDN -- P_XT
 A_NDN -- P_HS
 
-A_KH -- P_XT
-A_KH -- P_HS
 A_KH -- P_DG
 A_KH -- P_DV
 A_KH -- P_TT
@@ -83,6 +82,7 @@ A_NV -- P_QB
 A_NV -- P_QP
 A_NV -- P_QS
 A_NV -- P_QN
+A_NV -- P_NX
 
 A_QTV -- P_XT
 A_QTV -- P_BQ
@@ -99,23 +99,32 @@ A_QTV -- P_BC
 A_QTV -- P_CH
 A_QTV -- P_TP
 A_QTV -- P_HT
+A_QTV -- P_NX
 
 P_TT -- A_NEN
 P_HT -- A_NEN
+P_NX -- A_NEN
+
 P_TT -- A_VNP
 P_HT -- A_VNP
+
 P_TT -- A_MOMO
 P_HT -- A_MOMO
+
 P_TT -- A_STR
 P_HT -- A_STR
+
 P_XT -- A_GG
 P_AI -- A_GEM
+
 P_XT -- A_MAIL
 P_TT -- A_MAIL
 P_QS -- A_MAIL
 P_HT -- A_MAIL
+
 P_QP -- A_CLD
 P_QD -- A_CLD
 P_CH -- A_CLD
 P_TP -- A_CLD
+P_NX -- A_CLD
 @enduml

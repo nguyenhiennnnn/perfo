@@ -18,6 +18,7 @@ import {
   useDownloadImportExportJob,
   useImportExportJobs,
 } from "../hooks/use-import-export-jobs";
+import { History } from "lucide-react";
 
 const AdminImportExportHistoryPage = () => {
   const [params, setParams] = useAdminImportExportJobParams();
@@ -74,11 +75,20 @@ const AdminImportExportHistoryPage = () => {
         columns={columns}
         data={jobs.data?.items ?? []}
         isLoading={jobs.isLoading}
+        isError={jobs.isError}
+        error={jobs.error}
+        onRetry={() => void jobs.refetch()}
         isRefreshing={jobs.isPlaceholderData}
         totalItems={jobs.data?.totalItems ?? 0}
         pagination={pagination}
         onPaginationChange={onPaginationChange}
-        emptyMessage="Chưa có tác vụ nhập/xuất nào."
+        empty={{
+          icon: History,
+          title: "Chưa có tác vụ nhập hoặc xuất",
+          description: "Tác vụ nhập xuất tệp hiện ở đây sau lần chạy đầu tiên.",
+        }}
+        hasActiveFilters={params.type !== null || params.module !== null || params.status !== null}
+        onClearFilters={() => setParams({ type: null, module: null, status: null, page: DEFAULT_PAGE })}
       />
     </div>
   );

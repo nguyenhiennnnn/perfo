@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MailPlus, UserCheck, UserPlus } from "lucide-react";
+import { MailPlus, UserCheck, UserPlus, Users } from "lucide-react";
 import type { RowSelectionState } from "@tanstack/react-table";
 
 import { PageHeader } from "@/components/common/page-header";
@@ -177,11 +177,20 @@ const AdminEmployeesPage = () => {
         columns={columns}
         data={employees.data?.items ?? []}
         isLoading={employees.isLoading}
+        isError={employees.isError}
+        error={employees.error}
+        onRetry={() => void employees.refetch()}
         isRefreshing={employees.isPlaceholderData}
         totalItems={employees.data?.totalItems ?? 0}
         pagination={pagination}
         onPaginationChange={onPaginationChange}
-        emptyMessage="Chưa có nhân viên nào."
+        empty={{
+          icon: Users,
+          title: "Chưa có nhân viên",
+          description: "Thêm nhân viên từ tài khoản có sẵn, mời qua email hoặc tạo trực tiếp.",
+          actionLabel: "Tạo trực tiếp",
+          onAction: handleCreateDirect,
+        }}
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         getRowId={(row) => String(row.userId)}

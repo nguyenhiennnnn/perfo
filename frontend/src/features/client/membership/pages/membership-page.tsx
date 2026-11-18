@@ -1,3 +1,5 @@
+import { Award } from "lucide-react";
+import { EmptyState } from "@/components/common/empty-state";
 import { PageContainer } from "@/components/common/page-container";
 import { QueryState } from "@/components/common/query-state";
 import { SkeletonList } from "@/components/common/skeleton-list";
@@ -56,8 +58,9 @@ const MembershipPage = () => {
               <SkeletonList count={4} className="h-56 w-full cut-md" />
             </div>
           }
+          isEmpty={sortedTiers.length === 0}
+          empty={<EmptyState icon={Award} title="Chưa có hạng thẻ" description="Các hạng thành viên sẽ hiện ở đây khi rạp công bố chương trình." />}
           errorTitle="Không tải được các hạng thẻ"
-          errorDescription="Kiểm tra kết nối mạng rồi thử lại."
         >
           <div className={TIER_GRID_CLASS}>
             {sortedTiers.map((tier, index) => (

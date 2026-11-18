@@ -1,5 +1,5 @@
 import type { ColumnFiltersState } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
+import { Plus, Briefcase } from "lucide-react";
 
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
@@ -87,6 +87,9 @@ const PositionsPage = () => {
         columns={columns}
         data={positions.data?.items ?? []}
         isLoading={positions.isLoading}
+        isError={positions.isError}
+        error={positions.error}
+        onRetry={() => void positions.refetch()}
         isRefreshing={positions.isPlaceholderData}
         totalItems={positions.data?.totalItems ?? 0}
         pagination={pagination}
@@ -95,7 +98,13 @@ const PositionsPage = () => {
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         searchPlaceholder="Tìm theo tên chức vụ..."
-        emptyMessage="Chưa có chức vụ nào."
+        empty={{
+          icon: Briefcase,
+          title: "Chưa có chức vụ",
+          description: "Thêm chức vụ để phân loại nhân viên.",
+          actionLabel: "Thêm chức vụ",
+          onAction: handleCreate,
+        }}
       />
     </div>
   );

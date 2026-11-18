@@ -1,0 +1,87 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Times New Roman"
+skinparam sequenceMessageAlign left
+skinparam maxMessageSize 300
+skinparam ParticipantPadding 10
+skinparam dpi 150
+autonumber
+
+actor "Quản trị viên" as A
+participant "AdminShowtimesController" as C
+participant "ShowtimeCancellationService" as S
+participant "IBookingFulfillmentService" as F
+participant "IAppDbContext" as DB
+participant "INotificationService" as N
+participant "IBackgroundJobClient\n(Hangfire)" as H
+participant "ShowtimeRefundJob\n(Worker)" as RJ
+participant "IPaymentGateway\n(VNPay/MoMo/Stripe)" as PG
+
+== Pha 1: Tiếp nhận yêu cầu & Xử lý hủy suất chiếu tập trung ==
+A -> C : DELETE /api/v1/admin/showtimes/{id} (AdminOnly)
+C -> S : DeleteShowtimeAsync(showtimeId)
+S -> DB : Showtimes.FirstOrDefaultAsync(showtimeId)
+alt Suất không tồn tại
+  S --> A : 404 NotFoundException (NotFound_Showtime)
+else Suất không ở trạng thái Scheduled
+  S --> A : 409 ConflictAppException (Rule_ShowtimeMustBeScheduled)
+else Suất đã quá giờ bắt đầu (StartTime <= DateTime.UtcNow)
+  S --> A : 422 BusinessRuleException (Rule_ShowtimeStartedCannotCancel)
+end
+
+S -> DB : BeginTransactionAsync()
+S -> DB : showtime.Status = ShowtimeStatus.Cancelled
+S -> DB : Nạp Bookings (Pending, Confirmed) kèm Payments và User
+
+loop Xử lý từng đơn đặt vé của suất chiếu
+  S -> S : booking.Status = Cancelled
+  alt Đơn vốn Pending
+    S -> S : Đặt Payments Pending sang Failed
+  else Đơn vốn Confirmed & có tài khoản khách
+    S -> F : ReverseLoyaltyAsync(userId, bookingId, finalAmount)
+    note over F : Thu hồi điểm theo tỷ lệ;\nCập nhật RevokedPoints trong sổ điểm
+  end
+  alt Đơn có thanh toán thành công (Success)
+    alt Thanh toán tiền mặt tại quầy (Cash)
+      S -> S : manualRefundCount++\nGhi nhận thông báo email hoàn thủ công
+    else Cổng thanh toán điện tử
+      S -> S : refundPaymentIds.Add(payment.PaymentId)
+    end
+  end
+end
+
+S -> DB : Giải phóng ghế đang Held sang Available (xóa người giữ)
+S -> DB : SaveChangesAsync(), CommitAsync()
+
+== Pha 2: Xếp hàng công việc nền & Thông báo hoàn tiền ==
+loop Gửi email thông báo hoàn tiền thủ công cho khách tiền mặt
+  S -> N : SendShowtimeCancelledManualRefund(email, customerName, code, amount)
+end
+
+loop Xếp hàng hoàn tiền tự động qua Hangfire
+  S -> H : Enqueue<ShowtimeRefundJob>(j => j.RunAsync(paymentId))
+end
+
+S --> C : DeleteShowtimeResponse(showtimeId, "Cancelled", manualRefundCount, refundCount)
+C --> A : 200 OK { DeleteShowtimeResponse }
+
+== Pha 3: Thực thi hoàn tiền tự động qua cổng thanh toán (chạy nền) ==
+H -> RJ : RunAsync(paymentId)
+RJ -> DB : Nạp Payment kèm Booking, Showtime
+alt Thanh toán hợp lệ & đơn/suất đã Cancelled
+  RJ -> PG : RefundAsync(payment.Amount, reason="Hoàn tiền do rạp hủy suất chiếu")
+  alt Cổng thanh toán hoàn tiền thành công
+    RJ -> DB : Payment.Status = Refunded, RefundedAmount, RefundTransactionId
+    RJ -> DB : SaveChangesAsync()
+    RJ -> N : SendShowtimeCancelledAutoRefunded (gửi email hoàn tiền thành công)
+  else Cổng thanh toán thất bại
+    alt Còn lượt thử lại (Hangfire RetryCount < 3)
+      RJ --> H : Ném ngoại lệ để Hangfire thử lại sau
+    else Đã hết lượt thử lại
+      RJ -> N : SendShowtimeCancelledManualRefund (thông báo chuyển hoàn tiền thủ công)
+      RJ --> H : Ném ngoại lệ ghi nhận thất bại để quản trị viên đối soát
+    end
+  end
+end
+@enduml

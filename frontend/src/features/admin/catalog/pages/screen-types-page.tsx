@@ -1,5 +1,5 @@
 import type { ColumnFiltersState } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
+import { Plus, MonitorPlay } from "lucide-react";
 
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
@@ -91,6 +91,9 @@ const ScreenTypesPage = () => {
         columns={columns}
         data={screenTypes.data?.items ?? []}
         isLoading={screenTypes.isLoading}
+        isError={screenTypes.isError}
+        error={screenTypes.error}
+        onRetry={() => void screenTypes.refetch()}
         isRefreshing={screenTypes.isPlaceholderData}
         totalItems={screenTypes.data?.totalItems ?? 0}
         pagination={pagination}
@@ -99,7 +102,13 @@ const ScreenTypesPage = () => {
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         searchPlaceholder="Tìm theo tên loại màn hình..."
-        emptyMessage="Chưa có loại màn hình nào."
+        empty={{
+          icon: MonitorPlay,
+          title: "Chưa có loại màn hình",
+          description: "Thêm loại màn hình để gán cho phòng chiếu.",
+          actionLabel: "Thêm loại màn hình",
+          onAction: handleCreate,
+        }}
       />
     </div>
   );

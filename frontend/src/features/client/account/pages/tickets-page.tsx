@@ -3,7 +3,9 @@ import { Ticket as TicketIcon } from "lucide-react";
 import { EmptyState } from "@/components/common/empty-state";
 import { PageTitle } from "@/components/common/page-title";
 import { QueryState } from "@/components/common/query-state";
+import { ButtonLink } from "@/components/common/button-link";
 import { SkeletonList } from "@/components/common/skeleton-list";
+import { TicketSkeleton } from "@/components/common/skeleton-shapes";
 import { InfiniteScrollTrigger } from "@/components/common/infinite-scroll-trigger";
 import { TicketCard } from "@/features/client/account/components/ticket-card";
 import { useMyBookings, useCancelBooking } from "@/features/client/bookings/hooks/use-bookings";
@@ -11,6 +13,7 @@ import { useAlertDialogOpen } from "@/stores/alert-dialog-store";
 import { bookingStatusOptions } from "@/lib/enum-options";
 import { cn } from "@/lib/utils";
 import { ACCOUNT_LIST_PAGE_LIMIT } from "@/config/default-constants";
+import { ROUTES } from "@/config/routes";
 
 const TABS = [{ value: null as string | null, label: "Tất cả" }, ...bookingStatusOptions.map((o) => ({ value: o.value as string | null, label: o.label }))];
 
@@ -58,11 +61,26 @@ const AccountTicketsPage = () => {
       <div className="mt-5 space-y-3">
         <QueryState
           query={bookingsQuery}
-          skeleton={<SkeletonList count={3} className="h-24 w-full" />}
+          skeleton={<SkeletonList count={3} shape={TicketSkeleton} />}
           isEmpty={bookings.length === 0}
-          empty={<EmptyState icon={TicketIcon} title="Chưa có vé nào" description="Hãy đặt vé để bắt đầu trải nghiệm điện ảnh." />}
+          empty={
+            status ? (
+              <EmptyState
+                variant="filtered"
+                title="Không có vé ở trạng thái này"
+                description="Chọn trạng thái khác hoặc xem tất cả vé."
+                onClearFilters={() => setStatus(null)}
+              />
+            ) : (
+              <EmptyState
+                icon={TicketIcon}
+                title="Chưa có vé nào"
+                description="Đặt vé xem phim để vé và mã QR hiện ở đây."
+                action={<ButtonLink to={ROUTES.movies.list} variant="secondary">Xem danh sách phim</ButtonLink>}
+              />
+            )
+          }
           errorTitle="Không tải được danh sách vé"
-          errorDescription="Kiểm tra kết nối mạng rồi thử lại."
         >
           {bookings.map((booking) => (
             <TicketCard key={booking.bookingId} booking={booking} onCancel={() => handleCancel(booking.bookingId)} />

@@ -2,9 +2,10 @@ import type { ComponentProps } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Loader2 } from "lucide-react";
 import { BrandMark } from "@/components/common/brand-mark";
+import { STATE_MESSAGES } from "@/config/error-messages";
 import { cn } from "@/lib/utils";
 
-const DEFAULT_LABEL = "Đang tải";
+const DEFAULT_LABEL = STATE_MESSAGES.loadingLabel;
 
 export const spinnerVariants = cva(
   "shrink-0 animate-spin text-primary motion-reduce:animate-pulse",

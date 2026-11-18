@@ -67,9 +67,19 @@ const SchedulePage = () => {
           query={scheduleQuery}
           skeleton={<SkeletonList count={4} className="h-40 w-full" />}
           isEmpty={movies.length === 0}
-          empty={<EmptyState icon={CalendarX} title="Không có suất chiếu" description="Không có phim nào chiếu vào ngày đã chọn." />}
+          empty={
+            format ? (
+              <EmptyState
+                variant="filtered"
+                title="Không có suất chiếu ở định dạng này"
+                description="Thử chọn định dạng khác hoặc ngày khác."
+                onClearFilters={() => setScheduleParams({ format: null })}
+              />
+            ) : (
+              <EmptyState icon={CalendarX} title="Chưa có suất chiếu" description="Không có phim nào chiếu vào ngày đã chọn. Chọn ngày khác để xem tiếp." />
+            )
+          }
           errorTitle="Không tải được lịch chiếu"
-          errorDescription="Kiểm tra kết nối mạng rồi thử lại."
         >
           {movies.map((movie) => (
             <ScheduleMovieRow key={movie.movieId} movie={movie} />

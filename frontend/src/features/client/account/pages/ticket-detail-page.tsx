@@ -1,7 +1,8 @@
 import { useParams } from "react-router";
 import { Copy, Ticket as TicketIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { EmptyState } from "@/components/common/empty-state";
+import { NotFoundState } from "@/components/common/not-found-state";
+import { QueryState } from "@/components/common/query-state";
 import { Button } from "@/components/ui/button";
 import { ButtonLink } from "@/components/common/button-link";
 import { PageContainer } from "@/components/common/page-container";
@@ -9,6 +10,7 @@ import { BookingStatusBadge, PaymentMethodBadge, PaymentStatusBadge } from "@/co
 import { PerfoTicket } from "@/components/common/perfo-ticket";
 import { DownloadTicketsPdfButton } from "@/components/common/download-tickets-pdf-button";
 import { useBookingDetail, useCancelBooking } from "@/features/client/bookings/hooks/use-bookings";
+import type { BookingDetailDto } from "@/features/client/bookings/types";
 import { useAlertDialogOpen } from "@/stores/alert-dialog-store";
 import { useCountdown } from "@/hooks/use-countdown";
 import { formatCurrency, formatDate, formatDateTime, formatTime } from "@/lib/formatters";
@@ -18,52 +20,33 @@ import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings
 import { ROUTES } from "@/config/routes";
 import { ENDPOINTS } from "@/api/endpoints";
 
-const AccountTicketDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
-  const now = useNow();
-  const bookingId = Number(id);
+const TicketDetailSkeleton = () => (
+  <div className="space-y-6" aria-busy="true">
+    <div className="flex items-center justify-between gap-3 bg-card p-4">
+      <div className="space-y-2">
+        <Skeleton className="h-6 w-40 cut-xs" />
+        <Skeleton className="h-3 w-32 cut-xs" />
+      </div>
+      <Skeleton className="h-6 w-24 cut-xs" />
+    </div>
+    <div className="flex gap-4 bg-card p-4">
+      <Skeleton className="aspect-2/3 w-24 shrink-0" />
+      <div className="flex-1 space-y-3">
+        <Skeleton className="h-9 w-3/4 cut-xs" />
+        <Skeleton className="h-4 w-1/3 cut-xs" />
+        <Skeleton className="h-4 w-1/2 cut-xs" />
+      </div>
+    </div>
+    <Skeleton className="notch-y aspect-[920/380] w-full" />
+  </div>
+);
 
-  const { data: booking, isLoading } = useBookingDetail(bookingId);
+const TicketDetailContent = ({ booking }: { booking: BookingDetailDto }) => {
+  const now = useNow();
   const { data: settings } = useCinemaSettings();
   const cancelBooking = useCancelBooking();
   const openAlert = useAlertDialogOpen();
-  const holdCountdown = useCountdown(booking?.holdExpiresAt ?? null);
-
-  if (isLoading) {
-    return (
-      <PageContainer size="sm" className="space-y-6" aria-busy="true">
-        <div className="flex items-center justify-between gap-3 bg-card p-4">
-          <div className="space-y-2">
-            <Skeleton className="h-6 w-40 cut-xs" />
-            <Skeleton className="h-3 w-32 cut-xs" />
-          </div>
-          <Skeleton className="h-6 w-24 cut-xs" />
-        </div>
-        <div className="flex gap-4 bg-card p-4">
-          <Skeleton className="aspect-2/3 w-24 shrink-0" />
-          <div className="flex-1 space-y-3">
-            <Skeleton className="h-9 w-3/4 cut-xs" />
-            <Skeleton className="h-4 w-1/3 cut-xs" />
-            <Skeleton className="h-4 w-1/2 cut-xs" />
-          </div>
-        </div>
-        <Skeleton className="notch-y aspect-[920/380] w-full" />
-      </PageContainer>
-    );
-  }
-
-  if (!booking) {
-    return (
-      <PageContainer size="sm">
-        <EmptyState
-          icon={TicketIcon}
-          title="Không tìm thấy đơn đặt vé"
-          description="Đơn có thể đã bị xóa hoặc liên kết không đúng. Xem danh sách vé của bạn để tìm lại."
-          action={<ButtonLink to={ROUTES.account.tickets}>Xem vé của tôi</ButtonLink>}
-        />
-      </PageContainer>
-    );
-  }
+  const holdCountdown = useCountdown(booking.holdExpiresAt ?? null);
 
   const cancelDeadlineHours = settings?.cancelDeadlineHours ?? 2;
   const isRefundable = settings ? settings.cancelRefundPercent > 0 : true;
@@ -88,7 +71,7 @@ const AccountTicketDetailPage = () => {
   };
 
   return (
-    <PageContainer size="sm" className="space-y-6">
+    <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3 bg-card p-4">
         <div>
           <div className="flex items-center gap-2">
@@ -233,8 +216,33 @@ const AccountTicketDetailPage = () => {
           </Button>
         </div>
       )}
+    </div>
+  );
+};
+
+const AccountTicketDetailPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const bookingQuery = useBookingDetail(Number(id));
+
+  return (
+    <PageContainer size="sm">
+      <QueryState
+        query={bookingQuery}
+        skeleton={<TicketDetailSkeleton />}
+        notFound={
+          <NotFoundState
+            entity="đơn đặt vé"
+            icon={TicketIcon}
+            backLabel="Xem vé của tôi"
+            backTo={ROUTES.account.tickets}
+          />
+        }
+        errorTitle="Không tải được đơn đặt vé"
+      >
+        {(booking) => <TicketDetailContent booking={booking} />}
+      </QueryState>
     </PageContainer>
   );
-}
+};
 
 export default AccountTicketDetailPage;

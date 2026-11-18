@@ -5,6 +5,8 @@ import { API_ERROR_CODES } from "@/config/api-error-codes";
 import {
   ERROR_MESSAGES,
   ERROR_TOAST_DEDUPE_MS,
+  LOAD_ERROR_COPY,
+  type LoadErrorCopy,
   SERVER_ERROR_RULE,
   SILENT_TOAST_STATUSES,
   STATUS_ERROR_RULES,
@@ -32,6 +34,27 @@ export function extractApiError(error: unknown): ApiErrorShape {
     return { message: error.message };
   }
   return { message: ERROR_MESSAGES.unknown };
+}
+
+/** Nguyên nhân và cách sửa cho trạng thái lỗi tải dữ liệu (ErrorState). */
+export function describeLoadError(error: unknown): LoadErrorCopy {
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status;
+    if (status === undefined) {
+      return error.code === "ECONNABORTED" || error.code === "ETIMEDOUT"
+        ? LOAD_ERROR_COPY.timeout
+        : LOAD_ERROR_COPY.network;
+    }
+    if (status === HTTP_STATUS.forbidden) return LOAD_ERROR_COPY.forbidden;
+    if (status === HTTP_STATUS.tooManyRequests) return LOAD_ERROR_COPY.rateLimited;
+    if (status >= HTTP_STATUS.serverError) return LOAD_ERROR_COPY.server;
+  }
+  return LOAD_ERROR_COPY.fallback;
+}
+
+/** Lỗi 404 từ API: thực thể không tồn tại, không phải lỗi tải. */
+export function isNotFoundError(error: unknown): boolean {
+  return extractApiError(error).statusCode === HTTP_STATUS.notFound;
 }
 
 /** 403 do backend chặn vì tài khoản phải đổi mật khẩu trước. */

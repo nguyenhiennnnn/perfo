@@ -10,6 +10,7 @@ interface MoviesGridProps {
   hasNextPage: boolean | undefined;
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
+  hasActiveFilters?: boolean;
   onResetFilters?: () => void;
 }
 
@@ -23,15 +24,22 @@ export const MoviesGridSkeleton = () => (
   </div>
 );
 
-export const MoviesGrid = ({ movies, hasNextPage, isFetchingNextPage, fetchNextPage, onResetFilters }: MoviesGridProps) => {
+export const MoviesGrid = ({
+  movies,
+  hasNextPage,
+  isFetchingNextPage,
+  fetchNextPage,
+  hasActiveFilters,
+  onResetFilters,
+}: MoviesGridProps) => {
   if (movies.length === 0) {
-    return (
+    return hasActiveFilters ? (
+      <EmptyState variant="filtered" title="Không có phim phù hợp" onClearFilters={onResetFilters} />
+    ) : (
       <EmptyState
         icon={Film}
-        title="Không tìm thấy phim phù hợp"
-        description="Hãy thử điều chỉnh lại bộ lọc hoặc từ khóa tìm kiếm."
-        actionLabel={onResetFilters ? "Xóa bộ lọc" : undefined}
-        onAction={onResetFilters}
+        title="Chưa có phim nào"
+        description="Phim đang chiếu và sắp chiếu sẽ hiện ở đây khi rạp cập nhật lịch."
       />
     );
   }

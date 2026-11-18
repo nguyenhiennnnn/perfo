@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Skeleton } from "@/components/ui/skeleton";
+import { SkeletonList } from "@/components/common/skeleton-list";
 import { useSchedule } from "@/features/client/showtimes/hooks/use-showtimes";
 import { getBusinessToday } from "@/lib/business-time";
 import { formatShowtimeHour } from "@/lib/formatters";
@@ -26,7 +26,7 @@ export const CinemaExperienceSection = () => {
 
       <div className="mt-5 flex flex-col gap-3" aria-busy={isLoading || undefined}>
         {isLoading
-          ? Array.from({ length: 3 }, (_, i) => <Skeleton key={i} className="h-16 w-full cut-md" />)
+          ? <SkeletonList count={3} className="h-16 w-full cut-md" />
           : movies.map((movie) => {
               const times = [...movie.showtimes]
                 .sort((a, b) => a.startTime.localeCompare(b.startTime))

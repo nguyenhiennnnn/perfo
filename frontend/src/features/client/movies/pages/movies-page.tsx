@@ -24,6 +24,9 @@ const MoviesPage = () => {
     limit: params.limit,
   });
   const { data, isFetchingNextPage, hasNextPage, fetchNextPage } = moviesQuery;
+  const hasActiveFilters = Boolean(
+    params.search || params.status || params.genreId || params.languageId || params.ageRatingId,
+  );
 
   return (
     <PageContainer size="xl">
@@ -41,13 +44,13 @@ const MoviesPage = () => {
           query={moviesQuery}
           skeleton={<MoviesGridSkeleton />}
           errorTitle="Không tải được danh sách phim"
-          errorDescription="Kiểm tra kết nối mạng rồi thử lại."
         >
           <MoviesGrid
             movies={data?.pages ?? []}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}
             fetchNextPage={fetchNextPage}
+            hasActiveFilters={hasActiveFilters}
             onResetFilters={() => setParams({ search: "", status: null, genreId: null, languageId: null, ageRatingId: null, cursor: null })}
           />
         </QueryState>

@@ -30,6 +30,72 @@ export const ERROR_MESSAGES = {
   toastTitle: "Đã có lỗi xảy ra",
 } as const;
 
+export interface LoadErrorCopy {
+  cause: string;
+  fix: string;
+}
+
+export const LOAD_ERROR_COPY = {
+  network: {
+    cause: "Không kết nối được tới máy chủ.",
+    fix: "Kiểm tra mạng rồi bấm Thử lại.",
+  },
+  timeout: {
+    cause: "Máy chủ phản hồi quá lâu.",
+    fix: "Bấm Thử lại sau vài giây.",
+  },
+  forbidden: {
+    cause: "Tài khoản hiện tại không đủ quyền xem dữ liệu này.",
+    fix: "Đăng nhập bằng tài khoản phù hợp rồi tải lại trang.",
+  },
+  rateLimited: {
+    cause: "Bạn gửi quá nhiều yêu cầu trong thời gian ngắn.",
+    fix: "Đợi một lát rồi bấm Thử lại.",
+  },
+  server: {
+    cause: "Máy chủ đang gặp sự cố.",
+    fix: "Đợi vài phút rồi bấm Thử lại.",
+  },
+  fallback: {
+    cause: "Dữ liệu trả về không đọc được.",
+    fix: "Bấm Thử lại, nếu vẫn lỗi hãy tải lại trang.",
+  },
+} as const satisfies Record<string, LoadErrorCopy>;
+
+export const STATE_MESSAGES = {
+  loadingLabel: "Đang tải",
+  retry: "Thử lại",
+  clearFilters: "Xóa bộ lọc",
+  loadError: { title: "Không tải được dữ liệu" },
+  empty: { title: "Chưa có dữ liệu" },
+  filtered: {
+    title: "Không có kết quả phù hợp",
+    description: "Thử đổi từ khóa hoặc bỏ bớt bộ lọc.",
+  },
+  notFound: {
+    entityFallback: "dữ liệu",
+    title: (entity: string) => `Không tìm thấy ${entity}`,
+    description: (entity: string) =>
+      `Có thể ${entity} đã bị xóa hoặc đường dẫn không đúng.`,
+  },
+  page: {
+    notFound: {
+      title: "Không tìm thấy trang",
+      description: "Đường dẫn không tồn tại hoặc trang đã bị gỡ. Kiểm tra lại địa chỉ hoặc quay về trang chủ.",
+    },
+    forbidden: {
+      title: "Không có quyền truy cập",
+      description: "Tài khoản hiện tại không đủ quyền xem trang này. Đăng nhập bằng tài khoản phù hợp.",
+    },
+    error: {
+      title: "Trang không hiển thị được",
+      description: "Trang gặp lỗi khi hiển thị. Tải lại trang, nếu vẫn lỗi thì quay về trang chủ.",
+    },
+    reload: "Tải lại trang",
+    home: "Về trang chủ",
+  },
+} as const;
+
 export const VALIDATION_MESSAGES = {
   emailInvalid: "Email không hợp lệ.",
   emailRequired: "Vui lòng nhập email.",

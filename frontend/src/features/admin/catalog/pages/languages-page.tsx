@@ -1,5 +1,5 @@
 import type { ColumnFiltersState } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
+import { Plus, Languages } from "lucide-react";
 
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
@@ -90,6 +90,9 @@ const LanguagesPage = () => {
         columns={columns}
         data={languages.data?.items ?? []}
         isLoading={languages.isLoading}
+        isError={languages.isError}
+        error={languages.error}
+        onRetry={() => void languages.refetch()}
         isRefreshing={languages.isPlaceholderData}
         totalItems={languages.data?.totalItems ?? 0}
         pagination={pagination}
@@ -98,7 +101,13 @@ const LanguagesPage = () => {
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         searchPlaceholder="Tìm theo tên ngôn ngữ..."
-        emptyMessage="Chưa có ngôn ngữ nào."
+        empty={{
+          icon: Languages,
+          title: "Chưa có ngôn ngữ",
+          description: "Thêm ngôn ngữ để gán cho phim và suất chiếu.",
+          actionLabel: "Thêm ngôn ngữ",
+          onAction: handleCreate,
+        }}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { Plus, Projector } from "lucide-react";
 
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
@@ -96,11 +96,20 @@ const AdminRoomsPage = () => {
         columns={columns}
         data={rooms.data?.items ?? []}
         isLoading={rooms.isLoading}
+        isError={rooms.isError}
+        error={rooms.error}
+        onRetry={() => void rooms.refetch()}
         isRefreshing={rooms.isPlaceholderData}
         totalItems={rooms.data?.totalItems ?? 0}
         pagination={pagination}
         onPaginationChange={onPaginationChange}
-        emptyMessage="Chưa có phòng chiếu nào."
+        empty={{
+          icon: Projector,
+          title: "Chưa có phòng chiếu",
+          description: "Thêm phòng chiếu trước khi lên lịch suất chiếu.",
+          actionLabel: "Thêm phòng chiếu",
+          onAction: handleCreate,
+        }}
       />
     </div>
   );

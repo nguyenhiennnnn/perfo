@@ -23,6 +23,7 @@ import { useTablePagination } from "@/hooks/use-table-pagination";
 import { DEFAULT_PAGE } from "@/config/default-constants";
 import { stripNulls } from "@/lib/query-params";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { Users } from "lucide-react";
 
 const AdminUsersPage = () => {
   const [params, setParams] = useAdminUserParams();
@@ -93,6 +94,9 @@ const AdminUsersPage = () => {
         columns={columns}
         data={users.data?.items ?? []}
         isLoading={users.isLoading}
+        isError={users.isError}
+        error={users.error}
+        onRetry={() => void users.refetch()}
         isRefreshing={users.isPlaceholderData}
         totalItems={users.data?.totalItems ?? 0}
         pagination={pagination}
@@ -100,7 +104,11 @@ const AdminUsersPage = () => {
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         searchPlaceholder="Tìm theo tên hoặc email..."
-        emptyMessage="Chưa có người dùng nào."
+        empty={{
+          icon: Users,
+          title: "Chưa có người dùng",
+          description: "Người dùng xuất hiện ở đây sau khi đăng ký tài khoản.",
+        }}
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         getRowId={(row) => String(row.userId)}

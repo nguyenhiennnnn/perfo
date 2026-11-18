@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 import type { RowSelectionState } from "@tanstack/react-table";
 
 import { PageHeader } from "@/components/common/page-header";
@@ -102,6 +102,9 @@ const ActorsPage = () => {
         columns={columns}
         data={actors.data?.items ?? []}
         isLoading={actors.isLoading}
+        isError={actors.isError}
+        error={actors.error}
+        onRetry={() => void actors.refetch()}
         isRefreshing={actors.isPlaceholderData}
         totalItems={actors.data?.totalItems ?? 0}
         pagination={pagination}
@@ -109,7 +112,13 @@ const ActorsPage = () => {
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         searchPlaceholder="Tìm theo tên diễn viên..."
-        emptyMessage="Chưa có diễn viên nào."
+        empty={{
+          icon: Users,
+          title: "Chưa có diễn viên",
+          description: "Thêm diễn viên để gán vào dàn diễn viên của phim.",
+          actionLabel: "Thêm diễn viên",
+          onAction: handleCreate,
+        }}
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         getRowId={(row) => String(row.actorId)}

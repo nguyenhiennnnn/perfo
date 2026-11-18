@@ -1,23 +1,30 @@
 import type { ReactNode } from "react";
 import { ErrorState } from "@/components/common/error-state";
-
-const DEFAULT_ERROR_TITLE = "Không tải được dữ liệu";
-const DEFAULT_ERROR_DESCRIPTION = "Kết nối tới máy chủ bị gián đoạn. Kiểm tra mạng rồi bấm Thử lại.";
+import { NotFoundState } from "@/components/common/not-found-state";
+import { STATE_MESSAGES } from "@/config/error-messages";
+import { isNotFoundError } from "@/lib/error";
 
 interface QueryLike<TData> {
   isLoading: boolean;
   isError: boolean;
   data: TData | undefined;
+  error?: unknown;
   refetch: () => unknown;
 }
 
 interface QueryStateProps<TData> {
   query: QueryLike<TData>;
+  /** Skeleton đúng hình khối nội dung sẽ hiển thị. */
   skeleton: ReactNode;
   isEmpty?: boolean | ((data: TData) => boolean);
+  /** Trạng thái trống: EmptyState "chưa có dữ liệu" hoặc "không có kết quả lọc". */
   empty?: ReactNode;
+  /**
+   * Dùng cho truy vấn một thực thể (chi tiết). Hiện khi API trả 404 hoặc không có dữ liệu.
+   * Không truyền thì 404 hiện NotFoundState chung.
+   */
+  notFound?: ReactNode;
   errorTitle?: string;
-  errorDescription?: string;
   errorClassName?: string;
   children: ReactNode | ((data: TData) => ReactNode);
 }
@@ -27,8 +34,8 @@ export const QueryState = <TData,>({
   skeleton,
   isEmpty,
   empty,
-  errorTitle = DEFAULT_ERROR_TITLE,
-  errorDescription = DEFAULT_ERROR_DESCRIPTION,
+  notFound,
+  errorTitle,
   errorClassName,
   children,
 }: QueryStateProps<TData>) => {
@@ -37,15 +44,21 @@ export const QueryState = <TData,>({
   if (query.isLoading) return <>{skeleton}</>;
 
   if (query.isError && data === undefined) {
+    if (isNotFoundError(query.error)) {
+      return <>{notFound ?? <NotFoundState entity={STATE_MESSAGES.notFound.entityFallback} className={errorClassName} />}</>;
+    }
+
     return (
       <ErrorState
         title={errorTitle}
-        description={errorDescription}
+        error={query.error}
         onRetry={() => void query.refetch()}
         className={errorClassName}
       />
     );
   }
+
+  if ((data === undefined || data === null) && notFound !== undefined) return <>{notFound}</>;
 
   const showEmpty =
     data === undefined || (typeof isEmpty === "function" ? isEmpty(data) : isEmpty === true);

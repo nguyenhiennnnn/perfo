@@ -9,9 +9,11 @@ export const BookingShowtimeHeader = ({
   data: ShowtimeSeatsResponseDto | undefined;
   isLoading: boolean;
 }) => {
-  if (isLoading || !data) {
-    return <Skeleton className="h-10 w-2/3 " />;
+  if (isLoading) {
+    return <Skeleton className="h-10 w-2/3" />;
   }
+
+  if (!data) return null;
 
   return (
     <div>

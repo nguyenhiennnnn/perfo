@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ColumnFiltersState, RowSelectionState } from "@tanstack/react-table";
-import { Plus, Power, PowerOff } from "lucide-react";
+import { Plus, Power, PowerOff, Popcorn } from "lucide-react";
 
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
@@ -108,6 +108,9 @@ const AdminCombosPage = () => {
         columns={columns}
         data={combos.data?.items ?? []}
         isLoading={combos.isLoading}
+        isError={combos.isError}
+        error={combos.error}
+        onRetry={() => void combos.refetch()}
         isRefreshing={combos.isPlaceholderData}
         totalItems={combos.data?.totalItems ?? 0}
         pagination={pagination}
@@ -116,7 +119,13 @@ const AdminCombosPage = () => {
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         searchPlaceholder="Tìm theo tên combo..."
-        emptyMessage="Chưa có combo nào."
+        empty={{
+          icon: Popcorn,
+          title: "Chưa có combo",
+          description: "Thêm combo bắp nước để bán kèm vé.",
+          actionLabel: "Thêm combo",
+          onAction: handleCreate,
+        }}
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         getRowId={(row) => String(row.comboId)}

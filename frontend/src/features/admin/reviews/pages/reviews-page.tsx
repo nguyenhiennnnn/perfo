@@ -19,6 +19,8 @@ import { createSelectionColumn } from "@/components/common/data-table/data-table
 import { useAdminReviewParams } from "@/hooks/use-query-params";
 import { useTablePagination } from "@/hooks/use-table-pagination";
 import { stripNulls } from "@/lib/query-params";
+import { MessageSquareText } from "lucide-react";
+import { DEFAULT_PAGE } from "@/config/default-constants";
 
 const ratingOptions = [
   { value: "all", label: "Tất cả số sao" },
@@ -101,11 +103,20 @@ const AdminReviewsPage = () => {
         columns={columns}
         data={reviews.data?.items ?? []}
         isLoading={reviews.isLoading}
+        isError={reviews.isError}
+        error={reviews.error}
+        onRetry={() => void reviews.refetch()}
         isRefreshing={reviews.isPlaceholderData}
         totalItems={reviews.data?.totalItems ?? 0}
         pagination={pagination}
         onPaginationChange={onPaginationChange}
-        emptyMessage="Chưa có đánh giá nào."
+        empty={{
+          icon: MessageSquareText,
+          title: "Chưa có đánh giá",
+          description: "Đánh giá xuất hiện ở đây sau khi khách chấm điểm phim.",
+        }}
+        hasActiveFilters={params.rating !== null || params.movieId !== null}
+        onClearFilters={() => setParams({ rating: null, movieId: null, page: DEFAULT_PAGE })}
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         getRowId={(row) => String(row.reviewId)}

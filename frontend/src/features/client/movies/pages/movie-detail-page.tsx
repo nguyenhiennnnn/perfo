@@ -1,49 +1,29 @@
 import { Film } from "lucide-react";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import { MovieHero } from "@/features/client/movies/components/movie-hero";
 import { MovieCastCrew } from "@/features/client/movies/components/movie-cast-crew";
 import { MovieShowtimeSelector } from "@/features/client/movies/components/movie-showtime-selector";
 import { MovieReviews } from "@/features/client/movies/components/movie-reviews";
 import { ExpandableText } from "@/components/common/expandable-text";
 import { useMovieDetail } from "@/features/client/movies/hooks/use-movies";
+import type { MovieDetailDto } from "@/features/client/movies/types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { EmptyState } from "@/components/common/empty-state";
+import { NotFoundState } from "@/components/common/not-found-state";
+import { QueryState } from "@/components/common/query-state";
 import { PageContainer } from "@/components/common/page-container";
 import { Seo } from "@/components/common/seo";
 import { BRAND } from "@/config/brand";
 import { ROUTES } from "@/config/routes";
 import { SEO_DESCRIPTION_MAX_LENGTH } from "@/config/default-constants";
 
-const MovieDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
-  const movieId = Number(id);
+const MovieDetailSkeleton = () => (
+  <div className="space-y-6" aria-busy="true">
+    <Skeleton className="h-96 w-full" />
+    <Skeleton className="h-40 w-full" />
+  </div>
+);
 
-  const navigate = useNavigate();
-  const { data: movie, isLoading, isError, refetch } = useMovieDetail(movieId);
-
-  if (!isLoading && !movie) {
-    return (
-      <PageContainer size="lg">
-        <EmptyState
-          icon={Film}
-          title="Không tải được phim này"
-          description="Phim không tồn tại hoặc kết nối bị lỗi. Hãy thử lại hoặc quay về danh sách phim."
-          actionLabel={isError ? "Thử lại" : "Xem danh sách phim"}
-          onAction={isError ? () => void refetch() : () => navigate(ROUTES.movies.list)}
-        />
-      </PageContainer>
-    );
-  }
-
-  if (isLoading || !movie) {
-    return (
-      <PageContainer size="lg" className="space-y-6">
-        <Skeleton className="h-96 w-full" />
-        <Skeleton className="h-40 w-full" />
-      </PageContainer>
-    );
-  }
-
+const MovieDetailContent = ({ movie }: { movie: MovieDetailDto }) => {
   const movieStructuredData = {
     "@context": "https://schema.org",
     "@type": "Movie",
@@ -69,7 +49,7 @@ const MovieDetailPage = () => {
     : `Xem thông tin và đặt vé phim ${movie.title} tại ${BRAND.name}. Chọn suất chiếu, ghế ngồi và thanh toán online nhanh chóng.`;
 
   return (
-    <PageContainer size="lg" className="space-y-10">
+    <div className="space-y-10">
       <Seo
         title={movie.title}
         description={seoDescription}
@@ -96,8 +76,33 @@ const MovieDetailPage = () => {
       <MovieShowtimeSelector showtimes={movie.upcomingShowtimes} />
 
       <MovieReviews movieId={movie.movieId} />
+    </div>
+  );
+};
+
+const MovieDetailPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const movieQuery = useMovieDetail(Number(id));
+
+  return (
+    <PageContainer size="lg">
+      <QueryState
+        query={movieQuery}
+        skeleton={<MovieDetailSkeleton />}
+        notFound={
+          <NotFoundState
+            entity="phim"
+            icon={Film}
+            backLabel="Xem danh sách phim"
+            backTo={ROUTES.movies.list}
+          />
+        }
+        errorTitle="Không tải được phim này"
+      >
+        {(movie) => <MovieDetailContent movie={movie} />}
+      </QueryState>
     </PageContainer>
   );
-}
+};
 
 export default MovieDetailPage

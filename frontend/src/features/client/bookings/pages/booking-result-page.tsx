@@ -2,10 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Ticket as TicketIcon } from "lucide-react";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { ButtonLink } from "@/components/common/button-link";
 import { Confetti } from "@/components/common/confetti";
-import { EmptyState } from "@/components/common/empty-state";
+import { NotFoundState } from "@/components/common/not-found-state";
 import { PageContainer } from "@/components/common/page-container";
 import { QueryState } from "@/components/common/query-state";
 import { BookingStatus } from "@/types/enum";
@@ -13,6 +12,7 @@ import { BOOKING_RESULT_POLL_INTERVAL_MS } from "@/config/default-constants";
 
 import { useBookingDetail } from "../hooks/use-bookings";
 import { BookingResultStatus } from "../components/result/booking-result-status";
+import { BookingResultSkeleton } from "../components/result/booking-result-skeleton";
 import { BookingResultTickets } from "../components/result/booking-result-tickets";
 import { ROUTES } from "@/config/routes";
 
@@ -23,7 +23,6 @@ const BookingResultPage = () => {
   const bookingDetail = useBookingDetail(bookingId, {
     pollWhilePendingMs: BOOKING_RESULT_POLL_INTERVAL_MS,
   });
-  const { refetch } = bookingDetail;
   const status = bookingDetail.data?.status;
 
   const [celebrate, setCelebrate] = useState(false);
@@ -39,22 +38,28 @@ const BookingResultPage = () => {
     <PageContainer size="sm" className="flex min-h-[60vh] max-w-lg flex-col items-center justify-center gap-6 py-12">
       <Confetti active={celebrate} />
       {!bookingId ? (
-        <p className="text-sm text-muted-foreground">Thiếu thông tin đơn đặt vé.</p>
+        <NotFoundState
+          entity="đơn đặt vé"
+          icon={TicketIcon}
+          description="Đường dẫn thiếu mã đơn đặt vé. Mở lại đơn từ danh sách vé của bạn."
+          backLabel="Xem vé của tôi"
+          backTo={ROUTES.account.tickets}
+          className="w-full"
+        />
       ) : (
         <QueryState
           query={bookingDetail}
-          skeleton={<Skeleton className="h-64 w-full" />}
-          empty={
-            <EmptyState
+          skeleton={<BookingResultSkeleton />}
+          notFound={
+            <NotFoundState
+              entity="đơn đặt vé"
               icon={TicketIcon}
-              title="Không tìm thấy đơn đặt vé này"
-              actionLabel="Thử lại"
-              onAction={() => void refetch()}
+              backLabel="Xem vé của tôi"
+              backTo={ROUTES.account.tickets}
               className="w-full"
             />
           }
           errorTitle="Không tải được đơn đặt vé"
-          errorDescription="Kiểm tra kết nối mạng rồi thử lại."
           errorClassName="w-full"
         >
           {(booking) => (

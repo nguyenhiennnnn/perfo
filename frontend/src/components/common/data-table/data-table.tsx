@@ -18,7 +18,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Inbox, type LucideIcon } from "lucide-react";
+import { EmptyState } from "@/components/common/empty-state";
+import { ErrorState } from "@/components/common/error-state";
+import { TableRowsSkeleton } from "@/components/common/skeleton-shapes";
+import { STATE_MESSAGES } from "@/config/error-messages";
 import { cn } from "@/lib/utils";
 import {
   features,
@@ -27,11 +31,24 @@ import {
 import { DataTablePagination } from "@/components/common/data-table/data-table-pagination";
 import { DataTableToolbar } from "@/components/common/data-table/data-table-toolbar";
 
+export interface DataTableEmpty {
+  icon?: LucideIcon;
+  title: string;
+  description?: string;
+  /** Nút tạo mới hoặc hành động tiếp theo khi bảng chưa có dữ liệu. */
+  actionLabel?: string;
+  onAction?: () => void;
+}
+
 interface DataTableProps<TData extends RowData> {
   columns: ColumnDef<DataTableFeatures, TData>[];
   data: TData[];
   isLoading?: boolean;
   isRefreshing?: boolean;
+  isError?: boolean;
+  error?: unknown;
+  /** Gọi refetch của truy vấn; hiện ở nút "Thử lại" khi tải lỗi. */
+  onRetry?: () => void;
   totalItems: number;
   pagination: PaginationState;
   onPaginationChange: OnChangeFn<PaginationState>;
@@ -39,7 +56,10 @@ interface DataTableProps<TData extends RowData> {
   onSortingChange?: OnChangeFn<SortingState>;
   columnFilters?: ColumnFiltersState;
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>;
-  emptyMessage?: string;
+  /** Trạng thái "chưa có dữ liệu". Khi đang tìm hoặc lọc, bảng tự hiện "không có kết quả". */
+  empty?: DataTableEmpty;
+  hasActiveFilters?: boolean;
+  onClearFilters?: () => void;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
   searchPlaceholder?: string;
@@ -55,6 +75,9 @@ export const DataTable = <TData extends RowData>({
   data,
   isLoading,
   isRefreshing,
+  isError,
+  error,
+  onRetry,
   totalItems,
   pagination,
   onPaginationChange,
@@ -62,7 +85,9 @@ export const DataTable = <TData extends RowData>({
   onSortingChange,
   columnFilters,
   onColumnFiltersChange,
-  emptyMessage = "Không có dữ liệu.",
+  empty,
+  hasActiveFilters,
+  onClearFilters,
   searchValue,
   onSearchChange,
   searchPlaceholder,
@@ -98,6 +123,19 @@ export const DataTable = <TData extends RowData>({
       ...(rowSelection !== undefined ? { rowSelection } : {}),
     },
   });
+
+  const hasFilters = hasActiveFilters ?? (Boolean(searchValue) || (columnFilters?.length ?? 0) > 0);
+  const clearFilters = onClearFilters ?? (onSearchChange ? () => onSearchChange("") : undefined);
+  const rows = table.getRowModel().rows;
+  const showError = Boolean(isError) && !isLoading && rows.length === 0;
+
+  const renderMessageRow = (content: ReactNode) => (
+    <TableRow>
+      <TableCell colSpan={columns.length} className="p-0">
+        {content}
+      </TableCell>
+    </TableRow>
+  );
 
   return (
     <div className="space-y-4">
@@ -136,17 +174,17 @@ export const DataTable = <TData extends RowData>({
             className={cn(isRefreshing && "opacity-60 transition-opacity")}
           >
             {isLoading ? (
-              Array.from({ length: pagination.pageSize }).map((_, i) => (
-                <TableRow key={i}>
-                  {columns.map((_, j) => (
-                    <TableCell key={j}>
-                      <Skeleton className="h-5 w-full" />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              <TableRowsSkeleton rows={pagination.pageSize} columns={columns.length} />
+            ) : showError ? (
+              renderMessageRow(
+                <ErrorState
+                  error={error}
+                  onRetry={onRetry ?? (() => window.location.reload())}
+                  className="bg-transparent py-12"
+                />,
+              )
+            ) : rows.length ? (
+              rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
@@ -158,15 +196,21 @@ export const DataTable = <TData extends RowData>({
                   ))}
                 </TableRow>
               ))
+            ) : hasFilters ? (
+              renderMessageRow(
+                <EmptyState variant="filtered" onClearFilters={clearFilters} className="bg-transparent py-12" />,
+              )
             ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-muted-foreground h-24 text-center"
-                >
-                  {emptyMessage}
-                </TableCell>
-              </TableRow>
+              renderMessageRow(
+                <EmptyState
+                  icon={empty?.icon ?? Inbox}
+                  title={empty?.title ?? STATE_MESSAGES.empty.title}
+                  description={empty?.description}
+                  actionLabel={empty?.actionLabel}
+                  onAction={empty?.onAction}
+                  className="bg-transparent py-12"
+                />,
+              )
             )}
           </TableBody>
         </Table>

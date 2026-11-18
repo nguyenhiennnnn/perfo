@@ -1,8 +1,9 @@
 import { Link } from "react-router";
 import { Film } from "lucide-react";
 import { MovieCard } from "@/features/client/movies/components/movie-card";
-import { MovieCardSkeleton } from "@/features/client/movies/components/movie-card-skeleton";
+import { MoviesGridSkeleton } from "@/features/client/movies/components/movies-grid";
 import { EmptyState } from "@/components/common/empty-state";
+import { QueryState } from "@/components/common/query-state";
 import { useMovies } from "@/features/client/movies/hooks/use-movies";
 import type { MovieStatus } from "@/types/enum";
 import { HOME_MOVIE_SECTION_LIMIT } from "@/config/default-constants";
@@ -15,8 +16,8 @@ interface MovieSectionProps {
 }
 
 export const MovieSection = ({ title, status, viewAllHref, emptyMessage }: MovieSectionProps) => {
-  const { data, isLoading } = useMovies({ status, limit: HOME_MOVIE_SECTION_LIMIT });
-  const movies = data?.pages ?? [];
+  const moviesQuery = useMovies({ status, limit: HOME_MOVIE_SECTION_LIMIT });
+  const movies = moviesQuery.data?.pages ?? [];
 
   return (
     <section className="mt-10">
@@ -31,21 +32,19 @@ export const MovieSection = ({ title, status, viewAllHref, emptyMessage }: Movie
       </div>
 
       <div className="mt-5">
-        {isLoading ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <MovieCardSkeleton key={i} />
-            ))}
-          </div>
-        ) : movies.length === 0 ? (
-          <EmptyState icon={Film} title={emptyMessage} />
-        ) : (
+        <QueryState
+          query={moviesQuery}
+          skeleton={<MoviesGridSkeleton />}
+          isEmpty={movies.length === 0}
+          empty={<EmptyState icon={Film} title={emptyMessage} />}
+          errorTitle="Không tải được danh sách phim"
+        >
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {movies.map((movie) => (
               <MovieCard key={movie.movieId} movie={movie} />
             ))}
           </div>
-        )}
+        </QueryState>
       </div>
     </section>
   );

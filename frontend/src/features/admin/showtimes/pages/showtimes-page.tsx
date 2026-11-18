@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CalendarPlus, Copy, Plus, Sparkles, Upload } from "lucide-react";
+import { CalendarPlus, Copy, Plus, Sparkles, Upload, CalendarX } from "lucide-react";
 
 import { PageHeader } from "@/components/common/page-header";
 import { ExportButton } from "@/components/common/export-button";
@@ -252,10 +252,21 @@ const AdminShowtimesPage = () => {
             columns={columns}
             data={showtimes.data?.items ?? []}
             isLoading={showtimes.isLoading}
+            isError={showtimes.isError}
+            error={showtimes.error}
+            onRetry={() => void showtimes.refetch()}
             totalItems={showtimes.data?.totalItems ?? 0}
             pagination={pagination}
             onPaginationChange={onPaginationChange}
-            emptyMessage="Chưa có suất chiếu nào."
+            empty={{
+              icon: CalendarX,
+              title: "Chưa có suất chiếu",
+              description: "Thêm suất chiếu thủ công hoặc xếp lịch tự động.",
+              actionLabel: "Thêm suất chiếu",
+              onAction: canManage ? handleCreate : undefined,
+            }}
+            hasActiveFilters={params.date !== null || params.status !== null || params.movieId !== null || params.roomId !== null}
+            onClearFilters={() => setParams({ date: null, status: null, movieId: null, roomId: null, page: DEFAULT_PAGE })}
             rowSelection={rowSelection}
             onRowSelectionChange={setRowSelection}
             getRowId={(row) => String(row.showtimeId)}

@@ -18,6 +18,7 @@ import { bookingStatusOptions } from "@/lib/enum-options";
 import { EnumSelectFilter } from "@/components/common/filter/enum-select-filter";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { ROUTES } from "@/config/routes";
+import { Ticket } from "lucide-react";
 
 const AdminBookingsPage = () => {
   const [params, setParams] = useAdminBookingParams();
@@ -85,11 +86,20 @@ const AdminBookingsPage = () => {
         columns={columns}
         data={bookings.data?.items ?? []}
         isLoading={bookings.isLoading}
+        isError={bookings.isError}
+        error={bookings.error}
+        onRetry={() => void bookings.refetch()}
         isRefreshing={bookings.isPlaceholderData}
         totalItems={bookings.data?.totalItems ?? 0}
         pagination={pagination}
         onPaginationChange={onPaginationChange}
-        emptyMessage="Chưa có đơn đặt vé nào."
+        empty={{
+          icon: Ticket,
+          title: "Chưa có đơn đặt vé",
+          description: "Đơn hiện ở đây sau khi khách hoặc quầy bán vé tạo đơn.",
+        }}
+        hasActiveFilters={Boolean(params.search) || params.status !== null || params.channel !== null || params.fromDate !== null || params.toDate !== null}
+        onClearFilters={() => setParams({ search: "", status: null, channel: null, fromDate: null, toDate: null, page: DEFAULT_PAGE })}
       />
     </div>
   );

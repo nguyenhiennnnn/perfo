@@ -1,7 +1,7 @@
 import type {
   ColumnFiltersState,
 } from "@tanstack/react-table";
-import { Plus } from "lucide-react";
+import { Plus, Tags } from "lucide-react";
 
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
@@ -86,6 +86,9 @@ const GenresPage = () => {
         columns={columns}
         data={genres.data?.items ?? []}
         isLoading={genres.isLoading}
+        isError={genres.isError}
+        error={genres.error}
+        onRetry={() => void genres.refetch()}
         isRefreshing={genres.isPlaceholderData}
         totalItems={genres.data?.totalItems ?? 0}
         pagination={pagination}
@@ -94,7 +97,13 @@ const GenresPage = () => {
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         searchPlaceholder="Tìm theo tên thể loại..."
-        emptyMessage="Chưa có thể loại nào."
+        empty={{
+          icon: Tags,
+          title: "Chưa có thể loại",
+          description: "Thêm thể loại để gán cho phim.",
+          actionLabel: "Thêm thể loại",
+          onAction: handleCreate,
+        }}
       />
     </div>
   );

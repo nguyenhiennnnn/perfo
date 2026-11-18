@@ -31,7 +31,7 @@ export const TicketCard = ({ booking, onCancel }: TicketCardProps) => {
       <div className="flex items-center gap-3">
         <div className="text-right">
           <BookingStatusBadge status={booking.status} />
-          <p className="mt-1 text-sm font-semibold text-primary tabular-nums">{formatCurrency(booking.finalAmount)}</p>
+          <p className="mt-1 text-sm font-semibold text-primary-text tabular-nums">{formatCurrency(booking.finalAmount)}</p>
         </div>
         <div className="flex flex-col gap-2">
           <Link

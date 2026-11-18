@@ -59,8 +59,8 @@ export const HeaderUserMenu = ({ user }: HeaderUserMenuProps) => {
             <p className="font-medium text-foreground">{user.fullName}</p>
             <p className="text-xs font-normal text-muted-foreground">{user.email}</p>
             {user.membershipTierName && (
-              <p className="mt-1 flex items-center gap-1 text-xs font-medium text-accent">
-                <Star className="size-3 fill-accent" />
+              <p className="mt-1 flex items-center gap-1 text-xs font-medium text-accent-text">
+                <Star className="size-3 fill-accent text-accent" />
                 {user.membershipTierName}
               </p>
             )}

@@ -135,7 +135,7 @@ export const AiAssistantWidget = () => {
                   key={s}
                   type="button"
                   onClick={() => handleSend(s)}
-                  className="border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground transition-colors hover:border-primary hover:text-primary"
+                  className="border border-border bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground transition-colors hover:border-primary hover:text-primary-text"
                 >
                   {s}
                 </button>

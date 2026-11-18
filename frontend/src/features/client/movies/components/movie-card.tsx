@@ -70,7 +70,7 @@ export const MovieCard = ({ movie, className }: MovieCardProps) => {
         </div>
 
         {movie.averageRating > 0 && (
-          <div className="mt-2.5 flex items-center gap-1 text-xs font-semibold text-accent">
+          <div className="mt-2.5 flex items-center gap-1 text-xs font-semibold text-accent-text">
             <Star className="size-3.5 fill-accent text-accent" />
             <span className="t-numeral text-sm font-bold">{formatRating(movie.averageRating)}</span>
           </div>

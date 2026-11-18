@@ -48,7 +48,7 @@ export const createSeatTypeColumns = ({
         <DataTableColumnHeader column={column} title="Hệ số giá" />
       ),
       cell: ({ row }) => (
-        <span className="font-semibold tabular-nums text-primary">
+        <span className="font-semibold tabular-nums text-primary-text">
           x{row.original.priceMultiplier}
         </span>
       ),

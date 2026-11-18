@@ -69,7 +69,7 @@ export const LoginForm = () => {
                 <FieldLabel htmlFor="password">Mật khẩu</FieldLabel>
                 <Link
                   to={ROUTES.auth.forgotPassword}
-                  className="text-xs text-muted-foreground transition-colors hover:text-primary hover:underline"
+                  className="text-xs text-muted-foreground transition-colors hover:text-primary-text hover:underline"
                 >
                   Quên mật khẩu?
                 </Link>
@@ -105,7 +105,7 @@ export const LoginForm = () => {
         Chưa có tài khoản?{" "}
         <Link
           to={ROUTES.auth.register}
-          className="font-medium text-primary hover:underline"
+          className="font-medium text-primary-text hover:underline"
         >
           Đăng ký ngay
         </Link>

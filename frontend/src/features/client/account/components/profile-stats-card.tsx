@@ -21,7 +21,7 @@ export const ProfileStatsCard = ({ profile }: ProfileStatsCardProps) => {
         </div>
         <div className="text-right">
           <p className="text-xs text-muted-foreground">Điểm tích lũy</p>
-          <p className="mt-1 text-lg font-bold text-accent">{formatPoints(profile.points)}</p>
+          <p className="mt-1 text-lg font-bold text-accent-text">{formatPoints(profile.points)}</p>
         </div>
         <div className="text-right">
           <p className="text-xs text-muted-foreground">Tổng chi tiêu</p>

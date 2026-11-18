@@ -12,7 +12,7 @@ import { formatCurrency } from "@/lib/formatters";
 export const TIER_VISUALS = [
   {
     icon: Award,
-    accent: "text-warning",
+    accent: "text-warning-text",
     ring: "hover:border-warning/50",
     perk: "Quyền lợi hội viên cơ bản",
   },
@@ -24,13 +24,13 @@ export const TIER_VISUALS = [
   },
   {
     icon: Crown,
-    accent: "text-accent",
+    accent: "text-accent-text",
     ring: "hover:border-accent/50",
     perk: "Ưu tiên giữ chỗ sự kiện đặc biệt",
   },
   {
     icon: Gem,
-    accent: "text-primary",
+    accent: "text-primary-text",
     ring: "hover:border-primary/50",
     perk: "Tặng combo bắp nước miễn phí dịp sinh nhật",
   },

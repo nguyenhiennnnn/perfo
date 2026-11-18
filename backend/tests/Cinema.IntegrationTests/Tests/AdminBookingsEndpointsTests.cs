@@ -29,6 +29,7 @@ public class AdminBookingsEndpointsTests(CinemaApiFactory factory) : Integration
         string SeatRow,
         int SeatNumber,
         string MovieTitle,
+        string RoomName,
         DateTime StartTime,
         DateTime CheckedInAt
     );
@@ -225,6 +226,7 @@ public class AdminBookingsEndpointsTests(CinemaApiFactory factory) : Integration
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var checkin = await ReadDataAsync<CheckinResponseDto>(response);
         checkin.BookingId.ShouldBe(hold.BookingId);
+        checkin.RoomName.ShouldNotBeNullOrWhiteSpace();
     }
 
     [Fact]

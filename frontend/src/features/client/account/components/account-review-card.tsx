@@ -46,7 +46,7 @@ export const AccountReviewCard = ({ review }: AccountReviewCardProps) => {
         <div className="flex-1">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div>
-              <Link to={ROUTES.movies.detail(review.movieId)} className="font-heading text-sm font-semibold text-foreground hover:text-primary">
+              <Link to={ROUTES.movies.detail(review.movieId)} className="font-heading text-sm font-semibold text-foreground hover:text-primary-text">
                 {review.movieTitle}
               </Link>
               <div className="mt-1 flex items-center gap-2">

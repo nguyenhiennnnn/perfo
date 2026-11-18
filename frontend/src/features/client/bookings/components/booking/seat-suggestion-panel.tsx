@@ -84,7 +84,7 @@ export const SeatSuggestionPanel = ({
                   {o.seatNumbers.length > 1 ? `${first}–${last}` : first}
                 </span>
                 <span className="text-xs text-muted-foreground">{o.seatNumbers.length} ghế</span>
-                <span className="text-xs font-semibold tabular-nums text-primary">
+                <span className="text-xs font-semibold tabular-nums text-primary-text">
                   {formatCurrency(o.totalPrice)}
                 </span>
               </button>

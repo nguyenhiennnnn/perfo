@@ -102,6 +102,7 @@ export interface CheckinResponse {
   seatRow: string;
   seatNumber: number;
   movieTitle: string;
+  roomName: string;
   startTime: string;
   checkedInAt: string;
 }

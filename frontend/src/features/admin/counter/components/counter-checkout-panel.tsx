@@ -54,7 +54,7 @@ export const CounterCheckoutPanel = ({
         <p className="t-code text-sm text-foreground">
           {hold.bookingCode}
         </p>
-        <div className="flex items-center gap-1.5 text-xs font-medium text-warning">
+        <div className="flex items-center gap-1.5 text-xs font-medium text-warning-text">
           <Clock className="size-3.5" />
           <span>{isExpired ? "Đã hết hạn giữ ghế" : `Còn ${label}`}</span>
         </div>
@@ -62,7 +62,7 @@ export const CounterCheckoutPanel = ({
 
       <div className="flex items-center justify-between text-sm">
         <span className="text-muted-foreground">Số tiền cần thanh toán</span>
-        <span className="text-lg font-bold tabular-nums text-primary">
+        <span className="text-lg font-bold tabular-nums text-primary-text">
           {formatCurrency(hold.finalAmount)}
         </span>
       </div>

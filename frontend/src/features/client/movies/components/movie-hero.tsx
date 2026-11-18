@@ -67,7 +67,7 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
               </span>
             )}
             {movie.averageRating > 0 && (
-              <span className="flex items-center gap-1.5 font-semibold text-accent">
+              <span className="flex items-center gap-1.5 font-semibold text-accent-text">
                 <Star className="size-4 fill-accent text-accent" />
                 {formatRating(movie.averageRating)}/5.0
               </span>

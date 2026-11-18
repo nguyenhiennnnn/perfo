@@ -52,7 +52,7 @@ export const TopMoviesReportTable = ({ query, action }: TopMoviesReportTableProp
                   <TableCell className="text-muted-foreground">{index + 1}</TableCell>
                   <TableCell className="font-medium text-foreground">{movie.title}</TableCell>
                   <TableCell className="text-right tabular-nums">{formatNumber(movie.ticketsSold)}</TableCell>
-                  <TableCell className="text-right tabular-nums font-medium text-primary">
+                  <TableCell className="text-right tabular-nums font-medium text-primary-text">
                     {formatCurrency(movie.revenue)}
                   </TableCell>
                 </TableRow>

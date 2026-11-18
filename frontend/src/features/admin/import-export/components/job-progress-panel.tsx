@@ -194,7 +194,7 @@ export const JobProgressPanel = () => {
           <div className="border-t border-border px-3 py-2">
             <Link
               to={ROUTES.admin.importExportHistory}
-              className="text-sm text-primary underline-offset-4 hover:underline"
+              className="text-sm text-primary-text underline-offset-4 hover:underline"
             >
               Xem lịch sử Import/Export
             </Link>

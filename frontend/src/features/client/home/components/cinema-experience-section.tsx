@@ -23,7 +23,7 @@ export const CinemaExperienceSection = () => {
     <section>
       <div className="flex items-end justify-between gap-3 border-b border-border pb-3">
         <h2 className="t-h2 text-foreground">Lịch chiếu hôm nay</h2>
-        <Link to={ROUTES.schedule} className="shrink-0 text-sm font-medium text-primary hover:underline">
+        <Link to={ROUTES.schedule} className="shrink-0 text-sm font-medium text-primary-text hover:underline">
           Xem toàn bộ lịch chiếu
         </Link>
       </div>

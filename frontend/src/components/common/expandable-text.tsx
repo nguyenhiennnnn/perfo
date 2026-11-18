@@ -16,7 +16,7 @@ export const ExpandableText = ({ text, className }: ExpandableTextProps) => {
         <button
           type="button"
           onClick={() => setExpanded((v) => !v)}
-          className="mt-1 text-xs font-medium text-primary hover:underline"
+          className="mt-1 text-xs font-medium text-primary-text hover:underline"
         >
           {expanded ? "Thu gọn" : "Xem thêm"}
         </button>

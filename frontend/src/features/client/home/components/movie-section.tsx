@@ -25,7 +25,7 @@ export const MovieSection = ({ title, status, viewAllHref, emptyMessage }: Movie
         <h2 className="t-h2 text-foreground">{title}</h2>
         <Link
           to={viewAllHref}
-          className="shrink-0 text-sm font-medium text-primary hover:underline"
+          className="shrink-0 text-sm font-medium text-primary-text hover:underline"
         >
           Xem tất cả
         </Link>

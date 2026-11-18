@@ -198,7 +198,7 @@ export const SeatEditorToolbar = ({
 
         <div className="ml-auto flex items-center gap-3">
           {isDirty && (
-            <span className="flex items-center gap-1.5 text-xs font-medium text-warning">
+            <span className="flex items-center gap-1.5 text-xs font-medium text-warning-text">
               <span className="size-2 rounded-full bg-warning" aria-hidden />
               Có thay đổi chưa lưu
             </span>

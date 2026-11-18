@@ -56,7 +56,7 @@ export const createMembershipTierColumns = ({
         <DataTableColumnHeader column={column} title="Giảm giá" />
       ),
       cell: ({ row }) => (
-        <span className="font-semibold tabular-nums text-primary">
+        <span className="font-semibold tabular-nums text-primary-text">
           {row.original.discountPercent}%
         </span>
       ),

@@ -68,7 +68,7 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
         // Line variant (Perfo clean underline with primary accent)
         "group-data-[variant=line]/tabs-list:border-b-2 group-data-[variant=line]/tabs-list:border-transparent group-data-[variant=line]/tabs-list:px-3.5 group-data-[variant=line]/tabs-list:pt-1.5 group-data-[variant=line]/tabs-list:pb-2.5 group-data-[variant=line]/tabs-list:-mb-px",
         "group-data-[variant=line]/tabs-list:hover:text-foreground group-data-[variant=line]/tabs-list:hover:border-border",
-        "group-data-[variant=line]/tabs-list:data-active:border-primary group-data-[variant=line]/tabs-list:data-active:text-primary group-data-[variant=line]/tabs-list:data-active:font-semibold",
+        "group-data-[variant=line]/tabs-list:data-active:border-primary group-data-[variant=line]/tabs-list:data-active:text-primary-text group-data-[variant=line]/tabs-list:data-active:font-semibold",
         className
       )}
       {...props}

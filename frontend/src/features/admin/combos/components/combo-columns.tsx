@@ -70,7 +70,7 @@ export const createComboColumns = ({ onEdit, onToggle }: ComboColumnsOptions) =>
         <DataTableColumnHeader column={column} title="Giá" />
       ),
       cell: ({ row }) => (
-        <span className="font-semibold tabular-nums text-primary">
+        <span className="font-semibold tabular-nums text-primary-text">
           {formatCurrency(row.original.price)}
         </span>
       ),

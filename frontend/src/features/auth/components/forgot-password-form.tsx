@@ -86,7 +86,7 @@ export const ForgotPasswordForm = () => {
         Nhớ mật khẩu?{" "}
         <Link
           to={ROUTES.auth.login}
-          className="font-medium text-primary hover:underline"
+          className="font-medium text-primary-text hover:underline"
         >
           Đăng nhập
         </Link>

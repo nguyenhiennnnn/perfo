@@ -92,6 +92,7 @@ public class BookingMappingConfig : IRegister
             .Map(dest => dest.SeatRow, src => src.ShowtimeSeat.Seat.SeatRow)
             .Map(dest => dest.SeatNumber, src => src.ShowtimeSeat.Seat.SeatNumber)
             .Map(dest => dest.MovieTitle, src => src.ShowtimeSeat.Showtime.Movie.Title)
+            .Map(dest => dest.RoomName, src => src.ShowtimeSeat.Showtime.Room.RoomName)
             .Map(dest => dest.StartTime, src => src.ShowtimeSeat.Showtime.StartTime)
             .Map(dest => dest.CheckedInAt, src => src.CheckedInAt!.Value);
     }

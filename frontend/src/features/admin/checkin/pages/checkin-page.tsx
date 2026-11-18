@@ -18,6 +18,8 @@ const AdminCheckinPage = () => {
   const [result, setResult] = useState<CheckinResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const lastSuccessCodeRef = useRef<string | null>(null);
+  const inFlightCodeRef = useRef<string | null>(null);
   const checkinMutation = useCheckin();
   const { playSuccess, playError } = useCheckinSound();
 
@@ -26,17 +28,25 @@ const AdminCheckinPage = () => {
       const trimmed = qrCode.trim();
       if (!trimmed || checkinMutation.isPending) return;
 
+      if (trimmed === lastSuccessCodeRef.current || trimmed === inFlightCodeRef.current) {
+        setCode("");
+        return;
+      }
+
+      inFlightCodeRef.current = trimmed;
       checkinMutation.mutate(
         { qrCode: trimmed },
         {
           onSuccess: (res) => {
             const data = res.data;
+            lastSuccessCodeRef.current = trimmed;
             setStatus("success");
             setResult(data);
             setErrorMessage(null);
             playSuccess();
           },
           onError: (err: unknown) => {
+            lastSuccessCodeRef.current = null;
             setStatus("error");
             setResult(null);
             const errorObj = err as { response?: { data?: { message?: string } }; message?: string };
@@ -47,6 +57,9 @@ const AdminCheckinPage = () => {
             );
             playError();
           },
+          onSettled: () => {
+            inFlightCodeRef.current = null;
+          },
         },
       );
 
@@ -56,11 +69,26 @@ const AdminCheckinPage = () => {
     [checkinMutation, playError, playSuccess],
   );
 
+  const handleCloseResult = useCallback(() => {
+    lastSuccessCodeRef.current = null;
+    setStatus("idle");
+    setResult(null);
+    setErrorMessage(null);
+    inputRef.current?.focus();
+  }, []);
+
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Soát vé & Check-in"
         description="Quét mã QR hoặc nhập mã vé để xác nhận khách vào rạp."
+      />
+
+      <CheckinResultCard
+        status={status}
+        result={result}
+        errorMessage={errorMessage}
+        onClose={handleCloseResult}
       />
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -77,16 +105,14 @@ const AdminCheckinPage = () => {
             <Ticket className="size-4" />
             <span>Soát vé ngay</span>
           </Button>
+        </Card>
 
+        <Card className="p-5 lg:col-span-1">
           <CheckinCameraPanel
             active={cameraActive}
             onToggle={() => setCameraActive((prev) => !prev)}
             onDetect={handleScan}
           />
-        </Card>
-
-        <Card className="p-5 lg:col-span-1">
-          <CheckinResultCard status={status} result={result} errorMessage={errorMessage} />
         </Card>
       </div>
     </div>

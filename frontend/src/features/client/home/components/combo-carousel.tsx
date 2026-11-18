@@ -29,7 +29,7 @@ export const ComboCarousel = () => {
               <div className="flex flex-1 flex-col p-3">
                 <p className="line-clamp-1 text-sm font-semibold text-foreground">{combo.name}</p>
                 {combo.description && <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{combo.description}</p>}
-                <p className="mt-2 text-sm font-bold text-primary">{formatCurrency(combo.price)}</p>
+                <p className="mt-2 text-sm font-bold text-primary-text">{formatCurrency(combo.price)}</p>
               </div>
             </div>
           ))}

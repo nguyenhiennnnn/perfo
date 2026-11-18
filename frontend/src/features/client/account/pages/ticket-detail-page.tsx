@@ -129,7 +129,7 @@ const TicketDetailContent = ({ booking }: { booking: BookingDetailDto }) => {
                 : "Thời gian giữ ghế đã hết hạn."}
             </p>
             {canResumePayment && (
-              <p className="mt-0.5 text-xs font-semibold text-warning">
+              <p className="mt-0.5 text-xs font-semibold text-warning-text">
                 Còn {holdCountdown.label} để hoàn tất thanh toán
               </p>
             )}
@@ -197,7 +197,7 @@ const TicketDetailContent = ({ booking }: { booking: BookingDetailDto }) => {
           )}
           <div className="flex justify-between text-base font-semibold text-foreground">
             <span>Thành tiền</span>
-            <span className="tabular-nums text-primary">{formatCurrency(booking.finalAmount)}</span>
+            <span className="tabular-nums text-primary-text">{formatCurrency(booking.finalAmount)}</span>
           </div>
         </div>
       </div>

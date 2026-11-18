@@ -137,7 +137,7 @@ export const ImportPreviewStep = ({
       </div>
 
       {warnings.length > 0 && (
-        <div role="status" className="cut-sm space-y-1.5 bg-warning/10 px-3 py-2 text-sm text-warning">
+        <div role="status" className="cut-sm space-y-1.5 bg-warning/10 px-3 py-2 text-sm text-warning-text">
           <p className="flex items-center gap-2 font-medium">
             <TriangleAlert className="size-4 shrink-0" />
             <span>Lưu ý trước khi nhập</span>

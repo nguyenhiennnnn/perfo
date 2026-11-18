@@ -151,7 +151,7 @@ const AccountProfilePage = () => {
                 <FieldLabel>Email</FieldLabel>
                 <div className="flex items-center gap-2">
                   <Input value={loaded.email} disabled className="flex-1" />
-                  <span className="flex items-center gap-1 cut-xs bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                  <span className="flex items-center gap-1 cut-xs bg-primary/10 px-2 py-1 text-xs font-medium text-primary-text">
                     <BadgeCheck className="size-3.5" />
                     Đã xác thực
                   </span>

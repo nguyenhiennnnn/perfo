@@ -52,7 +52,7 @@ export const EmployeePerformanceTable = ({ query, action }: EmployeePerformanceT
                   <TableCell className="font-medium text-foreground">{emp.fullName}</TableCell>
                   <TableCell className="text-right tabular-nums">{formatNumber(emp.ticketsSold)}</TableCell>
                   <TableCell className="text-right tabular-nums">{formatNumber(emp.bookingCount)}</TableCell>
-                  <TableCell className="text-right tabular-nums font-medium text-primary">
+                  <TableCell className="text-right tabular-nums font-medium text-primary-text">
                     {formatCurrency(emp.revenue)}
                   </TableCell>
                 </TableRow>

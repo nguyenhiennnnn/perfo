@@ -56,7 +56,7 @@ export const CatalogCard = ({
       </div>
 
       <div className="mt-4">
-        <h3 className="t-h3 text-foreground transition-colors group-hover:text-primary">
+        <h3 className="t-h3 text-foreground transition-colors group-hover:text-primary-text">
           {title}
         </h3>
         <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">

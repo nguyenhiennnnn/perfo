@@ -1,7 +1,7 @@
 import { ModeToggle } from "@/components/common/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { useAuthUser } from "@/stores/auth-store";
-import { Bell, ChevronRight, Globe, PanelLeft } from "lucide-react";
+import { ChevronRight, Globe, Menu, PanelLeft } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,8 +16,9 @@ import { Link, useLocation } from "react-router";
 import { useLogoutConfirm } from "@/hooks/use-logout-confirm";
 import { ROUTES } from "@/config/routes";
 import { getAdminBreadcrumbs } from "@/config/admin-nav";
+import { getRoleLabel } from "@/components/common/status-badge.config";
 
-export const AdminTopbar = ({ onToggle }: { onToggle: () => void }) => {
+export const AdminTopbar = ({ onToggle, onOpenMenu }: { onToggle: () => void; onOpenMenu: () => void }) => {
   const user = useAuthUser();
   const confirmLogout = useLogoutConfirm();
   const { pathname } = useLocation();
@@ -25,8 +26,21 @@ export const AdminTopbar = ({ onToggle }: { onToggle: () => void }) => {
 
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-4 border-b border-border bg-background px-4">
+      <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Mở menu" onClick={onOpenMenu}>
+        <Menu className="size-5" />
+      </Button>
       <Tooltip>
-        <TooltipTrigger render={<Button variant="ghost" size="icon" aria-label="Thu gọn / mở rộng menu" onClick={onToggle} />}>
+        <TooltipTrigger
+          render={
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hidden lg:inline-flex"
+              aria-label="Thu gọn / mở rộng menu"
+              onClick={onToggle}
+            />
+          }
+        >
           <PanelLeft className="size-5" />
         </TooltipTrigger>
         <TooltipContent>Thu gọn / mở rộng menu</TooltipContent>
@@ -77,12 +91,6 @@ export const AdminTopbar = ({ onToggle }: { onToggle: () => void }) => {
           </TooltipTrigger>
           <TooltipContent>Xem trang khách hàng</TooltipContent>
         </Tooltip>
-        <Tooltip>
-          <TooltipTrigger render={<Button variant="ghost" size="icon" aria-label="Thông báo hệ thống" />}>
-            <Bell className="size-4" />
-          </TooltipTrigger>
-          <TooltipContent>Thông báo hệ thống</TooltipContent>
-        </Tooltip>
         <ModeToggle />
 
         <DropdownMenu>
@@ -97,12 +105,12 @@ export const AdminTopbar = ({ onToggle }: { onToggle: () => void }) => {
             <DropdownMenuLabel>
               <p className="font-medium text-foreground">{user?.fullName}</p>
               <p className="text-xs font-normal text-muted-foreground">
-                {user?.role}
+                {getRoleLabel(user?.role)}
               </p>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link to={ROUTES.admin.settings}>Cài đặt hệ thống</Link>
+            <DropdownMenuItem render={<Link to={ROUTES.admin.settings} />}>
+              Cài đặt hệ thống
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem render={<Link to={ROUTES.admin.changePassword} />}>

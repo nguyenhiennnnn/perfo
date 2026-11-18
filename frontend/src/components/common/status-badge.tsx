@@ -222,7 +222,7 @@ export const MembershipTierBadge = ({
   className?: string;
 }) =>
   tierName ? (
-    <Badge variant="outline" className={cn("border-accent text-accent font-semibold", className)}>
+    <Badge variant="outline" className={cn("border-accent text-accent-text font-semibold", className)}>
       {tierName}
     </Badge>
   ) : (

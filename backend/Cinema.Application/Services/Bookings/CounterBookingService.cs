@@ -183,6 +183,9 @@ public class CounterBookingService(
                 .Include(t => t.ShowtimeSeat)
                     .ThenInclude(ss => ss.Showtime)
                         .ThenInclude(s => s.Movie)
+                .Include(t => t.ShowtimeSeat)
+                    .ThenInclude(ss => ss.Showtime)
+                        .ThenInclude(s => s.Room)
                 .Include(t => t.Booking)
                 .FirstOrDefaultAsync(t => t.QrCode == request.QrCode, cancellationToken)
             ?? throw new NotFoundException(Messages.NotFound_QrCode);

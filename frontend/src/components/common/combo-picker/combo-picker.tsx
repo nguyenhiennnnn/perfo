@@ -76,7 +76,7 @@ export const ComboPicker = ({ combos, quantities, onChange, isLoading, isError, 
             </div>
             <div className="min-w-0 flex-1">
               <p className="line-clamp-1 text-sm font-medium text-foreground">{combo.name}</p>
-              <p className="text-xs font-semibold text-primary">{formatCurrency(combo.price)}</p>
+              <p className="text-xs font-semibold text-primary-text">{formatCurrency(combo.price)}</p>
               {labels?.[combo.comboId] && (
                 <Badge variant="success" className="mt-1">
                   {labels[combo.comboId]}

@@ -142,7 +142,7 @@ const AdminBookingDetailPage = () => {
                       #{t.ticketId}, {t.seatRow}{t.seatNumber}
                     </span>
                     {t.isCheckedIn ? (
-                      <span className="flex items-center gap-1 text-primary">
+                      <span className="flex items-center gap-1 text-primary-text">
                         <CheckCircle2 className="size-3.5" />
                         {t.checkedInAt ? formatDate(t.checkedInAt) : "Đã check-in"}
                       </span>
@@ -208,7 +208,7 @@ const AdminBookingDetailPage = () => {
               </div>
               <div className="flex justify-between pt-1">
                 <span className="font-medium text-foreground">Tổng cộng</span>
-                <span className="font-semibold tabular-nums text-primary">
+                <span className="font-semibold tabular-nums text-primary-text">
                   {formatCurrency(b.finalAmount)}
                 </span>
               </div>

@@ -33,6 +33,7 @@ public record CheckinResponse(
     string SeatRow,
     int SeatNumber,
     string MovieTitle,
+    string RoomName,
     DateTime StartTime,
     DateTime CheckedInAt
 );

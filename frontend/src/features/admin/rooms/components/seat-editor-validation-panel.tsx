@@ -59,7 +59,7 @@ export const SeatEditorValidationPanel = ({
                     focusedIndex === idx && "ring-2 ring-current",
                     issue.level === "error"
                       ? "border-destructive/40 bg-destructive/5 text-destructive"
-                      : "border-warning/40 bg-warning/5 text-warning",
+                      : "border-warning/40 bg-warning/5 text-warning-text",
                   )}
                 >
                   {issue.level === "error" ? (

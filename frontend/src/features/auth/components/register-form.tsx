@@ -157,7 +157,7 @@ export const RegisterForm = () => {
         Đã có tài khoản?{" "}
         <Link
           to={ROUTES.auth.login}
-          className="font-medium text-primary hover:underline"
+          className="font-medium text-primary-text hover:underline"
         >
           Đăng nhập
         </Link>

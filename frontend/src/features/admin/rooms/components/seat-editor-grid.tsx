@@ -137,11 +137,11 @@ export const SeatEditorGrid = ({
   const rowLabelClassName = (rowLabel: string) => {
     if (copySourceRow === rowLabel) return "bg-primary text-primary-foreground";
     if (isPickingCopySource) return "bg-accent text-accent-foreground";
-    if (isRowSelected(rowLabel)) return "bg-primary/15 text-primary";
+    if (isRowSelected(rowLabel)) return "bg-primary/15 text-primary-text";
     return undefined;
   };
 
-  const colLabelClassName = (col: number) => (isColSelected(col) ? "bg-primary/15 text-primary" : undefined);
+  const colLabelClassName = (col: number) => (isColSelected(col) ? "bg-primary/15 text-primary-text" : undefined);
 
   const rowLabelTitle = (rowLabel: string) => {
     if (isPickingCopySource) return `Bấm để sao chép hàng ${rowLabel}`;

@@ -58,7 +58,7 @@ export const AiChatCards = ({ cards, onNavigate }: AiChatCardsProps) => {
               )}
             </div>
             <span
-              className="mt-1 inline-flex items-center gap-0.5 text-xs font-medium text-primary"
+              className="mt-1 inline-flex items-center gap-0.5 text-xs font-medium text-primary-text"
             >
               {ACTION_LABEL[card.type]}
               <ChevronRight className="size-3.5" />

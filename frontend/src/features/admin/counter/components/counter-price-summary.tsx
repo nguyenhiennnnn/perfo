@@ -38,7 +38,7 @@ export const CounterPriceSummary = ({
       <Separator />
       <div className="flex items-center justify-between">
         <span className="font-medium text-foreground">Tổng cộng</span>
-        <span className="text-lg font-bold tabular-nums text-primary">
+        <span className="text-lg font-bold tabular-nums text-primary-text">
           {formatCurrency(finalAmount ?? estimatedTotal)}
         </span>
       </div>

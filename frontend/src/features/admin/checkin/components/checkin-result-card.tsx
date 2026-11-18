@@ -1,29 +1,46 @@
-import { CheckCircle2, XCircle, Film, Armchair, Clock } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { CheckCircle2, XCircle, Film, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/common/empty-state";
 import { formatDateTime, formatTime } from "@/lib/formatters";
 import type { CheckinResponse } from "@/features/admin/bookings/types";
-
 
 interface CheckinResultCardProps {
   status: "idle" | "success" | "error";
   result?: CheckinResponse | null;
   errorMessage?: string | null;
+  onClose: () => void;
 }
 
-export const CheckinResultCard = ({ status, result, errorMessage }: CheckinResultCardProps) => {
+export const CheckinResultCard = ({ status, result, errorMessage, onClose }: CheckinResultCardProps) => {
   if (status === "idle") {
     return (
-      <EmptyState icon={Film} title="Chưa có vé nào được soát" className="h-full min-h-55" />
+      <Card className="p-5">
+        <EmptyState icon={Film} title="Chưa có vé nào được soát" className="min-h-55" />
+      </Card>
     );
   }
 
   if (status === "error") {
     return (
-      <div className="flex h-full min-h-55 flex-col items-center justify-center gap-3 cut-md bg-destructive/10 px-4 text-center">
-        <XCircle className="size-10 text-destructive" />
-        <p className="font-heading text-lg font-semibold text-destructive">Soát vé thất bại</p>
-        <p className="text-sm text-muted-foreground">
+      <div role="alert" className="cut-lg bg-destructive p-6 text-destructive-foreground md:p-8">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <XCircle className="size-10 shrink-0" />
+            <p className="t-h2">Soát vé thất bại</p>
+          </div>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label="Đóng kết quả"
+            className="hover:bg-destructive-foreground/15 hover:text-destructive-foreground"
+            onClick={onClose}
+          >
+            <X className="size-5" />
+          </Button>
+        </div>
+        <p className="mt-6 text-xl font-bold">
           {errorMessage ?? "Mã vé không hợp lệ hoặc đã được sử dụng. Kiểm tra mã vé rồi quét lại."}
         </p>
       </div>
@@ -33,35 +50,45 @@ export const CheckinResultCard = ({ status, result, errorMessage }: CheckinResul
   if (!result) return null;
 
   return (
-    <div className="flex h-full min-h-55 flex-col gap-3 cut-md bg-success/10 p-4">
-      <div className="flex items-center gap-2">
-        <CheckCircle2 className="size-8 text-success" />
-        <div>
-          <p className="font-heading text-lg font-semibold text-success">Check-in thành công</p>
-          <p className="text-xs text-muted-foreground">Lúc {formatDateTime(result.checkedInAt)}</p>
+    <div role="status" className="cut-lg bg-success p-6 text-success-foreground md:p-8">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <CheckCircle2 className="size-10 shrink-0" />
+          <div>
+            <p className="t-h2">Check-in thành công</p>
+            <p className="text-sm">Lúc {formatDateTime(result.checkedInAt)}</p>
+          </div>
         </div>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          aria-label="Đóng kết quả"
+          className="hover:bg-success-foreground/15 hover:text-success-foreground"
+          onClick={onClose}
+        >
+          <X className="size-5" />
+        </Button>
       </div>
 
-      <div className="flex items-center gap-2 text-sm text-foreground">
-        <Film className="size-4 text-muted-foreground" />
-        <span className="line-clamp-1 font-medium">{result.movieTitle}</span>
-      </div>
-
-      <div className="flex items-center gap-2 text-sm text-foreground">
-        <Armchair className="size-4 text-muted-foreground" />
-        <span>
-          Ghế{" "}
-          <Badge variant="secondary" className="ml-1 tabular-nums">
+      <dl className="mt-6 grid grid-cols-2 gap-6">
+        <div className="min-w-0">
+          <dt className="text-sm font-medium">Ghế</dt>
+          <dd className="t-numeral text-7xl wrap-break-word md:text-9xl">
             {result.seatRow}
             {result.seatNumber}
-          </Badge>
-        </span>
-      </div>
+          </dd>
+        </div>
+        <div className="min-w-0">
+          <dt className="text-sm font-medium">Phòng</dt>
+          <dd className="t-numeral text-7xl wrap-break-word md:text-9xl">{result.roomName}</dd>
+        </div>
+      </dl>
 
-      <div className="flex items-center gap-2 text-sm text-foreground">
-        <Clock className="size-4 text-muted-foreground" />
-        <span>Suất chiếu {formatTime(result.startTime)}</span>
+      <div className="mt-6 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+        <p className="t-h2 min-w-0 wrap-break-word">{result.movieTitle}</p>
+        <p className="t-numeral text-4xl">{formatTime(result.startTime)}</p>
       </div>
     </div>
   );
-}
+};

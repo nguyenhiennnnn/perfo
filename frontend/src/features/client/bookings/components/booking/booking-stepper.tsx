@@ -25,7 +25,7 @@ export const BookingStepper = ({ step }: { step: BookingStep }) => {
               aria-current={isCurrent ? "step" : undefined}
               className={cn(
                 "flex items-center gap-2 text-sm font-medium",
-                isCurrent ? "text-foreground" : isDone ? "text-primary" : "text-muted-foreground",
+                isCurrent ? "text-foreground" : isDone ? "text-primary-text" : "text-muted-foreground",
               )}
             >
               <span
@@ -34,7 +34,7 @@ export const BookingStepper = ({ step }: { step: BookingStep }) => {
                   isCurrent
                     ? "bg-primary text-primary-foreground"
                     : isDone
-                      ? "bg-primary/15 text-primary"
+                      ? "bg-primary/15 text-primary-text"
                       : "bg-secondary text-muted-foreground",
                 )}
               >

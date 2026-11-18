@@ -65,7 +65,7 @@ export const PaymentDetailView = ({ paymentId }: PaymentDetailViewProps) => {
 
       <div className="flex items-center justify-between bg-muted/30 p-3 text-sm">
         <span className="text-muted-foreground">Tổng đơn đặt vé</span>
-        <span className="font-semibold tabular-nums text-primary">
+        <span className="font-semibold tabular-nums text-primary-text">
           {formatCurrency(p.booking.finalAmount)}
         </span>
       </div>

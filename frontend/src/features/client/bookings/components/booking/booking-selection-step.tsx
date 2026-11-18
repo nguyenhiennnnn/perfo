@@ -139,7 +139,7 @@ export const BookingSelectionStep = ({
 
       <div className="sticky bottom-0 z-30 -mx-4 border-t border-border bg-background px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] lg:hidden">
         {loneSeats.length > 0 && (
-          <p className="mb-2 flex items-center gap-1.5 text-xs text-warning">
+          <p className="mb-2 flex items-center gap-1.5 text-xs text-warning-text">
             <AlertTriangle className="size-3.5 shrink-0" />
             <span className="truncate">Không để trống ghế lẻ {loneSeats.join(", ")}</span>
           </p>
@@ -157,7 +157,7 @@ export const BookingSelectionStep = ({
               )}
             </p>
             <p className="flex items-baseline gap-2">
-              <span className="text-lg font-bold tabular-nums text-primary">{formatCurrency(total)}</span>
+              <span className="text-lg font-bold tabular-nums text-primary-text">{formatCurrency(total)}</span>
               {holdDurationMinutes != null && seatCodes.length > 0 && (
                 <span className="text-xs text-muted-foreground">giữ ghế {holdDurationMinutes} phút</span>
               )}

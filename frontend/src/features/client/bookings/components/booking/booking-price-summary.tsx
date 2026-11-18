@@ -68,13 +68,13 @@ export const BookingPriceSummary = ({ seats, combos, comboQuantities, comboItems
       {hold && hold.discountAmount > 0 && (
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Giảm giá hạng thành viên (áp dụng cho vé)</span>
-          <span className="font-medium text-primary">-{formatCurrency(hold.discountAmount)}</span>
+          <span className="font-medium text-primary-text">-{formatCurrency(hold.discountAmount)}</span>
         </div>
       )}
       <Separator />
       <div className="flex items-center justify-between">
         <span className="font-medium text-foreground">Tổng cộng</span>
-        <span className="text-lg font-bold tabular-nums text-primary">
+        <span className="text-lg font-bold tabular-nums text-primary-text">
           {formatCurrency(hold?.finalAmount ?? estimate.total)}
         </span>
       </div>

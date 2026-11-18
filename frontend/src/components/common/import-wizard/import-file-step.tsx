@@ -95,7 +95,7 @@ export const ImportFileStep = ({
       </div>
 
       {notice && (
-        <p className="cut-sm bg-warning/10 px-3 py-2 text-sm text-warning">
+        <p className="cut-sm bg-warning/10 px-3 py-2 text-sm text-warning-text">
           {notice}
         </p>
       )}
@@ -184,7 +184,7 @@ export const ImportFileStep = ({
           <Upload className="size-8 text-muted-foreground" />
           <p className="text-sm text-muted-foreground">
             Kéo thả file vào đây hoặc{" "}
-            <span className="font-medium text-primary">chọn file</span>
+            <span className="font-medium text-primary-text">chọn file</span>
           </p>
           <p className="text-xs text-muted-foreground">
             Hỗ trợ .xlsx, .csv (UTF-8), tối đa{" "}

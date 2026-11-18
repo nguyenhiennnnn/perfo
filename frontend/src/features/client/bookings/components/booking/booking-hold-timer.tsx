@@ -15,7 +15,7 @@ export const BookingHoldTimer = ({ expiresAt, className }: { expiresAt: string; 
             role="timer"
             className={cn(
               "flex items-center gap-1.5 text-xs",
-              isLow ? "font-semibold text-destructive" : "font-medium text-warning",
+              isLow ? "font-semibold text-destructive" : "font-medium text-warning-text",
               className,
             )}
           >

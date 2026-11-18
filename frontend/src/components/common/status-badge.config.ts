@@ -137,6 +137,8 @@ export const roleMap: Record<Role, BadgeItem> = {
   [Role.Employee]: { label: "Nhân viên", variant: "outline", className: "font-medium" },
 };
 
+export const getRoleLabel = (role?: string | null) => (role ? (roleMap[role as Role]?.label ?? role) : "");
+
 export interface BadgeStyleConfig {
   variant: BadgeVariant;
   className?: string;
@@ -159,7 +161,7 @@ export const defaultAgeRatingConfig: BadgeStyleConfig = {
 export const seatTypeConfigMap: Record<string, BadgeStyleConfig> = {
   VIP: {
     variant: "outline",
-    className: "border-accent text-accent font-semibold",
+    className: "border-accent text-accent-text font-semibold",
   },
   Sweetbox: {
     variant: "outline",
@@ -173,7 +175,7 @@ export const seatTypeConfigMap: Record<string, BadgeStyleConfig> = {
 
 export const defaultSeatTypeConfig: BadgeStyleConfig = {
   variant: "outline",
-  className: "border-accent text-accent font-semibold",
+  className: "border-accent text-accent-text font-semibold",
 };
 
 export interface StatusResultConfig {

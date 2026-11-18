@@ -193,7 +193,7 @@ export const MediaUploader = ({
           )}
           <p className="text-sm text-muted-foreground">
             Kéo thả {kind === "image" ? "ảnh" : "video"} vào đây hoặc{" "}
-            <span className="font-medium text-primary">chọn file</span>
+            <span className="font-medium text-primary-text">chọn file</span>
           </p>
           <p className="text-xs text-muted-foreground">
             Tối đa {Math.round(maxSizeBytes / (1024 * 1024))}MB

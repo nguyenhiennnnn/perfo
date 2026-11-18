@@ -28,7 +28,7 @@ export const SeatEditorSelectionBar = ({
     )}
   >
     <BoxSelect className="size-3.5 text-primary" />
-    <span className="font-medium text-primary">
+    <span className="font-medium text-primary-text">
       {selectedCount > 0
         ? `Đã chọn ${selectedCount} ô ghế.`
         : "Kéo chuột trên lưới, hoặc bấm nhãn hàng/cột để chọn vùng."}

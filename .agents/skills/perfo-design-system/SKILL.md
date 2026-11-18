@@ -43,6 +43,7 @@ Dự án sử dụng không gian màu **OKLCH** hiện đại với 2 chế đ�
 | `--primary-foreground` | Màu chữ trên nền primary (Thường là trắng/kem sáng). | `text-primary-foreground` |
 | `--secondary` | Màu phụ (Neutral/Slate ấm). Nút phụ, badge sắp chiếu, tag phụ. | `bg-secondary`, `text-secondary-foreground` |
 | `--accent` | Màu điểm nhấn vàng kim (Cinema Gold/Amber). Ghế VIP, rating sao, badge giải thưởng, VIP card. | `bg-accent`, `text-accent`, `border-accent` |
+| `--primary-text` / `--accent-text` / `--warning-text` | Màu chữ nhỏ (dưới 24px, hoặc dưới 18,66px đậm) cần 4,5:1: giá, link, điểm tích lũy, đồng hồ giữ ghế, cảnh báo. Kiểm bằng `node frontend/scripts/check-contrast.mjs`. | `text-primary-text`, `text-accent-text`, `text-warning-text` |
 | `--background` | Màu nền toàn trang. | `bg-background` |
 | `--foreground` | Màu chữ chính của toàn trang. | `text-foreground` |
 | `--card` / `--popover` | Màu nền khối nội dung, card phim, modal, dropdown, sheet. | `bg-card`, `text-card-foreground`, `bg-popover` |

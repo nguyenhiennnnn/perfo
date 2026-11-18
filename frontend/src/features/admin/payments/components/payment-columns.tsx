@@ -49,7 +49,7 @@ export const createPaymentColumns = ({ onViewDetail }: PaymentColumnsOptions) =>
     columnHelper.accessor("amount", {
       header: ({ column }) => <DataTableColumnHeader column={column} title="Số tiền" />,
       cell: ({ row }) => (
-        <span className="font-semibold tabular-nums text-primary">
+        <span className="font-semibold tabular-nums text-primary-text">
           {formatCurrency(row.original.amount)}
         </span>
       ),

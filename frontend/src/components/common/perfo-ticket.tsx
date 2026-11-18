@@ -61,7 +61,7 @@ export const PerfoTicket = ({
             </div>
             <div>
               <dt className="text-xs text-muted-foreground">Ghế</dt>
-              <dd className="t-code text-xl wrap-break-word text-primary">{seat}</dd>
+              <dd className="t-code text-xl wrap-break-word text-primary-text">{seat}</dd>
             </div>
             <div>
               <dt className="text-xs text-muted-foreground">Giá vé</dt>

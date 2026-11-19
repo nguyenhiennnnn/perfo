@@ -38,6 +38,7 @@ public static class DbInitializer
         string? GoogleId = null
     );
 
+    // TotalSpent ≈ Points × 10.000đ (khớp CinemaSettings.PointsPerAmount) để dữ liệu nhất quán.
     private sealed record CustomerSeed(UserSeed User, int Points, decimal TotalSpent);
 
     private sealed record EmployeeSeed(
@@ -54,60 +55,60 @@ public static class DbInitializer
             new UserSeed(
                 SeedEmails.Customer1,
                 "Customer@123",
-                "Nguyễn Văn Customer",
-                "0901234567",
+                "Nguyễn Minh Khoa",
+                "0903482917",
                 Gender.Male,
                 new DateOnly(1995, 3, 14)
             ),
             300,
-            1_000_000m
+            3_000_000m
         ),
         // Bạc (500+ điểm, giảm 5%)
         new(
             new UserSeed(
                 SeedEmails.Customer2,
                 "Customer@123",
-                "Trần Thị Bạc",
-                "0901234568",
+                "Trần Thị Thu Hà",
+                "0938215604",
                 Gender.Female,
                 new DateOnly(1993, 7, 2)
             ),
             800,
-            3_500_000m
+            8_000_000m
         ),
         // Vàng (2000+ điểm, giảm 10%)
         new(
             new UserSeed(
                 SeedEmails.Customer3,
                 "Customer@123",
-                "Lê Văn Vàng",
-                "0901234569",
+                "Lê Quốc Bảo",
+                "0977360281",
                 Gender.Male,
                 new DateOnly(1988, 11, 25)
             ),
             2_500,
-            12_000_000m
+            25_000_000m
         ),
         // Kim Cương (5000+ điểm, giảm 15%)
         new(
             new UserSeed(
                 SeedEmails.Customer4,
                 "Customer@123",
-                "Phạm Thị Kim Cương",
-                "0901234570",
+                "Phạm Ngọc Diệp",
+                "0912745893",
                 Gender.Female,
                 new DateOnly(1990, 1, 9)
             ),
             6_000,
-            30_000_000m
+            60_000_000m
         ),
         // Khách mới: chưa có booking/điểm nào (test empty state)
         new(
             new UserSeed(
                 SeedEmails.CustomerNew,
                 "Customer@123",
-                "Hoàng Minh Mới",
-                "0901234572",
+                "Hoàng Minh Anh",
+                "0868129355",
                 Gender.Other,
                 new DateOnly(2001, 5, 20)
             ),
@@ -119,22 +120,22 @@ public static class DbInitializer
             new UserSeed(
                 SeedEmails.CustomerInactive,
                 "Customer@123",
-                "Vũ Thị Bị Khóa",
-                "0901234573",
+                "Vũ Thị Lan Anh",
+                "0356908142",
                 Gender.Female,
                 new DateOnly(1997, 9, 30),
                 IsActive: false
             ),
             100,
-            500_000m
+            1_000_000m
         ),
         // Chưa xác thực email (EmailConfirmed = false) — login phải bị từ chối / yêu cầu xác thực
         new(
             new UserSeed(
                 SeedEmails.CustomerUnverified,
                 "Customer@123",
-                "Đỗ Văn Chưa Xác Thực",
-                "0901234574",
+                "Đỗ Thành Đạt",
+                "0702531786",
                 Gender.Male,
                 new DateOnly(1999, 12, 1),
                 EmailConfirmed: false
@@ -147,8 +148,8 @@ public static class DbInitializer
             new UserSeed(
                 SeedEmails.CustomerGoogle,
                 "Google@123",
-                "Ngô Thị Google",
-                "0901234575",
+                "Ngô Thùy Dương",
+                "0829614073",
                 Gender.Female,
                 new DateOnly(1996, 4, 18),
                 GoogleId: "seed-google-sub-000000000001"
@@ -165,8 +166,8 @@ public static class DbInitializer
             new UserSeed(
                 SeedEmails.Employee,
                 "Employee@123",
-                "Đặng Văn Nhân Viên",
-                "0901234571",
+                "Đặng Hoàng Nam",
+                "0944176328",
                 Gender.Male,
                 new DateOnly(1998, 6, 6)
             ),
@@ -177,8 +178,8 @@ public static class DbInitializer
             new UserSeed(
                 SeedEmails.Manager,
                 "Employee@123",
-                "Bùi Thị Quản Lý",
-                "0901234576",
+                "Bùi Thị Thanh Hương",
+                "0986453217",
                 Gender.Female,
                 new DateOnly(1985, 8, 12)
             ),
@@ -189,8 +190,8 @@ public static class DbInitializer
             new UserSeed(
                 SeedEmails.ShiftLead,
                 "Employee@123",
-                "Ngô Văn Trưởng Ca",
-                "0901234577",
+                "Ngô Văn Tuấn",
+                "0919807264",
                 Gender.Male,
                 new DateOnly(1992, 2, 28)
             ),
@@ -202,8 +203,8 @@ public static class DbInitializer
             new UserSeed(
                 SeedEmails.EmployeeInactive,
                 "Employee@123",
-                "Lý Văn Nghỉ Việc",
-                "0901234578",
+                "Lý Quốc Hải",
+                "0583296410",
                 Gender.Male,
                 new DateOnly(1994, 10, 10)
             ),

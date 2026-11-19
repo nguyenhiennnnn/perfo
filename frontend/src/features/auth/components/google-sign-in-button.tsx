@@ -3,15 +3,13 @@ import { useNavigate, useSearchParams } from "react-router";
 
 import { useTheme } from "@/app/providers/theme-provider";
 import { toast } from "@/components/ui/toast";
-import { extractApiError } from "@/lib/error";
+import { extractApiError, logDevError } from "@/lib/error";
+import { loadGoogleIdentity } from "@/lib/google-identity";
 import type { GoogleCredentialResponse } from "@/types/google-identity";
 
 import { useGoogleLogin } from "../hooks/use-auth";
 import { ENV } from "@/config/env";
-import {
-  GOOGLE_SDK_POLL_INTERVAL_MS,
-  GOOGLE_SIGN_IN_BUTTON_WIDTH_PX,
-} from "@/config/default-constants";
+import { GOOGLE_SIGN_IN_BUTTON_WIDTH_PX } from "@/config/default-constants";
 import { getSafeRedirect } from "@/lib/utils";
 
 const GOOGLE_CLIENT_ID = ENV.GOOGLE_CLIENT_ID;
@@ -57,43 +55,32 @@ export const GoogleSignInButton = ({ redirectTo }: GoogleSignInButtonProps) => {
     if (!GOOGLE_CLIENT_ID) return;
 
     let cancelled = false;
-    let pollId: ReturnType<typeof setInterval> | undefined;
 
-    const renderButton = () => {
-      if (cancelled || !containerRef.current || !window.google) return;
+    loadGoogleIdentity()
+      .then(() => {
+        if (cancelled || !containerRef.current || !window.google) return;
 
-      containerRef.current.innerHTML = "";
+        containerRef.current.innerHTML = "";
 
-      window.google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: (response) => onCredential(response),
-        cancel_on_tap_outside: true,
-      });
+        window.google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: (response) => onCredential(response),
+          cancel_on_tap_outside: true,
+        });
 
-      window.google.accounts.id.renderButton(containerRef.current, {
-        type: "standard",
-        theme: isDark ? "filled_black" : "outline",
-        size: "large",
-        text: "continue_with",
-        shape: "rectangular",
-        width: GOOGLE_SIGN_IN_BUTTON_WIDTH_PX,
-      });
-    };
-
-    if (window.google) {
-      renderButton();
-    } else {
-      pollId = setInterval(() => {
-        if (window.google) {
-          if (pollId) clearInterval(pollId);
-          renderButton();
-        }
-      }, GOOGLE_SDK_POLL_INTERVAL_MS);
-    }
+        window.google.accounts.id.renderButton(containerRef.current, {
+          type: "standard",
+          theme: isDark ? "filled_black" : "outline",
+          size: "large",
+          text: "continue_with",
+          shape: "rectangular",
+          width: GOOGLE_SIGN_IN_BUTTON_WIDTH_PX,
+        });
+      })
+      .catch((error: unknown) => logDevError(error, "Google Identity"));
 
     return () => {
       cancelled = true;
-      if (pollId) clearInterval(pollId);
     };
   }, [isDark]);
 

@@ -242,6 +242,7 @@ Table SeatTypes {
   SeatTypeId int [pk]
   Name varchar [not null, unique]
   PriceMultiplier decimal [not null]
+  IsCouple boolean [not null, default: false]
 }
 
 Table Seats {

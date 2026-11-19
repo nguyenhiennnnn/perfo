@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cinema.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261119015409_InitialCreate")]
+    [Migration("20261119024641_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -274,6 +274,186 @@ namespace Cinema.Infrastructure.Migrations
                             ActorId = 38,
                             AvatarUrl = "https://ui-avatars.com/api/?name=Hokuto+Matsumura&background=455a64&color=fff&size=500&bold=true&font-size=0.4",
                             FullName = "Hokuto Matsumura"
+                        },
+                        new
+                        {
+                            ActorId = 39,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Ryunosuke+Kamiki&background=34495e&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Ryunosuke Kamiki"
+                        },
+                        new
+                        {
+                            ActorId = 40,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Minami+Hamabe&background=c0392b&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Minami Hamabe"
+                        },
+                        new
+                        {
+                            ActorId = 41,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Bill+Hader&background=2874a6&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Bill Hader"
+                        },
+                        new
+                        {
+                            ActorId = 42,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Xochitl+Gomez&background=af601a&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Xochitl Gomez"
+                        },
+                        new
+                        {
+                            ActorId = 43,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Nguyễn+Hùng&background=148f77&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Nguyễn Hùng"
+                        },
+                        new
+                        {
+                            ActorId = 44,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Trần+Tiểu+Vy&background=a93226&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Trần Tiểu Vy"
+                        },
+                        new
+                        {
+                            ActorId = 45,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Ngọc+Xuân&background=6c3483&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Ngọc Xuân"
+                        },
+                        new
+                        {
+                            ActorId = 46,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Võ+Điền+Gia+Huy&background=1f618d&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Võ Điền Gia Huy"
+                        },
+                        new
+                        {
+                            ActorId = 47,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Lãnh+Thanh&background=7e5109&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Lãnh Thanh"
+                        },
+                        new
+                        {
+                            ActorId = 48,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Hồng+Đào&background=b03a2e&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Hồng Đào"
+                        },
+                        new
+                        {
+                            ActorId = 49,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Lê+Thiện&background=2c3e50&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Lê Thiện"
+                        },
+                        new
+                        {
+                            ActorId = 50,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Ma+Ran+Đô&background=7b241c&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Ma Ran Đô"
+                        },
+                        new
+                        {
+                            ActorId = 51,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Quỳnh+Lương&background=6e2c00&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Quỳnh Lương"
+                        },
+                        new
+                        {
+                            ActorId = 52,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Nadech+Kugimiya&background=117864&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Nadech Kugimiya"
+                        },
+                        new
+                        {
+                            ActorId = 53,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Ong-art+Cheamcharoenpornkul&background=273746&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Ong-art Cheamcharoenpornkul"
+                        },
+                        new
+                        {
+                            ActorId = 54,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Andrew+Koji&background=1a5276&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Andrew Koji"
+                        },
+                        new
+                        {
+                            ActorId = 55,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Noah+Centineo&background=af7ac5&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Noah Centineo"
+                        },
+                        new
+                        {
+                            ActorId = 56,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Jason+Momoa&background=7b7d7d&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Jason Momoa"
+                        },
+                        new
+                        {
+                            ActorId = 57,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Nguyễn+Cao+Kỳ+Duyên&background=cb4335&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Nguyễn Cao Kỳ Duyên"
+                        },
+                        new
+                        {
+                            ActorId = 58,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Steven+Nguyễn&background=2471a3&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Steven Nguyễn"
+                        },
+                        new
+                        {
+                            ActorId = 59,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Joseph+Zada&background=7d6608&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Joseph Zada"
+                        },
+                        new
+                        {
+                            ActorId = 60,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Whitney+Peak&background=884ea0&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Whitney Peak"
+                        },
+                        new
+                        {
+                            ActorId = 61,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Mckenna+Grace&background=148f77&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Mckenna Grace"
+                        },
+                        new
+                        {
+                            ActorId = 62,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Jesse+Plemons&background=5f6a6a&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Jesse Plemons"
+                        },
+                        new
+                        {
+                            ActorId = 63,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Lương+Thế+Thành&background=a04000&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Lương Thế Thành"
+                        },
+                        new
+                        {
+                            ActorId = 64,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Sally+Hồng+Anh&background=c2185b&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Sally Hồng Anh"
+                        },
+                        new
+                        {
+                            ActorId = 65,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Robert+De+Niro&background=424949&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Robert De Niro"
+                        },
+                        new
+                        {
+                            ActorId = 66,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Ben+Stiller&background=2e4053&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Ben Stiller"
+                        },
+                        new
+                        {
+                            ActorId = 67,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Ariana+Grande&background=d98880&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Ariana Grande"
+                        },
+                        new
+                        {
+                            ActorId = 68,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Owen+Wilson&background=b9770e&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Owen Wilson"
                         });
                 });
 
@@ -570,42 +750,42 @@ namespace Cinema.Infrastructure.Migrations
                         new
                         {
                             RoomId = 1,
-                            Cols = 10,
+                            Cols = 12,
                             IsActive = true,
                             RoomName = "Cinema Hall 01",
-                            Rows = 5,
+                            Rows = 8,
                             ScreenTypeId = 1,
-                            TotalSeats = 50
+                            TotalSeats = 96
                         },
                         new
                         {
                             RoomId = 2,
-                            Cols = 10,
+                            Cols = 14,
                             IsActive = true,
                             RoomName = "Cinema Hall 02",
-                            Rows = 5,
+                            Rows = 8,
                             ScreenTypeId = 1,
-                            TotalSeats = 50
+                            TotalSeats = 112
                         },
                         new
                         {
                             RoomId = 3,
-                            Cols = 10,
+                            Cols = 12,
                             IsActive = true,
                             RoomName = "3D Experience Hall 03",
-                            Rows = 4,
+                            Rows = 7,
                             ScreenTypeId = 2,
-                            TotalSeats = 40
+                            TotalSeats = 84
                         },
                         new
                         {
                             RoomId = 4,
-                            Cols = 10,
+                            Cols = 16,
                             IsActive = true,
                             RoomName = "IMAX Grand Theatre 04",
-                            Rows = 6,
+                            Rows = 10,
                             ScreenTypeId = 3,
-                            TotalSeats = 60
+                            TotalSeats = 160
                         });
                 });
 
@@ -756,19 +936,21 @@ namespace Cinema.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Address = "Đang cập nhật",
+                            Address = "Tầng 5, TTTM Perfo Plaza, 120 Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh",
                             CancelDeadlineHours = 2,
                             CancelRefundPercent = 100m,
                             CheckInOpenMinutes = 30,
                             ClosingTime = new TimeOnly(23, 59, 0),
                             DefaultEmployeePassword = "Employee@123",
+                            Email = "cskh@perfocinema.vn",
                             HoldDurationMinutes = 15,
                             LoyaltyWindowMonths = 12,
                             MaxComboQuantity = 10,
                             MaxSeatsPerBooking = 10,
                             MovieEndGraceDays = 1,
-                            Name = "Cinema",
+                            Name = "Perfo Cinema",
                             OpeningTime = new TimeOnly(8, 0, 0),
+                            Phone = "02838221234",
                             PointsPerAmount = 10000m,
                             RoomBufferMinutes = 15,
                             SchedulerHeatLookbackDays = 7,
@@ -779,7 +961,8 @@ namespace Cinema.Infrastructure.Migrations
                             SchedulerStepMinutes = 5,
                             SeatGapRuleMode = "Strict",
                             ShowtimeLookaheadDays = 7,
-                            StopSellingMinutesBefore = 0
+                            StopSellingMinutesBefore = 10,
+                            TaxCode = "0312345678"
                         });
                 });
 
@@ -823,47 +1006,47 @@ namespace Cinema.Infrastructure.Migrations
                         new
                         {
                             ComboId = 1,
-                            Description = "1 Bắp ngọt (vừa) + 1 Coca-Cola 22oz",
+                            Description = "1 Bắp ngọt (L) + 1 Nước ngọt (L)",
                             ImageUrl = "https://images.unsplash.com/photo-1585647347483-22b66260dfff?w=500",
                             IsActive = true,
-                            Name = "Solo Combo",
-                            Price = 65000m
+                            Name = "Combo Solo",
+                            Price = 89000m
                         },
                         new
                         {
                             ComboId = 2,
-                            Description = "1 Bắp ngọt (lớn) + 2 Coca-Cola 22oz",
+                            Description = "1 Bắp ngọt (L) + 2 Nước ngọt (L)",
                             ImageUrl = "https://images.unsplash.com/photo-1572177812156-58036aae439c?w=500",
                             IsActive = true,
-                            Name = "Double Combo",
-                            Price = 95000m
+                            Name = "Combo Couple",
+                            Price = 119000m
                         },
                         new
                         {
                             ComboId = 3,
-                            Description = "1 Bắp phô mai (lớn) + 2 Coca-Cola 32oz + 1 Snack khoai tây",
+                            Description = "1 Bắp phô mai (L) + 2 Nước ngọt (L) + 1 Snack",
                             ImageUrl = "https://images.unsplash.com/photo-1512149673953-1e251807ec7c?w=500",
                             IsActive = true,
-                            Name = "VIP Cheese Combo",
-                            Price = 129000m
+                            Name = "Combo Premium",
+                            Price = 149000m
                         },
                         new
                         {
                             ComboId = 4,
-                            Description = "2 Bắp ngọt (lớn) + 4 Coca-Cola 22oz + 2 Snack ngũ vị",
+                            Description = "2 Bắp ngọt (L) + 4 Nước ngọt (L) + 2 Snack",
                             ImageUrl = "https://images.unsplash.com/photo-1505686994434-e3cc5abf1330?w=500",
                             IsActive = true,
-                            Name = "Family Party Combo",
-                            Price = 189000m
+                            Name = "Combo Gia Đình",
+                            Price = 249000m
                         },
                         new
                         {
                             ComboId = 5,
-                            Description = "1 Bắp Caramel đặc biệt (lớn) + 2 Nước ngọt Sprite/Fanta 22oz",
+                            Description = "1 Bắp caramel (L) + 2 Nước ngọt (L)",
                             ImageUrl = "https://images.unsplash.com/photo-1578849278619-e73505e9610f?w=500",
                             IsActive = true,
-                            Name = "Caramel Sweet Combo",
-                            Price = 109000m
+                            Name = "Combo Caramel",
+                            Price = 135000m
                         });
                 });
 
@@ -1004,6 +1187,72 @@ namespace Cinema.Infrastructure.Migrations
                             DirectorId = 15,
                             AvatarUrl = "https://ui-avatars.com/api/?name=Makoto+Shinkai&background=16a085&color=fff&size=500&bold=true&font-size=0.4",
                             FullName = "Makoto Shinkai"
+                        },
+                        new
+                        {
+                            DirectorId = 16,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Takashi+Yamazaki&background=b03a2e&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Takashi Yamazaki"
+                        },
+                        new
+                        {
+                            DirectorId = 17,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Alessandro+Carloni&background=e67e22&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Alessandro Carloni"
+                        },
+                        new
+                        {
+                            DirectorId = 18,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Nguyễn+Phạm+Thành+Đạt&background=2e86ab&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Nguyễn Phạm Thành Đạt"
+                        },
+                        new
+                        {
+                            DirectorId = 19,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Vũ+Ngọc+Đãng&background=7d3c98&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Vũ Ngọc Đãng"
+                        },
+                        new
+                        {
+                            DirectorId = 20,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Narit+Yuvaboon&background=1e8449&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Narit Yuvaboon"
+                        },
+                        new
+                        {
+                            DirectorId = 21,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Kitao+Sakurai&background=922b21&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Kitao Sakurai"
+                        },
+                        new
+                        {
+                            DirectorId = 22,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Nguyễn+Hữu+Hoàng&background=5d6d7e&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Nguyễn Hữu Hoàng"
+                        },
+                        new
+                        {
+                            DirectorId = 23,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Trần+Hữu+Tấn&background=212f3d&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Trần Hữu Tấn"
+                        },
+                        new
+                        {
+                            DirectorId = 24,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Francis+Lawrence&background=b7950b&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Francis Lawrence"
+                        },
+                        new
+                        {
+                            DirectorId = 25,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=Nguyễn+Nhất+Trung&background=ca6f1e&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "Nguyễn Nhất Trung"
+                        },
+                        new
+                        {
+                            DirectorId = 26,
+                            AvatarUrl = "https://ui-avatars.com/api/?name=John+Hamburg&background=117a65&color=fff&size=500&bold=true&font-size=0.4",
+                            FullName = "John Hamburg"
                         });
                 });
 
@@ -1120,6 +1369,16 @@ namespace Cinema.Infrastructure.Migrations
                         {
                             GenreId = 10,
                             Name = "Bí ẩn"
+                        },
+                        new
+                        {
+                            GenreId = 11,
+                            Name = "Gia đình"
+                        },
+                        new
+                        {
+                            GenreId = 12,
+                            Name = "Tâm linh"
                         });
                 });
 
@@ -1299,6 +1558,11 @@ namespace Cinema.Infrastructure.Migrations
                         {
                             LanguageId = 4,
                             Name = "Tiếng Nhật"
+                        },
+                        new
+                        {
+                            LanguageId = 5,
+                            Name = "Tiếng Thái"
                         });
                 });
 
@@ -1513,7 +1777,7 @@ namespace Cinema.Infrastructure.Migrations
                             OriginalTitle = "Oppenheimer",
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/4/4a/Oppenheimer_%28film%29.jpg",
                             ReleaseDate = new DateOnly(2023, 8, 11),
-                            Status = "NowShowing",
+                            Status = "Ended",
                             Subtitle = "Tiếng Việt",
                             Title = "Oppenheimer",
                             TrailerUrl = "https://www.youtube.com/watch?v=keydELfWuMQ"
@@ -1531,7 +1795,7 @@ namespace Cinema.Infrastructure.Migrations
                             OriginalTitle = "Dune: Part Two",
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/5/52/Dune_Part_Two_poster.jpeg",
                             ReleaseDate = new DateOnly(2024, 3, 1),
-                            Status = "NowShowing",
+                            Status = "Ended",
                             Subtitle = "Tiếng Việt",
                             Title = "Dune: Hành Tinh Cát - Phần Hai",
                             TrailerUrl = "https://www.youtube.com/watch?v=Way9Dexny3w"
@@ -1549,7 +1813,7 @@ namespace Cinema.Infrastructure.Migrations
                             OriginalTitle = "Mai",
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/vi/3/36/Mai_2024_poster.jpg",
                             ReleaseDate = new DateOnly(2024, 2, 10),
-                            Status = "NowShowing",
+                            Status = "Ended",
                             Subtitle = "Tiếng Anh",
                             Title = "Mai",
                             TrailerUrl = "https://www.youtube.com/watch?v=EX6clvId19s"
@@ -1603,7 +1867,7 @@ namespace Cinema.Infrastructure.Migrations
                             OriginalTitle = "Face Off 7: One Wish",
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/vi/d/d4/%C3%81p_ph%C3%ADch_ch%C3%ADnh_th%E1%BB%A9c_L%E1%BA%ADt_m%E1%BA%B7t_7.jpg",
                             ReleaseDate = new DateOnly(2024, 4, 26),
-                            Status = "NowShowing",
+                            Status = "Ended",
                             Subtitle = "Tiếng Anh",
                             Title = "Lật Mặt 7: Một Điều Ước",
                             TrailerUrl = "https://www.youtube.com/watch?v=d1ZHdosjNX8"
@@ -1621,7 +1885,7 @@ namespace Cinema.Infrastructure.Migrations
                             OriginalTitle = "Deadpool & Wolverine",
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/vi/4/4c/Deadpool_%26_Wolverine_poster.jpg",
                             ReleaseDate = new DateOnly(2024, 7, 26),
-                            Status = "NowShowing",
+                            Status = "Ended",
                             Subtitle = "Tiếng Việt",
                             Title = "Deadpool & Wolverine",
                             TrailerUrl = "https://www.youtube.com/watch?v=73_1biulkYk"
@@ -1639,7 +1903,7 @@ namespace Cinema.Infrastructure.Migrations
                             OriginalTitle = "Inside Out 2",
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/f/f7/Inside_Out_2_poster.jpg",
                             ReleaseDate = new DateOnly(2024, 6, 14),
-                            Status = "NowShowing",
+                            Status = "Ended",
                             Subtitle = "Lồng tiếng & Phụ đề",
                             Title = "Những Mảnh Ghép Cảm Xúc 2",
                             TrailerUrl = "https://www.youtube.com/watch?v=8rjvKzYeSp0"
@@ -1747,7 +2011,7 @@ namespace Cinema.Infrastructure.Migrations
                             OriginalTitle = "Exhuma",
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/1/13/Exhuma_film_poster.jpg",
                             ReleaseDate = new DateOnly(2024, 3, 15),
-                            Status = "NowShowing",
+                            Status = "Ended",
                             Subtitle = "Tiếng Việt",
                             Title = "Quật Mộ Trùng Ma",
                             TrailerUrl = "https://www.youtube.com/watch?v=nO3_h3fJ3-s"
@@ -1801,7 +2065,7 @@ namespace Cinema.Infrastructure.Migrations
                             OriginalTitle = "Kung Fu Panda 4",
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/7/7f/Kung_Fu_Panda_4_poster.jpg",
                             ReleaseDate = new DateOnly(2024, 3, 8),
-                            Status = "NowShowing",
+                            Status = "Ended",
                             Subtitle = "Lồng tiếng & Phụ đề",
                             Title = "Kung Fu Panda 4",
                             TrailerUrl = "https://www.youtube.com/watch?v=_inKs4eeHiI"
@@ -1837,10 +2101,185 @@ namespace Cinema.Infrastructure.Migrations
                             OriginalTitle = "Suzume",
                             PosterUrl = "https://upload.wikimedia.org/wikipedia/en/7/7f/Suzume_no_Tojimari_poster.jpg",
                             ReleaseDate = new DateOnly(2023, 3, 10),
-                            Status = "ComingSoon",
+                            Status = "Ended",
                             Subtitle = "Tiếng Việt",
                             Title = "Khóa Chặt Cửa Nào Suzume",
                             TrailerUrl = "https://www.youtube.com/watch?v=5pY4qVz9rEQ"
+                        },
+                        new
+                        {
+                            MovieId = 20,
+                            AgeRatingId = 3,
+                            AverageRating = 0m,
+                            CreatedAt = new DateTime(2026, 10, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phần tiếp nối Godzilla Minus One do Takashi Yamazaki thực hiện, đưa khán giả trở lại nước Nhật hậu chiến trước sự đe dọa của quái vật huyền thoại Godzilla.",
+                            DirectorId = 16,
+                            DurationMinutes = 135,
+                            LanguageId = 4,
+                            OriginalTitle = "Godzilla Minus Zero",
+                            ReleaseDate = new DateOnly(2026, 11, 6),
+                            Status = "NowShowing",
+                            Subtitle = "Tiếng Việt",
+                            Title = "Godzilla Trừ Không"
+                        },
+                        new
+                        {
+                            MovieId = 21,
+                            AgeRatingId = 1,
+                            AverageRating = 0m,
+                            CreatedAt = new DateTime(2026, 10, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phim hoạt hình phiêu lưu hài hước dựa trên tác phẩm kinh điển của Dr. Seuss: chú mèo tinh nghịch đội chiếc mũ sọc đỏ trắng biến một ngày mưa buồn tẻ thành cuộc phiêu lưu hỗn loạn.",
+                            DirectorId = 17,
+                            DurationMinutes = 114,
+                            LanguageId = 2,
+                            OriginalTitle = "The Cat in the Hat",
+                            ReleaseDate = new DateOnly(2026, 11, 6),
+                            Status = "NowShowing",
+                            Subtitle = "Lồng tiếng & Phụ đề",
+                            Title = "Chàng Mèo Mang Mũ"
+                        },
+                        new
+                        {
+                            MovieId = 22,
+                            AgeRatingId = 3,
+                            AverageRating = 0m,
+                            CreatedAt = new DateTime(2026, 10, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phim hài hoài niệm pha yếu tố khoa học viễn tưởng, lấy bối cảnh một nông trại ở Mộc Châu những năm 1990. Tác phẩm điện ảnh đầu tay của đạo diễn Nguyễn Phạm Thành Đạt.",
+                            DirectorId = 18,
+                            DurationMinutes = 120,
+                            LanguageId = 1,
+                            OriginalTitle = "Bò Sữa Bay",
+                            ReleaseDate = new DateOnly(2026, 11, 6),
+                            Status = "NowShowing",
+                            Subtitle = "Tiếng Anh",
+                            Title = "Bò Sữa Bay"
+                        },
+                        new
+                        {
+                            MovieId = 23,
+                            AgeRatingId = 3,
+                            AverageRating = 0m,
+                            CreatedAt = new DateTime(2026, 10, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phim tâm lý gia đình của đạo diễn Vũ Ngọc Đãng, khai thác tình mẫu tử và những rạn nứt, hàn gắn giữa các thế hệ trong một gia đình.",
+                            DirectorId = 19,
+                            DurationMinutes = 110,
+                            LanguageId = 1,
+                            OriginalTitle = "Ngày Con Còn Mẹ",
+                            ReleaseDate = new DateOnly(2026, 11, 11),
+                            Status = "NowShowing",
+                            Subtitle = "Tiếng Anh",
+                            Title = "Ngày Con Còn Mẹ"
+                        },
+                        new
+                        {
+                            MovieId = 24,
+                            AgeRatingId = 5,
+                            AverageRating = 0m,
+                            CreatedAt = new DateTime(2026, 9, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phần thứ tư của loạt phim kinh dị siêu nhiên Thái Lan Quỷ Ăn Tạng, kết hợp yếu tố hành động.",
+                            DirectorId = 20,
+                            DurationMinutes = 111,
+                            LanguageId = 5,
+                            ReleaseDate = new DateOnly(2026, 10, 9),
+                            Status = "NowShowing",
+                            Subtitle = "Tiếng Việt",
+                            Title = "Quỷ Ăn Tạng 4: Hổ Tinh"
+                        },
+                        new
+                        {
+                            MovieId = 25,
+                            AgeRatingId = 4,
+                            AverageRating = 0m,
+                            CreatedAt = new DateTime(2026, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Chuyển thể từ series game đối kháng huyền thoại của Capcom, quy tụ các võ sĩ từ khắp thế giới trong giải đấu Street Fighter.",
+                            DirectorId = 21,
+                            DurationMinutes = 125,
+                            LanguageId = 2,
+                            OriginalTitle = "Street Fighter",
+                            ReleaseDate = new DateOnly(2026, 10, 16),
+                            Status = "NowShowing",
+                            Subtitle = "Tiếng Việt",
+                            Title = "Street Fighter"
+                        },
+                        new
+                        {
+                            MovieId = 26,
+                            AgeRatingId = 5,
+                            AverageRating = 0m,
+                            CreatedAt = new DateTime(2026, 10, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phần ba của loạt phim chính kịch cổ trang Việt Nam về những mối quan hệ chị em đầy ganh ghét và toan tính.",
+                            DirectorId = 22,
+                            DurationMinutes = 115,
+                            LanguageId = 1,
+                            OriginalTitle = "Chị Chị Em Em 3",
+                            ReleaseDate = new DateOnly(2026, 10, 16),
+                            Status = "NowShowing",
+                            Subtitle = "Tiếng Anh",
+                            Title = "Chị Chị Em Em 3"
+                        },
+                        new
+                        {
+                            MovieId = 27,
+                            AgeRatingId = 5,
+                            AverageRating = 0m,
+                            CreatedAt = new DateTime(2026, 10, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phim kinh dị tâm linh Việt Nam của đạo diễn Trần Hữu Tấn.",
+                            DirectorId = 23,
+                            DurationMinutes = 96,
+                            LanguageId = 1,
+                            OriginalTitle = "Trấn Yểm",
+                            ReleaseDate = new DateOnly(2026, 10, 30),
+                            Status = "NowShowing",
+                            Subtitle = "Tiếng Anh",
+                            Title = "Trấn Yểm"
+                        },
+                        new
+                        {
+                            MovieId = 28,
+                            AgeRatingId = 4,
+                            AverageRating = 0m,
+                            CreatedAt = new DateTime(2026, 11, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phần tiền truyện mới của loạt phim Đấu Trường Sinh Tử do Francis Lawrence đạo diễn, quay về thời điểm Hội Chiêu Quân diễn ra.",
+                            DirectorId = 24,
+                            DurationMinutes = 158,
+                            LanguageId = 2,
+                            OriginalTitle = "The Hunger Games: Sunrise on the Reaping",
+                            ReleaseDate = new DateOnly(2026, 11, 20),
+                            Status = "ComingSoon",
+                            Subtitle = "Tiếng Việt",
+                            Title = "Đấu Trường Sinh Tử: Bình Minh Ngày Chiêu Quân"
+                        },
+                        new
+                        {
+                            MovieId = 29,
+                            AgeRatingId = 3,
+                            AverageRating = 0m,
+                            CreatedAt = new DateTime(2026, 11, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phim hài – gia đình – tâm lý của đạo diễn Nguyễn Nhất Trung (Trung Lùn).",
+                            DirectorId = 25,
+                            DurationMinutes = 120,
+                            LanguageId = 1,
+                            OriginalTitle = "Trại Giam Hạnh Phúc",
+                            ReleaseDate = new DateOnly(2026, 11, 20),
+                            Status = "ComingSoon",
+                            Subtitle = "Tiếng Anh",
+                            Title = "Trại Giam Hạnh Phúc"
+                        },
+                        new
+                        {
+                            MovieId = 30,
+                            AgeRatingId = 3,
+                            AverageRating = 0m,
+                            CreatedAt = new DateTime(2026, 11, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Phần tiếp theo của loạt phim hài Meet the Parents với dàn diễn viên Robert De Niro, Ben Stiller, Ariana Grande và Owen Wilson.",
+                            DirectorId = 26,
+                            DurationMinutes = 90,
+                            LanguageId = 2,
+                            OriginalTitle = "Focker-in-Law",
+                            ReleaseDate = new DateOnly(2026, 11, 27),
+                            Status = "ComingSoon",
+                            Subtitle = "Tiếng Việt",
+                            Title = "Gặp Gỡ Thông Gia: Dâu Mới Trình Làng"
                         });
                 });
 
@@ -2127,6 +2566,171 @@ namespace Cinema.Infrastructure.Migrations
                             MovieId = 19,
                             ActorId = 38,
                             CharacterName = "Souta Munakata"
+                        },
+                        new
+                        {
+                            MovieId = 20,
+                            ActorId = 39
+                        },
+                        new
+                        {
+                            MovieId = 20,
+                            ActorId = 40
+                        },
+                        new
+                        {
+                            MovieId = 21,
+                            ActorId = 41
+                        },
+                        new
+                        {
+                            MovieId = 21,
+                            ActorId = 42
+                        },
+                        new
+                        {
+                            MovieId = 22,
+                            ActorId = 43
+                        },
+                        new
+                        {
+                            MovieId = 22,
+                            ActorId = 44
+                        },
+                        new
+                        {
+                            MovieId = 22,
+                            ActorId = 45
+                        },
+                        new
+                        {
+                            MovieId = 22,
+                            ActorId = 46
+                        },
+                        new
+                        {
+                            MovieId = 22,
+                            ActorId = 47
+                        },
+                        new
+                        {
+                            MovieId = 23,
+                            ActorId = 48
+                        },
+                        new
+                        {
+                            MovieId = 23,
+                            ActorId = 8
+                        },
+                        new
+                        {
+                            MovieId = 23,
+                            ActorId = 49
+                        },
+                        new
+                        {
+                            MovieId = 23,
+                            ActorId = 50
+                        },
+                        new
+                        {
+                            MovieId = 23,
+                            ActorId = 51
+                        },
+                        new
+                        {
+                            MovieId = 24,
+                            ActorId = 52
+                        },
+                        new
+                        {
+                            MovieId = 24,
+                            ActorId = 53
+                        },
+                        new
+                        {
+                            MovieId = 25,
+                            ActorId = 54
+                        },
+                        new
+                        {
+                            MovieId = 25,
+                            ActorId = 55
+                        },
+                        new
+                        {
+                            MovieId = 25,
+                            ActorId = 56
+                        },
+                        new
+                        {
+                            MovieId = 26,
+                            ActorId = 57
+                        },
+                        new
+                        {
+                            MovieId = 26,
+                            ActorId = 58
+                        },
+                        new
+                        {
+                            MovieId = 28,
+                            ActorId = 59
+                        },
+                        new
+                        {
+                            MovieId = 28,
+                            ActorId = 60
+                        },
+                        new
+                        {
+                            MovieId = 28,
+                            ActorId = 61
+                        },
+                        new
+                        {
+                            MovieId = 28,
+                            ActorId = 62
+                        },
+                        new
+                        {
+                            MovieId = 29,
+                            ActorId = 6
+                        },
+                        new
+                        {
+                            MovieId = 29,
+                            ActorId = 50
+                        },
+                        new
+                        {
+                            MovieId = 29,
+                            ActorId = 63
+                        },
+                        new
+                        {
+                            MovieId = 29,
+                            ActorId = 64
+                        },
+                        new
+                        {
+                            MovieId = 30,
+                            ActorId = 65
+                        },
+                        new
+                        {
+                            MovieId = 30,
+                            ActorId = 66
+                        },
+                        new
+                        {
+                            MovieId = 30,
+                            ActorId = 67
+                        },
+                        new
+                        {
+                            MovieId = 30,
+                            ActorId = 68
                         });
                 });
 
@@ -2399,6 +3003,131 @@ namespace Cinema.Infrastructure.Migrations
                         {
                             MovieId = 19,
                             GenreId = 10
+                        },
+                        new
+                        {
+                            MovieId = 20,
+                            GenreId = 1
+                        },
+                        new
+                        {
+                            MovieId = 20,
+                            GenreId = 5
+                        },
+                        new
+                        {
+                            MovieId = 21,
+                            GenreId = 6
+                        },
+                        new
+                        {
+                            MovieId = 21,
+                            GenreId = 11
+                        },
+                        new
+                        {
+                            MovieId = 21,
+                            GenreId = 9
+                        },
+                        new
+                        {
+                            MovieId = 22,
+                            GenreId = 2
+                        },
+                        new
+                        {
+                            MovieId = 22,
+                            GenreId = 1
+                        },
+                        new
+                        {
+                            MovieId = 22,
+                            GenreId = 8
+                        },
+                        new
+                        {
+                            MovieId = 23,
+                            GenreId = 3
+                        },
+                        new
+                        {
+                            MovieId = 23,
+                            GenreId = 8
+                        },
+                        new
+                        {
+                            MovieId = 23,
+                            GenreId = 11
+                        },
+                        new
+                        {
+                            MovieId = 24,
+                            GenreId = 4
+                        },
+                        new
+                        {
+                            MovieId = 24,
+                            GenreId = 12
+                        },
+                        new
+                        {
+                            MovieId = 25,
+                            GenreId = 1
+                        },
+                        new
+                        {
+                            MovieId = 26,
+                            GenreId = 3
+                        },
+                        new
+                        {
+                            MovieId = 27,
+                            GenreId = 4
+                        },
+                        new
+                        {
+                            MovieId = 27,
+                            GenreId = 12
+                        },
+                        new
+                        {
+                            MovieId = 28,
+                            GenreId = 1
+                        },
+                        new
+                        {
+                            MovieId = 28,
+                            GenreId = 9
+                        },
+                        new
+                        {
+                            MovieId = 28,
+                            GenreId = 5
+                        },
+                        new
+                        {
+                            MovieId = 29,
+                            GenreId = 2
+                        },
+                        new
+                        {
+                            MovieId = 29,
+                            GenreId = 11
+                        },
+                        new
+                        {
+                            MovieId = 29,
+                            GenreId = 8
+                        },
+                        new
+                        {
+                            MovieId = 30,
+                            GenreId = 2
+                        },
+                        new
+                        {
+                            MovieId = 30,
+                            GenreId = 11
                         });
                 });
 
@@ -2840,8 +3569,8 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 1,
-                            SeatRow = "B",
+                            SeatNumber = 11,
+                            SeatRow = "A",
                             SeatTypeId = 1
                         },
                         new
@@ -2850,8 +3579,8 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 2,
-                            SeatRow = "B",
+                            SeatNumber = 12,
+                            SeatRow = "A",
                             SeatTypeId = 1
                         },
                         new
@@ -2860,7 +3589,7 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 3,
+                            SeatNumber = 1,
                             SeatRow = "B",
                             SeatTypeId = 1
                         },
@@ -2870,7 +3599,7 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 4,
+                            SeatNumber = 2,
                             SeatRow = "B",
                             SeatTypeId = 1
                         },
@@ -2880,7 +3609,7 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 5,
+                            SeatNumber = 3,
                             SeatRow = "B",
                             SeatTypeId = 1
                         },
@@ -2890,7 +3619,7 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 6,
+                            SeatNumber = 4,
                             SeatRow = "B",
                             SeatTypeId = 1
                         },
@@ -2900,7 +3629,7 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 7,
+                            SeatNumber = 5,
                             SeatRow = "B",
                             SeatTypeId = 1
                         },
@@ -2910,7 +3639,7 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 8,
+                            SeatNumber = 6,
                             SeatRow = "B",
                             SeatTypeId = 1
                         },
@@ -2920,7 +3649,7 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 9,
+                            SeatNumber = 7,
                             SeatRow = "B",
                             SeatTypeId = 1
                         },
@@ -2930,7 +3659,7 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 10,
+                            SeatNumber = 8,
                             SeatRow = "B",
                             SeatTypeId = 1
                         },
@@ -2940,9 +3669,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 1,
-                            SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatNumber = 9,
+                            SeatRow = "B",
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -2950,9 +3679,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 2,
-                            SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatNumber = 10,
+                            SeatRow = "B",
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -2960,9 +3689,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 3,
-                            SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatNumber = 11,
+                            SeatRow = "B",
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -2970,9 +3699,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 4,
-                            SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatNumber = 12,
+                            SeatRow = "B",
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -2980,9 +3709,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 5,
+                            SeatNumber = 1,
                             SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -2990,9 +3719,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 6,
+                            SeatNumber = 2,
                             SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -3000,9 +3729,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 7,
+                            SeatNumber = 3,
                             SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -3010,9 +3739,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 8,
+                            SeatNumber = 4,
                             SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -3020,9 +3749,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 9,
+                            SeatNumber = 5,
                             SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -3030,9 +3759,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 10,
+                            SeatNumber = 6,
                             SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -3040,9 +3769,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 1,
-                            SeatRow = "D",
-                            SeatTypeId = 2
+                            SeatNumber = 7,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -3050,9 +3779,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 2,
-                            SeatRow = "D",
-                            SeatTypeId = 2
+                            SeatNumber = 8,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -3060,9 +3789,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 3,
-                            SeatRow = "D",
-                            SeatTypeId = 2
+                            SeatNumber = 9,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -3070,9 +3799,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 4,
-                            SeatRow = "D",
-                            SeatTypeId = 2
+                            SeatNumber = 10,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -3080,9 +3809,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 5,
-                            SeatRow = "D",
-                            SeatTypeId = 2
+                            SeatNumber = 11,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -3090,9 +3819,9 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 6,
-                            SeatRow = "D",
-                            SeatTypeId = 2
+                            SeatNumber = 12,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
@@ -3100,7 +3829,7 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 7,
+                            SeatNumber = 1,
                             SeatRow = "D",
                             SeatTypeId = 2
                         },
@@ -3110,7 +3839,7 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 8,
+                            SeatNumber = 2,
                             SeatRow = "D",
                             SeatTypeId = 2
                         },
@@ -3120,7 +3849,7 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 9,
+                            SeatNumber = 3,
                             SeatRow = "D",
                             SeatTypeId = 2
                         },
@@ -3130,328 +3859,318 @@ namespace Cinema.Infrastructure.Migrations
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
-                            SeatNumber = 10,
+                            SeatNumber = 4,
                             SeatRow = "D",
                             SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 41,
-                            CoupleId = new Guid("c0000000-0000-0000-0001-000000005001"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 1,
+                            SeatNumber = 5,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 42,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 1,
+                            SeatNumber = 6,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 43,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 1,
+                            SeatNumber = 7,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 44,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 1,
+                            SeatNumber = 8,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 45,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 1,
+                            SeatNumber = 9,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 46,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 1,
+                            SeatNumber = 10,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 47,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 1,
+                            SeatNumber = 11,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 48,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 1,
+                            SeatNumber = 12,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 49,
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
                             SeatNumber = 1,
                             SeatRow = "E",
-                            SeatTypeId = 3
+                            SeatTypeId = 2
                         },
                         new
                         {
-                            SeatId = 42,
-                            CoupleId = new Guid("c0000000-0000-0000-0001-000000005001"),
+                            SeatId = 50,
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 1,
                             SeatNumber = 2,
                             SeatRow = "E",
-                            SeatTypeId = 3
-                        },
-                        new
-                        {
-                            SeatId = 43,
-                            CoupleId = new Guid("c0000000-0000-0000-0001-000000005002"),
-                            IsActive = true,
-                            IsAisle = false,
-                            RoomId = 1,
-                            SeatNumber = 3,
-                            SeatRow = "E",
-                            SeatTypeId = 3
-                        },
-                        new
-                        {
-                            SeatId = 44,
-                            CoupleId = new Guid("c0000000-0000-0000-0001-000000005002"),
-                            IsActive = true,
-                            IsAisle = false,
-                            RoomId = 1,
-                            SeatNumber = 4,
-                            SeatRow = "E",
-                            SeatTypeId = 3
-                        },
-                        new
-                        {
-                            SeatId = 45,
-                            CoupleId = new Guid("c0000000-0000-0000-0001-000000005003"),
-                            IsActive = true,
-                            IsAisle = false,
-                            RoomId = 1,
-                            SeatNumber = 5,
-                            SeatRow = "E",
-                            SeatTypeId = 3
-                        },
-                        new
-                        {
-                            SeatId = 46,
-                            CoupleId = new Guid("c0000000-0000-0000-0001-000000005003"),
-                            IsActive = true,
-                            IsAisle = false,
-                            RoomId = 1,
-                            SeatNumber = 6,
-                            SeatRow = "E",
-                            SeatTypeId = 3
-                        },
-                        new
-                        {
-                            SeatId = 47,
-                            CoupleId = new Guid("c0000000-0000-0000-0001-000000005004"),
-                            IsActive = true,
-                            IsAisle = false,
-                            RoomId = 1,
-                            SeatNumber = 7,
-                            SeatRow = "E",
-                            SeatTypeId = 3
-                        },
-                        new
-                        {
-                            SeatId = 48,
-                            CoupleId = new Guid("c0000000-0000-0000-0001-000000005004"),
-                            IsActive = true,
-                            IsAisle = false,
-                            RoomId = 1,
-                            SeatNumber = 8,
-                            SeatRow = "E",
-                            SeatTypeId = 3
-                        },
-                        new
-                        {
-                            SeatId = 49,
-                            CoupleId = new Guid("c0000000-0000-0000-0001-000000005005"),
-                            IsActive = true,
-                            IsAisle = false,
-                            RoomId = 1,
-                            SeatNumber = 9,
-                            SeatRow = "E",
-                            SeatTypeId = 3
-                        },
-                        new
-                        {
-                            SeatId = 50,
-                            CoupleId = new Guid("c0000000-0000-0000-0001-000000005005"),
-                            IsActive = true,
-                            IsAisle = false,
-                            RoomId = 1,
-                            SeatNumber = 10,
-                            SeatRow = "E",
-                            SeatTypeId = 3
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 51,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 1,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 1,
+                            SeatNumber = 3,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 52,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 2,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 1,
+                            SeatNumber = 4,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 53,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 3,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 1,
+                            SeatNumber = 5,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 54,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 4,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 1,
+                            SeatNumber = 6,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 55,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 5,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 1,
+                            SeatNumber = 7,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 56,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 6,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 1,
+                            SeatNumber = 8,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 57,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 7,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 1,
+                            SeatNumber = 9,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 58,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 8,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 1,
+                            SeatNumber = 10,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 59,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 9,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 1,
+                            SeatNumber = 11,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 60,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 10,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 1,
+                            SeatNumber = 12,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 61,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
+                            RoomId = 1,
                             SeatNumber = 1,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            SeatRow = "F",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 62,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
+                            RoomId = 1,
                             SeatNumber = 2,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            SeatRow = "F",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 63,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
+                            RoomId = 1,
                             SeatNumber = 3,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            SeatRow = "F",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 64,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
+                            RoomId = 1,
                             SeatNumber = 4,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            SeatRow = "F",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 65,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
+                            RoomId = 1,
                             SeatNumber = 5,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            SeatRow = "F",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 66,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
+                            RoomId = 1,
                             SeatNumber = 6,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            SeatRow = "F",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 67,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
+                            RoomId = 1,
                             SeatNumber = 7,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            SeatRow = "F",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 68,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
+                            RoomId = 1,
                             SeatNumber = 8,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            SeatRow = "F",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 69,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
+                            RoomId = 1,
                             SeatNumber = 9,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            SeatRow = "F",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 70,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
+                            RoomId = 1,
                             SeatNumber = 10,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            SeatRow = "F",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 71,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 1,
-                            SeatRow = "C",
+                            RoomId = 1,
+                            SeatNumber = 11,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -3459,9 +4178,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 72,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 2,
-                            SeatRow = "C",
+                            RoomId = 1,
+                            SeatNumber = 12,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -3469,9 +4188,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 73,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 3,
-                            SeatRow = "C",
+                            RoomId = 1,
+                            SeatNumber = 1,
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -3479,9 +4198,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 74,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 4,
-                            SeatRow = "C",
+                            RoomId = 1,
+                            SeatNumber = 2,
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -3489,9 +4208,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 75,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 5,
-                            SeatRow = "C",
+                            RoomId = 1,
+                            SeatNumber = 3,
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -3499,9 +4218,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 76,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 6,
-                            SeatRow = "C",
+                            RoomId = 1,
+                            SeatNumber = 4,
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -3509,9 +4228,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 77,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 7,
-                            SeatRow = "C",
+                            RoomId = 1,
+                            SeatNumber = 5,
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -3519,9 +4238,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 78,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 8,
-                            SeatRow = "C",
+                            RoomId = 1,
+                            SeatNumber = 6,
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -3529,9 +4248,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 79,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 9,
-                            SeatRow = "C",
+                            RoomId = 1,
+                            SeatNumber = 7,
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -3539,9 +4258,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 80,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 10,
-                            SeatRow = "C",
+                            RoomId = 1,
+                            SeatNumber = 8,
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -3549,9 +4268,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 81,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 1,
-                            SeatRow = "D",
+                            RoomId = 1,
+                            SeatNumber = 9,
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -3559,9 +4278,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 82,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 2,
-                            SeatRow = "D",
+                            RoomId = 1,
+                            SeatNumber = 10,
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -3569,9 +4288,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 83,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 3,
-                            SeatRow = "D",
+                            RoomId = 1,
+                            SeatNumber = 11,
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -3579,188 +4298,190 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 84,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 4,
-                            SeatRow = "D",
+                            RoomId = 1,
+                            SeatNumber = 12,
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 85,
+                            CoupleId = new Guid("c0000000-0000-0000-0001-000000008001"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 5,
-                            SeatRow = "D",
-                            SeatTypeId = 2
+                            RoomId = 1,
+                            SeatNumber = 1,
+                            SeatRow = "H",
+                            SeatTypeId = 3
                         },
                         new
                         {
                             SeatId = 86,
+                            CoupleId = new Guid("c0000000-0000-0000-0001-000000008001"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 6,
-                            SeatRow = "D",
-                            SeatTypeId = 2
+                            RoomId = 1,
+                            SeatNumber = 2,
+                            SeatRow = "H",
+                            SeatTypeId = 3
                         },
                         new
                         {
                             SeatId = 87,
+                            CoupleId = new Guid("c0000000-0000-0000-0001-000000008002"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 7,
-                            SeatRow = "D",
-                            SeatTypeId = 2
+                            RoomId = 1,
+                            SeatNumber = 3,
+                            SeatRow = "H",
+                            SeatTypeId = 3
                         },
                         new
                         {
                             SeatId = 88,
+                            CoupleId = new Guid("c0000000-0000-0000-0001-000000008002"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 8,
-                            SeatRow = "D",
-                            SeatTypeId = 2
+                            RoomId = 1,
+                            SeatNumber = 4,
+                            SeatRow = "H",
+                            SeatTypeId = 3
                         },
                         new
                         {
                             SeatId = 89,
+                            CoupleId = new Guid("c0000000-0000-0000-0001-000000008003"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 9,
-                            SeatRow = "D",
-                            SeatTypeId = 2
+                            RoomId = 1,
+                            SeatNumber = 5,
+                            SeatRow = "H",
+                            SeatTypeId = 3
                         },
                         new
                         {
                             SeatId = 90,
+                            CoupleId = new Guid("c0000000-0000-0000-0001-000000008003"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 10,
-                            SeatRow = "D",
-                            SeatTypeId = 2
+                            RoomId = 1,
+                            SeatNumber = 6,
+                            SeatRow = "H",
+                            SeatTypeId = 3
                         },
                         new
                         {
                             SeatId = 91,
-                            CoupleId = new Guid("c0000000-0000-0000-0002-000000005001"),
+                            CoupleId = new Guid("c0000000-0000-0000-0001-000000008004"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 1,
-                            SeatRow = "E",
+                            RoomId = 1,
+                            SeatNumber = 7,
+                            SeatRow = "H",
                             SeatTypeId = 3
                         },
                         new
                         {
                             SeatId = 92,
-                            CoupleId = new Guid("c0000000-0000-0000-0002-000000005001"),
+                            CoupleId = new Guid("c0000000-0000-0000-0001-000000008004"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 2,
-                            SeatRow = "E",
+                            RoomId = 1,
+                            SeatNumber = 8,
+                            SeatRow = "H",
                             SeatTypeId = 3
                         },
                         new
                         {
                             SeatId = 93,
-                            CoupleId = new Guid("c0000000-0000-0000-0002-000000005002"),
+                            CoupleId = new Guid("c0000000-0000-0000-0001-000000008005"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 3,
-                            SeatRow = "E",
+                            RoomId = 1,
+                            SeatNumber = 9,
+                            SeatRow = "H",
                             SeatTypeId = 3
                         },
                         new
                         {
                             SeatId = 94,
-                            CoupleId = new Guid("c0000000-0000-0000-0002-000000005002"),
+                            CoupleId = new Guid("c0000000-0000-0000-0001-000000008005"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 4,
-                            SeatRow = "E",
+                            RoomId = 1,
+                            SeatNumber = 10,
+                            SeatRow = "H",
                             SeatTypeId = 3
                         },
                         new
                         {
                             SeatId = 95,
-                            CoupleId = new Guid("c0000000-0000-0000-0002-000000005003"),
+                            CoupleId = new Guid("c0000000-0000-0000-0001-000000008006"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 5,
-                            SeatRow = "E",
+                            RoomId = 1,
+                            SeatNumber = 11,
+                            SeatRow = "H",
                             SeatTypeId = 3
                         },
                         new
                         {
                             SeatId = 96,
-                            CoupleId = new Guid("c0000000-0000-0000-0002-000000005003"),
+                            CoupleId = new Guid("c0000000-0000-0000-0001-000000008006"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 2,
-                            SeatNumber = 6,
-                            SeatRow = "E",
+                            RoomId = 1,
+                            SeatNumber = 12,
+                            SeatRow = "H",
                             SeatTypeId = 3
                         },
                         new
                         {
                             SeatId = 97,
-                            CoupleId = new Guid("c0000000-0000-0000-0002-000000005004"),
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 2,
-                            SeatNumber = 7,
-                            SeatRow = "E",
-                            SeatTypeId = 3
+                            SeatNumber = 1,
+                            SeatRow = "A",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 98,
-                            CoupleId = new Guid("c0000000-0000-0000-0002-000000005004"),
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 2,
-                            SeatNumber = 8,
-                            SeatRow = "E",
-                            SeatTypeId = 3
+                            SeatNumber = 2,
+                            SeatRow = "A",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 99,
-                            CoupleId = new Guid("c0000000-0000-0000-0002-000000005005"),
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 2,
-                            SeatNumber = 9,
-                            SeatRow = "E",
-                            SeatTypeId = 3
+                            SeatNumber = 3,
+                            SeatRow = "A",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 100,
-                            CoupleId = new Guid("c0000000-0000-0000-0002-000000005005"),
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 2,
-                            SeatNumber = 10,
-                            SeatRow = "E",
-                            SeatTypeId = 3
+                            SeatNumber = 4,
+                            SeatRow = "A",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 101,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 1,
+                            RoomId = 2,
+                            SeatNumber = 5,
                             SeatRow = "A",
                             SeatTypeId = 1
                         },
@@ -3769,8 +4490,8 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 102,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 2,
+                            RoomId = 2,
+                            SeatNumber = 6,
                             SeatRow = "A",
                             SeatTypeId = 1
                         },
@@ -3779,8 +4500,8 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 103,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 3,
+                            RoomId = 2,
+                            SeatNumber = 7,
                             SeatRow = "A",
                             SeatTypeId = 1
                         },
@@ -3789,8 +4510,8 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 104,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 4,
+                            RoomId = 2,
+                            SeatNumber = 8,
                             SeatRow = "A",
                             SeatTypeId = 1
                         },
@@ -3799,8 +4520,8 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 105,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 5,
+                            RoomId = 2,
+                            SeatNumber = 9,
                             SeatRow = "A",
                             SeatTypeId = 1
                         },
@@ -3809,8 +4530,8 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 106,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 6,
+                            RoomId = 2,
+                            SeatNumber = 10,
                             SeatRow = "A",
                             SeatTypeId = 1
                         },
@@ -3819,8 +4540,8 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 107,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 7,
+                            RoomId = 2,
+                            SeatNumber = 11,
                             SeatRow = "A",
                             SeatTypeId = 1
                         },
@@ -3829,8 +4550,8 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 108,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 8,
+                            RoomId = 2,
+                            SeatNumber = 12,
                             SeatRow = "A",
                             SeatTypeId = 1
                         },
@@ -3839,8 +4560,8 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 109,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 9,
+                            RoomId = 2,
+                            SeatNumber = 13,
                             SeatRow = "A",
                             SeatTypeId = 1
                         },
@@ -3849,8 +4570,8 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 110,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 10,
+                            RoomId = 2,
+                            SeatNumber = 14,
                             SeatRow = "A",
                             SeatTypeId = 1
                         },
@@ -3859,519 +4580,509 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 111,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
+                            RoomId = 2,
                             SeatNumber = 1,
                             SeatRow = "B",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 112,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
+                            RoomId = 2,
                             SeatNumber = 2,
                             SeatRow = "B",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 113,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
+                            RoomId = 2,
                             SeatNumber = 3,
                             SeatRow = "B",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 114,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
+                            RoomId = 2,
                             SeatNumber = 4,
                             SeatRow = "B",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 115,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
+                            RoomId = 2,
                             SeatNumber = 5,
                             SeatRow = "B",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 116,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
+                            RoomId = 2,
                             SeatNumber = 6,
                             SeatRow = "B",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 117,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
+                            RoomId = 2,
                             SeatNumber = 7,
                             SeatRow = "B",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 118,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
+                            RoomId = 2,
                             SeatNumber = 8,
                             SeatRow = "B",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 119,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
+                            RoomId = 2,
                             SeatNumber = 9,
                             SeatRow = "B",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 120,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
+                            RoomId = 2,
                             SeatNumber = 10,
                             SeatRow = "B",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 121,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 1,
-                            SeatRow = "C",
-                            SeatTypeId = 2
+                            RoomId = 2,
+                            SeatNumber = 11,
+                            SeatRow = "B",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 122,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 2,
-                            SeatRow = "C",
-                            SeatTypeId = 2
+                            RoomId = 2,
+                            SeatNumber = 12,
+                            SeatRow = "B",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 123,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 3,
-                            SeatRow = "C",
-                            SeatTypeId = 2
+                            RoomId = 2,
+                            SeatNumber = 13,
+                            SeatRow = "B",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 124,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 4,
-                            SeatRow = "C",
-                            SeatTypeId = 2
+                            RoomId = 2,
+                            SeatNumber = 14,
+                            SeatRow = "B",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 125,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 5,
+                            RoomId = 2,
+                            SeatNumber = 1,
                             SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 126,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 6,
+                            RoomId = 2,
+                            SeatNumber = 2,
                             SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 127,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 7,
+                            RoomId = 2,
+                            SeatNumber = 3,
                             SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 128,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 8,
+                            RoomId = 2,
+                            SeatNumber = 4,
                             SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 129,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 9,
+                            RoomId = 2,
+                            SeatNumber = 5,
                             SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 130,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 10,
+                            RoomId = 2,
+                            SeatNumber = 6,
                             SeatRow = "C",
-                            SeatTypeId = 2
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 131,
-                            CoupleId = new Guid("c0000000-0000-0000-0003-000000004001"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 1,
-                            SeatRow = "D",
-                            SeatTypeId = 3
+                            RoomId = 2,
+                            SeatNumber = 7,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 132,
-                            CoupleId = new Guid("c0000000-0000-0000-0003-000000004001"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 2,
-                            SeatRow = "D",
-                            SeatTypeId = 3
+                            RoomId = 2,
+                            SeatNumber = 8,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 133,
-                            CoupleId = new Guid("c0000000-0000-0000-0003-000000004002"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 3,
-                            SeatRow = "D",
-                            SeatTypeId = 3
+                            RoomId = 2,
+                            SeatNumber = 9,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 134,
-                            CoupleId = new Guid("c0000000-0000-0000-0003-000000004002"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 4,
-                            SeatRow = "D",
-                            SeatTypeId = 3
+                            RoomId = 2,
+                            SeatNumber = 10,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 135,
-                            CoupleId = new Guid("c0000000-0000-0000-0003-000000004003"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 5,
-                            SeatRow = "D",
-                            SeatTypeId = 3
+                            RoomId = 2,
+                            SeatNumber = 11,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 136,
-                            CoupleId = new Guid("c0000000-0000-0000-0003-000000004003"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 6,
-                            SeatRow = "D",
-                            SeatTypeId = 3
+                            RoomId = 2,
+                            SeatNumber = 12,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 137,
-                            CoupleId = new Guid("c0000000-0000-0000-0003-000000004004"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 7,
-                            SeatRow = "D",
-                            SeatTypeId = 3
+                            RoomId = 2,
+                            SeatNumber = 13,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 138,
-                            CoupleId = new Guid("c0000000-0000-0000-0003-000000004004"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 8,
-                            SeatRow = "D",
-                            SeatTypeId = 3
+                            RoomId = 2,
+                            SeatNumber = 14,
+                            SeatRow = "C",
+                            SeatTypeId = 1
                         },
                         new
                         {
                             SeatId = 139,
-                            CoupleId = new Guid("c0000000-0000-0000-0003-000000004005"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 9,
+                            RoomId = 2,
+                            SeatNumber = 1,
                             SeatRow = "D",
-                            SeatTypeId = 3
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 140,
-                            CoupleId = new Guid("c0000000-0000-0000-0003-000000004005"),
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 3,
-                            SeatNumber = 10,
+                            RoomId = 2,
+                            SeatNumber = 2,
                             SeatRow = "D",
-                            SeatTypeId = 3
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 141,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 1,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 3,
+                            SeatRow = "D",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 142,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 2,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 4,
+                            SeatRow = "D",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 143,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 3,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 5,
+                            SeatRow = "D",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 144,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 4,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 6,
+                            SeatRow = "D",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 145,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 5,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 7,
+                            SeatRow = "D",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 146,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 6,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 8,
+                            SeatRow = "D",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 147,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 7,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 9,
+                            SeatRow = "D",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 148,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 8,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 10,
+                            SeatRow = "D",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 149,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 9,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 11,
+                            SeatRow = "D",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 150,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 10,
-                            SeatRow = "A",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 12,
+                            SeatRow = "D",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 151,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 1,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 13,
+                            SeatRow = "D",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 152,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 2,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 14,
+                            SeatRow = "D",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 153,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 3,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 1,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 154,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 4,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 2,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 155,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 5,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 3,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 156,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 6,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 4,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 157,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 7,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 5,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 158,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 8,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 6,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 159,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 9,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 7,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 160,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 10,
-                            SeatRow = "B",
-                            SeatTypeId = 1
+                            RoomId = 2,
+                            SeatNumber = 8,
+                            SeatRow = "E",
+                            SeatTypeId = 2
                         },
                         new
                         {
                             SeatId = 161,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 1,
-                            SeatRow = "C",
+                            RoomId = 2,
+                            SeatNumber = 9,
+                            SeatRow = "E",
                             SeatTypeId = 2
                         },
                         new
@@ -4379,9 +5090,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 162,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 2,
-                            SeatRow = "C",
+                            RoomId = 2,
+                            SeatNumber = 10,
+                            SeatRow = "E",
                             SeatTypeId = 2
                         },
                         new
@@ -4389,9 +5100,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 163,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 3,
-                            SeatRow = "C",
+                            RoomId = 2,
+                            SeatNumber = 11,
+                            SeatRow = "E",
                             SeatTypeId = 2
                         },
                         new
@@ -4399,9 +5110,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 164,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 4,
-                            SeatRow = "C",
+                            RoomId = 2,
+                            SeatNumber = 12,
+                            SeatRow = "E",
                             SeatTypeId = 2
                         },
                         new
@@ -4409,9 +5120,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 165,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 5,
-                            SeatRow = "C",
+                            RoomId = 2,
+                            SeatNumber = 13,
+                            SeatRow = "E",
                             SeatTypeId = 2
                         },
                         new
@@ -4419,9 +5130,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 166,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 6,
-                            SeatRow = "C",
+                            RoomId = 2,
+                            SeatNumber = 14,
+                            SeatRow = "E",
                             SeatTypeId = 2
                         },
                         new
@@ -4429,9 +5140,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 167,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 7,
-                            SeatRow = "C",
+                            RoomId = 2,
+                            SeatNumber = 1,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4439,9 +5150,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 168,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 8,
-                            SeatRow = "C",
+                            RoomId = 2,
+                            SeatNumber = 2,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4449,9 +5160,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 169,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 9,
-                            SeatRow = "C",
+                            RoomId = 2,
+                            SeatNumber = 3,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4459,9 +5170,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 170,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 10,
-                            SeatRow = "C",
+                            RoomId = 2,
+                            SeatNumber = 4,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4469,9 +5180,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 171,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 1,
-                            SeatRow = "D",
+                            RoomId = 2,
+                            SeatNumber = 5,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4479,9 +5190,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 172,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 2,
-                            SeatRow = "D",
+                            RoomId = 2,
+                            SeatNumber = 6,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4489,9 +5200,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 173,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 3,
-                            SeatRow = "D",
+                            RoomId = 2,
+                            SeatNumber = 7,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4499,9 +5210,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 174,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 4,
-                            SeatRow = "D",
+                            RoomId = 2,
+                            SeatNumber = 8,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4509,9 +5220,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 175,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 5,
-                            SeatRow = "D",
+                            RoomId = 2,
+                            SeatNumber = 9,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4519,9 +5230,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 176,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 6,
-                            SeatRow = "D",
+                            RoomId = 2,
+                            SeatNumber = 10,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4529,9 +5240,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 177,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 7,
-                            SeatRow = "D",
+                            RoomId = 2,
+                            SeatNumber = 11,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4539,9 +5250,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 178,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 8,
-                            SeatRow = "D",
+                            RoomId = 2,
+                            SeatNumber = 12,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4549,9 +5260,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 179,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 9,
-                            SeatRow = "D",
+                            RoomId = 2,
+                            SeatNumber = 13,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4559,9 +5270,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 180,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
-                            SeatNumber = 10,
-                            SeatRow = "D",
+                            RoomId = 2,
+                            SeatNumber = 14,
+                            SeatRow = "F",
                             SeatTypeId = 2
                         },
                         new
@@ -4569,9 +5280,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 181,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
+                            RoomId = 2,
                             SeatNumber = 1,
-                            SeatRow = "E",
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -4579,9 +5290,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 182,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
+                            RoomId = 2,
                             SeatNumber = 2,
-                            SeatRow = "E",
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -4589,9 +5300,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 183,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
+                            RoomId = 2,
                             SeatNumber = 3,
-                            SeatRow = "E",
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -4599,9 +5310,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 184,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
+                            RoomId = 2,
                             SeatNumber = 4,
-                            SeatRow = "E",
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -4609,9 +5320,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 185,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
+                            RoomId = 2,
                             SeatNumber = 5,
-                            SeatRow = "E",
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -4619,9 +5330,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 186,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
+                            RoomId = 2,
                             SeatNumber = 6,
-                            SeatRow = "E",
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -4629,9 +5340,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 187,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
+                            RoomId = 2,
                             SeatNumber = 7,
-                            SeatRow = "E",
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -4639,9 +5350,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 188,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
+                            RoomId = 2,
                             SeatNumber = 8,
-                            SeatRow = "E",
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -4649,9 +5360,9 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 189,
                             IsActive = true,
                             IsAisle = false,
-                            RoomId = 4,
+                            RoomId = 2,
                             SeatNumber = 9,
-                            SeatRow = "E",
+                            SeatRow = "G",
                             SeatTypeId = 2
                         },
                         new
@@ -4659,6 +5370,1792 @@ namespace Cinema.Infrastructure.Migrations
                             SeatId = 190,
                             IsActive = true,
                             IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 10,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 191,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 11,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 192,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 12,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 193,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 13,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 194,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 14,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 195,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008001"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 1,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 196,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008001"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 2,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 197,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008002"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 3,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 198,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008002"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 4,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 199,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008003"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 5,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 200,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008003"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 6,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 201,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008004"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 7,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 202,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008004"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 8,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 203,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008005"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 9,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 204,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008005"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 10,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 205,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008006"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 11,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 206,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008006"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 12,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 207,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008007"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 13,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 208,
+                            CoupleId = new Guid("c0000000-0000-0000-0002-000000008007"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 2,
+                            SeatNumber = 14,
+                            SeatRow = "H",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 209,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 1,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 210,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 2,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 211,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 3,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 212,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 4,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 213,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 5,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 214,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 6,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 215,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 7,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 216,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 8,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 217,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 9,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 218,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 10,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 219,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 11,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 220,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 12,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 221,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 1,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 222,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 2,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 223,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 3,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 224,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 4,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 225,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 5,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 226,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 6,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 227,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 7,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 228,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 8,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 229,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 9,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 230,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 10,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 231,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 11,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 232,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 12,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 233,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 1,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 234,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 2,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 235,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 3,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 236,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 4,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 237,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 5,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 238,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 6,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 239,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 7,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 240,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 8,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 241,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 9,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 242,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 10,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 243,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 11,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 244,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 12,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 245,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 1,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 246,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 2,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 247,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 3,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 248,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 4,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 249,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 5,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 250,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 6,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 251,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 7,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 252,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 8,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 253,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 9,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 254,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 10,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 255,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 11,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 256,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 12,
+                            SeatRow = "D",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 257,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 1,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 258,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 2,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 259,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 3,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 260,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 4,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 261,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 5,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 262,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 6,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 263,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 7,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 264,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 8,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 265,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 9,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 266,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 10,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 267,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 11,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 268,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 12,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 269,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 1,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 270,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 2,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 271,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 3,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 272,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 4,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 273,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 5,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 274,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 6,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 275,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 7,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 276,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 8,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 277,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 9,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 278,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 10,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 279,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 11,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 280,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 12,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 281,
+                            CoupleId = new Guid("c0000000-0000-0000-0003-000000007001"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 1,
+                            SeatRow = "G",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 282,
+                            CoupleId = new Guid("c0000000-0000-0000-0003-000000007001"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 2,
+                            SeatRow = "G",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 283,
+                            CoupleId = new Guid("c0000000-0000-0000-0003-000000007002"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 3,
+                            SeatRow = "G",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 284,
+                            CoupleId = new Guid("c0000000-0000-0000-0003-000000007002"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 4,
+                            SeatRow = "G",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 285,
+                            CoupleId = new Guid("c0000000-0000-0000-0003-000000007003"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 5,
+                            SeatRow = "G",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 286,
+                            CoupleId = new Guid("c0000000-0000-0000-0003-000000007003"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 6,
+                            SeatRow = "G",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 287,
+                            CoupleId = new Guid("c0000000-0000-0000-0003-000000007004"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 7,
+                            SeatRow = "G",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 288,
+                            CoupleId = new Guid("c0000000-0000-0000-0003-000000007004"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 8,
+                            SeatRow = "G",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 289,
+                            CoupleId = new Guid("c0000000-0000-0000-0003-000000007005"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 9,
+                            SeatRow = "G",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 290,
+                            CoupleId = new Guid("c0000000-0000-0000-0003-000000007005"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 10,
+                            SeatRow = "G",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 291,
+                            CoupleId = new Guid("c0000000-0000-0000-0003-000000007006"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 11,
+                            SeatRow = "G",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 292,
+                            CoupleId = new Guid("c0000000-0000-0000-0003-000000007006"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 3,
+                            SeatNumber = 12,
+                            SeatRow = "G",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 293,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 1,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 294,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 2,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 295,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 3,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 296,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 4,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 297,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 5,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 298,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 6,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 299,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 7,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 300,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 8,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 301,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 9,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 302,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 10,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 303,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 11,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 304,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 12,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 305,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 13,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 306,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 14,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 307,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 15,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 308,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 16,
+                            SeatRow = "A",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 309,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 1,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 310,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 2,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 311,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 3,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 312,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 4,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 313,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 5,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 314,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 6,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 315,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 7,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 316,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 8,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 317,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 9,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 318,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 10,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 319,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 11,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 320,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 12,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 321,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 13,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 322,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 14,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 323,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 15,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 324,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 16,
+                            SeatRow = "B",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 325,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 1,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 326,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 2,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 327,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 3,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 328,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 4,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 329,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 5,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 330,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 6,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 331,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 7,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 332,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 8,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 333,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 9,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 334,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 10,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 335,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 11,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 336,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 12,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 337,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 13,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 338,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 14,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 339,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 15,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 340,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 16,
+                            SeatRow = "C",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 341,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 1,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 342,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 2,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 343,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 3,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 344,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 4,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 345,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 5,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 346,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 6,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 347,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 7,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 348,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 8,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 349,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 9,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 350,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 10,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 351,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 11,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 352,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 12,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 353,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 13,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 354,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 14,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 355,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 15,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 356,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 16,
+                            SeatRow = "D",
+                            SeatTypeId = 1
+                        },
+                        new
+                        {
+                            SeatId = 357,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 1,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 358,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 2,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 359,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 3,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 360,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 4,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 361,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 5,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 362,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 6,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 363,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 7,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 364,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 8,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 365,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 9,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 366,
+                            IsActive = true,
+                            IsAisle = false,
                             RoomId = 4,
                             SeatNumber = 10,
                             SeatRow = "E",
@@ -4666,112 +7163,878 @@ namespace Cinema.Infrastructure.Migrations
                         },
                         new
                         {
-                            SeatId = 191,
-                            CoupleId = new Guid("c0000000-0000-0000-0004-000000006001"),
+                            SeatId = 367,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 11,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 368,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 12,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 369,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 13,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 370,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 14,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 371,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 15,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 372,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 16,
+                            SeatRow = "E",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 373,
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 4,
                             SeatNumber = 1,
                             SeatRow = "F",
-                            SeatTypeId = 3
+                            SeatTypeId = 2
                         },
                         new
                         {
-                            SeatId = 192,
-                            CoupleId = new Guid("c0000000-0000-0000-0004-000000006001"),
+                            SeatId = 374,
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 4,
                             SeatNumber = 2,
                             SeatRow = "F",
-                            SeatTypeId = 3
+                            SeatTypeId = 2
                         },
                         new
                         {
-                            SeatId = 193,
-                            CoupleId = new Guid("c0000000-0000-0000-0004-000000006002"),
+                            SeatId = 375,
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 4,
                             SeatNumber = 3,
                             SeatRow = "F",
-                            SeatTypeId = 3
+                            SeatTypeId = 2
                         },
                         new
                         {
-                            SeatId = 194,
-                            CoupleId = new Guid("c0000000-0000-0000-0004-000000006002"),
+                            SeatId = 376,
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 4,
                             SeatNumber = 4,
                             SeatRow = "F",
-                            SeatTypeId = 3
+                            SeatTypeId = 2
                         },
                         new
                         {
-                            SeatId = 195,
-                            CoupleId = new Guid("c0000000-0000-0000-0004-000000006003"),
+                            SeatId = 377,
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 4,
                             SeatNumber = 5,
                             SeatRow = "F",
-                            SeatTypeId = 3
+                            SeatTypeId = 2
                         },
                         new
                         {
-                            SeatId = 196,
-                            CoupleId = new Guid("c0000000-0000-0000-0004-000000006003"),
+                            SeatId = 378,
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 4,
                             SeatNumber = 6,
                             SeatRow = "F",
-                            SeatTypeId = 3
+                            SeatTypeId = 2
                         },
                         new
                         {
-                            SeatId = 197,
-                            CoupleId = new Guid("c0000000-0000-0000-0004-000000006004"),
+                            SeatId = 379,
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 4,
                             SeatNumber = 7,
                             SeatRow = "F",
-                            SeatTypeId = 3
+                            SeatTypeId = 2
                         },
                         new
                         {
-                            SeatId = 198,
-                            CoupleId = new Guid("c0000000-0000-0000-0004-000000006004"),
+                            SeatId = 380,
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 4,
                             SeatNumber = 8,
                             SeatRow = "F",
-                            SeatTypeId = 3
+                            SeatTypeId = 2
                         },
                         new
                         {
-                            SeatId = 199,
-                            CoupleId = new Guid("c0000000-0000-0000-0004-000000006005"),
+                            SeatId = 381,
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 4,
                             SeatNumber = 9,
                             SeatRow = "F",
-                            SeatTypeId = 3
+                            SeatTypeId = 2
                         },
                         new
                         {
-                            SeatId = 200,
-                            CoupleId = new Guid("c0000000-0000-0000-0004-000000006005"),
+                            SeatId = 382,
                             IsActive = true,
                             IsAisle = false,
                             RoomId = 4,
                             SeatNumber = 10,
                             SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 383,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 11,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 384,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 12,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 385,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 13,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 386,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 14,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 387,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 15,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 388,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 16,
+                            SeatRow = "F",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 389,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 1,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 390,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 2,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 391,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 3,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 392,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 4,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 393,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 5,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 394,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 6,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 395,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 7,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 396,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 8,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 397,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 9,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 398,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 10,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 399,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 11,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 400,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 12,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 401,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 13,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 402,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 14,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 403,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 15,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 404,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 16,
+                            SeatRow = "G",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 405,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 1,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 406,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 2,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 407,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 3,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 408,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 4,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 409,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 5,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 410,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 6,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 411,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 7,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 412,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 8,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 413,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 9,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 414,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 10,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 415,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 11,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 416,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 12,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 417,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 13,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 418,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 14,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 419,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 15,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 420,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 16,
+                            SeatRow = "H",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 421,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 1,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 422,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 2,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 423,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 3,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 424,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 4,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 425,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 5,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 426,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 6,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 427,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 7,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 428,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 8,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 429,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 9,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 430,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 10,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 431,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 11,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 432,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 12,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 433,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 13,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 434,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 14,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 435,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 15,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 436,
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 16,
+                            SeatRow = "I",
+                            SeatTypeId = 2
+                        },
+                        new
+                        {
+                            SeatId = 437,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010001"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 1,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 438,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010001"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 2,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 439,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010002"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 3,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 440,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010002"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 4,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 441,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010003"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 5,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 442,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010003"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 6,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 443,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010004"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 7,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 444,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010004"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 8,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 445,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010005"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 9,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 446,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010005"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 10,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 447,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010006"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 11,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 448,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010006"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 12,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 449,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010007"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 13,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 450,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010007"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 14,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 451,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010008"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 15,
+                            SeatRow = "J",
+                            SeatTypeId = 3
+                        },
+                        new
+                        {
+                            SeatId = 452,
+                            CoupleId = new Guid("c0000000-0000-0000-0004-000000010008"),
+                            IsActive = true,
+                            IsAisle = false,
+                            RoomId = 4,
+                            SeatNumber = 16,
+                            SeatRow = "J",
                             SeatTypeId = 3
                         });
                 });
@@ -4822,14 +8085,14 @@ namespace Cinema.Infrastructure.Migrations
                             SeatTypeId = 2,
                             IsCouple = false,
                             Name = "VIP",
-                            PriceMultiplier = 1.5m
+                            PriceMultiplier = 1.15m
                         },
                         new
                         {
                             SeatTypeId = 3,
                             IsCouple = true,
                             Name = "Couple",
-                            PriceMultiplier = 2.0m
+                            PriceMultiplier = 1.25m
                         });
                 });
 

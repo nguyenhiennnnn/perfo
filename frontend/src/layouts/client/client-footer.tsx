@@ -1,6 +1,6 @@
 import { Link } from "react-router";
-import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 import { BrandMark, BrandWordmark } from "@/components/common/brand-mark";
+import { FacebookIcon, InstagramIcon, YoutubeIcon } from "@/components/common/social-icons";
 import { BRAND } from "@/config/brand";
 import { ROUTES } from "@/config/routes";
 import { MOVIE_LIST_STATUS_QUERY } from "@/config/default-constants";
@@ -33,9 +33,9 @@ export const ClientFooter = () => {
             Đặt vé xem phim nhanh, chọn ghế realtime, nhận vé điện tử ngay.
           </p>
           <div aria-hidden className="flex items-center gap-3 text-muted-foreground">
-            <FaFacebook className="size-4" />
-            <FaYoutube className="size-4" />
-            <FaInstagram className="size-4" />
+            <FacebookIcon className="size-4" />
+            <YoutubeIcon className="size-4" />
+            <InstagramIcon className="size-4" />
           </div>
         </div>
 

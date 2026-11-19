@@ -17,7 +17,8 @@ internal static class ShowtimeSeeder
     internal const string SpecialSoldOut = "sold-out";
     internal const string SpecialCancelled = "cancelled";
 
-    private const int MaxShowsPerRoomDay = 4;
+    // Rạp thật chiếu 5–6 suất/phòng/ngày (9h–24h); để 5 để lượng ShowtimeSeat seed không quá lớn.
+    private const int MaxShowsPerRoomDay = 5;
     private const int MinShowsPerRoomDay = 3;
     private const int BufferMinutes = 15;
     private const double SafetyBufferHours = 0.5;
@@ -33,7 +34,7 @@ internal static class ShowtimeSeeder
     private sealed class Context
     {
         public List<Movie> NowShowing { get; init; } = [];
-        public List<Movie> PastPool { get; init; } = []; // NowShowing + Ended
+        public List<Movie> PastPool { get; init; } = []; // Phim đang chiếu: chỉ phim này mới có suất tuần trước
         public List<CinemaRoom> Rooms { get; init; } = [];
         public Dictionary<int, List<Seat>> SeatsByRoom { get; init; } = [];
         public TimeOnly Opening { get; init; }
@@ -140,15 +141,15 @@ internal static class ShowtimeSeeder
         )[]
         {
             // Đang chiếu: cửa sổ check-in đang mở, có vé đã/chưa check-in.
-            (SpecialOngoing, 8, nowMinute.AddMinutes(-20), 1, ShowtimeStatus.Scheduled),
+            (SpecialOngoing, 21, nowMinute.AddMinutes(-20), 1, ShowtimeStatus.Scheduled),
             // Sắp chiếu (20 phút nữa): check-in mở, đã quá hạn hoàn tiền.
-            (SpecialStartingSoon, 7, nowMinute.AddMinutes(20), 2, ShowtimeStatus.Scheduled),
+            (SpecialStartingSoon, 20, nowMinute.AddMinutes(20), 2, ShowtimeStatus.Scheduled),
             // 90 phút nữa: < CancelDeadlineHours (2h) nên không được hoàn tiền, nhưng chưa mở check-in.
-            (SpecialRefundClosed, 6, nowMinute.AddMinutes(90), 4, ShowtimeStatus.Scheduled),
+            (SpecialRefundClosed, 22, nowMinute.AddMinutes(90), 4, ShowtimeStatus.Scheduled),
             // Hết vé 100%: ngày mai 19:00, phòng nhỏ nhất.
             (
                 SpecialSoldOut,
-                3,
+                23,
                 BusinessTime.ToUtc(today.AddDays(1), new TimeOnly(19, 0)),
                 3,
                 ShowtimeStatus.Scheduled
@@ -156,7 +157,7 @@ internal static class ShowtimeSeeder
             // Suất bị hủy bởi rạp: có booking bị hủy + hoàn tiền (tự động & thủ công).
             (
                 SpecialCancelled,
-                14,
+                25,
                 BusinessTime.ToUtc(today.AddDays(2), new TimeOnly(15, 0)),
                 4,
                 ShowtimeStatus.Cancelled
@@ -274,7 +275,7 @@ internal static class ShowtimeSeeder
         return new Context
         {
             NowShowing = movies.Where(m => m.Status == MovieStatus.NowShowing).ToList(),
-            PastPool = movies,
+            PastPool = movies.Where(m => m.Status == MovieStatus.NowShowing).ToList(),
             Rooms = rooms.Where(r => seatsByRoom.ContainsKey(r.RoomId)).ToList(),
             SeatsByRoom = seatsByRoom,
             Opening = settings?.OpeningTime ?? new TimeOnly(8, 0),
@@ -363,13 +364,25 @@ internal static class ShowtimeSeeder
         return new DateTime(ticks, value.Kind);
     }
 
-    private static decimal GetBasePrice(string? screenTypeName) =>
-        screenTypeName switch
+    // Giá vé nền (ghế thường) theo mặt bằng CGV/Lotte 2026: T2–T5 rẻ hơn T6–CN,
+    // suất từ 17h đắt hơn suất ngày; 3D phụ thu 30k (T2–T5) / 50k (T6–CN); IMAX giá riêng.
+    private static decimal GetBasePrice(string? screenTypeName, DateTime startUtc)
+    {
+        var local = BusinessTime.ToLocal(startUtc);
+        var weekend = local.DayOfWeek is DayOfWeek.Friday or DayOfWeek.Saturday or DayOfWeek.Sunday;
+        var prime = local.Hour >= 17;
+
+        var standard2D = weekend
+            ? (prime ? 105_000m : 95_000m)
+            : (prime ? 90_000m : 75_000m);
+
+        return screenTypeName switch
         {
-            "IMAX" => 130_000m,
-            "3D" => 95_000m,
-            _ => 75_000m,
+            "IMAX" => weekend ? 180_000m : 140_000m,
+            "3D" => standard2D + (weekend ? 50_000m : 30_000m),
+            _ => standard2D,
         };
+    }
 
     private static Showtime BuildShowtime(
         Context ctx,
@@ -381,7 +394,7 @@ internal static class ShowtimeSeeder
         DateTime createdAt
     )
     {
-        var basePrice = GetBasePrice(room.ScreenType?.Name);
+        var basePrice = GetBasePrice(room.ScreenType?.Name, start);
         var showtime = new Showtime
         {
             MovieId = movie.MovieId,

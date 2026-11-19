@@ -9,7 +9,7 @@ public static class TestDataSeeder
     public const int CustomerRoleId = 1; // seeded by SeedData.Apply
     public const int AdminRoleId = 2; // seeded by SeedData.Apply
     public const int StandardSeatTypeId = 1; // seeded: PriceMultiplier 1.0
-    public const int VipSeatTypeId = 2; // seeded: PriceMultiplier 1.5
+    public const int VipSeatTypeId = 2; // seeded: PriceMultiplier 1.15
 
     public static User AddCustomer(
         AppDbContext db,

@@ -6,7 +6,7 @@ import { ROUTES } from "@/config/routes";
 import { InvalidLinkNotice } from "@/features/auth/components/invalid-link-notice";
 
 import { AdminSetPasswordForm } from "../components/admin-set-password-form";
-import { isInvalidResetTokenError } from "../utils/reset-token-error";
+import { isInvalidResetTokenError } from "@/features/auth/utils/reset-token-error";
 
 const CONTACT_ADMIN_HINT = "Hãy liên hệ quản trị viên để được mời lại.";
 

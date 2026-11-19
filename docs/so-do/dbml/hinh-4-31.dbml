@@ -1,4 +1,4 @@
-// Hình 4.30. ERD module Phòng chiếu
+// Hình 4.31. ERD module Phòng chiếu
 // Dán vào https://dbdiagram.io/d để vẽ; xuất PNG/SVG/PDF.
 
 Table CinemaRooms {
@@ -34,6 +34,7 @@ Table SeatTypes {
   SeatTypeId int [pk]
   Name varchar [not null, unique]
   PriceMultiplier decimal [not null]
+  IsCouple boolean [not null, default: false]
 }
 
 Table Showtimes {
@@ -51,3 +52,4 @@ Ref: Seats.RoomId > CinemaRooms.RoomId
 Ref: Seats.SeatTypeId > SeatTypes.SeatTypeId
 Ref: Showtimes.RoomId > CinemaRooms.RoomId
 Ref: ShowtimeSeats.SeatId > Seats.SeatId
+

@@ -9,6 +9,18 @@ public static class SeedData
 {
     private static readonly DateTime SeedDate = new(2026, 1, 1, 0, 0, 0);
 
+    // Quy mô phòng theo rạp thương mại: 84–160 ghế (phòng 2D tiêu chuẩn ~100–110 ghế).
+    // StandardRows hàng thường -> VipRows hàng VIP -> hàng cuối còn lại là ghế đôi.
+    private readonly record struct RoomLayout(int Rows, int Cols, int StandardRows, int VipRows);
+
+    private static readonly RoomLayout[] Layouts =
+    [
+        new(Rows: 8, Cols: 12, StandardRows: 3, VipRows: 4), // Hall 01 (2D): 96 ghế, 6 cặp đôi
+        new(Rows: 8, Cols: 14, StandardRows: 3, VipRows: 4), // Hall 02 (2D): 112 ghế, 7 cặp đôi
+        new(Rows: 7, Cols: 12, StandardRows: 3, VipRows: 3), // Hall 03 (3D): 84 ghế, 6 cặp đôi
+        new(Rows: 10, Cols: 16, StandardRows: 4, VipRows: 5), // Hall 04 (IMAX): 160 ghế, 8 cặp đôi
+    ];
+
     public static void Apply(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -78,13 +90,14 @@ public static class SeedData
                 {
                     SeatTypeId = 2,
                     Name = "VIP",
-                    PriceMultiplier = 1.5m,
+                    PriceMultiplier = 1.15m,
                 },
                 new SeatType
                 {
                     SeatTypeId = 3,
+                    // Hệ số áp cho TỪNG ghế; 1 cặp (2 ghế) ≈ 2,5 × vé thường, sát mức sweetbox thực tế.
                     Name = "Couple",
-                    PriceMultiplier = 2.0m,
+                    PriceMultiplier = 1.25m,
                     IsCouple = true,
                 }
             );
@@ -101,7 +114,9 @@ public static class SeedData
                 new Genre { GenreId = 7, Name = "Lãng mạn" },
                 new Genre { GenreId = 8, Name = "Tâm lý" },
                 new Genre { GenreId = 9, Name = "Phiêu lưu" },
-                new Genre { GenreId = 10, Name = "Bí ẩn" }
+                new Genre { GenreId = 10, Name = "Bí ẩn" },
+                new Genre { GenreId = 11, Name = "Gia đình" },
+                new Genre { GenreId = 12, Name = "Tâm linh" }
             );
 
         modelBuilder
@@ -110,7 +125,8 @@ public static class SeedData
                 new Language { LanguageId = 1, Name = "Tiếng Việt" },
                 new Language { LanguageId = 2, Name = "Tiếng Anh" },
                 new Language { LanguageId = 3, Name = "Tiếng Hàn" },
-                new Language { LanguageId = 4, Name = "Tiếng Nhật" }
+                new Language { LanguageId = 4, Name = "Tiếng Nhật" },
+                new Language { LanguageId = 5, Name = "Tiếng Thái" }
             );
 
         modelBuilder
@@ -193,11 +209,18 @@ public static class SeedData
                 new CinemaSettings
                 {
                     Id = 1,
-                    Name = "Cinema",
-                    Address = "Đang cập nhật",
+                    Name = "Perfo Cinema",
+                    Address = "Tầng 5, TTTM Perfo Plaza, 120 Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh",
+                    Phone = "02838221234",
+                    Email = "cskh@perfocinema.vn",
+                    TaxCode = "0312345678",
+                    // Suất đầu mở bán từ 9h, suất cuối kết thúc trước nửa đêm.
                     OpeningTime = new TimeOnly(8, 0),
                     ClosingTime = new TimeOnly(23, 59),
+                    // 10.000đ = 1 điểm (CGV/Lotte: ~1% giá trị giao dịch).
                     PointsPerAmount = 10000m,
+                    // Ngừng bán vé online khi suất chiếu còn 10 phút.
+                    StopSellingMinutesBefore = 10,
                     DefaultEmployeePassword = CinemaSettings.DefaultEmployeePasswordValue,
                 }
             );
@@ -208,45 +231,45 @@ public static class SeedData
                 new Combo
                 {
                     ComboId = 1,
-                    Name = "Solo Combo",
-                    Description = "1 Bắp ngọt (vừa) + 1 Coca-Cola 22oz",
-                    Price = 65000m,
+                    Name = "Combo Solo",
+                    Description = "1 Bắp ngọt (L) + 1 Nước ngọt (L)",
+                    Price = 89000m,
                     ImageUrl = "https://images.unsplash.com/photo-1585647347483-22b66260dfff?w=500",
                     IsActive = true,
                 },
                 new Combo
                 {
                     ComboId = 2,
-                    Name = "Double Combo",
-                    Description = "1 Bắp ngọt (lớn) + 2 Coca-Cola 22oz",
-                    Price = 95000m,
+                    Name = "Combo Couple",
+                    Description = "1 Bắp ngọt (L) + 2 Nước ngọt (L)",
+                    Price = 119000m,
                     ImageUrl = "https://images.unsplash.com/photo-1572177812156-58036aae439c?w=500",
                     IsActive = true,
                 },
                 new Combo
                 {
                     ComboId = 3,
-                    Name = "VIP Cheese Combo",
-                    Description = "1 Bắp phô mai (lớn) + 2 Coca-Cola 32oz + 1 Snack khoai tây",
-                    Price = 129000m,
+                    Name = "Combo Premium",
+                    Description = "1 Bắp phô mai (L) + 2 Nước ngọt (L) + 1 Snack",
+                    Price = 149000m,
                     ImageUrl = "https://images.unsplash.com/photo-1512149673953-1e251807ec7c?w=500",
                     IsActive = true,
                 },
                 new Combo
                 {
                     ComboId = 4,
-                    Name = "Family Party Combo",
-                    Description = "2 Bắp ngọt (lớn) + 4 Coca-Cola 22oz + 2 Snack ngũ vị",
-                    Price = 189000m,
+                    Name = "Combo Gia Đình",
+                    Description = "2 Bắp ngọt (L) + 4 Nước ngọt (L) + 2 Snack",
+                    Price = 249000m,
                     ImageUrl = "https://images.unsplash.com/photo-1505686994434-e3cc5abf1330?w=500",
                     IsActive = true,
                 },
                 new Combo
                 {
                     ComboId = 5,
-                    Name = "Caramel Sweet Combo",
-                    Description = "1 Bắp Caramel đặc biệt (lớn) + 2 Nước ngọt Sprite/Fanta 22oz",
-                    Price = 109000m,
+                    Name = "Combo Caramel",
+                    Description = "1 Bắp caramel (L) + 2 Nước ngọt (L)",
+                    Price = 135000m,
                     ImageUrl = "https://images.unsplash.com/photo-1578849278619-e73505e9610f?w=500",
                     IsActive = true,
                 }
@@ -359,6 +382,83 @@ public static class SeedData
                     FullName = "Makoto Shinkai",
                     AvatarUrl =
                         "https://ui-avatars.com/api/?name=Makoto+Shinkai&background=16a085&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Director
+                {
+                    DirectorId = 16,
+                    FullName = "Takashi Yamazaki",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Takashi+Yamazaki&background=b03a2e&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Director
+                {
+                    DirectorId = 17,
+                    FullName = "Alessandro Carloni",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Alessandro+Carloni&background=e67e22&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Director
+                {
+                    DirectorId = 18,
+                    FullName = "Nguyễn Phạm Thành Đạt",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Nguyễn+Phạm+Thành+Đạt&background=2e86ab&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Director
+                {
+                    DirectorId = 19,
+                    FullName = "Vũ Ngọc Đãng",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Vũ+Ngọc+Đãng&background=7d3c98&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Director
+                {
+                    DirectorId = 20,
+                    FullName = "Narit Yuvaboon",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Narit+Yuvaboon&background=1e8449&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Director
+                {
+                    DirectorId = 21,
+                    FullName = "Kitao Sakurai",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Kitao+Sakurai&background=922b21&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Director
+                {
+                    DirectorId = 22,
+                    FullName = "Nguyễn Hữu Hoàng",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Nguyễn+Hữu+Hoàng&background=5d6d7e&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Director
+                {
+                    DirectorId = 23,
+                    FullName = "Trần Hữu Tấn",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Trần+Hữu+Tấn&background=212f3d&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Director
+                {
+                    DirectorId = 24,
+                    FullName = "Francis Lawrence",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Francis+Lawrence&background=b7950b&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Director
+                {
+                    DirectorId = 25,
+                    FullName = "Nguyễn Nhất Trung",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Nguyễn+Nhất+Trung&background=ca6f1e&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Director
+                {
+                    DirectorId = 26,
+                    FullName = "John Hamburg",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=John+Hamburg&background=117a65&color=fff&size=500&bold=true&font-size=0.4",
                 }
             );
 
@@ -630,6 +730,216 @@ public static class SeedData
                     FullName = "Hokuto Matsumura",
                     AvatarUrl =
                         "https://ui-avatars.com/api/?name=Hokuto+Matsumura&background=455a64&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 39,
+                    FullName = "Ryunosuke Kamiki",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Ryunosuke+Kamiki&background=34495e&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 40,
+                    FullName = "Minami Hamabe",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Minami+Hamabe&background=c0392b&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 41,
+                    FullName = "Bill Hader",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Bill+Hader&background=2874a6&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 42,
+                    FullName = "Xochitl Gomez",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Xochitl+Gomez&background=af601a&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 43,
+                    FullName = "Nguyễn Hùng",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Nguyễn+Hùng&background=148f77&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 44,
+                    FullName = "Trần Tiểu Vy",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Trần+Tiểu+Vy&background=a93226&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 45,
+                    FullName = "Ngọc Xuân",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Ngọc+Xuân&background=6c3483&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 46,
+                    FullName = "Võ Điền Gia Huy",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Võ+Điền+Gia+Huy&background=1f618d&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 47,
+                    FullName = "Lãnh Thanh",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Lãnh+Thanh&background=7e5109&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 48,
+                    FullName = "Hồng Đào",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Hồng+Đào&background=b03a2e&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 49,
+                    FullName = "Lê Thiện",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Lê+Thiện&background=2c3e50&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 50,
+                    FullName = "Ma Ran Đô",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Ma+Ran+Đô&background=7b241c&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 51,
+                    FullName = "Quỳnh Lương",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Quỳnh+Lương&background=6e2c00&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 52,
+                    FullName = "Nadech Kugimiya",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Nadech+Kugimiya&background=117864&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 53,
+                    FullName = "Ong-art Cheamcharoenpornkul",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Ong-art+Cheamcharoenpornkul&background=273746&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 54,
+                    FullName = "Andrew Koji",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Andrew+Koji&background=1a5276&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 55,
+                    FullName = "Noah Centineo",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Noah+Centineo&background=af7ac5&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 56,
+                    FullName = "Jason Momoa",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Jason+Momoa&background=7b7d7d&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 57,
+                    FullName = "Nguyễn Cao Kỳ Duyên",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Nguyễn+Cao+Kỳ+Duyên&background=cb4335&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 58,
+                    FullName = "Steven Nguyễn",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Steven+Nguyễn&background=2471a3&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 59,
+                    FullName = "Joseph Zada",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Joseph+Zada&background=7d6608&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 60,
+                    FullName = "Whitney Peak",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Whitney+Peak&background=884ea0&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 61,
+                    FullName = "Mckenna Grace",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Mckenna+Grace&background=148f77&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 62,
+                    FullName = "Jesse Plemons",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Jesse+Plemons&background=5f6a6a&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 63,
+                    FullName = "Lương Thế Thành",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Lương+Thế+Thành&background=a04000&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 64,
+                    FullName = "Sally Hồng Anh",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Sally+Hồng+Anh&background=c2185b&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 65,
+                    FullName = "Robert De Niro",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Robert+De+Niro&background=424949&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 66,
+                    FullName = "Ben Stiller",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Ben+Stiller&background=2e4053&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 67,
+                    FullName = "Ariana Grande",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Ariana+Grande&background=d98880&color=fff&size=500&bold=true&font-size=0.4",
+                },
+                new Actor
+                {
+                    ActorId = 68,
+                    FullName = "Owen Wilson",
+                    AvatarUrl =
+                        "https://ui-avatars.com/api/?name=Owen+Wilson&background=b9770e&color=fff&size=500&bold=true&font-size=0.4",
                 }
             );
 
@@ -641,9 +951,9 @@ public static class SeedData
                     RoomId = 1,
                     RoomName = "Cinema Hall 01",
                     ScreenTypeId = 1,
-                    Rows = 5,
-                    Cols = 10,
-                    TotalSeats = 50,
+                    Rows = Layouts[0].Rows,
+                    Cols = Layouts[0].Cols,
+                    TotalSeats = Layouts[0].Rows * Layouts[0].Cols,
                     IsActive = true,
                 },
                 new CinemaRoom
@@ -651,9 +961,9 @@ public static class SeedData
                     RoomId = 2,
                     RoomName = "Cinema Hall 02",
                     ScreenTypeId = 1,
-                    Rows = 5,
-                    Cols = 10,
-                    TotalSeats = 50,
+                    Rows = Layouts[1].Rows,
+                    Cols = Layouts[1].Cols,
+                    TotalSeats = Layouts[1].Rows * Layouts[1].Cols,
                     IsActive = true,
                 },
                 new CinemaRoom
@@ -661,9 +971,9 @@ public static class SeedData
                     RoomId = 3,
                     RoomName = "3D Experience Hall 03",
                     ScreenTypeId = 2,
-                    Rows = 4,
-                    Cols = 10,
-                    TotalSeats = 40,
+                    Rows = Layouts[2].Rows,
+                    Cols = Layouts[2].Cols,
+                    TotalSeats = Layouts[2].Rows * Layouts[2].Cols,
                     IsActive = true,
                 },
                 new CinemaRoom
@@ -671,15 +981,17 @@ public static class SeedData
                     RoomId = 4,
                     RoomName = "IMAX Grand Theatre 04",
                     ScreenTypeId = 3,
-                    Rows = 6,
-                    Cols = 10,
-                    TotalSeats = 60,
+                    Rows = Layouts[3].Rows,
+                    Cols = Layouts[3].Cols,
+                    TotalSeats = Layouts[3].Rows * Layouts[3].Cols,
                     IsActive = true,
                 }
             );
 
+        // Sơ đồ ghế theo kiểu rạp thật: các hàng đầu là ghế thường, hàng giữa là VIP,
+        // hàng CUỐI là ghế đôi (sweetbox). Số cột chẵn để ghép cặp liền kề 1-2, 3-4, ...
         var seats = new List<Seat>();
-        int seatIdCounter = 1;
+        var seatIdCounter = 1;
 
         // Helper tạo CoupleId cố định, duy nhất theo từng cặp ghế liền kề cùng hàng
         static Guid? GetCoupleId(int roomId, int rowIdx, int seatNumber, int seatTypeId)
@@ -687,121 +999,40 @@ public static class SeedData
             if (seatTypeId != 3)
                 return null;
 
-            int pairIndex = (seatNumber + 1) / 2; // num 1-2 => pair 1, 3-4 => pair 2, 5-6 => pair 3, v.v.
+            var pairIndex = (seatNumber + 1) / 2; // 1-2 => cặp 1, 3-4 => cặp 2, ...
             return Guid.Parse(
                 $"c0000000-0000-0000-{roomId:D4}-{((rowIdx + 1) * 1000 + pairIndex):D12}"
             );
         }
 
-        // Seed Seats for Room 1 (50 seats: A1-A10 Standard, B1-B10 Standard, C1-C10 VIP, D1-D10 VIP, E1-E10 Couple)
-        for (int rowIdx = 0; rowIdx < 5; rowIdx++)
+        for (var roomIdx = 0; roomIdx < Layouts.Length; roomIdx++)
         {
-            string row = ((char)('A' + rowIdx)).ToString();
-            int seatTypeId = rowIdx switch
-            {
-                0 or 1 => 1, // Standard
-                2 or 3 => 2, // VIP
-                _ => 3, // Couple
-            };
+            var layout = Layouts[roomIdx];
+            var roomId = roomIdx + 1;
 
-            for (int num = 1; num <= 10; num++)
+            for (var rowIdx = 0; rowIdx < layout.Rows; rowIdx++)
             {
-                seats.Add(
-                    new Seat
-                    {
-                        SeatId = seatIdCounter++,
-                        RoomId = 1,
-                        SeatRow = row,
-                        SeatNumber = num,
-                        SeatTypeId = seatTypeId,
-                        CoupleId = GetCoupleId(1, rowIdx, num, seatTypeId),
-                        IsActive = true,
-                    }
-                );
-            }
-        }
+                var row = ((char)('A' + rowIdx)).ToString();
+                var seatTypeId =
+                    rowIdx < layout.StandardRows ? 1
+                    : rowIdx < layout.StandardRows + layout.VipRows ? 2
+                    : 3;
 
-        // Seed Seats for Room 2 (50 seats: A1-A10 Standard, B1-B10 Standard, C1-C10 VIP, D1-D10 VIP, E1-E10 Couple)
-        for (int rowIdx = 0; rowIdx < 5; rowIdx++)
-        {
-            string row = ((char)('A' + rowIdx)).ToString();
-            int seatTypeId = rowIdx switch
-            {
-                0 or 1 => 1,
-                2 or 3 => 2,
-                _ => 3,
-            };
-
-            for (int num = 1; num <= 10; num++)
-            {
-                seats.Add(
-                    new Seat
-                    {
-                        SeatId = seatIdCounter++,
-                        RoomId = 2,
-                        SeatRow = row,
-                        SeatNumber = num,
-                        SeatTypeId = seatTypeId,
-                        CoupleId = GetCoupleId(2, rowIdx, num, seatTypeId),
-                        IsActive = true,
-                    }
-                );
-            }
-        }
-
-        // Seed Seats for Room 3 (40 seats: A1-A10 Standard, B1-B10 VIP, C1-C10 VIP, D1-D10 Couple)
-        for (int rowIdx = 0; rowIdx < 4; rowIdx++)
-        {
-            string row = ((char)('A' + rowIdx)).ToString();
-            int seatTypeId = rowIdx switch
-            {
-                0 => 1, // Standard
-                1 or 2 => 2, // VIP
-                _ => 3, // Couple
-            };
-
-            for (int num = 1; num <= 10; num++)
-            {
-                seats.Add(
-                    new Seat
-                    {
-                        SeatId = seatIdCounter++,
-                        RoomId = 3,
-                        SeatRow = row,
-                        SeatNumber = num,
-                        SeatTypeId = seatTypeId,
-                        CoupleId = GetCoupleId(3, rowIdx, num, seatTypeId),
-                        IsActive = true,
-                    }
-                );
-            }
-        }
-
-        // Seed Seats for Room 4 (60 seats: A1-A10 Standard, B1-B10 Standard, C1-C10 VIP, D1-D10 VIP, E1-E10 VIP, F1-F10 Couple)
-        for (int rowIdx = 0; rowIdx < 6; rowIdx++)
-        {
-            string row = ((char)('A' + rowIdx)).ToString();
-            int seatTypeId = rowIdx switch
-            {
-                0 or 1 => 1, // Standard
-                2 or 3 or 4 => 2, // VIP
-                _ => 3, // Couple
-            };
-
-            for (int num = 1; num <= 10; num++)
-            {
-                seats.Add(
-                    new Seat
-                    {
-                        SeatId = seatIdCounter++,
-                        RoomId = 4,
-                        SeatRow = row,
-                        SeatNumber = num,
-                        SeatTypeId = seatTypeId,
-                        CoupleId = GetCoupleId(4, rowIdx, num, seatTypeId),
-                        IsActive = true,
-                    }
-                );
+                for (var num = 1; num <= layout.Cols; num++)
+                {
+                    seats.Add(
+                        new Seat
+                        {
+                            SeatId = seatIdCounter++,
+                            RoomId = roomId,
+                            SeatRow = row,
+                            SeatNumber = num,
+                            SeatTypeId = seatTypeId,
+                            CoupleId = GetCoupleId(roomId, rowIdx, num, seatTypeId),
+                            IsActive = true,
+                        }
+                    );
+                }
             }
         }
 
@@ -826,7 +1057,7 @@ public static class SeedData
                     PosterUrl =
                         "https://upload.wikimedia.org/wikipedia/en/4/4a/Oppenheimer_%28film%29.jpg",
                     TrailerUrl = "https://www.youtube.com/watch?v=keydELfWuMQ",
-                    Status = MovieStatus.NowShowing,
+                    Status = MovieStatus.Ended,
                     AverageRating = 4.8m,
                     CreatedAt = SeedDate,
                 },
@@ -846,7 +1077,7 @@ public static class SeedData
                     PosterUrl =
                         "https://upload.wikimedia.org/wikipedia/en/5/52/Dune_Part_Two_poster.jpeg",
                     TrailerUrl = "https://www.youtube.com/watch?v=Way9Dexny3w",
-                    Status = MovieStatus.NowShowing,
+                    Status = MovieStatus.Ended,
                     AverageRating = 4.7m,
                     CreatedAt = SeedDate,
                 },
@@ -866,7 +1097,7 @@ public static class SeedData
                     PosterUrl =
                         "https://upload.wikimedia.org/wikipedia/vi/3/36/Mai_2024_poster.jpg",
                     TrailerUrl = "https://www.youtube.com/watch?v=EX6clvId19s",
-                    Status = MovieStatus.NowShowing,
+                    Status = MovieStatus.Ended,
                     AverageRating = 4.5m,
                     CreatedAt = SeedDate,
                 },
@@ -926,7 +1157,7 @@ public static class SeedData
                     PosterUrl =
                         "https://upload.wikimedia.org/wikipedia/vi/d/d4/%C3%81p_ph%C3%ADch_ch%C3%ADnh_th%E1%BB%A9c_L%E1%BA%ADt_m%E1%BA%B7t_7.jpg",
                     TrailerUrl = "https://www.youtube.com/watch?v=d1ZHdosjNX8",
-                    Status = MovieStatus.NowShowing,
+                    Status = MovieStatus.Ended,
                     AverageRating = 4.4m,
                     CreatedAt = SeedDate,
                 },
@@ -946,7 +1177,7 @@ public static class SeedData
                     PosterUrl =
                         "https://upload.wikimedia.org/wikipedia/vi/4/4c/Deadpool_%26_Wolverine_poster.jpg",
                     TrailerUrl = "https://www.youtube.com/watch?v=73_1biulkYk",
-                    Status = MovieStatus.NowShowing,
+                    Status = MovieStatus.Ended,
                     AverageRating = 4.7m,
                     CreatedAt = SeedDate,
                 },
@@ -966,7 +1197,7 @@ public static class SeedData
                     PosterUrl =
                         "https://upload.wikimedia.org/wikipedia/en/f/f7/Inside_Out_2_poster.jpg",
                     TrailerUrl = "https://www.youtube.com/watch?v=8rjvKzYeSp0",
-                    Status = MovieStatus.NowShowing,
+                    Status = MovieStatus.Ended,
                     AverageRating = 4.8m,
                     CreatedAt = SeedDate,
                 },
@@ -1086,7 +1317,7 @@ public static class SeedData
                     PosterUrl =
                         "https://upload.wikimedia.org/wikipedia/en/1/13/Exhuma_film_poster.jpg",
                     TrailerUrl = "https://www.youtube.com/watch?v=nO3_h3fJ3-s",
-                    Status = MovieStatus.NowShowing,
+                    Status = MovieStatus.Ended,
                     AverageRating = 4.6m,
                     CreatedAt = SeedDate,
                 },
@@ -1146,7 +1377,7 @@ public static class SeedData
                     PosterUrl =
                         "https://upload.wikimedia.org/wikipedia/en/7/7f/Kung_Fu_Panda_4_poster.jpg",
                     TrailerUrl = "https://www.youtube.com/watch?v=_inKs4eeHiI",
-                    Status = MovieStatus.NowShowing,
+                    Status = MovieStatus.Ended,
                     AverageRating = 4.3m,
                     CreatedAt = SeedDate,
                 },
@@ -1186,9 +1417,240 @@ public static class SeedData
                     PosterUrl =
                         "https://upload.wikimedia.org/wikipedia/en/7/7f/Suzume_no_Tojimari_poster.jpg",
                     TrailerUrl = "https://www.youtube.com/watch?v=5pY4qVz9rEQ",
-                    Status = MovieStatus.ComingSoon,
+                    Status = MovieStatus.Ended,
                     AverageRating = 4.7m,
                     CreatedAt = SeedDate,
+                },
+                new Movie
+                {
+                    MovieId = 20,
+                    Title = "Godzilla Trừ Không",
+                    OriginalTitle = "Godzilla Minus Zero",
+                    Description =
+                        "Phần tiếp nối Godzilla Minus One do Takashi Yamazaki thực hiện, đưa khán giả trở lại nước Nhật hậu chiến trước sự đe dọa của quái vật huyền thoại Godzilla.",
+                    DirectorId = 16,
+                    DurationMinutes = 135,
+                    ReleaseDate = new DateOnly(2026, 11, 6),
+                    LanguageId = 4,
+                    Subtitle = "Tiếng Việt",
+                    AgeRatingId = 3,
+                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
+                    PosterUrl = null,
+                    TrailerUrl = null,
+                    Status = MovieStatus.NowShowing,
+                    // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
+                    AverageRating = 0m,
+                    CreatedAt = new DateTime(2026, 11, 6, 0, 0, 0).AddDays(-14),
+                },
+                new Movie
+                {
+                    MovieId = 21,
+                    Title = "Chàng Mèo Mang Mũ",
+                    OriginalTitle = "The Cat in the Hat",
+                    Description =
+                        "Phim hoạt hình phiêu lưu hài hước dựa trên tác phẩm kinh điển của Dr. Seuss: chú mèo tinh nghịch đội chiếc mũ sọc đỏ trắng biến một ngày mưa buồn tẻ thành cuộc phiêu lưu hỗn loạn.",
+                    DirectorId = 17,
+                    DurationMinutes = 114,
+                    ReleaseDate = new DateOnly(2026, 11, 6),
+                    LanguageId = 2,
+                    Subtitle = "Lồng tiếng & Phụ đề",
+                    AgeRatingId = 1,
+                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
+                    PosterUrl = null,
+                    TrailerUrl = null,
+                    Status = MovieStatus.NowShowing,
+                    // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
+                    AverageRating = 0m,
+                    CreatedAt = new DateTime(2026, 11, 6, 0, 0, 0).AddDays(-14),
+                },
+                new Movie
+                {
+                    MovieId = 22,
+                    Title = "Bò Sữa Bay",
+                    OriginalTitle = "Bò Sữa Bay",
+                    Description =
+                        "Phim hài hoài niệm pha yếu tố khoa học viễn tưởng, lấy bối cảnh một nông trại ở Mộc Châu những năm 1990. Tác phẩm điện ảnh đầu tay của đạo diễn Nguyễn Phạm Thành Đạt.",
+                    DirectorId = 18,
+                    DurationMinutes = 120,
+                    ReleaseDate = new DateOnly(2026, 11, 6),
+                    LanguageId = 1,
+                    Subtitle = "Tiếng Anh",
+                    AgeRatingId = 3,
+                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
+                    PosterUrl = null,
+                    TrailerUrl = null,
+                    Status = MovieStatus.NowShowing,
+                    // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
+                    AverageRating = 0m,
+                    CreatedAt = new DateTime(2026, 11, 6, 0, 0, 0).AddDays(-14),
+                },
+                new Movie
+                {
+                    MovieId = 23,
+                    Title = "Ngày Con Còn Mẹ",
+                    OriginalTitle = "Ngày Con Còn Mẹ",
+                    Description =
+                        "Phim tâm lý gia đình của đạo diễn Vũ Ngọc Đãng, khai thác tình mẫu tử và những rạn nứt, hàn gắn giữa các thế hệ trong một gia đình.",
+                    DirectorId = 19,
+                    DurationMinutes = 110,
+                    ReleaseDate = new DateOnly(2026, 11, 11),
+                    LanguageId = 1,
+                    Subtitle = "Tiếng Anh",
+                    AgeRatingId = 3,
+                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
+                    PosterUrl = null,
+                    TrailerUrl = null,
+                    Status = MovieStatus.NowShowing,
+                    // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
+                    AverageRating = 0m,
+                    CreatedAt = new DateTime(2026, 11, 11, 0, 0, 0).AddDays(-14),
+                },
+                new Movie
+                {
+                    MovieId = 24,
+                    Title = "Quỷ Ăn Tạng 4: Hổ Tinh",
+                    OriginalTitle = null,
+                    Description =
+                        "Phần thứ tư của loạt phim kinh dị siêu nhiên Thái Lan Quỷ Ăn Tạng, kết hợp yếu tố hành động.",
+                    DirectorId = 20,
+                    DurationMinutes = 111,
+                    ReleaseDate = new DateOnly(2026, 10, 9),
+                    LanguageId = 5,
+                    Subtitle = "Tiếng Việt",
+                    AgeRatingId = 5,
+                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
+                    PosterUrl = null,
+                    TrailerUrl = null,
+                    Status = MovieStatus.NowShowing,
+                    // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
+                    AverageRating = 0m,
+                    CreatedAt = new DateTime(2026, 10, 9, 0, 0, 0).AddDays(-14),
+                },
+                new Movie
+                {
+                    MovieId = 25,
+                    Title = "Street Fighter",
+                    OriginalTitle = "Street Fighter",
+                    Description =
+                        "Chuyển thể từ series game đối kháng huyền thoại của Capcom, quy tụ các võ sĩ từ khắp thế giới trong giải đấu Street Fighter.",
+                    DirectorId = 21,
+                    DurationMinutes = 125,
+                    ReleaseDate = new DateOnly(2026, 10, 16),
+                    LanguageId = 2,
+                    Subtitle = "Tiếng Việt",
+                    AgeRatingId = 4,
+                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
+                    PosterUrl = null,
+                    TrailerUrl = null,
+                    Status = MovieStatus.NowShowing,
+                    // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
+                    AverageRating = 0m,
+                    CreatedAt = new DateTime(2026, 10, 16, 0, 0, 0).AddDays(-14),
+                },
+                new Movie
+                {
+                    MovieId = 26,
+                    Title = "Chị Chị Em Em 3",
+                    OriginalTitle = "Chị Chị Em Em 3",
+                    Description =
+                        "Phần ba của loạt phim chính kịch cổ trang Việt Nam về những mối quan hệ chị em đầy ganh ghét và toan tính.",
+                    DirectorId = 22,
+                    DurationMinutes = 115,
+                    ReleaseDate = new DateOnly(2026, 10, 16),
+                    LanguageId = 1,
+                    Subtitle = "Tiếng Anh",
+                    AgeRatingId = 5,
+                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
+                    PosterUrl = null,
+                    TrailerUrl = null,
+                    Status = MovieStatus.NowShowing,
+                    // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
+                    AverageRating = 0m,
+                    CreatedAt = new DateTime(2026, 10, 16, 0, 0, 0).AddDays(-14),
+                },
+                new Movie
+                {
+                    MovieId = 27,
+                    Title = "Trấn Yểm",
+                    OriginalTitle = "Trấn Yểm",
+                    Description =
+                        "Phim kinh dị tâm linh Việt Nam của đạo diễn Trần Hữu Tấn.",
+                    DirectorId = 23,
+                    DurationMinutes = 96,
+                    ReleaseDate = new DateOnly(2026, 10, 30),
+                    LanguageId = 1,
+                    Subtitle = "Tiếng Anh",
+                    AgeRatingId = 5,
+                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
+                    PosterUrl = null,
+                    TrailerUrl = null,
+                    Status = MovieStatus.NowShowing,
+                    // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
+                    AverageRating = 0m,
+                    CreatedAt = new DateTime(2026, 10, 30, 0, 0, 0).AddDays(-14),
+                },
+                new Movie
+                {
+                    MovieId = 28,
+                    Title = "Đấu Trường Sinh Tử: Bình Minh Ngày Chiêu Quân",
+                    OriginalTitle = "The Hunger Games: Sunrise on the Reaping",
+                    Description =
+                        "Phần tiền truyện mới của loạt phim Đấu Trường Sinh Tử do Francis Lawrence đạo diễn, quay về thời điểm Hội Chiêu Quân diễn ra.",
+                    DirectorId = 24,
+                    DurationMinutes = 158,
+                    ReleaseDate = new DateOnly(2026, 11, 20),
+                    LanguageId = 2,
+                    Subtitle = "Tiếng Việt",
+                    AgeRatingId = 4,
+                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
+                    PosterUrl = null,
+                    TrailerUrl = null,
+                    Status = MovieStatus.ComingSoon,
+                    // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
+                    AverageRating = 0m,
+                    CreatedAt = new DateTime(2026, 11, 20, 0, 0, 0).AddDays(-14),
+                },
+                new Movie
+                {
+                    MovieId = 29,
+                    Title = "Trại Giam Hạnh Phúc",
+                    OriginalTitle = "Trại Giam Hạnh Phúc",
+                    Description =
+                        "Phim hài – gia đình – tâm lý của đạo diễn Nguyễn Nhất Trung (Trung Lùn).",
+                    DirectorId = 25,
+                    DurationMinutes = 120,
+                    ReleaseDate = new DateOnly(2026, 11, 20),
+                    LanguageId = 1,
+                    Subtitle = "Tiếng Anh",
+                    AgeRatingId = 3,
+                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
+                    PosterUrl = null,
+                    TrailerUrl = null,
+                    Status = MovieStatus.ComingSoon,
+                    // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
+                    AverageRating = 0m,
+                    CreatedAt = new DateTime(2026, 11, 20, 0, 0, 0).AddDays(-14),
+                },
+                new Movie
+                {
+                    MovieId = 30,
+                    Title = "Gặp Gỡ Thông Gia: Dâu Mới Trình Làng",
+                    OriginalTitle = "Focker-in-Law",
+                    Description =
+                        "Phần tiếp theo của loạt phim hài Meet the Parents với dàn diễn viên Robert De Niro, Ben Stiller, Ariana Grande và Owen Wilson.",
+                    DirectorId = 26,
+                    DurationMinutes = 90,
+                    ReleaseDate = new DateOnly(2026, 11, 27),
+                    LanguageId = 2,
+                    Subtitle = "Tiếng Việt",
+                    AgeRatingId = 3,
+                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
+                    PosterUrl = null,
+                    TrailerUrl = null,
+                    Status = MovieStatus.ComingSoon,
+                    // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
+                    AverageRating = 0m,
+                    CreatedAt = new DateTime(2026, 11, 27, 0, 0, 0).AddDays(-14),
                 }
             );
 
@@ -1264,7 +1726,33 @@ public static class SeedData
                 // Suzume: Hoạt hình (6), Phiêu lưu (9), Bí ẩn (10)
                 new MovieGenre { MovieId = 19, GenreId = 6 },
                 new MovieGenre { MovieId = 19, GenreId = 9 },
-                new MovieGenre { MovieId = 19, GenreId = 10 }
+                new MovieGenre { MovieId = 19, GenreId = 10 },
+                // Phim mới 10-11/2026
+                new MovieGenre { MovieId = 20, GenreId = 1 },
+                new MovieGenre { MovieId = 20, GenreId = 5 },
+                new MovieGenre { MovieId = 21, GenreId = 6 },
+                new MovieGenre { MovieId = 21, GenreId = 11 },
+                new MovieGenre { MovieId = 21, GenreId = 9 },
+                new MovieGenre { MovieId = 22, GenreId = 2 },
+                new MovieGenre { MovieId = 22, GenreId = 1 },
+                new MovieGenre { MovieId = 22, GenreId = 8 },
+                new MovieGenre { MovieId = 23, GenreId = 3 },
+                new MovieGenre { MovieId = 23, GenreId = 8 },
+                new MovieGenre { MovieId = 23, GenreId = 11 },
+                new MovieGenre { MovieId = 24, GenreId = 4 },
+                new MovieGenre { MovieId = 24, GenreId = 12 },
+                new MovieGenre { MovieId = 25, GenreId = 1 },
+                new MovieGenre { MovieId = 26, GenreId = 3 },
+                new MovieGenre { MovieId = 27, GenreId = 4 },
+                new MovieGenre { MovieId = 27, GenreId = 12 },
+                new MovieGenre { MovieId = 28, GenreId = 1 },
+                new MovieGenre { MovieId = 28, GenreId = 9 },
+                new MovieGenre { MovieId = 28, GenreId = 5 },
+                new MovieGenre { MovieId = 29, GenreId = 2 },
+                new MovieGenre { MovieId = 29, GenreId = 11 },
+                new MovieGenre { MovieId = 29, GenreId = 8 },
+                new MovieGenre { MovieId = 30, GenreId = 2 },
+                new MovieGenre { MovieId = 30, GenreId = 11 }
             );
 
         modelBuilder
@@ -1552,6 +2040,172 @@ public static class SeedData
                     MovieId = 19,
                     ActorId = 38, // Hokuto Matsumura
                     CharacterName = "Souta Munakata",
+                },
+                // Phim mới 10-11/2026
+                new MovieCast
+                {
+                    MovieId = 20,
+                    ActorId = 39, // Ryunosuke Kamiki
+                },
+                new MovieCast
+                {
+                    MovieId = 20,
+                    ActorId = 40, // Minami Hamabe
+                },
+                new MovieCast
+                {
+                    MovieId = 21,
+                    ActorId = 41, // Bill Hader
+                },
+                new MovieCast
+                {
+                    MovieId = 21,
+                    ActorId = 42, // Xochitl Gomez
+                },
+                new MovieCast
+                {
+                    MovieId = 22,
+                    ActorId = 43, // Nguyễn Hùng
+                },
+                new MovieCast
+                {
+                    MovieId = 22,
+                    ActorId = 44, // Trần Tiểu Vy
+                },
+                new MovieCast
+                {
+                    MovieId = 22,
+                    ActorId = 45, // Ngọc Xuân
+                },
+                new MovieCast
+                {
+                    MovieId = 22,
+                    ActorId = 46, // Võ Điền Gia Huy
+                },
+                new MovieCast
+                {
+                    MovieId = 22,
+                    ActorId = 47, // Lãnh Thanh
+                },
+                new MovieCast
+                {
+                    MovieId = 23,
+                    ActorId = 48, // Hồng Đào
+                },
+                new MovieCast
+                {
+                    MovieId = 23,
+                    ActorId = 8, // Phương Anh Đào
+                },
+                new MovieCast
+                {
+                    MovieId = 23,
+                    ActorId = 49, // Lê Thiện
+                },
+                new MovieCast
+                {
+                    MovieId = 23,
+                    ActorId = 50, // Ma Ran Đô
+                },
+                new MovieCast
+                {
+                    MovieId = 23,
+                    ActorId = 51, // Quỳnh Lương
+                },
+                new MovieCast
+                {
+                    MovieId = 24,
+                    ActorId = 52, // Nadech Kugimiya
+                },
+                new MovieCast
+                {
+                    MovieId = 24,
+                    ActorId = 53, // Ong-art Cheamcharoenpornkul
+                },
+                new MovieCast
+                {
+                    MovieId = 25,
+                    ActorId = 54, // Andrew Koji
+                },
+                new MovieCast
+                {
+                    MovieId = 25,
+                    ActorId = 55, // Noah Centineo
+                },
+                new MovieCast
+                {
+                    MovieId = 25,
+                    ActorId = 56, // Jason Momoa
+                },
+                new MovieCast
+                {
+                    MovieId = 26,
+                    ActorId = 57, // Nguyễn Cao Kỳ Duyên
+                },
+                new MovieCast
+                {
+                    MovieId = 26,
+                    ActorId = 58, // Steven Nguyễn
+                },
+                new MovieCast
+                {
+                    MovieId = 28,
+                    ActorId = 59, // Joseph Zada
+                },
+                new MovieCast
+                {
+                    MovieId = 28,
+                    ActorId = 60, // Whitney Peak
+                },
+                new MovieCast
+                {
+                    MovieId = 28,
+                    ActorId = 61, // Mckenna Grace
+                },
+                new MovieCast
+                {
+                    MovieId = 28,
+                    ActorId = 62, // Jesse Plemons
+                },
+                new MovieCast
+                {
+                    MovieId = 29,
+                    ActorId = 6, // Tuấn Trần
+                },
+                new MovieCast
+                {
+                    MovieId = 29,
+                    ActorId = 50, // Ma Ran Đô
+                },
+                new MovieCast
+                {
+                    MovieId = 29,
+                    ActorId = 63, // Lương Thế Thành
+                },
+                new MovieCast
+                {
+                    MovieId = 29,
+                    ActorId = 64, // Sally Hồng Anh
+                },
+                new MovieCast
+                {
+                    MovieId = 30,
+                    ActorId = 65, // Robert De Niro
+                },
+                new MovieCast
+                {
+                    MovieId = 30,
+                    ActorId = 66, // Ben Stiller
+                },
+                new MovieCast
+                {
+                    MovieId = 30,
+                    ActorId = 67, // Ariana Grande
+                },
+                new MovieCast
+                {
+                    MovieId = 30,
+                    ActorId = 68, // Owen Wilson
                 }
             );
     }

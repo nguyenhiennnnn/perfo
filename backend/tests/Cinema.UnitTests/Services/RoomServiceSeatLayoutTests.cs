@@ -154,7 +154,7 @@ public class RoomServiceSeatLayoutTests(PostgresContainerFixture fixture) : IDis
         var ss = await _handle
             .Db.ShowtimeSeats.AsNoTracking()
             .SingleAsync(x => x.ShowtimeId == showtime.ShowtimeId && x.SeatId == seats[1].SeatId);
-        ss.Price.ShouldBe(showtime.BasePrice * 1.5m);
+        ss.Price.ShouldBe(showtime.BasePrice * 1.15m);
     }
 
     [Fact]
@@ -176,7 +176,7 @@ public class RoomServiceSeatLayoutTests(PostgresContainerFixture fixture) : IDis
             .Db.ShowtimeSeats.AsNoTracking()
             .SingleAsync(x => x.ShowtimeId == showtime.ShowtimeId && x.SeatId == newSeat.SeatId);
         ss.Status.ShouldBe(ShowtimeSeatStatus.Available);
-        ss.Price.ShouldBe(showtime.BasePrice * 1.5m);
+        ss.Price.ShouldBe(showtime.BasePrice * 1.15m);
     }
 
     [Fact]

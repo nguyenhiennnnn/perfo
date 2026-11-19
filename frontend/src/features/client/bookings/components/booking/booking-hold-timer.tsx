@@ -17,8 +17,6 @@ function getLevel(remainingMs: number): HoldLevel {
   return "normal";
 }
 
-// Chỉ đọc cho screen reader khi chuyển mốc (2 phút, 1 phút, 30 giây, hết giờ), không đọc mỗi giây.
-// Cố ý không chứa cụm "Giữ ghế còn" để getByText(/Giữ ghế còn/) trong e2e chỉ khớp đúng một phần tử.
 const ANNOUNCEMENTS: Record<HoldLevel, string> = {
   normal: "",
   warn: "Còn dưới 2 phút để thanh toán.",
@@ -53,8 +51,6 @@ export const BookingHoldTimer = ({ expiresAt, className }: { expiresAt: string; 
     <Tooltip>
       <TooltipTrigger
         render={
-          // Lớp ngoài giữ nền đặc để nội dung cuộn phía sau không lộ qua khi sticky;
-          // lớp trong đổi tông theo mức khẩn cấp. Cảnh báo không chỉ dựa vào màu: đổi icon và có dòng chữ.
           <div role="timer" className={cn("bg-background", className)}>
             <div className={cn("flex flex-col items-center gap-0.5 px-4 py-2.5", TONES[level])}>
               <div className="flex items-center gap-2">

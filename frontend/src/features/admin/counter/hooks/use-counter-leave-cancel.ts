@@ -25,7 +25,6 @@ export function useCounterLeaveCancel({
     try {
       await bookingsAdminApi.counterCancel(bookingId);
     } catch {
-      // Đã hủy, đã hết hạn hoặc đã thanh toán: không báo lỗi cho nhân viên.
     }
   }, []);
 

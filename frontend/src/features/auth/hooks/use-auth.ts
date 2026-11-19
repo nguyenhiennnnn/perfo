@@ -45,9 +45,7 @@ async function hydrateUserFromMe() {
   try {
     const res = await authApi.me();
     useAuthStore.getState().updateUser(applyMeToAuthUser(res.data));
-  } catch {
-    //
-  }
+  } catch {}
 }
 
 export function useLogin() {

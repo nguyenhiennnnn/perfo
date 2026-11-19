@@ -1,4 +1,3 @@
-// Hằng số hub, tên sự kiện và kiểu payload SignalR dùng chung (không chứa logic kết nối).
 import { ENV } from "@/config/env";
 import { API_VERSION_PREFIX, SIGNALR_HUB_PATH } from "@/api/endpoints";
 

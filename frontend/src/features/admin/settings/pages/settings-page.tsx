@@ -42,7 +42,6 @@ const settingsFormSchema = z.object({
   cancelDeadlineHours: z.coerce.number().min(0, "Giá trị không được âm."),
   stopSellingMinutesBefore: z.coerce.number().min(0, "Giá trị không được âm.").max(SETTINGS_FIELD_MAX.stopSellingMinutesBefore, `Tối đa ${SETTINGS_FIELD_MAX.stopSellingMinutesBefore} phút.`),
   seatGapRuleMode: z.enum([SeatGapRuleMode.Strict, SeatGapRuleMode.AllowEdge, SeatGapRuleMode.Off]),
-  // Để trống nghĩa là chưa cấu hình hoặc giữ nguyên giá trị hiện tại.
   defaultEmployeePassword: z.string().superRefine((value, ctx) => {
     if (value === "") return;
     const result = defaultEmployeePasswordSchema.safeParse(value);

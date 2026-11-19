@@ -19,8 +19,6 @@ export function useUpdateMyProfile() {
     mutationFn: (body: UpdateProfileRequest) =>
       accountApi.updateMyProfile(body),
     onSuccess: (res) => {
-      // Chỉ cập nhật phần đã đổi. Trước đây ghi đè cả user bằng setCredentials nên mất
-      // membershipTierName/points/mustChangePassword/hasPassword sau khi lưu hồ sơ.
       const { fullName, avatar } = res.data;
       useAuthStore.getState().updateUser({ fullName, avatar });
     },

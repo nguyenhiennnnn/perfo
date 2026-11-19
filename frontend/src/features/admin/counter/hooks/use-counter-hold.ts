@@ -59,7 +59,6 @@ export function useCounterHoldFlow({
   ) => {
     const res = await counterHold.mutateAsync(request);
     if (leave.hasLeft()) {
-      // Nhân viên đã rời trang trước khi server trả lời: hủy đơn vừa tạo.
       await leave.cancelQuietly(res.data.bookingId);
       return;
     }

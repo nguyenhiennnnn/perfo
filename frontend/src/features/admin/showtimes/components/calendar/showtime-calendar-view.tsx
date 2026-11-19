@@ -52,7 +52,6 @@ export const ShowtimeCalendarView = ({
     }
   }, [params.from, params.to, setParams]);
 
-  // GET /admin/rooms chỉ dành cho Admin; Employee gọi sẽ bị 403 và hiện toast lỗi.
   const canFilterByRoom = useAuthRole() === Role.Admin;
   const rooms = useAdminRooms(
     { page: 1, pageSize: LOOKUP_PAGE_SIZE },

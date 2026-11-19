@@ -33,9 +33,6 @@ const sheetVariants: Record<SheetSide, string> = {
     "inset-y-0 right-0 h-full border-l data-open:animate-in data-open:slide-in-from-right data-closed:animate-out data-closed:slide-out-to-right",
 }
 
-// Chiều rộng cho sheet trái/phải. `sm` giữ nguyên kích thước cũ (3/4 màn hình
-// trên mobile, 384px từ breakpoint sm). Các cỡ còn lại full width trên mobile
-// rồi giới hạn theo breakpoint sm: md 448px, lg 576px, xl 672px.
 const sheetSizeVariants: Record<SheetSize, string> = {
   sm: "w-3/4 sm:max-w-sm",
   md: "w-full sm:max-w-md",

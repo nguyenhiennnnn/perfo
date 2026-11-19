@@ -21,7 +21,6 @@ export const BookingCustomerForm = ({
   onCustomerPhoneChange,
   isAuthenticated,
 }: BookingCustomerFormProps) => {
-  // Báo lỗi sau khi rời ô (giống mode "onTouched" của react-hook-form), không báo khi đang gõ dở.
   const [touched, setTouched] = useState({ name: false, phone: false });
   const markTouched = (field: "name" | "phone") =>
     setTouched((prev) => (prev[field] ? prev : { ...prev, [field]: true }));

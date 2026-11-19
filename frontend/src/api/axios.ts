@@ -165,9 +165,7 @@ function redirectToLogin() {
 
 function redirectToChangePassword() {
   const { user, updateUser } = useAuthStore.getState();
-  // Bật cờ trong store: AdminProtectedRoute tự chuyển mọi đường dẫn admin sang trang đổi mật khẩu.
   if (user && !user.mustChangePassword) updateUser({ mustChangePassword: true });
-  // Ngoài khu admin không có guard nào bắt cờ, nên chuyển thẳng.
   const { pathname } = window.location;
   if (!pathname.startsWith(ROUTES.admin.root)) {
     window.location.assign(ROUTES.admin.changePassword);
@@ -283,6 +281,5 @@ export function apiPostKeepalive(url: string): void {
       },
     }).catch(() => undefined);
   } catch {
-    // trình duyệt từ chối keepalive: bỏ qua, dựa vào thời hạn giữ
   }
 }

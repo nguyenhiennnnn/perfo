@@ -1,4 +1,3 @@
-// Khớp với Cinema.Shared.Constants.ApiPaths (ApiVersionPrefix, ShowtimeHub).
 export const API_VERSION_PREFIX = "/api/v1";
 export const SIGNALR_HUB_PATH = "/hubs/showtimes";
 

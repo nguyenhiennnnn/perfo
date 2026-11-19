@@ -21,7 +21,6 @@ export const AdminProtectedRoute = () => {
     return <Navigate to={ROUTES.home} replace />;
   }
 
-  // Bắt buộc đổi mật khẩu: mọi đường dẫn admin khác đều quay về trang đổi mật khẩu.
   if (user.mustChangePassword && pathname !== ROUTES.admin.changePassword) {
     return <Navigate to={ROUTES.admin.changePassword} replace />;
   }

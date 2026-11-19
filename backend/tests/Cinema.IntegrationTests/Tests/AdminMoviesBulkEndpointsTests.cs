@@ -96,7 +96,6 @@ public class AdminMoviesBulkEndpointsTests(CinemaApiFactory factory) : Integrati
     public async Task BulkDelete_ExceedsLimit_ReturnsBadRequest()
     {
         using var client = await LoginAsAdminAsync();
-        // Default BulkDeleteLimit = 50; send 51 ids
         var ids = Enumerable.Range(1, 51).ToArray();
 
         var response = await client.SendAsync(

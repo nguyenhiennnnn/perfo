@@ -5,7 +5,6 @@ import type { TooltipValueType } from "recharts"
 import { cn } from "@/lib/utils"
 import { getLocale } from "@/lib/regional-settings"
 
-// Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const
 
 const INITIAL_DIMENSION = { width: 320, height: 200 } as const
@@ -252,7 +251,7 @@ function ChartTooltipContent({
                         </span>
                       </div>
                       {item.value != null && (
-                        <span className="tabular-nums font-medium text-foreground tabular-nums">
+                        <span className="tabular-numstabular-nums font-medium text-foreground tabular-numstabular-nums">
                           {typeof item.value === "number"
                             ? item.value.toLocaleString(getLocale())
                             : String(item.value)}

@@ -89,7 +89,6 @@ public class AdminReviewsBulkEndpointsTests(CinemaApiFactory factory) : Integrat
         result.TotalSuccess.ShouldBe(1);
         result.TotalFailed.ShouldBe(0);
 
-        // Rating should be recalculated to 0 (no reviews left)
         using var scope = Factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var movie = await db.Movies.SingleAsync(m => m.MovieId == movieId);

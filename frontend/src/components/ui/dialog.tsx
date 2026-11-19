@@ -39,7 +39,6 @@ function DialogOverlay({
 
 type DialogSize = "sm" | "md" | "lg" | "xl"
 
-// Giới hạn chiều rộng từ breakpoint sm. Mobile luôn là 100% - 2rem.
 const dialogSizeVariants: Record<DialogSize, string> = {
   sm: "sm:max-w-sm",
   md: "sm:max-w-md",

@@ -253,7 +253,6 @@ public class PaymentServiceStripeTests(PostgresContainerFixture fixture) : IDisp
         );
     }
 
-    // â”€â”€ Idempotency â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     [Fact]
     public async Task ProcessStripeWebhookAsync_PaymentAlreadySuccessful_IsIdempotentAndDoesNotReconfirmBooking()

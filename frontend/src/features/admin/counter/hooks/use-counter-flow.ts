@@ -28,7 +28,6 @@ export function useCounterFlow() {
   });
   const checkout = useCounterCheckoutFlow(hold.holdResult);
 
-  // Đang thanh toán hoặc đã xong thì không hủy khi rời trang; server cũng chỉ hủy đơn Pending.
   const cancellableBookingId =
     step !== "done" && !checkout.isCheckingOut
       ? (hold.holdResult?.bookingId ?? null)

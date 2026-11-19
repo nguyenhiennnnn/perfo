@@ -33,7 +33,6 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
         const string orderType = "other";
         var returnUrl = $"{_options.ReturnUrl}?bookingId={request.BookingId}";
 
-        // MoMo v2: rawSignature fields must be in strict alphabetical order
         var rawSignature =
             $"accessKey={_options.AccessKey}&amount={amount}&extraData={extraData}"
             + $"&ipnUrl={_options.IpnUrl}&orderId={orderId}&orderInfo={request.OrderInfo}"
@@ -45,7 +44,7 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
         {
             partnerCode = _options.PartnerCode,
             requestId,
-            amount,       // integer per MoMo v2 spec
+            amount,      
             orderId,
             orderInfo = request.OrderInfo,
             redirectUrl = returnUrl,
@@ -82,9 +81,6 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
     {
         var receivedSignature = queryOrFormParams.GetValueOrDefault("signature", string.Empty);
 
-        // MoMo v2: callback/IPN raw signature fields in strict alphabetical order
-        // Fields: accessKey, amount, extraData, message, orderId, orderInfo,
-        //         orderType, partnerCode, payType, requestId, responseTime, resultCode, transId
         var rawSignature =
             $"accessKey={_options.AccessKey}&amount={queryOrFormParams.GetValueOrDefault("amount")}"
             + $"&extraData={queryOrFormParams.GetValueOrDefault("extraData")}&message={queryOrFormParams.GetValueOrDefault("message")}"
@@ -130,7 +126,6 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
 
         var transId = request.GatewayTransactionId ?? request.OriginalTransactionId;
 
-        // MoMo v2 refund rawSignature: alphabetical order
         var rawSignature =
             $"accessKey={_options.AccessKey}&amount={amount}&description={request.OrderInfo}"
             + $"&orderId={orderId}&partnerCode={_options.PartnerCode}&requestId={requestId}&transId={transId}";
@@ -141,7 +136,7 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
             partnerCode = _options.PartnerCode,
             orderId,
             requestId,
-            amount,       // integer per MoMo v2 spec
+            amount,       
             transId,
             lang = "vi",
             description = request.OrderInfo,

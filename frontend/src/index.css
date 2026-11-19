@@ -426,10 +426,40 @@
   }
   .tear-stub[data-torn="true"] {
     transform: translate(16px, 8px) rotate(4deg);
+    animation: tear-stub-rip 1100ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  @keyframes tear-stub-rip {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    10% {
+      transform: translate(0, 0) rotate(-1.5deg);
+    }
+    20% {
+      transform: translate(0, 0) rotate(1.5deg);
+    }
+    30% {
+      transform: translate(0, 0) rotate(-1.2deg);
+    }
+    40% {
+      transform: translate(0, 0) rotate(1.2deg);
+    }
+    50% {
+      transform: translate(0, 0) rotate(-0.8deg);
+    }
+    60% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate(16px, 8px) rotate(4deg);
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     .tear-stub {
       transition: none;
+    }
+    .tear-stub[data-torn="true"] {
+      animation: none;
     }
   }
 

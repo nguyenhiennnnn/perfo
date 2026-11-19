@@ -7,7 +7,7 @@ import { NotFoundState } from "@/components/common/not-found-state";
 import { PageHeader } from "@/components/common/page-header";
 import { QueryState } from "@/components/common/query-state";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { toast } from "@/components/ui/toast";
 
 import {
@@ -296,9 +296,9 @@ const SeatEditorReady = ({
 };
 
 const SeatEditorSkeleton = () => (
-  <div aria-hidden className="space-y-4">
-    <Skeleton className="h-12 w-full" />
-    <Skeleton className="h-96 w-full" />
+  <div aria-busy="true" className="space-y-4">
+    <CardSkeleton className="h-12" />
+    <CardSkeleton cut="lg" className="h-96" />
   </div>
 );
 

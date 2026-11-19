@@ -1,16 +1,15 @@
 import type { ComponentType } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CardSkeleton, type CutShapeProps } from "@/components/common/skeleton-shapes";
 
-interface SkeletonListProps {
+interface SkeletonListProps extends CutShapeProps {
   count: number;
-  className?: string;
-  shape?: ComponentType<{ className?: string }>;
+  shape?: ComponentType<CutShapeProps>;
 }
 
-export const SkeletonList = ({ count, className, shape: Shape = Skeleton }: SkeletonListProps) => (
+export const SkeletonList = ({ count, className, cut, shape: Shape = CardSkeleton }: SkeletonListProps) => (
   <>
     {Array.from({ length: count }, (_, index) => (
-      <Shape key={index} className={className} />
+      <Shape key={index} className={className} cut={cut} />
     ))}
   </>
 );

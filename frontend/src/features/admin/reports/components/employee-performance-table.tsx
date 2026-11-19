@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import type { UseQueryResult } from "@tanstack/react-query";
 import { QueryState } from "@/components/common/query-state";
 import { TableRowsSkeleton } from "@/components/common/skeleton-shapes";
+import { SKELETON_ROW_COUNT } from "@/config/default-constants";
 import { EmptyState } from "@/components/common/empty-state";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
 import type { EmployeePerformanceDto } from "../types";
@@ -27,8 +28,8 @@ export const EmployeePerformanceTable = ({ query, action }: EmployeePerformanceT
           query={query}
           skeleton={
             <Table>
-              <TableBody>
-                <TableRowsSkeleton rows={5} columns={4} />
+              <TableBody aria-busy="true">
+                <TableRowsSkeleton rows={SKELETON_ROW_COUNT} columns={4} />
               </TableBody>
             </Table>
           }

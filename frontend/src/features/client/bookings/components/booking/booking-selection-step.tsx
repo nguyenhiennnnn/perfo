@@ -14,6 +14,8 @@ import { BookingCustomerForm } from "./booking-customer-form";
 import { BookingPriceSummary, calcBookingEstimate } from "./booking-price-summary";
 import { SeatSuggestionPanel } from "./seat-suggestion-panel";
 
+export const BOOKING_SELECTION_GRID_CLASS = "grid grid-cols-1 gap-6 lg:grid-cols-[1fr_22.5rem]";
+
 interface BookingSelectionStepProps {
   data: ShowtimeSeatsResponseDto | undefined;
   statusMap: Map<number, ShowtimeSeatStatus>;
@@ -71,7 +73,7 @@ export const BookingSelectionStep = ({
     : undefined;
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_22.5rem]">
+    <div className={BOOKING_SELECTION_GRID_CLASS}>
       <div className="flex flex-col gap-4">
         <SeatSuggestionPanel
           showtimeId={data.showtimeId}

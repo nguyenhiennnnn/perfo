@@ -2,7 +2,6 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { QueryState } from "@/components/common/query-state";
 import { SkeletonList } from "@/components/common/skeleton-list";
-import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
 import type { RevenueReportDto } from "../types";
 import { Wallet, Receipt } from "lucide-react";
@@ -12,13 +11,14 @@ interface RevenueSummaryCardsProps {
 }
 
 const SUMMARY_GRID_CLASS = "grid grid-cols-1 gap-3 sm:grid-cols-2";
+const SUMMARY_SKELETON_COUNT = 2;
 
 export const RevenueSummaryCards = ({ query }: RevenueSummaryCardsProps) => (
   <QueryState
     query={query}
     skeleton={
-      <div className={SUMMARY_GRID_CLASS}>
-        <SkeletonList count={2} shape={CardSkeleton} className="h-24" />
+      <div aria-busy="true" className={SUMMARY_GRID_CLASS}>
+        <SkeletonList count={SUMMARY_SKELETON_COUNT} className="h-24" />
       </div>
     }
     errorTitle="Không tải được tổng doanh thu"

@@ -17,13 +17,13 @@ import { ENDPOINTS } from "@/api/endpoints";
 import { BookingStatus } from "@/types/enum";
 
 const BookingDetailSkeleton = () => (
-  <div className="grid gap-4 md:grid-cols-3">
+  <div aria-busy="true" className="grid gap-4 md:grid-cols-3">
     <div className="space-y-4 md:col-span-2">
-      <CardSkeleton className="h-32 cut-md" />
-      <CardSkeleton className="h-24 cut-md" />
-      <CardSkeleton className="h-32 cut-md" />
+      <CardSkeleton className="h-36" />
+      <CardSkeleton className="h-24" />
+      <CardSkeleton />
     </div>
-    <CardSkeleton className="h-40 cut-md" />
+    <CardSkeleton className="h-40" />
   </div>
 );
 

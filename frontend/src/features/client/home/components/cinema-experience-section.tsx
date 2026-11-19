@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { Ticket } from "lucide-react";
 import { SkeletonList } from "@/components/common/skeleton-list";
+import { SKELETON_LIST_COUNT } from "@/config/default-constants";
 import { useBookShowtime } from "@/features/client/bookings/hooks/use-book-showtime";
 import { useSchedule } from "@/features/client/showtimes/hooks/use-showtimes";
 import { getBusinessToday } from "@/lib/business-time";
@@ -30,7 +31,7 @@ export const CinemaExperienceSection = () => {
 
       <div className="mt-5 flex flex-col gap-3" aria-busy={isLoading || undefined}>
         {isLoading
-          ? <SkeletonList count={3} className="h-16 w-full cut-md" />
+          ? <SkeletonList count={SKELETON_LIST_COUNT} className="h-40 sm:h-26" />
           : movies.map((movie) => {
               const times = [...movie.showtimes]
                 .sort((a, b) => a.startTime.localeCompare(b.startTime))

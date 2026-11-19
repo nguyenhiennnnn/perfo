@@ -5,7 +5,7 @@ import { EmptyState } from "@/components/common/empty-state";
 import { PageContainer } from "@/components/common/page-container";
 import { QueryState } from "@/components/common/query-state";
 import { SkeletonList } from "@/components/common/skeleton-list";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { TierCard } from "../components/tier-card";
 import { TierCompareTable } from "../components/tier-compare-table";
 import { MembershipFaq } from "../components/membership-faq";
@@ -71,7 +71,7 @@ const MembershipPage = () => {
             <p className="mt-3 text-xs text-muted-foreground">chi tiêu cho mỗi điểm thưởng tích lũy</p>
           </div>
         ) : (
-          isSettingsLoading && <Skeleton className="h-40 w-full cut-lg" />
+          isSettingsLoading && <CardSkeleton cut="lg" className="h-40" />
         )}
       </section>
 
@@ -83,8 +83,8 @@ const MembershipPage = () => {
         <QueryState
           query={tiersQuery}
           skeleton={
-            <div className={TIER_GRID_CLASS} style={getTierGridStyle(TIER_SKELETON_COUNT)}>
-              <SkeletonList count={TIER_SKELETON_COUNT} className="h-56 w-full cut-md" />
+            <div aria-busy="true" className={TIER_GRID_CLASS} style={getTierGridStyle(TIER_SKELETON_COUNT)}>
+              <SkeletonList count={TIER_SKELETON_COUNT} className="h-56" />
             </div>
           }
           isEmpty={sortedTiers.length === 0}

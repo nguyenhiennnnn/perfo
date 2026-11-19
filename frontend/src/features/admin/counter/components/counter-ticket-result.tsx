@@ -21,7 +21,7 @@ export const CounterTicketResult = ({ bookingQuery, checkout, onNewSale }: Count
   const seatPrices = new Map((booking?.seats ?? []).map((seat) => [`${seat.seatRow}${seat.seatNumber}`, seat.price]));
 
   return (
-    <div className="flex flex-col items-center gap-6 cut-lg bg-card p-6 text-center">
+    <div className="flex flex-col items-center gap-6 cut-lg bg-card p-6 text-center" aria-busy={bookingQuery.isLoading || undefined}>
       <CheckCircle2 className="size-10 text-success" />
       <div>
         <p className="font-heading text-lg font-semibold text-foreground">Thanh toán thành công</p>

@@ -4,11 +4,10 @@ import { PageTitle } from "@/components/common/page-title";
 import { QueryState } from "@/components/common/query-state";
 import { ButtonLink } from "@/components/common/button-link";
 import { SkeletonList } from "@/components/common/skeleton-list";
-import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { InfiniteScrollTrigger } from "@/components/common/infinite-scroll-trigger";
 import { AccountReviewCard } from "@/features/client/account/components/account-review-card";
 import { useMyReviews } from "@/features/client/account/hooks/use-account";
-import { ACCOUNT_LIST_PAGE_LIMIT } from "@/config/default-constants";
+import { ACCOUNT_LIST_PAGE_LIMIT, SKELETON_LIST_COUNT } from "@/config/default-constants";
 import { ROUTES } from "@/config/routes";
 
 const AccountReviewsPage = () => {
@@ -20,10 +19,10 @@ const AccountReviewsPage = () => {
     <div>
       <PageTitle title="Đánh giá của tôi" />
 
-      <div className="space-y-3">
+      <div className="space-y-3" aria-busy={reviewsQuery.isLoading || undefined}>
         <QueryState
           query={reviewsQuery}
-          skeleton={<SkeletonList count={3} shape={CardSkeleton} />}
+          skeleton={<SkeletonList count={SKELETON_LIST_COUNT} />}
           isEmpty={reviews.length === 0}
           empty={
             <EmptyState

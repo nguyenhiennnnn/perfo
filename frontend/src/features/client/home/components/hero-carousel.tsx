@@ -55,7 +55,11 @@ export const HeroCarousel = () => {
   const prev = () => requestMove((index - 1 + count) % count, "prev");
 
   if (isLoading) {
-    return <Skeleton className={cn(HERO_HEIGHT, "w-full")} />;
+    return (
+      <div aria-busy="true">
+        <Skeleton className={cn(HERO_HEIGHT, "w-full")} />
+      </div>
+    );
   }
 
   if (count === 0) return null;

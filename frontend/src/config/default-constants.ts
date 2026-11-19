@@ -142,3 +142,7 @@ export const SETTINGS_FIELD_MAX = {
   schedulerHeatRatingWeight: 10,
   schedulerMaxRating: 10,
 } as const;
+
+export const SKELETON_LIST_COUNT = 3;
+export const SKELETON_ROW_COUNT = 5;
+export const SKELETON_GRID_COUNT = 6;

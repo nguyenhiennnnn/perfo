@@ -211,6 +211,20 @@ public class VnPayGateway(
                     )
                 );
         }
+        catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested)
+        {
+            logger.LogError(
+                ex,
+                "VnPayRefundTimeout OriginalTransactionId {TransactionId} — VNPAY API không phản hồi (timeout). "
+                    + "Sandbox có thể chưa kích hoạt Refund API cho TmnCode này.",
+                request.OriginalTransactionId
+            );
+            return new RefundResult(
+                false,
+                null,
+                string.Format(Messages.Refund_VnPayApiError, "Timeout: VNPAY API không phản hồi")
+            );
+        }
         catch (Exception ex)
         {
             logger.LogError(

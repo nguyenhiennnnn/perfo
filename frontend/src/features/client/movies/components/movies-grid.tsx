@@ -4,6 +4,7 @@ import { MovieCardSkeleton } from "@/features/client/movies/components/movie-car
 import { EmptyState } from "@/components/common/empty-state";
 import { InfiniteScrollTrigger } from "@/components/common/infinite-scroll-trigger";
 import { formatNumber } from "@/lib/formatters";
+import { SKELETON_ROW_COUNT } from "@/config/default-constants";
 import type { MovieListItemDto } from "@/features/client/movies/types";
 
 interface MoviesGridProps {
@@ -16,12 +17,12 @@ interface MoviesGridProps {
   onResetFilters?: () => void;
 }
 
-const MOVIES_GRID_CLASS = "grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5";
+export const MOVIES_GRID_CLASS = "grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5";
 
 export const MoviesGridSkeleton = () => (
-  <div className={MOVIES_GRID_CLASS}>
-    {Array.from({ length: 5 }).map((_, i) => (
-      <MovieCardSkeleton key={i} />
+  <div aria-busy="true" className={MOVIES_GRID_CLASS}>
+    {Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
+      <MovieCardSkeleton key={index} />
     ))}
   </div>
 );

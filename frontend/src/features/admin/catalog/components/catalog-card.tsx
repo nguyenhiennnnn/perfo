@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import type { LucideIcon } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { LineSkeleton } from "@/components/common/skeleton-shapes";
 import { cn } from "@/lib/utils";
 
 export interface CatalogCardProps {
@@ -43,7 +43,7 @@ export const CatalogCard = ({
         </div>
         <div className="text-right">
           {isLoading ? (
-            <Skeleton className="ml-auto h-7 w-10" />
+            <LineSkeleton className="ml-auto h-8 w-10" />
           ) : (
             <span className="font-heading text-2xl font-semibold tabular text-foreground">
               {isError ? "—" : (count ?? 0)}

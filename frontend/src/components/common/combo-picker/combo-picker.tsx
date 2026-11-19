@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/common/empty-state";
 import { ErrorState } from "@/components/common/error-state";
 import { SkeletonList } from "@/components/common/skeleton-list";
-import { RowSkeleton } from "@/components/common/skeleton-shapes";
+import { SKELETON_GRID_COUNT } from "@/config/default-constants";
 import { ComboQuantityStepper } from "./combo-quantity-stepper";
 
 export interface ComboOption {
@@ -29,8 +29,8 @@ interface ComboPickerProps {
 export const ComboPicker = ({ combos, quantities, onChange, isLoading, isError, error, onRetry, labels }: ComboPickerProps) => {
   if (isLoading) {
     return (
-      <div className="@container grid grid-cols-1 gap-3 @sm:grid-cols-2">
-        <SkeletonList count={4} shape={RowSkeleton} />
+      <div aria-busy="true" className="@container grid grid-cols-1 gap-3 @sm:grid-cols-2">
+        <SkeletonList count={SKELETON_GRID_COUNT} className="h-20" />
       </div>
     );
   }

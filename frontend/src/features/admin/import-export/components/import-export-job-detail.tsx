@@ -3,11 +3,11 @@ import { Download } from "lucide-react";
 import { Spinner } from "@/components/common/spinner";
 import { ImportExportJobStatusBadge } from "@/components/common/status-badge";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { NotFoundState } from "@/components/common/not-found-state";
 import { QueryState } from "@/components/common/query-state";
 import { SkeletonList } from "@/components/common/skeleton-list";
-import { CardSkeleton } from "@/components/common/skeleton-shapes";
+import { LineSkeleton } from "@/components/common/skeleton-shapes";
+import { SKELETON_LIST_COUNT } from "@/config/default-constants";
 import { formatDateTime, formatNumber } from "@/lib/formatters";
 import { useAuthUser } from "@/stores/auth-store";
 import { ImportExportJobType } from "@/types/enum";
@@ -45,10 +45,10 @@ export const ImportExportJobDetail = ({ jobId }: ImportExportJobDetailProps) => 
       <QueryState
         query={jobQuery}
         skeleton={
-          <div aria-hidden className="space-y-3">
-            <Skeleton className="h-6 w-1/3 cut-xs" />
+          <div aria-busy="true" className="space-y-3">
+            <LineSkeleton className="h-6 w-1/3" />
             <div className="grid grid-cols-3 gap-3">
-              <SkeletonList count={3} shape={CardSkeleton} className="h-16" />
+              <SkeletonList count={SKELETON_LIST_COUNT} className="h-16" />
             </div>
           </div>
         }

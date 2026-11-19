@@ -4,9 +4,8 @@ import { CalendarX, Clock, Ticket } from "lucide-react";
 import { useBookingFlow } from "../hooks/use-booking-flow";
 import { BookingStepper } from "../components/booking/booking-stepper";
 import { BookingShowtimeHeader } from "../components/booking/booking-showtime-header";
-import { BookingSelectionStep } from "../components/booking/booking-selection-step";
+import { BOOKING_SELECTION_GRID_CLASS, BookingSelectionStep } from "../components/booking/booking-selection-step";
 import { BookingPaymentStep } from "../components/booking/booking-payment-step";
-import { Skeleton } from "@/components/ui/skeleton";
 import { ButtonLink } from "@/components/common/button-link";
 import { EmptyState } from "@/components/common/empty-state";
 import { NotFoundState } from "@/components/common/not-found-state";
@@ -31,8 +30,8 @@ const RESUME_NOTICE = {
 } as const;
 
 const SeatSelectionSkeleton = () => (
-  <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_22.5rem]">
-    <Skeleton className="h-96 w-full" />
+  <div aria-busy="true" className={BOOKING_SELECTION_GRID_CLASS}>
+    <CardSkeleton className="h-96" cut="lg" />
     <CardSkeleton className="h-48" />
   </div>
 );
@@ -51,7 +50,7 @@ const BookingPage = () => {
       <BookingStepper step={flow.step} />
 
       {flow.isResumeLoading && (
-        <div className="mx-auto w-full max-w-lg space-y-3">
+        <div className="mx-auto w-full max-w-lg space-y-3" aria-busy="true">
           <CardSkeleton />
           <CardSkeleton />
         </div>

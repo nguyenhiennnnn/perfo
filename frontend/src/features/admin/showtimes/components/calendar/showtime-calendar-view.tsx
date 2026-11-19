@@ -7,9 +7,8 @@ import { EnumSelectFilter } from "@/components/common/filter/enum-select-filter"
 import { EmptyState } from "@/components/common/empty-state";
 import { ErrorState } from "@/components/common/error-state";
 import { SelectField } from "@/components/common/select-field";
-import { Skeleton } from "@/components/ui/skeleton";
 import { SkeletonList } from "@/components/common/skeleton-list";
-import { RowSkeleton } from "@/components/common/skeleton-shapes";
+import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getBusinessTodayDate } from "@/lib/business-time";
 import { showtimeStatusOptions } from "@/lib/enum-options";
@@ -28,7 +27,7 @@ import {
 } from "@/features/admin/showtimes/utils/calendar-layout";
 import { ShowtimeCalendarDay } from "./showtime-calendar-day";
 import { ShowtimeCalendarLegend } from "./showtime-calendar-legend";
-import { LOOKUP_PAGE_SIZE } from "@/config/default-constants";
+import { LOOKUP_PAGE_SIZE, SKELETON_LIST_COUNT } from "@/config/default-constants";
 
 interface ShowtimeCalendarViewProps {
   onSelectShowtime?: (showtime: ShowtimeCalendarItemDto) => void;
@@ -115,9 +114,9 @@ export const ShowtimeCalendarView = ({
       <ShowtimeCalendarLegend editable={Boolean(onSelectShowtime)} />
 
       {calendar.isLoading && (
-        <div className="flex flex-col gap-2" aria-busy>
-          <Skeleton className="h-12 w-full" />
-          <SkeletonList count={4} shape={RowSkeleton} className="h-20" />
+        <div className="flex flex-col gap-2" aria-busy="true">
+          <CardSkeleton className="h-12" />
+          <SkeletonList count={SKELETON_LIST_COUNT} className="h-20" />
         </div>
       )}
 

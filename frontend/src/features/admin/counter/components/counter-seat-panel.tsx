@@ -1,6 +1,6 @@
 import type { UseQueryResult } from "@tanstack/react-query";
 import { CalendarX } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { NotFoundState } from "@/components/common/not-found-state";
 import { QueryState } from "@/components/common/query-state";
 import { SelectableSeatMap } from "@/components/common/seat-map/selectable-seat-map";
@@ -23,7 +23,7 @@ export const CounterSeatPanel = ({
 }: CounterSeatPanelProps) => (
   <QueryState
     query={query}
-    skeleton={<Skeleton className="h-96 w-full" />}
+    skeleton={<CardSkeleton cut="lg" className="h-96" />}
     notFound={<NotFoundState entity="suất chiếu" icon={CalendarX} />}
     errorTitle="Không tải được sơ đồ ghế"
   >

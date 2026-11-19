@@ -7,13 +7,14 @@ import { useEffect, type ReactNode } from "react";
 import { PageHeader } from "@/components/common/page-header";
 import { FieldGroup } from "@/components/ui/field";
 import { QueryState } from "@/components/common/query-state";
-import { FormSkeleton } from "@/components/common/skeleton-shapes";
+import { LineSkeleton } from "@/components/common/skeleton-shapes";
+import { Skeleton } from "@/components/ui/skeleton";
 import { FormInputField } from "@/components/common/form/form-input-field";
 import { SubmitButton } from "@/components/common/form/submit-button";
 import { FormSelectField } from "@/components/common/form/form-select-field";
 import { FormTimePickerField } from "@/components/common/form/form-time-picker-field";
 
-import { FORM_PENDING_LABEL, PERCENT_MAX, SETTINGS_FIELD_MAX } from "@/config/default-constants";
+import { FORM_PENDING_LABEL, PERCENT_MAX, SETTINGS_FIELD_MAX, SKELETON_LIST_COUNT } from "@/config/default-constants";
 import { useServerFieldErrors } from "@/hooks/use-server-field-errors";
 import { SeatGapRuleMode } from "@/types/enum";
 import { useAdminSettings, useAdminUpdateSettings } from "../hooks/use-admin-settings";
@@ -86,10 +87,22 @@ const SettingsSection = ({
   </section>
 );
 
+const SETTINGS_SKELETON_FIELDS = 4;
+
 const SettingsSkeleton = () => (
-  <div className="max-w-4xl space-y-8">
-    {[0, 1, 2].map((index) => (
-      <FormSkeleton key={index} fields={4} />
+  <div aria-busy="true" className="max-w-4xl space-y-8">
+    {Array.from({ length: SKELETON_LIST_COUNT }, (_, sectionIndex) => (
+      <div key={sectionIndex}>
+        <LineSkeleton className="h-6 w-1/3" />
+        <div className="mt-4 grid items-start gap-x-4 gap-y-4 sm:grid-cols-2">
+          {Array.from({ length: SETTINGS_SKELETON_FIELDS }, (_, fieldIndex) => (
+            <div key={fieldIndex} className="space-y-2">
+              <LineSkeleton className="h-3.5 w-24" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ))}
+        </div>
+      </div>
     ))}
   </div>
 );

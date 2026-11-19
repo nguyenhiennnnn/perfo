@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { QueryState } from "@/components/common/query-state";
 import { SkeletonList } from "@/components/common/skeleton-list";
-import { CardSkeleton } from "@/components/common/skeleton-shapes";
+import { SKELETON_GRID_COUNT } from "@/config/default-constants";
 import { cn } from "@/lib/utils";
 import { formatCurrency, formatNumber, formatPercent } from "@/lib/formatters";
 import type { DashboardSummaryDto } from "@/features/admin/dashboard/types";
@@ -83,8 +83,8 @@ export const DashboardStatCards = ({ query }: DashboardStatCardsProps) => (
   <QueryState
     query={query}
     skeleton={
-      <div className={STATS_GRID_CLASS}>
-        <SkeletonList count={5} shape={CardSkeleton} className="h-32" />
+      <div aria-busy="true" className={STATS_GRID_CLASS}>
+        <SkeletonList count={SKELETON_GRID_COUNT} className="h-25" />
       </div>
     }
     errorTitle="Không tải được số liệu tổng quan"

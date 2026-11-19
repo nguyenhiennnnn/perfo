@@ -13,7 +13,8 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import type { UseQueryResult } from "@tanstack/react-query";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CardSkeleton } from "@/components/common/skeleton-shapes";
+import { cn } from "@/lib/utils";
 import { QueryState } from "@/components/common/query-state";
 import { EmptyState } from "@/components/common/empty-state";
 import { formatCurrency } from "@/lib/formatters";
@@ -30,6 +31,8 @@ interface RevenueReportChartProps {
   action?: ReactNode;
 }
 
+const CHART_HEIGHT_CLASS = "h-80";
+
 export const RevenueReportChart = ({ query, action }: RevenueReportChartProps) => {
   return (
     <Card>
@@ -41,7 +44,7 @@ export const RevenueReportChart = ({ query, action }: RevenueReportChartProps) =
       <CardContent>
         <QueryState
           query={query}
-          skeleton={<Skeleton className="h-80 w-full" />}
+          skeleton={<CardSkeleton className={CHART_HEIGHT_CLASS} />}
           isEmpty={(report) => report.items.length === 0}
           empty={
             <EmptyState
@@ -53,7 +56,7 @@ export const RevenueReportChart = ({ query, action }: RevenueReportChartProps) =
           errorTitle="Không tải được biểu đồ doanh thu"
         >
           {(report) => (
-          <ChartContainer config={chartConfig} className="h-80 w-full">
+          <ChartContainer config={chartConfig} className={cn(CHART_HEIGHT_CLASS, "w-full")}>
             <ComposedChart accessibilityLayer data={report.items}>
               <CartesianGrid vertical={false} />
               <XAxis dataKey="period" tickLine={false} axisLine={false} tickMargin={10} />

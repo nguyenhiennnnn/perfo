@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { SkeletonList } from "@/components/common/skeleton-list";
 import { EmptyState } from "@/components/common/empty-state";
 import { QueryState } from "@/components/common/query-state";
-import { RowSkeleton } from "@/components/common/skeleton-shapes";
+import { SKELETON_GRID_COUNT } from "@/config/default-constants";
 import type { DashboardInsightsDto } from "@/features/admin/dashboard/types";
 import { Film } from "lucide-react";
 import { formatShowtimeHour } from "@/lib/formatters";
@@ -20,10 +20,10 @@ export const TodayShowtimesCard = ({ query }: TodayShowtimesCardProps) => {
         <CardTitle>Suất chiếu hôm nay</CardTitle>
         <CardDescription>Tình trạng lấp đầy theo suất chiếu</CardDescription>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-busy={query.isLoading || undefined}>
         <QueryState
           query={query}
-          skeleton={<SkeletonList count={6} shape={RowSkeleton} className="h-16" />}
+          skeleton={<SkeletonList count={SKELETON_GRID_COUNT} cut="sm" className="h-18" />}
           isEmpty={(insights) => insights.todayShowtimes.length === 0}
           empty={
             <div className="col-span-full">

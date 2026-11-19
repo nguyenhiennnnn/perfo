@@ -7,7 +7,7 @@ import { MovieReviews } from "@/features/client/movies/components/movie-reviews"
 import { ExpandableText } from "@/components/common/expandable-text";
 import { useMovieDetail } from "@/features/client/movies/hooks/use-movies";
 import type { MovieDetailDto } from "@/features/client/movies/types";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CardSkeleton, LineSkeleton } from "@/components/common/skeleton-shapes";
 import { NotFoundState } from "@/components/common/not-found-state";
 import { QueryState } from "@/components/common/query-state";
 import { PageContainer } from "@/components/common/page-container";
@@ -16,10 +16,21 @@ import { BRAND } from "@/config/brand";
 import { ROUTES } from "@/config/routes";
 import { SEO_DESCRIPTION_MAX_LENGTH } from "@/config/default-constants";
 
+const MOVIE_DETAIL_GRID_CLASS = "grid gap-10 lg:grid-cols-[1fr_22.5rem]";
+
 const MovieDetailSkeleton = () => (
-  <div className="space-y-6" aria-busy="true">
-    <Skeleton className="h-96 w-full" />
-    <Skeleton className="h-40 w-full" />
+  <div className="space-y-10" aria-busy="true">
+    <CardSkeleton className="h-150 sm:h-100" />
+    <div className={MOVIE_DETAIL_GRID_CLASS}>
+      <div className="space-y-8">
+        <div className="space-y-3">
+          <LineSkeleton className="h-7 w-1/3" />
+          <CardSkeleton className="h-40" />
+        </div>
+        <CardSkeleton className="h-48" />
+      </div>
+      <CardSkeleton className="h-80" />
+    </div>
   </div>
 );
 
@@ -61,7 +72,7 @@ const MovieDetailContent = ({ movie }: { movie: MovieDetailDto }) => {
 
       <MovieHero movie={movie} />
 
-      <div className="grid gap-10 lg:grid-cols-[1fr_22.5rem]">
+      <div className={MOVIE_DETAIL_GRID_CLASS}>
         <div className="space-y-8">
           {movie.description && (
             <div>

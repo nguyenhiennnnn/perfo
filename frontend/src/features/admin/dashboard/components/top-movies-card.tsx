@@ -5,7 +5,8 @@ import { Trophy } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import type { UseQueryResult } from "@tanstack/react-query";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CardSkeleton } from "@/components/common/skeleton-shapes";
+import { cn } from "@/lib/utils";
 import { EmptyState } from "@/components/common/empty-state";
 import { QueryState } from "@/components/common/query-state";
 import type { DashboardInsightsDto } from "@/features/admin/dashboard/types";
@@ -14,6 +15,8 @@ import { TOP_MOVIES_CHART_LABEL_MAX_CHARS } from "@/config/default-constants";
 const chartConfig = {
   ticketsSold: { label: "Vé đã bán", color: "var(--chart-3)" },
 } satisfies ChartConfig;
+
+const CHART_HEIGHT_CLASS = "h-65";
 
 interface TopMoviesCardProps {
   query: UseQueryResult<DashboardInsightsDto>;
@@ -29,7 +32,7 @@ export const TopMoviesCard = ({ query }: TopMoviesCardProps) => {
       <CardContent>
         <QueryState
           query={query}
-          skeleton={<Skeleton className="h-65 w-full" />}
+          skeleton={<CardSkeleton className={CHART_HEIGHT_CLASS} />}
           isEmpty={(insights) => insights.topMovies.length === 0}
           empty={<EmptyState icon={Trophy} title="Chưa có dữ liệu" description="Chưa có phim nào bán vé trong khoảng này." />}
           errorTitle="Không tải được phim bán chạy"
@@ -41,7 +44,7 @@ export const TopMoviesCard = ({ query }: TopMoviesCardProps) => {
             }));
 
             return (
-          <ChartContainer config={chartConfig} className="h-65 w-full">
+          <ChartContainer config={chartConfig} className={cn(CHART_HEIGHT_CLASS, "w-full")}>
             <BarChart accessibilityLayer data={data} layout="vertical" margin={{ left: 8 }}>
               <CartesianGrid horizontal={false} />
               <XAxis type="number" hide />

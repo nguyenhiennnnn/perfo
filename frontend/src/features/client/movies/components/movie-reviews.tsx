@@ -4,11 +4,23 @@ import { EmptyState } from "@/components/common/empty-state";
 import { InfiniteScrollTrigger } from "@/components/common/infinite-scroll-trigger";
 import { QueryState } from "@/components/common/query-state";
 import { SkeletonList } from "@/components/common/skeleton-list";
-import { CardSkeleton } from "@/components/common/skeleton-shapes";
+import { AvatarSkeleton, LineSkeleton } from "@/components/common/skeleton-shapes";
 import { ReviewForm } from "@/features/client/movies/components/review-form";
 import { ReviewItem } from "@/features/client/movies/components/review-item";
 import { useCanReviewStatus, useCreateReview, useDeleteMyReview, useMovieReviews, useUpdateReview } from "@/features/client/movies/hooks/use-movies";
 import { useAuthUser } from "@/stores/auth-store";
+import { SKELETON_LIST_COUNT } from "@/config/default-constants";
+
+const ReviewSkeleton = () => (
+  <div className="flex gap-3 py-4">
+    <AvatarSkeleton />
+    <div className="flex-1 space-y-2">
+      <LineSkeleton className="w-1/4" />
+      <LineSkeleton className="h-3.5 w-1/3" />
+      <LineSkeleton />
+    </div>
+  </div>
+);
 
 interface MovieReviewsProps {
   movieId: number;
@@ -51,10 +63,10 @@ export const MovieReviews = ({ movieId }: MovieReviewsProps) => {
         </div>
       )}
 
-      <div className="mt-6">
+      <div className="mt-6" aria-busy={reviewsQuery.isLoading || undefined}>
         <QueryState
           query={reviewsQuery}
-          skeleton={<SkeletonList count={2} shape={CardSkeleton} />}
+          skeleton={<SkeletonList count={SKELETON_LIST_COUNT} shape={ReviewSkeleton} />}
           isEmpty={(result) => result.reviews.length === 0}
           empty={<EmptyState icon={MessageSquareText} title="Chưa có đánh giá nào" description="Hãy là người đầu tiên chia sẻ cảm nhận về bộ phim này." />}
           errorTitle="Không tải được đánh giá"

@@ -38,9 +38,9 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 const ProfileSkeleton = () => (
-  <div className="space-y-6">
-    <CardSkeleton className="h-40" />
-    <div className="bg-card p-5">
+  <div className="space-y-6" aria-busy="true">
+    <CardSkeleton className="h-36" />
+    <div className="p-5">
       <FormSkeleton fields={4} />
     </div>
   </div>

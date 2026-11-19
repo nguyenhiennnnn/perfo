@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import { Ticket as TicketIcon } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CardSkeleton, LineSkeleton, TicketSkeleton } from "@/components/common/skeleton-shapes";
 import { NotFoundState } from "@/components/common/not-found-state";
 import { QueryState } from "@/components/common/query-state";
 import { Button } from "@/components/ui/button";
@@ -22,22 +22,13 @@ import { ENDPOINTS } from "@/api/endpoints";
 
 const TicketDetailSkeleton = () => (
   <div className="space-y-6" aria-busy="true">
-    <div className="flex items-center justify-between gap-3 bg-card p-4">
-      <div className="space-y-2">
-        <Skeleton className="h-6 w-40 cut-xs" />
-        <Skeleton className="h-3 w-32 cut-xs" />
-      </div>
-      <Skeleton className="h-6 w-24 cut-xs" />
+    <CardSkeleton className="h-20" />
+    <div>
+      <LineSkeleton className="h-7 w-1/3" />
+      <TicketSkeleton className="mt-3" />
     </div>
-    <Skeleton className="h-[30rem] w-full cut-lg sm:h-72" />
-    <div className="flex gap-4 bg-card p-4">
-      <Skeleton className="aspect-2/3 w-24 shrink-0" />
-      <div className="flex-1 space-y-3">
-        <Skeleton className="h-9 w-3/4 cut-xs" />
-        <Skeleton className="h-4 w-1/3 cut-xs" />
-        <Skeleton className="h-4 w-1/2 cut-xs" />
-      </div>
-    </div>
+    <CardSkeleton className="h-44" />
+    <CardSkeleton className="h-40" />
   </div>
 );
 

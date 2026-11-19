@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { EmptyState } from "@/components/common/empty-state";
 import { QueryState } from "@/components/common/query-state";
 import { SkeletonList } from "@/components/common/skeleton-list";
-import { CardSkeleton } from "@/components/common/skeleton-shapes";
+import { SKELETON_LIST_COUNT } from "@/config/default-constants";
 import { formatCurrency } from "@/lib/formatters";
 import { useSchedule } from "@/features/client/showtimes/hooks/use-showtimes";
 import { formatShowtimeRange } from "@/lib/cinema-format";
@@ -34,7 +34,11 @@ export const CounterShowtimePicker = ({ date, onDateChange, onPickShowtime }: Co
 
       <QueryState
         query={schedule}
-        skeleton={<SkeletonList count={2} shape={CardSkeleton} className="h-32" />}
+        skeleton={
+          <div aria-busy="true" className="flex flex-col gap-4">
+            <SkeletonList count={SKELETON_LIST_COUNT} className="h-40" />
+          </div>
+        }
         isEmpty={(data) => data.movies.length === 0}
         empty={
           <EmptyState

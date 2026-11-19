@@ -18,7 +18,12 @@ export const PaymentDetailView = ({ paymentId }: PaymentDetailViewProps) => {
     return (
       <QueryState
         query={detail}
-        skeleton={<CardSkeleton className="h-48" />}
+        skeleton={
+          <div aria-busy="true" className="space-y-4">
+            <CardSkeleton cut="sm" className="h-11" />
+            <CardSkeleton className="h-72" />
+          </div>
+        }
         notFound={<NotFoundState entity="giao dịch" />}
         errorTitle="Không tải được chi tiết giao dịch"
         errorClassName="py-8"

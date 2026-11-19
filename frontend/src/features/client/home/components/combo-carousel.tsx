@@ -1,6 +1,7 @@
 import { Popcorn } from "lucide-react";
 import { ComboCardSkeleton } from "@/features/client/combos/components/combo-card-skeleton";
 import { formatCurrency } from "@/lib/formatters";
+import { SKELETON_ROW_COUNT } from "@/config/default-constants";
 import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
 
 export const ComboCarousel = () => {
@@ -12,10 +13,10 @@ export const ComboCarousel = () => {
     <section>
       <h2 className="t-h2 text-foreground">Combo bắp nước bán chạy</h2>
 
-      <div className="mt-5 flex gap-4 overflow-x-auto pb-2">
+      <div className="mt-5 flex gap-4 overflow-x-auto pb-2" aria-busy={isLoading || undefined}>
         {isLoading
-          ? Array.from({ length: 5 }).map((_, i) => (
-              <ComboCardSkeleton key={i} />
+          ? Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
+              <ComboCardSkeleton key={index} />
             ))
           : combos!.map((combo) => (
             <div key={combo.comboId} className="flex w-48 shrink-0 flex-col overflow-hidden bg-card">

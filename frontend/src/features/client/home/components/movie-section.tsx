@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { Film } from "lucide-react";
 import { MovieCard } from "@/features/client/movies/components/movie-card";
-import { MoviesGridSkeleton } from "@/features/client/movies/components/movies-grid";
+import { MOVIES_GRID_CLASS, MoviesGridSkeleton } from "@/features/client/movies/components/movies-grid";
 import { EmptyState } from "@/components/common/empty-state";
 import { QueryState } from "@/components/common/query-state";
 import { useMovies } from "@/features/client/movies/hooks/use-movies";
@@ -39,7 +39,7 @@ export const MovieSection = ({ title, status, viewAllHref, emptyMessage }: Movie
           empty={<EmptyState icon={Film} title={emptyMessage} />}
           errorTitle="Không tải được danh sách phim"
         >
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          <div className={MOVIES_GRID_CLASS}>
             {movies.map((movie) => (
               <MovieCard key={movie.movieId} movie={movie} />
             ))}

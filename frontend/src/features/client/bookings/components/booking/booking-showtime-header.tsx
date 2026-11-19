@@ -1,6 +1,6 @@
 import { Ticket } from "lucide-react";
 import { AgeRatingBadge } from "@/components/common/status-badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { LineSkeleton, PosterSkeleton } from "@/components/common/skeleton-shapes";
 import type { ShowtimeSeatsResponseDto } from "@/features/client/showtimes/types";
 import { formatDateTime } from "@/lib/formatters";
 
@@ -13,11 +13,11 @@ export const BookingShowtimeHeader = ({
 }) => {
   if (isLoading) {
     return (
-      <div aria-hidden className="flex gap-4">
-        <Skeleton className="aspect-2/3 w-16 shrink-0 cut-sm" />
+      <div aria-busy="true" className="flex gap-4">
+        <PosterSkeleton cut="sm" className="w-16 shrink-0 sm:w-20" />
         <div className="flex-1 space-y-2">
-          <Skeleton className="h-9 w-2/3 cut-xs" />
-          <Skeleton className="h-4 w-1/3 cut-xs" />
+          <LineSkeleton className="h-9 w-2/3" />
+          <LineSkeleton className="w-1/3" />
         </div>
       </div>
     );

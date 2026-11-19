@@ -12,7 +12,8 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import type { UseQueryResult } from "@tanstack/react-query";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CardSkeleton } from "@/components/common/skeleton-shapes";
+import { cn } from "@/lib/utils";
 import { QueryState } from "@/components/common/query-state";
 import { EmptyState } from "@/components/common/empty-state";
 import { formatCurrency } from "@/lib/formatters";
@@ -22,6 +23,8 @@ const chartConfig = {
   ticketRevenue: { label: "Doanh thu vé", color: "var(--chart-1)" },
   comboRevenue: { label: "Doanh thu combo", color: "var(--chart-2)" },
 } satisfies ChartConfig;
+
+const CHART_HEIGHT_CLASS = "h-70";
 
 interface RevenueTrendChartProps {
   query: UseQueryResult<DashboardInsightsDto>;
@@ -37,7 +40,7 @@ export const RevenueTrendChart = ({ query }: RevenueTrendChartProps) => {
       <CardContent>
         <QueryState
           query={query}
-          skeleton={<Skeleton className="h-70 w-full" />}
+          skeleton={<CardSkeleton className={CHART_HEIGHT_CLASS} />}
           isEmpty={(insights) => insights.revenueTrend.length === 0}
           empty={
             <EmptyState
@@ -49,7 +52,7 @@ export const RevenueTrendChart = ({ query }: RevenueTrendChartProps) => {
           errorTitle="Không tải được doanh thu theo ngày"
         >
           {(insights) => (
-          <ChartContainer config={chartConfig} className="h-70 w-full">
+          <ChartContainer config={chartConfig} className={cn(CHART_HEIGHT_CLASS, "w-full")}>
             <BarChart accessibilityLayer data={insights.revenueTrend}>
               <CartesianGrid vertical={false} />
               <XAxis dataKey="period" tickLine={false} axisLine={false} tickMargin={10} />

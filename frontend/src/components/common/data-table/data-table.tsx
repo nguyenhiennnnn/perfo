@@ -163,7 +163,7 @@ export const DataTable = <TData extends RowData>({
             ))}
           </TableHeader>
           <TableBody
-            aria-busy={isRefreshing || undefined}
+            aria-busy={isLoading || isRefreshing || undefined}
             className={cn(isRefreshing && "opacity-60 transition-opacity")}
           >
             {isLoading ? (

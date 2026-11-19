@@ -11,6 +11,7 @@ import { PageContainer } from "@/components/common/page-container";
 import { PageTitle } from "@/components/common/page-title";
 import { QueryState } from "@/components/common/query-state";
 import { SkeletonList } from "@/components/common/skeleton-list";
+import { SKELETON_LIST_COUNT } from "@/config/default-constants";
 import { useScheduleParams } from "@/hooks/use-query-params";
 import { getBusinessToday, getBusinessTodayDate } from "@/lib/business-time";
 import { toDateKey } from "@/lib/cinema-format";
@@ -60,12 +61,12 @@ const SchedulePage = () => {
       </div>
 
       <div
-        aria-busy={isPlaceholderData || undefined}
+        aria-busy={scheduleQuery.isLoading || isPlaceholderData || undefined}
         className={cn("mt-6 space-y-4", isPlaceholderData && "pointer-events-none opacity-60 transition-opacity")}
       >
         <QueryState
           query={scheduleQuery}
-          skeleton={<SkeletonList count={4} className="h-40 w-full" />}
+          skeleton={<SkeletonList count={SKELETON_LIST_COUNT} className="h-80 sm:h-52" />}
           isEmpty={movies.length === 0}
           empty={
             format ? (

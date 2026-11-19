@@ -42,6 +42,7 @@ export interface SeatDto {
   isActive: boolean;
   isAisle: boolean;
   coupleId?: string | null;
+  isCouple?: boolean;
 }
 
 export interface SeatLayoutItem {

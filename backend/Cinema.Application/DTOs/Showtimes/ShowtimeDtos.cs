@@ -8,7 +8,8 @@ public record ShowtimeSeatItemDto(
     string? SeatType,
     Guid? CoupleId,
     string Status,
-    decimal Price
+    decimal Price,
+    bool IsCouple
 );
 
 public record AislePositionDto(string SeatRow, int SeatNumber);

@@ -5,6 +5,7 @@ import { NAME_MAX_LENGTH } from "@/config/default-constants";
 
 import { FieldGroup } from "@/components/ui/field";
 import { FormInputField } from "@/components/common/form/form-input-field";
+import { FormSwitchField } from "@/components/common/form/form-switch-field";
 
 import { useAdminCreateSeatType } from "@/features/admin/catalog/hooks/use-admin-seat-type";
 import { FormActions } from "@/components/common/form/form-actions";
@@ -18,6 +19,7 @@ const seatTypeFormSchema = z.object({
   priceMultiplier: z.coerce
     .number({ message: "Hệ số giá phải là số." })
     .min(0.1, "Hệ số giá tối thiểu là 0.1."),
+  isCouple: z.boolean(),
 });
 
 type SeatTypeFormValues = z.infer<typeof seatTypeFormSchema>;
@@ -31,7 +33,7 @@ export const SeatTypeCreateForm = ({ onSuccess }: SeatTypeCreateFormProps) => {
 
   const form = useForm<SeatTypeFormValues>({
     resolver: zodResolver(seatTypeFormSchema),
-    defaultValues: { name: "", priceMultiplier: 1 },
+    defaultValues: { name: "", priceMultiplier: 1, isCouple: false },
   });
 
   const applyServerErrors = useServerFieldErrors(form);
@@ -40,6 +42,7 @@ export const SeatTypeCreateForm = ({ onSuccess }: SeatTypeCreateFormProps) => {
     createSeatType.mutate({
       name: values.name,
       priceMultiplier: values.priceMultiplier,
+      isCouple: values.isCouple,
     }, {
       onSuccess: () => onSuccess(),
       onError: applyServerErrors,
@@ -70,6 +73,12 @@ export const SeatTypeCreateForm = ({ onSuccess }: SeatTypeCreateFormProps) => {
           min={0.1}
           step={0.1}
           placeholder="1.0"
+        />
+
+        <FormSwitchField
+          name="isCouple"
+          control={form.control}
+          label="Ghế đôi (hai ghế liền kề đặt như một khối)"
         />
       </FieldGroup>
 

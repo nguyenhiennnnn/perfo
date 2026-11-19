@@ -5,6 +5,7 @@ import type { SeatTypeDto } from "@/features/admin/catalog/types";
 import type { SeatEditorBrush } from "../types/seat-editor";
 import { seatTypeLabel } from "@/components/common/seat-map/seat-kind";
 import { describeBrush } from "../utils/seat-editor-labels";
+import { listBrushSeatTypes } from "../utils/seat-editor-cells";
 import { SeatEditorToolButton } from "./seat-editor-tool-button";
 
 interface SeatEditorBrushToolsProps {
@@ -36,6 +37,7 @@ export const SeatEditorBrushTools = ({
   onOpenAutoGenerate,
 }: SeatEditorBrushToolsProps) => {
   const current = describeBrush(brush, seatTypes);
+  const listedSeatTypes = listBrushSeatTypes(seatTypes);
 
   const statusText = isCopyActive
     ? "Đang dùng: Sao chép hàng ghế — bấm nhãn hàng nguồn, rồi bấm nhãn hàng đích để dán."
@@ -47,7 +49,7 @@ export const SeatEditorBrushTools = ({
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap gap-x-8 gap-y-3">
         <ToolGroup label="Gán loại ghế">
-          {seatTypes?.map((st, index) => (
+          {listedSeatTypes.map((st, index) => (
             <SeatEditorToolButton
               key={st.seatTypeId}
               active={brush.type === "seatType" && brush.seatTypeId === st.seatTypeId}
@@ -55,7 +57,7 @@ export const SeatEditorBrushTools = ({
               tooltip={describeBrush({ type: "seatType", seatTypeId: st.seatTypeId }, seatTypes).hint}
               shortcut={index < 9 ? String(index + 1) : undefined}
             >
-              {seatTypeLabel(st.name)}
+              {seatTypeLabel(st.name, st.isCouple)}
             </SeatEditorToolButton>
           ))}
         </ToolGroup>
@@ -67,7 +69,7 @@ export const SeatEditorBrushTools = ({
             onClick={() => onBrushChange({ type: "pairCouple" })}
             tooltip={describeBrush({ type: "pairCouple" }, seatTypes).hint}
           >
-            Gộp 2 ghế thành ghế đôi
+            Ghế đôi
           </SeatEditorToolButton>
           <SeatEditorToolButton
             icon={Ban}

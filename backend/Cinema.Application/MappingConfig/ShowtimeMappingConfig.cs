@@ -24,7 +24,11 @@ public class ShowtimeMappingConfig : IRegister
                 src => src.Seat.SeatType != null ? src.Seat.SeatType.Name : "Standard"
             )
             .Map(dest => dest.Status, src => src.Status.ToDtoStatus())
-            .Map(dest => dest.Price, src => src.Price);
+            .Map(dest => dest.Price, src => src.Price)
+            .Map(
+                dest => dest.IsCouple,
+                src => src.Seat.SeatType != null && src.Seat.SeatType.IsCouple
+            );
 
         config
             .NewConfig<Showtime, WholeCinemaShowtimeSlotDto>()

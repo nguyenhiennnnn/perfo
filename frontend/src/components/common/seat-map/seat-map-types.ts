@@ -17,6 +17,7 @@ export interface SeatCellData {
   showtimeSeatId?: number;
   seatTypeId?: number | null;
   seatTypeName?: string | null;
+  isCouple?: boolean;
   isActive: boolean;
   isAisle: boolean;
   coupleId?: string | null;
@@ -40,15 +41,10 @@ export function generateRowLabel(index: number): string {
 
 export function resolveSeatVisualKind(
   seatTypeName?: string | null,
+  isCouple?: boolean | null,
 ): SeatVisualKind {
+  if (isCouple) return "couple";
   const name = (seatTypeName ?? "").toLowerCase();
-  if (
-    name.includes("couple") ||
-    name.includes("đôi") ||
-    name.includes("sweetbox")
-  ) {
-    return "couple";
-  }
   if (name.includes("vip")) return "vip";
   return "standard";
 }

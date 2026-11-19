@@ -44,11 +44,11 @@ export const SeatEditorAutoGenerateForm = ({
   onDone,
 }: SeatEditorAutoGenerateFormProps) => {
   const detectedVipId =
-    seatTypes?.find((t) => resolveSeatVisualKind(t.name) === "vip")?.seatTypeId ??
+    seatTypes?.find((t) => resolveSeatVisualKind(t.name, t.isCouple) === "vip")?.seatTypeId ??
     NONE_SEAT_TYPE_ID;
 
   const detectedCoupleId =
-    seatTypes?.find((t) => resolveSeatVisualKind(t.name) === "couple")?.seatTypeId ?? null;
+    seatTypes?.find((t) => t.isCouple)?.seatTypeId ?? null;
 
   const form = useForm<AutoGenerateFormValues>({
     resolver: zodResolver(autoGenerateFormSchema),
@@ -65,11 +65,11 @@ export const SeatEditorAutoGenerateForm = ({
 
   const standardOptions: SeatTypeDto[] = [
     { seatTypeId: NONE_SEAT_TYPE_ID, name: "— Không đặt —" } as SeatTypeDto,
-    ...(seatTypes ?? []),
+    ...(seatTypes ?? []).filter((t) => !t.isCouple),
   ];
   const vipOptions: SeatTypeDto[] = [
     { seatTypeId: NONE_SEAT_TYPE_ID, name: "— Không có hàng VIP —" } as SeatTypeDto,
-    ...(seatTypes ?? []),
+    ...(seatTypes ?? []).filter((t) => !t.isCouple),
   ];
 
   const onSubmit = (values: AutoGenerateFormValues) => {

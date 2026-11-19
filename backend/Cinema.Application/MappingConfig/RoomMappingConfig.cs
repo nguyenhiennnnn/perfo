@@ -18,6 +18,7 @@ public class RoomMappingConfig : IRegister
 
         config
             .NewConfig<Seat, SeatDto>()
-            .Map(dest => dest.SeatTypeName, src => src.SeatType != null ? src.SeatType.Name : null);
+            .Map(dest => dest.SeatTypeName, src => src.SeatType != null ? src.SeatType.Name : null)
+            .Map(dest => dest.IsCouple, src => src.SeatType != null && src.SeatType.IsCouple);
     }
 }

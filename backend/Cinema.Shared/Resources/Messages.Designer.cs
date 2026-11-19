@@ -612,6 +612,18 @@ namespace Cinema.Shared.Resources {
             }
         }
 
+        public static string Invalid_CoupleSeatsTypeNotCouple {
+            get {
+                return ResourceManager.GetString("Invalid_CoupleSeatsTypeNotCouple", resourceCulture);
+            }
+        }
+
+        public static string Invalid_CoupleTypeWithoutCouple {
+            get {
+                return ResourceManager.GetString("Invalid_CoupleTypeWithoutCouple", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Mật khẩu hiện tại không đúng..
         /// </summary>
@@ -6731,6 +6743,18 @@ namespace Cinema.Shared.Resources {
         public static string Invalid_ImportCoupleGroupActive {
             get {
                 return ResourceManager.GetString("Invalid_ImportCoupleGroupActive", resourceCulture);
+            }
+        }
+
+        public static string Invalid_ImportCoupleGroupTypeNotCouple {
+            get {
+                return ResourceManager.GetString("Invalid_ImportCoupleGroupTypeNotCouple", resourceCulture);
+            }
+        }
+
+        public static string Invalid_ImportCoupleTypeWithoutGroup {
+            get {
+                return ResourceManager.GetString("Invalid_ImportCoupleTypeWithoutGroup", resourceCulture);
             }
         }
         

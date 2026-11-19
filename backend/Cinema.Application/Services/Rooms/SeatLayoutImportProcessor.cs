@@ -100,12 +100,15 @@ public sealed class SeatLayoutImportProcessor(
         var seatTypes = await db
             .SeatTypes.AsNoTracking()
             .OrderBy(st => st.Name)
-            .Select(st => new { st.Name, st.PriceMultiplier })
+            .Select(st => new { st.Name, st.PriceMultiplier, st.IsCouple })
             .Take(ExportLimits.MaxRows)
             .ToListAsync(cancellationToken);
 
-        var first = seatTypes.FirstOrDefault()?.Name ?? "Ghế thường";
-        var second = seatTypes.Skip(1).FirstOrDefault()?.Name ?? first;
+        var first =
+            seatTypes.FirstOrDefault(t => !t.IsCouple)?.Name
+            ?? seatTypes.FirstOrDefault()?.Name
+            ?? "Ghế thường";
+        var second = seatTypes.FirstOrDefault(t => t.IsCouple)?.Name ?? first;
 
         var sheets = new List<ExportSheet>
         {
@@ -164,7 +167,7 @@ public sealed class SeatLayoutImportProcessor(
 
         var seatTypes = await db
             .SeatTypes.AsNoTracking()
-            .Select(st => new SeatTypeInfo(st.SeatTypeId, st.Name))
+            .Select(st => new SeatTypeInfo(st.SeatTypeId, st.Name, st.IsCouple))
             .ToListAsync(cancellationToken);
 
         var current = (
@@ -543,7 +546,17 @@ public sealed class SeatLayoutImportProcessor(
             }
         }
 
-        var coupled = positions.Where(p => !p.IsAisle && p.CoupleKey is not null).ToList();
+        var coupleTypeIds = context
+            .SeatTypes.Values.SelectMany(v => v)
+            .Where(t => t.IsCouple)
+            .Select(t => t.Id)
+            .ToHashSet();
+        var coupled = positions
+            .Where(p =>
+                (!p.IsAisle && p.CoupleKey is not null)
+                || (p.SeatTypeId is { } typeId && coupleTypeIds.Contains(typeId))
+            )
+            .ToList();
         var violations = SeatCoupleRules.Validate(
             coupled.Select(p => new CoupleSeatInput(
                 p.RowNumber,
@@ -552,7 +565,8 @@ public sealed class SeatLayoutImportProcessor(
                 p.SeatTypeId,
                 p.IsActive,
                 p.IsAisle,
-                p.CoupleKey
+                p.IsAisle ? null : p.CoupleKey,
+                p.SeatTypeId is { } typeId && coupleTypeIds.Contains(typeId)
             ))
         );
 
@@ -562,13 +576,17 @@ public sealed class SeatLayoutImportProcessor(
             invalidKeys.Add(violation.GroupKey);
             var label = coupled.First(p => p.RowNumber == violation.Refs[0]).CoupleLabel;
             var error = ImportCoupleMessage(violation.Kind, label, violation.Refs.Count);
+            var column =
+                violation.Kind == SeatCoupleViolationKind.CoupleTypeWithoutCouple
+                    ? SeatLayoutImportColumns.SeatType
+                    : SeatLayoutImportColumns.CoupleGroup;
             foreach (var rowNumber in violation.Refs)
-                context.AddCrossError(rowNumber, SeatLayoutImportColumns.CoupleGroup, error);
+                context.AddCrossError(rowNumber, column, error);
         }
 
         foreach (
             var group in coupled
-                .Where(p => !invalidKeys.Contains(p.CoupleKey!))
+                .Where(p => p.CoupleKey is not null && !p.IsAisle && !invalidKeys.Contains(p.CoupleKey!))
                 .GroupBy(p => p.CoupleKey!)
         )
         {
@@ -610,6 +628,12 @@ public sealed class SeatLayoutImportProcessor(
                 Messages.Invalid_ImportCoupleGroupSeatType,
                 label
             ),
+            SeatCoupleViolationKind.SeatTypeNotCouple => string.Format(
+                Messages.Invalid_ImportCoupleGroupTypeNotCouple,
+                label
+            ),
+            SeatCoupleViolationKind.CoupleTypeWithoutCouple =>
+                Messages.Invalid_ImportCoupleTypeWithoutGroup,
             _ => string.Format(Messages.Invalid_ImportCoupleGroupActive, label),
         };
 
@@ -836,7 +860,7 @@ public sealed class SeatLayoutImportProcessor(
 
     private sealed record RoomInfo(int RoomId, int Rows, int Cols);
 
-    private sealed record SeatTypeInfo(int Id, string Name);
+    private sealed record SeatTypeInfo(int Id, string Name, bool IsCouple);
 
     private sealed record CurrentSeat(
         int SeatId,

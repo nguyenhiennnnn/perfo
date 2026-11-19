@@ -20,5 +20,6 @@ public class SeatTypeConfiguration : IEntityTypeConfiguration<SeatType>
             .Property(x => x.PriceMultiplier)
             .HasColumnType("decimal(5,2)")
             .HasDefaultValue(1.0m);
+        builder.Property(x => x.IsCouple).HasDefaultValue(false);
     }
 }

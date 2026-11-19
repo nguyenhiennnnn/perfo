@@ -232,6 +232,12 @@
   <data name="Invalid_CoupleSeatsActiveMismatch" xml:space="preserve">
     <value>Hai ghế của một cặp ghế đôi phải cùng trạng thái bật/tắt.</value>
   </data>
+  <data name="Invalid_CoupleSeatsTypeNotCouple" xml:space="preserve">
+    <value>Ghế thuộc cặp ghế đôi phải dùng loại ghế đôi.</value>
+  </data>
+  <data name="Invalid_CoupleTypeWithoutCouple" xml:space="preserve">
+    <value>Ghế thuộc loại ghế đôi phải nằm trong một cặp ghế đôi.</value>
+  </data>
   <data name="Invalid_CurrentPassword" xml:space="preserve">
     <value>Mật khẩu hiện tại không đúng.</value>
   </data>
@@ -2424,6 +2430,13 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Invalid_ImportCoupleGroupActive" xml:space="preserve">
     <value>Hai ghế của nhóm "{0}" phải cùng trạng thái bật/tắt.</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Invalid_ImportCoupleGroupActive, ...)</comment>
+  </data>
+  <data name="Invalid_ImportCoupleGroupTypeNotCouple" xml:space="preserve">
+    <value>Hai ghế của nhóm "{0}" phải dùng loại ghế đôi.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Invalid_ImportCoupleGroupTypeNotCouple, ...)</comment>
+  </data>
+  <data name="Invalid_ImportCoupleTypeWithoutGroup" xml:space="preserve">
+    <value>Ghế loại ghế đôi phải có mã CoupleGroup.</value>
   </data>
   <data name="Rule_ImportSeatLayoutSkipBreaksRows" xml:space="preserve">
     <value>Bỏ qua các dòng lỗi sẽ để trống số ghế giữa hàng. Hãy sửa file hoặc đánh dấu các vị trí đó là lối đi.</value>

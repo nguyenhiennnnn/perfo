@@ -229,9 +229,19 @@ export const MembershipTierBadge = ({
     <EmptyValue />
   );
 
-export const SeatTypeBadge = ({ name, className }: { name?: string | null; className?: string }) => {
+export const SeatTypeBadge = ({
+  name,
+  isCouple,
+  className,
+}: {
+  name?: string | null;
+  isCouple?: boolean | null;
+  className?: string;
+}) => {
   if (!name) return <EmptyValue />;
-  const config = seatTypeConfigMap[name] ?? defaultSeatTypeConfig;
+  const config = isCouple
+    ? seatTypeConfigMap.Sweetbox
+    : (seatTypeConfigMap[name] ?? defaultSeatTypeConfig);
   return (
     <Badge variant={config.variant} className={cn(config.className, className)}>
       {name}

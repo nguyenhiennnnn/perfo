@@ -33,7 +33,7 @@ function validateDuplicates(list: EditorCell[]): ValidationIssue[] {
   return issues;
 }
 
-function validateCouples(list: EditorCell[]): ValidationIssue[] {
+function validateCouples(list: EditorCell[], coupleTypeIds: ReadonlySet<number>): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   const groups = new Map<string, EditorCell[]>();
   list.forEach((c) => {
@@ -52,16 +52,62 @@ function validateCouples(list: EditorCell[]): ValidationIssue[] {
       });
       return;
     }
+
     const [a, b] = group.sort((x, y) => x.seatNumber - y.seatNumber);
+    const range = `${a.seatRow}${a.seatNumber} - ${b.seatRow}${b.seatNumber}`;
+
     if (a.seatRow !== b.seatRow || b.seatNumber - a.seatNumber !== 1) {
       issues.push({
-        level: "warning",
-        message: `Cặp ghế đôi hàng ${a.seatRow} (${a.seatNumber} - ${b.seatNumber}) không liền kề nhau.`,
+        level: "error",
+        message: `Cặp ghế đôi ${range} không liền kề nhau.`,
         cellKeys,
       });
     }
+    if (a.isAisle || b.isAisle) {
+      issues.push({
+        level: "error",
+        message: `Cặp ghế đôi ${range} nằm trên ô lối đi.`,
+        cellKeys,
+      });
+    }
+    if (a.seatTypeId !== b.seatTypeId) {
+      issues.push({
+        level: "error",
+        message: `Hai ghế của cặp ghế đôi ${range} khác loại ghế.`,
+        cellKeys,
+      });
+    }
+    if (a.isActive !== b.isActive) {
+      issues.push({
+        level: "error",
+        message: `Hai ghế của cặp ghế đôi ${range} khác trạng thái bật/tắt.`,
+        cellKeys,
+      });
+    }
+    if (!a.isAisle && !b.isAisle) {
+      const wrongType = group.filter((c) => c.seatTypeId === null || !coupleTypeIds.has(c.seatTypeId));
+      if (wrongType.length > 0) {
+        issues.push({
+          level: "error",
+          message: `Cặp ghế đôi ${range} phải dùng loại ghế đôi.`,
+          cellKeys: wrongType.map(cellKeyOf),
+        });
+      }
+    }
   });
   return issues;
+}
+
+function validateCoupleTypeSeats(list: EditorCell[], coupleTypeIds: ReadonlySet<number>): ValidationIssue[] {
+  return list
+    .filter(
+      (c) => !c.isAisle && !c.coupleId && c.seatTypeId !== null && coupleTypeIds.has(c.seatTypeId),
+    )
+    .map((c) => ({
+      level: "error",
+      message: `Ghế ${c.seatRow}${c.seatNumber} dùng loại ghế đôi nhưng không thuộc cặp ghế đôi nào.`,
+      cellKeys: [cellKeyOf(c)],
+    }));
 }
 
 function validateAisles(list: EditorCell[], cols: number): ValidationIssue[] {
@@ -90,11 +136,13 @@ export function validateSeatLayout(
   list: EditorCell[],
   rows: number,
   cols: number,
+  coupleTypeIds: ReadonlySet<number> = new Set(),
 ): ValidationIssue[] {
   return [
     ...validateBounds(list, rows, cols),
     ...validateDuplicates(list),
-    ...validateCouples(list),
+    ...validateCouples(list, coupleTypeIds),
+    ...validateCoupleTypeSeats(list, coupleTypeIds),
     ...validateAisles(list, cols),
   ];
 }

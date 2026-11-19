@@ -189,13 +189,14 @@ public class RoomService(IAppDbContext db) : IRoomService
             .Select(s => s.SeatTypeId!.Value)
             .Distinct()
             .ToList();
+        var coupleTypeIds = new HashSet<int>();
         if (seatTypeIds.Count > 0)
         {
-            var existingCount = await db.SeatTypes.CountAsync(
-                st => seatTypeIds.Contains(st.SeatTypeId),
-                cancellationToken
-            );
-            if (existingCount != seatTypeIds.Count)
+            var foundTypes = await db
+                .SeatTypes.Where(st => seatTypeIds.Contains(st.SeatTypeId))
+                .Select(st => new { st.SeatTypeId, st.IsCouple })
+                .ToListAsync(cancellationToken);
+            if (foundTypes.Count != seatTypeIds.Count)
                 throw new ValidationAppException(
                     Messages.Invalid_ReferenceData,
                     new Dictionary<string, string[]>
@@ -203,6 +204,8 @@ public class RoomService(IAppDbContext db) : IRoomService
                         ["seats"] = [Messages.Invalid_SeatTypeIdsNotFound],
                     }
                 );
+
+            coupleTypeIds = foundTypes.Where(t => t.IsCouple).Select(t => t.SeatTypeId).ToHashSet();
         }
 
         var duplicatePositions = SeatCoupleRules.FindDuplicatePositions(
@@ -227,7 +230,8 @@ public class RoomService(IAppDbContext db) : IRoomService
                         s.SeatTypeId,
                         s.IsActive,
                         s.IsAisle,
-                        s.CoupleId?.ToString()
+                        s.CoupleId?.ToString(),
+                        s.SeatTypeId is { } typeId && coupleTypeIds.Contains(typeId)
                     )
             )
         );
@@ -477,6 +481,8 @@ public class RoomService(IAppDbContext db) : IRoomService
             SeatCoupleViolationKind.OnAisle => Messages.Invalid_CoupleSeatsOnAisle,
             SeatCoupleViolationKind.DifferentSeatType => Messages.Invalid_CoupleSeatsTypeMismatch,
             SeatCoupleViolationKind.DifferentActiveState => Messages.Invalid_CoupleSeatsActiveMismatch,
+            SeatCoupleViolationKind.SeatTypeNotCouple => Messages.Invalid_CoupleSeatsTypeNotCouple,
+            SeatCoupleViolationKind.CoupleTypeWithoutCouple => Messages.Invalid_CoupleTypeWithoutCouple,
             _ => Messages.Invalid_CoupleSeatsUnpaired,
         };
 }

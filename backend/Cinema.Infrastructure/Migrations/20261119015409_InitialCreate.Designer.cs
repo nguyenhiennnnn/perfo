@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cinema.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261118014317_InitialCreate")]
+    [Migration("20261119015409_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -4784,6 +4784,11 @@ namespace Cinema.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SeatTypeId"));
 
+                    b.Property<bool>("IsCouple")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -4808,18 +4813,21 @@ namespace Cinema.Infrastructure.Migrations
                         new
                         {
                             SeatTypeId = 1,
+                            IsCouple = false,
                             Name = "Standard",
                             PriceMultiplier = 1.0m
                         },
                         new
                         {
                             SeatTypeId = 2,
+                            IsCouple = false,
                             Name = "VIP",
                             PriceMultiplier = 1.5m
                         },
                         new
                         {
                             SeatTypeId = 3,
+                            IsCouple = true,
                             Name = "Couple",
                             PriceMultiplier = 2.0m
                         });

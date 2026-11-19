@@ -575,6 +575,7 @@ public class CatalogService(IAppDbContext db) : ICatalogService
         {
             Name = request.Name,
             PriceMultiplier = request.PriceMultiplier,
+            IsCouple = request.IsCouple,
         };
         db.SeatTypes.Add(entity);
         await db.SaveChangesAsync(cancellationToken);
@@ -592,6 +593,7 @@ public class CatalogService(IAppDbContext db) : ICatalogService
             ?? throw new NotFoundException(Messages.NotFound_SeatType);
         entity.Name = request.Name;
         entity.PriceMultiplier = request.PriceMultiplier;
+        entity.IsCouple = request.IsCouple;
         await db.SaveChangesAsync(cancellationToken);
         return entity.Adapt<SeatTypeDto>();
     }

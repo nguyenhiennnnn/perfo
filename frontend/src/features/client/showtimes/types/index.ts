@@ -32,6 +32,7 @@ export interface ShowtimeSeatItemDto {
   seatNumber: number;
   seatTypeId?: number | null;
   seatType?: string | null;
+  isCouple?: boolean;
   coupleId?: string | null;
   status: string;
   price: number;

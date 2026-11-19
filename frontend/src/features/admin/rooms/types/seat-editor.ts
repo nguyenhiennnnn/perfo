@@ -13,6 +13,17 @@ export type SeatEditorBrush =
   | { type: "toggleAisle" }
   | { type: "pairCouple" };
 
+export interface SeatTypeRules {
+  defaultSeatTypeId: number | null;
+  coupleSeatTypeId: number | null;
+  coupleTypeIds: ReadonlySet<number>;
+}
+
+export interface BrushResult {
+  cells: EditorCellMap;
+  warning: string | null;
+}
+
 export interface ValidationIssue {
   level: "error" | "warning";
   message: string;

@@ -45,7 +45,7 @@ const STATE_TEXT: Record<SeatCellState, string> = {
 const buildLegend = (seats: ShowtimeSeatItemDto[]): SeatLegendItem[] => {
   const priceByKind = new Map<SeatVisualKind, number>();
   for (const seat of seats) {
-    const kind = resolveSeatVisualKind(seat.seatType);
+    const kind = resolveSeatVisualKind(seat.seatType, seat.isCouple);
     if (!priceByKind.has(kind) && seat.price != null) priceByKind.set(kind, seat.price);
   }
   return [...TYPE_LEGEND_ITEMS, ...STATUS_LEGEND_ITEMS].map((item) => {
@@ -72,6 +72,7 @@ export const SelectableSeatMap = ({
     showtimeSeatId: seat.showtimeSeatId,
     seatTypeId: seat.seatTypeId,
     seatTypeName: seat.seatType,
+    isCouple: seat.isCouple,
     coupleId: seat.coupleId,
     price: seat.price,
     isActive: true,
@@ -120,7 +121,7 @@ export const SelectableSeatMap = ({
             <SeatButton
               label={label}
               ariaLabel={`Ghế ${code}, ${STATE_TEXT[state]}`}
-              kind={resolveSeatVisualKind(cell.seatTypeName)}
+              kind={resolveSeatVisualKind(cell.seatTypeName, cell.isCouple)}
               state={state}
               mark={highlightedIds?.has(cell.showtimeSeatId) ? "suggested" : undefined}
               onClick={() =>
@@ -130,12 +131,13 @@ export const SelectableSeatMap = ({
                   seatNumber: cell.seatNumber,
                   seatTypeId: cell.seatTypeId ?? null,
                   seatType: cell.seatTypeName ?? null,
+                  isCouple: cell.isCouple ?? false,
                   coupleId: cell.coupleId ?? null,
                   status,
                   price: cell.price ?? 0,
                 })
               }
-              title={`${code}${cell.seatTypeName ? `, ${seatTypeLabel(cell.seatTypeName)}` : ""}`}
+              title={`${code}${cell.seatTypeName ? `, ${seatTypeLabel(cell.seatTypeName, cell.isCouple)}` : ""}`}
             />
           );
         }}

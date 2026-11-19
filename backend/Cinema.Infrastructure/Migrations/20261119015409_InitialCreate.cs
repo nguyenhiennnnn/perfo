@@ -203,7 +203,8 @@ namespace Cinema.Infrastructure.Migrations
                     SeatTypeId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    PriceMultiplier = table.Column<decimal>(type: "numeric(5,2)", nullable: false, defaultValue: 1.0m)
+                    PriceMultiplier = table.Column<decimal>(type: "numeric(5,2)", nullable: false, defaultValue: 1.0m),
+                    IsCouple = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -1013,9 +1014,13 @@ namespace Cinema.Infrastructure.Migrations
                 values: new object[,]
                 {
                     { 1, "Standard", 1.0m },
-                    { 2, "VIP", 1.5m },
-                    { 3, "Couple", 2.0m }
+                    { 2, "VIP", 1.5m }
                 });
+
+            migrationBuilder.InsertData(
+                table: "SeatTypes",
+                columns: new[] { "SeatTypeId", "IsCouple", "Name", "PriceMultiplier" },
+                values: new object[] { 3, true, "Couple", 2.0m });
 
             migrationBuilder.InsertData(
                 table: "CinemaRooms",

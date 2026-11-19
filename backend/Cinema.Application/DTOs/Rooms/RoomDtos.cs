@@ -25,7 +25,8 @@ public record SeatDto(
     string? SeatTypeName,
     bool IsActive,
     bool IsAisle,
-    Guid? CoupleId
+    Guid? CoupleId,
+    bool IsCouple
 );
 
 public record SeatLayoutItem(

@@ -5,6 +5,7 @@ import { NAME_MAX_LENGTH, FORM_SAVE_CHANGES_LABEL } from "@/config/default-const
 
 import { FieldGroup } from "@/components/ui/field";
 import { FormInputField } from "@/components/common/form/form-input-field";
+import { FormSwitchField } from "@/components/common/form/form-switch-field";
 
 import { useAdminUpdateSeatType } from "@/features/admin/catalog/hooks/use-admin-seat-type";
 import type { SeatTypeDto } from "@/features/admin/catalog/types";
@@ -19,6 +20,7 @@ const seatTypeFormSchema = z.object({
   priceMultiplier: z.coerce
     .number({ message: "Hệ số giá phải là số." })
     .min(0.1, "Hệ số giá tối thiểu là 0.1."),
+  isCouple: z.boolean(),
 });
 
 type SeatTypeFormValues = z.infer<typeof seatTypeFormSchema>;
@@ -39,6 +41,7 @@ export const SeatTypeUpdateForm = ({
     defaultValues: {
       name: seatType.name,
       priceMultiplier: seatType.priceMultiplier,
+      isCouple: seatType.isCouple,
     },
   });
 
@@ -50,6 +53,7 @@ export const SeatTypeUpdateForm = ({
       body: {
         name: values.name,
         priceMultiplier: values.priceMultiplier,
+        isCouple: values.isCouple,
       },
     }, {
       onSuccess: () => onSuccess(),
@@ -80,6 +84,12 @@ export const SeatTypeUpdateForm = ({
           type="number"
           min={0.1}
           step={0.1}
+        />
+
+        <FormSwitchField
+          name="isCouple"
+          control={form.control}
+          label="Ghế đôi (hai ghế liền kề đặt như một khối)"
         />
       </FieldGroup>
 

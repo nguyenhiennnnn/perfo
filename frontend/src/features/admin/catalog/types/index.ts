@@ -47,6 +47,7 @@ export interface SeatTypeDto {
   seatTypeId: number;
   name: string;
   priceMultiplier: number;
+  isCouple: boolean;
 }
 
 export interface UpsertGenreRequest {
@@ -79,6 +80,7 @@ export interface QuickCreatePersonRequest {
 export interface UpsertSeatTypeRequest {
   name: string;
   priceMultiplier: number;
+  isCouple: boolean;
 }
 
 export interface UpsertMembershipTierRequest {

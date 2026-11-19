@@ -44,7 +44,7 @@ export const SeatEditorStats = ({ cellMap, seatTypes }: SeatEditorStatsProps) =>
     <dl className="flex flex-wrap gap-x-6 gap-y-1.5 bg-card px-4 py-3 text-xs" aria-label="Thống kê sơ đồ ghế">
       <Stat label="Tổng số ghế" value={stats.sellable} />
       {seatTypes?.map((st) => (
-        <Stat key={st.seatTypeId} label={seatTypeLabel(st.name)} value={stats.byType.get(st.seatTypeId) ?? 0} />
+        <Stat key={st.seatTypeId} label={seatTypeLabel(st.name, st.isCouple)} value={stats.byType.get(st.seatTypeId) ?? 0} />
       ))}
       <Stat label="Cặp ghế đôi" value={stats.couplePairs} />
       <Stat label="Ghế đã tắt" value={stats.disabled} />

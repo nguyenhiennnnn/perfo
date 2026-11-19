@@ -85,6 +85,7 @@ public static class SeedData
                     SeatTypeId = 3,
                     Name = "Couple",
                     PriceMultiplier = 2.0m,
+                    IsCouple = true,
                 }
             );
 

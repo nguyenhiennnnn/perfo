@@ -40,7 +40,8 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
                 ss.Seat.SeatType != null ? ss.Seat.SeatType.Name : null,
                 ss.Seat.CoupleId,
                 ss.Status.ToString(),
-                ss.Price
+                ss.Price,
+                ss.Seat.SeatType != null && ss.Seat.SeatType.IsCouple
             ))
             .ToListAsync(cancellationToken);
 

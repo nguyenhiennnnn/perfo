@@ -2,14 +2,19 @@ import {
   generateRowLabel,
   seatCellKey,
 } from "@/components/common/seat-map/seat-map-types";
+import type { SeatTypeDto } from "@/features/admin/catalog/types";
 import type { SeatDto, UpdateSeatLayoutRequest } from "../types";
 import type {
   AutoGenerateOptions,
+  BrushResult,
   CopiedRow,
   EditorCell,
   EditorCellMap,
   SeatEditorBrush,
+  SeatTypeRules,
 } from "../types/seat-editor";
+
+type SolidBrush = Exclude<SeatEditorBrush, { type: "pairCouple" }>;
 
 function newCoupleId(seed: string): string {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -29,6 +34,25 @@ const createDefaultCell = (
   isAisle: false,
   coupleId: null,
 });
+
+const warn = (cells: EditorCellMap, warning: string): BrushResult => ({ cells, warning });
+
+export function buildSeatTypeRules(
+  seatTypes: SeatTypeDto[] | undefined,
+  defaultSeatTypeId: number | null,
+): SeatTypeRules {
+  const coupleTypes = (seatTypes ?? []).filter((t) => t.isCouple);
+  return {
+    defaultSeatTypeId,
+    coupleSeatTypeId: coupleTypes[0]?.seatTypeId ?? null,
+    coupleTypeIds: new Set(coupleTypes.map((t) => t.seatTypeId)),
+  };
+}
+
+export function listBrushSeatTypes(seatTypes: SeatTypeDto[] | undefined): SeatTypeDto[] {
+  const defaultCoupleId = seatTypes?.find((t) => t.isCouple)?.seatTypeId;
+  return (seatTypes ?? []).filter((t) => !t.isCouple || t.seatTypeId !== defaultCoupleId);
+}
 
 export function buildInitialCells(
   rows: number,
@@ -63,63 +87,257 @@ export function buildInitialCells(
   return map;
 }
 
+function releaseFromCouple(cell: EditorCell, rules: SeatTypeRules): EditorCell {
+  const isCoupleType = cell.seatTypeId !== null && rules.coupleTypeIds.has(cell.seatTypeId);
+  return {
+    ...cell,
+    coupleId: null,
+    seatTypeId: isCoupleType ? (rules.defaultSeatTypeId ?? cell.seatTypeId) : cell.seatTypeId,
+  };
+}
+
+export function sanitizeCouples(cells: EditorCellMap, rules: SeatTypeRules): EditorCellMap {
+  const groups = new Map<string, string[]>();
+  cells.forEach((cell, key) => {
+    if (cell.coupleId) groups.set(cell.coupleId, [...(groups.get(cell.coupleId) ?? []), key]);
+  });
+
+  const next = new Map(cells);
+  groups.forEach((keys) => {
+    if (keys.length === 2) return;
+    keys.forEach((key) => {
+      const cell = next.get(key);
+      if (cell) next.set(key, releaseFromCouple(cell, rules));
+    });
+  });
+  return next;
+}
+
 export function resizeCells(
   cells: EditorCellMap,
   newRows: number,
   newCols: number,
-  defaultSeatTypeId: number | null,
+  rules: SeatTypeRules,
 ): EditorCellMap {
   const next: EditorCellMap = new Map();
   for (let r = 0; r < newRows; r++) {
     const rowLabel = generateRowLabel(r);
     for (let c = 1; c <= newCols; c++) {
       const key = seatCellKey(rowLabel, c);
-      next.set(key, cells.get(key) ?? createDefaultCell(rowLabel, c, defaultSeatTypeId));
+      next.set(key, cells.get(key) ?? createDefaultCell(rowLabel, c, rules.defaultSeatTypeId));
     }
   }
-  return next;
+  return sanitizeCouples(next, rules);
 }
 
-export function applyBrushToCell(
-  cell: EditorCell,
-  brush: Exclude<SeatEditorBrush, { type: "pairCouple" }>,
-): EditorCell {
-  switch (brush.type) {
-    case "seatType":
-      return { ...cell, seatTypeId: brush.seatTypeId, isAisle: false };
-    case "toggleActive":
-      return { ...cell, isActive: !cell.isActive };
-    case "toggleAisle":
-      return {
-        ...cell,
-        isAisle: !cell.isAisle,
-        coupleId: !cell.isAisle ? null : cell.coupleId,
-      };
+function membersOf(cells: EditorCellMap, key: string, cell: EditorCell): string[] {
+  if (!cell.coupleId) return [key];
+  const keys: string[] = [];
+  cells.forEach((c, k) => {
+    if (c.coupleId === cell.coupleId) keys.push(k);
+  });
+  return keys;
+}
+
+export function expandToCouples(cells: EditorCellMap, keys: Iterable<string>): string[] {
+  const expanded = new Set<string>();
+  for (const key of keys) {
+    const cell = cells.get(key);
+    if (!cell) continue;
+    membersOf(cells, key, cell).forEach((k) => expanded.add(k));
   }
+  return Array.from(expanded);
 }
 
-export function unpairCouple(cells: EditorCellMap, coupleId: string): EditorCellMap {
+function updateMembers(
+  cells: EditorCellMap,
+  keys: string[],
+  patch: (cell: EditorCell) => EditorCell,
+): EditorCellMap {
   const next = new Map(cells);
-  next.forEach((c, k) => {
-    if (c.coupleId === coupleId) next.set(k, { ...c, coupleId: null });
+  keys.forEach((key) => {
+    const cell = next.get(key);
+    if (cell) next.set(key, patch(cell));
   });
   return next;
 }
 
-export const canPairSeats = (a: EditorCell | undefined, b: EditorCell): a is EditorCell =>
-  !!a && !a.isAisle && a.seatRow === b.seatRow && Math.abs(a.seatNumber - b.seatNumber) === 1;
+function findPartnerKey(cells: EditorCellMap, cell: EditorCell): string | null {
+  const candidates = [cell.seatNumber + 1, cell.seatNumber - 1];
+  for (const number of candidates) {
+    const key = seatCellKey(cell.seatRow, number);
+    const candidate = cells.get(key);
+    if (candidate && !candidate.isAisle && !candidate.coupleId) return key;
+  }
+  return null;
+}
 
-export function pairCouple(
+function pairWithNeighbor(
   cells: EditorCellMap,
-  keyA: string,
-  cellA: EditorCell,
-  keyB: string,
-  cellB: EditorCell,
-): EditorCellMap {
-  const coupleId = newCoupleId(keyB);
+  key: string,
+  cell: EditorCell,
+  seatTypeId: number | null,
+): BrushResult {
+  if (seatTypeId === null) {
+    return warn(
+      cells,
+      "Chưa có loại ghế đôi. Hãy bật cờ \"Ghế đôi\" cho một loại ghế trong danh mục loại ghế.",
+    );
+  }
+
+  const partnerKey = findPartnerKey(cells, cell);
+  const partner = partnerKey ? cells.get(partnerKey) : undefined;
+  if (!partnerKey || !partner) {
+    return warn(cells, "Không có ô liền kề còn trống để ghép thành ghế đôi.");
+  }
+
+  const coupleId = newCoupleId(partnerKey);
   const next = new Map(cells);
-  next.set(keyA, { ...cellA, coupleId });
-  next.set(keyB, { ...cellB, coupleId });
+  next.set(key, { ...cell, seatTypeId, coupleId });
+  next.set(partnerKey, { ...partner, seatTypeId, coupleId, isActive: cell.isActive });
+  return { cells: next, warning: null };
+}
+
+function splitCouple(
+  cells: EditorCellMap,
+  key: string,
+  cell: EditorCell,
+  rules: SeatTypeRules,
+): EditorCellMap {
+  return updateMembers(cells, membersOf(cells, key, cell), (c) => ({
+    ...c,
+    coupleId: null,
+    seatTypeId: rules.defaultSeatTypeId ?? c.seatTypeId,
+  }));
+}
+
+function toggleCoupleAt(
+  cells: EditorCellMap,
+  key: string,
+  cell: EditorCell,
+  rules: SeatTypeRules,
+): BrushResult {
+  if (cell.isAisle) return warn(cells, "Không thể đặt ghế đôi tại ô lối đi.");
+  if (cell.coupleId) return { cells: splitCouple(cells, key, cell, rules), warning: null };
+  return pairWithNeighbor(cells, key, cell, rules.coupleSeatTypeId);
+}
+
+function assignSeatTypeAt(
+  cells: EditorCellMap,
+  key: string,
+  cell: EditorCell,
+  seatTypeId: number,
+  rules: SeatTypeRules,
+): BrushResult {
+  if (rules.coupleTypeIds.has(seatTypeId)) {
+    if (cell.isAisle) return warn(cells, "Không thể đặt ghế đôi tại ô lối đi.");
+    if (!cell.coupleId) return pairWithNeighbor(cells, key, cell, seatTypeId);
+    return {
+      cells: updateMembers(cells, membersOf(cells, key, cell), (c) => ({ ...c, seatTypeId })),
+      warning: null,
+    };
+  }
+
+  return {
+    cells: updateMembers(cells, membersOf(cells, key, cell), (c) => ({
+      ...c,
+      seatTypeId,
+      isAisle: false,
+      coupleId: null,
+    })),
+    warning: null,
+  };
+}
+
+function toggleAisleAt(
+  cells: EditorCellMap,
+  key: string,
+  cell: EditorCell,
+  rules: SeatTypeRules,
+): EditorCellMap {
+  if (cell.coupleId) {
+    return updateMembers(cells, membersOf(cells, key, cell), (c) => ({
+      ...c,
+      isAisle: true,
+      coupleId: null,
+      seatTypeId: rules.defaultSeatTypeId ?? c.seatTypeId,
+    }));
+  }
+  return updateMembers(cells, [key], (c) => ({ ...c, isAisle: !c.isAisle }));
+}
+
+export function applyBrushAt(
+  cells: EditorCellMap,
+  key: string,
+  brush: SeatEditorBrush,
+  rules: SeatTypeRules,
+): BrushResult {
+  const cell = cells.get(key);
+  if (!cell) return { cells, warning: null };
+
+  switch (brush.type) {
+    case "pairCouple":
+      return toggleCoupleAt(cells, key, cell, rules);
+    case "seatType":
+      return assignSeatTypeAt(cells, key, cell, brush.seatTypeId, rules);
+    case "toggleActive":
+      return {
+        cells: updateMembers(cells, membersOf(cells, key, cell), (c) => ({
+          ...c,
+          isActive: !cell.isActive,
+        })),
+        warning: null,
+      };
+    case "toggleAisle":
+      return { cells: toggleAisleAt(cells, key, cell, rules), warning: null };
+  }
+}
+
+export function applyBrushToKeys(
+  cells: EditorCellMap,
+  keys: Iterable<string>,
+  brush: SolidBrush,
+  rules: SeatTypeRules,
+): EditorCellMap {
+  const targets = expandToCouples(cells, keys);
+  const selected = targets
+    .map((key) => ({ key, cell: cells.get(key) }))
+    .filter((entry): entry is { key: string; cell: EditorCell } => !!entry.cell);
+
+  const next = new Map(cells);
+
+  if (brush.type === "toggleActive") {
+    const targetActive = !selected.some(({ cell }) => cell.isActive && !cell.isAisle);
+    selected.forEach(({ key, cell }) => {
+      if (!cell.isAisle) next.set(key, { ...cell, isActive: targetActive });
+    });
+    return next;
+  }
+
+  if (brush.type === "toggleAisle") {
+    const targetAisle = selected.some(({ cell }) => !cell.isAisle);
+    selected.forEach(({ key, cell }) => {
+      if (cell.isAisle === targetAisle) return;
+      next.set(
+        key,
+        targetAisle
+          ? {
+              ...cell,
+              isAisle: true,
+              coupleId: null,
+              seatTypeId: cell.coupleId
+                ? (rules.defaultSeatTypeId ?? cell.seatTypeId)
+                : cell.seatTypeId,
+            }
+          : { ...cell, isAisle: false },
+      );
+    });
+    return next;
+  }
+
+  selected.forEach(({ key, cell }) =>
+    next.set(key, { ...cell, seatTypeId: brush.seatTypeId, isAisle: false, coupleId: null }),
+  );
   return next;
 }
 
@@ -127,6 +345,7 @@ export function pasteRowCells(
   cells: EditorCellMap,
   copied: CopiedRow,
   targetRowLabel: string,
+  rules: SeatTypeRules,
 ): EditorCellMap {
   const coupleIdMap = new Map<string, string>();
   const next = new Map(cells);
@@ -144,7 +363,7 @@ export function pasteRowCells(
 
     next.set(key, { ...source, seatRow: targetRowLabel, coupleId });
   });
-  return next;
+  return sanitizeCouples(next, rules);
 }
 
 function buildCoupleIdsByCol(

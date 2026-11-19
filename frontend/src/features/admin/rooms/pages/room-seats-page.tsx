@@ -54,8 +54,10 @@ const SeatEditorReady = ({
 
   const defaultSeatTypeId = useMemo(() => {
     if (seatTypes.length === 0) return null;
-    const standard = seatTypes.find((t) => resolveSeatVisualKind(t.name) === "standard");
-    return (standard ?? seatTypes[0]).seatTypeId;
+    const standard = seatTypes.find(
+      (t) => resolveSeatVisualKind(t.name, t.isCouple) === "standard",
+    );
+    return (standard ?? seatTypes.find((t) => !t.isCouple) ?? seatTypes[0]).seatTypeId;
   }, [seatTypes]);
 
   const { rows: initialRows, cols: initialCols } = useMemo(
@@ -67,6 +69,7 @@ const SeatEditorReady = ({
     initialRows,
     initialCols,
     initialSeats: seats,
+    seatTypes,
     defaultSeatTypeId,
   });
 
@@ -261,7 +264,6 @@ const SeatEditorReady = ({
         cols={editor.cols}
         cellMap={editor.cellMap}
         seatTypes={seatTypes}
-        pendingCoupleKey={editor.pendingCoupleKey}
         onCellClick={handleCellClick}
         activeBrush={brush}
         issueKeys={issueKeys}

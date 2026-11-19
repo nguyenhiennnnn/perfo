@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { SeatTypeDto } from "@/features/admin/catalog/types";
 import type { SeatEditorBrush } from "../types/seat-editor";
+import { listBrushSeatTypes } from "../utils/seat-editor-cells";
 
 interface UseSeatEditorShortcutsParams {
   enabled: boolean;
@@ -71,7 +72,7 @@ export function useSeatEditorShortcuts(params: UseSeatEditorShortcutsParams) {
           p.onDisableSelection();
         }
       } else if (/^[1-9]$/.test(key)) {
-        const seatType = p.seatTypes[Number(key) - 1];
+        const seatType = listBrushSeatTypes(p.seatTypes)[Number(key) - 1];
         if (seatType) p.onSelectBrush({ type: "seatType", seatTypeId: seatType.seatTypeId });
       }
     };

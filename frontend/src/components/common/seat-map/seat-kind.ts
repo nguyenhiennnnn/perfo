@@ -12,9 +12,12 @@ const DEFAULT_NAMES: Record<SeatVisualKind, RegExp> = {
   couple: /^(couple|sweetbox|đôi)$/i,
 };
 
-export const seatTypeLabel = (name: string | null | undefined): string => {
+export const seatTypeLabel = (
+  name: string | null | undefined,
+  isCouple?: boolean | null,
+): string => {
   const trimmed = (name ?? "").trim();
-  const kind = resolveSeatVisualKind(trimmed);
+  const kind = resolveSeatVisualKind(trimmed, isCouple);
   if (trimmed === "" || DEFAULT_NAMES[kind].test(trimmed)) return SEAT_KIND_LABEL[kind];
   return trimmed;
 };

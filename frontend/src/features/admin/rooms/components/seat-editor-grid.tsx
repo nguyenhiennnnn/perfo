@@ -35,7 +35,6 @@ interface SeatEditorGridProps {
   cols: number;
   cellMap: Map<string, EditorCell>;
   seatTypes: SeatTypeDto[] | undefined;
-  pendingCoupleKey: string | null;
   onCellClick: (rowLabel: string, col: number) => void;
   activeBrush?: SeatEditorBrush;
   issueKeys?: Set<string>;
@@ -57,7 +56,6 @@ export const SeatEditorGrid = ({
   cols,
   cellMap,
   seatTypes,
-  pendingCoupleKey,
   onCellClick,
   activeBrush,
   issueKeys,
@@ -70,8 +68,7 @@ export const SeatEditorGrid = ({
   copySourceRow,
   isPickingCopySource,
 }: SeatEditorGridProps) => {
-  const seatTypeName = (id: number | null) =>
-    seatTypes?.find((t) => t.seatTypeId === id)?.name ?? null;
+  const seatTypeOf = (id: number | null) => seatTypes?.find((t) => t.seatTypeId === id);
 
   const cells = Array.from(cellMap.values()).map((c) => ({
     seatRow: c.seatRow,
@@ -80,7 +77,8 @@ export const SeatEditorGrid = ({
     isAisle: c.isAisle,
     coupleId: c.coupleId,
     seatTypeId: c.seatTypeId,
-    seatTypeName: seatTypeName(c.seatTypeId),
+    seatTypeName: seatTypeOf(c.seatTypeId)?.name ?? null,
+    isCouple: seatTypeOf(c.seatTypeId)?.isCouple ?? false,
   }));
 
   const { rowLabels, cellAt } = useSeatGridModel({ rowsCount: rows, cols, cells });
@@ -172,18 +170,11 @@ export const SeatEditorGrid = ({
           if (!cell) return null;
           if (previewMode && !cell.isAisle && !cell.isActive) return null;
           const key = seatCellKey(rowLabel, col);
-          const isPending = pendingCoupleKey === key;
           const isSelected = !previewMode && selectedKeys?.has(key);
           const hasIssue = !previewMode && issueKeys?.has(key);
-          const mark: SeatMark | undefined = isPending
-            ? "pending"
-            : hasIssue
-              ? "issue"
-              : isSelected
-                ? "range"
-                : undefined;
+          const mark: SeatMark | undefined = hasIssue ? "issue" : isSelected ? "range" : undefined;
           const state = cell.isAisle ? "aisle" : cell.isActive ? "available" : "inactive";
-          const kind = resolveSeatVisualKind(cell.seatTypeName);
+          const kind = resolveSeatVisualKind(cell.seatTypeName, cell.isCouple);
           const label = cell.isAisle
             ? ""
             : cell.coupleSpan === 2
@@ -193,7 +184,7 @@ export const SeatEditorGrid = ({
           const code = isCouple
             ? `${rowLabel}${col}-${rowLabel}${col + 1}`
             : `${rowLabel}${col}`;
-          const typeLabel = cell.seatTypeName ? seatTypeLabel(cell.seatTypeName) : null;
+          const typeLabel = cell.seatTypeName ? seatTypeLabel(cell.seatTypeName, cell.isCouple) : null;
           const description = cell.isAisle
             ? `Ô ${code}, lối đi`
             : `Ghế ${code}${typeLabel ? `, ${typeLabel}` : ""}, ${cell.isActive ? "đang bật" : "đã tắt"}`;

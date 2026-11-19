@@ -2,6 +2,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
 import { SeatTypeBadge } from "@/components/common/status-badge";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -41,7 +42,7 @@ export const createSeatTypeColumns = ({
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Loại ghế" />
       ),
-      cell: ({ row }) => <SeatTypeBadge name={row.original.name} />,
+      cell: ({ row }) => <SeatTypeBadge name={row.original.name} isCouple={row.original.isCouple} />,
     }),
     columnHelper.accessor("priceMultiplier", {
       header: ({ column }) => (
@@ -52,6 +53,17 @@ export const createSeatTypeColumns = ({
           x{row.original.priceMultiplier}
         </span>
       ),
+    }),
+    columnHelper.accessor("isCouple", {
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Ghế đôi" />
+      ),
+      cell: ({ row }) =>
+        row.original.isCouple ? (
+          <Badge variant="secondary">Ghế đôi</Badge>
+        ) : (
+          <span className="text-muted-foreground text-sm">—</span>
+        ),
     }),
     columnHelper.display({
       id: "actions",

@@ -1,5 +1,4 @@
 import { seatTypeLabel } from "@/components/common/seat-map/seat-kind";
-import { resolveSeatVisualKind } from "@/components/common/seat-map/seat-map-types";
 import type { SeatTypeDto } from "@/features/admin/catalog/types";
 import type { SeatEditorBrush } from "../types/seat-editor";
 
@@ -11,29 +10,29 @@ export const describeBrush = (
     case "seatType": {
       const seatType = seatTypes?.find((t) => t.seatTypeId === brush.seatTypeId);
       const name = seatType?.name ?? "";
-      const label = seatType ? seatTypeLabel(name) : "Loại ghế";
-      const isCouple = resolveSeatVisualKind(name) === "couple";
+      const isCouple = seatType?.isCouple ?? false;
+      const label = seatType ? seatTypeLabel(name, isCouple) : "Loại ghế";
       return {
         label: `Gán ${label}`,
         hint: isCouple
-          ? "Bấm vào ô ghế để đổi loại. Ghế đôi cần được gộp 2 ghế liền kề bằng công cụ Gộp 2 ghế thành ghế đôi."
-          : "Bấm vào ô ghế để đổi sang loại này.",
+          ? "Bấm vào ô ghế để tự ghép với ô liền kề thành ghế đôi loại này. Bấm vào ghế đôi có sẵn để đổi loại cả cặp."
+          : "Bấm vào ô ghế để đổi sang loại này. Nếu ô thuộc ghế đôi, cặp ghế sẽ được tách ra.",
       };
     }
     case "pairCouple":
       return {
-        label: "Gộp 2 ghế thành ghế đôi",
-        hint: "Bấm ghế thứ nhất, rồi bấm ghế liền kề cùng hàng. Bấm vào ghế đôi có sẵn để tách lại.",
+        label: "Ghế đôi",
+        hint: "Bấm một ô để tự ghép với ô liền kề bên phải (hoặc bên trái nếu không được) thành ghế đôi. Bấm lại lên ghế đôi để tách về 2 ghế thường.",
       };
     case "toggleAisle":
       return {
         label: "Đặt/bỏ lối đi",
-        hint: "Bấm vào ô để biến thành lối đi, bấm lần nữa để trả lại thành ghế.",
+        hint: "Bấm vào ô để biến thành lối đi, bấm lần nữa để trả lại thành ghế. Với ghế đôi, cả cặp cùng chuyển thành lối đi.",
       };
     case "toggleActive":
       return {
         label: "Bật/tắt ghế",
-        hint: "Bấm vào ghế để tắt (không bán), bấm lần nữa để bật lại.",
+        hint: "Bấm vào ghế để tắt (không bán), bấm lần nữa để bật lại. Với ghế đôi, cả cặp cùng bật/tắt.",
       };
   }
 };

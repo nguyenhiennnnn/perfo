@@ -8,6 +8,8 @@ public enum SeatCoupleViolationKind
     OnAisle,
     DifferentSeatType,
     DifferentActiveState,
+    SeatTypeNotCouple,
+    CoupleTypeWithoutCouple,
 }
 
 public record CoupleSeatInput(
@@ -17,7 +19,8 @@ public record CoupleSeatInput(
     int? SeatTypeId,
     bool IsActive,
     bool IsAisle,
-    string? GroupKey
+    string? GroupKey,
+    bool IsCoupleType = false
 );
 
 public record SeatCoupleViolation(
@@ -31,8 +34,9 @@ public static class SeatCoupleRules
     public static List<SeatCoupleViolation> Validate(IEnumerable<CoupleSeatInput> seats)
     {
         var violations = new List<SeatCoupleViolation>();
+        var all = seats.ToList();
 
-        foreach (var group in seats.Where(s => s.GroupKey is not null).GroupBy(s => s.GroupKey!))
+        foreach (var group in all.Where(s => s.GroupKey is not null).GroupBy(s => s.GroupKey!))
         {
             var members = group
                 .OrderBy(s => s.Row.Length)
@@ -43,6 +47,15 @@ public static class SeatCoupleRules
             if (Check(members) is { } kind)
                 violations.Add(new SeatCoupleViolation(group.Key, kind, members.Select(m => m.Ref).ToList()));
         }
+
+        foreach (var seat in all.Where(s => s.GroupKey is null && s.IsCoupleType))
+            violations.Add(
+                new SeatCoupleViolation(
+                    $"seat:{seat.Ref}",
+                    SeatCoupleViolationKind.CoupleTypeWithoutCouple,
+                    [seat.Ref]
+                )
+            );
 
         return violations;
     }
@@ -81,6 +94,9 @@ public static class SeatCoupleRules
 
         if (first.IsActive != second.IsActive)
             return SeatCoupleViolationKind.DifferentActiveState;
+
+        if (!first.IsCoupleType || !second.IsCoupleType)
+            return SeatCoupleViolationKind.SeatTypeNotCouple;
 
         return null;
     }

@@ -21,7 +21,12 @@ public record PositionDto(int PositionId, string Name);
 
 public record ScreenTypeDto(int ScreenTypeId, string Name);
 
-public record SeatTypeDto(int SeatTypeId, string Name, decimal PriceMultiplier);
+public record SeatTypeDto(
+    int SeatTypeId,
+    string Name,
+    decimal PriceMultiplier,
+    bool IsCouple
+);
 
 public record UpsertGenreRequest(string Name);
 
@@ -37,7 +42,7 @@ public record UpsertPositionRequest(string Name);
 
 public record UpsertScreenTypeRequest(string Name);
 
-public record UpsertSeatTypeRequest(string Name, decimal PriceMultiplier);
+public record UpsertSeatTypeRequest(string Name, decimal PriceMultiplier, bool IsCouple = false);
 
 public record UpsertMembershipTierRequest(string TierName, int MinPoints, decimal DiscountPercent);
 

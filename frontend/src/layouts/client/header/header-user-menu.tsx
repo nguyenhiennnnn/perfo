@@ -37,13 +37,13 @@ export const HeaderUserMenu = ({ user }: HeaderUserMenuProps) => {
         className={cn(
           "cut-xs hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1",
           "bg-secondary text-secondary-foreground",
-          "text-[13px] font-medium leading-none",
+          "text-sm font-medium leading-none",
           "transition-colors hover:bg-muted",
         )}
         title={`${user.membershipTierName ?? "Thành viên"} — ${user.points ?? 0} điểm`}
       >
         <Star className="size-3.5 fill-accent text-accent shrink-0" />
-        <span className="t-numeral text-[13px] text-foreground">{user.points ?? 0}</span>
+        <span className="t-numeral text-sm text-foreground">{user.points ?? 0}</span>
         <span className="text-muted-foreground hidden md:inline">điểm</span>
       </Link>
       <DropdownMenu>

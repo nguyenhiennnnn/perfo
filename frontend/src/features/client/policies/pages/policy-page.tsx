@@ -28,7 +28,7 @@ const PolicyPage = () => {
       />
 
       <aside className="md:sticky md:top-24 md:self-start">
-        <p className="mb-3 text-[13px] font-medium text-foreground">Chính sách</p>
+        <p className="mb-3 text-sm font-medium text-foreground">Chính sách</p>
         <nav className="flex flex-row flex-wrap gap-1 md:flex-col">
           {POLICIES.map((item) => (
             <Link
@@ -63,7 +63,7 @@ const PolicyPage = () => {
                 {section.heading}
               </h2>
               {section.list ? (
-                <ul className="list-disc space-y-1.5 pl-5 text-[15px] leading-relaxed text-foreground md:text-base">
+                <ul className="list-disc space-y-1.5 pl-5 text-base leading-relaxed text-foreground md:text-base">
                   {section.body.map((line) => (
                     <li key={line}>{line}</li>
                   ))}
@@ -72,7 +72,7 @@ const PolicyPage = () => {
                 section.body.map((line) => (
                   <p
                     key={line}
-                    className="text-[15px] leading-relaxed text-foreground md:text-base"
+                    className="text-base leading-relaxed text-foreground md:text-base"
                   >
                     {line}
                   </p>

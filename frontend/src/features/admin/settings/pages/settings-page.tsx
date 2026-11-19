@@ -409,7 +409,7 @@ const AdminSettingsPage = () => {
             </SettingsSection>
 
             <div className="sticky bottom-0 z-20 flex items-center justify-between gap-3 cut-md bg-secondary px-4 py-3">
-              <p aria-live="polite" className="text-[13px] text-muted-foreground">
+              <p aria-live="polite" className="text-sm text-muted-foreground">
                 {form.formState.isDirty ? "Có thay đổi chưa lưu." : ""}
               </p>
               <SubmitButton

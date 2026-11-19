@@ -22,7 +22,7 @@ export const AiChatCards = ({ cards, onNavigate }: AiChatCardsProps) => {
           key={`${card.type}-${card.link}`}
           to={card.link}
           onClick={onNavigate}
-          className="group flex items-stretch gap-3 border border-border bg-card p-2 transition-colors hover:border-primary"
+          className="group flex items-stretch gap-3 bg-secondary p-2 transition-colors hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_8%)]"
         >
           <div className="aspect-2/3 w-12 shrink-0 overflow-hidden bg-muted">
             {card.imageUrl ? (

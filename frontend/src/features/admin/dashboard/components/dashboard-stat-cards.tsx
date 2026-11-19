@@ -22,7 +22,7 @@ const StatCard = ({ label, value, hint, trend, wide }: StatItem) => {
     <Card className={cn("py-4", wide && "col-span-2")}>
       <CardContent className="px-4">
         <div className="min-w-0">
-          <p className="t-numeral text-[44px] text-foreground">{value}</p>
+          <p className="t-numeral text-5xl text-foreground">{value}</p>
           <p className="mt-1 text-xs text-muted-foreground">{label}</p>
           {hint && (
             <p

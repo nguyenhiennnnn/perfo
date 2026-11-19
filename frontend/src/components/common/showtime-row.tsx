@@ -20,7 +20,7 @@ export const ShowtimeRow = ({ item, disabled = false, onBook }: ShowtimeRowProps
         className="notch-stub relative grid grid-rows-[1fr_var(--stub-h)] bg-card cut-lg @md:grid-cols-[1fr_var(--stub-w)] @md:grid-rows-1"
       >
         <div className="flex items-center gap-4 p-4">
-          <p className="t-numeral shrink-0 text-[2.5rem] text-foreground">{startLabel}</p>
+          <p className="t-numeral shrink-0 text-4xl text-foreground">{startLabel}</p>
           <div className="min-w-0 text-sm">
             <p className="font-medium text-foreground">
               Phòng {item.roomName}

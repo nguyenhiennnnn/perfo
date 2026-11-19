@@ -22,7 +22,7 @@ interface SeatGridProps {
 
 const MAX_TILT_DEG = 2.5;
 
-const ROW_LABEL = "t-code w-6 shrink-0 text-center text-[13px] text-muted-foreground";
+const ROW_LABEL = "t-code w-6 shrink-0 text-center text-sm text-muted-foreground";
 
 const COL_LABEL = "t-code h-6 text-center text-xs leading-6 text-muted-foreground transition-colors";
 

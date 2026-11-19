@@ -96,7 +96,7 @@ export const AiAssistantWidget = () => {
       >
         <div className="flex items-center justify-between gap-2 bg-primary px-4 py-3 text-primary-foreground">
           <div className="flex items-center gap-2.5">
-            <div className="flex size-9 shrink-0 items-center justify-center border border-primary-foreground/30 bg-primary-foreground/10">
+            <div className="flex size-9 shrink-0 items-center justify-center bg-primary-foreground/10">
               <Sparkles className="size-4" />
             </div>
             <div>

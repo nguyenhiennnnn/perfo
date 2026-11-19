@@ -2,7 +2,7 @@
 
 import { STATE_MESSAGES } from "@/config/error-messages";
 import { useState } from "react";
-import { Check, ChevronsUpDown, X } from "lucide-react";
+import { ChevronsUpDown, X } from "lucide-react";
 import { Spinner } from "@/components/common/spinner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -187,7 +187,7 @@ export const MultiSelectField = <T,>({
         <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
       </PopoverTrigger>
 
-      <PopoverContent className="w-(--anchor-width) p-0" align="start">
+      <PopoverContent className="w-(--anchor-width) bg-background p-0" align="start">
         <Command shouldFilter={false}>
           <CommandInput
             placeholder={searchPlaceholder}
@@ -210,16 +210,11 @@ export const MultiSelectField = <T,>({
                     return (
                       <CommandItem
                         key={optionValue}
+                        data-checked={isSelected}
                         value={String(optionValue)}
                         disabled={createState.isCreating}
                         onSelect={() => toggle(option)}
                       >
-                        <Check
-                          className={cn(
-                            "mr-2 size-4",
-                            isSelected ? "opacity-100" : "opacity-0",
-                          )}
-                        />
                         <span className="truncate">
                           {getOptionLabel(option)}
                         </span>

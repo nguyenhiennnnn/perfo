@@ -61,7 +61,7 @@ export const PaymentDetailView = ({ paymentId }: PaymentDetailViewProps) => {
 
       <div className="space-y-2">
         {rows.map(([label, value]) => (
-          <div key={label} className="flex items-center justify-between border-b border-border/50 pb-2 text-sm">
+          <div key={label} className="flex items-center justify-between border-b border-border pb-2 text-sm">
             <span className="text-muted-foreground">{label}</span>
             <span className="font-medium text-foreground">{value}</span>
           </div>

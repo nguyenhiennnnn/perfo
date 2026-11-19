@@ -133,7 +133,7 @@ export const ShowtimeAutoScheduleForm = ({ onSuccess }: ShowtimeAutoScheduleForm
     return (
       <div className="space-y-4">
         {draft.unplaced.length > 0 && (
-          <div className="space-y-1 border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+          <div className="space-y-1 bg-destructive/10 p-3 text-sm text-destructive">
             {draft.unplaced.map((u) => (
               <p key={u.movieId}>
                 {u.movieTitle}: chỉ xếp được {u.placed}/{u.requested} suất.

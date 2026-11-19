@@ -40,7 +40,7 @@ export const ClientFooter = () => {
         </div>
 
         <div className="flex flex-col">
-          <p className="mb-1 text-[13px] font-medium text-foreground">Danh mục</p>
+          <p className="mb-1 text-sm font-medium text-foreground">Danh mục</p>
           {FOOTER_CATEGORIES.map((item) => (
             <Link
               key={item.label}
@@ -53,7 +53,7 @@ export const ClientFooter = () => {
         </div>
 
         <div className="flex flex-col">
-          <p className="mb-1 text-[13px] font-medium text-foreground">Chính sách</p>
+          <p className="mb-1 text-sm font-medium text-foreground">Chính sách</p>
           {FOOTER_POLICIES.map((item) => (
             <Link
               key={item.label}
@@ -66,7 +66,7 @@ export const ClientFooter = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <p className="text-[13px] font-medium text-foreground">Chăm sóc khách hàng</p>
+          <p className="text-sm font-medium text-foreground">Chăm sóc khách hàng</p>
           <p className="text-sm text-muted-foreground">Hotline: {BRAND.supportHotline}</p>
           <p className="text-sm text-muted-foreground">Email: {BRAND.supportEmail}</p>
           <p className="mt-2 text-sm font-medium text-foreground">

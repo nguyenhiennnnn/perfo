@@ -2,7 +2,7 @@
 
 import { STATE_MESSAGES } from "@/config/error-messages";
 import { useState } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 import { Spinner } from "@/components/common/spinner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -132,7 +132,7 @@ export const SingleSelectField = <T,>({
         <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
       </PopoverTrigger>
 
-      <PopoverContent className="w-(--anchor-width) p-0" align="start">
+      <PopoverContent className="w-(--anchor-width) bg-background p-0" align="start">
         <Command shouldFilter={false}>
           <CommandInput
             placeholder={searchPlaceholder}
@@ -154,18 +154,11 @@ export const SingleSelectField = <T,>({
                     return (
                       <CommandItem
                         key={optionValue}
+                        data-checked={isSameValue(value, optionValue)}
                         value={String(optionValue)}
                         disabled={createState.isCreating}
                         onSelect={() => handleSelect(option)}
                       >
-                        <Check
-                          className={cn(
-                            "mr-2 size-4",
-                            isSameValue(value, optionValue)
-                              ? "opacity-100"
-                              : "opacity-0",
-                          )}
-                        />
                         <span className="truncate">
                           {getOptionLabel(option)}
                         </span>

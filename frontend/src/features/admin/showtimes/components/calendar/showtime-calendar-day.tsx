@@ -98,7 +98,7 @@ export const ShowtimeCalendarDay = ({
         >
           <div className="flex border-b border-border">
             <div
-              className="sticky left-0 z-20 shrink-0 bg-card px-3 py-2 text-[13px] font-semibold text-muted-foreground"
+              className="sticky left-0 z-20 shrink-0 bg-card px-3 py-2 text-sm font-semibold text-muted-foreground"
               style={{ width: ROOM_COLUMN_WIDTH }}
             >
               Phòng chiếu

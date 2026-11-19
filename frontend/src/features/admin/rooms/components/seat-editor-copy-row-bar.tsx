@@ -12,7 +12,7 @@ export const SeatEditorCopyRowBar = ({
   sourceRow,
   onCancel,
 }: SeatEditorCopyRowBarProps) => (
-  <div className="flex flex-wrap items-center gap-2 border border-accent/40 bg-accent/10 px-3 py-2 text-xs">
+  <div className="flex flex-wrap items-center gap-2 bg-accent/10 px-3 py-2 text-xs">
     <ClipboardPaste className="size-3.5" />
     <span className="font-medium">
       {isPickingSource

@@ -41,7 +41,7 @@ export const AccountNav = ({ onLogout }: AccountNavProps) => {
           {label}
         </NavLink>
       ))}
-      <div className="my-1 border-t border-border/70" />
+      <div className="my-1 border-t border-border" />
       <button
         onClick={onLogout}
         className="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-destructive cut-xs transition-colors hover:bg-destructive/10 cursor-pointer"

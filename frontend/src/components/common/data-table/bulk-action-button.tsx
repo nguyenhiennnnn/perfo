@@ -39,7 +39,13 @@ export const BulkActionButton = ({
   };
 
   return (
-    <Button variant={variant} size="sm" disabled={isPending} onClick={handleClick}>
+    <Button
+      variant={variant === "destructive" ? "outline" : variant}
+      size="sm"
+      disabled={isPending}
+      onClick={handleClick}
+      className={variant === "destructive" ? "text-destructive hover:text-destructive" : undefined}
+    >
       <Icon className="size-4" />
       <span>
         {actionLabel} {count} {itemLabel}

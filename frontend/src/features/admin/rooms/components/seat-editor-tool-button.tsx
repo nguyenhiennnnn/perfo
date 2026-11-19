@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SeatEditorKbd } from "./seat-editor-kbd";
 
-const DEFAULT_ACTIVE = "border-foreground bg-foreground text-background";
-const INACTIVE = "border-border bg-card text-foreground hover:bg-muted";
+const DEFAULT_ACTIVE = "bg-foreground text-background";
+const INACTIVE = "bg-secondary text-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_8%)]";
 
 interface SeatEditorToolButtonProps {
   active: boolean;
@@ -32,7 +32,7 @@ export const SeatEditorToolButton = ({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "flex items-center gap-1.5 border px-3 py-1.5 text-xs font-medium outline-none transition-all focus-visible:ring-2 focus-visible:ring-ring/50",
+        "flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring/50",
         active ? activeClassName : INACTIVE,
       )}
     >

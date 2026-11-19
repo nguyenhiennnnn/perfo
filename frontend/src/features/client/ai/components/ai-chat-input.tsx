@@ -39,7 +39,7 @@ export const AiChatInput = ({ onSend, disabled }: AiChatInputProps) => {
         onClick={handleSubmit}
         disabled={disabled || !value.trim()}
         className={cn(
-          "flex size-10 shrink-0 items-center justify-center bg-primary text-primary-foreground transition-all hover:bg-primary/90 active:scale-95",
+          "flex size-10 shrink-0 items-center justify-center bg-primary text-primary-foreground transition-colors hover:bg-primary/90",
           (disabled || !value.trim()) && "cursor-not-allowed opacity-40",
         )}
         aria-label="Gửi tin nhắn"

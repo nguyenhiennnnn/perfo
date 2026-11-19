@@ -82,14 +82,8 @@ public static class DependencyInjection
         services.Configure<GeminiOptions>(configuration.GetSection(GeminiOptions.SectionName));
         services.AddHttpClient<IAiModelClient, GeminiAiModelClient>();
 
-        services.AddHttpClient<IPaymentGateway, VnPayGateway>(client =>
-        {
-            client.Timeout = TimeSpan.FromSeconds(30);
-        });
-        services.AddHttpClient<IPaymentGateway, MomoGateway>(client =>
-        {
-            client.Timeout = TimeSpan.FromSeconds(30);
-        });
+        services.AddHttpClient<IPaymentGateway, VnPayGateway>();
+        services.AddHttpClient<IPaymentGateway, MomoGateway>();
         services.AddScoped<IPaymentGateway, StripeGateway>();
 
         return services;

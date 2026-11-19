@@ -129,7 +129,7 @@ export const BookingSelectionStep = ({
           </p>
         )}
         {loneSeats.length > 0 && (
-          <p className="flex items-start gap-2 border border-warning/40 bg-warning/10 p-3 text-xs text-foreground">
+          <p className="flex items-start gap-2 bg-warning/10 p-3 text-xs text-foreground">
             <AlertTriangle className="mt-0.5 size-4 shrink-0 text-warning" />
             Không thể để trống ghế lẻ {loneSeats.join(", ")}. Vui lòng chọn lại để không bỏ lẻ ghế.
           </p>
@@ -152,7 +152,7 @@ export const BookingSelectionStep = ({
               {seatCodes.length > 0 ? (
                 <>
                   {seatCodes.length} ghế:{" "}
-                  <span className="t-code text-[13px] text-foreground">{seatCodes.join(", ")}</span>
+                  <span className="t-code text-sm text-foreground">{seatCodes.join(", ")}</span>
                 </>
               ) : (
                 "Chưa chọn ghế"

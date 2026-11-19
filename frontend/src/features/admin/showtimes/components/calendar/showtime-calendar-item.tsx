@@ -70,7 +70,7 @@ export const ShowtimeCalendarItem = ({
       <span className="flex items-start justify-between gap-1">
         <span
           className={cn(
-            "line-clamp-2 text-[13px] leading-[1.2] font-medium",
+            "line-clamp-2 text-sm leading-[1.2] font-medium",
             cancelled && "line-through",
             interactive && "group-hover:underline",
           )}

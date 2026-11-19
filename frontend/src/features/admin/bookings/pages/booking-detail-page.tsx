@@ -171,7 +171,7 @@ const AdminBookingDetailPage = () => {
                 </div>
               ))}
               {b.payments.some((p) => p.refundedAmount != null) && (
-                <div className="pt-2 border-t border-border/50 space-y-2">
+                <div className="pt-2 border-t border-border space-y-2">
                   {b.payments
                     .filter((p) => p.refundedAmount != null)
                     .map((p) => (
@@ -198,11 +198,11 @@ const AdminBookingDetailPage = () => {
               <BookingStatusBadge status={b.status} />
             </div>
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between border-b border-border/50 pb-2">
+              <div className="flex justify-between border-b border-border pb-2">
                 <span className="text-muted-foreground">Tạm tính</span>
                 <span className="tabular-nums text-foreground">{formatCurrency(b.totalAmount)}</span>
               </div>
-              <div className="flex justify-between border-b border-border/50 pb-2">
+              <div className="flex justify-between border-b border-border pb-2">
                 <span className="text-muted-foreground">Giảm giá (chỉ trên vé)</span>
                 <span className="tabular-nums text-foreground">-{formatCurrency(b.discountAmount)}</span>
               </div>

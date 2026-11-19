@@ -50,7 +50,7 @@ export const MoviesGrid = ({
 
   return (
     <div className="space-y-4">
-      <p aria-live="polite" className="text-[13px] text-muted-foreground">
+      <p aria-live="polite" className="text-sm text-muted-foreground">
         {formatNumber(totalCount ?? movies.length)} phim{hasActiveFilters ? " phù hợp" : ""}
       </p>
       <div className={MOVIES_GRID_CLASS}>
@@ -62,7 +62,7 @@ export const MoviesGrid = ({
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
         fetchNextPage={fetchNextPage}
-        endMessage={<p className="py-6 text-center text-[13px] text-muted-foreground">Đã hết danh sách</p>}
+        endMessage={<p className="py-6 text-center text-sm text-muted-foreground">Đã hết danh sách</p>}
       />
     </div>
   );

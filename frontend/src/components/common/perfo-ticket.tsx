@@ -50,7 +50,7 @@ export const PerfoTicket = ({
           <p className="t-h1 line-clamp-2 text-balance text-foreground">{movieTitle}</p>
 
           <div>
-            <p className="t-numeral text-5xl text-foreground @xl:text-[3.5rem]">{formatTime(startTime)}</p>
+            <p className="t-numeral text-5xl text-foreground @xl:text-6xl">{formatTime(startTime)}</p>
             <p className="mt-1 text-sm text-muted-foreground">{formatDate(startTime)}</p>
           </div>
 

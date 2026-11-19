@@ -52,7 +52,7 @@ export const GlobalSheet = () => {
         className={cn("flex flex-col p-0 gap-0", className)}
       >
         {(title || description) && (
-          <SheetHeader className="shrink-0 px-6 pt-6 pb-4 border-b border-border/40">
+          <SheetHeader className="shrink-0 px-6 pt-6 pb-4 border-b border-border">
             {title && <SheetTitle>{title}</SheetTitle>}
             {description && <SheetDescription>{description}</SheetDescription>}
           </SheetHeader>

@@ -54,12 +54,12 @@ export const SeatEditorValidationPanel = ({
                   onClick={() => onFocusIssue(idx)}
                   aria-pressed={focusedIndex === idx}
                   className={cn(
-                    "flex w-full items-start gap-2 border px-3 py-2 text-left text-xs transition-colors",
+                    "flex w-full items-start gap-2 px-3 py-2 text-left text-xs transition-colors",
                     clickable && "cursor-pointer hover:bg-muted/60",
                     focusedIndex === idx && "ring-2 ring-current",
                     issue.level === "error"
-                      ? "border-destructive/40 bg-destructive/5 text-destructive"
-                      : "border-warning/40 bg-warning/5 text-warning-text",
+                      ? "bg-destructive/10 text-destructive"
+                      : "bg-warning/10 text-warning-text",
                   )}
                 >
                   {issue.level === "error" ? (

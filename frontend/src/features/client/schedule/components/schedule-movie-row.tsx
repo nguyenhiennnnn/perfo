@@ -35,7 +35,7 @@ export const ScheduleMovieRow = ({ movie }: ScheduleMovieRowProps) => {
 
         <div className="mt-2 flex items-center gap-2">
           {movie.ageRatingCode && <AgeRatingBadge code={movie.ageRatingCode} />}
-          <span className="text-[13px] text-muted-foreground">{formatDuration(movie.durationMinutes)}</span>
+          <span className="text-sm text-muted-foreground">{formatDuration(movie.durationMinutes)}</span>
         </div>
 
         <div className="mt-3">

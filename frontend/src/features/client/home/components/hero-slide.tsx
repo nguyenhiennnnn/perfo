@@ -68,7 +68,7 @@ export const HeroSlide = ({ movie, position, total, phase, direction }: HeroSlid
           {movie.genres.slice(0, HERO_SLIDE_GENRES_LIMIT).map((g) => (
             <span
               key={g}
-              className="cut-xs bg-scrim-foreground/15 px-2.5 py-1 text-[13px] font-medium tracking-wide text-scrim-foreground"
+              className="cut-xs bg-scrim-foreground/15 px-2.5 py-1 text-sm font-medium text-scrim-foreground"
             >
               {g}
             </span>
@@ -110,7 +110,7 @@ export const HeroSlide = ({ movie, position, total, phase, direction }: HeroSlid
                 <span className="t-numeral text-2xl text-accent">
                   {formatRating(movie.averageRating)}
                 </span>
-                <span className="text-[13px] text-scrim-foreground/50">/&nbsp;5</span>
+                <span className="text-sm text-scrim-foreground/50">/&nbsp;5</span>
               </span>
               <span className="text-xs text-scrim-foreground/50">
                 đánh giá
@@ -133,7 +133,7 @@ export const HeroSlide = ({ movie, position, total, phase, direction }: HeroSlid
             to={href}
             {...prefetchProps}
             tabIndex={leaving ? -1 : undefined}
-            className="cut-sm inline-flex h-12 items-center gap-2 bg-primary px-7 text-[15px] font-semibold text-primary-foreground transition-colors duration-150 hover:bg-primary/90"
+            className="cut-sm inline-flex h-12 items-center gap-2 bg-primary px-7 text-base font-semibold text-primary-foreground transition-colors duration-150 hover:bg-primary/90"
           >
             <Ticket className="size-4" />
             Đặt vé
@@ -142,7 +142,7 @@ export const HeroSlide = ({ movie, position, total, phase, direction }: HeroSlid
             to={href}
             {...prefetchProps}
             tabIndex={leaving ? -1 : undefined}
-            className="cut-sm inline-flex h-12 items-center gap-2 bg-scrim-foreground/12 px-7 text-[15px] font-medium text-scrim-foreground transition-colors duration-150 hover:bg-scrim-foreground/22"
+            className="cut-sm inline-flex h-12 items-center gap-2 bg-scrim-foreground/12 px-7 text-base font-medium text-scrim-foreground transition-colors duration-150 hover:bg-scrim-foreground/22"
           >
             <Info className="size-4" />
             Chi tiết phim

@@ -23,7 +23,7 @@ export const SeatEditorSelectionBar = ({
 }: SeatEditorSelectionBarProps) => (
   <div
     className={cn(
-      "flex flex-wrap items-center gap-2 border border-primary/40 bg-card px-3 py-2 text-xs",
+      "flex flex-wrap items-center gap-2 bg-secondary px-3 py-2 text-xs",
       className,
     )}
   >

@@ -64,7 +64,7 @@ export const MovieCard = ({ movie, className }: MovieCardProps) => {
           <h3 className="t-h3 text-sm text-foreground line-clamp-2 group-hover:underline">
             <Link to={href} {...prefetchProps}>{movie.title}</Link>
           </h3>
-          <p className="mt-1 line-clamp-1 text-[13px] text-muted-foreground">
+          <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
             {genreText ? `${genreText}, ${durationText}` : durationText}
           </p>
         </div>

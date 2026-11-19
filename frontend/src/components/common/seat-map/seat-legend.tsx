@@ -34,7 +34,7 @@ export const SeatLegend = ({ items, className }: { items: SeatLegendItem[]; clas
             <span className="seat__label">{item.state === "inactive" ? "1" : null}</span>
           </span>
           <span className="flex flex-col leading-tight">
-            <span className="flex items-center gap-1 whitespace-nowrap text-[13px] text-foreground/90">
+            <span className="flex items-center gap-1 whitespace-nowrap text-sm text-foreground/90">
               {item.label}
               {item.state === "available" && (
                 <SeatKindIcon kind={item.type} className="size-3 text-muted-foreground" />

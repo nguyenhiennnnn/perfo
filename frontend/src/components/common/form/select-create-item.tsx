@@ -19,9 +19,9 @@ export const SelectCreateItem = ({
     onSelect={onCreate}
   >
     {isCreating ? (
-      <Spinner size="sm" decorative className="mr-2 text-current" />
+      <Spinner size="sm" decorative className="text-current" />
     ) : (
-      <Plus className="mr-2 size-4" />
+      <Plus className="size-4" />
     )}
     <span className="truncate">
       {isCreating ? `Đang thêm "${term}"...` : `Thêm "${term}"`}

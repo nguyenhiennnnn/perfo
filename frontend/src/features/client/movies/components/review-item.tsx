@@ -13,7 +13,7 @@ interface ReviewItemProps {
 
 export const ReviewItem = ({ review, isOwner, onEdit, onDelete }: ReviewItemProps) => {
   return (
-    <div className="flex gap-3 border-b border-border/60 py-4 last:border-none">
+    <div className="flex gap-3 border-b border-border py-4 last:border-none">
       <UserAvatar src={review.userAvatar} name={review.userName} size="md" />
 
       <div className="flex-1">

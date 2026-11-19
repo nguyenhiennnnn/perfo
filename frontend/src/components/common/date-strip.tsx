@@ -75,10 +75,10 @@ export const DateStrip = ({ value, onChange, daysCount = 14, availableDates, cla
               >
                 Th{date.getMonth() + 1}
               </span>
-              <span className="t-numeral mt-1 text-[28px] font-extrabold leading-none">{dayNum}</span>
+              <span className="t-numeral mt-1 text-3xl font-extrabold leading-none">{dayNum}</span>
               <span
                 className={cn(
-                  "mt-1 text-[13px] font-medium leading-tight",
+                  "mt-1 text-sm font-medium leading-tight",
                   active ? "text-primary-foreground/90" : "text-muted-foreground",
                 )}
               >

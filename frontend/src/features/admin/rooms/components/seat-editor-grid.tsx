@@ -17,7 +17,7 @@ import {
 import type { SeatTypeDto } from "@/features/admin/catalog/types";
 import type { EditorCell, SeatEditorBrush } from "../types/seat-editor";
 
-const HOVER_PREVIEW = "hover:[box-shadow:inset_0_0_0_2px_var(--primary)]!";
+const HOVER_PREVIEW = "hover:bg-primary/40!";
 
 const cursorClassFor = (
   brush: SeatEditorBrush | undefined,

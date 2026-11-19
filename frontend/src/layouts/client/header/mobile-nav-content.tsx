@@ -25,7 +25,7 @@ export const MobileNavContent = ({ onNavigate }: MobileNavContent) => {
         </NavLink>
       ))}
       {!isAuthenticated && (
-        <div className="mt-4 flex flex-col gap-2 pt-4 border-t border-border/40">
+        <div className="mt-4 flex flex-col gap-2 pt-4 border-t border-border">
           <Link
             to={ROUTES.auth.login}
             onClick={onNavigate}

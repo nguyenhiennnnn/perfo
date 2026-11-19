@@ -25,9 +25,7 @@ export const DataTablePagination = <TData extends RowData>({
   return (
     <div className="flex items-center justify-between px-2">
       <div className="text-muted-foreground flex-1 text-sm">
-        {table.getFilteredSelectedRowModel().rows.length > 0
-          ? `${table.getFilteredSelectedRowModel().rows.length} dòng đã chọn.`
-          : `${totalItems} kết quả.`}
+        {`${totalItems} kết quả.`}
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">

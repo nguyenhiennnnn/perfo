@@ -19,12 +19,12 @@ export const SeatMapFrame = ({ legend, children, className }: SeatMapFrameProps)
 
   return (
     <div className={cn("@container bg-card p-4 sm:p-6 cut-lg", className)} style={SPOTLIGHT}>
-      <div className="mb-6 border-b border-border/60 pb-4">
+      <div className="mb-6 border-b border-border pb-4">
         <SeatLegend items={topItems} />
       </div>
       {children}
       {statusItems.length > 0 && (
-        <div className="mt-4 flex justify-center border-t border-border/60 pt-4">
+        <div className="mt-4 flex justify-center border-t border-border pt-4">
           <SeatLegend items={statusItems} className="justify-center gap-x-4" />
         </div>
       )}

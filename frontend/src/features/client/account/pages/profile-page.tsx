@@ -53,6 +53,7 @@ const AccountProfilePage = () => {
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
+    mode: "onTouched",
     defaultValues: {
       fullName: "",
       phone: "",

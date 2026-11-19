@@ -8,6 +8,7 @@ import { SubmitButton } from "@/components/common/form/submit-button";
 import { PasswordStrengthMeter } from "@/components/common/form/password-strength-meter";
 import { useChangePassword } from "@/features/client/account/hooks/use-account";
 import { useServerFieldErrors } from "@/hooks/use-server-field-errors";
+import { useRevalidateWhenTouched } from "@/hooks/use-revalidate-when-touched";
 
 import {
   adminChangePasswordSchema,
@@ -31,12 +32,18 @@ export const AdminChangePasswordForm = ({
 
   const form = useForm<AdminChangePasswordFormValues>({
     resolver: zodResolver(adminChangePasswordSchema),
+    mode: "onTouched",
     defaultValues: { currentPassword: "", newPassword: "", confirmPassword: "" },
   });
 
   const applyServerErrors = useServerFieldErrors(form);
 
   const newPassword = form.watch("newPassword");
+  useRevalidateWhenTouched(
+    newPassword,
+    () => form.getFieldState("confirmPassword").isTouched,
+    () => void form.trigger("confirmPassword"),
+  );
 
   const onSubmit = (values: AdminChangePasswordFormValues) => {
     changePassword.mutate(

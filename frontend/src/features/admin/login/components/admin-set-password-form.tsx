@@ -7,6 +7,7 @@ import { FormErrorAlert } from "@/components/common/form/form-error-alert";
 import { SubmitButton } from "@/components/common/form/submit-button";
 import { PasswordStrengthMeter } from "@/components/common/form/password-strength-meter";
 import { useServerFieldErrors } from "@/hooks/use-server-field-errors";
+import { useRevalidateWhenTouched } from "@/hooks/use-revalidate-when-touched";
 import { useResetPassword } from "@/features/auth/hooks/use-auth";
 
 import {
@@ -34,6 +35,7 @@ export const AdminSetPasswordForm = ({
 
   const form = useForm<AdminSetPasswordFormValues>({
     resolver: zodResolver(adminSetPasswordSchema),
+    mode: "onTouched",
     defaultValues: { newPassword: "", confirmPassword: "" },
   });
 
@@ -53,6 +55,11 @@ export const AdminSetPasswordForm = ({
   };
 
   const newPassword = form.watch("newPassword");
+  useRevalidateWhenTouched(
+    newPassword,
+    () => form.getFieldState("confirmPassword").isTouched,
+    () => void form.trigger("confirmPassword"),
+  );
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">

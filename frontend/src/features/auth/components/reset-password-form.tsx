@@ -9,6 +9,7 @@ import { SubmitButton } from "@/components/common/form/submit-button";
 import { PasswordStrengthMeter } from "@/components/common/form/password-strength-meter";
 import { ROUTES } from "@/config/routes";
 import { useServerFieldErrors } from "@/hooks/use-server-field-errors";
+import { useRevalidateWhenTouched } from "@/hooks/use-revalidate-when-touched";
 
 import { useResetPassword } from "../hooks/use-auth";
 import { setPasswordSchema, type SetPasswordFormValues } from "../schemas/password-schemas";
@@ -24,11 +25,17 @@ export const ResetPasswordForm = () => {
 
   const form = useForm<SetPasswordFormValues>({
     resolver: zodResolver(setPasswordSchema),
+    mode: "onTouched",
     defaultValues: { newPassword: "", confirmPassword: "" },
   });
 
   const applyServerErrors = useServerFieldErrors(form);
   const newPassword = form.watch("newPassword");
+  useRevalidateWhenTouched(
+    newPassword,
+    () => form.getFieldState("confirmPassword").isTouched,
+    () => void form.trigger("confirmPassword"),
+  );
 
   if (!token) {
     return (

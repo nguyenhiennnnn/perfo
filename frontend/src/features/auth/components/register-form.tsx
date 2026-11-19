@@ -13,6 +13,7 @@ import { FormErrorAlert } from "@/components/common/form/form-error-alert";
 import { SubmitButton } from "@/components/common/form/submit-button";
 import { useServerFieldErrors } from "@/hooks/use-server-field-errors";
 import { useRegister } from "../hooks/use-auth";
+import { useRevalidateWhenTouched } from "@/hooks/use-revalidate-when-touched";
 import { strongPasswordSchema } from "@/lib/validators";
 import type { RegisterRequest } from "../types";
 import { PasswordStrengthMeter } from "@/components/common/form/password-strength-meter";
@@ -49,6 +50,7 @@ export const RegisterForm = () => {
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
+    mode: "onTouched",
     defaultValues: {
       fullName: "",
       email: "",
@@ -74,6 +76,11 @@ export const RegisterForm = () => {
   };
 
   const password = form.watch("password");
+  useRevalidateWhenTouched(
+    password,
+    () => form.getFieldState("confirmPassword").isTouched,
+    () => void form.trigger("confirmPassword"),
+  );
 
   if (submittedEmail) {
     return (

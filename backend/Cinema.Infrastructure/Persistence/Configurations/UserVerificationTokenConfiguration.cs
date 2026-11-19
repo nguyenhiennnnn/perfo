@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +11,7 @@ public class UserVerificationTokenConfiguration : IEntityTypeConfiguration<UserV
     {
         builder.ToTable("UserVerificationTokens");
         builder.HasKey(x => x.TokenId);
-        builder.Property(x => x.TokenHash).HasMaxLength(255).IsRequired();
+        builder.Property(x => x.TokenHash).HasMaxLength(FieldLengths.TokenHash).IsRequired();
         builder
             .HasIndex(x => x.TokenHash)
             .IsUnique()

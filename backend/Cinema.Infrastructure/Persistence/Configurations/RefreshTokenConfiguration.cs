@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +11,7 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
     {
         builder.ToTable("RefreshTokens");
         builder.HasKey(x => x.RefreshTokenId);
-        builder.Property(x => x.TokenHash).HasMaxLength(255).IsRequired();
+        builder.Property(x => x.TokenHash).HasMaxLength(FieldLengths.TokenHash).IsRequired();
         builder.HasIndex(x => x.TokenHash).IsUnique().HasDatabaseName("UQ_RefreshTokens_TokenHash");
         builder.Property(x => x.ExpiresAt).HasColumnType("timestamp without time zone");
         builder.Property(x => x.IsRevoked).HasDefaultValue(false);

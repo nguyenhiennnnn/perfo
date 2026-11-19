@@ -40,7 +40,7 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.SeatGapRuleMode)
             .HasConversion<string>()
-            .HasMaxLength(20)
+            .HasMaxLength(FieldLengths.EnumValue)
             .HasDefaultValue(Domain.Enums.SeatGapRuleMode.Strict);
 
         builder

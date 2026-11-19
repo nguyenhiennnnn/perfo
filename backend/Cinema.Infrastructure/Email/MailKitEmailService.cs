@@ -32,7 +32,7 @@ public class MailKitEmailService(
         message.Subject = subject;
         message.Body = new BodyBuilder { HtmlBody = htmlBody }.ToMessageBody();
 
-        using var client = new SmtpClient { Timeout = 15_000 };
+        using var client = new SmtpClient { Timeout = _options.SmtpTimeoutMilliseconds };
         try
         {
             if (string.IsNullOrWhiteSpace(_options.SmtpHost))

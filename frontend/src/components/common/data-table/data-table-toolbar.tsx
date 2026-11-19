@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "@/components/common/data-table/data-table-view-options";
 import type { DataTableFeatures } from "@/components/common/data-table/data-table-features";
+import { SEARCH_PLACEHOLDER } from "@/config/default-constants";
 
 interface DataTableToolbarProps<TData extends RowData> {
   table: ReactTable<DataTableFeatures, TData>;
@@ -18,7 +19,7 @@ export const DataTableToolbar = <TData extends RowData>({
   table,
   searchValue,
   onSearchChange,
-  searchPlaceholder = "Tìm kiếm...",
+  searchPlaceholder = SEARCH_PLACEHOLDER,
   filters,
 }: DataTableToolbarProps<TData>) => {
   return (

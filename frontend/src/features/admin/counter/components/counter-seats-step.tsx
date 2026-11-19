@@ -6,6 +6,7 @@ import type { CounterFlow } from "../hooks/use-counter-flow";
 import { CounterSeatPanel } from "./counter-seat-panel";
 import { CounterCustomerForm } from "./counter-customer-form";
 import { CounterPriceSummary } from "./counter-price-summary";
+import { HOLDING_SEATS_LABEL } from "@/config/default-constants";
 
 interface CounterSeatsStepProps {
   flow: CounterFlow;
@@ -58,7 +59,7 @@ export function CounterSeatsStep({ flow }: CounterSeatsStepProps) {
         />
 
         <Button disabled={!flow.canHold || flow.isHolding} onClick={flow.holdSeats}>
-          {flow.isHolding ? "Đang giữ ghế..." : "Giữ ghế & tiếp tục"}
+          {flow.isHolding ? HOLDING_SEATS_LABEL : "Giữ ghế & tiếp tục"}
         </Button>
       </div>
     </div>

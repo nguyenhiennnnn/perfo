@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -23,7 +24,7 @@ public class ShowtimeSeatConfiguration : IEntityTypeConfiguration<ShowtimeSeat>
         builder
             .Property(x => x.Status)
             .HasConversion<string>()
-            .HasMaxLength(20)
+            .HasMaxLength(FieldLengths.EnumValue)
             .HasDefaultValue(Domain.Enums.ShowtimeSeatStatus.Available);
         builder.Property(x => x.HeldUntil).HasColumnType("timestamp without time zone");
         builder.Property(x => x.Price).HasColumnType("decimal(18,2)");

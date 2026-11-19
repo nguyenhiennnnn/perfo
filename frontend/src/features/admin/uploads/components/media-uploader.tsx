@@ -8,6 +8,7 @@ import { X, ImageIcon, Film, ImageOff } from "lucide-react";
 import { Spinner } from "@/components/common/spinner";
 import { isYoutubeUrl, toEmbedUrl } from "@/features/client/movies/utils/embed-url";
 import type { UseMutationResult } from "@tanstack/react-query";
+import { BYTES_PER_MB } from "@/config/default-constants";
 
 type MediaKind = "image" | "video";
 
@@ -64,7 +65,7 @@ export const MediaUploader = ({
 
       if (file.size > maxSizeBytes) {
         setError(
-          `File vượt quá giới hạn ${Math.round(maxSizeBytes / (1024 * 1024))}MB.`,
+          `File vượt quá giới hạn ${Math.round(maxSizeBytes / BYTES_PER_MB)}MB.`,
         );
         return;
       }
@@ -196,7 +197,7 @@ export const MediaUploader = ({
             <span className="font-medium text-primary-text">chọn file</span>
           </p>
           <p className="text-xs text-muted-foreground">
-            Tối đa {Math.round(maxSizeBytes / (1024 * 1024))}MB
+            Tối đa {Math.round(maxSizeBytes / BYTES_PER_MB)}MB
           </p>
         </div>
       )}

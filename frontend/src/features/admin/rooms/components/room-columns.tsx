@@ -13,6 +13,7 @@ import { DataTableColumnHeader } from "@/components/common/data-table/data-table
 import type { DataTableFeatures } from "@/components/common/data-table/data-table-features";
 
 import type { AdminRoomDto } from "../types";
+import { STATUS_LABEL } from "@/config/default-constants";
 
 interface RoomColumnsOptions {
   onViewDetail: (room: AdminRoomDto) => void;
@@ -55,7 +56,7 @@ export const createRoomColumns = ({ onViewDetail, onEdit, onToggle }: RoomColumn
       ),
     }),
     columnHelper.accessor("isActive", {
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={STATUS_LABEL} />,
       cell: ({ row }) => <RoomStatusBadge isActive={row.original.isActive} />,
       enableSorting: false,
     }),

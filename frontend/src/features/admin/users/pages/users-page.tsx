@@ -20,7 +20,7 @@ import { createUserColumns } from "../components/user-columns";
 import { UserRoleForm } from "../components/forms/user-role-form";
 import { useAdminUserParams } from "@/hooks/use-query-params";
 import { useTablePagination } from "@/hooks/use-table-pagination";
-import { DEFAULT_PAGE } from "@/config/default-constants";
+import { DEFAULT_PAGE, SEARCH_NAME_OR_EMAIL_PLACEHOLDER } from "@/config/default-constants";
 import { stripNulls } from "@/lib/query-params";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { Users } from "lucide-react";
@@ -103,7 +103,7 @@ const AdminUsersPage = () => {
         onPaginationChange={onPaginationChange}
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
-        searchPlaceholder="Tìm theo tên hoặc email..."
+        searchPlaceholder={SEARCH_NAME_OR_EMAIL_PLACEHOLDER}
         empty={{
           icon: Users,
           title: "Chưa có người dùng",

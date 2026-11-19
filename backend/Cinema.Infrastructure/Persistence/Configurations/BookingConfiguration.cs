@@ -38,7 +38,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder
             .Property(x => x.Channel)
             .HasConversion<string>()
-            .HasMaxLength(20)
+            .HasMaxLength(FieldLengths.EnumValue)
             .HasDefaultValue(Domain.Enums.BookingChannel.Online);
         builder.Property(x => x.CustomerName).HasMaxLength(FieldLengths.FullName);
         builder.Property(x => x.CustomerPhone).HasMaxLength(FieldLengths.Phone);
@@ -48,7 +48,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder
             .Property(x => x.Status)
             .HasConversion<string>()
-            .HasMaxLength(20)
+            .HasMaxLength(FieldLengths.EnumValue)
             .HasDefaultValue(Domain.Enums.BookingStatus.Pending);
         builder
             .Property(x => x.CreatedAt)

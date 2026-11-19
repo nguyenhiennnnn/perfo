@@ -281,5 +281,6 @@ export function apiPostKeepalive(url: string): void {
       },
     }).catch(() => undefined);
   } catch {
+    // Best-effort: bỏ qua lỗi.
   }
 }

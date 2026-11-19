@@ -24,6 +24,7 @@ import {
 import { filterBySearch } from "./select-name-utils";
 import { useSelectCreate, type SelectCreateProps } from "./use-select-create";
 import { SelectCreateItem, SelectCreateNote } from "./select-create-item";
+import { SEARCH_PLACEHOLDER } from "@/config/default-constants";
 
 export interface MultiSelectFieldProps<T> extends SelectCreateProps<T> {
   value: (string | number)[];
@@ -54,7 +55,7 @@ export const MultiSelectField = <T,>({
   onSearchChange,
   isLoading = false,
   placeholder = "Chọn...",
-  searchPlaceholder = "Tìm kiếm...",
+  searchPlaceholder = SEARCH_PLACEHOLDER,
   emptyText = STATE_MESSAGES.filtered.title,
   disabled,
   maxBadges = 3,

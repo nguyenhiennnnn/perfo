@@ -6,6 +6,7 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Hangfire;
@@ -40,7 +41,7 @@ public class ExportJobService(
             throw new BusinessRuleException(
                 string.Format(
                     Messages.Rule_ExportUseBackgroundJob,
-                    threshold.ToString("N0", CultureInfo.GetCultureInfo("vi-VN"))
+                    threshold.ToString("N0", CultureInfo.GetCultureInfo(RegionalDefaults.Locale))
                 )
             );
 

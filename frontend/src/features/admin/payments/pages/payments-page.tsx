@@ -15,7 +15,7 @@ import { stripNulls } from "@/lib/query-params";
 import { EnumSelectFilter } from "@/components/common/filter/enum-select-filter";
 import { paymentMethodOptions, paymentStatusOptions } from "@/lib/enum-options";
 import { DateFilterPicker } from "@/components/common/filter/date-filter-picker";
-import { DEFAULT_PAGE } from "@/config/default-constants";
+import { DEFAULT_PAGE, ALL_STATUSES_LABEL, STATUS_LABEL } from "@/config/default-constants";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { CreditCard } from "lucide-react";
 
@@ -69,8 +69,8 @@ const AdminPaymentsPage = () => {
           value={params.status}
           onChange={(status) => setParams({ status, page: DEFAULT_PAGE })}
           options={paymentStatusOptions}
-          placeholder="Trạng thái"
-          allLabel="Tất cả trạng thái"
+          placeholder={STATUS_LABEL}
+          allLabel={ALL_STATUSES_LABEL}
         />
         <EnumSelectFilter
           value={params.paymentMethod}

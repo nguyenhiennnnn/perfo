@@ -11,6 +11,7 @@ namespace Cinema.Infrastructure.Export;
 public class ExportWriter : IExportWriter
 {
     private const double MaxColumnWidth = 60;
+    private const int ExcelSheetNameMaxLength = 31;
     private const string IntegerFormat = "#,##0";
     private const string DecimalFormat = "#,##0.00";
     private const string MoneyFormat = "#,##0\" ₫\"";
@@ -430,7 +431,7 @@ public class ExportWriter : IExportWriter
         );
         if (string.IsNullOrWhiteSpace(cleaned))
             cleaned = "Sheet1";
-        return cleaned.Length > 31 ? cleaned[..31] : cleaned;
+        return cleaned.Length > ExcelSheetNameMaxLength ? cleaned[..ExcelSheetNameMaxLength] : cleaned;
     }
 
     private static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(IEnumerable<T> source)

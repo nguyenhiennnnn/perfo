@@ -25,6 +25,7 @@ export function useCounterLeaveCancel({
     try {
       await bookingsAdminApi.counterCancel(bookingId);
     } catch {
+      // Best-effort: bỏ qua lỗi.
     }
   }, []);
 

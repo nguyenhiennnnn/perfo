@@ -13,6 +13,7 @@ import type { ShowtimeSeatsResponseDto } from "@/features/client/showtimes/types
 import { BookingCustomerForm } from "./booking-customer-form";
 import { BookingPriceSummary, calcBookingEstimate } from "./booking-price-summary";
 import { SeatSuggestionPanel } from "./seat-suggestion-panel";
+import { HOLDING_SEATS_LABEL } from "@/config/default-constants";
 
 export const BOOKING_SELECTION_GRID_CLASS = "grid grid-cols-1 gap-6 lg:grid-cols-[1fr_22.5rem]";
 
@@ -121,7 +122,7 @@ export const BookingSelectionStep = ({
       <div className="flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start">
         <BookingPriceSummary seats={selectedSeats} combos={activeCombos.data} comboQuantities={comboQuantities} />
         <Button className="max-lg:hidden" disabled={!canHold || isHolding} onClick={onContinue}>
-          {isHolding ? "Đang giữ ghế..." : "Giữ ghế & tiếp tục thanh toán"}
+          {isHolding ? HOLDING_SEATS_LABEL : "Giữ ghế & tiếp tục thanh toán"}
         </Button>
         {holdDurationMinutes != null && (
           <p className="text-center text-xs text-muted-foreground">
@@ -166,7 +167,7 @@ export const BookingSelectionStep = ({
             </p>
           </div>
           <Button disabled={!canHold || isHolding} onClick={onContinue}>
-            {isHolding ? "Đang giữ ghế..." : "Giữ ghế"}
+            {isHolding ? HOLDING_SEATS_LABEL : "Giữ ghế"}
           </Button>
         </div>
       </div>

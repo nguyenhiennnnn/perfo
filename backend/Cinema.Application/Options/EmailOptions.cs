@@ -22,4 +22,8 @@ public class EmailOptions
     public string ResendApiKey { get; set; } = string.Empty;
 
     public string ResendFromAddress { get; set; } = string.Empty;
+
+    public string ResendApiUrl { get; set; } = "https://api.resend.com/emails";
+
+    public int SmtpTimeoutMilliseconds { get; set; } = 15_000;
 }

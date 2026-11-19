@@ -15,6 +15,7 @@ import { formatCurrency, formatDate } from "@/lib/formatters";
 import type { AdminPaymentListItemDto } from "@/features/admin/payments/types";
 import { PaymentStatusBadge } from "@/components/common/status-badge";
 import type { PaymentStatus } from "@/types/enum";
+import { STATUS_LABEL } from "@/config/default-constants";
 
 interface PaymentColumnsOptions {
   onViewDetail: (payment: AdminPaymentListItemDto) => void;
@@ -55,7 +56,7 @@ export const createPaymentColumns = ({ onViewDetail }: PaymentColumnsOptions) =>
       ),
     }),
     columnHelper.accessor("status", {
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={STATUS_LABEL} />,
       cell: ({ row }) => <PaymentStatusBadge status={row.original.status as PaymentStatus} />,
       enableSorting: false,
     }),

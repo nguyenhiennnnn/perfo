@@ -1,4 +1,5 @@
 import { set } from "date-fns";
+import { MINUTES_PER_DAY, MINUTES_PER_HOUR } from "@/config/default-constants";
 
 export function combineDateAndTime(date: Date, time: string): Date {
   const [hours, minutes] = time.split(":").map((n) => Number(n) || 0);
@@ -10,11 +11,10 @@ export function toTimeValue(date?: Date | null): string {
   return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 }
 
-const MINUTES_PER_DAY = 24 * 60;
 
 export function timeToMinutes(value?: string | null): number | null {
   const match = value?.match(/^(\d{1,2}):(\d{2})/);
-  return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+  return match ? Number(match[1]) * MINUTES_PER_HOUR + Number(match[2]) : null;
 }
 
 export function minutesToTimeValue(totalMinutes: number): string {

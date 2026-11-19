@@ -1,9 +1,9 @@
 import {
   IMPORT_ACCEPTED_EXTENSIONS,
   IMPORT_MAX_FILE_BYTES,
+  BYTES_PER_MB,
 } from "@/config/default-constants";
 import { extractApiError, getDisplayMessage } from "@/lib/error";
-import { BYTES_PER_MB } from "@/lib/formatters";
 import type { ImportApplyResponse } from "@/types/import";
 
 const MAX_LISTED_ROWS = 20;

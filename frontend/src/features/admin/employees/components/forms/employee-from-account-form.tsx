@@ -12,7 +12,7 @@ import { useAdminPositions } from "@/features/admin/catalog/hooks/use-admin-posi
 import { usePositionQuickCreate } from "@/features/admin/catalog/hooks/use-quick-create";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useAdminUsersSelect } from "@/features/admin/users/hooks/use-admin-users";
-import { LOOKUP_PAGE_SIZE } from "@/config/default-constants";
+import { LOOKUP_PAGE_SIZE, SEARCH_NAME_OR_EMAIL_PLACEHOLDER } from "@/config/default-constants";
 import { FormSearchSelectField } from "@/components/common/form/form-search-select-field";
 import { FormActions } from "@/components/common/form/form-actions";
 import { useServerFieldErrors } from "@/hooks/use-server-field-errors";
@@ -82,7 +82,7 @@ export const EmployeeFromAccountForm = ({ onSuccess }: EmployeeFromAccountFormPr
           onSearchChange={setUserSearch}
           isLoading={adminUsers.isLoading}
           placeholder="Chọn người dùng"
-          searchPlaceholder="Tìm theo tên hoặc email..."
+          searchPlaceholder={SEARCH_NAME_OR_EMAIL_PLACEHOLDER}
           emptyText="Không tìm thấy người dùng phù hợp."
         />
 

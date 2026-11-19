@@ -35,7 +35,7 @@ const registerSchema = z
         VALIDATION_MESSAGES.phoneInvalid,
       ),
     password: strongPasswordSchema,
-    confirmPassword: z.string().min(1, "Vui lòng xác nhận mật khẩu."),
+    confirmPassword: z.string().min(1, VALIDATION_MESSAGES.confirmPasswordRequired),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: VALIDATION_MESSAGES.passwordMismatch,

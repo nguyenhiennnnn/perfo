@@ -14,6 +14,7 @@ import { MovieStatusBadge } from "@/components/common/status-badge";
 import { formatDate } from "@/lib/formatters";
 
 import type { AdminMovieListItemDto } from "@/features/admin/movies/types";
+import { STATUS_LABEL } from "@/config/default-constants";
 
 interface MovieColumnsOptions {
   onEdit?: (movie: AdminMovieListItemDto) => void;
@@ -76,7 +77,7 @@ export const createMovieColumns = ({ onEdit, onDelete, canManage = true }: Movie
       ),
     }),
     columnHelper.accessor("status", {
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={STATUS_LABEL} />,
       cell: ({ row }) => <MovieStatusBadge status={row.original.status} />,
       enableSorting: false,
     }),

@@ -8,6 +8,7 @@ import {
   PaymentStatus,
   ShowtimeStatus,
 } from "@/types/enum";
+import { FAILED_LABEL } from "@/config/default-constants";
 
 export interface EnumOption<T extends string = string> {
   value: T;
@@ -40,7 +41,7 @@ export const bookingStatusOptions = toOptions(BookingStatus, {
 export const paymentStatusOptions = toOptions(PaymentStatus, {
   Pending: "Chờ xử lý",
   Success: "Thành công",
-  Failed: "Thất bại",
+  Failed: FAILED_LABEL,
   Refunded: "Đã hoàn tiền",
 });
 
@@ -72,7 +73,7 @@ export const importExportJobStatusOptions = toOptions(ImportExportJobStatus, {
   Queued: "Đang chờ",
   Running: "Đang xử lý",
   Completed: "Hoàn thành",
-  Failed: "Thất bại",
+  Failed: FAILED_LABEL,
 });
 
 export const importExportModuleOptions = toOptions(ImportExportModule, {

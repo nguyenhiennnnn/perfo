@@ -5,6 +5,7 @@ import { UserAvatar } from "@/components/common/user-avatar";
 import {
   ACCEPTED_IMAGE_ACCEPT,
   MAX_IMAGE_SIZE_BYTES,
+  BYTES_PER_MB,
 } from "@/config/default-constants";
 import { useUploadImage } from "@/features/admin/uploads/hooks/use-uploads";
 
@@ -30,7 +31,7 @@ export const AvatarUpload = ({
 
     if (file.size > MAX_IMAGE_SIZE_BYTES) {
       setError(
-        `File vượt quá giới hạn ${Math.round(MAX_IMAGE_SIZE_BYTES / (1024 * 1024))}MB.`,
+        `File vượt quá giới hạn ${Math.round(MAX_IMAGE_SIZE_BYTES / BYTES_PER_MB)}MB.`,
       );
       return;
     }

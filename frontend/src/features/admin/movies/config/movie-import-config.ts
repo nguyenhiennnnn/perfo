@@ -1,5 +1,6 @@
 import { ENDPOINTS } from "@/api/endpoints";
 import type { ImportWizardConfig } from "@/components/common/import-wizard/import-wizard-types";
+import { STATUS_LABEL } from "@/config/default-constants";
 
 export const movieImportConfig: ImportWizardConfig = {
   title: "Import phim từ file",
@@ -22,7 +23,7 @@ export const movieImportConfig: ImportWizardConfig = {
     { key: "AgeRating", header: "Độ tuổi" },
     { key: "PosterUrl", header: "Poster" },
     { key: "TrailerUrl", header: "Trailer" },
-    { key: "Status", header: "Trạng thái" },
+    { key: "Status", header: STATUS_LABEL },
     { key: "Genres", header: "Thể loại" },
     { key: "Cast", header: "Diễn viên" },
   ],

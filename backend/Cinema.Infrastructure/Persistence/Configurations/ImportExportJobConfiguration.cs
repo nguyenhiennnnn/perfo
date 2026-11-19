@@ -31,13 +31,13 @@ public class ImportExportJobConfiguration : IEntityTypeConfiguration<ImportExpor
         );
         builder.HasKey(x => x.JobId);
         builder.Property(x => x.JobId).ValueGeneratedNever();
-        builder.Property(x => x.Type).HasConversion<string>().HasMaxLength(20);
+        builder.Property(x => x.Type).HasConversion<string>().HasMaxLength(FieldLengths.EnumValue);
         builder.Property(x => x.Module).HasMaxLength(50).IsRequired();
         builder.Property(x => x.Format).HasMaxLength(10).IsRequired();
         builder
             .Property(x => x.Status)
             .HasConversion<string>()
-            .HasMaxLength(20)
+            .HasMaxLength(FieldLengths.EnumValue)
             .HasDefaultValue(ImportExportJobStatus.Queued);
         builder.Property(x => x.Progress).HasDefaultValue(0);
         builder.Property(x => x.TotalRows).HasDefaultValue(0);

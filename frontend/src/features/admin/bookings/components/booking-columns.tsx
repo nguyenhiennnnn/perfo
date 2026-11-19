@@ -14,6 +14,7 @@ import { BookingChannelBadge, BookingStatusBadge } from "@/components/common/sta
 import { formatCurrency, formatDate } from "@/lib/formatters";
 
 import type { AdminBookingListItemDto } from "@/features/admin/bookings/types";
+import { STATUS_LABEL } from "@/config/default-constants";
 
 interface BookingColumnsOptions {
   onViewDetail: (booking: AdminBookingListItemDto) => void;
@@ -57,7 +58,7 @@ export const createBookingColumns = ({ onViewDetail }: BookingColumnsOptions) =>
       ),
     }),
     columnHelper.accessor("status", {
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={STATUS_LABEL} />,
       cell: ({ row }) => <BookingStatusBadge status={row.original.status} />,
       enableSorting: false,
     }),

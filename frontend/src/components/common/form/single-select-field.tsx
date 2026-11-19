@@ -23,6 +23,7 @@ import {
 import { filterBySearch, isSameValue } from "./select-name-utils";
 import { useSelectCreate, type SelectCreateProps } from "./use-select-create";
 import { SelectCreateItem, SelectCreateNote } from "./select-create-item";
+import { SEARCH_PLACEHOLDER } from "@/config/default-constants";
 
 export interface SingleSelectFieldProps<T> extends SelectCreateProps<T> {
   value: string | number | null | undefined;
@@ -53,7 +54,7 @@ export const SingleSelectField = <T,>({
   onSearchChange,
   isLoading = false,
   placeholder = "Chọn...",
-  searchPlaceholder = "Tìm kiếm...",
+  searchPlaceholder = SEARCH_PLACEHOLDER,
   emptyText = STATE_MESSAGES.filtered.title,
   disabled,
   clearable = true,

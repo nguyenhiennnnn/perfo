@@ -7,6 +7,8 @@ import {
   IMPORT_ACCEPT,
   IMPORT_MAX_FILE_BYTES,
   PERCENT_MAX,
+  BYTES_PER_MB,
+  FORM_PROCESSING_LABEL,
 } from "@/config/default-constants";
 import { useBlockDialogClose } from "@/hooks/use-block-dialog-close";
 import { formatFileSize } from "@/lib/formatters";
@@ -188,7 +190,7 @@ export const ImportFileStep = ({
           </p>
           <p className="text-xs text-muted-foreground">
             Hỗ trợ .xlsx, .csv (UTF-8), tối đa{" "}
-            {IMPORT_MAX_FILE_BYTES / (1024 * 1024)}MB
+            {IMPORT_MAX_FILE_BYTES / BYTES_PER_MB}MB
           </p>
         </div>
       )}
@@ -213,7 +215,7 @@ export const ImportFileStep = ({
         </Button>
         <Button type="button" onClick={handleSubmit} disabled={!file || isUploading}>
           {isUploading && <Spinner size="sm" decorative className="text-current" />}
-          {isUploading ? "Đang xử lý..." : "Xem trước"}
+          {isUploading ? FORM_PROCESSING_LABEL : "Xem trước"}
         </Button>
       </ImportWizardFooter>
     </div>

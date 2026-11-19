@@ -16,6 +16,7 @@ import { formatDate } from "@/lib/formatters";
 import { Role } from "@/types/enum";
 
 import type { AdminEmployeeDto } from "@/features/admin/employees/types";
+import { STATUS_LABEL } from "@/config/default-constants";
 
 interface EmployeeColumnsOptions {
   onEdit: (employee: AdminEmployeeDto) => void;
@@ -67,7 +68,7 @@ export const createEmployeeColumns = ({
       ),
     }),
     columnHelper.accessor("isActive", {
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={STATUS_LABEL} />,
       cell: ({ row }) =>
         row.original.isPendingActivation ? (
           <Badge variant="warning">Chờ kích hoạt</Badge>

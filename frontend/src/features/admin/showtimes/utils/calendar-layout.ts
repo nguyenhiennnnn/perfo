@@ -2,8 +2,8 @@ import { getBusinessMinutesOfDay } from "@/lib/business-time";
 import { ShowtimeStatus } from "@/types/enum";
 import type { ShowtimeCalendarItemDto } from "../types";
 import { groupByRoom } from "./group-by-room";
+import { MINUTES_PER_DAY, CALENDAR_EMPTY_DAY_START_MINUTES, CALENDAR_EMPTY_DAY_END_MINUTES, CALENDAR_MIN_WINDOW_MINUTES } from "@/config/default-constants";
 
-export const MINUTES_IN_DAY = 24 * 60;
 export const MIN_GAP_MINUTES = 30;
 
 export interface PlacedShowtime {
@@ -47,7 +47,7 @@ const isCancelled = (s: ShowtimeCalendarItemDto) =>
 function toRange(s: ShowtimeCalendarItemDto) {
   const startMin = getBusinessMinutesOfDay(s.startTime);
   const rawEnd = getBusinessMinutesOfDay(s.endTime);
-  return { startMin, endMin: rawEnd > startMin ? rawEnd : MINUTES_IN_DAY };
+  return { startMin, endMin: rawEnd > startMin ? rawEnd : MINUTES_PER_DAY };
 }
 
 function layoutRoom(
@@ -121,15 +121,15 @@ export function buildDayLayout(
 
   const minStart = placed.length
     ? Math.min(...placed.map((i) => i.startMin))
-    : 8 * 60;
+    : CALENDAR_EMPTY_DAY_START_MINUTES;
   const maxEnd = placed.length
     ? Math.max(...placed.map((i) => i.endMin))
-    : 22 * 60;
+    : CALENDAR_EMPTY_DAY_END_MINUTES;
 
   let windowStart = Math.max(Math.floor(minStart / 60) * 60, 0);
-  let windowEnd = Math.min(Math.ceil(maxEnd / 60) * 60, MINUTES_IN_DAY);
-  while (windowEnd - windowStart < 4 * 60) {
-    if (windowEnd < MINUTES_IN_DAY) windowEnd += 60;
+  let windowEnd = Math.min(Math.ceil(maxEnd / 60) * 60, MINUTES_PER_DAY);
+  while (windowEnd - windowStart < CALENDAR_MIN_WINDOW_MINUTES) {
+    if (windowEnd < MINUTES_PER_DAY) windowEnd += 60;
     else if (windowStart > 0) windowStart -= 60;
     else break;
   }

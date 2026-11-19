@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -37,7 +38,7 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
         builder
             .Property(x => x.Status)
             .HasConversion<string>()
-            .HasMaxLength(20)
+            .HasMaxLength(FieldLengths.EnumValue)
             .HasDefaultValue(Domain.Enums.PaymentStatus.Pending);
         builder.Property(x => x.PaidAt).HasColumnType("timestamp without time zone");
         builder

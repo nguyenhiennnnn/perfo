@@ -13,6 +13,7 @@ import { DataTableColumnHeader } from "@/components/common/data-table/data-table
 import type { DataTableFeatures } from "@/components/common/data-table/data-table-features";
 
 import type { AdminUserListItemDto } from "../types";
+import { STATUS_LABEL } from "@/config/default-constants";
 
 interface UserColumnsOptions {
   onChangeRole: (user: AdminUserListItemDto) => void;
@@ -48,7 +49,7 @@ export const createUserColumns = ({ onChangeRole, onToggle, currentUserId }: Use
       enableSorting: false,
     }),
     columnHelper.accessor("isActive", {
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={STATUS_LABEL} />,
       cell: ({ row }) => <UserStatusBadge isActive={row.original.isActive} />,
       enableSorting: false,
     }),

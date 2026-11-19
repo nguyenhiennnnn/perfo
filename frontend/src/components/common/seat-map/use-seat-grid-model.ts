@@ -72,5 +72,7 @@ export function useSeatGridModel({
       cellAt: (rowLabel: string, col: number) =>
         map.get(seatCellKey(rowLabel, col)),
     };
+    // cols nằm trong deps để model tính lại khi đổi số cột, dù không dùng trực tiếp.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowsCount, cols, cells]);
 }

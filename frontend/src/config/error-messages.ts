@@ -108,6 +108,9 @@ export const VALIDATION_MESSAGES = {
   imageUrlInvalid: "Đường dẫn ảnh không hợp lệ.",
   imageUrlTooLong: (max: number) => `Đường dẫn ảnh tối đa ${max} ký tự.`,
   fullNameTooLong: (max: number) => `Họ tên tối đa ${max} ký tự.`,
+  confirmPasswordRequired: "Vui lòng xác nhận mật khẩu.",
+  min: (value: number) => `Tối thiểu ${value}.`,
+  max: (value: number) => `Tối đa ${value}.`,
 } as const;
 
 export const SILENT_TOAST_STATUSES: readonly number[] = [HTTP_STATUS.unauthorized];

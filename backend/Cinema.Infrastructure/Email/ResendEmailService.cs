@@ -19,7 +19,6 @@ public class ResendEmailService(
     private readonly EmailOptions _options = options.Value;
     private string FromName =>
         string.IsNullOrWhiteSpace(_options.FromName) ? brandOptions.Value.Name : _options.FromName;
-    private const string ResendApiUrl = "https://api.resend.com/emails";
 
     public async Task SendAsync(
         string toEmail,
@@ -47,7 +46,7 @@ public class ResendEmailService(
 
         try
         {
-            var response = await client.PostAsync(ResendApiUrl, content, cancellationToken);
+            var response = await client.PostAsync(_options.ResendApiUrl, content, cancellationToken);
             var body = await response.Content.ReadAsStringAsync(cancellationToken);
 
             if (!response.IsSuccessStatusCode)

@@ -14,6 +14,7 @@ import type { DataTableFeatures } from "@/components/common/data-table/data-tabl
 import { formatCurrency } from "@/lib/formatters";
 
 import type { AdminComboDto } from "@/features/admin/combos/types";
+import { STATUS_LABEL } from "@/config/default-constants";
 
 interface ComboColumnsOptions {
   onEdit: (combo: AdminComboDto) => void;
@@ -77,7 +78,7 @@ export const createComboColumns = ({ onEdit, onToggle }: ComboColumnsOptions) =>
     }),
     columnHelper.accessor("isActive", {
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Trạng thái" />
+        <DataTableColumnHeader column={column} title={STATUS_LABEL} />
       ),
       cell: ({ row }) => <ComboStatusBadge isActive={row.original.isActive} />,
       enableSorting: false,

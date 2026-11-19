@@ -5,9 +5,14 @@ export const SEARCH_DEBOUNCE_MS = 300;
 export const MS_PER_SECOND = 1000;
 export const MS_PER_MINUTE = 60 * MS_PER_SECOND;
 export const MS_PER_HOUR = 60 * MS_PER_MINUTE;
+export const MINUTES_PER_HOUR = 60;
+export const MINUTES_PER_DAY = 24 * MINUTES_PER_HOUR;
 
-export const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
-export const MAX_VIDEO_SIZE_BYTES = 100 * 1024 * 1024;
+export const BYTES_PER_KB = 1024;
+export const BYTES_PER_MB = BYTES_PER_KB * BYTES_PER_KB;
+
+export const MAX_IMAGE_SIZE_BYTES = 5 * BYTES_PER_MB;
+export const MAX_VIDEO_SIZE_BYTES = 100 * BYTES_PER_MB;
 export const ACCEPTED_IMAGE_TYPES = [
   "image/png",
   "image/jpeg",
@@ -19,7 +24,7 @@ export const ACCEPTED_VIDEO_TYPES = [
   "video/webm",
 ] as const;
 
-export const IMPORT_MAX_FILE_BYTES = 5 * 1024 * 1024;
+export const IMPORT_MAX_FILE_BYTES = 5 * BYTES_PER_MB;
 export const IMPORT_ACCEPTED_EXTENSIONS = [".xlsx", ".csv"] as const;
 export const IMPORT_ACCEPT = IMPORT_ACCEPTED_EXTENSIONS.join(",");
 export const IMPORT_PREVIEW_PAGE_SIZE = 20;
@@ -58,9 +63,12 @@ export const DEFAULT_CANCEL_DEADLINE_HOURS = 2;
 export const COPY_FEEDBACK_MS = 2000;
 export const DEFAULT_SCREEN_TYPE = "2D";
 export const BUSINESS_TIME_ZONE_BOOT_TIMEOUT_MS = 3_000;
-export const FALLBACK_OPENING_MINUTES = 8 * 60;
-export const FALLBACK_CLOSING_MINUTES = 23 * 60;
-export const DEFAULT_PICKER_OFFSET_FROM_OPENING_MINUTES = 2 * 60;
+export const FALLBACK_OPENING_MINUTES = 8 * MINUTES_PER_HOUR;
+export const FALLBACK_CLOSING_MINUTES = 23 * MINUTES_PER_HOUR;
+export const DEFAULT_PICKER_OFFSET_FROM_OPENING_MINUTES = 2 * MINUTES_PER_HOUR;
+export const CALENDAR_EMPTY_DAY_START_MINUTES = 8 * MINUTES_PER_HOUR;
+export const CALENDAR_EMPTY_DAY_END_MINUTES = 22 * MINUTES_PER_HOUR;
+export const CALENDAR_MIN_WINDOW_MINUTES = 4 * MINUTES_PER_HOUR;
 export const DEFAULT_SHOWTIME_BASE_PRICE = 75_000;
 export const PRICE_INPUT_STEP = 1000;
 export const DEFAULT_MOVIE_DURATION_MINUTES = 120;
@@ -79,6 +87,13 @@ export const GOOGLE_SIGN_IN_BUTTON_WIDTH_PX = 336;
 export const FORM_PENDING_LABEL = "Đang lưu...";
 export const FORM_CANCEL_LABEL = "Hủy";
 export const FORM_SAVE_CHANGES_LABEL = "Lưu thay đổi";
+export const FORM_PROCESSING_LABEL = "Đang xử lý...";
+export const HOLDING_SEATS_LABEL = "Đang giữ ghế...";
+export const FAILED_LABEL = "Thất bại";
+export const STATUS_LABEL = "Trạng thái";
+export const ALL_STATUSES_LABEL = "Tất cả trạng thái";
+export const SEARCH_PLACEHOLDER = "Tìm kiếm...";
+export const SEARCH_NAME_OR_EMAIL_PLACEHOLDER = "Tìm theo tên hoặc email...";
 export const IRREVERSIBLE_ACTION_MESSAGE = "Hành động này không thể hoàn tác.";
 
 export const QUICK_CREATE_NAME_MAX_LENGTH = 50;

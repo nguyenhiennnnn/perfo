@@ -9,6 +9,7 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { useAlertDialogState } from "@/stores/alert-dialog-store";
+import { FORM_PROCESSING_LABEL } from "@/config/default-constants";
 
 export const GlobalAlertDialog = () => {
   const {
@@ -48,7 +49,7 @@ export const GlobalAlertDialog = () => {
                 : undefined
             }
           >
-            {isLoading ? "Đang xử lý..." : confirmText}
+            {isLoading ? FORM_PROCESSING_LABEL : confirmText}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

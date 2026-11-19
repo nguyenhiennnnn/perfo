@@ -1,7 +1,7 @@
 import { PageHeader } from "@/components/common/page-header";
 import { DataTable } from "@/components/common/data-table/data-table";
 import { EnumSelectFilter } from "@/components/common/filter/enum-select-filter";
-import { DEFAULT_PAGE } from "@/config/default-constants";
+import { DEFAULT_PAGE, ALL_STATUSES_LABEL, STATUS_LABEL } from "@/config/default-constants";
 import { useAdminImportExportJobParams } from "@/hooks/use-query-params";
 import { useTablePagination } from "@/hooks/use-table-pagination";
 import {
@@ -66,8 +66,8 @@ const AdminImportExportHistoryPage = () => {
           value={params.status}
           onChange={(status) => setParams({ status, page: DEFAULT_PAGE })}
           options={importExportJobStatusOptions}
-          placeholder="Trạng thái"
-          allLabel="Tất cả trạng thái"
+          placeholder={STATUS_LABEL}
+          allLabel={ALL_STATUSES_LABEL}
         />
       </div>
 

@@ -15,6 +15,7 @@ import { formatCurrency, formatDate, formatTime } from "@/lib/formatters";
 import { ShowtimeStatus } from "@/types/enum";
 
 import type { AdminShowtimeDto } from "../types";
+import { STATUS_LABEL } from "@/config/default-constants";
 
 interface ShowtimeColumnsOptions {
   onEdit?: (showtime: AdminShowtimeDto) => void;
@@ -76,7 +77,7 @@ export const createShowtimeColumns = ({
       ),
     }),
     columnHelper.accessor("status", {
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={STATUS_LABEL} />,
       cell: ({ row }) => <ShowtimeStatusBadge status={row.original.status} />,
       enableSorting: false,
     }),

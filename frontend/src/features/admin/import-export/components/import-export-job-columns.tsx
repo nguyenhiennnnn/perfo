@@ -25,6 +25,7 @@ import {
   getJobTypeLabel,
 } from "../utils/job-labels";
 import { JobProgressBar } from "./job-progress-bar";
+import { STATUS_LABEL } from "@/config/default-constants";
 
 interface ImportExportJobColumnsOptions {
   currentUserId?: number | null;
@@ -68,7 +69,7 @@ export const createImportExportJobColumns = ({
       enableSorting: false,
     }),
     columnHelper.accessor("status", {
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Trạng thái" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={STATUS_LABEL} />,
       cell: ({ row }) => <ImportExportJobStatusBadge status={row.original.status} />,
       enableSorting: false,
     }),

@@ -1,9 +1,7 @@
 import { format } from "date-fns";
 import { toWallDate } from "@/lib/business-time";
 import { getCurrencyLabel, getLocale } from "@/lib/regional-settings";
-
-export const BYTES_PER_KB = 1024;
-export const BYTES_PER_MB = BYTES_PER_KB * BYTES_PER_KB;
+import { BYTES_PER_KB, BYTES_PER_MB } from "@/config/default-constants";
 
 export function formatPoints(points: number) {
   return new Intl.NumberFormat(getLocale()).format(points);

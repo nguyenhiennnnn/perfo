@@ -1,4 +1,5 @@
 using System.Globalization;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,7 @@ public static class ExportLimits
 
         var message = string.Format(
             Messages.Export_TooManyRows,
-            MaxRows.ToString("N0", CultureInfo.GetCultureInfo("vi-VN"))
+            MaxRows.ToString("N0", CultureInfo.GetCultureInfo(RegionalDefaults.Locale))
         );
         throw new ValidationAppException(
             message,

@@ -7,6 +7,7 @@ import { formatCurrency } from "@/lib/formatters";
 import { useCountdown } from "@/hooks/use-countdown";
 import { useAlertDialogOpen } from "@/stores/alert-dialog-store";
 import type { CounterHoldResponse } from "@/features/admin/bookings/types";
+import { FORM_PROCESSING_LABEL } from "@/config/default-constants";
 
 interface CounterCheckoutPanelProps {
   hold: CounterHoldResponse;
@@ -88,7 +89,7 @@ export const CounterCheckoutPanel = ({
         disabled={isSubmitting || isInsufficient || isExpired}
       >
         <HandCoins className="size-4" />
-        <span>{isSubmitting ? "Đang xử lý..." : "Xác nhận thanh toán"}</span>
+        <span>{isSubmitting ? FORM_PROCESSING_LABEL : "Xác nhận thanh toán"}</span>
       </Button>
       <div className="grid grid-cols-2 gap-2">
         <Button variant="outline" onClick={onChangeSeats} disabled={isSubmitting}>

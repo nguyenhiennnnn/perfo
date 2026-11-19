@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import type { badgeVariants } from "@/components/ui/badge";
 import type { VariantProps } from "class-variance-authority";
+import { FAILED_LABEL } from "@/config/default-constants";
 
 export type BadgeVariant = VariantProps<typeof badgeVariants>["variant"];
 
@@ -103,7 +104,7 @@ export const bookingStatusMap: Record<BookingStatus, BadgeItem> = {
 export const paymentStatusMap: Record<PaymentStatus, BadgeItem> = {
   [PaymentStatus.Pending]: { label: "Chờ xử lý", variant: "warning", icon: Clock },
   [PaymentStatus.Success]: { label: "Đã thanh toán", variant: "success", icon: CheckCircle2 },
-  [PaymentStatus.Failed]: { label: "Thất bại", variant: "destructive", icon: XCircle },
+  [PaymentStatus.Failed]: { label: FAILED_LABEL, variant: "destructive", icon: XCircle },
   [PaymentStatus.Refunded]: { label: "Đã hoàn tiền", variant: "outline", icon: XCircle },
 };
 
@@ -116,7 +117,7 @@ export const importExportJobStatusMap: Record<ImportExportJobStatus, BadgeItem> 
     className: "[&>svg]:animate-spin motion-reduce:[&>svg]:animate-none",
   },
   [ImportExportJobStatus.Completed]: { label: "Hoàn thành", variant: "success", icon: CheckCircle2 },
-  [ImportExportJobStatus.Failed]: { label: "Thất bại", variant: "destructive", icon: XCircle },
+  [ImportExportJobStatus.Failed]: { label: FAILED_LABEL, variant: "destructive", icon: XCircle },
 };
 
 export const bookingChannelMap: Record<BookingChannel, BadgeItem> = {

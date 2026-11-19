@@ -20,7 +20,7 @@ import {
   features,
   type DataTableFeatures,
 } from "@/components/common/data-table/data-table-features";
-import { IMPORT_PREVIEW_PAGE_SIZE } from "@/config/default-constants";
+import { IMPORT_PREVIEW_PAGE_SIZE, STATUS_LABEL } from "@/config/default-constants";
 import { useBlockDialogClose } from "@/hooks/use-block-dialog-close";
 import { extractApiError } from "@/lib/error";
 import { cn } from "@/lib/utils";
@@ -61,7 +61,7 @@ const buildColumns = (config: ImportWizardConfig): PreviewColumn[] => [
   ),
   {
     id: STATUS_COLUMN_ID,
-    header: "Trạng thái",
+    header: STATUS_LABEL,
     cell: ({ row }) => <ImportRowStatus errors={row.original.errors} />,
   },
 ];

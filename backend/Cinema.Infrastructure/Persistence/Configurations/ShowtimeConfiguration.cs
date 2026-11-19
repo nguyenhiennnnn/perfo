@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -27,7 +28,7 @@ public class ShowtimeConfiguration : IEntityTypeConfiguration<Showtime>
         builder
             .Property(x => x.Status)
             .HasConversion<string>()
-            .HasMaxLength(20)
+            .HasMaxLength(FieldLengths.EnumValue)
             .HasDefaultValue(Domain.Enums.ShowtimeStatus.Scheduled);
         builder
             .Property(x => x.CreatedAt)

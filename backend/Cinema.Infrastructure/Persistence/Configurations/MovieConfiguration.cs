@@ -35,7 +35,7 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
         builder
             .Property(x => x.Status)
             .HasConversion<string>()
-            .HasMaxLength(20)
+            .HasMaxLength(FieldLengths.EnumValue)
             .HasDefaultValue(Domain.Enums.MovieStatus.ComingSoon);
         builder.Property(x => x.AverageRating).HasColumnType("decimal(3,2)").HasDefaultValue(0m);
         builder

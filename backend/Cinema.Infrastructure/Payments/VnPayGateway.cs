@@ -32,6 +32,10 @@ public class VnPayGateway(
     private const string ApiVersion = "2.1.0";
     private const string DateFormat = "yyyyMMddHHmmss";
     private const string SuccessResponseCode = "00";
+    private const string RefundRejectedStatus = "09";
+    private const string FullRefundType = "02";
+    private const string PartialRefundType = "03";
+    private const int OrderInfoMaxLength = 255;
     private const string DefaultIpAddress = "127.0.0.1";
     private const decimal AmountScale = 100m;
     private const string CurrencyCode = "VND";
@@ -63,7 +67,7 @@ public class VnPayGateway(
     )
     {
         var returnUrl = $"{_options.ReturnUrl.Trim()}?bookingId={request.BookingId}";
-        var nowUtc = _time.GetUtcNow().UtcDateTime;
+        var nowUtc = request.CreatedAtUtc ?? _time.GetUtcNow().UtcDateTime;
 
         var vnpParams = new SortedDictionary<string, string>(StringComparer.Ordinal)
         {
@@ -140,20 +144,28 @@ public class VnPayGateway(
     {
         var requestId = Guid.NewGuid().ToString("N")[..16];
         var createDate = FormatVnPayDate(_time.GetUtcNow().UtcDateTime);
+        var tmnCode = _options.TmnCode.Trim();
+        var hashSecret = _options.HashSecret.Trim();
         var vnpTxnRef = request.OriginalTransactionId;
         var vnpAmount = ToVnpAmount(request.Amount);
         var vnpTransactionDate = FormatVnPayDate(request.OriginalPaymentDate);
         var vnpTransactionNo = request.GatewayTransactionId ?? string.Empty;
-        const string transactionType = "02";
+        var transactionType =
+            request.OriginalAmount is { } originalAmount && request.Amount < originalAmount
+                ? PartialRefundType
+                : FullRefundType;
         const string createBy = "System";
         const string ipAddr = DefaultIpAddress;
+        var orderInfo = ToAscii(request.OrderInfo);
+        if (orderInfo.Length > OrderInfoMaxLength)
+            orderInfo = orderInfo[..OrderInfoMaxLength];
 
         var signData = string.Join(
             "|",
             requestId,
             ApiVersion,
             "refund",
-            _options.TmnCode,
+            tmnCode,
             transactionType,
             vnpTxnRef,
             vnpAmount,
@@ -162,16 +174,16 @@ public class VnPayGateway(
             createBy,
             createDate,
             ipAddr,
-            request.OrderInfo
+            orderInfo
         );
-        var secureHash = HmacSigner.Sha512Hex(_options.HashSecret, signData);
+        var secureHash = HmacSigner.Sha512Hex(hashSecret, signData);
 
         var payload = new
         {
             vnp_RequestId = requestId,
             vnp_Version = ApiVersion,
             vnp_Command = "refund",
-            vnp_TmnCode = _options.TmnCode,
+            vnp_TmnCode = tmnCode,
             vnp_TransactionType = transactionType,
             vnp_TxnRef = vnpTxnRef,
             vnp_Amount = vnpAmount,
@@ -180,7 +192,7 @@ public class VnPayGateway(
             vnp_CreateBy = createBy,
             vnp_CreateDate = createDate,
             vnp_IpAddr = ipAddr,
-            vnp_OrderInfo = request.OrderInfo,
+            vnp_OrderInfo = orderInfo,
             vnp_SecureHash = secureHash,
         };
 
@@ -199,7 +211,11 @@ public class VnPayGateway(
             if (result is null)
                 return new RefundResult(false, null, Messages.Refund_VnPayEmptyResponse);
 
-            return result.vnp_ResponseCode == SuccessResponseCode
+            var accepted =
+                result.vnp_ResponseCode == SuccessResponseCode
+                && result.vnp_TransactionStatus != RefundRejectedStatus;
+
+            return accepted
                 ? new RefundResult(true, result.vnp_TransactionNo, null)
                 : new RefundResult(
                     false,
@@ -243,7 +259,8 @@ public class VnPayGateway(
     private record VnPayRefundResponse(
         string vnp_ResponseCode,
         string? vnp_Message,
-        string? vnp_TransactionNo
+        string? vnp_TransactionNo,
+        string? vnp_TransactionStatus = null
     );
 
     private static string BuildSignData(SortedDictionary<string, string> sortedParams) =>

@@ -45,13 +45,19 @@ public class BookingCheckoutService(
             );
 
         var transactionId = CodeGenerator.GeneratePaymentTransactionId(booking.BookingCode);
+        var nowUtc = DateTime.UtcNow;
+        var createdAt = new DateTime(
+            nowUtc.Ticks - nowUtc.Ticks % TimeSpan.TicksPerSecond,
+            DateTimeKind.Utc
+        );
 
         var gatewayResult = await gateway.CreatePaymentAsync(
             new CreatePaymentRequest(
                 booking.BookingId,
                 booking.FinalAmount,
                 string.Format(Messages.Payment_BookingDescription, booking.BookingCode),
-                transactionId
+                transactionId,
+                createdAt
             ),
             cancellationToken
         );
@@ -66,7 +72,7 @@ public class BookingCheckoutService(
             Status = PaymentStatus.Pending,
             Amount = booking.FinalAmount,
             TransactionId = transactionId,
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = createdAt,
         };
         db.Payments.Add(payment);
         await db.SaveChangesAsync(cancellationToken);

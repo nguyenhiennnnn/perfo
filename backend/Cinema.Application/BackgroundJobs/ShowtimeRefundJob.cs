@@ -79,8 +79,9 @@ public class ShowtimeRefundJob(
                             Messages.Refund_ShowtimeCancelledDescription,
                             booking.BookingCode
                         ),
-                        payment.PaidAt ?? payment.CreatedAt,
-                        GatewayTransactionId: payment.GatewayTransactionId
+                        payment.CreatedAt,
+                        GatewayTransactionId: payment.GatewayTransactionId,
+                        OriginalAmount: payment.Amount
                     ),
                     cancellationToken
                 );

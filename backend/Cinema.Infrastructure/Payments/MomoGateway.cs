@@ -20,6 +20,8 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
 
     public string MethodName => PaymentMethodNames.Momo;
 
+    private const int OrderInfoMaxLength = 255;
+
     public async Task<CreatePaymentResult> CreatePaymentAsync(
         CreatePaymentRequest request,
         CancellationToken cancellationToken = default
@@ -30,12 +32,14 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
         var amount = (long)request.Amount;
         const string extraData = "";
         const string requestType = "captureWallet";
-        const string orderType = "other";
-        var returnUrl = $"{_options.ReturnUrl}?bookingId={request.BookingId}";
+        var orderInfo = request.OrderInfo.Length > OrderInfoMaxLength
+            ? request.OrderInfo[..OrderInfoMaxLength]
+            : request.OrderInfo;
+        var returnUrl = $"{_options.ReturnUrl.Trim()}?bookingId={request.BookingId}";
 
         var rawSignature =
             $"accessKey={_options.AccessKey}&amount={amount}&extraData={extraData}"
-            + $"&ipnUrl={_options.IpnUrl}&orderId={orderId}&orderInfo={request.OrderInfo}"
+            + $"&ipnUrl={_options.IpnUrl}&orderId={orderId}&orderInfo={orderInfo}"
             + $"&partnerCode={_options.PartnerCode}&redirectUrl={returnUrl}&requestId={requestId}&requestType={requestType}";
 
         var signature = HmacSigner.Sha256Hex(_options.SecretKey, rawSignature);
@@ -44,14 +48,13 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
         {
             partnerCode = _options.PartnerCode,
             requestId,
-            amount,      
+            amount,
             orderId,
-            orderInfo = request.OrderInfo,
+            orderInfo,
             redirectUrl = returnUrl,
             ipnUrl = _options.IpnUrl,
             extraData,
             requestType,
-            orderType,
             signature,
             lang = "vi",
         };
@@ -120,14 +123,20 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
         CancellationToken cancellationToken = default
     )
     {
-        var requestId = Guid.NewGuid().ToString();
-        var orderId = Guid.NewGuid().ToString();
-        var amount = (long)request.Amount;
+        if (!long.TryParse(request.GatewayTransactionId, out var transId) || transId <= 0)
+            return new RefundResult(
+                false,
+                null,
+                string.Format(Messages.Refund_MomoApiError, "Thiếu hoặc sai MoMo transId")
+            );
 
-        var transId = request.GatewayTransactionId ?? request.OriginalTransactionId;
+        var requestId = Guid.NewGuid().ToString("N");
+        var orderId = $"RF{Guid.NewGuid():N}";
+        var amount = (long)request.Amount;
+        var description = request.OrderInfo ?? string.Empty;
 
         var rawSignature =
-            $"accessKey={_options.AccessKey}&amount={amount}&description={request.OrderInfo}"
+            $"accessKey={_options.AccessKey}&amount={amount}&description={description}"
             + $"&orderId={orderId}&partnerCode={_options.PartnerCode}&requestId={requestId}&transId={transId}";
         var signature = HmacSigner.Sha256Hex(_options.SecretKey, rawSignature);
 
@@ -136,10 +145,10 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
             partnerCode = _options.PartnerCode,
             orderId,
             requestId,
-            amount,       
+            amount,
             transId,
             lang = "vi",
-            description = request.OrderInfo,
+            description,
             signature,
         };
 
@@ -159,7 +168,11 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
                 return new RefundResult(false, null, Messages.Refund_MomoEmptyResponse);
 
             return result.ResultCode == 0
-                ? new RefundResult(true, orderId, null)
+                ? new RefundResult(
+                    true,
+                    result.TransId is > 0 ? result.TransId.Value.ToString() : orderId,
+                    null
+                )
                 : new RefundResult(
                     false,
                     null,
@@ -178,5 +191,5 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
 
     private record MomoCreateResponse(int ResultCode, string? Message, string? PayUrl);
 
-    private record MomoRefundResponse(int ResultCode, string? Message);
+    private record MomoRefundResponse(int ResultCode, string? Message, long? TransId);
 }

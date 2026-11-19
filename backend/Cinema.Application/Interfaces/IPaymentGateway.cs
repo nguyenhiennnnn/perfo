@@ -4,7 +4,8 @@ public record CreatePaymentRequest(
     int BookingId,
     decimal Amount,
     string OrderInfo,
-    string TransactionId
+    string TransactionId,
+    DateTime? CreatedAtUtc = null
 );
 
 public record CreatePaymentResult(string PaymentUrl, string? TransactionId);
@@ -14,7 +15,8 @@ public record RefundRequest(
     decimal Amount,
     string OrderInfo,
     DateTime OriginalPaymentDate,
-    string? GatewayTransactionId = null
+    string? GatewayTransactionId = null,
+    decimal? OriginalAmount = null
 );
 
 public record RefundResult(bool Success, string? RefundTransactionId, string? Message);

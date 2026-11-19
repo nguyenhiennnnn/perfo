@@ -328,8 +328,9 @@ public class PaymentService(
                         payment.TransactionId,
                         payment.Amount,
                         string.Format(Messages.Refund_SeatsExpiredDescription, payment.PaymentId),
-                        payment.PaidAt ?? payment.CreatedAt,
-                        GatewayTransactionId: payment.GatewayTransactionId
+                        payment.CreatedAt,
+                        GatewayTransactionId: payment.GatewayTransactionId,
+                        OriginalAmount: payment.Amount
                     ),
                     cancellationToken
                 );

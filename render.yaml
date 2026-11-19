@@ -145,6 +145,10 @@ services:
         sync: false
       - key: VnPay__IpnUrl
         sync: false
+      - key: VnPay__BaseUrl
+        value: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+      - key: VnPay__ApiUrl
+        value: https://sandbox.vnpayment.vn/merchant_webapi/api/transaction
 
       # ── MoMo ──────────────────────────────────────────────────────────────
       - key: Momo__PartnerCode
@@ -157,6 +161,10 @@ services:
         sync: false
       - key: Momo__IpnUrl
         sync: false
+      - key: Momo__Endpoint
+        value: https://test-payment.momo.vn/v2/gateway/api/create
+      - key: Momo__RefundEndpoint
+        value: https://test-payment.momo.vn/v2/gateway/api/refund
 
       # ── Stripe ────────────────────────────────────────────────────────────
       - key: Stripe__SecretKey

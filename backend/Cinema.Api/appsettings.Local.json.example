@@ -34,9 +34,16 @@
     "TmnCode": "",
     "HashSecret": "",
     "ReturnUrl": "http://localhost:5173/booking/result",
-    "IpnUrl": "http://localhost:8080/api/v1/payments/vnpay/ipn"
+    "IpnUrl": "http://localhost:8080/api/v1/payments/vnpay/ipn",
+    "BaseUrl": "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
+    "ApiUrl": "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction"
   },
   "Momo": {
+    "PartnerCode": "",
+    "AccessKey": "",
+    "SecretKey": "",
+    "Endpoint": "https://test-payment.momo.vn/v2/gateway/api/create",
+    "RefundEndpoint": "https://test-payment.momo.vn/v2/gateway/api/refund",
     "ReturnUrl": "http://localhost:5173/booking/result",
     "IpnUrl": "http://localhost:8080/api/v1/payments/momo/ipn"
   }

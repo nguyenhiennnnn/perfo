@@ -126,8 +126,9 @@ public class BookingCancellationService(
                 payment.TransactionId!,
                 eligibility.RefundAmount,
                 string.Format(Messages.Refund_CancelBookingDescription, booking.BookingCode),
-                payment.PaidAt ?? payment.CreatedAt,
-                GatewayTransactionId: payment.GatewayTransactionId
+                payment.CreatedAt,
+                GatewayTransactionId: payment.GatewayTransactionId,
+                OriginalAmount: payment.Amount
             ),
             cancellationToken
         );

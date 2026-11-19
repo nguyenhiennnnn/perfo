@@ -26,7 +26,9 @@ public class PaymentsController(IPaymentService paymentService) : ControllerBase
     {
         var parameters = await BuildParamsFromJsonBodyAsync(cancellationToken);
         var result = await paymentService.ProcessMomoIpnAsync(parameters, cancellationToken);
-        return Ok(new { resultCode = result.ResultCode, message = result.Message });
+        if (result.ResultCode == 0)
+            return NoContent();
+        return BadRequest(new { resultCode = result.ResultCode, message = result.Message });
     }
 
     [HttpPost("stripe/webhook")]

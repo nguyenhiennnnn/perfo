@@ -1,6 +1,7 @@
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Rooms;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;
@@ -204,20 +205,41 @@ public class RoomService(IAppDbContext db) : IRoomService
                 );
         }
 
-        var coupleGroups = request
-            .Seats.Where(s => s.CoupleId is not null)
-            .GroupBy(s => s.CoupleId!.Value)
-            .ToList();
-        var invalidCoupleIds = coupleGroups
-            .Where(g => g.Count() != 2 || g.Select(s => s.SeatRow).Distinct().Count() != 1)
-            .Select(g => g.Key)
-            .ToList();
-        if (invalidCoupleIds.Count > 0)
+        var duplicatePositions = SeatCoupleRules.FindDuplicatePositions(
+            request.Seats.Select(s => (s.SeatRow, s.SeatNumber))
+        );
+        if (duplicatePositions.Count > 0)
+            throw new ValidationAppException(
+                Messages.Validation_Seats_DuplicatedPosition,
+                new Dictionary<string, string[]>
+                {
+                    ["seats"] = [Messages.Validation_Seats_DuplicatedPosition],
+                }
+            );
+
+        var coupleViolations = SeatCoupleRules.Validate(
+            request.Seats.Select(
+                (s, index) =>
+                    new CoupleSeatInput(
+                        index,
+                        s.SeatRow,
+                        s.SeatNumber,
+                        s.SeatTypeId,
+                        s.IsActive,
+                        s.IsAisle,
+                        s.CoupleId?.ToString()
+                    )
+            )
+        );
+        if (coupleViolations.Count > 0)
             throw new ValidationAppException(
                 Messages.Invalid_CoupleSeatData,
                 new Dictionary<string, string[]>
                 {
-                    ["seats"] = [Messages.Invalid_CoupleSeatsUnpaired],
+                    ["seats"] = coupleViolations
+                        .Select(v => CoupleViolationMessage(v.Kind))
+                        .Distinct()
+                        .ToArray(),
                 }
             );
 
@@ -447,4 +469,14 @@ public class RoomService(IAppDbContext db) : IRoomService
 
     private Task<AdminRoomDto> LoadRoomDtoAsync(int roomId, CancellationToken cancellationToken) =>
         GetRoomByIdAsync(roomId, cancellationToken);
+
+    private static string CoupleViolationMessage(SeatCoupleViolationKind kind) =>
+        kind switch
+        {
+            SeatCoupleViolationKind.NotAdjacent => Messages.Invalid_CoupleSeatsNotAdjacent,
+            SeatCoupleViolationKind.OnAisle => Messages.Invalid_CoupleSeatsOnAisle,
+            SeatCoupleViolationKind.DifferentSeatType => Messages.Invalid_CoupleSeatsTypeMismatch,
+            SeatCoupleViolationKind.DifferentActiveState => Messages.Invalid_CoupleSeatsActiveMismatch,
+            _ => Messages.Invalid_CoupleSeatsUnpaired,
+        };
 }

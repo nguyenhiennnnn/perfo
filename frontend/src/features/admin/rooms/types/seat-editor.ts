@@ -24,6 +24,7 @@ export interface AutoGenerateOptions {
   cols: number;
   standardSeatTypeId: number | null;
   vipSeatTypeId: number | null;
+  coupleSeatTypeId: number | null;
   vipRowCount: number;
   coupleRowCount: number;
   aisleCols: number[];

@@ -51,7 +51,7 @@ export function useSeatGridModel({
 
       const partner = byCouple
         .get(`${cell.coupleId}|${cell.seatRow}`)
-        ?.find((c) => c.seatNumber !== cell.seatNumber);
+        ?.find((c) => Math.abs(c.seatNumber - cell.seatNumber) === 1);
 
       if (partner) {
         const [first, second] = [cell, partner].sort(

@@ -575,6 +575,42 @@ namespace Cinema.Shared.Resources {
                 return ResourceManager.GetString("Invalid_CoupleSeatsUnpaired", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hai ghế của một cặp ghế đôi phải liền kề nhau...
+        /// </summary>
+        public static string Invalid_CoupleSeatsNotAdjacent {
+            get {
+                return ResourceManager.GetString("Invalid_CoupleSeatsNotAdjacent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ghế đôi không thể nằm trên ô lối đi...
+        /// </summary>
+        public static string Invalid_CoupleSeatsOnAisle {
+            get {
+                return ResourceManager.GetString("Invalid_CoupleSeatsOnAisle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hai ghế của một cặp ghế đôi phải cùng loại ghế...
+        /// </summary>
+        public static string Invalid_CoupleSeatsTypeMismatch {
+            get {
+                return ResourceManager.GetString("Invalid_CoupleSeatsTypeMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hai ghế của một cặp ghế đôi phải cùng trạng thái bật/tắt...
+        /// </summary>
+        public static string Invalid_CoupleSeatsActiveMismatch {
+            get {
+                return ResourceManager.GetString("Invalid_CoupleSeatsActiveMismatch", resourceCulture);
+            }
+        }
 
         /// <summary>
         ///   Looks up a localized string similar to Mật khẩu hiện tại không đúng..
@@ -6677,6 +6713,24 @@ namespace Cinema.Shared.Resources {
         public static string Invalid_ImportCoupleGroupAdjacent {
             get {
                 return ResourceManager.GetString("Invalid_ImportCoupleGroupAdjacent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hai ghế của nhóm "{0}" phải cùng loại ghế...
+        /// </summary>
+        public static string Invalid_ImportCoupleGroupSeatType {
+            get {
+                return ResourceManager.GetString("Invalid_ImportCoupleGroupSeatType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hai ghế của nhóm "{0}" phải cùng trạng thái bật/tắt...
+        /// </summary>
+        public static string Invalid_ImportCoupleGroupActive {
+            get {
+                return ResourceManager.GetString("Invalid_ImportCoupleGroupActive", resourceCulture);
             }
         }
         

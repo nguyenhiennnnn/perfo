@@ -76,3 +76,40 @@ export function formatSeatCodes(
   }
   return codes;
 }
+
+/**
+ * Trả về toàn bộ ID ghế cùng nhóm với ghế được bấm.
+ * Ghế đôi (có coupleId) luôn được chọn/bỏ chọn theo cả cặp; ghế thường trả về chính nó.
+ */
+export function getSeatGroupIds(
+  seats: Pick<ShowtimeSeatItemDto, "showtimeSeatId" | "coupleId">[],
+  showtimeSeatId: number,
+): number[] {
+  const coupleId = seats.find((s) => s.showtimeSeatId === showtimeSeatId)?.coupleId;
+  if (!coupleId) return [showtimeSeatId];
+  const group = seats.filter((s) => s.coupleId === coupleId).map((s) => s.showtimeSeatId);
+  return group.length > 0 ? group : [showtimeSeatId];
+}
+
+/**
+ * Tính tập ghế đã chọn mới sau khi bấm 1 ghế (áp dụng cho cả cặp ghế đôi).
+ * Trả về chính `prev` nếu có ghế trong nhóm không còn trống (đang giữ/đã bán).
+ */
+export function toggleSeatSelection(
+  prev: Set<number>,
+  seats: Pick<ShowtimeSeatItemDto, "showtimeSeatId" | "coupleId">[],
+  statusMap: Map<number, ShowtimeSeatStatus>,
+  showtimeSeatId: number,
+): Set<number> {
+  const group = getSeatGroupIds(seats, showtimeSeatId);
+  const blocked = group.some((id) => {
+    const status = statusMap.get(id);
+    return status !== undefined && status !== ShowtimeSeatStatus.Available;
+  });
+  if (blocked) return prev;
+
+  const next = new Set(prev);
+  const remove = next.has(showtimeSeatId);
+  group.forEach((id) => (remove ? next.delete(id) : next.add(id)));
+  return next;
+}

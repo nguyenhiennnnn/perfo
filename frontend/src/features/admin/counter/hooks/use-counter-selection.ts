@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { getBusinessToday } from "@/lib/business-time";
 import { ShowtimeSeatStatus } from "@/types/enum";
+import { toggleSeatSelection } from "@/components/common/seat-map/seat-map-utils";
 import { useShowtimeSeats } from "@/features/client/showtimes/hooks/use-showtimes";
 import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
 import type { CounterHoldRequest } from "@/features/admin/bookings/types";
@@ -53,16 +54,12 @@ export function useCounterSelection() {
 
   const toggleSeat = (
     showtimeSeatId: number,
-    status: ShowtimeSeatStatus | undefined,
+    statusMap: Map<number, ShowtimeSeatStatus>,
   ) => {
-    if (status && status !== ShowtimeSeatStatus.Available) return;
-
-    setSelectedSeatIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(showtimeSeatId)) next.delete(showtimeSeatId);
-      else next.add(showtimeSeatId);
-      return next;
-    });
+    const seats = showtimeSeats.data?.seats ?? [];
+    setSelectedSeatIds((prev) =>
+      toggleSeatSelection(prev, seats, statusMap, showtimeSeatId),
+    );
   };
 
   const setComboQuantity = (comboId: number, quantity: number) => {

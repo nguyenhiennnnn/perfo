@@ -48,10 +48,7 @@ export function useCounterFlow() {
   };
 
   const toggleSeat = (showtimeSeatId: number) =>
-    selection.toggleSeat(
-      showtimeSeatId,
-      hold.seatStatusMap.get(showtimeSeatId),
-    );
+    selection.toggleSeat(showtimeSeatId, hold.seatStatusMap);
 
   const holdSeats = async () => {
     const request = selection.buildHoldRequest();

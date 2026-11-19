@@ -47,6 +47,9 @@ export const SeatEditorAutoGenerateForm = ({
     seatTypes?.find((t) => resolveSeatVisualKind(t.name) === "vip")?.seatTypeId ??
     NONE_SEAT_TYPE_ID;
 
+  const detectedCoupleId =
+    seatTypes?.find((t) => resolveSeatVisualKind(t.name) === "couple")?.seatTypeId ?? null;
+
   const form = useForm<AutoGenerateFormValues>({
     resolver: zodResolver(autoGenerateFormSchema),
     defaultValues: {
@@ -80,6 +83,7 @@ export const SeatEditorAutoGenerateForm = ({
         values.standardSeatTypeId === NONE_SEAT_TYPE_ID ? null : values.standardSeatTypeId,
       vipSeatTypeId:
         values.vipSeatTypeId === NONE_SEAT_TYPE_ID ? null : values.vipSeatTypeId,
+      coupleSeatTypeId: detectedCoupleId,
       vipRowCount: Math.max(0, Math.min(values.vipRowCount, safeRows)),
       coupleRowCount: Math.max(0, Math.min(values.coupleRowCount, safeRows)),
       aisleCols: parseAisleCols(values.aisleColsText).filter((c) => c <= safeCols),

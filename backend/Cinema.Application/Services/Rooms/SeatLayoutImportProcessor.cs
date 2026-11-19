@@ -504,12 +504,15 @@ public sealed class SeatLayoutImportProcessor(
             firstRowByPosition[(seatRow, number)] = row.RowNumber;
 
             TryParseFlag(row.Data.IsAisle, false, out var isAisle);
+            TryParseFlag(row.Data.IsActive, true, out var isActive);
             positions.Add(
                 new ParsedPosition(
                     row.RowNumber,
                     seatRow,
                     number,
                     isAisle,
+                    isActive,
+                    FindSeatTypeId(row.Data.SeatType, context),
                     CoupleKey(row.Data.CoupleGroup),
                     NameNormalizer.Normalize(row.Data.CoupleGroup)
                 )
@@ -540,39 +543,36 @@ public sealed class SeatLayoutImportProcessor(
             }
         }
 
+        var coupled = positions.Where(p => !p.IsAisle && p.CoupleKey is not null).ToList();
+        var violations = SeatCoupleRules.Validate(
+            coupled.Select(p => new CoupleSeatInput(
+                p.RowNumber,
+                p.Row,
+                p.Number,
+                p.SeatTypeId,
+                p.IsActive,
+                p.IsAisle,
+                p.CoupleKey
+            ))
+        );
+
+        var invalidKeys = new HashSet<string>();
+        foreach (var violation in violations)
+        {
+            invalidKeys.Add(violation.GroupKey);
+            var label = coupled.First(p => p.RowNumber == violation.Refs[0]).CoupleLabel;
+            var error = ImportCoupleMessage(violation.Kind, label, violation.Refs.Count);
+            foreach (var rowNumber in violation.Refs)
+                context.AddCrossError(rowNumber, SeatLayoutImportColumns.CoupleGroup, error);
+        }
+
         foreach (
-            var group in positions
-                .Where(p => !p.IsAisle && p.CoupleKey is not null)
+            var group in coupled
+                .Where(p => !invalidKeys.Contains(p.CoupleKey!))
                 .GroupBy(p => p.CoupleKey!)
         )
         {
-            var members = group
-                .OrderBy(p => p.Row.Length)
-                .ThenBy(p => p.Row, StringComparer.Ordinal)
-                .ThenBy(p => p.Number)
-                .ToList();
-            var label = members[0].CoupleLabel;
-
-            string? error = null;
-            if (members.Count != 2)
-                error = string.Format(Messages.Invalid_ImportCoupleGroupSize, label, members.Count);
-            else if (members[0].Row != members[1].Row)
-                error = string.Format(Messages.Invalid_ImportCoupleGroupRow, label);
-            else if (members[1].Number - members[0].Number != 1)
-                error = string.Format(Messages.Invalid_ImportCoupleGroupAdjacent, label);
-
-            if (error is not null)
-            {
-                foreach (var member in members)
-                    context.AddCrossError(
-                        member.RowNumber,
-                        SeatLayoutImportColumns.CoupleGroup,
-                        error
-                    );
-                continue;
-            }
-
-            var existingIds = members
+            var existingIds = group
                 .Select(m =>
                     context.Current.TryGetValue((m.Row, m.Number), out var seat)
                         ? seat.CoupleId
@@ -584,6 +584,41 @@ public sealed class SeatLayoutImportProcessor(
                 existingIds.Count == 1 && existingIds[0] is { } existing ? existing : Guid.NewGuid();
         }
     }
+
+    private static string ImportCoupleMessage(
+        SeatCoupleViolationKind kind,
+        string label,
+        int memberCount
+    ) =>
+        kind switch
+        {
+            SeatCoupleViolationKind.WrongSize => string.Format(
+                Messages.Invalid_ImportCoupleGroupSize,
+                label,
+                memberCount
+            ),
+            SeatCoupleViolationKind.DifferentRows => string.Format(
+                Messages.Invalid_ImportCoupleGroupRow,
+                label
+            ),
+            SeatCoupleViolationKind.NotAdjacent => string.Format(
+                Messages.Invalid_ImportCoupleGroupAdjacent,
+                label
+            ),
+            SeatCoupleViolationKind.OnAisle => Messages.Invalid_ImportCoupleOnAisle,
+            SeatCoupleViolationKind.DifferentSeatType => string.Format(
+                Messages.Invalid_ImportCoupleGroupSeatType,
+                label
+            ),
+            _ => string.Format(Messages.Invalid_ImportCoupleGroupActive, label),
+        };
+
+    private static int? FindSeatTypeId(string? name, SeatLayoutImportContext context) =>
+        name is not null
+        && context.SeatTypes.TryGetValue(Key(name), out var matches)
+        && matches.Count == 1
+            ? matches[0].Id
+            : null;
 
     private static bool HasGaps(IEnumerable<SeatLayoutItem> items) =>
         items
@@ -818,6 +853,8 @@ public sealed class SeatLayoutImportProcessor(
         string Row,
         int Number,
         bool IsAisle,
+        bool IsActive,
+        int? SeatTypeId,
         string? CoupleKey,
         string CoupleLabel
     );

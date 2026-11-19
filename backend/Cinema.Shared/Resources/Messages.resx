@@ -220,6 +220,18 @@
   <data name="Invalid_CoupleSeatsUnpaired" xml:space="preserve">
     <value>Có ghế đôi bị lẻ cặp hoặc không cùng hàng.</value>
   </data>
+  <data name="Invalid_CoupleSeatsNotAdjacent" xml:space="preserve">
+    <value>Hai ghế của một cặp ghế đôi phải liền kề nhau.</value>
+  </data>
+  <data name="Invalid_CoupleSeatsOnAisle" xml:space="preserve">
+    <value>Ghế đôi không thể nằm trên ô lối đi.</value>
+  </data>
+  <data name="Invalid_CoupleSeatsTypeMismatch" xml:space="preserve">
+    <value>Hai ghế của một cặp ghế đôi phải cùng loại ghế.</value>
+  </data>
+  <data name="Invalid_CoupleSeatsActiveMismatch" xml:space="preserve">
+    <value>Hai ghế của một cặp ghế đôi phải cùng trạng thái bật/tắt.</value>
+  </data>
   <data name="Invalid_CurrentPassword" xml:space="preserve">
     <value>Mật khẩu hiện tại không đúng.</value>
   </data>
@@ -2404,6 +2416,14 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Invalid_ImportCoupleGroupAdjacent" xml:space="preserve">
     <value>Hai ghế của nhóm "{0}" phải liền kề nhau.</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Invalid_ImportCoupleGroupAdjacent, ...)</comment>
+  </data>
+  <data name="Invalid_ImportCoupleGroupSeatType" xml:space="preserve">
+    <value>Hai ghế của nhóm "{0}" phải cùng loại ghế.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Invalid_ImportCoupleGroupSeatType, ...)</comment>
+  </data>
+  <data name="Invalid_ImportCoupleGroupActive" xml:space="preserve">
+    <value>Hai ghế của nhóm "{0}" phải cùng trạng thái bật/tắt.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Invalid_ImportCoupleGroupActive, ...)</comment>
   </data>
   <data name="Rule_ImportSeatLayoutSkipBreaksRows" xml:space="preserve">
     <value>Bỏ qua các dòng lỗi sẽ để trống số ghế giữa hàng. Hãy sửa file hoặc đánh dấu các vị trí đó là lối đi.</value>

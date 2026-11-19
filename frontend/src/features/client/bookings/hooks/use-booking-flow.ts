@@ -8,12 +8,14 @@ import {
 } from "@/config/default-constants";
 import { queryKeys } from "@/api/query-keys";
 import {
-  ShowtimeSeatStatus,
   PaymentMethod,
   BookingStatus,
   SeatGapRuleMode,
 } from "@/types/enum";
-import { findLoneSeats } from "@/components/common/seat-map/seat-map-utils";
+import {
+  findLoneSeats,
+  toggleSeatSelection,
+} from "@/components/common/seat-map/seat-map-utils";
 import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
 import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings";
 import { useShowtimeSeats } from "@/features/client/showtimes/hooks/use-showtimes";
@@ -190,28 +192,9 @@ export function useBookingFlow(showtimeId: number, resumeBookingId?: number) {
 
   const toggleSeat = (showtimeSeatId: number) => {
     const allSeats = showtimeSeats.data?.seats ?? [];
-    const coupleId = allSeats.find(
-      (s) => s.showtimeSeatId === showtimeSeatId,
-    )?.coupleId;
-    const group = coupleId
-      ? allSeats
-          .filter((s) => s.coupleId === coupleId)
-          .map((s) => s.showtimeSeatId)
-      : [showtimeSeatId];
-    if (
-      group.some((id) => {
-        const status = seatStatusMap.get(id);
-        return status && status !== ShowtimeSeatStatus.Available;
-      })
-    )
-      return;
-
-    setSelectedSeatIds((prev) => {
-      const next = new Set(prev);
-      const remove = next.has(showtimeSeatId);
-      group.forEach((id) => (remove ? next.delete(id) : next.add(id)));
-      return next;
-    });
+    setSelectedSeatIds((prev) =>
+      toggleSeatSelection(prev, allSeats, seatStatusMap, showtimeSeatId),
+    );
   };
 
   const selectSeats = (ids: number[]) => setSelectedSeatIds(new Set(ids));

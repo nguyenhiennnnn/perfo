@@ -77,10 +77,6 @@ export function formatSeatCodes(
   return codes;
 }
 
-/**
- * Trả về toàn bộ ID ghế cùng nhóm với ghế được bấm.
- * Ghế đôi (có coupleId) luôn được chọn/bỏ chọn theo cả cặp; ghế thường trả về chính nó.
- */
 export function getSeatGroupIds(
   seats: Pick<ShowtimeSeatItemDto, "showtimeSeatId" | "coupleId">[],
   showtimeSeatId: number,
@@ -91,10 +87,6 @@ export function getSeatGroupIds(
   return group.length > 0 ? group : [showtimeSeatId];
 }
 
-/**
- * Tính tập ghế đã chọn mới sau khi bấm 1 ghế (áp dụng cho cả cặp ghế đôi).
- * Trả về chính `prev` nếu có ghế trong nhóm không còn trống (đang giữ/đã bán).
- */
 export function toggleSeatSelection(
   prev: Set<number>,
   seats: Pick<ShowtimeSeatItemDto, "showtimeSeatId" | "coupleId">[],

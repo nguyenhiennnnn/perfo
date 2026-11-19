@@ -200,8 +200,7 @@ apiClient.interceptors.response.use(
 
       try {
         const newToken = await refreshAccessToken();
-        originalRequest.headers = originalRequest.headers ?? {};
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        originalRequest.headers.set("Authorization", `Bearer ${newToken}`);
         return apiClient(originalRequest);
       } catch (refreshError) {
         const refreshStatus = (refreshError as AxiosError)?.response?.status;

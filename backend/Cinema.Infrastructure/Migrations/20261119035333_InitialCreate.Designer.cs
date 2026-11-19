@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cinema.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261119024641_InitialCreate")]
+    [Migration("20261119035333_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -2117,6 +2117,7 @@ namespace Cinema.Infrastructure.Migrations
                             DurationMinutes = 135,
                             LanguageId = 4,
                             OriginalTitle = "Godzilla Minus Zero",
+                            PosterUrl = "https://cinema.momocdn.net/convert-webp/img/2404819473541948-godzzzzz.jpg?size=L",
                             ReleaseDate = new DateOnly(2026, 11, 6),
                             Status = "NowShowing",
                             Subtitle = "Tiếng Việt",
@@ -2133,6 +2134,7 @@ namespace Cinema.Infrastructure.Migrations
                             DurationMinutes = 114,
                             LanguageId = 2,
                             OriginalTitle = "The Cat in the Hat",
+                            PosterUrl = "https://image-fworker.momocdn.net/momo-external/baaf9e8cdc307bc2a22024cc1b58e3c932bb24e0085aec89bc5c12c2236a7aa9?size=L",
                             ReleaseDate = new DateOnly(2026, 11, 6),
                             Status = "NowShowing",
                             Subtitle = "Lồng tiếng & Phụ đề",
@@ -2149,6 +2151,7 @@ namespace Cinema.Infrastructure.Migrations
                             DurationMinutes = 120,
                             LanguageId = 1,
                             OriginalTitle = "Bò Sữa Bay",
+                            PosterUrl = "https://cinema.momocdn.net/convert-webp/img/4904564921820363-bsb_1200x1600.png?size=L",
                             ReleaseDate = new DateOnly(2026, 11, 6),
                             Status = "NowShowing",
                             Subtitle = "Tiếng Anh",
@@ -2165,6 +2168,7 @@ namespace Cinema.Infrastructure.Migrations
                             DurationMinutes = 110,
                             LanguageId = 1,
                             OriginalTitle = "Ngày Con Còn Mẹ",
+                            PosterUrl = "https://cinema.momocdn.net/convert-webp/img/4986547019998252-1200wx1600h.jpg?size=L",
                             ReleaseDate = new DateOnly(2026, 11, 11),
                             Status = "NowShowing",
                             Subtitle = "Tiếng Anh",
@@ -2180,6 +2184,7 @@ namespace Cinema.Infrastructure.Migrations
                             DirectorId = 20,
                             DurationMinutes = 111,
                             LanguageId = 5,
+                            PosterUrl = "https://homepage.momocdn.net/img/quy-an-tang-4-260929095104.webp",
                             ReleaseDate = new DateOnly(2026, 10, 9),
                             Status = "NowShowing",
                             Subtitle = "Tiếng Việt",
@@ -2196,6 +2201,7 @@ namespace Cinema.Infrastructure.Migrations
                             DurationMinutes = 125,
                             LanguageId = 2,
                             OriginalTitle = "Street Fighter",
+                            PosterUrl = "https://image-fworker.momocdn.net/momo-external/828b56d93d2f00be168fb17e06cdf8ab0051a3b59762b65d45d6eb9eba6df8dd?size=L",
                             ReleaseDate = new DateOnly(2026, 10, 16),
                             Status = "NowShowing",
                             Subtitle = "Tiếng Việt",
@@ -2212,6 +2218,7 @@ namespace Cinema.Infrastructure.Migrations
                             DurationMinutes = 115,
                             LanguageId = 1,
                             OriginalTitle = "Chị Chị Em Em 3",
+                            PosterUrl = "https://cinema.momocdn.net/convert-webp/img/4463292240117827-cc33.jpg?size=L",
                             ReleaseDate = new DateOnly(2026, 10, 16),
                             Status = "NowShowing",
                             Subtitle = "Tiếng Anh",
@@ -2228,6 +2235,7 @@ namespace Cinema.Infrastructure.Migrations
                             DurationMinutes = 96,
                             LanguageId = 1,
                             OriginalTitle = "Trấn Yểm",
+                            PosterUrl = "https://cinema.momocdn.net/convert-webp/img/169449770605007316-tra_n-ye_m-poster-co_ng-bo_-du_-a_n.jpg?size=L",
                             ReleaseDate = new DateOnly(2026, 10, 30),
                             Status = "NowShowing",
                             Subtitle = "Tiếng Anh",
@@ -2244,6 +2252,7 @@ namespace Cinema.Infrastructure.Migrations
                             DurationMinutes = 158,
                             LanguageId = 2,
                             OriginalTitle = "The Hunger Games: Sunrise on the Reaping",
+                            PosterUrl = "https://cinema.momocdn.net/convert-webp/img/3864033921859582-thehungergamesunrise.jpg?size=L",
                             ReleaseDate = new DateOnly(2026, 11, 20),
                             Status = "ComingSoon",
                             Subtitle = "Tiếng Việt",
@@ -2260,6 +2269,7 @@ namespace Cinema.Infrastructure.Migrations
                             DurationMinutes = 120,
                             LanguageId = 1,
                             OriginalTitle = "Trại Giam Hạnh Phúc",
+                            PosterUrl = "https://cinema.momocdn.net/convert-webp/img/3867294930842850-tghp.jpg?size=L",
                             ReleaseDate = new DateOnly(2026, 11, 20),
                             Status = "ComingSoon",
                             Subtitle = "Tiếng Anh",
@@ -2276,6 +2286,7 @@ namespace Cinema.Infrastructure.Migrations
                             DurationMinutes = 90,
                             LanguageId = 2,
                             OriginalTitle = "Focker-in-Law",
+                            PosterUrl = "https://image-fworker.momocdn.net/momo-external/52e1271dc9f3d6ba6c7f38e060ab0692254826dd1bee7e0cae963248e10d35e0?size=L",
                             ReleaseDate = new DateOnly(2026, 11, 27),
                             Status = "ComingSoon",
                             Subtitle = "Tiếng Việt",

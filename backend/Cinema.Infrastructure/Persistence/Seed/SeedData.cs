@@ -1434,8 +1434,9 @@ public static class SeedData
                     LanguageId = 4,
                     Subtitle = "Tiếng Việt",
                     AgeRatingId = 3,
-                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
-                    PosterUrl = null,
+                    // Poster lấy từ CDN của MoMo (ảnh hotlink); trailer chưa có nguồn công khai.
+                    PosterUrl =
+                        "https://cinema.momocdn.net/convert-webp/img/2404819473541948-godzzzzz.jpg?size=L",
                     TrailerUrl = null,
                     Status = MovieStatus.NowShowing,
                     // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
@@ -1455,8 +1456,9 @@ public static class SeedData
                     LanguageId = 2,
                     Subtitle = "Lồng tiếng & Phụ đề",
                     AgeRatingId = 1,
-                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
-                    PosterUrl = null,
+                    // Poster lấy từ CDN của MoMo (ảnh hotlink); trailer chưa có nguồn công khai.
+                    PosterUrl =
+                        "https://image-fworker.momocdn.net/momo-external/baaf9e8cdc307bc2a22024cc1b58e3c932bb24e0085aec89bc5c12c2236a7aa9?size=L",
                     TrailerUrl = null,
                     Status = MovieStatus.NowShowing,
                     // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
@@ -1476,8 +1478,9 @@ public static class SeedData
                     LanguageId = 1,
                     Subtitle = "Tiếng Anh",
                     AgeRatingId = 3,
-                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
-                    PosterUrl = null,
+                    // Poster lấy từ CDN của MoMo (ảnh hotlink); trailer chưa có nguồn công khai.
+                    PosterUrl =
+                        "https://cinema.momocdn.net/convert-webp/img/4904564921820363-bsb_1200x1600.png?size=L",
                     TrailerUrl = null,
                     Status = MovieStatus.NowShowing,
                     // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
@@ -1497,8 +1500,9 @@ public static class SeedData
                     LanguageId = 1,
                     Subtitle = "Tiếng Anh",
                     AgeRatingId = 3,
-                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
-                    PosterUrl = null,
+                    // Poster lấy từ CDN của MoMo (ảnh hotlink); trailer chưa có nguồn công khai.
+                    PosterUrl =
+                        "https://cinema.momocdn.net/convert-webp/img/4986547019998252-1200wx1600h.jpg?size=L",
                     TrailerUrl = null,
                     Status = MovieStatus.NowShowing,
                     // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
@@ -1518,8 +1522,9 @@ public static class SeedData
                     LanguageId = 5,
                     Subtitle = "Tiếng Việt",
                     AgeRatingId = 5,
-                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
-                    PosterUrl = null,
+                    // Poster lấy từ CDN của MoMo (ảnh hotlink); trailer chưa có nguồn công khai.
+                    PosterUrl =
+                        "https://homepage.momocdn.net/img/quy-an-tang-4-260929095104.webp",
                     TrailerUrl = null,
                     Status = MovieStatus.NowShowing,
                     // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
@@ -1539,8 +1544,9 @@ public static class SeedData
                     LanguageId = 2,
                     Subtitle = "Tiếng Việt",
                     AgeRatingId = 4,
-                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
-                    PosterUrl = null,
+                    // Poster lấy từ CDN của MoMo (ảnh hotlink); trailer chưa có nguồn công khai.
+                    PosterUrl =
+                        "https://image-fworker.momocdn.net/momo-external/828b56d93d2f00be168fb17e06cdf8ab0051a3b59762b65d45d6eb9eba6df8dd?size=L",
                     TrailerUrl = null,
                     Status = MovieStatus.NowShowing,
                     // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
@@ -1560,8 +1566,9 @@ public static class SeedData
                     LanguageId = 1,
                     Subtitle = "Tiếng Anh",
                     AgeRatingId = 5,
-                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
-                    PosterUrl = null,
+                    // Poster lấy từ CDN của MoMo (ảnh hotlink); trailer chưa có nguồn công khai.
+                    PosterUrl =
+                        "https://cinema.momocdn.net/convert-webp/img/4463292240117827-cc33.jpg?size=L",
                     TrailerUrl = null,
                     Status = MovieStatus.NowShowing,
                     // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
@@ -1581,8 +1588,9 @@ public static class SeedData
                     LanguageId = 1,
                     Subtitle = "Tiếng Anh",
                     AgeRatingId = 5,
-                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
-                    PosterUrl = null,
+                    // Poster lấy từ CDN của MoMo (ảnh hotlink); trailer chưa có nguồn công khai.
+                    PosterUrl =
+                        "https://cinema.momocdn.net/convert-webp/img/169449770605007316-tra_n-ye_m-poster-co_ng-bo_-du_-a_n.jpg?size=L",
                     TrailerUrl = null,
                     Status = MovieStatus.NowShowing,
                     // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
@@ -1602,8 +1610,9 @@ public static class SeedData
                     LanguageId = 2,
                     Subtitle = "Tiếng Việt",
                     AgeRatingId = 4,
-                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
-                    PosterUrl = null,
+                    // Poster lấy từ CDN của MoMo (ảnh hotlink); trailer chưa có nguồn công khai.
+                    PosterUrl =
+                        "https://cinema.momocdn.net/convert-webp/img/3864033921859582-thehungergamesunrise.jpg?size=L",
                     TrailerUrl = null,
                     Status = MovieStatus.ComingSoon,
                     // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
@@ -1623,8 +1632,9 @@ public static class SeedData
                     LanguageId = 1,
                     Subtitle = "Tiếng Anh",
                     AgeRatingId = 3,
-                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
-                    PosterUrl = null,
+                    // Poster lấy từ CDN của MoMo (ảnh hotlink); trailer chưa có nguồn công khai.
+                    PosterUrl =
+                        "https://cinema.momocdn.net/convert-webp/img/3867294930842850-tghp.jpg?size=L",
                     TrailerUrl = null,
                     Status = MovieStatus.ComingSoon,
                     // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.
@@ -1644,8 +1654,9 @@ public static class SeedData
                     LanguageId = 2,
                     Subtitle = "Tiếng Việt",
                     AgeRatingId = 3,
-                    // Poster/Trailer: cập nhật từ trang quản trị sau khi nhà phát hành công bố.
-                    PosterUrl = null,
+                    // Poster lấy từ CDN của MoMo (ảnh hotlink); trailer chưa có nguồn công khai.
+                    PosterUrl =
+                        "https://image-fworker.momocdn.net/momo-external/52e1271dc9f3d6ba6c7f38e060ab0692254826dd1bee7e0cae963248e10d35e0?size=L",
                     TrailerUrl = null,
                     Status = MovieStatus.ComingSoon,
                     // Chưa có đánh giá: điểm trung bình sẽ được tính từ bảng Review.

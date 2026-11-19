@@ -1,15 +1,19 @@
-using System.Net.Http.Json;
 using System.Text.Json;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Cinema.Infrastructure.Payments;
 
-public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) : IPaymentGateway
+public class MomoGateway(
+    IOptions<MomoOptions> options,
+    HttpClient httpClient,
+    ILogger<MomoGateway> logger
+) : IPaymentGateway
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -59,16 +63,25 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
             lang = "vi",
         };
 
-        using var response = await httpClient.PostAsJsonAsync(
-            _options.Endpoint,
-            payload,
-            cancellationToken
-        );
-        var result =
-            await response.Content.ReadFromJsonAsync<MomoCreateResponse>(
+        MomoCreateResponse result;
+        try
+        {
+            result = await GatewayHttp.PostJsonAsync<MomoCreateResponse>(
+                httpClient,
+                _options.Endpoint.Trim(),
+                payload,
                 JsonOptions,
+                logger,
+                "MoMo",
                 cancellationToken
-            ) ?? throw new BusinessRuleException(Messages.Rule_MomoInvalidResponse);
+            );
+        }
+        catch (GatewayHttpException ex)
+        {
+            throw new BusinessRuleException(
+                string.Format(Messages.Rule_MomoCreatePaymentFailed, ex.Message)
+            );
+        }
 
         if (result.ResultCode != 0)
             throw new BusinessRuleException(
@@ -154,18 +167,15 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
 
         try
         {
-            using var response = await httpClient.PostAsJsonAsync(
-                _options.RefundEndpoint,
+            var result = await GatewayHttp.PostJsonAsync<MomoRefundResponse>(
+                httpClient,
+                _options.RefundEndpoint.Trim(),
                 payload,
-                cancellationToken
-            );
-            var result = await response.Content.ReadFromJsonAsync<MomoRefundResponse>(
                 JsonOptions,
+                logger,
+                "MoMo",
                 cancellationToken
             );
-
-            if (result is null)
-                return new RefundResult(false, null, Messages.Refund_MomoEmptyResponse);
 
             return result.ResultCode == 0
                 ? new RefundResult(
@@ -181,6 +191,8 @@ public class MomoGateway(IOptions<MomoOptions> options, HttpClient httpClient) :
         }
         catch (Exception ex)
         {
+            if (ex is not GatewayHttpException)
+                logger.LogError(ex, "MomoRefundApiError");
             return new RefundResult(
                 false,
                 null,

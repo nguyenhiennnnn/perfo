@@ -147,12 +147,15 @@ public class BookingServiceCheckinTests(PostgresContainerFixture fixture) : Book
         var room = TestDataSeeder.AddRoom(Db);
         var seats = TestDataSeeder.AddSeats(Db, room.RoomId, count: 1);
         var movie = TestDataSeeder.AddMovie(Db);
+        // Online hold is rejected inside the stop-selling window (seeded default: 10 minutes before
+        // start), so hold/confirm against a showtime far in the future, then move it to the
+        // requested start time to exercise the check-in window.
         var showtime = TestDataSeeder.AddShowtime(
             Db,
             movie,
             room,
             seats,
-            startTime: startTime ?? DateTime.UtcNow.AddMinutes(10)
+            startTime: DateTime.UtcNow.AddDays(1)
         );
         var seatId = (
             await Db.ShowtimeSeats.FirstAsync(ss => ss.ShowtimeId == showtime.ShowtimeId)
@@ -169,6 +172,14 @@ public class BookingServiceCheckinTests(PostgresContainerFixture fixture) : Book
             hold.BookingId,
             CancellationToken.None
         );
+
+        var actualStart = startTime ?? DateTime.UtcNow.AddMinutes(10);
+        var trackedShowtime = await Db.Showtimes.SingleAsync(s =>
+            s.ShowtimeId == showtime.ShowtimeId
+        );
+        trackedShowtime.StartTime = actualStart;
+        trackedShowtime.EndTime = actualStart.AddMinutes(movie.DurationMinutes + 15);
+        await Db.SaveChangesAsync();
 
         var ticket = await Db.BookingTickets.SingleAsync(t => t.BookingId == hold.BookingId);
         return (ticket.QrCode!, hold.BookingId);

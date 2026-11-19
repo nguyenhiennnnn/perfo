@@ -50,8 +50,10 @@ test("visiting the booking result page for a non-existent booking shows a retry 
   await page.goto("/booking/result?bookingId=999999999");
   await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
 
-  await expect(page.getByText(/Không tìm thấy đơn đặt vé này/i)).toBeVisible({
+  // The API answers 404 for an unknown booking, which the page renders as a "not found" state
+  // with a way back to the customer's tickets (not a crash / blank page).
+  await expect(page.getByText(/Không tìm thấy đơn đặt vé/i).first()).toBeVisible({
     timeout: 20_000,
   });
-  await expect(page.getByRole("button", { name: /Thử lại/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Xem vé của tôi/i })).toBeVisible();
 });

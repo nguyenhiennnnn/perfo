@@ -50,6 +50,13 @@ public class AdminShowtimesBulkEndpointsTests(CinemaApiFactory factory)
         return movie.MovieId;
     }
 
+    private async Task<int> CountBookableSeatsAsync(int roomId)
+    {
+        using var scope = Factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        return await db.Seats.CountAsync(s => s.RoomId == roomId && s.IsActive && !s.IsAisle);
+    }
+
     private static object BuildBulkCreatePayload(
         int movieId,
         int roomId,
@@ -92,7 +99,7 @@ public class AdminShowtimesBulkEndpointsTests(CinemaApiFactory factory)
         var result = await ReadDataAsync<BulkCreateResponseDto>(response);
         result.TotalCreated.ShouldBe(1);
         result.TotalSkipped.ShouldBe(0);
-        result.Created[0].SeatsGenerated.ShouldBe(50);
+        result.Created[0].SeatsGenerated.ShouldBe(await CountBookableSeatsAsync(SeededActiveRoomId));
         Cinema
             .Application.Utils.BusinessTime.ToLocal(result.Created[0].StartTime)
             .Hour.ShouldBe(10);

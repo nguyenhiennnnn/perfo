@@ -172,6 +172,7 @@ public class SettingsServiceTests(PostgresContainerFixture fixture) : IDisposabl
         double percent
     )
     {
+        var before = await _handle.Db.CinemaSettings.AsNoTracking().SingleAsync(s => s.Id == 1);
         var sut = CreateSut();
 
         await Should.ThrowAsync<BusinessRuleException>(() =>
@@ -181,8 +182,16 @@ public class SettingsServiceTests(PostgresContainerFixture fixture) : IDisposabl
             )
         );
 
+        // The seeded row is already named "Perfo Cinema", so compare against the pre-call state
+        // instead: a rejected request must leave every persisted value untouched.
         var saved = await _handle.Db.CinemaSettings.AsNoTracking().SingleAsync(s => s.Id == 1);
-        saved.Name.ShouldNotBe("Perfo Cinema");
+        saved.CancelRefundPercent.ShouldBe(before.CancelRefundPercent);
+        saved.CancelDeadlineHours.ShouldBe(before.CancelDeadlineHours);
+        saved.StopSellingMinutesBefore.ShouldBe(before.StopSellingMinutesBefore);
+        saved.PointsPerAmount.ShouldBe(before.PointsPerAmount);
+        saved.Address.ShouldBe(before.Address);
+        saved.Phone.ShouldBe(before.Phone);
+        saved.UpdatedAt.ShouldBe(before.UpdatedAt);
     }
 
     [Theory]

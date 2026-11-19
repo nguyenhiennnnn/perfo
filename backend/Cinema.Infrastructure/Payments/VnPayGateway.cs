@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using Cinema.Application.Interfaces;
@@ -198,18 +197,15 @@ public class VnPayGateway(
 
         try
         {
-            using var response = await httpClient.PostAsJsonAsync(
-                _options.ApiUrl,
+            var result = await GatewayHttp.PostJsonAsync<VnPayRefundResponse>(
+                httpClient,
+                _options.ApiUrl.Trim(),
                 payload,
-                cancellationToken
-            );
-            var result = await response.Content.ReadFromJsonAsync<VnPayRefundResponse>(
                 JsonOptions,
+                logger,
+                "VnPay",
                 cancellationToken
             );
-
-            if (result is null)
-                return new RefundResult(false, null, Messages.Refund_VnPayEmptyResponse);
 
             var accepted =
                 result.vnp_ResponseCode == SuccessResponseCode
@@ -239,6 +235,14 @@ public class VnPayGateway(
                 false,
                 null,
                 string.Format(Messages.Refund_VnPayApiError, "Timeout: VNPAY API không phản hồi")
+            );
+        }
+        catch (GatewayHttpException ex)
+        {
+            return new RefundResult(
+                false,
+                null,
+                string.Format(Messages.Refund_VnPayApiError, ex.Message)
             );
         }
         catch (Exception ex)

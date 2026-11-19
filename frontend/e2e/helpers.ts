@@ -183,6 +183,59 @@ export async function loginAsCustomer(page: Page) {
   });
 }
 
+// Selectors for the customer booking UI. Keep them in one place so UI refactors only need
+// a single update here.
+export const BOOKABLE_SHOWTIME_BUTTON =
+  '#showtimes button[aria-label^="Đặt vé suất"]:not([disabled])';
+export const AVAILABLE_SEAT_BUTTON =
+  'button[aria-label^="Ghế "][aria-label$=", trống"]';
+
+/**
+ * Browses /movies and opens the booking page of the first movie that has a bookable showtime.
+ * The first movie in the catalog is not guaranteed to have upcoming showtimes (it may be
+ * "coming soon", or all of its showtimes may be sold out), so we walk the list instead of
+ * assuming the first card works.
+ */
+export async function openFirstBookableShowtime(page: Page): Promise<void> {
+  await page.goto("/movies");
+  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
+  await page
+    .locator('a[href^="/movies/"]')
+    .first()
+    .waitFor({ state: "visible", timeout: 20_000 });
+
+  const hrefs = await page.locator('a[href^="/movies/"]').evaluateAll((links) => {
+    const seen = new Set<string>();
+    for (const link of links) {
+      const path = (link.getAttribute("href") ?? "").split(/[?#]/)[0];
+      if (/^\/movies\/\d+$/.test(path)) seen.add(path);
+    }
+    return Array.from(seen);
+  });
+
+  for (const href of hrefs.slice(0, 10)) {
+    await page.goto(href);
+    await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
+
+    const bookButton = page.locator(BOOKABLE_SHOWTIME_BUTTON).first();
+    const found = await bookButton
+      .waitFor({ state: "visible", timeout: 5_000 })
+      .then(() => true)
+      .catch(() => false);
+    if (!found) continue;
+
+    await bookButton.scrollIntoViewIfNeeded();
+    await bookButton.click();
+    await page.waitForURL(/\/booking\/\d+/, { timeout: 10_000 });
+    await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
+    return;
+  }
+
+  throw new Error(
+    "No movie with a bookable showtime was found. Seed showtimes (or run the DB seeder) before running the e2e suite.",
+  );
+}
+
 export async function loginAsAdmin(page: Page) {
   await waitForApiReady(page);
   const MAX_ATTEMPTS = 3;

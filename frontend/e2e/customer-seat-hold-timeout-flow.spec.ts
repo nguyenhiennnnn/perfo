@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 import {
+  AVAILABLE_SEAT_BUTTON,
   loginAsCustomer,
+  openFirstBookableShowtime,
   getCustomerApiToken,
   getLatestPendingBookingId,
   expireBookingHoldInDb,
@@ -13,26 +15,9 @@ test("seat hold that expires mid-checkout notifies the customer and returns them
 }) => {
   await loginAsCustomer(page);
 
-  await page.goto("/movies");
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
-  const firstMovieLink = page.locator('a[href^="/movies/"]').first();
-  await expect(firstMovieLink).toBeVisible({ timeout: 20_000 });
-  await firstMovieLink.click();
-  await expect(page).toHaveURL(/\/movies\/\d+/, { timeout: 10_000 });
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
+  await openFirstBookableShowtime(page);
 
-  await page.locator("#showtimes").scrollIntoViewIfNeeded();
-  const firstShowtimeButton = page
-    .locator('#showtimes button[data-slot="showtime-slot"]:not([disabled])')
-    .first();
-  await expect(firstShowtimeButton).toBeVisible({ timeout: 10_000 });
-  await firstShowtimeButton.click();
-  await expect(page).toHaveURL(/\/booking\/\d+/, { timeout: 10_000 });
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
-
-  const availableSeats = page.locator(
-    'button[aria-label^="Ghế "]:not([disabled])',
-  );
+  const availableSeats = page.locator(AVAILABLE_SEAT_BUTTON);
   await expect(availableSeats.first()).toBeVisible({ timeout: 10_000 });
   const seatCount = await availableSeats.count();
   test.skip(
@@ -45,7 +30,8 @@ test("seat hold that expires mid-checkout notifies the customer and returns them
   // canHold stays permanently false.  Pick a second seat to resolve it.
   const loneSeatWarning = page.getByText(/Không thể để trống ghế lẻ/i);
   if (await loneSeatWarning.isVisible({ timeout: 1_500 }).catch(() => false)) {
-    if (seatCount >= 2) await availableSeats.nth(1).click();
+    // The clicked seat is no longer "available", so `.first()` is now the adjacent seat.
+    if (seatCount >= 2) await availableSeats.first().click();
   }
 
   const continueButton = page.getByRole("button", {

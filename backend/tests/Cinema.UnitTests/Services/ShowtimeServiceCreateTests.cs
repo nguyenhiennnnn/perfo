@@ -83,7 +83,8 @@ public class ShowtimeServiceCreateTests(PostgresContainerFixture fixture) : Show
         var vipShowtimeSeat = await Db.ShowtimeSeats.SingleAsync(ss =>
             ss.ShowtimeId == response.ShowtimeId
         );
-        vipShowtimeSeat.Price.ShouldBe(150_000m);
+        // VIP seat type seeded with PriceMultiplier 1.15 (see TestDataSeeder.VipSeatTypeId).
+        vipShowtimeSeat.Price.ShouldBe(115_000m);
     }
 
     [Fact]

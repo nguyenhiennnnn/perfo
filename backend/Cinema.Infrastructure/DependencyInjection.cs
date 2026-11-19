@@ -82,8 +82,12 @@ public static class DependencyInjection
         services.Configure<GeminiOptions>(configuration.GetSection(GeminiOptions.SectionName));
         services.AddHttpClient<IAiModelClient, GeminiAiModelClient>();
 
-        services.AddHttpClient<IPaymentGateway, VnPayGateway>();
-        services.AddHttpClient<IPaymentGateway, MomoGateway>();
+        // Mỗi gateway một HttpClient riêng (trước đây cùng dùng tên "IPaymentGateway"), có
+        // User-Agent, timeout 30s và không tự follow redirect.
+        services.AddGatewayHttpClient<VnPayGateway>();
+        services.AddTransient<IPaymentGateway>(sp => sp.GetRequiredService<VnPayGateway>());
+        services.AddGatewayHttpClient<MomoGateway>();
+        services.AddTransient<IPaymentGateway>(sp => sp.GetRequiredService<MomoGateway>());
         services.AddScoped<IPaymentGateway, StripeGateway>();
 
         return services;

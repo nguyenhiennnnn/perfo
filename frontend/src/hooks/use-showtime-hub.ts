@@ -92,7 +92,6 @@ export function useShowtimeHub(
             await conn.invoke("LeaveShowtime", showtimeId);
           }
         } catch {
-          // Best-effort: bỏ qua lỗi.
         } finally {
           await conn.stop();
         }

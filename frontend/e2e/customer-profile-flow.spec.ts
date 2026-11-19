@@ -41,13 +41,13 @@ test("customer profile flow: view profile, update details, verify persistence, a
   ).toBeVisible({ timeout: 10_000 });
 
   // Verify tabs can be clicked and filter states change
-  const paidTab = page.getByRole("button", { name: "Đã thanh toán" });
+  const paidTab = page.getByRole("tab", { name: "Đã thanh toán" });
   if (await paidTab.isVisible()) {
     await paidTab.click();
-    await expect(paidTab).toHaveClass(/border-primary/);
+    await expect(paidTab).toHaveAttribute("aria-selected", "true");
   }
 
-  const allTab = page.getByRole("button", { name: "Tất cả" });
+  const allTab = page.getByRole("tab", { name: "Tất cả" });
   await allTab.click();
-  await expect(allTab).toHaveClass(/border-primary/);
+  await expect(allTab).toHaveAttribute("aria-selected", "true");
 });

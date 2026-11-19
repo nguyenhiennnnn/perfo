@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { loginAsCustomer } from "./helpers";
+import {
+  AVAILABLE_SEAT_BUTTON,
+  loginAsCustomer,
+  openFirstBookableShowtime,
+} from "./helpers";
 
 test("customer end-to-end booking flow: select movie, pick seats, add combos, hold, check payment & release", async ({
   page,
@@ -7,29 +11,11 @@ test("customer end-to-end booking flow: select movie, pick seats, add combos, ho
   // 1. Log in as Customer (also cancels any previous pending bookings)
   await loginAsCustomer(page);
 
-  // 2. Browse movies catalog and pick the first movie
-  await page.goto("/movies");
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
-  const firstMovieLink = page.locator('a[href^="/movies/"]').first();
-  await expect(firstMovieLink).toBeVisible({ timeout: 20_000 });
-  await firstMovieLink.click();
-  await page.waitForURL(/\/movies\/\d+/, { timeout: 10_000 });
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
-
-  // 3. Scroll to showtimes section and select an available showtime slot
-  await page.locator("#showtimes").scrollIntoViewIfNeeded();
-  const firstShowtimeButton = page
-    .locator('#showtimes button[data-slot="showtime-slot"]:not([disabled])')
-    .first();
-  await expect(firstShowtimeButton).toBeVisible({ timeout: 10_000 });
-  await firstShowtimeButton.click();
-  await page.waitForURL(/\/booking\/\d+/, { timeout: 10_000 });
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
+  // 2-3. Browse the movie catalog, open the first movie that has a bookable showtime and book it
+  await openFirstBookableShowtime(page);
 
   // 4. In seat selection step, select 2 available seats
-  const availableSeats = page.locator(
-    'button[aria-label^="Ghế "]:not([disabled])',
-  );
+  const availableSeats = page.locator(AVAILABLE_SEAT_BUTTON);
   await expect(availableSeats.first()).toBeVisible({ timeout: 10_000 });
   const seatCount = await availableSeats.count();
   test.skip(
@@ -37,13 +23,19 @@ test("customer end-to-end booking flow: select movie, pick seats, add combos, ho
     "Not enough available seats on this showtime to run the scenario",
   );
 
-  await availableSeats.nth(0).click();
-  await availableSeats.nth(1).click();
+  // A selected seat stops matching AVAILABLE_SEAT_BUTTON (its label becomes "đang chọn"), so
+  // `.first()` always points at the next free seat, which keeps the two seats adjacent.
+  await availableSeats.first().click();
+  await availableSeats.first().click();
 
   // If selecting two seats leaves a lone seat under the cinema gap rule, pick the adjacent seat
   const loneSeatWarning = page.getByText(/Không thể để trống ghế lẻ/i);
-  if (await loneSeatWarning.isVisible()) {
-    await availableSeats.nth(2).click();
+  const hasLoneSeat = await loneSeatWarning
+    .waitFor({ state: "visible", timeout: 1_500 })
+    .then(() => true)
+    .catch(() => false);
+  if (hasLoneSeat) {
+    await availableSeats.first().click();
   }
 
   // Verify seat price summary is displayed
@@ -57,11 +49,12 @@ test("customer end-to-end booking flow: select movie, pick seats, add combos, ho
     })
     .last();
   const comboPlusButton = comboSection
-    .locator("button:has(svg.lucide-plus)")
+    .locator('button:has(svg[class*="lucide-plus"])')
     .first();
   if (await comboPlusButton.isVisible()) {
     await comboPlusButton.click();
-    await expect(page.getByText("Combo", { exact: true })).toBeVisible();
+    // The price summary lists the chosen combo as "<quantity>x <name>"
+    await expect(page.getByText(/^1x\s/).first()).toBeVisible();
   }
 
   // 6. Hold seats & continue to payment step
@@ -77,24 +70,24 @@ test("customer end-to-end booking flow: select movie, pick seats, add combos, ho
   await expect(page.getByText(/Giữ ghế còn/i)).toBeVisible({ timeout: 20_000 });
 
   // Verify payment action button is visible
-  const paymentButton = page.getByRole("button", { name: /^Thanh toán$/i });
+  const paymentButton = page.getByRole("button", { name: /^Thanh toán\s/i });
   await expect(paymentButton).toBeVisible({ timeout: 10_000 });
 
   // Verify payment methods can be switched
-  const momoButton = page.getByRole("button", { name: "MoMo" });
-  if (await momoButton.isVisible()) {
-    await momoButton.click();
-    await expect(momoButton).toHaveClass(/border-primary/);
+  const momoOption = page.getByRole("radio", { name: "MoMo" });
+  if (await momoOption.isVisible()) {
+    await momoOption.click();
+    await expect(momoOption).toHaveAttribute("aria-checked", "true");
   }
 
-  const vnpayButton = page.getByRole("button", { name: "VNPay" });
-  if (await vnpayButton.isVisible()) {
-    await vnpayButton.click();
-    await expect(vnpayButton).toHaveClass(/border-primary/);
+  const vnpayOption = page.getByRole("radio", { name: "VNPay" });
+  if (await vnpayOption.isVisible()) {
+    await vnpayOption.click();
+    await expect(vnpayOption).toHaveAttribute("aria-checked", "true");
   }
 
   // 8. Cancel hold to release seats back to the showtime
-  const cancelButton = page.getByRole("button", { name: /Huỷ, chọn lại ghế/i });
+  const cancelButton = page.getByRole("button", { name: /Hủy, chọn lại ghế/i });
   await expect(cancelButton).toBeVisible();
   await cancelButton.click();
 
@@ -107,5 +100,5 @@ test("customer end-to-end booking flow: select movie, pick seats, add combos, ho
   await expect(page.getByRole("heading", { name: /Vé của tôi/i })).toBeVisible({
     timeout: 20_000,
   });
-  await expect(page.getByRole("button", { name: "Tất cả" })).toBeVisible();
+  await expect(page.getByRole("tab", { name: "Tất cả" })).toBeVisible();
 });

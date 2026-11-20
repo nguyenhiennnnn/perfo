@@ -47,7 +47,10 @@ export const HeaderUserMenu = ({ user }: HeaderUserMenuProps) => {
         <span className="text-muted-foreground hidden md:inline">điểm</span>
       </Link>
       <DropdownMenu>
-        <DropdownMenuTrigger className="rounded-full outline-none ring-ring/50 focus-visible:ring-2">
+        <DropdownMenuTrigger
+          data-testid="header-user-menu"
+          className="rounded-full outline-none ring-ring/50 focus-visible:ring-2"
+        >
           <img
             src={user.avatar ?? "/icons.svg"}
             alt={user.fullName}

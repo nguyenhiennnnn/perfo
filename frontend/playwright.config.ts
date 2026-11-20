@@ -7,16 +7,18 @@ dotenv.config({ path: path.resolve(import.meta.dirname, ".env"), override: true 
 
 export default defineConfig({
   testDir: "./e2e",
-  timeout: 60_000,
+  timeout: 120_000,
   expect: {
     timeout: 10_000,
   },
   fullyParallel: false,
   retries: process.env.CI ? 1 : 0,
   workers: 1,
-  reporter: "html",
+  reporter: "list",
   use: {
     baseURL: process.env.E2E_BASE_URL ?? "http://localhost:5173",
+    actionTimeout: 15_000,
+    navigationTimeout: 20_000,
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },

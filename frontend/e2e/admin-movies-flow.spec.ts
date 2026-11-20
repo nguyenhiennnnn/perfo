@@ -4,13 +4,13 @@ import { loginAsAdmin } from "./helpers";
 test("admin movie management flow: search, filter, create movie with genres, verify in table, and delete", async ({
   page,
 }) => {
+  test.setTimeout(120_000);
   // 1. Log in as Admin
   await loginAsAdmin(page);
 
   // 2. Navigate to Movie Management
   await page.getByRole("link", { name: "Quản lý phim" }).click();
   await page.waitForURL(/\/admin\/movies/, { timeout: 10_000 });
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
   await expect(
     page.getByRole("heading", { name: /Quản lý.*[Pp]him/i }),
   ).toBeVisible({ timeout: 20_000 });

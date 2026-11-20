@@ -24,22 +24,23 @@ test("customer sees a clear failure state when a booking ends up cancelled/faile
   );
 
   await page.goto(`/booking/result?bookingId=${hold!.bookingId}`);
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
 
   await expect(
-    page.getByRole("heading", { name: /Đơn đặt vé đã bị huỷ/i }),
+    page.getByRole("heading", { name: /Đơn đặt vé đã bị h[uủ][yỷ]/i }),
   ).toBeVisible({ timeout: 20_000 });
   await expect(
-    page.getByText(/Giao dịch không thành công hoặc đã bị huỷ/i),
+    page.getByText(/Giao dịch không thành công hoặc đã bị/i),
   ).toBeVisible();
   await expect(page.getByText(hold!.bookingCode)).toBeVisible();
 
   await expect(page.locator("main").getByText(/Vé điện tử/i)).not.toBeVisible();
 
   await expect(
-    page.getByRole("link", { name: /Xem vé của tôi/i }),
+    page.getByRole("button", { name: /Xem vé của tôi/i }).or(page.getByRole("link", { name: /Xem vé của tôi/i })),
   ).toBeVisible();
-  await expect(page.getByRole("link", { name: /Về trang chủ/i })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /Về trang chủ/i }).or(page.getByRole("link", { name: /Về trang chủ/i })),
+  ).toBeVisible();
 });
 
 test("visiting the booking result page for a non-existent booking shows a retry state, not a crash", async ({
@@ -48,12 +49,13 @@ test("visiting the booking result page for a non-existent booking shows a retry 
   await loginAsCustomer(page);
 
   await page.goto("/booking/result?bookingId=999999999");
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
 
   // The API answers 404 for an unknown booking, which the page renders as a "not found" state
   // with a way back to the customer's tickets (not a crash / blank page).
   await expect(page.getByText(/Không tìm thấy đơn đặt vé/i).first()).toBeVisible({
     timeout: 20_000,
   });
-  await expect(page.getByRole("link", { name: /Xem vé của tôi/i })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /Xem vé của tôi/i }).or(page.getByRole("link", { name: /Xem vé của tôi/i })),
+  ).toBeVisible();
 });

@@ -28,7 +28,7 @@ const AdminCheckinPage = () => {
       const trimmed = qrCode.trim();
       if (!trimmed || checkinMutation.isPending) return;
 
-      if (trimmed === lastSuccessCodeRef.current || trimmed === inFlightCodeRef.current) {
+      if (trimmed === inFlightCodeRef.current) {
         setCode("");
         return;
       }

@@ -1,11 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { cleanFutureTestShowtimes, loginAsAdmin } from "./helpers";
 
-test.setTimeout(120_000);
-
 test("admin showtimes management flow: switch views, filter, create new showtime, verify, and cancel", async ({
   page,
 }) => {
+  test.setTimeout(120_000);
   // Ensure a clean slate for future test showtimes
   await cleanFutureTestShowtimes();
 
@@ -15,7 +14,6 @@ test("admin showtimes management flow: switch views, filter, create new showtime
   // 2. Navigate to Showtimes page
   await page.getByRole("link", { name: "Suất chiếu" }).click();
   await page.waitForURL(/\/admin\/showtimes/, { timeout: 10_000 });
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
   await expect(
     page.getByRole("heading", { name: "Quản lý Suất chiếu" }),
   ).toBeVisible({ timeout: 20_000 });

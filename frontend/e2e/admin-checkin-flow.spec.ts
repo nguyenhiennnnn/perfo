@@ -1,18 +1,16 @@
 import { expect, test } from "@playwright/test";
 import { createEligibleTicketForCheckin, loginAsAdmin } from "./helpers";
 
-test.setTimeout(120_000);
-
 test("admin ticket check-in flow: reject invalid codes, successfully check-in valid ticket, and prevent duplicate scans", async ({
   page,
 }) => {
+  test.setTimeout(120_000);
   // 1. Log in as Admin
   await loginAsAdmin(page);
 
   // 2. Navigate to Check-in page
   await page.getByRole("link", { name: "Soát vé" }).click();
   await expect(page).toHaveURL(/\/admin\/checkin/, { timeout: 10_000 });
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
   await expect(
     page.getByRole("heading", { name: /Soát vé & Check-in/i }),
   ).toBeVisible({ timeout: 20_000 });

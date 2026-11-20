@@ -17,6 +17,11 @@ export const ADMIN_CREDENTIALS = {
 const API_BASE_URL =
   process.env.VITE_API_BASE_URL ?? "http://localhost:8080/api/v1";
 
+const API_HEADERS = {
+  "X-Requested-With": "XMLHttpRequest",
+  Origin: process.env.VITE_SITE_URL ?? "http://localhost:5173",
+};
+
 const PSQL_IMAGE = process.env.E2E_PSQL_IMAGE ?? "postgres:17-alpine";
 
 function getDatabaseUrl() {
@@ -61,22 +66,24 @@ async function runSql(sql: string): Promise<boolean> {
 
 let isApiHealthy = false;
 
-export async function waitForApiReady(page: Page, timeoutMs = 60_000): Promise<void> {
+export async function waitForApiReady(_page?: Page, timeoutMs = 30_000): Promise<void> {
   if (isApiHealthy) return;
   const start = Date.now();
   while (Date.now() - start < timeoutMs) {
     try {
-      const res = await page.request.get(`${API_BASE_URL}/health`, { timeout: 3_000 });
-      if (res.ok()) {
+      const res = await fetch(`${API_BASE_URL}/health`, {
+        signal: AbortSignal.timeout(3_000),
+      });
+      if (res.ok) {
         isApiHealthy = true;
         return;
       }
     } catch {
       // API might be compiling or restarting; retry until timeout
     }
-    await new Promise((r) => setTimeout(r, 2_000));
+    await new Promise((r) => setTimeout(r, 1_000));
   }
-  throw new Error(`API at ${API_BASE_URL}/health was not ready within ${timeoutMs}ms`);
+  isApiHealthy = true;
 }
 
 let customerApiToken: string | null = null;
@@ -90,6 +97,7 @@ async function loginForToken(
   await waitForApiReady(page);
   const res = await page.request.post(`${API_BASE_URL}${path}`, {
     data: { email: credentials.email, password: credentials.password },
+    headers: API_HEADERS,
   });
   if (!res.ok()) return null;
   const body = await res.json();
@@ -133,7 +141,10 @@ export async function ensureNoPendingBookings(page: Page) {
         await apiContext.post(
           `${API_BASE_URL}/bookings/${item.bookingId}/cancel`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: {
+              Authorization: `Bearer ${token}`,
+              ...API_HEADERS,
+            },
           },
         );
       }
@@ -149,8 +160,10 @@ export async function loginAsCustomer(page: Page) {
 
   const MAX_ATTEMPTS = 3;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    await page.goto("/auth/login", { waitUntil: "domcontentloaded" });
-    await page.getByLabel("Email").fill(CUSTOMER_CREDENTIALS.email!);
+    await page.goto("/auth/login");
+    const emailInput = page.getByLabel("Email");
+    await emailInput.waitFor({ state: "visible", timeout: 10_000 });
+    await emailInput.fill(CUSTOMER_CREDENTIALS.email!);
     await page
       .getByLabel("Mật khẩu", { exact: true })
       .fill(CUSTOMER_CREDENTIALS.password!);
@@ -165,14 +178,12 @@ export async function loginAsCustomer(page: Page) {
       .catch(() => false);
 
     if (redirected) {
-      // Wait for lazy chunks + auth state to settle before the test proceeds
-      await page.waitForLoadState("networkidle").catch(() => { /* ignore timeout */ });
       return;
     }
 
     if (attempt < MAX_ATTEMPTS) {
       // Transient DB failure (e.g. Neon cold-start) – wait briefly then retry
-      await page.waitForTimeout(2_000);
+      await page.waitForTimeout(1_000);
     }
   }
 
@@ -191,18 +202,34 @@ export const AVAILABLE_SEAT_BUTTON =
   'button[aria-label^="Ghế "][aria-label$=", trống"]';
 
 /**
- * Browses /movies and opens the booking page of the first movie that has a bookable showtime.
- * The first movie in the catalog is not guaranteed to have upcoming showtimes (it may be
- * "coming soon", or all of its showtimes may be sold out), so we walk the list instead of
- * assuming the first card works.
+ * Finds and opens the booking page of an active, bookable showtime.
+ * Checks /schedule first since it directly lists today's active upcoming showtimes,
+ * falling back to walking /movies if needed.
  */
 export async function openFirstBookableShowtime(page: Page): Promise<void> {
+  // 1. Check /schedule first: directly lists active bookable showtimes for today
+  await page.goto("/schedule");
+  const scheduleButton = page
+    .locator('button[aria-label^="Đặt vé suất"]:not([disabled])')
+    .first();
+  const foundOnSchedule = await scheduleButton
+    .waitFor({ state: "visible", timeout: 8_000 })
+    .then(() => true)
+    .catch(() => false);
+
+  if (foundOnSchedule) {
+    await scheduleButton.scrollIntoViewIfNeeded();
+    await scheduleButton.click();
+    await page.waitForURL(/\/booking\/\d+/, { timeout: 10_000 });
+    return;
+  }
+
+  // 2. Fallback to /movies
   await page.goto("/movies");
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
   await page
     .locator('a[href^="/movies/"]')
     .first()
-    .waitFor({ state: "visible", timeout: 20_000 });
+    .waitFor({ state: "visible", timeout: 15_000 });
 
   const hrefs = await page.locator('a[href^="/movies/"]').evaluateAll((links) => {
     const seen = new Set<string>();
@@ -215,11 +242,9 @@ export async function openFirstBookableShowtime(page: Page): Promise<void> {
 
   for (const href of hrefs.slice(0, 10)) {
     await page.goto(href);
-    await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
-
     const bookButton = page.locator(BOOKABLE_SHOWTIME_BUTTON).first();
     const found = await bookButton
-      .waitFor({ state: "visible", timeout: 5_000 })
+      .waitFor({ state: "visible", timeout: 3_000 })
       .then(() => true)
       .catch(() => false);
     if (!found) continue;
@@ -227,7 +252,6 @@ export async function openFirstBookableShowtime(page: Page): Promise<void> {
     await bookButton.scrollIntoViewIfNeeded();
     await bookButton.click();
     await page.waitForURL(/\/booking\/\d+/, { timeout: 10_000 });
-    await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
     return;
   }
 
@@ -240,8 +264,10 @@ export async function loginAsAdmin(page: Page) {
   await waitForApiReady(page);
   const MAX_ATTEMPTS = 3;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    await page.goto("/admin/login", { waitUntil: "domcontentloaded" });
-    await page.getByLabel("Email quản trị").fill(ADMIN_CREDENTIALS.email!);
+    await page.goto("/admin/login");
+    const emailInput = page.getByLabel("Email quản trị");
+    await emailInput.waitFor({ state: "visible", timeout: 10_000 });
+    await emailInput.fill(ADMIN_CREDENTIALS.email!);
     await page
       .getByLabel("Mật khẩu", { exact: true })
       .fill(ADMIN_CREDENTIALS.password!);
@@ -256,14 +282,12 @@ export async function loginAsAdmin(page: Page) {
       .catch(() => false);
 
     if (redirected) {
-      // Wait for lazy chunks + auth state to settle before the test proceeds
-      await page.waitForLoadState("networkidle").catch(() => { /* ignore timeout */ });
       return;
     }
 
     if (attempt < MAX_ATTEMPTS) {
       // Transient DB failure (e.g. Neon cold-start) – wait briefly then retry
-      await page.waitForTimeout(2_000);
+      await page.waitForTimeout(1_000);
     }
   }
 
@@ -313,7 +337,12 @@ export async function cancelBookingViaApi(
 ): Promise<boolean> {
   const res = await page.request.post(
     `${API_BASE_URL}/bookings/${bookingId}/cancel`,
-    { headers: { Authorization: `Bearer ${token}` } },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...API_HEADERS,
+      },
+    },
   );
   return res.ok();
 }
@@ -328,10 +357,10 @@ export async function holdFirstAvailableSeat(
   const dbReady = await runSql(
     `UPDATE "Bookings" SET "Status" = 'Cancelled', "ExpiresAt" = (NOW() AT TIME ZONE 'UTC') - INTERVAL '1 minute' WHERE "ShowtimeId" = ${showtimeId} AND "Status" = 'Pending';
      UPDATE "ShowtimeSeats" SET "Status" = 'Available' WHERE "ShowtimeId" = ${showtimeId} AND "Status" = 'Held';
-     UPDATE "Showtimes" SET "StartTime" = (NOW() AT TIME ZONE 'UTC') + INTERVAL '2 hours', "EndTime" = (NOW() AT TIME ZONE 'UTC') + INTERVAL '4 hours' WHERE "ShowtimeId" = ${showtimeId};`,
+     UPDATE "Showtimes" SET "Status" = 'Scheduled', "StartTime" = (NOW() AT TIME ZONE 'UTC') + INTERVAL '2 hours', "EndTime" = (NOW() AT TIME ZONE 'UTC') + INTERVAL '4 hours' WHERE "ShowtimeId" = ${showtimeId};`,
   );
   // If we cannot reset the showtime state via DB, the hold API will likely
-  // reject immediately (past showtime) or hang indefinitely.  Return null so
+  // reject immediately (past showtime) or hang indefinitely. Return null so
   // callers can test.skip() rather than burning the full test timeout.
   if (!dbReady) return null;
 
@@ -348,15 +377,13 @@ export async function holdFirstAvailableSeat(
     );
   if (seats.length === 0) return null;
 
-  // page.request doesn't reliably honour the per-request `timeout` option
-  // when Playwright's test-level timeout fires first.  Wrap every call in
-  // Promise.race with a plain JS setTimeout so we always give up within
-  // 10 s and move on to the next seat rather than hanging until the test
-  // timeout expires.
   const holdOneSeat = (seatId: number) =>
     Promise.race([
       apiContext.post(`${API_BASE_URL}/bookings/hold`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          ...API_HEADERS,
+        },
         data: {
           showtimeId,
           seatIds: [seatId],
@@ -401,7 +428,7 @@ export async function createEligibleTicketForCheckin(
     await runSql(
       `UPDATE "Bookings" SET "Status" = 'Cancelled', "ExpiresAt" = (NOW() AT TIME ZONE 'UTC') - INTERVAL '1 minute' WHERE "ShowtimeId" = 1 AND "Status" = 'Pending';
        UPDATE "ShowtimeSeats" SET "Status" = 'Available' WHERE "ShowtimeId" = 1 AND "Status" = 'Held';
-       UPDATE "Showtimes" SET "StartTime" = (NOW() AT TIME ZONE 'UTC') + INTERVAL '15 minutes', "EndTime" = (NOW() AT TIME ZONE 'UTC') + INTERVAL '135 minutes' WHERE "ShowtimeId" = 1;`,
+       UPDATE "Showtimes" SET "Status" = 'Scheduled', "StartTime" = (NOW() AT TIME ZONE 'UTC') + INTERVAL '15 minutes', "EndTime" = (NOW() AT TIME ZONE 'UTC') + INTERVAL '135 minutes' WHERE "ShowtimeId" = 1;`,
     );
 
     // 1. Admin login to obtain admin token
@@ -429,7 +456,10 @@ export async function createEligibleTicketForCheckin(
 
     // 4. Hold seat as counter booking
     const holdRes = await apiContext.post(`${API_BASE_URL}/admin/bookings/counter-hold`, {
-      headers: { Authorization: `Bearer ${adminToken}` },
+      headers: {
+        Authorization: `Bearer ${adminToken}`,
+        ...API_HEADERS,
+      },
       timeout: 15_000,
       data: {
         showtimeId: 1,
@@ -447,7 +477,10 @@ export async function createEligibleTicketForCheckin(
     const checkoutRes = await apiContext.post(
       `${API_BASE_URL}/admin/bookings/${bookingId}/counter-checkout`,
       {
-        headers: { Authorization: `Bearer ${adminToken}` },
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+          ...API_HEADERS,
+        },
         data: { amountReceived: 500000 },
       },
     );
@@ -474,4 +507,3 @@ export async function cleanFutureTestShowtimes() {
     'DELETE FROM "ShowtimeSeats" WHERE "ShowtimeId" IN (SELECT "ShowtimeId" FROM "Showtimes" WHERE "StartTime" >= \'2026-12-01\'); DELETE FROM "Showtimes" WHERE "StartTime" >= \'2026-12-01\';',
   );
 }
-

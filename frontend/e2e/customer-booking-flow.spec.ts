@@ -8,15 +8,16 @@ import {
 test("customer end-to-end booking flow: select movie, pick seats, add combos, hold, check payment & release", async ({
   page,
 }) => {
+  test.setTimeout(120_000);
   // 1. Log in as Customer (also cancels any previous pending bookings)
   await loginAsCustomer(page);
 
-  // 2-3. Browse the movie catalog, open the first movie that has a bookable showtime and book it
+  // 2-3. Browse the movie catalog / schedule, open an active bookable showtime
   await openFirstBookableShowtime(page);
 
   // 4. In seat selection step, select 2 available seats
   const availableSeats = page.locator(AVAILABLE_SEAT_BUTTON);
-  await expect(availableSeats.first()).toBeVisible({ timeout: 10_000 });
+  await expect(availableSeats.first()).toBeVisible({ timeout: 15_000 });
   const seatCount = await availableSeats.count();
   test.skip(
     seatCount < 2,
@@ -96,7 +97,6 @@ test("customer end-to-end booking flow: select movie, pick seats, add combos, ho
 
   // 9. Navigate to My Tickets to verify account ticket history is accessible
   await page.goto("/account/tickets");
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
   await expect(page.getByRole("heading", { name: /Vé của tôi/i })).toBeVisible({
     timeout: 20_000,
   });

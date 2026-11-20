@@ -8,11 +8,10 @@ import {
   expireBookingHoldInDb,
 } from "./helpers";
 
-test.setTimeout(180_000);
-
 test("seat hold that expires mid-checkout notifies the customer and returns them to seat selection", async ({
   page,
 }) => {
+  test.setTimeout(180_000);
   await loginAsCustomer(page);
 
   await openFirstBookableShowtime(page);

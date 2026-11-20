@@ -9,7 +9,6 @@ test("customer profile flow: view profile, update details, verify persistence, a
 
   // 2. Navigate to customer profile
   await page.goto("/account/profile");
-  await page.waitForLoadState("networkidle").catch(() => { /* ignore */ });
   await expect(
     page.getByRole("heading", { name: "Thông tin cá nhân" }),
   ).toBeVisible({ timeout: 20_000 });

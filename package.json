@@ -71,7 +71,12 @@
     "test:e2e:typecheck": "tsc --noEmit -p .",
     "test:e2e:concurrency": "playwright test e2e/booking-concurrency.spec.ts",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:report": "playwright show-report"
+    "test:e2e:report": "playwright show-report",
+    "// === LOAD TEST - k6 (CHI chay tren staging/local; can cai k6, xem loadtest/README.md; them tham so sau --, vd: npm run loadtest:l4 -- -e BASE_URL=...) ===": "",
+    "loadtest:l1": "k6 run loadtest/scenarios/l1-seat-contention.js",
+    "loadtest:l2": "k6 run loadtest/scenarios/l2-peak-booking.js",
+    "loadtest:l3": "k6 run loadtest/scenarios/l3-ipn.js",
+    "loadtest:l4": "k6 run loadtest/scenarios/l4-browse.js"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

@@ -1,0 +1,22 @@
+{
+  // Chỉ dùng để typecheck/IntelliSense cho Playwright E2E (e2e/ và playwright.config.ts).
+  // Frontend có tsconfig riêng trong frontend/ (tsc -b frontend).
+  "compilerOptions": {
+    "target": "es2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    // Cần để khai báo process, node:crypto, node:http... (từ @types/node ở devDependencies)
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["e2e", "playwright.config.ts"]
+}

@@ -6,7 +6,6 @@ import {
   acquireOutbox,
   createEmployeeWithTemporaryPassword,
   deactivateAccounts,
-  E2E_INITIAL_PASSWORD,
   loginRequest,
   registerConfirmedCustomer,
   uniqueE2eEmail,

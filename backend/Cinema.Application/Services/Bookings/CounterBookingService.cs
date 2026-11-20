@@ -202,10 +202,10 @@ public class CounterBookingService(
         var now = DateTime.UtcNow;
 
         var checkInOpenMinutes = await GetCheckInOpenMinutesAsync(cancellationToken);
-        // if (now < showtime.StartTime.AddMinutes(-checkInOpenMinutes))
-        //     throw new BusinessRuleException(
-        //         string.Format(Messages.Rule_CheckInNotOpenYet, checkInOpenMinutes)
-        //     );
+        if (now < showtime.StartTime.AddMinutes(-checkInOpenMinutes))
+            throw new BusinessRuleException(
+                string.Format(Messages.Rule_CheckInNotOpenYet, checkInOpenMinutes)
+            );
         if (now > showtime.EndTime)
             throw new BusinessRuleException(Messages.Rule_ShowtimeEnded);
 

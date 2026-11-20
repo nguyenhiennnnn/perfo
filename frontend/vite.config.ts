@@ -64,7 +64,6 @@ export default defineConfig(({ mode }) => {
       watch: {
         usePolling: true,
         interval: 100,
-        ignored: ["**/test-results/**", "**/playwright-report/**"],
       },
       hmr: {
         clientPort: 5173,

@@ -9,14 +9,7 @@
     "build:full": "tsc -b && vite build && node scripts/build-sitemap.mjs",
     "sitemap:build": "node scripts/build-sitemap.mjs",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "test:e2e:headed": "playwright test --headed",
-    "test:e2e:debug": "playwright test --debug",
-    "test:load:browse": "powershell -ExecutionPolicy Bypass -File ../load-tests/run-load-test.ps1 -Scenario browse-movies-stress.js",
-    "test:load:peak": "powershell -ExecutionPolicy Bypass -File ../load-tests/run-load-test.ps1 -Scenario peak-ticket-rush.js",
-    "test:load": "npm run test:load:browse && npm run test:load:peak"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

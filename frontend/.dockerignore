@@ -3,10 +3,6 @@ dist
 dist-ssr
 build
 
-e2e/
-playwright-report/
-test-results/
-
 .env
 .env.*
 !.env.example

@@ -32,7 +32,6 @@ backend/out/
 backend/**/logs/*
 !backend/**/logs/.gitkeep
 *.log
-!load-tests/results/.gitkeep
 
 backend/**/.vs/
 .vs/
@@ -54,14 +53,6 @@ frontend/node_modules/
 frontend/dist/
 frontend/dist-ssr/
 frontend/.vite/
-
-frontend/test-results/
-frontend/playwright-report/
-frontend/blob-report/
-frontend/.last-run.json
-
-load-tests/results/*
-!load-tests/results/.gitkeep
 
 frontend/tsconfig.tsbuildinfo
 frontend/**/*.tsbuildinfo

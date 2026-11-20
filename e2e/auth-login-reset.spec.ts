@@ -219,7 +219,7 @@ test.describe("Reset mật khẩu bằng token dùng một lần (A6)", () => {
     await page.goto("/auth/forgot-password");
     await page.getByLabel("Email", { exact: true }).fill(email);
     await page.getByRole("button", { name: "Gửi liên kết đặt lại mật khẩu" }).click();
-    await expect(page.getByRole("heading", { name: FORGOT_PASSWORD_SENT_HEADING })).toBeVisible();
+    await expect(page.getByRole("heading", { name: FORGOT_PASSWORD_SENT_HEADING })).toBeVisible({ timeout: 15_000 });
 
     // 2) Lấy token từ link trong thư gửi tới đúng khách này.
     const token = await waitForEmailToken(mock, "passwordReset", email, requestedAt);

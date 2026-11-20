@@ -13,9 +13,14 @@ export default defineConfig({
   testDir: "e2e",
   // workers=1 để tránh xung đột cổng mock gateway (9099) và race condition DB.
   workers: 1,
+  // 60s mặc định cho mỗi test; các test nặng (booking-flow, expiry) tự override.
+  timeout: 60_000,
   use: {
     baseURL: process.env.E2E_BASE_URL || "http://localhost:5173",
     trace: "on-first-retry",
+    // Tăng timeout điều hướng: frontend Docker cold start có thể mất > 30s.
+    navigationTimeout: 60_000,
+    actionTimeout: 15_000,
   },
   projects: [
     {

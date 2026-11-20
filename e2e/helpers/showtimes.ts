@@ -162,7 +162,7 @@ async function cancelEarliestBlocker(
   });
 
   const now = Date.now();
-  const blocker = calendar.days
+  const candidates = calendar.days
     .flatMap((day) => day.showtimes)
     .filter(
       (s) =>
@@ -171,13 +171,21 @@ async function cancelEarliestBlocker(
         // Bỏ qua suất đã bắt đầu: backend từ chối hủy với HTTP 422.
         new Date(s.startTime).getTime() > now,
     )
-    .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())[0];
+    .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
-  // Suất chặn đã có ghế bị giữ/đặt: không đụng vào.
-  if (!blocker || blocker.availableSeats < blocker.totalSeats) return false;
-
-  await cancelShowtime(request, accessToken, blocker.showtimeId);
-  return true;
+  for (const candidate of candidates) {
+    // Thử hủy: suất chỉ có Held (chưa xác nhận) thì backend cho hủy.
+    const response = await request.delete(`${API_BASE_URL}/admin/showtimes/${candidate.showtimeId}`, {
+      headers: authHeaders(accessToken),
+      failOnStatusCode: false,
+    });
+    if (response.ok()) return true;
+    // 422/409: đã có vé xác nhận hoặc đã bắt đầu → thử ứng viên kế tiếp.
+    if (response.status() !== 422 && response.status() !== 409) {
+      throw await describeFailure(`Hủy suất ${candidate.showtimeId}`, response);
+    }
+  }
+  return false;
 }
 
 /** Hủy suất chiếu (DELETE /admin/showtimes/{id}); dùng để dọn sau test. Suất đã bắt đầu thì backend từ chối. */

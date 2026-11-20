@@ -1,0 +1,4 @@
+[
+  { "email": "customer@cinema.local", "password": "Customer@123", "portal": "customer" },
+  { "email": "customer2@cinema.local", "password": "Customer@123", "portal": "customer" }
+]

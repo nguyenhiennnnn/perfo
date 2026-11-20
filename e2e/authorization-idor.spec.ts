@@ -305,7 +305,7 @@ test.describe("Phân quyền theo vai trò", () => {
     test.setTimeout(UI_TEST_TIMEOUT_MS);
     await page.goto("/admin/dashboard");
 
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/$/, { timeout: 15_000 });
     await expect(page.getByRole("heading", { name: DASHBOARD_HEADING, level: 1 })).toHaveCount(0);
     await expect(page.getByTestId("header-user-menu")).toBeVisible();
   });
@@ -317,7 +317,7 @@ test.describe("Phân quyền theo vai trò", () => {
 
     for (const path of ["/admin/dashboard", "/admin/employees"]) {
       await page.goto(path);
-      await expect(page, `nhân viên mở ${path}`).toHaveURL(/\/admin\/bookings\/counter$/);
+      await expect(page, `nhân viên mở ${path}`).toHaveURL(/\/admin\/bookings\/counter$/, { timeout: 15_000 });
     }
     await expect(page.getByRole("heading", { name: DASHBOARD_HEADING, level: 1 })).toHaveCount(0);
   });

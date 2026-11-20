@@ -45,6 +45,10 @@ services:
       RateLimit__ExportWindowSeconds: ${RATE_LIMIT_EXPORT_WINDOW_SECONDS:-60}
       RateLimit__ImportPermitLimit: ${RATE_LIMIT_IMPORT_PERMIT_LIMIT:-10}
       RateLimit__ImportWindowSeconds: ${RATE_LIMIT_IMPORT_WINDOW_SECONDS:-60}
+      # E2E: nới rate limit auth để beforeAll không bị 429 khi tạo nhiều tài khoản.
+      RateLimit__AuthPermitLimit: ${RATE_LIMIT_AUTH_PERMIT_LIMIT:-1000}
+      RateLimit__AuthWindowSeconds: ${RATE_LIMIT_AUTH_WINDOW_SECONDS:-60}
+      RateLimit__GlobalPermitLimit: ${RATE_LIMIT_GLOBAL_PERMIT_LIMIT:-10000}
 
       ImportExport__MaxActiveJobsPerUser: ${IMPORT_EXPORT_MAX_ACTIVE_JOBS_PER_USER:-2}
       ImportExport__ActiveJobStaleMinutes: ${IMPORT_EXPORT_ACTIVE_JOB_STALE_MINUTES:-60}

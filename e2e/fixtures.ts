@@ -97,6 +97,7 @@ async function openAuthenticatedPage(
 interface AuthFixtures {
   adminPage: Page;
   customerPage: Page;
+  customer2Page: Page;
   employeePage: Page;
 }
 
@@ -124,5 +125,6 @@ function authenticatedPageFixture(role: Role) {
 export const test = base.extend<AuthFixtures>({
   adminPage: authenticatedPageFixture("admin"),
   customerPage: authenticatedPageFixture("customer"),
+  customer2Page: authenticatedPageFixture("customer2"),
   employeePage: authenticatedPageFixture("employee"),
 });

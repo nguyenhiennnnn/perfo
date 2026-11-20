@@ -1,6 +1,6 @@
 import type { APIRequestContext } from "@playwright/test";
 
-export type Role = "admin" | "customer" | "employee";
+export type Role = "admin" | "customer" | "customer2" | "employee";
 
 /** Base URL của API backend (khớp VITE_API_BASE_URL trong .env.example). */
 export const API_BASE_URL = (
@@ -23,6 +23,11 @@ export const ACCOUNTS: Record<Role, Account> = {
   },
   customer: {
     email: "customer@cinema.local",
+    password: "Customer@123",
+    endpoint: "/auth/login",
+  },
+  customer2: {
+    email: "customer2@cinema.local",
     password: "Customer@123",
     endpoint: "/auth/login",
   },

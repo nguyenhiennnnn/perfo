@@ -16,6 +16,7 @@ export const CheckinCodeInput = forwardRef<HTMLInputElement, CheckinCodeInputPro
         <QrCode className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           ref={ref}
+          data-testid="checkin-code-input"
           autoFocus
           disabled={disabled}
           value={value}

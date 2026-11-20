@@ -81,7 +81,7 @@ export const CounterCheckoutPanel = ({
 
       <div className="flex items-center justify-between text-sm">
         <span className="text-muted-foreground">Tiền thừa trả khách</span>
-        <span className="font-semibold tabular-nums text-foreground">{formatCurrency(change)}</span>
+        <span data-testid="counter-change-amount" className="font-semibold tabular-nums text-foreground">{formatCurrency(change)}</span>
       </div>
 
       <Button

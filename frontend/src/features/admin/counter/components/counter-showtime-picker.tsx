@@ -70,6 +70,7 @@ export const CounterShowtimePicker = ({ date, onDateChange, onPickShowtime }: Co
                 <button
                   key={st.showtimeId}
                   type="button"
+                  data-testid={`counter-showtime-${st.showtimeId}`}
                   disabled={st.availableSeats <= 0 || st.status !== ShowtimeStatus.Scheduled}
                   onClick={() => onPickShowtime(st.showtimeId)}
                   className="flex flex-col items-start cut-sm bg-secondary px-3 py-2 text-left text-xs font-medium transition-all hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"

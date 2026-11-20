@@ -69,7 +69,8 @@ services:
       Email__SmtpPassword: ${SMTP_PASSWORD:-}
       Email__FromAddress: ${SMTP_FROM_ADDRESS:-no-reply@perfo.local}
       Email__FromName: ${SMTP_FROM_NAME:-}
-      Email__ResendApiKey: ${RESEND_API_KEY:-}
+      Email__ResendApiKey: ${RESEND_API_KEY_E2E:-${RESEND_API_KEY:-}}
+      Email__ResendApiUrl: ${RESEND_API_URL_E2E:-}
       Email__ResendFromAddress: ${RESEND_FROM_ADDRESS:-onboarding@resend.dev}
 
       VnPay__TmnCode: ${VNPAY_TMN_CODE:-}
@@ -77,7 +78,7 @@ services:
       VnPay__BaseUrl: ${VNPAY_BASE_URL:-https://sandbox.vnpayment.vn/paymentv2/vpcpay.html}
       VnPay__ReturnUrl: ${VNPAY_RETURN_URL:-http://localhost:5173/booking/result}
       VnPay__IpnUrl: ${VNPAY_IPN_URL:-http://localhost:8080/api/v1/payments/vnpay/ipn}
-      VnPay__ApiUrl: ${VNPAY_API_URL:-https://sandbox.vnpayment.vn/merchant_webapi/api/transaction}
+      VnPay__ApiUrl: ${VNPAY_API_URL_E2E:-${VNPAY_API_URL:-https://sandbox.vnpayment.vn/merchant_webapi/api/transaction}}
 
       Momo__PartnerCode: ${MOMO_PARTNER_CODE:-}
       Momo__AccessKey: ${MOMO_ACCESS_KEY:-}
@@ -123,6 +124,8 @@ services:
       retries: 10
       start_period: 40s
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - perfo-net
 

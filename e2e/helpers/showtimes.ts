@@ -154,16 +154,23 @@ async function cancelEarliestBlocker(
   roomId: number,
   start: Date,
 ): Promise<boolean> {
-  const calendar = await getData<CalendarData>(request, accessToken, "/admin/showtimes", {
+  const calendar = await getData<CalendarData>(request, accessToken, "/admin/showtimes/calendar", {
     from: dateOnly(new Date(start.getTime() - DAY_MS)),
     to: dateOnly(new Date(start.getTime() + 2 * DAY_MS)),
     roomId,
     status: "Scheduled",
   });
 
+  const now = Date.now();
   const blocker = calendar.days
     .flatMap((day) => day.showtimes)
-    .filter((s) => s.status === "Scheduled" && new Date(s.endTime).getTime() > start.getTime())
+    .filter(
+      (s) =>
+        s.status === "Scheduled" &&
+        new Date(s.endTime).getTime() > start.getTime() &&
+        // Bỏ qua suất đã bắt đầu: backend từ chối hủy với HTTP 422.
+        new Date(s.startTime).getTime() > now,
+    )
     .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())[0];
 
   // Suất chặn đã có ghế bị giữ/đặt: không đụng vào.

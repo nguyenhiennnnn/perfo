@@ -33,14 +33,17 @@ function loginUrl(user) {
 
 // Đăng nhập bằng API. Trả { accessToken, expiresIn, user } hoặc ném lỗi nếu thất bại.
 // Endpoint auth bị rate limit theo IP (mặc định 5 lần/60 giây): gặp 429 thì chờ Retry-After rồi thử lại.
-export function login(user) {
+// options (tùy chọn): { tags } gộp thêm tag vào request login; { onResponse(res) } được gọi với response
+// cuối cùng (không gọi cho các lần 429 sẽ thử lại), trước khi kiểm tra, để kịch bản ghi metric riêng.
+export function login(user, options) {
+  const opts = options || {};
   for (let attempt = 1; ; attempt++) {
     const res = http.post(
       loginUrl(user),
       JSON.stringify({ email: user.email, password: user.password }),
       {
         headers: Object.assign({}, JSON_HEADERS, CSRF_HEADERS),
-        tags: { name: 'POST /auth/login' },
+        tags: Object.assign({ name: 'POST /auth/login' }, opts.tags),
       },
     );
 
@@ -50,6 +53,8 @@ export function login(user) {
       sleep(retryAfter > 0 ? retryAfter : DEFAULT_RETRY_AFTER_SECONDS);
       continue;
     }
+
+    if (opts.onResponse) opts.onResponse(res);
 
     if (!checkOk(res, 'login')) {
       throw new Error(`Đăng nhập thất bại (${user.email}): HTTP ${res.status} ${res.body}`);

@@ -106,7 +106,9 @@ const TicketDetailContent = ({ booking }: { booking: BookingDetailDto }) => {
           </div>
           <p className="mt-1 text-xs text-muted-foreground">Đặt lúc {formatDateTime(booking.createdAt)}</p>
         </div>
-        <BookingStatusBadge status={booking.status} />
+        <span data-testid="ticket-detail-status">
+          <BookingStatusBadge status={booking.status} />
+        </span>
       </div>
 
       {isConfirmed && ticketsSection}
@@ -217,7 +219,11 @@ const TicketDetailContent = ({ booking }: { booking: BookingDetailDto }) => {
           </Button>
         </div>
       )}
-      {isConfirmed && cancelNotice && <p className="text-sm text-muted-foreground">{cancelNotice}</p>}
+      {isConfirmed && cancelNotice && (
+        <p data-testid="ticket-cancel-notice" className="text-sm text-muted-foreground">
+          {cancelNotice}
+        </p>
+      )}
     </div>
   );
 };

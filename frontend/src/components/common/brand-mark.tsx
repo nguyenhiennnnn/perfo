@@ -38,14 +38,19 @@ export const BrandMark = ({ className, loading = false }: BrandMarkProps) => (
   </svg>
 );
 
-export const BrandWordmark = ({ className }: { className?: string }) => (
+interface BrandWordmarkProps {
+  className?: string;
+  tone?: "default" | "inverse";
+}
+
+export const BrandWordmark = ({ className, tone = "default" }: BrandWordmarkProps) => (
   <svg viewBox="0 0 184 48" role="img" aria-label={BRAND.name} className={cn("h-auto", className)}>
     <clipPath id="perfo-wm-clip">
       <rect x="-2" width="190" height="48" />
     </clipPath>
     <g
       clipPath="url(#perfo-wm-clip)"
-      className="stroke-foreground"
+      className={tone === "inverse" ? "stroke-primary-foreground" : "stroke-foreground"}
       fill="none"
       strokeWidth="9"
       strokeMiterlimit="10"

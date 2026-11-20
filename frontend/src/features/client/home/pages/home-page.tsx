@@ -35,7 +35,7 @@ const HomePage = () => {
       />
       <HeroCarousel />
 
-      <PageContainer size="xl" className="space-y-14 pt-0 pb-14">
+      <PageContainer size="xl" className="space-y-14 pt-10 pb-14 md:pt-14">
         <CinemaExperienceSection />
 
         <MovieSection

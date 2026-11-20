@@ -16,7 +16,7 @@ const AdminAuthLayout = () => {
       <div className="relative z-10 flex w-full max-w-sm flex-col items-center gap-5">
         <Link to={ROUTES.home} className="flex items-center gap-2">
           <BrandMark className="size-8 shrink-0" />
-          <BrandWordmark className="h-5 w-auto" />
+          <BrandWordmark tone="inverse" className="h-5 w-auto" />
         </Link>
 
         <div className="w-full cut-lg bg-card p-6 sm:p-8">

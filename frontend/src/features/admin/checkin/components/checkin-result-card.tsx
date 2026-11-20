@@ -50,12 +50,12 @@ export const CheckinResultCard = ({ status, result, errorMessage, onClose }: Che
   if (!result) return null;
 
   return (
-    <div role="status" className="cut-lg bg-success p-6 text-success-foreground md:p-8">
+    <div role="status" className="cut-lg bg-success p-4 text-success-foreground md:p-5">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <CheckCircle2 className="size-10 shrink-0" />
+          <CheckCircle2 className="size-8 shrink-0" />
           <div>
-            <p className="t-h2">Check-in thành công</p>
+            <p className="t-h3">Check-in thành công</p>
             <p className="text-sm">Lúc {formatDateTime(result.checkedInAt)}</p>
           </div>
         </div>
@@ -71,23 +71,23 @@ export const CheckinResultCard = ({ status, result, errorMessage, onClose }: Che
         </Button>
       </div>
 
-      <dl className="mt-6 grid grid-cols-2 gap-6">
+      <dl className="mt-4 grid grid-cols-[auto_1fr] items-end gap-x-8 gap-y-2">
         <div className="min-w-0">
           <dt className="text-sm font-medium">Ghế</dt>
-          <dd className="t-numeral text-7xl wrap-break-word md:text-9xl">
+          <dd className="t-numeral text-6xl wrap-break-word md:text-7xl">
             {result.seatRow}
             {result.seatNumber}
           </dd>
         </div>
         <div className="min-w-0">
           <dt className="text-sm font-medium">Phòng</dt>
-          <dd className="t-numeral text-7xl wrap-break-word md:text-9xl">{result.roomName}</dd>
+          <dd className="t-numeral text-3xl wrap-break-word md:text-4xl">{result.roomName}</dd>
         </div>
       </dl>
 
-      <div className="mt-6 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-        <p className="t-h2 min-w-0 wrap-break-word">{result.movieTitle}</p>
-        <p className="t-numeral text-4xl">{formatTime(result.startTime)}</p>
+      <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t border-success-foreground/25 pt-3">
+        <p className="t-h3 min-w-0 wrap-break-word">{result.movieTitle}</p>
+        <p className="t-numeral text-3xl">{formatTime(result.startTime)}</p>
       </div>
     </div>
   );

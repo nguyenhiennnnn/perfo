@@ -174,5 +174,7 @@ public class ExportJobService(
 
     private IExportModule Resolve(string module) =>
         modules.FirstOrDefault(m => m.Module == module)
-        ?? throw new InvalidOperationException($"Module xuất dữ liệu '{module}' chưa được đăng ký.");
+        ?? throw new InvalidOperationException(
+            string.Format(Messages.Export_ModuleNotRegistered, module)
+        );
 }

@@ -107,7 +107,7 @@ public sealed class SeatLayoutImportProcessor(
         var first =
             seatTypes.FirstOrDefault(t => !t.IsCouple)?.Name
             ?? seatTypes.FirstOrDefault()?.Name
-            ?? "Ghế thường";
+            ?? Messages.Import_SeatLayout_DefaultSeatTypeName;
         var second = seatTypes.FirstOrDefault(t => t.IsCouple)?.Name ?? first;
 
         var sheets = new List<ExportSheet>

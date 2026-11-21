@@ -1,7 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>Cinema.Shared</RootNamespace>
+        <NeutralLanguage>vi</NeutralLanguage>
     </PropertyGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Update="Resources\Messages.resx">
+            <Generator>MSBuild:Compile</Generator>
+            <StronglyTypedFileName>$(IntermediateOutputPath)Messages.Designer.cs</StronglyTypedFileName>
+            <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
+            <StronglyTypedNamespace>Cinema.Shared.Resources</StronglyTypedNamespace>
+            <StronglyTypedClassName>Messages</StronglyTypedClassName>
+            <PublicClass>true</PublicClass>
+        </EmbeddedResource>
+    </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Application.Services.ImportExport;
 using Cinema.Application.Utils;
+using Cinema.Shared.Resources;
 using Hangfire;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -38,7 +39,7 @@ public class ExportJob(
             var handler =
                 modules.FirstOrDefault(m => m.Module == module)
                 ?? throw new InvalidOperationException(
-                    $"Module xuất dữ liệu '{module}' chưa được đăng ký."
+                    string.Format(Messages.Export_ModuleNotRegistered, module)
                 );
 
             var settings = options.Value;

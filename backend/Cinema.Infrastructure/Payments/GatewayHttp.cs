@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Cinema.Shared.Resources;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -57,10 +58,10 @@ internal static class GatewayHttp
                 location,
                 Truncate(body)
             );
-            var reason = response.StatusCode is >= HttpStatusCode.MultipleChoices and < HttpStatusCode.BadRequest
-                ? $"bị chuyển hướng (HTTP {status}) tới {location ?? "?"} — kiểm tra lại URL API"
-                : $"trả về HTTP {status} với nội dung không phải JSON (có thể bị chặn bởi firewall/IP của server hoặc sai URL API)";
-            throw new GatewayHttpException($"{gatewayName} {reason}");
+            var message = response.StatusCode is >= HttpStatusCode.MultipleChoices and < HttpStatusCode.BadRequest
+                ? string.Format(Messages.Gateway_RedirectedResponse, gatewayName, status, location ?? "?")
+                : string.Format(Messages.Gateway_NonJsonResponse, gatewayName, status);
+            throw new GatewayHttpException(message);
         }
 
         try
@@ -68,7 +69,7 @@ internal static class GatewayHttp
             var result = JsonSerializer.Deserialize<T>(body, jsonOptions);
             if (result is null)
                 throw new GatewayHttpException(
-                    $"{gatewayName} trả về dữ liệu rỗng (HTTP {status})"
+                    string.Format(Messages.Gateway_EmptyResponse, gatewayName, status)
                 );
             return result;
         }
@@ -83,7 +84,7 @@ internal static class GatewayHttp
                 Truncate(body)
             );
             throw new GatewayHttpException(
-                $"{gatewayName} trả về JSON không hợp lệ (HTTP {status})"
+                string.Format(Messages.Gateway_InvalidJsonResponse, gatewayName, status)
             );
         }
     }

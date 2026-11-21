@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Cinema.Application.Utils;
+using Cinema.Shared.Resources;
 
 namespace Cinema.Application.Services.ImportExport;
 
@@ -11,7 +12,9 @@ public static class ImportExportJson
 
     public static T Deserialize<T>(string json) =>
         JsonSerializer.Deserialize<T>(json, Options)
-        ?? throw new InvalidOperationException($"Không đọc được bộ lọc {typeof(T).Name}.");
+        ?? throw new InvalidOperationException(
+            string.Format(Messages.Json_FilterDeserializeFailed, typeof(T).Name)
+        );
 
     private static JsonSerializerOptions Create()
     {

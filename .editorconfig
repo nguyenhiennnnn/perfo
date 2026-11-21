@@ -16,3 +16,9 @@ indent_size = 2
 [*.{cs,csproj,slnx,props,targets}]
 indent_size = 4
 max_line_length = 100
+
+[*.resx]
+indent_size = 2
+
+[*.Designer.cs]
+generated_code = true

@@ -1,6 +1,7 @@
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Application.Services.ImportExport;
+using Cinema.Shared.Resources;
 using Hangfire;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -35,7 +36,7 @@ public class ImportApplyJob(
             var handler =
                 modules.FirstOrDefault(m => m.Module == module)
                 ?? throw new InvalidOperationException(
-                    $"Module nhập dữ liệu '{module}' chưa được đăng ký."
+                    string.Format(Messages.Import_ModuleNotRegistered, module)
                 );
 
             var progress = new JobProgressReporter(

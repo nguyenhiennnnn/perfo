@@ -234,7 +234,7 @@ public class VnPayGateway(
             return new RefundResult(
                 false,
                 null,
-                string.Format(Messages.Refund_VnPayApiError, "Timeout: VNPAY API không phản hồi")
+                string.Format(Messages.Refund_VnPayApiError, Messages.Refund_VnPayTimeout)
             );
         }
         catch (GatewayHttpException ex)

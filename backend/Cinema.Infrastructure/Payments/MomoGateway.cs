@@ -140,7 +140,7 @@ public class MomoGateway(
             return new RefundResult(
                 false,
                 null,
-                string.Format(Messages.Refund_MomoApiError, "Thiếu hoặc sai MoMo transId")
+                string.Format(Messages.Refund_MomoApiError, Messages.Refund_MomoInvalidTransId)
             );
 
         var requestId = Guid.NewGuid().ToString("N");

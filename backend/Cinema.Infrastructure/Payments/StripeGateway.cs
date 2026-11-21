@@ -41,8 +41,8 @@ public class StripeGateway(IOptions<StripeOptions> options, ILogger<StripeGatewa
             Mode = "payment",
             ClientReferenceId = request.TransactionId,
             SuccessUrl =
-                $"{_options.ReturnUrl}?bookingId={request.BookingId}&session_id={{CHECKOUT_SESSION_ID}}",
-            CancelUrl = $"{_options.ReturnUrl}?bookingId={request.BookingId}&canceled=true",
+                $"{_options.ReturnUrl}?bookingId={request.OrderId}&session_id={{CHECKOUT_SESSION_ID}}",
+            CancelUrl = $"{_options.ReturnUrl}?bookingId={request.OrderId}&canceled=true",
             LineItems =
             [
                 new SessionLineItemOptions
@@ -66,7 +66,7 @@ public class StripeGateway(IOptions<StripeOptions> options, ILogger<StripeGatewa
             ],
             Metadata = new Dictionary<string, string>
             {
-                ["bookingId"] = request.BookingId.ToString(),
+                ["bookingId"] = request.OrderId.ToString(),
                 ["transactionId"] = request.TransactionId,
             },
         };
@@ -92,7 +92,7 @@ public class StripeGateway(IOptions<StripeOptions> options, ILogger<StripeGatewa
             TransactionId: sessionId,
             GatewayResponseCode: isCanceled ? "canceled" : "succeeded",
             Amount: 0m,
-            BookingId: 0
+            OrderId: 0
         );
     }
 
@@ -164,7 +164,7 @@ public class StripeGateway(IOptions<StripeOptions> options, ILogger<StripeGatewa
                     ?? session.Metadata?.GetValueOrDefault("transactionId")
                     ?? string.Empty;
                 var bookingIdStr = session.Metadata?.GetValueOrDefault("bookingId") ?? "0";
-                _ = int.TryParse(bookingIdStr, out var bookingId);
+                _ = int.TryParse(bookingIdStr, out var orderId);
                 var isSuccess = string.Equals(
                     session.PaymentStatus,
                     "paid",
@@ -181,7 +181,7 @@ public class StripeGateway(IOptions<StripeOptions> options, ILogger<StripeGatewa
                     TransactionId: transactionId,
                     GatewayResponseCode: session.PaymentStatus ?? "paid",
                     Amount: amount,
-                    BookingId: bookingId,
+                    OrderId: orderId,
                     GatewayTransactionId: session.PaymentIntentId,
                     Currency: currency
                 );
@@ -194,7 +194,7 @@ public class StripeGateway(IOptions<StripeOptions> options, ILogger<StripeGatewa
             TransactionId: string.Empty,
             GatewayResponseCode: stripeEvent.Type,
             Amount: 0m,
-            BookingId: 0
+            OrderId: 0
         );
     }
 

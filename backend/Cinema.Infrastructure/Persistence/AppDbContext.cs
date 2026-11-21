@@ -35,11 +35,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<Showtime> Showtimes => Set<Showtime>();
     public DbSet<ShowtimeSeat> ShowtimeSeats => Set<ShowtimeSeat>();
-    public DbSet<Booking> Bookings => Set<Booking>();
-    public DbSet<BookingTicket> BookingTickets => Set<BookingTicket>();
+    public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OrderLine> OrderLines => Set<OrderLine>();
+    public DbSet<OrderPriceAdjustment> OrderPriceAdjustments => Set<OrderPriceAdjustment>();
+    public DbSet<OrderPriceAdjustmentAllocation> OrderPriceAdjustmentAllocations =>
+        Set<OrderPriceAdjustmentAllocation>();
     public DbSet<Combo> Combos => Set<Combo>();
-    public DbSet<BookingCombo> BookingCombos => Set<BookingCombo>();
-    public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<PaymentTransaction> PaymentTransactions => Set<PaymentTransaction>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<UserVerificationToken> UserVerificationTokens => Set<UserVerificationToken>();
     public DbSet<ImportExportJob> ImportExportJobs => Set<ImportExportJob>();

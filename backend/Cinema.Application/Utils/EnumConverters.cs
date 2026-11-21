@@ -25,7 +25,9 @@ public static class EnumConverters
             PaymentMethod.VNPay => PaymentMethodNames.VnPay,
             PaymentMethod.Momo => PaymentMethodNames.Momo,
             PaymentMethod.Stripe => PaymentMethodNames.Stripe,
-            _ => "Cash",
+            PaymentMethod.GiftCard => PaymentMethodNames.GiftCard,
+            PaymentMethod.BankTransfer => PaymentMethodNames.BankTransfer,
+            _ => PaymentMethodNames.Cash,
         };
 
     public static string ToDtoStatus(this PaymentStatus status) =>
@@ -33,8 +35,7 @@ public static class EnumConverters
         {
             PaymentStatus.Pending => "Pending",
             PaymentStatus.Success => "Success",
-            PaymentStatus.Failed => "Failed",
-            _ => "Refunded",
+            _ => "Failed",
         };
 
     public static string ToDtoStatus(this ShowtimeStatus status) =>

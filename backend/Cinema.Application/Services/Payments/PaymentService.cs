@@ -4,7 +4,6 @@ using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
-using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,9 +13,9 @@ namespace Cinema.Application.Services.Payments;
 
 public class PaymentService(
     IAppDbContext db,
-    IBookingFulfillmentService bookingFulfillmentService,
+    IPaymentLedgerService ledger,
+    IPaymentRefundService refundService,
     IEnumerable<IPaymentGateway> paymentGateways,
-    INotificationService notificationService,
     ILogger<PaymentService> logger,
     IOptions<StripeOptions>? stripeOptions = null
 ) : IPaymentService
@@ -51,41 +50,32 @@ public class PaymentService(
             return new VnPayIpnResult("97", "Invalid signature");
         }
 
-        var payment = await db.Payments.FirstOrDefaultAsync(
-            p => p.TransactionId == callback.TransactionId,
+        var charge = await FindChargeAsync(
+            PaymentMethod.VNPay,
+            callback.TransactionId,
             cancellationToken
         );
-        if (payment is null)
+        if (charge is null)
             return new VnPayIpnResult("01", "Order not found");
 
-        if (IsAlreadyProcessed(payment, callback.IsSuccess))
+        if (IsAlreadyProcessed(charge, callback.IsSuccess))
         {
-            logger.LogInformation(
-                "PaymentAlreadyProcessed PaymentId {PaymentId} Status {Status}",
-                payment.PaymentId,
-                payment.Status
-            );
+            LogAlreadyProcessed(charge);
             return new VnPayIpnResult("00", "Confirm Success");
         }
 
-        if (Math.Abs(payment.Amount - callback.Amount) > 0.01m)
+        if (!AmountMatches(charge, callback.Amount))
         {
             logger.LogWarning(
-                "PaymentWebhookReceived VNPay sai số tiền — PaymentId {PaymentId} Expected {Expected} Got {Got}",
-                payment.PaymentId,
-                payment.Amount,
+                "PaymentWebhookReceived VNPay sai số tiền — PaymentTransactionId {Id} Expected {Expected} Got {Got}",
+                charge.PaymentTransactionId,
+                charge.Amount,
                 callback.Amount
             );
             return new VnPayIpnResult("04", "Invalid amount");
         }
 
-        await ApplyPaymentResultAsync(
-            payment.PaymentId,
-            callback.IsSuccess,
-            callback.GatewayResponseCode,
-            callback.GatewayTransactionId,
-            cancellationToken
-        );
+        await ApplyChargeResultAsync(charge, callback, cancellationToken);
         return new VnPayIpnResult("00", "Confirm Success");
     }
 
@@ -117,33 +107,24 @@ public class PaymentService(
             return new MomoIpnResult(97, "Invalid signature");
         }
 
-        var payment = await db.Payments.FirstOrDefaultAsync(
-            p => p.TransactionId == callback.TransactionId,
+        var charge = await FindChargeAsync(
+            PaymentMethod.Momo,
+            callback.TransactionId,
             cancellationToken
         );
-        if (payment is null)
+        if (charge is null)
             return new MomoIpnResult(1, "Order not found");
 
-        if (IsAlreadyProcessed(payment, callback.IsSuccess))
+        if (IsAlreadyProcessed(charge, callback.IsSuccess))
         {
-            logger.LogInformation(
-                "PaymentAlreadyProcessed PaymentId {PaymentId} Status {Status}",
-                payment.PaymentId,
-                payment.Status
-            );
+            LogAlreadyProcessed(charge);
             return new MomoIpnResult(0, "success");
         }
 
-        if (Math.Abs(payment.Amount - callback.Amount) > 0.01m)
+        if (!AmountMatches(charge, callback.Amount))
             return new MomoIpnResult(4, "Invalid amount");
 
-        await ApplyPaymentResultAsync(
-            payment.PaymentId,
-            callback.IsSuccess,
-            callback.GatewayResponseCode,
-            callback.GatewayTransactionId,
-            cancellationToken
-        );
+        await ApplyChargeResultAsync(charge, callback, cancellationToken);
         return new MomoIpnResult(0, "success");
     }
 
@@ -178,11 +159,12 @@ public class PaymentService(
             return new StripeWebhookResult(true, "Event ignored");
         }
 
-        var payment = await db.Payments.FirstOrDefaultAsync(
-            p => p.TransactionId == callback.TransactionId,
+        var charge = await FindChargeAsync(
+            PaymentMethod.Stripe,
+            callback.TransactionId,
             cancellationToken
         );
-        if (payment is null)
+        if (charge is null)
         {
             logger.LogWarning(
                 "PaymentWebhookReceived Stripe Payment not found TxnRef {TxnRef}",
@@ -191,22 +173,18 @@ public class PaymentService(
             return new StripeWebhookResult(false, "Payment not found");
         }
 
-        if (IsAlreadyProcessed(payment, callback.IsSuccess))
+        if (IsAlreadyProcessed(charge, callback.IsSuccess))
         {
-            logger.LogInformation(
-                "PaymentAlreadyProcessed PaymentId {PaymentId} Status {Status}",
-                payment.PaymentId,
-                payment.Status
-            );
+            LogAlreadyProcessed(charge);
             return new StripeWebhookResult(true, "Payment already processed");
         }
 
-        if (Math.Abs(payment.Amount - callback.Amount) > 0.01m)
+        if (!AmountMatches(charge, callback.Amount))
         {
             logger.LogWarning(
-                "PaymentWebhookReceived Stripe sai số tiền — PaymentId {PaymentId} Expected {Expected} Got {Got}",
-                payment.PaymentId,
-                payment.Amount,
+                "PaymentWebhookReceived Stripe sai số tiền — PaymentTransactionId {Id} Expected {Expected} Got {Got}",
+                charge.PaymentTransactionId,
+                charge.Amount,
                 callback.Amount
             );
             return new StripeWebhookResult(false, "Invalid amount");
@@ -222,177 +200,166 @@ public class PaymentService(
         )
         {
             logger.LogWarning(
-                "PaymentWebhookReceived Stripe sai currency — PaymentId {PaymentId} Expected {Expected} Got {Got}",
-                payment.PaymentId,
+                "PaymentWebhookReceived Stripe sai currency — PaymentTransactionId {Id} Expected {Expected} Got {Got}",
+                charge.PaymentTransactionId,
                 _stripeCurrency,
                 callback.Currency
             );
             return new StripeWebhookResult(false, "Invalid currency");
         }
 
-        await ApplyPaymentResultAsync(
-            payment.PaymentId,
-            callback.IsSuccess,
-            callback.GatewayResponseCode,
-            callback.GatewayTransactionId,
-            cancellationToken
-        );
+        await ApplyChargeResultAsync(charge, callback, cancellationToken);
         return new StripeWebhookResult(true, "Payment processed successfully");
     }
 
-    private async Task ApplyPaymentResultAsync(
-        int paymentId,
-        bool isSuccess,
-        string gatewayResponseCode,
-        string? gatewayTransactionId,
+    private Task<PaymentTransaction?> FindChargeAsync(
+        PaymentMethod method,
+        string transactionCode,
+        CancellationToken cancellationToken
+    ) =>
+        db
+            .PaymentTransactions.AsNoTracking()
+            .FirstOrDefaultAsync(
+                t =>
+                    t.TransactionCode == transactionCode
+                    && t.Type == PaymentTransactionType.Charge
+                    && t.Method == method,
+                cancellationToken
+            );
+
+    private async Task ApplyChargeResultAsync(
+        PaymentTransaction pending,
+        GatewayCallbackResult callback,
         CancellationToken cancellationToken
     )
     {
-        await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
+        var isSuccess = callback.IsSuccess;
+        var status = isSuccess ? PaymentStatus.Success : PaymentStatus.Failed;
+        var completedAt = (DateTime?)DateTime.UtcNow;
+        var responseCode = callback.GatewayResponseCode;
+        var gatewayTransactionId = callback.GatewayTransactionId;
+        var chargeId = pending.PaymentTransactionId;
 
-        var payment = await db.Payments.FirstAsync(
-            p => p.PaymentId == paymentId,
-            cancellationToken
+        PaymentTransaction? charge = null;
+        PaymentTransaction? overpaidRefund = null;
+
+        await using (var transaction = await db.Database.BeginTransactionAsync(cancellationToken))
+        {
+            await db.LockOrderAsync(pending.OrderId, cancellationToken);
+
+            var claimable = db.PaymentTransactions.Where(t =>
+                t.PaymentTransactionId == chargeId
+                && (t.Status == PaymentStatus.Pending || (isSuccess && t.Status == PaymentStatus.Failed))
+            );
+
+            var claimed =
+                isSuccess && !string.IsNullOrWhiteSpace(gatewayTransactionId)
+                    ? await claimable.ExecuteUpdateAsync(
+                        s =>
+                            s.SetProperty(t => t.Status, status)
+                                .SetProperty(t => t.GatewayResponseCode, responseCode)
+                                .SetProperty(t => t.CompletedAt, completedAt)
+                                .SetProperty(t => t.GatewayTransactionId, gatewayTransactionId),
+                        cancellationToken
+                    )
+                    : await claimable.ExecuteUpdateAsync(
+                        s =>
+                            s.SetProperty(t => t.Status, status)
+                                .SetProperty(t => t.GatewayResponseCode, responseCode)
+                                .SetProperty(t => t.CompletedAt, completedAt),
+                        cancellationToken
+                    );
+
+            if (claimed == 0)
+            {
+                await transaction.CommitAsync(cancellationToken);
+                logger.LogInformation(
+                    "PaymentDuplicateIgnored PaymentTransactionId {Id}",
+                    chargeId
+                );
+                return;
+            }
+
+            if (!isSuccess)
+            {
+                await transaction.CommitAsync(cancellationToken);
+                logger.LogInformation(
+                    "PaymentFailed PaymentTransactionId {Id} OrderId {OrderId}",
+                    chargeId,
+                    pending.OrderId
+                );
+                return;
+            }
+
+            charge = await db
+                .PaymentTransactions.AsNoTracking()
+                .FirstAsync(t => t.PaymentTransactionId == chargeId, cancellationToken);
+
+            var summary = await ledger.GetSummaryAsync(pending.OrderId, cancellationToken);
+            if (summary.OverpaidAmount > 0m)
+            {
+                overpaidRefund = await refundService.ReserveAsync(
+                    charge,
+                    Math.Min(summary.OverpaidAmount, charge.Amount),
+                    Messages.Refund_OverpaymentNote,
+                    null,
+                    cancellationToken
+                );
+            }
+
+            await transaction.CommitAsync(cancellationToken);
+        }
+
+        logger.LogInformation(
+            "PaymentRecorded PaymentTransactionId {Id} OrderId {OrderId} Amount {Amount}",
+            chargeId,
+            pending.OrderId,
+            pending.Amount
         );
 
-        payment.GatewayResponseCode = gatewayResponseCode;
-        payment.Status = isSuccess ? PaymentStatus.Success : PaymentStatus.Failed;
-        if (isSuccess)
-        {
-            payment.PaidAt = DateTime.UtcNow;
-            if (!string.IsNullOrWhiteSpace(gatewayTransactionId))
-                payment.GatewayTransactionId = gatewayTransactionId;
-        }
-        await db.SaveChangesAsync(cancellationToken);
+        if (overpaidRefund is null)
+            return;
 
-        if (!isSuccess)
+        var result = await refundService.ExecuteAsync(
+            overpaidRefund.PaymentTransactionId,
+            cancellationToken
+        );
+        if (result.Success)
         {
-            await transaction.CommitAsync(cancellationToken);
-            await bookingFulfillmentService.ProcessPaymentFailureAsync(
-                payment.BookingId,
-                cancellationToken
-            );
             logger.LogInformation(
-                "PaymentFailed PaymentId {PaymentId} BookingId {BookingId}",
-                payment.PaymentId,
-                payment.BookingId
+                "OverpaymentRefunded PaymentTransactionId {Id} RefundTransactionId {RefundId} Amount {Amount}",
+                chargeId,
+                result.RefundTransactionId,
+                result.Amount
             );
             return;
         }
 
-        try
-        {
-            await bookingFulfillmentService.ConfirmBookingAndGenerateTicketsAsync(
-                payment.BookingId,
+        await db
+            .PaymentTransactions.Where(t => t.PaymentTransactionId == chargeId)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(t => t.NeedsManualRefund, true),
                 cancellationToken
             );
-            await transaction.CommitAsync(cancellationToken);
-            logger.LogInformation(
-                "PaymentVerified PaymentId {PaymentId} BookingId {BookingId}",
-                payment.PaymentId,
-                payment.BookingId
-            );
-        }
-        catch (SeatsNoLongerHeldException)
-        {
-            await transaction.CommitAsync(cancellationToken);
-            await HandleSeatsExpiredAfterPaymentAsync(payment, cancellationToken);
-        }
-    }
-
-    private static bool IsAlreadyProcessed(Payment payment, bool callbackSuccess) =>
-        payment.Status is PaymentStatus.Success or PaymentStatus.Refunded
-        || (payment.Status == PaymentStatus.Failed && !callbackSuccess);
-
-    private async Task HandleSeatsExpiredAfterPaymentAsync(
-        Payment payment,
-        CancellationToken cancellationToken
-    )
-    {
         logger.LogCritical(
-            "SeatsExpiredAfterPayment PaymentId {PaymentId} BookingId {BookingId} Amount {Amount} — đang thử hoàn tiền tự động.",
-            payment.PaymentId,
-            payment.BookingId,
-            payment.Amount
+            "OverpaymentRefundFailed PaymentTransactionId {Id} OrderId {OrderId} Amount {Amount} — cần hoàn tiền thủ công.",
+            chargeId,
+            pending.OrderId,
+            result.Amount
         );
-
-        var gateway = paymentGateways.FindByMethod(payment.PaymentMethod.ToString());
-
-        RefundResult? refundResult = null;
-        if (gateway is not null && payment.TransactionId is not null)
-        {
-            try
-            {
-                refundResult = await gateway.RefundAsync(
-                    new RefundRequest(
-                        payment.TransactionId,
-                        payment.Amount,
-                        string.Format(Messages.Refund_SeatsExpiredDescription, payment.PaymentId),
-                        payment.CreatedAt,
-                        GatewayTransactionId: payment.GatewayTransactionId,
-                        OriginalAmount: payment.Amount
-                    ),
-                    cancellationToken
-                );
-            }
-            catch (Exception ex) when (ex is not OperationCanceledException)
-            {
-                logger.LogError(
-                    ex,
-                    "AutoRefundFailed PaymentId {PaymentId} — lỗi khi gọi gateway hoàn tiền.",
-                    payment.PaymentId
-                );
-            }
-        }
-
-        var autoRefunded = refundResult is { Success: true };
-        if (autoRefunded)
-        {
-            payment.Status = PaymentStatus.Refunded;
-            payment.RefundedAmount = payment.Amount;
-            payment.RefundedAt = DateTime.UtcNow;
-            payment.RefundTransactionId = refundResult!.RefundTransactionId;
-            await db.SaveChangesAsync(cancellationToken);
-            logger.LogInformation(
-                "AutoRefundSucceeded PaymentId {PaymentId} BookingId {BookingId}",
-                payment.PaymentId,
-                payment.BookingId
-            );
-        }
-
-        var settings = await db.CinemaSettings.FirstOrDefaultAsync(
-            s => s.Id == AppDbContextExtensions.CinemaSettingsId,
-            cancellationToken
-        );
-        if (!string.IsNullOrWhiteSpace(settings?.Email))
-        {
-            notificationService.SendSeatsExpiredToAdmin(
-                settings.Email!,
-                autoRefunded,
-                payment.BookingId,
-                payment.PaymentId,
-                payment.Amount
-            );
-        }
-
-        var customer = await db
-            .Bookings.Where(b => b.BookingId == payment.BookingId && b.UserId != null)
-            .Select(b => new
-            {
-                b.BookingCode,
-                b.CustomerName,
-                b.User!.Email,
-            })
-            .FirstOrDefaultAsync(cancellationToken);
-        if (customer is not null && !string.IsNullOrWhiteSpace(customer.Email))
-        {
-            notificationService.SendSeatsExpiredToCustomer(
-                customer.Email,
-                customer.CustomerName,
-                customer.BookingCode,
-                autoRefunded,
-                payment.Amount
-            );
-        }
     }
+
+    private static bool IsAlreadyProcessed(PaymentTransaction charge, bool callbackSuccess) =>
+        charge.Status == PaymentStatus.Success
+        || (charge.Status == PaymentStatus.Failed && !callbackSuccess);
+
+    private static bool AmountMatches(PaymentTransaction charge, decimal callbackAmount) =>
+        Math.Abs(charge.Amount - callbackAmount) <= 0.01m;
+
+    private void LogAlreadyProcessed(PaymentTransaction charge) =>
+        logger.LogInformation(
+            "PaymentAlreadyProcessed PaymentTransactionId {Id} Status {Status}",
+            charge.PaymentTransactionId,
+            charge.Status
+        );
 }

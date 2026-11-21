@@ -32,11 +32,12 @@ public interface IAppDbContext
     DbSet<Review> Reviews { get; }
     DbSet<Showtime> Showtimes { get; }
     DbSet<ShowtimeSeat> ShowtimeSeats { get; }
-    DbSet<Booking> Bookings { get; }
-    DbSet<BookingTicket> BookingTickets { get; }
+    DbSet<Order> Orders { get; }
+    DbSet<OrderLine> OrderLines { get; }
+    DbSet<OrderPriceAdjustment> OrderPriceAdjustments { get; }
+    DbSet<OrderPriceAdjustmentAllocation> OrderPriceAdjustmentAllocations { get; }
     DbSet<Combo> Combos { get; }
-    DbSet<BookingCombo> BookingCombos { get; }
-    DbSet<Payment> Payments { get; }
+    DbSet<PaymentTransaction> PaymentTransactions { get; }
     DbSet<RefreshToken> RefreshTokens { get; }
     DbSet<UserVerificationToken> UserVerificationTokens { get; }
     DbSet<ImportExportJob> ImportExportJobs { get; }

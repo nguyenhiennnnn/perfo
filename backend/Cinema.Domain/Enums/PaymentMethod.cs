@@ -6,4 +6,6 @@ public enum PaymentMethod
     Momo,
     Cash,
     Stripe,
+    GiftCard,
+    BankTransfer,
 }

@@ -52,11 +52,11 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
         builder.Property(x => x.ChangeGiven).HasColumnType("decimal(18,2)");
 
         builder
-            .HasOne(x => x.Booking)
-            .WithMany(bk => bk.Payments)
-            .HasForeignKey(x => x.BookingId)
+            .HasOne(x => x.Order)
+            .WithMany(o => o.Payments)
+            .HasForeignKey(x => x.OrderId)
             .OnDelete(DeleteBehavior.Restrict);
-        builder.HasIndex(x => x.BookingId).HasDatabaseName("IX_Payments_Booking");
+        builder.HasIndex(x => x.OrderId).HasDatabaseName("IX_Payments_Order");
         builder.HasIndex(x => x.Status).HasDatabaseName("IX_Payments_Status");
     }
 }

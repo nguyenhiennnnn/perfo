@@ -48,9 +48,9 @@ public class ShowtimeSeatConfiguration : IEntityTypeConfiguration<ShowtimeSeat>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
-            .HasOne<Booking>()
+            .HasOne<Order>()
             .WithMany()
-            .HasForeignKey(x => x.HeldByBookingId)
+            .HasForeignKey(x => x.HeldByOrderId)
             .OnDelete(DeleteBehavior.SetNull);
 
         builder

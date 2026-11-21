@@ -39,7 +39,7 @@ public class MomoGateway(
         var orderInfo = request.OrderInfo.Length > OrderInfoMaxLength
             ? request.OrderInfo[..OrderInfoMaxLength]
             : request.OrderInfo;
-        var returnUrl = $"{_options.ReturnUrl.Trim()}?bookingId={request.BookingId}";
+        var returnUrl = $"{_options.ReturnUrl.Trim()}?bookingId={request.OrderId}";
 
         var rawSignature =
             $"accessKey={_options.AccessKey}&amount={amount}&extraData={extraData}"
@@ -126,7 +126,7 @@ public class MomoGateway(
             orderId,
             resultCode,
             amount,
-            BookingId: 0,
+            OrderId: 0,
             GatewayTransactionId: string.IsNullOrEmpty(momoTransId) ? null : momoTransId
         );
     }

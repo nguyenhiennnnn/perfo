@@ -29,16 +29,16 @@ public class LoyaltyPointEntryConfiguration : IEntityTypeConfiguration<LoyaltyPo
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
         builder
-            .HasOne(x => x.Booking)
+            .HasOne(x => x.Order)
             .WithMany()
-            .HasForeignKey(x => x.BookingId)
+            .HasForeignKey(x => x.OrderId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder
-            .HasIndex(x => x.BookingId)
+            .HasIndex(x => x.OrderId)
             .IsUnique()
-            .HasFilter("\"BookingId\" IS NOT NULL")
-            .HasDatabaseName("UX_LoyaltyPointEntries_Booking");
+            .HasFilter("\"OrderId\" IS NOT NULL")
+            .HasDatabaseName("UX_LoyaltyPointEntries_Order");
         builder
             .HasIndex(x => new { x.UserId, x.EarnedAt })
             .HasDatabaseName("IX_LoyaltyPointEntries_User_EarnedAt");

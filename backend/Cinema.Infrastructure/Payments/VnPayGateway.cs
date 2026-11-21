@@ -65,7 +65,7 @@ public class VnPayGateway(
         CancellationToken cancellationToken = default
     )
     {
-        var returnUrl = $"{_options.ReturnUrl.Trim()}?bookingId={request.BookingId}";
+        var returnUrl = $"{_options.ReturnUrl.Trim()}?bookingId={request.OrderId}";
         var nowUtc = request.CreatedAtUtc ?? _time.GetUtcNow().UtcDateTime;
 
         var vnpParams = new SortedDictionary<string, string>(StringComparer.Ordinal)
@@ -131,7 +131,7 @@ public class VnPayGateway(
             txnRef,
             responseCode,
             amount,
-            BookingId: 0,
+            OrderId: 0,
             GatewayTransactionId: string.IsNullOrEmpty(vnpTransactionNo) ? null : vnpTransactionNo
         );
     }

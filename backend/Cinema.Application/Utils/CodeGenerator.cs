@@ -31,4 +31,7 @@ public static class CodeGenerator
 
     public static string GeneratePaymentTransactionId(string bookingCode) =>
         $"{bookingCode}{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+
+    public static string GenerateRefundTransactionCode(string chargeTransactionCode) =>
+        $"{chargeTransactionCode}R{Guid.NewGuid().ToString("N")[..10].ToUpperInvariant()}";
 }

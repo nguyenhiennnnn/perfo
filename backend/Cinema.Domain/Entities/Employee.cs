@@ -10,5 +10,5 @@ public class Employee
 
     public User User { get; set; } = null!;
     public Position? Position { get; set; }
-    public ICollection<Booking> CounterBookings { get; set; } = [];
+    public ICollection<Order> CreatedOrders { get; set; } = [];
 }

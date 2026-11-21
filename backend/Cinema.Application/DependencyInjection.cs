@@ -81,6 +81,8 @@ public static class DependencyInjection
         services.AddScoped<ICounterBookingService, CounterBookingService>();
         services.AddScoped<LoyaltyExpiryService>();
         services.AddScoped<IComboService, ComboService>();
+        services.AddScoped<IPaymentLedgerService, PaymentLedgerService>();
+        services.AddScoped<IPaymentRefundService, PaymentRefundService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IPaymentAdminService, PaymentAdminService>();
         services.AddScoped<IPaymentExportService, PaymentExportService>();

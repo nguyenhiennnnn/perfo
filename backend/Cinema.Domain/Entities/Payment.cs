@@ -5,7 +5,7 @@ namespace Cinema.Domain.Entities;
 public class Payment
 {
     public int PaymentId { get; set; }
-    public int BookingId { get; set; }
+    public int OrderId { get; set; }
     public PaymentMethod PaymentMethod { get; set; }
     public string? TransactionId { get; set; }
 
@@ -23,5 +23,5 @@ public class Payment
     public decimal? AmountReceived { get; set; }
     public decimal? ChangeGiven { get; set; }
 
-    public Booking Booking { get; set; } = null!;
+    public Order Order { get; set; } = null!;
 }

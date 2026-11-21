@@ -18,6 +18,10 @@ public static class FieldLengths
     public const int CinemaAddress = 255;
     public const int DefaultEmployeePassword = 100;
     public const int EnumValue = 20;
+    public const int OrderCode = 20;
+    public const int TransactionCode = 150;
+    public const int GatewayResponseCode = 20;
+    public const int ReferenceType = 50;
     public const int TokenHash = 255;
 
     public const int FileName = 255;

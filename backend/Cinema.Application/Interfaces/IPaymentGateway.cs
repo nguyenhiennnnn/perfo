@@ -1,7 +1,7 @@
 namespace Cinema.Application.Interfaces;
 
 public record CreatePaymentRequest(
-    int BookingId,
+    int OrderId,
     decimal Amount,
     string OrderInfo,
     string TransactionId,
@@ -27,7 +27,7 @@ public record GatewayCallbackResult(
     string TransactionId,
     string GatewayResponseCode,
     decimal Amount,
-    int BookingId,
+    int OrderId,
     string? GatewayTransactionId = null,
     string? Currency = null
 );

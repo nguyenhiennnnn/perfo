@@ -1522,6 +1522,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="NotFound_Movie" xml:space="preserve">
     <value>Không tìm thấy phim.</value>
   </data>
+  <data name="NotFound_Order" xml:space="preserve">
+    <value>Không tìm thấy đơn hàng.</value>
+  </data>
   <data name="NotFound_Payment" xml:space="preserve">
     <value>Không tìm thấy giao dịch.</value>
   </data>
@@ -1568,11 +1571,23 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
 
   <!-- ===== Refund ===== -->
+  <data name="Refund_AmountInvalid" xml:space="preserve">
+    <value>Số tiền hoàn phải lớn hơn 0.</value>
+  </data>
   <data name="Refund_CancelBookingDescription" xml:space="preserve">
     <value>Hoàn tiền hủy vé {0}</value>
   </data>
+  <data name="Refund_ExceedsCollected" xml:space="preserve">
+    <value>Số tiền hoàn vượt quá số tiền còn có thể hoàn của giao dịch gốc.</value>
+  </data>
+  <data name="Refund_GatewayUnavailable" xml:space="preserve">
+    <value>Cổng thanh toán {0} chưa được cấu hình để hoàn tiền.</value>
+  </data>
   <data name="Refund_JobFailed" xml:space="preserve">
     <value>Hoàn tiền thất bại PaymentId {0}: {1}</value>
+  </data>
+  <data name="Refund_MethodUnsupported" xml:space="preserve">
+    <value>Phương thức thanh toán này chưa hỗ trợ hoàn tiền.</value>
   </data>
   <data name="Refund_MomoApiError" xml:space="preserve">
     <value>Lỗi gọi MoMo refund API: {0}</value>
@@ -1586,11 +1601,20 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Refund_MomoInvalidTransId" xml:space="preserve">
     <value>Thiếu hoặc sai MoMo transId</value>
   </data>
+  <data name="Refund_OriginalNotRefundable" xml:space="preserve">
+    <value>Chỉ hoàn được giao dịch thu đã thành công.</value>
+  </data>
+  <data name="Refund_OverpaymentNote" xml:space="preserve">
+    <value>Hoàn tiền tự động - khách thanh toán thừa cho đơn hàng</value>
+  </data>
   <data name="Refund_SeatsExpiredDescription" xml:space="preserve">
     <value>Hoàn tiền tự động - ghế hết hạn giữ - Payment {0}</value>
   </data>
   <data name="Refund_ShowtimeCancelledDescription" xml:space="preserve">
     <value>Hoàn tiền do rạp hủy suất chiếu - booking {0}</value>
+  </data>
+  <data name="Refund_TransactionDescription" xml:space="preserve">
+    <value>Hoàn tiền giao dịch {0}</value>
   </data>
   <data name="Refund_StripeApiError" xml:space="preserve">
     <value>Lỗi gọi Stripe refund API: {0}</value>

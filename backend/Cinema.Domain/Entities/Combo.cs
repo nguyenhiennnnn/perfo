@@ -9,5 +9,5 @@ public class Combo
     public string? ImageUrl { get; set; }
     public bool IsActive { get; set; } = true;
 
-    public ICollection<BookingCombo> BookingCombos { get; set; } = [];
+    public ICollection<OrderLine> OrderLines { get; set; } = [];
 }

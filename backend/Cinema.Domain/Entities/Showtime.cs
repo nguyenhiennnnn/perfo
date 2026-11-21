@@ -16,5 +16,5 @@ public class Showtime
     public Movie Movie { get; set; } = null!;
     public CinemaRoom Room { get; set; } = null!;
     public ICollection<ShowtimeSeat> ShowtimeSeats { get; set; } = [];
-    public ICollection<Booking> Bookings { get; set; } = [];
+    public ICollection<OrderLine> OrderLines { get; set; } = [];
 }

@@ -9,12 +9,12 @@ public class ShowtimeSeat
     public int SeatId { get; set; }
     public ShowtimeSeatStatus Status { get; set; } = ShowtimeSeatStatus.Available;
     public int? HeldByUserId { get; set; }
-    public int? HeldByBookingId { get; set; }
+    public int? HeldByOrderId { get; set; }
     public DateTime? HeldUntil { get; set; }
     public decimal Price { get; set; }
 
     public Showtime Showtime { get; set; } = null!;
     public Seat Seat { get; set; } = null!;
     public User? HeldByUser { get; set; }
-    public BookingTicket? BookingTicket { get; set; }
+    public ICollection<OrderLine> OrderLines { get; set; } = [];
 }

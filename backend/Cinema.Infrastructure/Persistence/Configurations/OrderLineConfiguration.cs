@@ -1,0 +1,117 @@
+using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Cinema.Infrastructure.Persistence.Configurations;
+
+public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
+{
+    public void Configure(EntityTypeBuilder<OrderLine> builder)
+    {
+        builder.ToTable(
+            "OrderLines",
+            t =>
+            {
+                t.HasCheckConstraint(
+                    "CK_OrderLines_LineType",
+                    "\"LineType\" IN ('Ticket','Combo','GiftCard','Fee')"
+                );
+                t.HasCheckConstraint(
+                    "CK_OrderLines_Shape",
+                    "(\"LineType\" = 'Ticket' AND \"ShowtimeId\" IS NOT NULL "
+                        + "AND \"ShowtimeSeatId\" IS NOT NULL AND \"ComboId\" IS NULL "
+                        + "AND \"Quantity\" = 1) OR "
+                        + "(\"LineType\" = 'Combo' AND \"ComboId\" IS NOT NULL "
+                        + "AND \"ShowtimeSeatId\" IS NULL AND \"TicketTypeId\" IS NULL) OR "
+                        + "(\"LineType\" IN ('GiftCard','Fee') AND \"ComboId\" IS NULL "
+                        + "AND \"ShowtimeId\" IS NULL AND \"ShowtimeSeatId\" IS NULL "
+                        + "AND \"TicketTypeId\" IS NULL)"
+                );
+                t.HasCheckConstraint("CK_OrderLines_Quantity", "\"Quantity\" > 0");
+                t.HasCheckConstraint(
+                    "CK_OrderLines_QuantityFulfilled",
+                    "\"QuantityFulfilled\" >= 0 AND \"QuantityFulfilled\" <= \"Quantity\""
+                );
+                t.HasCheckConstraint("CK_OrderLines_UnitCost", "\"UnitCost\" >= 0");
+                t.HasCheckConstraint("CK_OrderLines_UnitListPrice", "\"UnitListPrice\" >= 0");
+                t.HasCheckConstraint(
+                    "CK_OrderLines_LockedUnitPrice",
+                    "\"LockedUnitPrice\" >= 0"
+                );
+                t.HasCheckConstraint(
+                    "CK_OrderLines_PaidAmount",
+                    "\"PaidAmount\" >= 0 AND \"PaidAmount\" <= \"LockedUnitPrice\" * \"Quantity\""
+                );
+                t.HasCheckConstraint(
+                    "CK_OrderLines_CheckIn",
+                    "(NOT \"IsCheckedIn\") OR \"LineType\" = 'Ticket'"
+                );
+            }
+        );
+        builder.HasKey(x => x.OrderLineId);
+        builder
+            .Property(x => x.LineType)
+            .HasConversion<string>()
+            .HasMaxLength(FieldLengths.EnumValue)
+            .IsRequired();
+        builder.Property(x => x.Description).HasMaxLength(FieldLengths.Description);
+        builder.Property(x => x.Quantity).HasDefaultValue(1);
+        builder.Property(x => x.QuantityFulfilled).HasDefaultValue(0);
+        builder.Property(x => x.UnitCost).HasColumnType("decimal(18,2)");
+        builder.Property(x => x.UnitListPrice).HasColumnType("decimal(18,2)");
+        builder.Property(x => x.LockedUnitPrice).HasColumnType("decimal(18,2)");
+        builder.Property(x => x.PaidAmount).HasColumnType("decimal(18,2)");
+        builder.Property(x => x.QrCode).HasMaxLength(255);
+        builder.Property(x => x.IsCheckedIn).HasDefaultValue(false);
+        builder.Property(x => x.CheckedInAt).HasColumnType("timestamp without time zone");
+
+        builder
+            .HasOne(x => x.Order)
+            .WithMany(o => o.Lines)
+            .HasForeignKey(x => x.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasIndex(x => x.OrderId).HasDatabaseName("IX_OrderLines_Order");
+
+        builder
+            .HasOne(x => x.Showtime)
+            .WithMany(s => s.OrderLines)
+            .HasForeignKey(x => x.ShowtimeId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasIndex(x => x.ShowtimeId)
+            .HasFilter("\"ShowtimeId\" IS NOT NULL")
+            .HasDatabaseName("IX_OrderLines_Showtime");
+
+        builder
+            .HasOne(x => x.ShowtimeSeat)
+            .WithMany(ss => ss.OrderLines)
+            .HasForeignKey(x => x.ShowtimeSeatId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasIndex(x => x.ShowtimeSeatId)
+            .HasFilter("\"ShowtimeSeatId\" IS NOT NULL")
+            .HasDatabaseName("IX_OrderLines_ShowtimeSeat");
+
+        builder
+            .HasOne(x => x.Combo)
+            .WithMany(c => c.OrderLines)
+            .HasForeignKey(x => x.ComboId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasIndex(x => x.ComboId)
+            .HasFilter("\"ComboId\" IS NOT NULL")
+            .HasDatabaseName("IX_OrderLines_Combo");
+
+        builder
+            .HasIndex(x => x.TicketTypeId)
+            .HasFilter("\"TicketTypeId\" IS NOT NULL")
+            .HasDatabaseName("IX_OrderLines_TicketType");
+
+        builder
+            .HasIndex(x => x.QrCode)
+            .IsUnique()
+            .HasFilter("\"QrCode\" IS NOT NULL")
+            .HasDatabaseName("UX_OrderLines_QrCode");
+    }
+}

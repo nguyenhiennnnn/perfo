@@ -18,7 +18,9 @@ internal record OrderListRow(
     int TicketCount,
     decimal FinalAmount,
     DateTime CreatedAt,
-    DateTime? ExpiresAt
+    DateTime? ExpiresAt,
+    int RefundCount,
+    int RefundOpenCount
 );
 
 internal static class OrderListProjection
@@ -44,7 +46,11 @@ internal static class OrderListProjection
                 .Sum(l => (int?)l.Quantity) ?? 0,
             o.FinalAmount,
             o.CreatedAt,
-            o.ExpiresAt
+            o.ExpiresAt,
+            o.PaymentTransactions.Count(t => t.Type == PaymentTransactionType.Refund),
+            o.PaymentTransactions.Count(t =>
+                t.Type == PaymentTransactionType.Refund && t.Status != PaymentStatus.Success
+            )
         ));
 
     public static OrderListItemDto ToDto(this OrderListRow row) =>
@@ -61,6 +67,9 @@ internal static class OrderListProjection
             row.TicketCount,
             row.FinalAmount,
             row.CreatedAt,
-            row.Status == OrderStatus.Pending ? row.ExpiresAt : null
+            row.Status == OrderStatus.Pending ? row.ExpiresAt : null,
+            row.RefundCount == 0 ? CancelOrderResponse.RefundStatusNone
+            : row.RefundOpenCount == 0 ? CancelOrderResponse.RefundStatusRefunded
+            : CancelOrderResponse.RefundStatusPending
         );
 }

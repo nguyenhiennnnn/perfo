@@ -65,6 +65,8 @@ export const ROUTES = {
     catalogActors: "/admin/catalog/actors",
     catalogDirectors: "/admin/catalog/directors",
     orderDetail: (orderId: number | string) => `/admin/orders/${orderId}`,
+    ordersByShowtime: (showtimeId: number | string) =>
+      `/admin/orders?showtimeId=${showtimeId}`,
     roomSeats: (roomId: number | string) => `/admin/rooms/${roomId}/seats`,
     importExportHistory: "/admin/import-export",
     settings: "/admin/settings",

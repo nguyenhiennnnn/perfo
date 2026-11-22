@@ -57,6 +57,8 @@ export interface OrderListParams {
   limit?: number;
 }
 
+export type OrderRefundStatus = "None" | "Pending" | "Refunded";
+
 export interface OrderListItemDto {
   orderId: number;
   orderCode: string;
@@ -71,6 +73,7 @@ export interface OrderListItemDto {
   finalAmount: number;
   createdAt: string;
   expiresAt?: string | null;
+  refundStatus: OrderRefundStatus;
 }
 
 export interface OrderEmployeeBriefDto {

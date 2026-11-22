@@ -48,7 +48,7 @@ export function useAdminUpdateShowtime() {
 
 export function useAdminDeleteShowtime() {
   return useMutation({
-    meta: { invalidates: "showtimeCancelled" },
+    meta: { invalidates: "showtimeCancelled", skipSuccessToast: true },
     mutationFn: (id: number) => showtimesAdminApi.deleteShowtime(id),
   });
 }

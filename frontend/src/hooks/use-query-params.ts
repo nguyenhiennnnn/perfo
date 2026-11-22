@@ -84,6 +84,7 @@ const adminOrderParsers = {
   status: parseAsString,
   channel: parseAsString,
   type: parseAsString,
+  showtimeId: parseAsInteger,
   fromDate: parseAsString,
   toDate: parseAsString,
 };

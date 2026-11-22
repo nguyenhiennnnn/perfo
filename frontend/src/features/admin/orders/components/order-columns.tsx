@@ -1,6 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { Eye } from "lucide-react";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTableColumnHeader } from "@/components/common/data-table/data-table-column-header";
 import type { DataTableFeatures } from "@/components/common/data-table/data-table-features";
@@ -10,6 +11,7 @@ import { getOrderTypeLabel } from "@/features/client/orders/utils/order-labels";
 import { formatCurrency, formatDateTime } from "@/lib/formatters";
 
 import type { AdminOrderListItemDto } from "../types";
+import { getOrderRefundStatusInfo } from "../utils/order-cancel";
 
 interface OrderColumnsOptions {
   onViewDetail: (order: AdminOrderListItemDto) => void;
@@ -85,6 +87,18 @@ export const createOrderColumns = ({ onViewDetail }: OrderColumnsOptions) =>
       enableSorting: false,
       header: ({ column }) => <DataTableColumnHeader column={column} title={STATUS_LABEL} />,
       cell: ({ row }) => <BookingStatusBadge status={row.original.status} />,
+    }),
+    columnHelper.accessor("refundStatus", {
+      enableSorting: false,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Hoàn tiền" />,
+      cell: ({ row }) => {
+        const info = getOrderRefundStatusInfo(row.original.refundStatus);
+        return info ? (
+          <Badge variant={info.variant}>{info.label}</Badge>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        );
+      },
     }),
     columnHelper.accessor("createdAt", {
       enableSorting: false,

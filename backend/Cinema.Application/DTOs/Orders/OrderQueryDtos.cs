@@ -13,7 +13,8 @@ public record OrderListItemDto(
     int TicketCount,
     decimal FinalAmount,
     DateTime CreatedAt,
-    DateTime? ExpiresAt
+    DateTime? ExpiresAt,
+    string RefundStatus
 );
 
 public record OrderEmployeeBriefDto(int EmployeeId, string FullName);

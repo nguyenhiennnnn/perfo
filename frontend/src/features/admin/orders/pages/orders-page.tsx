@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { ReceiptText } from "lucide-react";
+import { ReceiptText, X } from "lucide-react";
 
 import { ENDPOINTS } from "@/api/endpoints";
 import { DataTable } from "@/components/common/data-table/data-table";
@@ -7,6 +7,7 @@ import { DateFilterPicker } from "@/components/common/filter/date-filter-picker"
 import { EnumSelectFilter } from "@/components/common/filter/enum-select-filter";
 import { ExportButton } from "@/components/common/export-button";
 import { PageHeader } from "@/components/common/page-header";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ALL_STATUSES_LABEL, DEFAULT_PAGE, STATUS_LABEL } from "@/config/default-constants";
 import { ROUTES } from "@/config/routes";
@@ -38,6 +39,7 @@ const AdminOrdersPage = () => {
     params.status !== null ||
     params.channel !== null ||
     params.type !== null ||
+    params.showtimeId !== null ||
     params.fromDate !== null ||
     params.toDate !== null;
 
@@ -55,6 +57,7 @@ const AdminOrdersPage = () => {
               status: listParams.status,
               channel: listParams.channel,
               type: listParams.type,
+              showtimeId: listParams.showtimeId,
               fromDate: listParams.fromDate,
               toDate: listParams.toDate,
             }}
@@ -63,6 +66,22 @@ const AdminOrdersPage = () => {
           />
         }
       />
+
+      {params.showtimeId !== null && (
+        <div className="mb-3 flex flex-wrap items-center gap-2 cut-sm bg-secondary px-3 py-2 text-sm text-foreground">
+          <span>
+            Đang lọc đơn của suất chiếu <span className="t-code">#{params.showtimeId}</span>
+          </span>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setParams({ showtimeId: null, page: DEFAULT_PAGE })}
+          >
+            <X className="size-4" />
+            <span>Bỏ lọc suất chiếu</span>
+          </Button>
+        </div>
+      )}
 
       <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         <Input
@@ -127,6 +146,7 @@ const AdminOrdersPage = () => {
             status: null,
             channel: null,
             type: null,
+            showtimeId: null,
             fromDate: null,
             toDate: null,
             page: DEFAULT_PAGE,

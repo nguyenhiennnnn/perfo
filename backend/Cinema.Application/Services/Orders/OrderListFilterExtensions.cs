@@ -19,6 +19,16 @@ internal static class OrderListFilterExtensions
             query = query.Where(o => o.Channel == channel);
         if (EnumConverters.TryParseEnum<OrderType>(filter.Type, out var type))
             query = query.Where(o => o.Type == type);
+        if (filter.ShowtimeId is { } showtimeId)
+            query = query.Where(o =>
+                o.Lines.Any(l => l.ShowtimeId == showtimeId && l.LineType == OrderLineType.Ticket)
+                || (
+                    o.OriginalOrder != null
+                    && o.OriginalOrder.Lines.Any(l =>
+                        l.ShowtimeId == showtimeId && l.LineType == OrderLineType.Ticket
+                    )
+                )
+            );
         if (filter.FromDate is not null)
             query = query.Where(o =>
                 o.CreatedAt >= BusinessTime.StartOfDayUtc(filter.FromDate.Value)

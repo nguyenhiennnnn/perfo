@@ -5,7 +5,7 @@ import {
   PaymentStatus,
   PaymentTransactionType,
 } from "@/types/enum";
-import type { CancelOrderRefundDto } from "../types";
+import type { CancelOrderRefundDto, OrderRefundStatus } from "../types";
 
 const CASH_METHOD = "Cash";
 
@@ -66,6 +66,14 @@ export const getRefundStatusInfo = (status: string): RefundStatusInfo => {
   if (status === PaymentStatus.Pending)
     return { label: "Chờ hoàn", variant: "warning" };
   return { label: "Cần hoàn thủ công", variant: "destructive" };
+};
+
+export const getOrderRefundStatusInfo = (
+  status: OrderRefundStatus,
+): RefundStatusInfo | null => {
+  if (status === "Refunded") return { label: "Đã hoàn", variant: "success" };
+  if (status === "Pending") return { label: "Chờ hoàn", variant: "warning" };
+  return null;
 };
 
 export const getRefundTotal = (refunds: CancelOrderRefundDto[]) =>

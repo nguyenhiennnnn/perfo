@@ -9,7 +9,8 @@ public record OrderListFilter(
     string? Type,
     DateOnly? FromDate,
     DateOnly? ToDate,
-    string? Search
+    string? Search,
+    int? ShowtimeId = null
 );
 
 public interface IOrderQueryService

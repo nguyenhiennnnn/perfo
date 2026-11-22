@@ -10,6 +10,7 @@ export type {
   OrderLineDto,
   OrderPaymentSummaryDto,
   OrderPriceAdjustmentDto,
+  OrderRefundStatus,
   OrderTicketDto,
   OrderTransactionDto,
 } from "@/features/client/orders/types";
@@ -20,6 +21,7 @@ export interface AdminOrderListParams {
   status?: string;
   channel?: string;
   type?: string;
+  showtimeId?: number;
   fromDate?: string;
   toDate?: string;
   search?: string;

@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
-import { bookingsAdminApi } from "@/features/admin/bookings/api/bookings-admin-api";
+import { CancelReason } from "@/types/enum";
+import { counterApi } from "../api/counter-api";
+
+const ABANDON_BODY = { reason: CancelReason.Other } as const;
 
 interface UseCounterLeaveCancelParams {
   onRestoredAfterCancel: () => void;
@@ -17,13 +20,13 @@ export function useCounterLeaveCancel({
     onRestoredRef.current = onRestoredAfterCancel;
   }, [onRestoredAfterCancel]);
 
-  const setCancellableBookingId = useCallback((id: number | null) => {
+  const setCancellableOrderId = useCallback((id: number | null) => {
     cancellableIdRef.current = id;
   }, []);
 
-  const cancelQuietly = useCallback(async (bookingId: number) => {
+  const cancelQuietly = useCallback(async (orderId: number) => {
     try {
-      await bookingsAdminApi.counterCancel(bookingId);
+      await counterApi.cancelOrder(orderId, ABANDON_BODY);
     } catch {
       // Best-effort: bỏ qua lỗi.
     }
@@ -39,7 +42,7 @@ export function useCounterLeaveCancel({
       if (id === null) return;
       cancellableIdRef.current = null;
       cancelledOnHideRef.current = true;
-      bookingsAdminApi.counterCancelKeepalive(id);
+      counterApi.cancelOrderKeepalive(id, ABANDON_BODY);
     };
     const onPageShow = (event: PageTransitionEvent) => {
       if (!event.persisted || !cancelledOnHideRef.current) return;
@@ -63,7 +66,7 @@ export function useCounterLeaveCancel({
     };
   }, [cancelQuietly]);
 
-  return { setCancellableBookingId, cancelQuietly, hasLeft };
+  return { setCancellableOrderId, cancelQuietly, hasLeft };
 }
 
 export type CounterLeaveCancel = ReturnType<typeof useCounterLeaveCancel>;

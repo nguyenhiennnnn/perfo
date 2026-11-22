@@ -3,8 +3,7 @@ import { getBusinessToday } from "@/lib/business-time";
 import { ShowtimeSeatStatus } from "@/types/enum";
 import { toggleSeatSelection } from "@/components/common/seat-map/seat-map-utils";
 import { useShowtimeSeats } from "@/features/client/showtimes/hooks/use-showtimes";
-import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
-import type { CounterHoldRequest } from "@/features/admin/bookings/types";
+import type { CounterHoldRequest } from "../types";
 
 export function useCounterSelection() {
   const [selectedDate, setSelectedDate] = useState(() => getBusinessToday());
@@ -20,7 +19,6 @@ export function useCounterSelection() {
   const [userId, setUserId] = useState<number | null>(null);
 
   const showtimeSeats = useShowtimeSeats(showtimeId ?? 0);
-  const activeCombos = useActiveCombos();
 
   const combosPayload = useMemo(
     () =>
@@ -37,15 +35,6 @@ export function useCounterSelection() {
       ),
     [showtimeSeats.data, selectedSeatIds],
   );
-
-  const estimatedTotal = useMemo(() => {
-    const seatsTotal = selectedSeatsInfo.reduce((sum, s) => sum + s.price, 0);
-    const combosTotal = combosPayload.reduce((sum, item) => {
-      const combo = activeCombos.data?.find((c) => c.comboId === item.comboId);
-      return sum + (combo?.price ?? 0) * item.quantity;
-    }, 0);
-    return seatsTotal + combosTotal;
-  }, [selectedSeatsInfo, combosPayload, activeCombos.data]);
 
   const selectShowtime = (id: number) => {
     setShowtimeId(id);
@@ -110,7 +99,6 @@ export function useCounterSelection() {
     setCustomerPhone,
     userId,
     setUserId,
-    estimatedTotal,
     canHold,
     buildHoldRequest,
     resetSelection,

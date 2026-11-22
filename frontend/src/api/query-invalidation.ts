@@ -11,6 +11,8 @@ const showtimeViews = (): KeyList => [
 ];
 const bookingViews = (): KeyList => [
   k.adminBookings.all(),
+  k.adminOrders.all(),
+  k.adminCashRefunds.all(),
   k.orders.all(),
   k.adminPayments.all(),
 ];

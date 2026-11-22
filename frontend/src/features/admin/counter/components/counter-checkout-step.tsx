@@ -11,7 +11,7 @@ interface CounterCheckoutStepProps {
 export function CounterCheckoutStep({ flow }: CounterCheckoutStepProps) {
   const activeCombos = useActiveCombos();
 
-  if (!flow.holdResult) return null;
+  if (!flow.order) return null;
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4">
@@ -19,14 +19,18 @@ export function CounterCheckoutStep({ flow }: CounterCheckoutStepProps) {
         seats={flow.selectedSeatsInfo}
         combos={activeCombos.data}
         comboQuantities={flow.comboQuantities}
-        finalAmount={flow.holdResult.finalAmount}
+        discountAmount={flow.order.discountAmount}
+        finalAmount={flow.order.finalAmount}
       />
       <CounterCheckoutPanel
-        hold={flow.holdResult}
-        onConfirm={flow.confirmCheckout}
+        order={flow.order}
+        payments={flow.payments}
+        outstandingAmount={flow.outstandingAmount}
+        hasPartialPayment={flow.hasPartialPayment}
+        onPay={flow.pay}
         onChangeSeats={flow.backToSeats}
-        onCancelOrder={flow.resetFlow}
-        isSubmitting={flow.isCheckingOut || flow.isCancelling}
+        onCancelOrder={flow.cancelOrder}
+        isSubmitting={flow.isPaying || flow.isCancelling}
       />
     </div>
   );

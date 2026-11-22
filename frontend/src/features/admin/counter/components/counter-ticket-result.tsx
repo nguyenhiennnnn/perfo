@@ -1,72 +1,76 @@
 import { CheckCircle2, PlusCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import type { UseQueryResult } from "@tanstack/react-query";
-import { PerfoTicket } from "@/components/common/perfo-ticket";
+import { Button } from "@/components/ui/button";
+import { DownloadTicketsPdfButton } from "@/components/common/download-tickets-pdf-button";
 import { QueryState } from "@/components/common/query-state";
 import { TicketSkeleton } from "@/components/common/skeleton-shapes";
+import { ENDPOINTS } from "@/api/endpoints";
 import { formatCurrency } from "@/lib/formatters";
-import type {
-  AdminBookingDetailDto,
-  CounterCheckoutResponse,
-} from "@/features/admin/bookings/types";
+import { OrderStatus } from "@/types/enum";
+import { OrderTicketCards } from "@/features/client/orders/components/detail/order-tickets-section";
+import type { OrderDetailDto } from "@/features/admin/orders/types";
+import type { CounterCheckoutResponse } from "../types";
+import { CounterPaymentReceipts } from "./counter-payment-receipts";
 
 interface CounterTicketResultProps {
-  bookingQuery: UseQueryResult<AdminBookingDetailDto>;
-  checkout: CounterCheckoutResponse;
+  orderQuery: UseQueryResult<OrderDetailDto>;
+  payments: CounterCheckoutResponse[];
+  totalChange: number;
   onNewSale: () => void;
 }
 
-export const CounterTicketResult = ({ bookingQuery, checkout, onNewSale }: CounterTicketResultProps) => {
-  const booking = bookingQuery.data;
-  const seatPrices = new Map((booking?.seats ?? []).map((seat) => [`${seat.seatRow}${seat.seatNumber}`, seat.price]));
-
-  return (
-    <div className="flex flex-col items-center gap-6 py-6 text-center" aria-busy={bookingQuery.isLoading || undefined}>
-      <CheckCircle2 className="size-10 text-success" />
-      <div>
-        <p className="font-heading text-lg font-semibold text-foreground">Thanh toán thành công</p>
-        <p className="text-sm text-muted-foreground">Tiền thừa trả khách: {formatCurrency(checkout.change)}</p>
-      </div>
-
-      <QueryState
-        query={bookingQuery}
-        skeleton={<TicketSkeleton className="w-full max-w-3xl" />}
-        errorTitle="Không tải được vé vừa bán"
-        errorClassName="w-full max-w-3xl"
-      >
-        {booking && booking.tickets && booking.tickets.length > 0 ? (
-        <div className="flex w-full max-w-3xl flex-col gap-4">
-          {booking.tickets.map((ticket) => (
-            <PerfoTicket
-              key={ticket.ticketId}
-              movieTitle={booking.movie?.title ?? ""}
-              startTime={booking.showtime.startTime}
-              room={booking.showtime.roomName}
-              seat={`${ticket.seatRow}${ticket.seatNumber}`}
-              price={seatPrices.get(`${ticket.seatRow}${ticket.seatNumber}`) ?? 0}
-              ticketCode={`${booking.bookingCode}-${ticket.seatRow}${ticket.seatNumber}`}
-              qrValue={ticket.qrCodeImage}
-              isCheckedIn={ticket.isCheckedIn}
-            />
-          ))}
-        </div>
-        ) : booking ? (
-          <PerfoTicket
-            movieTitle={booking.movie?.title ?? ""}
-            startTime={booking.showtime.startTime}
-            room={booking.showtime.roomName}
-            seat={Array.from(seatPrices.keys()).join(", ")}
-            price={booking.seats.reduce((sum, seat) => sum + seat.price, 0)}
-            ticketCode={booking.bookingCode}
-            qrValue={booking.bookingCode}
-          />
-        ) : null}
-      </QueryState>
-
-      <Button onClick={onNewSale}>
-        <PlusCircle className="size-4" />
-        <span>Bán vé mới</span>
-      </Button>
+export const CounterTicketResult = ({
+  orderQuery,
+  payments,
+  totalChange,
+  onNewSale,
+}: CounterTicketResultProps) => (
+  <div
+    className="flex flex-col items-center gap-6 py-6 text-center"
+    aria-busy={orderQuery.isLoading || undefined}
+  >
+    <CheckCircle2 className="size-10 text-success" />
+    <div>
+      <p className="font-heading text-lg font-semibold text-foreground">Thanh toán thành công</p>
+      <p className="text-sm text-muted-foreground">
+        Tiền thối trả khách: {formatCurrency(totalChange)}
+      </p>
     </div>
-  );
-};
+
+    <div className="w-full max-w-md text-left">
+      <CounterPaymentReceipts payments={payments} />
+    </div>
+
+    <QueryState
+      query={orderQuery}
+      skeleton={<TicketSkeleton className="w-full max-w-3xl" />}
+      errorTitle="Không tải được vé vừa bán"
+      errorClassName="w-full max-w-3xl"
+    >
+      {(order) =>
+        order.status === OrderStatus.Confirmed ? (
+          <div className="flex w-full max-w-3xl flex-col gap-4 text-left">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="t-code text-sm text-foreground">{order.orderCode}</p>
+              <DownloadTicketsPdfButton
+                endpoint={ENDPOINTS.admin.bookings.ticketsPdf(order.orderId)}
+                fallbackFilename={`tickets-${order.orderCode}.pdf`}
+              />
+            </div>
+            <OrderTicketCards order={order} />
+          </div>
+        ) : (
+          <div className="flex w-full max-w-3xl flex-col gap-2">
+            <p className="text-sm text-muted-foreground">Đang xác nhận đơn và phát vé...</p>
+            <TicketSkeleton className="w-full" />
+          </div>
+        )
+      }
+    </QueryState>
+
+    <Button onClick={onNewSale}>
+      <PlusCircle className="size-4" />
+      <span>Bán vé mới</span>
+    </Button>
+  </div>
+);

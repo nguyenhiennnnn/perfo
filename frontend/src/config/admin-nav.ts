@@ -50,7 +50,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
     items: [
       {
         to: ROUTES.admin.bookingCounter,
-        label: "Bán vé tại quầy",
+        label: "Bán hàng tại quầy",
         icon: ShoppingBag,
         roles: [Role.Admin, Role.Employee],
       },

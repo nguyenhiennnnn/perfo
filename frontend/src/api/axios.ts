@@ -267,7 +267,7 @@ export async function apiUpload<T>(
   return data;
 }
 
-export function apiPostKeepalive(url: string): void {
+export function apiPostKeepalive(url: string, body?: unknown): void {
   const { accessToken } = useAuthStore.getState();
   if (!accessToken) return;
   try {
@@ -277,8 +277,10 @@ export function apiPostKeepalive(url: string): void {
       credentials: "include",
       headers: {
         ...CSRF_HEADERS,
+        ...(body === undefined ? {} : { "Content-Type": "application/json" }),
         Authorization: `Bearer ${accessToken}`,
       },
+      body: body === undefined ? undefined : JSON.stringify(body),
     }).catch(() => undefined);
   } catch {
     // Best-effort: bỏ qua lỗi.

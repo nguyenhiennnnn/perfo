@@ -98,6 +98,7 @@ export const ENDPOINTS = {
       byId: (id: number) => `/admin/bookings/${id}`,
       ticketsPdf: (id: number) => `/admin/bookings/${id}/tickets/pdf`,
       counterHold: "/admin/bookings/counter-hold",
+      counterComboOrder: "/admin/bookings/counter-combo-order",
       counterCheckout: (id: number) => `/admin/bookings/${id}/counter-checkout`,
       counterCancel: (id: number) => `/admin/bookings/${id}/counter-cancel`,
       checkin: "/admin/bookings/checkin",

@@ -8,8 +8,6 @@ import type {
   CounterHoldResponse,
   CounterCheckoutRequest,
   CounterCheckoutResponse,
-  CheckinRequest,
-  CheckinResponse,
 } from "@/features/admin/bookings/types";
 import type { CancelOrderResponse } from "@/features/client/orders/types";
 import { ENDPOINTS } from "@/api/endpoints";
@@ -32,7 +30,4 @@ export const bookingsAdminApi = {
 
   counterCancelKeepalive: (bookingId: number) =>
     apiPostKeepalive(ENDPOINTS.admin.bookings.counterCancel(bookingId)),
-
-  checkin: (body: CheckinRequest) =>
-    apiPost<ApiResponse<CheckinResponse>>(ENDPOINTS.admin.bookings.checkin, body),
 };

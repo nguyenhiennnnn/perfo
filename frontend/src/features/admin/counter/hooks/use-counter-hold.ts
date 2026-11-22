@@ -1,14 +1,9 @@
 import { useState } from "react";
 import { toast } from "@/components/ui/toast";
 import { useRealtimeSeatMap } from "@/hooks/use-realtime-seat-map";
-import {
-  useCounterHold,
-  useCounterCancel,
-} from "@/features/admin/bookings/hooks/use-admin-booking";
-import type {
-  CounterHoldRequest,
-  CounterHoldResponse,
-} from "@/features/admin/bookings/types";
+import { CancelReason } from "@/types/enum";
+import { useCounterHoldOrder, useCounterCancelOrder } from "./use-counter-orders";
+import type { CounterHoldRequest, CounterOrderResponse } from "../types";
 import type { ShowtimeSeatItemDto } from "@/features/client/showtimes/types";
 import type { CounterLeaveCancel } from "./use-counter-leave-cancel";
 
@@ -25,56 +20,53 @@ export function useCounterHoldFlow({
   onHoldExpired,
   leave,
 }: UseCounterHoldFlowParams) {
-  const [holdResult, setHoldResult] = useState<CounterHoldResponse | null>(
-    null,
-  );
+  const [order, setOrder] = useState<CounterOrderResponse | null>(null);
 
-  const counterHold = useCounterHold();
-  const counterCancel = useCounterCancel();
+  const holdOrder = useCounterHoldOrder();
+  const cancelOrder = useCounterCancelOrder();
 
   const seatStatusMap = useRealtimeSeatMap({
     showtimeId,
     initialSeats,
-    ownOrderId: holdResult?.bookingId ?? null,
+    ownOrderId: order?.orderId ?? null,
     onHoldExpired: () => {
       toast.add({ title: "Thời gian giữ ghế đã hết hạn.", type: "warning" });
       onHoldExpired();
     },
   });
 
-  const cancelHold = async () => {
-    if (!holdResult) return true;
+  const cancelHold = async (
+    reason: CancelReason = CancelReason.Other,
+  ) => {
+    if (!order) return true;
     try {
-      await counterCancel.mutateAsync(holdResult.bookingId);
+      await cancelOrder.mutateAsync({ orderId: order.orderId, reason });
     } catch {
       return false;
     }
-    setHoldResult(null);
+    setOrder(null);
     return true;
   };
 
-  const holdSeats = async (
-    request: CounterHoldRequest,
-    onHeld: () => void,
-  ) => {
-    const res = await counterHold.mutateAsync(request);
+  const holdSeats = async (request: CounterHoldRequest, onHeld: () => void) => {
+    const res = await holdOrder.mutateAsync(request);
     if (leave.hasLeft()) {
-      await leave.cancelQuietly(res.data.bookingId);
+      await leave.cancelQuietly(res.data.orderId);
       return;
     }
-    setHoldResult(res.data);
+    setOrder(res.data);
     onHeld();
   };
 
-  const clearHold = () => setHoldResult(null);
+  const clearHold = () => setOrder(null);
 
   return {
-    holdResult,
+    order,
     seatStatusMap,
     holdSeats,
     cancelHold,
     clearHold,
-    isHolding: counterHold.isPending,
-    isCancelling: counterCancel.isPending,
+    isHolding: holdOrder.isPending,
+    isCancelling: cancelOrder.isPending,
   };
 }

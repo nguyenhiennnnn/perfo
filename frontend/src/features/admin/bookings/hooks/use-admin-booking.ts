@@ -4,7 +4,6 @@ import type {
   AdminBookingListParams,
   CounterHoldRequest,
   CounterCheckoutRequest,
-  CheckinRequest,
 } from "@/features/admin/bookings/types";
 import { bookingsAdminApi } from "../api/bookings-admin-api";
 
@@ -45,12 +44,5 @@ export function useCounterCancel() {
   return useMutation({
     meta: { invalidates: "bookingChanged" },
     mutationFn: (bookingId: number) => bookingsAdminApi.counterCancel(bookingId),
-  });
-}
-
-export function useCheckin() {
-  return useMutation({
-    meta: { invalidates: "bookingChanged" },
-    mutationFn: (body: CheckinRequest) => bookingsAdminApi.checkin(body),
   });
 }

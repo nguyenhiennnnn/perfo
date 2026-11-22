@@ -159,3 +159,6 @@ export const SETTINGS_FIELD_MAX = {
 export const SKELETON_LIST_COUNT = 3;
 export const SKELETON_ROW_COUNT = 5;
 export const SKELETON_GRID_COUNT = 6;
+
+export const COUNTER_WALK_IN_NAME = "Khách vãng lai";
+export const COUNTER_CASH_QUICK_AMOUNTS = [50_000, 100_000, 200_000, 500_000] as const;

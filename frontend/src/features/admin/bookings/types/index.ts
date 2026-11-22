@@ -118,18 +118,3 @@ export interface CounterCheckoutResponse {
   status: string;
   change: number;
 }
-
-export interface CheckinRequest {
-  qrCode: string;
-}
-
-export interface CheckinResponse {
-  ticketId: number;
-  bookingId: number;
-  seatRow: string;
-  seatNumber: number;
-  movieTitle: string;
-  roomName: string;
-  startTime: string;
-  checkedInAt: string;
-}

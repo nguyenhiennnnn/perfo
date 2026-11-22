@@ -80,18 +80,3 @@ export interface CounterOrderDetail {
   lines: CounterOrderLine[];
   transactions: CounterOrderTransaction[];
 }
-
-export interface CounterCancelRefund {
-  method: string;
-  amount: number;
-  status: string;
-}
-
-export interface CounterCancelResponse {
-  orderId: number;
-  orderCode: string;
-  status: OrderStatus;
-  totalRefunded: number;
-  refundStatus: "None" | "Refunded" | "Pending";
-  refunds: CounterCancelRefund[];
-}

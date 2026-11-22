@@ -1,5 +1,6 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/api/query-keys";
+import type { CancelReason } from "@/types/enum";
 import { ordersAdminApi } from "../api/orders-admin-api";
 import type { AdminOrderListParams, OrderDetailDto } from "../types";
 
@@ -32,5 +33,22 @@ export function useAdminOrderDetail(
         }
       : false,
     select: (res) => res.data,
+  });
+}
+
+export function useCancelOrderInline() {
+  return useMutation({
+    meta: {
+      invalidates: "bookingChanged",
+      skipErrorToast: true,
+      skipSuccessToast: true,
+    },
+    mutationFn: ({
+      orderId,
+      reason,
+    }: {
+      orderId: number;
+      reason: CancelReason;
+    }) => ordersAdminApi.cancelOrder(orderId, reason),
   });
 }

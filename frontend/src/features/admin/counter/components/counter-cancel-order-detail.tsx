@@ -1,4 +1,3 @@
-import { useRef, type ReactNode } from "react";
 import { Ban, TriangleAlert } from "lucide-react";
 import { QueryState } from "@/components/common/query-state";
 import { CardSkeleton, LineSkeleton } from "@/components/common/skeleton-shapes";
@@ -8,16 +7,10 @@ import {
 } from "@/components/common/status-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { HTTP_STATUS } from "@/config/http-status";
-import { extractApiError, getDisplayMessage } from "@/lib/error";
-import { formatCurrency, formatDateTime } from "@/lib/formatters";
-import { useAlertDialogOpen } from "@/stores/alert-dialog-store";
-import { OrderStatus, type CancelReason } from "@/types/enum";
-import {
-  useCounterCancelOrderInline,
-  useCounterOrderDetail,
-} from "../hooks/use-counter-cancel";
-import type { CounterOrderDetail } from "../types/counter-cancel";
+import { InfoRow, Section } from "@/features/admin/orders/components/order-detail-parts";
+import { OrderCancelErrorNotice } from "@/features/admin/orders/components/order-cancel-error-notice";
+import { OrderCancelResult } from "@/features/admin/orders/components/order-cancel-result";
+import { useOrderCancelFlow } from "@/features/admin/orders/hooks/use-order-cancel-flow";
 import {
   canCancelOrder,
   getCancelledByLabel,
@@ -25,9 +18,11 @@ import {
   getCheckInSummary,
   getPaidMethodAmounts,
   getPaymentMethodLabel,
-} from "../utils/cancel-order";
-import { CounterCancelReasonPicker } from "./counter-cancel-reason-picker";
-import { CounterCancelResult } from "./counter-cancel-result";
+} from "@/features/admin/orders/utils/order-cancel";
+import { formatCurrency, formatDateTime } from "@/lib/formatters";
+import { OrderStatus } from "@/types/enum";
+import { useCounterOrderDetail } from "../hooks/use-counter-cancel";
+import type { CounterOrderDetail } from "../types/counter-cancel";
 
 const DetailSkeleton = () => (
   <div aria-busy="true" className="flex flex-col gap-4 bg-card p-4">
@@ -36,46 +31,6 @@ const DetailSkeleton = () => (
     <LineSkeleton className="h-5 w-2/3" />
     <CardSkeleton className="h-28" />
     <CardSkeleton className="h-20" />
-  </div>
-);
-
-const Section = ({ title, children }: { title: string; children: ReactNode }) => (
-  <section className="flex flex-col gap-2">
-    <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
-    {children}
-  </section>
-);
-
-const InfoRow = ({ label, children }: { label: string; children: ReactNode }) => (
-  <div className="flex items-start justify-between gap-3 text-sm">
-    <dt className="shrink-0 text-muted-foreground">{label}</dt>
-    <dd className="min-w-0 text-right font-medium wrap-break-word text-foreground">
-      {children}
-    </dd>
-  </div>
-);
-
-const getErrorTitle = (error: unknown) => {
-  const { statusCode } = extractApiError(error);
-  if (statusCode === HTTP_STATUS.conflict)
-    return "Đơn đang được xử lý hoặc đã bị hủy";
-  if (statusCode === HTTP_STATUS.notFound) return "Không tìm thấy đơn hàng";
-  return "Không thể hủy đơn";
-};
-
-const CancelErrorNotice = ({ error }: { error: unknown }) => (
-  <div
-    role="alert"
-    data-testid="counter-cancel-error"
-    className="flex items-start gap-3 cut-sm bg-destructive/10 p-3 text-destructive"
-  >
-    <TriangleAlert className="mt-0.5 size-4 shrink-0" />
-    <div className="min-w-0">
-      <p className="text-sm font-semibold">{getErrorTitle(error)}</p>
-      <p className="mt-0.5 text-sm wrap-break-word">
-        {getDisplayMessage(error, { preferServerMessage: true })}
-      </p>
-    </div>
   </div>
 );
 
@@ -207,39 +162,7 @@ export const CounterCancelOrderDetail = ({
   orderId,
 }: CounterCancelOrderDetailProps) => {
   const detail = useCounterOrderDetail(orderId);
-  const cancel = useCounterCancelOrderInline();
-  const openAlertDialog = useAlertDialogOpen();
-  const reasonRef = useRef<CancelReason | null>(null);
-
-  const handleCancel = (order: CounterOrderDetail) => {
-    reasonRef.current = null;
-    cancel.reset();
-    openAlertDialog({
-      title: `Hủy đơn ${order.orderCode}?`,
-      description:
-        "Thao tác không thể hoàn tác. Số tiền hoàn do hệ thống tính theo chính sách của rạp.",
-      content: (
-        <CounterCancelReasonPicker
-          onReasonChange={(reason) => {
-            reasonRef.current = reason;
-          }}
-        />
-      ),
-      confirmDisabled: true,
-      confirmText: "Xác nhận hủy đơn",
-      cancelText: "Giữ lại đơn",
-      variant: "destructive",
-      onConfirm: async () => {
-        const reason = reasonRef.current;
-        if (!reason) return;
-        try {
-          await cancel.mutateAsync({ orderId: order.orderId, reason });
-        } catch {
-          void detail.refetch();
-        }
-      },
-    });
-  };
+  const { cancel, start } = useOrderCancelFlow();
 
   return (
     <QueryState
@@ -271,8 +194,8 @@ export const CounterCancelOrderDetail = ({
               </div>
             </div>
 
-            {cancel.data && <CounterCancelResult result={cancel.data.data} />}
-            {cancel.error && <CancelErrorNotice error={cancel.error} />}
+            {cancel.data && <OrderCancelResult result={cancel.data.data} />}
+            {cancel.error && <OrderCancelErrorNotice error={cancel.error} />}
 
             <Section title="Khách hàng">
               <dl className="flex flex-col gap-1.5">
@@ -322,7 +245,7 @@ export const CounterCancelOrderDetail = ({
                 variant="destructive"
                 className="w-full sm:w-auto sm:self-end"
                 disabled={cancel.isPending}
-                onClick={() => handleCancel(order)}
+                onClick={() => start(order, () => void detail.refetch())}
               >
                 <Ban className="size-4" />
                 <span>Hủy đơn</span>

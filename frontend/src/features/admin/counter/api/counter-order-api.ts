@@ -2,7 +2,7 @@ import { apiPost, apiPostKeepalive } from "@/api/axios";
 import { ENDPOINTS } from "@/api/endpoints";
 import type { ApiResponse } from "@/types/api";
 import type { CancelReason } from "@/types/enum";
-import type { CounterCancelResponse } from "../types/counter-cancel";
+import type { CancelOrderResponse } from "@/features/admin/orders/types";
 import type {
   CounterCancelRequest,
   CounterCheckoutRequest,
@@ -25,7 +25,7 @@ export const counterOrderApi = {
     ),
 
   cancel: (orderId: number, reason: CancelReason) =>
-    apiPost<ApiResponse<CounterCancelResponse>>(
+    apiPost<ApiResponse<CancelOrderResponse>>(
       ENDPOINTS.admin.bookings.counterCancel(orderId),
       { reason } satisfies CounterCancelRequest,
     ),

@@ -224,6 +224,7 @@ public static class DbInitializer
         await SeedTestAccountsAsync(db, logger, cancellationToken);
         await SeedVerificationTokensAsync(db, logger, cancellationToken);
         await SeedExtraRoomsAsync(db, logger, cancellationToken);
+        await BackfillReferralCodesAsync(db, logger, cancellationToken);
 
         var scenariosPending =
             seedDemoScenarios
@@ -240,6 +241,40 @@ public static class DbInitializer
         }
 
         await SeedScenariosAsync(db, logger, cancellationToken);
+        await BackfillReferralCodesAsync(db, logger, cancellationToken);
+    }
+
+    private static async Task BackfillReferralCodesAsync(
+        AppDbContext db,
+        ILogger logger,
+        CancellationToken cancellationToken
+    )
+    {
+        var profiles = await db
+            .CustomerProfiles.Where(p => p.ReferralCode == null)
+            .ToListAsync(cancellationToken);
+        if (profiles.Count == 0)
+            return;
+
+        var used = (
+            await db
+                .CustomerProfiles.Where(p => p.ReferralCode != null)
+                .Select(p => p.ReferralCode!)
+                .ToListAsync(cancellationToken)
+        ).ToHashSet();
+
+        foreach (var profile in profiles)
+        {
+            string code;
+            do
+            {
+                code = Cinema.Application.Utils.ReferralCodeGenerator.Generate();
+            } while (!used.Add(code));
+            profile.ReferralCode = code;
+        }
+
+        await db.SaveChangesAsync(cancellationToken);
+        logger.LogInformation("Backfilled referral codes for {Count} profiles", profiles.Count);
     }
 
     private static async Task SeedScenariosAsync(

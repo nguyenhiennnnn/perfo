@@ -1446,6 +1446,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Invalid_TokenExpiredOrUsed" xml:space="preserve">
     <value>Token hết hạn, đã dùng hoặc không hợp lệ.</value>
   </data>
+  <data name="Invalid_UnsubscribeToken" xml:space="preserve">
+    <value>Liên kết hủy đăng ký không hợp lệ.</value>
+  </data>
   <data name="Invalid_UploadFileMissing" xml:space="preserve">
     <value>Thiếu file upload.</value>
   </data>
@@ -2036,6 +2039,15 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Success_PositionUpdated" xml:space="preserve">
     <value>Đã cập nhật chức vụ.</value>
+  </data>
+  <data name="Success_MarketingUnsubscribed" xml:space="preserve">
+    <value>Bạn đã hủy nhận email và thông báo tiếp thị.</value>
+  </data>
+  <data name="Success_PreferencesUpdated" xml:space="preserve">
+    <value>Đã cập nhật lựa chọn nhận thông tin.</value>
+  </data>
+  <data name="Rule_ReferralCodeGenerationFailed" xml:space="preserve">
+    <value>Không thể tạo mã giới thiệu, vui lòng thử lại.</value>
   </data>
   <data name="Success_ProfileUpdated" xml:space="preserve">
     <value>Cập nhật thông tin thành công.</value>

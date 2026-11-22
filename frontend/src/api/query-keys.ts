@@ -50,6 +50,7 @@ export const queryKeys = {
   users: {
     me: () => ["users", "me"] as const,
     myReviews: (params?: object) => ["users", "me", "reviews", params] as const,
+    preferences: () => ["users", "me", "preferences"] as const,
   },
 
   ai: {

@@ -1,13 +1,14 @@
 import { VALIDATION_MESSAGES } from "@/config/error-messages";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router";
 import { CheckCircle2 } from "lucide-react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { FieldGroup } from "@/components/ui/field";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { FormInputField } from "@/components/common/form/form-input-field";
 import { FormErrorAlert } from "@/components/common/form/form-error-alert";
 import { SubmitButton } from "@/components/common/form/submit-button";
@@ -36,6 +37,7 @@ const registerSchema = z
       ),
     password: strongPasswordSchema,
     confirmPassword: z.string().min(1, VALIDATION_MESSAGES.confirmPasswordRequired),
+    marketingOptIn: z.boolean(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: VALIDATION_MESSAGES.passwordMismatch,
@@ -57,6 +59,7 @@ export const RegisterForm = () => {
       phone: "",
       password: "",
       confirmPassword: "",
+      marketingOptIn: false,
     },
   });
 
@@ -68,6 +71,7 @@ export const RegisterForm = () => {
       email: data.email,
       password: data.password,
       phone: data.phone || null,
+      marketingOptIn: data.marketingOptIn,
     };
     registerUser(payload, {
       onSuccess: () => setSubmittedEmail(data.email),
@@ -153,6 +157,28 @@ export const RegisterForm = () => {
           type="password"
           autoComplete="new-password"
           placeholder={PASSWORD_PLACEHOLDER}
+        />
+
+        <Controller
+          name="marketingOptIn"
+          control={form.control}
+          render={({ field }) => (
+            <Field orientation="horizontal" className="items-start">
+              <Checkbox
+                id="register-marketing-opt-in"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+              <FieldContent>
+                <FieldLabel htmlFor="register-marketing-opt-in">
+                  Nhận email và thông báo tiếp thị
+                </FieldLabel>
+                <FieldDescription>
+                  Ưu đãi, khuyến mãi và tin phim mới. Bạn có thể tắt bất cứ lúc nào.
+                </FieldDescription>
+              </FieldContent>
+            </Field>
+          )}
         />
       </FieldGroup>
 

@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,6 +14,14 @@ public class CustomerProfileConfiguration : IEntityTypeConfiguration<CustomerPro
         builder.Property(x => x.UserId).ValueGeneratedNever();
         builder.Property(x => x.Points).HasDefaultValue(0);
         builder.Property(x => x.TotalSpent).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+        builder.Property(x => x.MarketingOptIn).HasDefaultValue(false);
+        builder.Property(x => x.PersonalizedRecommendations).HasDefaultValue(true);
+        builder.Property(x => x.ReminderAndReviewInvites).HasDefaultValue(true);
+        builder.Property(x => x.ReferralCode).HasMaxLength(FieldLengths.ReferralCode);
+        builder
+            .HasIndex(x => x.ReferralCode)
+            .IsUnique()
+            .HasDatabaseName("UX_CustomerProfiles_ReferralCode");
 
         builder
             .HasOne(x => x.User)

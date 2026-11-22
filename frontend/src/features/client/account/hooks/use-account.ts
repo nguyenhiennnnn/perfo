@@ -1,8 +1,13 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import { queryClient } from "@/api/query-client";
 import { accountApi } from "../api/account-api";
 import { queryKeys } from "@/api/query-keys";
 import { useAuthStore } from "@/stores/auth-store";
-import type { MyReviewListParams, UpdateProfileRequest } from "@/features/client/account/types";
+import type {
+  MyReviewListParams,
+  UpdateCommunicationPreferencesRequest,
+  UpdateProfileRequest,
+} from "@/features/client/account/types";
 import type { ChangePasswordRequest } from "@/features/auth/types";
 
 export function useMyProfile() {
@@ -47,5 +52,30 @@ export function useChangePassword(options?: { skipSuccessToast?: boolean }) {
     meta: { invalidates: "passwordChanged", skipSuccessToast: options?.skipSuccessToast },
     mutationFn: (body: ChangePasswordRequest) =>
       accountApi.changePassword(body),
+  });
+}
+
+export function useMyPreferences() {
+  return useQuery({
+    queryKey: queryKeys.users.preferences(),
+    queryFn: () => accountApi.getMyPreferences(),
+    select: (res) => res.data,
+  });
+}
+
+export function useUpdateMyPreferences() {
+  return useMutation({
+    mutationFn: (body: UpdateCommunicationPreferencesRequest) =>
+      accountApi.updateMyPreferences(body),
+    onSuccess: (res) => {
+      queryClient.setQueryData(queryKeys.users.preferences(), res);
+    },
+  });
+}
+
+export function useUnsubscribeMarketing() {
+  return useMutation({
+    meta: { skipSuccessToast: true, skipErrorToast: true },
+    mutationFn: (token: string) => accountApi.unsubscribeMarketing(token),
   });
 }

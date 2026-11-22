@@ -1,12 +1,19 @@
 namespace Cinema.Application.DTOs.Auth;
 
-public record RegisterRequest(string FullName, string Email, string Password, string? Phone);
+public record RegisterRequest(
+    string FullName,
+    string Email,
+    string Password,
+    string? Phone,
+    bool MarketingOptIn = false
+);
 
 public record RegisterResponse(int UserId, string Email, string Message);
 
 public record MessageResponse(string Message);
 
 public record ConfirmEmailRequest(string Token);
+
 
 public record LoginRequest(string Email, string Password);
 

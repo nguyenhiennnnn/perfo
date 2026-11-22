@@ -11,7 +11,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Services.Users;
 
-public class UserProfileService(IAppDbContext db) : IUserProfileService
+public class UserProfileService(IAppDbContext db, IReferralCodeService referralCodeService)
+    : IUserProfileService
 {
     public async Task<UserProfileDto> GetMyProfileAsync(
         int userId,
@@ -65,6 +66,7 @@ public class UserProfileService(IAppDbContext db) : IUserProfileService
             UserId = userId,
             Points = 0,
             TotalSpent = 0,
+            ReferralCode = await referralCodeService.GenerateUniqueAsync(cancellationToken),
         };
         db.CustomerProfiles.Add(profile);
         await db.SaveChangesAsync(cancellationToken);

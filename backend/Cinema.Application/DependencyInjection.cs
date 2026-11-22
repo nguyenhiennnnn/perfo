@@ -95,6 +95,9 @@ public static class DependencyInjection
         services.AddScoped<IReviewService, ReviewService>();
         services.AddScoped<ISettingsService, SettingsService>();
         services.AddScoped<IUserProfileService, UserProfileService>();
+        services.AddScoped<IReferralCodeService, ReferralCodeService>();
+        services.AddScoped<IUnsubscribeTokenService, UnsubscribeTokenService>();
+        services.AddScoped<ICommunicationPreferenceService, CommunicationPreferenceService>();
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IReportExportService, ReportExportService>();
         services.AddScoped<IDashboardService, DashboardService>();

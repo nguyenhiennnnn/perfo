@@ -5,6 +5,7 @@ export interface RegisterRequest {
   email: string;
   password: string;
   phone?: string | null;
+  marketingOptIn: boolean;
 }
 
 export interface RegisterResponse {

@@ -6,6 +6,7 @@ export const ROUTES = {
   notFound: "/404",
   schedule: "/schedule",
   membership: "/membership",
+  unsubscribe: "/unsubscribe",
   policy: (slug: string) => `/policies/${slug}`,
   movies: {
     list: "/movies",

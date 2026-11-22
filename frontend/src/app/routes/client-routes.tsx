@@ -24,6 +24,7 @@ const RegisterPage = lazyRoute(() => import("@/features/auth/pages/register-page
 const ConfirmEmailPage = lazyRoute(() => import("@/features/auth/pages/confirm-email-page"));
 const ForgotPasswordPage = lazyRoute(() => import("@/features/auth/pages/forgot-password-page"));
 const ResetPasswordPage = lazyRoute(() => import("@/features/auth/pages/reset-password-page"));
+const UnsubscribePage = lazyRoute(() => import("@/features/client/account/pages/unsubscribe-page"));
 const MembershipPage = lazyRoute(() => import("@/features/client/membership/pages/membership-page"));
 const PolicyPage = lazyRoute(() => import("@/features/client/policies/pages/policy-page"));
 
@@ -57,6 +58,10 @@ export const clientRoutes: RouteObject[] = [
         ],
       },
     ],
+  },
+  {
+    element: <AuthLayout />,
+    children: [{ path: ROUTES.unsubscribe, lazy: UnsubscribePage }],
   },
   {
     path: ROUTES.auth.root,

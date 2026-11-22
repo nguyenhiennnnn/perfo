@@ -18,7 +18,8 @@ namespace Cinema.Api.Controllers.Client;
 public class UsersController(
     IUserProfileService userProfileService,
     IPasswordService passwordService,
-    IReviewService reviewService
+    IReviewService reviewService,
+    ICommunicationPreferenceService preferenceService
 ) : AppControllerBase
 {
     [HttpGet("me")]
@@ -34,6 +35,17 @@ public class UsersController(
         Ok(
             await userProfileService.UpdateMyProfileAsync(CurrentUserId, request, cancellationToken)
         );
+
+    [HttpGet("me/preferences")]
+    public async Task<IActionResult> GetMyPreferences(CancellationToken cancellationToken) =>
+        Ok(await preferenceService.GetAsync(CurrentUserId, cancellationToken));
+
+    [HttpPut("me/preferences")]
+    [SuccessMessage(nameof(Messages.Success_PreferencesUpdated))]
+    public async Task<IActionResult> UpdateMyPreferences(
+        [FromBody] UpdateCommunicationPreferencesRequest request,
+        CancellationToken cancellationToken
+    ) => Ok(await preferenceService.UpdateAsync(CurrentUserId, request, cancellationToken));
 
     [HttpGet("me/reviews")]
     public async Task<ActionResult<CursorPageResult<UserMyReviewDto>>> GetMyReviews(

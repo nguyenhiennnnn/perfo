@@ -19,6 +19,7 @@ public class RegistrationService(
     IPasswordHasher<User> passwordHasher,
     IOptions<EmailOptions> emailOptions,
     IVerificationTokenSender verificationTokenSender,
+    IReferralCodeService referralCodeService,
     ILogger<RegistrationService> logger
 ) : IRegistrationService
 {
@@ -59,6 +60,8 @@ public class RegistrationService(
             User = user,
             Points = 0,
             TotalSpent = 0,
+            MarketingOptIn = request.MarketingOptIn,
+            ReferralCode = await referralCodeService.GenerateUniqueAsync(cancellationToken),
         };
         db.CustomerProfiles.Add(customerProfile);
 

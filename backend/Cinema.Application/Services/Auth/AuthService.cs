@@ -18,6 +18,7 @@ public class AuthService(
     IAppDbContext db,
     ITokenService tokenService,
     IGoogleAuthService googleAuthService,
+    IReferralCodeService referralCodeService,
     IPasswordHasher<User> passwordHasher,
     IOptions<JwtOptions> jwtOptions,
     ILogger<AuthService> logger
@@ -159,6 +160,9 @@ public class AuthService(
                     User = user,
                     Points = 0,
                     TotalSpent = 0,
+                    ReferralCode = await referralCodeService.GenerateUniqueAsync(
+                        cancellationToken
+                    ),
                 }
             );
 

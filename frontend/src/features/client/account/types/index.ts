@@ -52,3 +52,15 @@ export interface MyReviewListParams {
   cursor?: string;
   limit?: number;
 }
+
+export interface CommunicationPreferencesDto {
+  marketingOptIn: boolean;
+  personalizedRecommendations: boolean;
+  reminderAndReviewInvites: boolean;
+  referralCode?: string | null;
+}
+
+export type UpdateCommunicationPreferencesRequest = Omit<
+  CommunicationPreferencesDto,
+  "referralCode"
+>;

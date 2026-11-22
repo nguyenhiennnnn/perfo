@@ -20,6 +20,10 @@ export const ENDPOINTS = {
     me: "/users/me",
     myReviews: "/users/me/reviews",
     changePassword: "/users/me/change-password",
+    preferences: "/users/me/preferences",
+  },
+  emailPreferences: {
+    unsubscribe: "/email-preferences/unsubscribe",
   },
   ai: {
     chat: "/ai/chat",

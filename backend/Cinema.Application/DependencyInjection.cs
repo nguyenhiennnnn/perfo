@@ -98,7 +98,9 @@ public static class DependencyInjection
         services.AddScoped<IBookingTicketPdfService, BookingTicketPdfService>();
         services.AddScoped<IOrderHoldService, OrderHoldService>();
         services.AddScoped<IOrderCheckoutService, OrderCheckoutService>();
-        services.AddScoped<ICounterBookingService, CounterBookingService>();
+        services.AddScoped<ICounterOrderService, CounterOrderService>();
+        services.AddScoped<ICounterPaymentService, CounterPaymentService>();
+        services.AddScoped<ITicketCheckInService, TicketCheckInService>();
         services.AddScoped<LoyaltyExpiryService>();
         services.AddScoped<IComboService, ComboService>();
         services.AddScoped<IPaymentLedgerService, PaymentLedgerService>();

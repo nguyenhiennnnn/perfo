@@ -3,7 +3,7 @@ using Cinema.Domain.Enums;
 
 namespace Cinema.Application.Interfaces;
 
-public record OrderHoldPolicyContext(int ShowtimeId, int HolderUserId, int? CreatedByEmployeeId);
+public record OrderHoldPolicyContext(int? ShowtimeId, int HolderUserId, int? CreatedByEmployeeId);
 
 public interface IOrderHoldPolicy
 {

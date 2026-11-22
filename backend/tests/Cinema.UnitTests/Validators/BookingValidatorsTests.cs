@@ -1,5 +1,7 @@
 using Cinema.Application.DTOs.Bookings;
+using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Validators.Bookings;
+using Cinema.Application.Validators.Orders;
 using FluentValidation.TestHelper;
 
 namespace Cinema.UnitTests.Validators;
@@ -159,35 +161,6 @@ public class CheckoutRequestValidatorTests
         _validator
             .TestValidate(new CheckoutRequest(method))
             .ShouldHaveValidationErrorFor(x => x.PaymentMethod);
-    }
-}
-
-public class CounterCheckoutRequestValidatorTests
-{
-    private readonly CounterCheckoutRequestValidator _validator = new();
-
-    [Fact]
-    public void ZeroAmountReceived_FailsValidation()
-    {
-        _validator
-            .TestValidate(new CounterCheckoutRequest(0m))
-            .ShouldHaveValidationErrorFor(x => x.AmountReceived);
-    }
-
-    [Fact]
-    public void NegativeAmountReceived_FailsValidation()
-    {
-        _validator
-            .TestValidate(new CounterCheckoutRequest(-1000m))
-            .ShouldHaveValidationErrorFor(x => x.AmountReceived);
-    }
-
-    [Fact]
-    public void PositiveAmountReceived_PassesValidation()
-    {
-        _validator
-            .TestValidate(new CounterCheckoutRequest(100_000m))
-            .ShouldNotHaveAnyValidationErrors();
     }
 }
 

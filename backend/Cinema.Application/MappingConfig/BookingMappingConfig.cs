@@ -43,12 +43,6 @@ public class BookingMappingConfig : IRegister
             .NewConfig<Booking, HoldBookingResponse>()
             .Map(dest => dest.Status, _ => BookingStatus.Pending.ToDtoStatus());
 
-        config
-            .NewConfig<Booking, CounterHoldResponse>()
-            .Map(dest => dest.Status, _ => BookingStatus.Pending.ToDtoStatus())
-            .Map(dest => dest.Channel, _ => "Counter")
-            .Map(dest => dest.CreatedByEmployeeId, src => src.CreatedByEmployeeId);
-
         // ── Seat DTOs ─────────────────────────────────────────────────────────
         config
             .NewConfig<ShowtimeSeat, BookingSeatDto>()
@@ -84,16 +78,5 @@ public class BookingMappingConfig : IRegister
                 dest => dest.QrCodeImage,
                 src => Utils.QrCodeHelper.GenerateDataUri(src.QrCode ?? string.Empty)
             );
-
-        config
-            .NewConfig<BookingTicket, CheckinResponse>()
-            .Map(dest => dest.TicketId, src => src.TicketId)
-            .Map(dest => dest.BookingId, src => src.BookingId)
-            .Map(dest => dest.SeatRow, src => src.ShowtimeSeat.Seat.SeatRow)
-            .Map(dest => dest.SeatNumber, src => src.ShowtimeSeat.Seat.SeatNumber)
-            .Map(dest => dest.MovieTitle, src => src.ShowtimeSeat.Showtime.Movie.Title)
-            .Map(dest => dest.RoomName, src => src.ShowtimeSeat.Showtime.Room.RoomName)
-            .Map(dest => dest.StartTime, src => src.ShowtimeSeat.Showtime.StartTime)
-            .Map(dest => dest.CheckedInAt, src => src.CheckedInAt!.Value);
     }
 }

@@ -16,7 +16,7 @@ public class PaymentTransactionConfiguration : IEntityTypeConfiguration<PaymentT
                 t.HasCheckConstraint("CK_PaymentTransactions_Type", "\"Type\" IN ('Charge','Refund')");
                 t.HasCheckConstraint(
                     "CK_PaymentTransactions_Method",
-                    "\"Method\" IN ('VNPay','Momo','Cash','Stripe','GiftCard','BankTransfer')"
+                    "\"Method\" IN ('VNPay','Momo','Cash','Stripe','GiftCard','BankTransfer','Card')"
                 );
                 t.HasCheckConstraint(
                     "CK_PaymentTransactions_Status",

@@ -39,6 +39,7 @@ public static class EnumConverters
             PaymentMethod.Stripe => PaymentMethodNames.Stripe,
             PaymentMethod.GiftCard => PaymentMethodNames.GiftCard,
             PaymentMethod.BankTransfer => PaymentMethodNames.BankTransfer,
+            PaymentMethod.Card => PaymentMethodNames.Card,
             _ => PaymentMethodNames.Cash,
         };
 

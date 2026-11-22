@@ -19,7 +19,8 @@ QUY TẮC CHUNG CHO MỌI TASK
 
 - Nguồn nghiệp vụ là NANG_CAP_BUSINESS_PERFO.md. Đọc phần 3 (quy ước chung) và hạng mục của task trước khi code. Nếu prompt lệch tài liệu thì theo tài liệu và nêu chỗ lệch ở cuối câu trả lời.
 - Chỉ làm đúng phạm vi task. Không làm trước phần của task sau; chỉ chừa điểm mở rộng tối thiểu khi prompt nêu rõ.
-- Không build, không chạy lệnh, không viết test (backend lẫn frontend), không viết comment trong code, xóa code thừa.
+- Không build, không chạy lệnh, không viết comment trong code, xóa code thừa.
+- Không làm và không sửa phần testing: không viết test mới (backend lẫn frontend, gồm unit, integration, e2e, loadtest), không sửa, không xóa project hay file test hiện có (thư mục tests, e2e, loadtest và các file test khác), kể cả khi test cũ không còn khớp với code mới. Chỉ nêu ở cuối câu trả lời những test có thể bị ảnh hưởng.
 - Bám convention hiện có: Cinema.Api / Cinema.Application / Cinema.Infrastructure / Cinema.Shared; truy cập dữ liệu qua IAppDbContext; service tách theo trách nhiệm nhỏ, logic dùng chung đặt ở lớp static hoặc service riêng; không đổi route, DTO, hành vi hiện có nếu task không yêu cầu.
 - Mọi chuỗi người dùng nhìn thấy (lỗi, email, thông báo) lưu trong Messages.resx và cập nhật Messages.Designer.cs viết tay; không hard-code tiếng Việt trong code.
 - Thời gian: dùng VietnamTime và Brand:TimeZoneId, cột timestamp without time zone. "Theo ngày" luôn là ngày kinh doanh theo mục 3.1.
@@ -30,7 +31,7 @@ QUY TẮC CHUNG CHO MỌI TASK
 - Tham số cấu hình mới của task thêm vào cài đặt rạp đúng theo Phụ lục của tài liệu.
 - Frontend: React 19 + TypeScript, theo skill cinema-design-system (semantic token, cn, component ở @/components/ui, PageHeader, data-table, useDialogStore / useAlertDialogStore / useSheetStore, TanStack Query, formatter tiền và ngày ở @/lib/formatters). Giao diện tiếng Việt, responsive (màn hình khách và quầy dùng được trên điện thoại), có skeleton và empty state, không hard-code màu.
 - Thay đổi schema: cập nhật entity và cấu hình EF; không chạy lệnh. Không chuyển đổi dữ liệu cũ.
-- Đầu ra: chỉ xuất các file mới hoặc thay đổi .zip theo cấu trúc thư mục project. Cuối câu trả lời liệt kê ngắn việc thủ công (package, lệnh migration, appsettings, seed), có thể điều chỉnh project gốc nếu thấy vướng khi thực hiện.
+- Đầu ra: chỉ xuất các file mới hoặc thay đổi .zip theo cấu trúc thư mục project. Cuối câu trả lời liệt kê ngắn việc thủ công (package, lệnh migration, appsettings, seed), có thể điều chỉnh project gốc nếu thấy vướng khi thực hiện, không cần tạo các file migration hay các file có thể tự generate.
 ```
 
 ---

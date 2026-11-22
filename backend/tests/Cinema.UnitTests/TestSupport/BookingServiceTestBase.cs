@@ -124,17 +124,6 @@ public abstract class BookingServiceTestBase : IDisposable
         );
     }
 
-    protected CounterBookingService CreateCounterSut()
-    {
-        PrepareContext();
-        return new(
-            Db,
-            CreateHoldSut(),
-            CreateFulfillment(),
-            NullLogger<CounterBookingService>.Instance
-        );
-    }
-
     protected BookingFulfillmentService CreateFulfillmentSut()
     {
         PrepareContext();

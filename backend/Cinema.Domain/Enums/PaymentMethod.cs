@@ -8,4 +8,5 @@ public enum PaymentMethod
     Stripe,
     GiftCard,
     BankTransfer,
+    Card,
 }

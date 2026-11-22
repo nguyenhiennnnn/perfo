@@ -23,6 +23,16 @@ public interface IOrderHoldService
         string? customerPhone,
         CancellationToken cancellationToken
     );
+    Task<Order> CreateComboHoldOrderAsync(
+        List<ComboSelectionRequest> comboSelections,
+        int holderUserId,
+        SalesChannel channel,
+        int? orderUserId,
+        int? createdByEmployeeId,
+        string customerName,
+        string? customerPhone,
+        CancellationToken cancellationToken
+    );
     Task EnsureWithinBookingLimitsAsync(
         int seatCount,
         List<ComboSelectionRequest>? combos,

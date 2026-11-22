@@ -1733,9 +1733,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_BookingNotPendingOrExpired" xml:space="preserve">
     <value>Booking không ở trạng thái Pending hoặc đã hết hạn.</value>
   </data>
-  <data name="Rule_BookingNotPendingOrHoldExpired" xml:space="preserve">
-    <value>Booking không ở trạng thái Pending hoặc đã hết hạn giữ ghế.</value>
-  </data>
   <data name="Rule_BulkCreateBatchTooLarge" xml:space="preserve">
     <value>Tối đa {0} suất chiếu mỗi lần tạo hàng loạt. Hãy thu hẹp khoảng ngày.</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Rule_BulkCreateBatchTooLarge, ...)</comment>
@@ -1781,9 +1778,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_CloudinaryUploadFailed" xml:space="preserve">
     <value>Upload Cloudinary thất bại: {0}</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Rule_CloudinaryUploadFailed, ...)</comment>
-  </data>
-  <data name="Rule_CounterPaymentOnlyForCounterBooking" xml:space="preserve">
-    <value>Chỉ có thể thu tiền tại quầy cho booking tạo tại quầy.</value>
   </data>
   <data name="Rule_CounterPendingLimit" xml:space="preserve">
     <value>Bạn đang giữ tối đa 5 đơn bán tại quầy chưa thanh toán. Hãy thanh toán hoặc huỷ bớt đơn trước khi giữ ghế mới.</value>
@@ -1942,9 +1936,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Rule_StripeSecretKeyMissing" xml:space="preserve">
     <value>Stripe SecretKey chưa được cấu hình.</value>
-  </data>
-  <data name="Rule_TicketNoLongerValid" xml:space="preserve">
-    <value>Vé không còn hiệu lực (booking đã hủy hoặc chưa thanh toán).</value>
   </data>
   <data name="Rule_TicketPdfNotPaid" xml:space="preserve">
     <value>Chỉ có thể tải vé PDF của booking đã thanh toán.</value>
@@ -2607,5 +2598,53 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Success_CashRefundConfirmed" xml:space="preserve">
     <value>Đã xác nhận hoàn tiền mặt.</value>
+  </data>
+  <data name="Email_RefundMethodCard" xml:space="preserve">
+    <value>Hoàn lại tại quầy qua thẻ</value>
+  </data>
+  <data name="Validation_Combos_AtLeastOne" xml:space="preserve">
+    <value>Phải chọn ít nhất một combo.</value>
+  </data>
+  <data name="Validation_Combos_Duplicated" xml:space="preserve">
+    <value>Danh sách combo không được trùng comboId.</value>
+  </data>
+  <data name="Validation_Amount_Positive" xml:space="preserve">
+    <value>Số tiền thanh toán phải lớn hơn 0.</value>
+  </data>
+  <data name="Validation_AmountReceived_RequiredForCash" xml:space="preserve">
+    <value>Thanh toán tiền mặt phải nhập số tiền nhận.</value>
+  </data>
+  <data name="Validation_AmountReceived_CashOnly" xml:space="preserve">
+    <value>Số tiền nhận chỉ áp dụng cho thanh toán tiền mặt.</value>
+  </data>
+  <data name="Validation_CounterPaymentMethod_Invalid" xml:space="preserve">
+    <value>Phương thức thanh toán tại quầy chỉ gồm Cash hoặc Card.</value>
+  </data>
+  <data name="Rule_CounterPaymentOnlyForCounterOrder" xml:space="preserve">
+    <value>Chỉ có thể thu tiền tại quầy cho đơn tạo tại quầy.</value>
+  </data>
+  <data name="Rule_CounterOrderNotPendingOrExpired" xml:space="preserve">
+    <value>Đơn không ở trạng thái chờ thanh toán hoặc đã hết thời gian giữ.</value>
+  </data>
+  <data name="Rule_CounterOrderAlreadyPaid" xml:space="preserve">
+    <value>Đơn đã được thanh toán đủ.</value>
+  </data>
+  <data name="Rule_CounterPaymentAmountInvalid" xml:space="preserve">
+    <value>Số tiền thanh toán phải lớn hơn 0 và không vượt quá số tiền còn thiếu của đơn.</value>
+  </data>
+  <data name="Rule_CounterOrderNotPayable" xml:space="preserve">
+    <value>Đơn không còn giữ được chỗ nên không thể xác nhận. Các khoản đã thu tại quầy đã được ghi nhận hoàn lại, vui lòng trả lại tiền cho khách.</value>
+  </data>
+  <data name="Rule_CheckInOrderCancelled" xml:space="preserve">
+    <value>Vé không hợp lệ: đơn hàng đã bị hủy.</value>
+  </data>
+  <data name="Rule_CheckInOrderExpired" xml:space="preserve">
+    <value>Vé không hợp lệ: đơn hàng đã hết hạn.</value>
+  </data>
+  <data name="Rule_CheckInOrderNotPaid" xml:space="preserve">
+    <value>Vé không hợp lệ: đơn hàng chưa được thanh toán đủ.</value>
+  </data>
+  <data name="Rule_CheckInTicketRefunded" xml:space="preserve">
+    <value>Vé không hợp lệ: vé đã được hoàn tiền.</value>
   </data>
 </root>

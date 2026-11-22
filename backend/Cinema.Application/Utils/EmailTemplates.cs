@@ -389,6 +389,7 @@ public static class EmailTemplates
             PaymentMethod.Cash => Messages.Email_RefundMethodCash,
             PaymentMethod.GiftCard => Messages.Email_RefundMethodGiftCard,
             PaymentMethod.BankTransfer => Messages.Email_RefundMethodBankTransfer,
+            PaymentMethod.Card => Messages.Email_RefundMethodCard,
             _ => string.Format(Messages.Email_RefundMethodGateway, method.ToDtoMethod()),
         };
 

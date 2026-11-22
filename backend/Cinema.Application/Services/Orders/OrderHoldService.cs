@@ -240,6 +240,99 @@ public class OrderHoldService(
         return order;
     }
 
+    public async Task<Order> CreateComboHoldOrderAsync(
+        List<ComboSelectionRequest> comboSelections,
+        int holderUserId,
+        SalesChannel channel,
+        int? orderUserId,
+        int? createdByEmployeeId,
+        string customerName,
+        string? customerPhone,
+        CancellationToken cancellationToken
+    )
+    {
+        if (comboSelections.Count == 0)
+            throw new ValidationAppException(
+                Messages.Validation_Combos_AtLeastOne,
+                new Dictionary<string, string[]>
+                {
+                    ["combos"] = [Messages.Validation_Combos_AtLeastOne],
+                }
+            );
+
+        await EnsureWithinBookingLimitsAsync(0, comboSelections, cancellationToken);
+
+        if (string.IsNullOrWhiteSpace(customerName))
+        {
+            throw new ValidationAppException(
+                Messages.Invalid_CustomerNameMissing,
+                new Dictionary<string, string[]>
+                {
+                    ["customerName"] = [Messages.Invalid_CustomerNameRequired],
+                }
+            );
+        }
+
+        var holdSettings = await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken);
+        var policy = holdPolicies.First(p => p.Channel == channel);
+        await policy.EnsureNoConflictingPendingAsync(
+            new OrderHoldPolicyContext(null, holderUserId, createdByEmployeeId),
+            cancellationToken
+        );
+
+        var comboSelectionList = await LoadComboSelectionsAsync(comboSelections, cancellationToken);
+        var orderCode = await OrderCodes.GenerateUniqueAsync(
+            db,
+            bookingOptions.Value.BookingCodeMaxAttempts,
+            cancellationToken
+        );
+
+        var now = DateTime.UtcNow;
+        var holdUntil = now.AddMinutes(holdSettings.HoldDurationMinutes);
+        var lines = comboSelectionList.Select(x => NewComboLine(null, x)).ToList();
+        var totalAmount = lines.Sum(l => l.LockedUnitPrice * l.Quantity);
+        foreach (var line in lines)
+            line.PaidAmount = line.LockedUnitPrice * line.Quantity;
+
+        var order = new Order
+        {
+            OrderCode = orderCode,
+            Type = OrderType.Combo,
+            Channel = channel,
+            UserId = orderUserId,
+            CustomerName = customerName,
+            CustomerPhone = customerPhone,
+            Status = OrderStatus.Pending,
+            CreatedAt = now,
+            ExpiresAt = holdUntil,
+            CreatedByEmployeeId = createdByEmployeeId,
+            TotalAmount = totalAmount,
+            DiscountAmount = 0m,
+            FinalAmount = totalAmount,
+        };
+        foreach (var line in lines)
+            order.Lines.Add(line);
+
+        await db.InTransactionAsync(
+            async () =>
+            {
+                db.Orders.Add(order);
+                await db.SaveChangesAsync(cancellationToken);
+                await resourceHolds.ReserveAllAsync(order, cancellationToken);
+                await db.SaveChangesAsync(cancellationToken);
+            },
+            cancellationToken
+        );
+
+        logger.LogInformation(
+            "ComboOrderCreated OrderId {OrderId} Channel {Channel} LineCount {Count}",
+            order.OrderId,
+            channel,
+            lines.Count
+        );
+        return order;
+    }
+
     public async Task EnsureWithinBookingLimitsAsync(
         int seatCount,
         List<ComboSelectionRequest>? combos,
@@ -280,7 +373,7 @@ public class OrderHoldService(
             LockedUnitPrice = seat.Price,
         };
 
-    private static OrderLine NewComboLine(int showtimeId, (Combo Combo, int Quantity) selection) =>
+    private static OrderLine NewComboLine(int? showtimeId, (Combo Combo, int Quantity) selection) =>
         new()
         {
             LineType = OrderLineType.Combo,

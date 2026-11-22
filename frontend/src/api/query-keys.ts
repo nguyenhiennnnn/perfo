@@ -22,10 +22,10 @@ export const queryKeys = {
       ["showtimes", "seat-suggestions", showtimeId, count] as const,
   },
 
-  bookings: {
-    all: () => ["bookings"] as const,
-    myList: (params?: object) => ["bookings", "my", params] as const,
-    detail: (bookingId: number) => ["bookings", "detail", bookingId] as const,
+  orders: {
+    all: () => ["orders"] as const,
+    myList: (params?: object) => ["orders", "my", params] as const,
+    detail: (orderId: number) => ["orders", "detail", orderId] as const,
   },
 
   combos: {

@@ -36,6 +36,14 @@ export interface ShowtimeSeatItemDto {
   coupleId?: string | null;
   status: string;
   price: number;
+  heldByMe?: boolean;
+}
+
+export interface ShowtimeMyHoldDto {
+  orderId: number;
+  orderCode: string;
+  expiresAt: string;
+  showtimeSeatIds: number[];
 }
 
 export interface AislePositionDto {
@@ -55,6 +63,7 @@ export interface ShowtimeSeatsResponseDto {
   moviePosterUrl?: string | null;
   ageRatingCode?: string | null;
   screenType?: string | null;
+  myHold?: ShowtimeMyHoldDto | null;
 }
 
 export interface SeatSuggestionDto {

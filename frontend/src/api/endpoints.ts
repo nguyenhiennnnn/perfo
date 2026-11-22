@@ -52,7 +52,7 @@ export const ENDPOINTS = {
     seats: (id: number) => `/showtimes/${id}/seats`,
     seatSuggestions: (id: number) => `/showtimes/${id}/seat-suggestions`,
   },
-  bookings: {
+  orders: {
     root: "/bookings",
     hold: "/bookings/hold",
     byId: (id: number) => `/bookings/${id}`,

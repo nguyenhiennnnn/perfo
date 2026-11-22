@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { Ticket } from "lucide-react";
 import { SkeletonList } from "@/components/common/skeleton-list";
 import { SKELETON_LIST_COUNT } from "@/config/default-constants";
-import { useBookShowtime } from "@/features/client/bookings/hooks/use-book-showtime";
+import { useBookShowtime } from "@/features/client/orders/hooks/use-book-showtime";
 import { useSchedule } from "@/features/client/showtimes/hooks/use-showtimes";
 import { getBusinessToday } from "@/lib/business-time";
 import { formatShowtimeHour } from "@/lib/formatters";

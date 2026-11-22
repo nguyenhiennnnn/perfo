@@ -8,9 +8,10 @@ import { ButtonLink } from "@/components/common/button-link";
 import { SkeletonList } from "@/components/common/skeleton-list";
 import { InfiniteScrollTrigger } from "@/components/common/infinite-scroll-trigger";
 import { TicketCard } from "@/features/client/account/components/ticket-card";
-import { useMyBookings, useCancelBooking } from "@/features/client/bookings/hooks/use-bookings";
+import { useCancelOrder, useMyOrders } from "@/features/client/orders/hooks/use-orders";
 import { useAlertDialogOpen } from "@/stores/alert-dialog-store";
 import { bookingStatusOptions } from "@/lib/enum-options";
+import { CancelReason } from "@/types/enum";
 import { ACCOUNT_LIST_PAGE_LIMIT, SKELETON_LIST_COUNT } from "@/config/default-constants";
 import { ROUTES } from "@/config/routes";
 
@@ -21,21 +22,21 @@ const TABS = [{ value: null as string | null, label: "Tất cả" }, ...bookingS
 const AccountTicketsPage = () => {
   const [status, setStatus] = useState<string | null>(null);
   const tabsId = useId();
-  const bookingsQuery = useMyBookings({ status: status ?? undefined, limit: ACCOUNT_LIST_PAGE_LIMIT });
-  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = bookingsQuery;
-  const cancelBooking = useCancelBooking();
+  const ordersQuery = useMyOrders({ status: status ?? undefined, limit: ACCOUNT_LIST_PAGE_LIMIT });
+  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = ordersQuery;
+  const cancelOrder = useCancelOrder();
   const openAlert = useAlertDialogOpen();
 
-  const bookings = data?.bookings ?? [];
+  const orders = data?.orders ?? [];
   const getTabId = (value: string | null) => `${tabsId}-${value ?? TAB_ALL_KEY}`;
 
-  const handleCancel = (bookingId: number) => {
+  const handleCancel = (orderId: number) => {
     openAlert({
       title: "Hủy vé & hoàn tiền",
       description: "Bạn có chắc muốn hủy vé này? Số tiền sẽ được hoàn theo chính sách của rạp.",
       confirmText: "Hủy vé",
       variant: "destructive",
-      onConfirm: () => cancelBooking.mutate(bookingId),
+      onConfirm: () => cancelOrder.mutate({ orderId, reason: CancelReason.CustomerChangedMind }),
     });
   };
 
@@ -57,11 +58,11 @@ const AccountTicketsPage = () => {
         ))}
       </ChipGroup>
 
-      <div role="tabpanel" aria-labelledby={getTabId(status)} className="mt-5 space-y-3" aria-busy={bookingsQuery.isLoading || undefined}>
+      <div role="tabpanel" aria-labelledby={getTabId(status)} className="mt-5 space-y-3" aria-busy={ordersQuery.isLoading || undefined}>
         <QueryState
-          query={bookingsQuery}
+          query={ordersQuery}
           skeleton={<SkeletonList count={SKELETON_LIST_COUNT} className="h-42 sm:h-23" />}
-          isEmpty={bookings.length === 0}
+          isEmpty={orders.length === 0}
           empty={
             status ? (
               <EmptyState
@@ -81,8 +82,8 @@ const AccountTicketsPage = () => {
           }
           errorTitle="Không tải được danh sách vé"
         >
-          {bookings.map((booking) => (
-            <TicketCard key={booking.bookingId} booking={booking} onCancel={() => handleCancel(booking.bookingId)} />
+          {orders.map((order) => (
+            <TicketCard key={order.orderId} order={order} onCancel={() => handleCancel(order.orderId)} />
           ))}
           <InfiniteScrollTrigger hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} fetchNextPage={fetchNextPage} />
         </QueryState>

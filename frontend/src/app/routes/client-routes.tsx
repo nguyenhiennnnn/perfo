@@ -8,8 +8,8 @@ import { GuestRoute } from "./protected-route/guest-route";
 import { lazyRoute } from "./lazy-route";
 import { ROUTES } from "@/config/routes";
 
-const BookingPage = lazyRoute(() => import("@/features/client/bookings/pages/booking-page"));
-const BookingResultPage = lazyRoute(() => import("@/features/client/bookings/pages/booking-result-page"));
+const BookingPage = lazyRoute(() => import("@/features/client/orders/pages/booking-page"));
+const BookingResultPage = lazyRoute(() => import("@/features/client/orders/pages/booking-result-page"));
 const HomePage = lazyRoute(() => import("@/features/client/home/pages/home-page"));
 const MovieDetailPage = lazyRoute(() => import("@/features/client/movies/pages/movie-detail-page"));
 const MoviesPage = lazyRoute(() => import("@/features/client/movies/pages/movies-page"));

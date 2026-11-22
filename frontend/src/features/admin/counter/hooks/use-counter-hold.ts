@@ -35,7 +35,7 @@ export function useCounterHoldFlow({
   const seatStatusMap = useRealtimeSeatMap({
     showtimeId,
     initialSeats,
-    ownBookingId: holdResult?.bookingId ?? null,
+    ownOrderId: holdResult?.bookingId ?? null,
     onHoldExpired: () => {
       toast.add({ title: "Thời gian giữ ghế đã hết hạn.", type: "warning" });
       onHoldExpired();

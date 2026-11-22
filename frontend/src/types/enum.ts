@@ -43,13 +43,34 @@ export const BookingChannel = {
 export type BookingChannel =
   (typeof BookingChannel)[keyof typeof BookingChannel];
 
-export const BookingStatus = {
+export const OrderStatus = {
   Pending: "Pending",
   Confirmed: "Confirmed",
   Cancelled: "Cancelled",
   Expired: "Expired",
 } as const;
-export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus];
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];
+
+export const BookingStatus = OrderStatus;
+export type BookingStatus = OrderStatus;
+
+export const OrderLineType = {
+  Ticket: "Ticket",
+  Combo: "Combo",
+  GiftCard: "GiftCard",
+  Fee: "Fee",
+} as const;
+export type OrderLineType = (typeof OrderLineType)[keyof typeof OrderLineType];
+
+export const CancelReason = {
+  CustomerChangedMind: "CustomerChangedMind",
+  DuplicateOrder: "DuplicateOrder",
+  PaymentError: "PaymentError",
+  ShowtimeCancelled: "ShowtimeCancelled",
+  RoomClosed: "RoomClosed",
+  Other: "Other",
+} as const;
+export type CancelReason = (typeof CancelReason)[keyof typeof CancelReason];
 
 export const PaymentMethod = {
   VNPay: "VNPay",

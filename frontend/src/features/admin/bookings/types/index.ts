@@ -1,21 +1,48 @@
 import type { BookingStatus } from "@/types/enum";
-import type {
-  BookingMovieBriefDto,
-  BookingShowtimeBriefDto,
-  BookingSeatDto,
-  BookingComboItemDto,
-  BookingTicketDto,
-  BookingPaymentDto,
-} from "@/features/client/bookings/types";
+export interface BookingMovieBriefDto {
+  movieId: number;
+  title: string;
+  posterUrl?: string | null;
+}
 
-export type {
-  BookingMovieBriefDto,
-  BookingShowtimeBriefDto,
-  BookingSeatDto,
-  BookingComboItemDto,
-  BookingTicketDto,
-  BookingPaymentDto,
-};
+export interface BookingShowtimeBriefDto {
+  showtimeId: number;
+  roomName: string;
+  startTime: string;
+}
+
+export interface BookingSeatDto {
+  seatRow: string;
+  seatNumber: number;
+  price: number;
+}
+
+export interface BookingComboItemDto {
+  name: string;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface BookingTicketDto {
+  ticketId: number;
+  seatRow: string;
+  seatNumber: number;
+  qrCodeImage: string;
+  isCheckedIn: boolean;
+  checkedInAt?: string | null;
+}
+
+export interface BookingPaymentDto {
+  paymentId: number;
+  paymentMethod: string;
+  status: string;
+  amount: number;
+  transactionId?: string | null;
+  paidAt?: string | null;
+  createdAt: string;
+  refundedAmount?: number | null;
+  refundedAt?: string | null;
+}
 
 export interface AdminBookingListParams {
   status?: string;

@@ -12,14 +12,14 @@ import type { ShowtimeSeatItemDto } from "@/features/client/showtimes/types";
 interface UseRealtimeSeatMapParams {
   showtimeId: number | null;
   initialSeats: ShowtimeSeatItemDto[] | undefined;
-  ownBookingId?: number | null;
+  ownOrderId?: number | null;
   onHoldExpired?: (payload: HoldExpiredPayload) => void;
 }
 
 export function useRealtimeSeatMap({
   showtimeId,
   initialSeats,
-  ownBookingId,
+  ownOrderId,
   onHoldExpired,
 }: UseRealtimeSeatMapParams) {
   const [statusOverrides, setStatusOverrides] = useState<
@@ -50,7 +50,7 @@ export function useRealtimeSeatMap({
       applyStatus(payload.seatIds, ShowtimeSeatStatus.Available),
     onHoldExpired: (payload: HoldExpiredPayload) => {
       applyStatus(payload.seatIds, ShowtimeSeatStatus.Available);
-      if (ownBookingId && payload.bookingId === ownBookingId) {
+      if (ownOrderId && payload.bookingId === ownOrderId) {
         onHoldExpired?.(payload);
       }
     },

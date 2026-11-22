@@ -14,6 +14,7 @@ import {
   MessageSquare,
   Layers,
   History,
+  ScrollText,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -134,6 +135,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         to: ROUTES.admin.importExportHistory,
         label: "Lịch sử Import/Export",
         icon: History,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.auditLogs,
+        label: "Nhật ký thao tác",
+        icon: ScrollText,
         roles: [Role.Admin],
       },
       {

@@ -1,3 +1,4 @@
+using Cinema.Application.Events;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
@@ -14,6 +15,7 @@ public class PaymentRefundService(
     IAppDbContext db,
     IPaymentLedgerService ledger,
     IEnumerable<IPaymentGateway> paymentGateways,
+    IBusinessEventDispatcher eventDispatcher,
     ILogger<PaymentRefundService> logger
 ) : IPaymentRefundService
 {
@@ -175,7 +177,23 @@ public class PaymentRefundService(
             );
         }
 
-        await db.SaveChangesAsync(cancellationToken);
+        await db.InTransactionAsync(
+            async () =>
+            {
+                await db.SaveChangesAsync(cancellationToken);
+                if (refund.Status == PaymentStatus.Success)
+                    await eventDispatcher.PublishAsync(
+                        new OrderRefunded(
+                            refund.OrderId,
+                            refund.PaymentTransactionId,
+                            refund.Amount,
+                            refund.CompletedAt ?? DateTime.UtcNow
+                        ),
+                        cancellationToken
+                    );
+            },
+            cancellationToken
+        );
         return ToResult(refund, gatewayResult?.Message ?? message);
     }
 

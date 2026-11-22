@@ -1,3 +1,4 @@
+using Cinema.Application.Events;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
@@ -6,7 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Services.Bookings;
 
-public class BookingSeatReleaser(IAppDbContext db, IRealtimeNotifier realtimeNotifier)
+public class BookingSeatReleaser(
+    IAppDbContext db,
+    IRealtimeNotifier realtimeNotifier,
+    IBusinessEventDispatcher eventDispatcher
+)
 {
     public Task<int> ResolveHolderUserIdAsync(
         Booking booking,
@@ -44,22 +49,37 @@ public class BookingSeatReleaser(IAppDbContext db, IRealtimeNotifier realtimeNot
 
     public async Task ReleaseAndCancelBookingAsync(
         Booking booking,
+        CancelReason reason,
+        CancelledBy cancelledBy,
         CancellationToken cancellationToken
     )
     {
-        var releasedSeatIds = await ReleaseBookingSeatsAsync(booking, cancellationToken);
-        booking.Status = BookingStatus.Cancelled;
+        var releasedSeatIds = new List<int>();
 
-        await db
-            .Payments.Where(p =>
-                p.BookingId == booking.BookingId && p.Status == PaymentStatus.Pending
-            )
-            .ExecuteUpdateAsync(
-                setters => setters.SetProperty(p => p.Status, PaymentStatus.Failed),
-                cancellationToken
-            );
+        await db.InTransactionAsync(
+            async () =>
+            {
+                releasedSeatIds = await ReleaseBookingSeatsAsync(booking, cancellationToken);
+                booking.Status = BookingStatus.Cancelled;
 
-        await db.SaveChangesAsync(cancellationToken);
+                await db
+                    .Payments.Where(p =>
+                        p.BookingId == booking.BookingId && p.Status == PaymentStatus.Pending
+                    )
+                    .ExecuteUpdateAsync(
+                        setters => setters.SetProperty(p => p.Status, PaymentStatus.Failed),
+                        cancellationToken
+                    );
+
+                await db.SaveChangesAsync(cancellationToken);
+
+                await eventDispatcher.PublishAsync(
+                    new OrderCancelled(booking.BookingId, reason, cancelledBy, DateTime.UtcNow),
+                    cancellationToken
+                );
+            },
+            cancellationToken
+        );
 
         await realtimeNotifier.NotifySeatReleasedAsync(
             booking.ShowtimeId,

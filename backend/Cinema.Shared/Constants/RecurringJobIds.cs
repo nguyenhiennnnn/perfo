@@ -7,4 +7,5 @@ public class RecurringJobIds
     public const string ExpireLoyaltyPoints = "expire-loyalty-points";
     public const string CleanupImportExportFiles = "cleanup-import-export-files";
     public const string CleanupImportSessions = "cleanup-import-sessions";
+    public const string ProcessOutbox = "process-outbox";
 }

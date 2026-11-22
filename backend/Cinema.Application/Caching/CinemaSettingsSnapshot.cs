@@ -1,0 +1,66 @@
+using Cinema.Domain.Entities;
+using Cinema.Domain.Enums;
+
+namespace Cinema.Application.Caching;
+
+public sealed record CinemaSettingsSnapshot(
+    string Name,
+    string Address,
+    string? Phone,
+    string? Email,
+    string? TaxCode,
+    string? LogoUrl,
+    TimeOnly? OpeningTime,
+    TimeOnly? ClosingTime,
+    decimal PointsPerAmount,
+    decimal CancelRefundPercent,
+    int CancelDeadlineHours,
+    int StopSellingMinutesBefore,
+    int HoldDurationMinutes,
+    int CheckInOpenMinutes,
+    SeatGapRuleMode SeatGapRuleMode,
+    int RoomBufferMinutes,
+    int MaxSeatsPerBooking,
+    int MaxComboQuantity,
+    int LoyaltyWindowMonths,
+    int MovieEndGraceDays,
+    int ShowtimeLookaheadDays,
+    int SchedulerStepMinutes,
+    int SchedulerMinSameMovieGapMinutes,
+    int SchedulerHeatLookbackDays,
+    double SchedulerHeatSalesWeight,
+    double SchedulerHeatRatingWeight,
+    double SchedulerMaxRating
+)
+{
+    public static CinemaSettingsSnapshot From(CinemaSettings s) =>
+        new(
+            s.Name,
+            s.Address,
+            s.Phone,
+            s.Email,
+            s.TaxCode,
+            s.LogoUrl,
+            s.OpeningTime,
+            s.ClosingTime,
+            s.PointsPerAmount,
+            s.CancelRefundPercent,
+            s.CancelDeadlineHours,
+            s.StopSellingMinutesBefore,
+            s.HoldDurationMinutes,
+            s.CheckInOpenMinutes,
+            s.SeatGapRuleMode,
+            s.RoomBufferMinutes,
+            s.MaxSeatsPerBooking,
+            s.MaxComboQuantity,
+            s.LoyaltyWindowMonths,
+            s.MovieEndGraceDays,
+            s.ShowtimeLookaheadDays,
+            s.SchedulerStepMinutes,
+            s.SchedulerMinSameMovieGapMinutes,
+            s.SchedulerHeatLookbackDays,
+            s.SchedulerHeatSalesWeight,
+            s.SchedulerHeatRatingWeight,
+            s.SchedulerMaxRating
+        );
+}

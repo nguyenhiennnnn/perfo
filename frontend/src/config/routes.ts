@@ -45,6 +45,7 @@ export const ROUTES = {
     combos: "/admin/combos",
     bookings: "/admin/bookings",
     payments: "/admin/payments",
+    auditLogs: "/admin/audit-logs",
     reports: "/admin/reports",
     users: "/admin/users",
     employees: "/admin/employees",

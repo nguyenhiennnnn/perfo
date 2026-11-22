@@ -1,5 +1,6 @@
 using Cinema.Application.BackgroundJobs;
 using Cinema.Application.DTOs.Showtimes;
+using Cinema.Application.Events;
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;
@@ -13,6 +14,7 @@ namespace Cinema.Application.Services.Showtimes;
 public class ShowtimeCancellationService(
     IAppDbContext db,
     IBookingFulfillmentService bookingFulfillmentService,
+    IBusinessEventDispatcher eventDispatcher,
     INotificationService notificationService,
     IBackgroundJobClient backgroundJobClient,
     ILogger<ShowtimeCancellationService> logger
@@ -78,6 +80,16 @@ public class ShowtimeCancellationService(
                         booking.FinalAmount,
                         cancellationToken
                     );
+
+                await eventDispatcher.PublishAsync(
+                    new OrderCancelled(
+                        booking.BookingId,
+                        CancelReason.ShowtimeCancelled,
+                        CancelledBy.System,
+                        DateTime.UtcNow
+                    ),
+                    cancellationToken
+                );
 
                 if (payment is null)
                     continue;

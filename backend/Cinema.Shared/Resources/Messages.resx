@@ -245,6 +245,12 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
 
   <!-- ===== Config ===== -->
+  <data name="Config_CacheKeyDuplicated" xml:space="preserve">
+    <value>Khóa bộ nhớ đệm bị đăng ký trùng: {0}.</value>
+  </data>
+  <data name="Config_CacheKeyNotRegistered" xml:space="preserve">
+    <value>Khóa bộ nhớ đệm chưa được đăng ký: {0}.</value>
+  </data>
   <data name="Config_CorsOriginsMissing" xml:space="preserve">
     <value>Cors:AllowedOrigins chưa cấu hình.</value>
   </data>
@@ -1486,6 +1492,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="NotFound_AgeRating" xml:space="preserve">
     <value>Không tìm thấy phân loại độ tuổi.</value>
   </data>
+  <data name="NotFound_AuditLog" xml:space="preserve">
+    <value>Không tìm thấy dòng nhật ký thao tác.</value>
+  </data>
   <data name="NotFound_Booking" xml:space="preserve">
     <value>Không tìm thấy booking.</value>
   </data>
@@ -1647,6 +1656,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <!-- ===== Rule ===== -->
   <data name="Rule_AmountReceivedInsufficient" xml:space="preserve">
     <value>Số tiền nhận không đủ.</value>
+  </data>
+  <data name="Rule_AuditLogImmutable" xml:space="preserve">
+    <value>Nhật ký thao tác chỉ được thêm mới, không thể sửa hoặc xóa.</value>
   </data>
   <data name="Rule_BookingCancelAtCounter" xml:space="preserve">
     <value>Booking thanh toán tại quầy hoặc chưa xác định được giao dịch — vui lòng liên hệ trực tiếp rạp để được hỗ trợ hủy vé.</value>

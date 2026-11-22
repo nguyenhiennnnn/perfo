@@ -1,3 +1,4 @@
+using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Bookings;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
@@ -16,7 +17,8 @@ public class BookingHoldService(
     IRealtimeNotifier realtimeNotifier,
     IEnumerable<IBookingHoldPolicy> holdPolicies,
     IBookingFulfillmentService fulfillmentService,
-    ILogger<BookingHoldService> logger
+    ILogger<BookingHoldService> logger,
+    IAppCache cache
 ) : IBookingHoldService
 {
     public async Task<HoldBookingResponse> HoldSeatsAsync(
@@ -74,15 +76,11 @@ public class BookingHoldService(
         if (showtime.StartTime <= DateTime.UtcNow)
             throw new BusinessRuleException(Messages.Rule_ShowtimeStartedOrEnded);
 
-        var holdSettings = await db
-            .CinemaSettings.Where(s => s.Id == AppDbContextExtensions.CinemaSettingsId)
-            .Select(s => new { s.StopSellingMinutesBefore, s.HoldDurationMinutes })
-            .FirstOrDefaultAsync(cancellationToken);
-        var holdMinutes =
-            holdSettings?.HoldDurationMinutes ?? CinemaSettings.DefaultHoldDurationMinutes;
+        var holdSettings = await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken);
+        var holdMinutes = holdSettings.HoldDurationMinutes;
 
         var policy = holdPolicies.First(p => p.Channel == channel);
-        policy.EnsureSalesOpen(showtime, holdSettings?.StopSellingMinutesBefore ?? 0);
+        policy.EnsureSalesOpen(showtime, holdSettings.StopSellingMinutesBefore);
 
         if (string.IsNullOrWhiteSpace(customerName))
         {
@@ -223,13 +221,9 @@ public class BookingHoldService(
         CancellationToken cancellationToken
     )
     {
-        var limits = await db
-            .CinemaSettings.AsNoTracking()
-            .Where(s => s.Id == AppDbContextExtensions.CinemaSettingsId)
-            .Select(s => new { s.MaxSeatsPerBooking, s.MaxComboQuantity })
-            .FirstOrDefaultAsync(cancellationToken);
-        var maxSeats = limits?.MaxSeatsPerBooking ?? CinemaSettings.DefaultMaxSeatsPerBooking;
-        var maxCombo = limits?.MaxComboQuantity ?? CinemaSettings.DefaultMaxComboQuantity;
+        var limits = await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken);
+        var maxSeats = limits.MaxSeatsPerBooking;
+        var maxCombo = limits.MaxComboQuantity;
 
         if (seatCount > maxSeats)
         {
@@ -272,7 +266,8 @@ public class BookingHoldService(
             DateTime.UtcNow,
             cancellationToken
         );
-        var tier = await LoyaltyWindow.ResolveTierAsync(db, points, cancellationToken);
+        var tiers = await cache.GetAsync(CacheKeys.MembershipTiers, cancellationToken);
+        var tier = LoyaltyWindow.ResolveTier(tiers, points);
         if (tier is null)
             return 0m;
 

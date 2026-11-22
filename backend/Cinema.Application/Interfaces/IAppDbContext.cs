@@ -41,6 +41,7 @@ public interface IAppDbContext
     DbSet<RefreshToken> RefreshTokens { get; }
     DbSet<UserVerificationToken> UserVerificationTokens { get; }
     DbSet<ImportExportJob> ImportExportJobs { get; }
+    DbSet<AuditLog> AuditLogs { get; }
 }
 
 public static class AppDbContextExtensions

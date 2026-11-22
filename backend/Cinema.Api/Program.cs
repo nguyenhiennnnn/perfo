@@ -34,6 +34,7 @@ builder
 
 builder.Services.AddCorsPolicy(configuration);
 builder.Services.AddRefreshCookie(configuration);
+builder.Services.AddCurrentActorAccessor();
 builder.Services.AddRateLimiting(configuration);
 
 builder.ValidateProductionOptions();

@@ -83,6 +83,7 @@ export const invalidations = {
     k.catalog.membershipTiers(),
     k.adminUsers.all(),
     k.users.me(),
+    k.adminAuditLogs.all(),
   ],
   positionChanged: (): KeyList => [
     k.adminCatalog.positions(),
@@ -124,7 +125,11 @@ export const invalidations = {
     k.adminDashboard.all(),
   ],
 
-  settingsChanged: (): KeyList => [k.adminSettings.get(), k.settings.get()],
+  settingsChanged: (): KeyList => [
+    k.adminSettings.get(),
+    k.settings.get(),
+    k.adminAuditLogs.all(),
+  ],
 } satisfies Record<string, () => KeyList>;
 
 export type InvalidationName = keyof typeof invalidations;

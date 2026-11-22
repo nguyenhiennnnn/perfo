@@ -17,6 +17,7 @@ const AdminDashboardPage = lazyRoute(() => import("@/features/admin/dashboard/pa
 const AdminShowtimesPage = lazyRoute(() => import("@/features/admin/showtimes/pages/showtimes-page"));
 const AdminCounterPage = lazyRoute(() => import("@/features/admin/counter/pages/counter-page"));
 const AdminCheckinPage = lazyRoute(() => import("@/features/admin/checkin/pages/checkin-page"));
+const AdminAuditLogsPage = lazyRoute(() => import("@/features/admin/audit-logs/pages/audit-logs-page"));
 const AdminPaymentsPage = lazyRoute(() => import("@/features/admin/payments/pages/payments-page"));
 const AdminUsersPage = lazyRoute(() => import("@/features/admin/users/pages/users-page"));
 const AdminReportsPage = lazyRoute(() => import("@/features/admin/reports/pages/reports.page"));
@@ -78,6 +79,7 @@ export const adminRoutes: RouteObject[] = [
           { path: "bookings/counter", lazy: AdminCounterPage },
           { path: "checkin", lazy: AdminCheckinPage },
           { path: "payments", lazy: AdminPaymentsPage },
+          { path: "audit-logs", lazy: AdminAuditLogsPage },
           { path: "reports", lazy: AdminReportsPage },
           { path: "users", lazy: AdminUsersPage },
           { path: "employees", lazy: AdminEmployeesPage },

@@ -1,8 +1,11 @@
+using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Catalog;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Services.Audit;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Mapster;
@@ -10,7 +13,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Services.Catalog;
 
-public class CatalogService(IAppDbContext db) : ICatalogService
+public class CatalogService(IAppDbContext db, IAppCache cache, IAuditLogger auditLogger)
+    : ICatalogService
 {
     public async Task<List<GenreDto>> GetGenresAsync(CancellationToken cancellationToken) =>
         await db
@@ -33,10 +37,14 @@ public class CatalogService(IAppDbContext db) : ICatalogService
     public async Task<List<MembershipTierDto>> GetMembershipTiersAsync(
         CancellationToken cancellationToken
     ) =>
-        await db
-            .MembershipTiers.OrderBy(t => t.MinPoints)
-            .ProjectToType<MembershipTierDto>()
-            .ToListAsync(cancellationToken);
+        (await cache.GetAsync(CacheKeys.MembershipTiers, cancellationToken))
+            .Select(t => new MembershipTierDto(
+                t.TierId,
+                t.TierName,
+                t.MinPoints,
+                t.DiscountPercent
+            ))
+            .ToList();
 
     public async Task<OffsetPageResult<GenreDto>> GetGenresAdminAsync(
         int page,
@@ -650,8 +658,20 @@ public class CatalogService(IAppDbContext db) : ICatalogService
             MinPoints = request.MinPoints,
             DiscountPercent = request.DiscountPercent,
         };
+
+        await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
         db.MembershipTiers.Add(entity);
         await db.SaveChangesAsync(cancellationToken);
+        auditLogger.Record(
+            AuditActions.Create,
+            AuditEntityTypes.MembershipTier,
+            entity.TierId.ToString(),
+            null,
+            AuditSnapshots.Tier(entity)
+        );
+        await db.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+        await cache.RefreshAsync(CacheKeys.MembershipTiers, cancellationToken);
         return entity.Adapt<MembershipTierDto>();
     }
 
@@ -664,10 +684,19 @@ public class CatalogService(IAppDbContext db) : ICatalogService
         var entity =
             await db.MembershipTiers.FirstOrDefaultAsync(t => t.TierId == id, cancellationToken)
             ?? throw new NotFoundException(Messages.NotFound_MembershipTier);
+        var before = AuditSnapshots.Tier(entity);
         entity.TierName = request.TierName;
         entity.MinPoints = request.MinPoints;
         entity.DiscountPercent = request.DiscountPercent;
+        auditLogger.Record(
+            AuditActions.Update,
+            AuditEntityTypes.MembershipTier,
+            entity.TierId.ToString(),
+            before,
+            AuditSnapshots.Tier(entity)
+        );
         await db.SaveChangesAsync(cancellationToken);
+        await cache.RefreshAsync(CacheKeys.MembershipTiers, cancellationToken);
         return entity.Adapt<MembershipTierDto>();
     }
 
@@ -688,7 +717,15 @@ public class CatalogService(IAppDbContext db) : ICatalogService
             throw new ConflictAppException(Messages.Conflict_MembershipTierInUse);
 
         db.MembershipTiers.Remove(entity);
+        auditLogger.Record(
+            AuditActions.Delete,
+            AuditEntityTypes.MembershipTier,
+            entity.TierId.ToString(),
+            AuditSnapshots.Tier(entity),
+            null
+        );
         await db.SaveChangesAsync(cancellationToken);
+        await cache.RefreshAsync(CacheKeys.MembershipTiers, cancellationToken);
         return new DeleteCategoryResponse(id, true);
     }
 }

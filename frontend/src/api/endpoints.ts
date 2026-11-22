@@ -118,6 +118,11 @@ export const ENDPOINTS = {
       bulk: "/admin/movies/bulk",
       import: "/admin/movies/import",
     },
+    auditLogs: {
+      root: "/admin/audit-logs",
+      filterOptions: "/admin/audit-logs/filter-options",
+      byId: (id: number) => `/admin/audit-logs/${id}`,
+    },
     payments: {
       root: "/admin/payments",
       export: "/admin/payments/export",

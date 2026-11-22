@@ -1,4 +1,5 @@
 using Cinema.Application.DTOs.Bookings;
+using Cinema.Application.Events;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
@@ -17,6 +18,7 @@ public class BookingCancellationService(
     INotificationService notificationService,
     IBookingFulfillmentService fulfillmentService,
     BookingSeatReleaser releaser,
+    IBusinessEventDispatcher eventDispatcher,
     ILogger<BookingCancellationService> logger
 ) : IBookingCancellationService
 {
@@ -63,7 +65,12 @@ public class BookingCancellationService(
 
         if (booking.Status == BookingStatus.Pending)
         {
-            await releaser.ReleaseAndCancelBookingAsync(booking, cancellationToken);
+            await releaser.ReleaseAndCancelBookingAsync(
+                booking,
+                CancelReason.CustomerChangedMind,
+                CancelledBy.Customer,
+                cancellationToken
+            );
             logger.LogInformation(
                 "BookingCancelled(Pending) BookingId {BookingId} UserId {UserId}",
                 bookingId,
@@ -174,6 +181,15 @@ public class BookingCancellationService(
 
         try
         {
+            await eventDispatcher.PublishAsync(
+                new OrderCancelled(
+                    booking.BookingId,
+                    CancelReason.CustomerChangedMind,
+                    CancelledBy.Customer,
+                    DateTime.UtcNow
+                ),
+                cancellationToken
+            );
             await db.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }

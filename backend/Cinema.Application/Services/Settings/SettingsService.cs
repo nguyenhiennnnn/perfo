@@ -1,9 +1,12 @@
+using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Settings;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
+using Cinema.Application.Services.Audit;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Mapster;
@@ -12,21 +15,17 @@ using Microsoft.Extensions.Options;
 
 namespace Cinema.Application.Services.Settings;
 
-public class SettingsService(IAppDbContext db, IOptions<BrandOptions> brandOptions)
-    : ISettingsService
+public class SettingsService(
+    IAppDbContext db,
+    IOptions<BrandOptions> brandOptions,
+    IAppCache cache,
+    IAuditLogger auditLogger
+) : ISettingsService
 {
     private readonly BrandOptions _brand = brandOptions.Value;
 
-    public async Task<CinemaSettingsDto> GetSettingsAsync(CancellationToken cancellationToken)
-    {
-        var settings =
-            await db.CinemaSettings.FirstOrDefaultAsync(
-                s => s.Id == AppDbContextExtensions.CinemaSettingsId,
-                cancellationToken
-            ) ?? throw new NotFoundException(Messages.NotFound_CinemaSettings);
-
-        return ToDto(settings);
-    }
+    public async Task<CinemaSettingsDto> GetSettingsAsync(CancellationToken cancellationToken) =>
+        ToDto(await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken));
 
     public async Task<AdminCinemaSettingsDto> GetAdminSettingsAsync(
         CancellationToken cancellationToken
@@ -51,6 +50,8 @@ public class SettingsService(IAppDbContext db, IOptions<BrandOptions> brandOptio
                 s => s.Id == AppDbContextExtensions.CinemaSettingsId,
                 cancellationToken
             ) ?? throw new NotFoundException(Messages.NotFound_CinemaSettings);
+
+        var before = AuditSnapshots.Settings(settings, false);
 
         if (request.CancelRefundPercent is < 0 or > 100)
             throw new BusinessRuleException(Messages.Rule_CancelRefundPercentRange);
@@ -101,11 +102,23 @@ public class SettingsService(IAppDbContext db, IOptions<BrandOptions> brandOptio
             settings.SchedulerMaxRating = schedulerMaxRating;
         if (settings.SchedulerHeatSalesWeight + settings.SchedulerHeatRatingWeight <= 0)
             throw new BusinessRuleException(Messages.Validation_SchedulerHeatWeights_SumPositive);
+        var passwordChanged = false;
         if (request.DefaultEmployeePassword is { } defaultEmployeePassword)
+        {
+            passwordChanged = defaultEmployeePassword != settings.DefaultEmployeePassword;
             settings.DefaultEmployeePassword = defaultEmployeePassword;
+        }
         settings.UpdatedAt = DateTime.UtcNow;
 
+        auditLogger.Record(
+            AuditActions.Update,
+            AuditEntityTypes.CinemaSettings,
+            settings.Id.ToString(),
+            before,
+            AuditSnapshots.Settings(settings, passwordChanged)
+        );
         await db.SaveChangesAsync(cancellationToken);
+        await cache.RefreshAsync(CacheKeys.CinemaSettings, cancellationToken);
 
         return ToAdminDto(settings);
     }
@@ -113,7 +126,7 @@ public class SettingsService(IAppDbContext db, IOptions<BrandOptions> brandOptio
     private AdminCinemaSettingsDto ToAdminDto(CinemaSettings settings) =>
         new(ToDto(settings), settings.DefaultEmployeePassword);
 
-    private CinemaSettingsDto ToDto(CinemaSettings settings) =>
+    private CinemaSettingsDto ToDto(object settings) =>
         settings.Adapt<CinemaSettingsDto>() with
         {
             TimeZoneId = BusinessTime.IanaId,

@@ -1,3 +1,4 @@
+using Cinema.Application.Caching;
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,11 @@ public static class LoyaltyWindow
             .MembershipTiers.Where(t => t.MinPoints <= points)
             .OrderByDescending(t => t.MinPoints)
             .FirstOrDefaultAsync(ct);
+
+    public static MembershipTierSnapshot? ResolveTier(
+        IReadOnlyList<MembershipTierSnapshot> tiers,
+        int points
+    ) => tiers.Where(t => t.MinPoints <= points).MaxBy(t => t.MinPoints);
 
     public static async Task<(int Points, MembershipTier? Tier)> GetStandingAsync(
         IAppDbContext db,

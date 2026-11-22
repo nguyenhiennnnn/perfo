@@ -23,6 +23,9 @@ public static class FieldLengths
     public const int GatewayResponseCode = 20;
     public const int ReferenceType = 50;
     public const int TokenHash = 255;
+    public const int AuditAction = 50;
+    public const int AuditEntityType = 100;
+    public const int AuditEntityId = 100;
 
     public const int FileName = 255;
     public const int ErrorMessage = 2000;

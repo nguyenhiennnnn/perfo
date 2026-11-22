@@ -43,6 +43,8 @@ public static class DependencyInjection
                     sql => sql.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
                 );
 
+                options.AddInterceptors(new AuditLogImmutabilityInterceptor());
+
                 options.ConfigureWarnings(w =>
                     w.Ignore(
                         Microsoft

@@ -85,6 +85,12 @@ public static class BackgroundJobExtensions
             options.CleanupImportSessionsCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<ProcessOutboxJob>(
+            RecurringJobIds.ProcessOutbox,
+            j => j.RunAsync(CancellationToken.None),
+            options.ProcessOutboxCron,
+            jobOptions
+        );
 
         return app;
     }

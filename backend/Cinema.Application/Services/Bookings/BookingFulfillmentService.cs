@@ -1,3 +1,4 @@
+using Cinema.Application.Events;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
@@ -17,6 +18,7 @@ public class BookingFulfillmentService(
     IRealtimeNotifier realtimeNotifier,
     INotificationService notificationService,
     BookingSeatReleaser releaser,
+    IBusinessEventDispatcher eventDispatcher,
     ILogger<BookingFulfillmentService> logger
 ) : IBookingFulfillmentService
 {
@@ -107,6 +109,11 @@ public class BookingFulfillmentService(
                     cancellationToken
                 );
 
+            await eventDispatcher.PublishAsync(
+                new OrderConfirmed(booking.BookingId, DateTime.UtcNow),
+                cancellationToken
+            );
+
             await db.SaveChangesAsync(cancellationToken);
             if (ownsConfirmTransaction)
                 await transaction.CommitAsync(cancellationToken);
@@ -176,7 +183,12 @@ public class BookingFulfillmentService(
             return;
         }
 
-        await releaser.ReleaseAndCancelBookingAsync(booking, cancellationToken);
+        await releaser.ReleaseAndCancelBookingAsync(
+            booking,
+            CancelReason.PaymentError,
+            CancelledBy.System,
+            cancellationToken
+        );
         logger.LogInformation(
             "PaymentFailed BookingId {BookingId} — ghế đã được release.",
             bookingId

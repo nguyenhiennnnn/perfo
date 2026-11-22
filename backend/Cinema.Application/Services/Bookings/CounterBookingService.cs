@@ -1,4 +1,5 @@
 using Cinema.Application.DTOs.Bookings;
+using Cinema.Application.Events;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
@@ -17,6 +18,7 @@ public class CounterBookingService(
     IBookingHoldService holdService,
     IBookingFulfillmentService fulfillmentService,
     BookingSeatReleaser releaser,
+    IBusinessEventDispatcher eventDispatcher,
     ILogger<CounterBookingService> logger
 ) : ICounterBookingService
 {
@@ -118,7 +120,12 @@ public class CounterBookingService(
             throw new BusinessRuleException(Messages.Rule_OnlyCounterPendingCancellable);
         }
 
-        await releaser.ReleaseAndCancelBookingAsync(booking, cancellationToken);
+        await releaser.ReleaseAndCancelBookingAsync(
+            booking,
+            CancelReason.Other,
+            CancelledBy.Staff,
+            cancellationToken
+        );
         logger.LogInformation(
             "BookingCancelled(Counter) BookingId {BookingId} EmployeeId {EmployeeId}",
             bookingId,
@@ -209,17 +216,33 @@ public class CounterBookingService(
         if (now > showtime.EndTime)
             throw new BusinessRuleException(Messages.Rule_ShowtimeEnded);
 
-        var checkedIn = await db
-            .BookingTickets.Where(t => t.TicketId == ticket.TicketId && !t.IsCheckedIn)
-            .ExecuteUpdateAsync(
-                setters =>
-                    setters
-                        .SetProperty(t => t.IsCheckedIn, true)
-                        .SetProperty(t => t.CheckedInAt, now),
-                cancellationToken
-            );
-        if (checkedIn == 0)
-            throw new ConflictAppException(Messages.Conflict_TicketAlreadyCheckedIn);
+        await db.InTransactionAsync(
+            async () =>
+            {
+                var checkedIn = await db
+                    .BookingTickets.Where(t => t.TicketId == ticket.TicketId && !t.IsCheckedIn)
+                    .ExecuteUpdateAsync(
+                        setters =>
+                            setters
+                                .SetProperty(t => t.IsCheckedIn, true)
+                                .SetProperty(t => t.CheckedInAt, now),
+                        cancellationToken
+                    );
+                if (checkedIn == 0)
+                    throw new ConflictAppException(Messages.Conflict_TicketAlreadyCheckedIn);
+
+                await eventDispatcher.PublishAsync(
+                    new TicketCheckedIn(
+                        ticket.BookingId,
+                        ticket.TicketId,
+                        showtime.ShowtimeId,
+                        now
+                    ),
+                    cancellationToken
+                );
+            },
+            cancellationToken
+        );
 
         ticket.IsCheckedIn = true;
         ticket.CheckedInAt = now;

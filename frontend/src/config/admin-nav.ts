@@ -8,6 +8,7 @@ import {
   Popcorn,
   Ticket,
   CreditCard,
+  Banknote,
   BarChart3,
   Users,
   ShieldAlert,
@@ -93,6 +94,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         to: ROUTES.admin.orders,
         label: "Quản lý đơn hàng",
         icon: Ticket,
+        roles: [Role.Admin, Role.Employee],
+      },
+      {
+        to: ROUTES.admin.cashRefunds,
+        label: "Đơn tiền mặt cần hoàn",
+        icon: Banknote,
         roles: [Role.Admin, Role.Employee],
       },
       {

@@ -37,3 +37,10 @@ export interface CashRefundConfirmResultDto {
   confirmedByUserId?: number | null;
   confirmedByName?: string | null;
 }
+
+export const CashRefundStatus = {
+  Pending: "Pending",
+  Refunded: "Refunded",
+  All: "All",
+} as const;
+export type CashRefundStatus = (typeof CashRefundStatus)[keyof typeof CashRefundStatus];

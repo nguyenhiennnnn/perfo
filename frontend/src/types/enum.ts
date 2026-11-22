@@ -95,6 +95,9 @@ export const PaymentMethod = {
   Momo: "Momo",
   Cash: "Cash",
   Stripe: "Stripe",
+  GiftCard: "GiftCard",
+  BankTransfer: "BankTransfer",
+  Card: "Card",
 } as const;
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod];
 

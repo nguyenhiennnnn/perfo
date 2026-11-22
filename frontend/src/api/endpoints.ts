@@ -134,6 +134,10 @@ export const ENDPOINTS = {
       exportJobs: "/admin/payments/export-jobs",
       byId: (id: number) => `/admin/payments/${id}`,
     },
+    cashRefunds: {
+      root: "/admin/cash-refunds",
+      confirm: (id: number) => `/admin/cash-refunds/${id}/confirm`,
+    },
     reviews: {
       root: "/admin/reviews",
       byId: (id: number) => `/admin/reviews/${id}`,

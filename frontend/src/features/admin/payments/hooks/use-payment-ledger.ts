@@ -33,7 +33,7 @@ export function useCashRefunds(params: CashRefundListParams) {
 
 export function useConfirmCashRefund() {
   return useMutation({
-    meta: { invalidates: "bookingChanged" },
+    meta: { invalidates: "bookingChanged", skipSuccessToast: true },
     mutationFn: (refundTransactionId: number) =>
       paymentLedgerApi.confirmCashRefund(refundTransactionId),
   });

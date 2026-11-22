@@ -10,12 +10,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DataTableColumnHeader } from "@/components/common/data-table/data-table-column-header";
 import type { DataTableFeatures } from "@/components/common/data-table/data-table-features";
-import { formatCurrency, formatDate } from "@/lib/formatters";
-
-import type { AdminPaymentListItemDto } from "@/features/admin/payments/types";
-import { PaymentStatusBadge } from "@/components/common/status-badge";
-import type { PaymentStatus } from "@/types/enum";
+import { PaymentMethodBadge } from "@/components/common/status-badge";
 import { STATUS_LABEL } from "@/config/default-constants";
+import { formatCurrency, formatDateTime } from "@/lib/formatters";
+
+import type { AdminPaymentListItemDto } from "../types/ledger";
+import { isRefundTransaction, needsCashRefund } from "../utils/transaction-labels";
+import {
+  CashRefundFlagBadge,
+  TransactionStatusBadge,
+  TransactionTypeBadge,
+} from "./transaction-badges";
 
 interface PaymentColumnsOptions {
   onViewDetail: (payment: AdminPaymentListItemDto) => void;
@@ -25,46 +30,61 @@ const columnHelper = createColumnHelper<DataTableFeatures, AdminPaymentListItemD
 
 export const createPaymentColumns = ({ onViewDetail }: PaymentColumnsOptions) =>
   columnHelper.columns([
-    columnHelper.accessor("paymentId", {
-      header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
-      cell: ({ row }) => (
-        <span className="text-muted-foreground w-14 inline-block text-sm tabular-nums">
-          #{row.original.paymentId}
-        </span>
-      ),
+    columnHelper.accessor("transactionCode", {
+      enableSorting: false,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Mã giao dịch" />,
+      cell: ({ row }) => <span className="t-code text-foreground">{row.original.transactionCode}</span>,
     }),
-    columnHelper.accessor("bookingCode", {
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Đơn đặt vé" />,
-      cell: ({ row }) => (
-        <span className="t-code text-foreground">
-          {row.original.bookingCode}
-        </span>
-      ),
+    columnHelper.accessor("orderCode", {
+      enableSorting: false,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Mã đơn" />,
+      cell: ({ row }) => <span className="t-code text-foreground">{row.original.orderCode}</span>,
     }),
-    columnHelper.accessor("paymentMethod", {
+    columnHelper.accessor("type", {
+      enableSorting: false,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Loại" />,
+      cell: ({ row }) => <TransactionTypeBadge type={row.original.type} />,
+    }),
+    columnHelper.accessor("method", {
+      enableSorting: false,
       header: ({ column }) => <DataTableColumnHeader column={column} title="Phương thức" />,
-      cell: ({ row }) => (
-        <span className="text-sm text-foreground">{row.original.paymentMethod}</span>
-      ),
+      cell: ({ row }) => <PaymentMethodBadge method={row.original.method} />,
     }),
     columnHelper.accessor("amount", {
+      enableSorting: false,
       header: ({ column }) => <DataTableColumnHeader column={column} title="Số tiền" />,
       cell: ({ row }) => (
         <span className="font-semibold tabular-nums text-primary-text">
+          {isRefundTransaction(row.original.type) ? "-" : ""}
           {formatCurrency(row.original.amount)}
         </span>
       ),
     }),
-    columnHelper.accessor("status", {
-      header: ({ column }) => <DataTableColumnHeader column={column} title={STATUS_LABEL} />,
-      cell: ({ row }) => <PaymentStatusBadge status={row.original.status as PaymentStatus} />,
+    columnHelper.accessor("gatewayFee", {
       enableSorting: false,
-    }),
-    columnHelper.accessor("paidAt", {
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Ngày thanh toán" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Phí cổng" />,
       cell: ({ row }) => (
         <span className="text-sm tabular-nums text-muted-foreground">
-          {row.original.paidAt ? formatDate(row.original.paidAt) : "—"}
+          {row.original.gatewayFee > 0 ? formatCurrency(row.original.gatewayFee) : "—"}
+        </span>
+      ),
+    }),
+    columnHelper.accessor("status", {
+      enableSorting: false,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={STATUS_LABEL} />,
+      cell: ({ row }) => (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <TransactionStatusBadge type={row.original.type} status={row.original.status} />
+          {needsCashRefund(row.original) && <CashRefundFlagBadge />}
+        </div>
+      ),
+    }),
+    columnHelper.accessor("createdAt", {
+      enableSorting: false,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Thời điểm" />,
+      cell: ({ row }) => (
+        <span className="text-sm tabular-nums text-muted-foreground">
+          {formatDateTime(row.original.createdAt)}
         </span>
       ),
     }),

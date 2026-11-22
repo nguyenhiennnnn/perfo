@@ -48,6 +48,7 @@ export const ROUTES = {
     combos: "/admin/combos",
     orders: "/admin/orders",
     payments: "/admin/payments",
+    cashRefunds: "/admin/cash-refunds",
     auditLogs: "/admin/audit-logs",
     reports: "/admin/reports",
     users: "/admin/users",

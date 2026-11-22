@@ -130,6 +130,9 @@ export const paymentMethodMap: Record<PaymentMethod, BadgeItem> = {
   [PaymentMethod.Momo]: { label: "MoMo", variant: "secondary", className: "font-medium" },
   [PaymentMethod.Cash]: { label: "Tiền mặt", variant: "outline", className: "font-medium" },
   [PaymentMethod.Stripe]: { label: "Stripe", variant: "default", className: "font-medium" },
+  [PaymentMethod.GiftCard]: { label: "Thẻ quà tặng", variant: "secondary", className: "font-medium" },
+  [PaymentMethod.BankTransfer]: { label: "Chuyển khoản", variant: "outline", className: "font-medium" },
+  [PaymentMethod.Card]: { label: "Thẻ", variant: "outline", className: "font-medium" },
 };
 
 export const roleMap: Record<Role, BadgeItem> = {

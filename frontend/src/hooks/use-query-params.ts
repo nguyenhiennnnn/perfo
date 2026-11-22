@@ -1,5 +1,6 @@
 import {
   debounce,
+  parseAsBoolean,
   parseAsInteger,
   parseAsString,
   parseAsStringLiteral,
@@ -127,8 +128,11 @@ const adminPaymentParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
   search: searchParser,
+  type: parseAsString,
   status: parseAsString,
   paymentMethod: parseAsString,
+  orderCode: searchParser,
+  needsRefund: parseAsBoolean,
   fromDate: parseAsString,
   toDate: parseAsString,
 };
@@ -136,6 +140,19 @@ const adminPaymentParsers = {
 export const useAdminPaymentParams = (
   options?: Parameters<typeof useQueryStates<typeof adminPaymentParsers>>[1],
 ) => useQueryStates(adminPaymentParsers, options);
+
+const adminCashRefundParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  status: parseAsStringLiteral(["Pending", "Refunded", "All"] as const).withDefault("Pending"),
+  orderCode: searchParser,
+  fromDate: parseAsString,
+  toDate: parseAsString,
+};
+
+export const useAdminCashRefundParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminCashRefundParsers>>[1],
+) => useQueryStates(adminCashRefundParsers, options);
 
 const adminAuditLogParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),

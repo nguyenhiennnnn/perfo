@@ -63,6 +63,9 @@ export const paymentMethodOptions = toOptions(PaymentMethod, {
   Momo: "Momo",
   Cash: "Tiền mặt",
   Stripe: "Stripe",
+  GiftCard: "Thẻ quà tặng",
+  BankTransfer: "Chuyển khoản",
+  Card: "Thẻ",
 });
 
 export const movieStatusOptions = toOptions(MovieStatus, {

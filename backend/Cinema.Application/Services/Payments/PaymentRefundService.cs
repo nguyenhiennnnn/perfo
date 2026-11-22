@@ -87,8 +87,16 @@ public class PaymentRefundService(
             CreatedAt = now,
             CompletedAt = isGateway ? null : now,
         };
-        db.PaymentTransactions.Add(refund);
-        await db.SaveChangesAsync(cancellationToken);
+        await db.InTransactionAsync(
+            async () =>
+            {
+                db.PaymentTransactions.Add(refund);
+                await db.SaveChangesAsync(cancellationToken);
+                if (!isGateway)
+                    await PublishRefundedAsync(refund, cancellationToken);
+            },
+            cancellationToken
+        );
         return refund;
     }
 
@@ -97,9 +105,27 @@ public class PaymentRefundService(
         CancellationToken cancellationToken
     )
     {
+        PaymentRefundResult? result = null;
+        await db.InTransactionAsync(
+            async () =>
+            {
+                result = await ExecuteLockedAsync(refundTransactionId, cancellationToken);
+            },
+            cancellationToken
+        );
+        return result!;
+    }
+
+    private async Task<PaymentRefundResult> ExecuteLockedAsync(
+        int refundTransactionId,
+        CancellationToken cancellationToken
+    )
+    {
+        await db.LockTransactionAsync(refundTransactionId, cancellationToken);
         var refund =
             await db
-                .PaymentTransactions.Include(t => t.OriginalTransaction)
+                .PaymentTransactions.AsNoTracking()
+                .Include(t => t.OriginalTransaction)
                 .FirstOrDefaultAsync(
                     t =>
                         t.PaymentTransactionId == refundTransactionId
@@ -152,16 +178,15 @@ public class PaymentRefundService(
             }
         }
 
-        refund.CompletedAt = DateTime.UtcNow;
-        if (gatewayResult is { Success: true })
-        {
-            refund.Status = PaymentStatus.Success;
-            refund.GatewayTransactionId = gatewayResult.RefundTransactionId;
-        }
-        else
-        {
-            refund.Status = PaymentStatus.Failed;
-            refund.Note = Truncate(
+        var completedAt = DateTime.UtcNow;
+        var success = gatewayResult is { Success: true };
+        var status = success ? PaymentStatus.Success : PaymentStatus.Failed;
+        var gatewayTransactionId = success
+            ? gatewayResult!.RefundTransactionId
+            : refund.GatewayTransactionId;
+        var note = success
+            ? refund.Note
+            : Truncate(
                 string.Join(
                     " | ",
                     new[] { refund.Note, gatewayResult?.Message, message }.Where(s =>
@@ -169,33 +194,51 @@ public class PaymentRefundService(
                     )
                 )
             );
+
+        if (!success)
             logger.LogWarning(
                 "RefundFailed RefundTransactionId {RefundId} ChargeTransactionId {ChargeId} Amount {Amount}",
                 refund.PaymentTransactionId,
                 charge.PaymentTransactionId,
                 refund.Amount
             );
+
+        var updated = await db
+            .PaymentTransactions.Where(t =>
+                t.PaymentTransactionId == refundTransactionId && t.Status == PaymentStatus.Pending
+            )
+            .ExecuteUpdateAsync(
+                s =>
+                    s.SetProperty(t => t.Status, status)
+                        .SetProperty(t => t.CompletedAt, completedAt)
+                        .SetProperty(t => t.GatewayTransactionId, gatewayTransactionId)
+                        .SetProperty(t => t.Note, note),
+                cancellationToken
+            );
+
+        if (updated > 0 && success)
+        {
+            refund.CompletedAt = completedAt;
+            await PublishRefundedAsync(refund, cancellationToken);
         }
 
-        await db.InTransactionAsync(
-            async () =>
-            {
-                await db.SaveChangesAsync(cancellationToken);
-                if (refund.Status == PaymentStatus.Success)
-                    await eventDispatcher.PublishAsync(
-                        new OrderRefunded(
-                            refund.OrderId,
-                            refund.PaymentTransactionId,
-                            refund.Amount,
-                            refund.CompletedAt ?? DateTime.UtcNow
-                        ),
-                        cancellationToken
-                    );
-            },
-            cancellationToken
-        );
+        refund.Status = status;
         return ToResult(refund, gatewayResult?.Message ?? message);
     }
+
+    private Task PublishRefundedAsync(
+        PaymentTransaction refund,
+        CancellationToken cancellationToken
+    ) =>
+        eventDispatcher.PublishAsync(
+            new OrderRefunded(
+                refund.OrderId,
+                refund.PaymentTransactionId,
+                refund.Amount,
+                refund.CompletedAt ?? DateTime.UtcNow
+            ),
+            cancellationToken
+        );
 
     private IPaymentGateway? FindGateway(PaymentMethod method) =>
         paymentGateways.FindByMethod(method.ToString());

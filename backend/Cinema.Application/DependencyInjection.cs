@@ -83,6 +83,8 @@ public static class DependencyInjection
         services.AddScoped<IOrderHoldPolicy, CounterHoldPolicy>();
         services.AddScoped<IOrderResourceHoldService, OrderResourceHoldService>();
         services.AddScoped<IOrderLoyaltyService, OrderLoyaltyService>();
+        services.AddScoped<IOrderRefundService, OrderRefundService>();
+        services.AddScoped<IOrderLineRefundService, OrderLineRefundService>();
         services.AddScoped<IOrderReleaseService, OrderReleaseService>();
         services.AddScoped<IOrderConfirmationService, OrderConfirmationService>();
         services.AddBackgroundEventHandler<OrderConfirmed, OrderConfirmedEmailHandler>();

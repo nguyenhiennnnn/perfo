@@ -44,6 +44,14 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
                     "\"PaidAmount\" >= 0 AND \"PaidAmount\" <= \"LockedUnitPrice\" * \"Quantity\""
                 );
                 t.HasCheckConstraint(
+                    "CK_OrderLines_RefundedAmount",
+                    "\"RefundedAmount\" >= 0 AND \"RefundedAmount\" <= \"PaidAmount\""
+                );
+                t.HasCheckConstraint(
+                    "CK_OrderLines_RefundedQuantity",
+                    "\"RefundedQuantity\" >= 0 AND \"RefundedQuantity\" <= \"Quantity\""
+                );
+                t.HasCheckConstraint(
                     "CK_OrderLines_CheckIn",
                     "(NOT \"IsCheckedIn\") OR \"LineType\" = 'Ticket'"
                 );
@@ -62,6 +70,8 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
         builder.Property(x => x.UnitListPrice).HasColumnType("decimal(18,2)");
         builder.Property(x => x.LockedUnitPrice).HasColumnType("decimal(18,2)");
         builder.Property(x => x.PaidAmount).HasColumnType("decimal(18,2)");
+        builder.Property(x => x.RefundedAmount).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
+        builder.Property(x => x.RefundedQuantity).HasDefaultValue(0);
         builder.Property(x => x.QrCode).HasMaxLength(255);
         builder.Property(x => x.IsCheckedIn).HasDefaultValue(false);
         builder.Property(x => x.CheckedInAt).HasColumnType("timestamp without time zone");

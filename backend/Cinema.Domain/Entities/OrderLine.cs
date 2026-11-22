@@ -18,6 +18,8 @@ public class OrderLine
     public decimal UnitListPrice { get; set; }
     public decimal LockedUnitPrice { get; set; }
     public decimal PaidAmount { get; set; }
+    public decimal RefundedAmount { get; set; }
+    public int RefundedQuantity { get; set; }
     public string? QrCode { get; set; }
     public bool IsCheckedIn { get; set; }
     public DateTime? CheckedInAt { get; set; }

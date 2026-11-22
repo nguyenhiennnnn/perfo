@@ -1,15 +1,22 @@
+import type { UseQueryResult } from "@tanstack/react-query";
+import { Ticket } from "lucide-react";
+import { ButtonLink } from "@/components/common/button-link";
+import { EmptyState } from "@/components/common/empty-state";
+import { QueryState } from "@/components/common/query-state";
 import { Button } from "@/components/ui/button";
-import { PaymentMethod } from "@/types/enum";
-import type { HoldOrderResponse, OrderComboLine, PricedSeat } from "@/features/client/orders/types";
-import { BookingHoldTimer } from "./booking-hold-timer";
-import { BookingPaymentMethod } from "./booking-payment-method";
-import { BookingPriceSummary } from "./booking-price-summary";
+import { ROUTES } from "@/config/routes";
 import { formatCurrency } from "@/lib/formatters";
+import { OrderStatus, PaymentMethod } from "@/types/enum";
+import type { OrderDetailDto } from "@/features/client/orders/types";
+import { canPayOutstanding } from "../../utils/order-payment";
+import { BookingHoldTimer } from "./booking-hold-timer";
+import { BookingOrderSummary } from "./booking-order-summary";
+import { BookingPaymentMethod } from "./booking-payment-method";
+import { BookingPaymentSkeleton } from "./booking-payment-skeleton";
 
 interface BookingPaymentStepProps {
-  seats: PricedSeat[];
-  comboItems: OrderComboLine[];
-  hold: HoldOrderResponse;
+  expiresAt: string;
+  orderQuery: UseQueryResult<OrderDetailDto>;
   paymentMethod: PaymentMethod;
   onPaymentMethodChange: (value: PaymentMethod) => void;
   isSubmitting: boolean;
@@ -19,9 +26,8 @@ interface BookingPaymentStepProps {
 }
 
 export const BookingPaymentStep = ({
-  seats,
-  comboItems,
-  hold,
+  expiresAt,
+  orderQuery,
   paymentMethod,
   onPaymentMethodChange,
   isSubmitting,
@@ -29,23 +35,51 @@ export const BookingPaymentStep = ({
   onCancel,
   isCancelling,
 }: BookingPaymentStepProps) => {
+  const order = orderQuery.data;
+  const showCancel = !order || order.status === OrderStatus.Pending;
+
   return (
     <div className="mx-auto flex w-full max-w-lg flex-col gap-4">
-      <BookingHoldTimer
-        expiresAt={hold.expiresAt}
-        className="sticky top-16 z-40"
-      />
+      <BookingHoldTimer expiresAt={expiresAt} className="sticky top-16 z-40" />
 
-      <BookingPriceSummary seats={seats} combos={undefined} comboQuantities={{}} comboItems={comboItems} hold={hold} />
+      <QueryState
+        query={orderQuery}
+        skeleton={<BookingPaymentSkeleton />}
+        errorTitle="Không tải được chi tiết đơn"
+      >
+        {(loadedOrder) =>
+          canPayOutstanding(loadedOrder) ? (
+            <>
+              {loadedOrder.payment.netPaidAmount > 0 && (
+                <p role="status" className="bg-warning/10 p-4 text-sm font-medium text-foreground">
+                  Đơn đã trả {formatCurrency(loadedOrder.payment.netPaidAmount)}. Thanh toán phần còn lại trước khi
+                  hết hạn giữ ghế để nhận vé.
+                </p>
+              )}
+              <BookingOrderSummary order={loadedOrder} />
+              <BookingPaymentMethod value={paymentMethod} onChange={onPaymentMethodChange} />
+              <Button disabled={isSubmitting} onClick={onSubmit}>
+                {isSubmitting
+                  ? "Đang chuyển đến cổng thanh toán..."
+                  : `Thanh toán${loadedOrder.payment.netPaidAmount > 0 ? " phần còn lại" : ""} ${formatCurrency(loadedOrder.payment.outstandingAmount)}`}
+              </Button>
+            </>
+          ) : (
+            <EmptyState
+              icon={Ticket}
+              title="Đơn không còn cần thanh toán"
+              description="Đơn đã đủ tiền, đã hủy hoặc đã hết hạn. Xem kết quả để biết trạng thái mới nhất."
+              action={<ButtonLink to={ROUTES.booking.result(loadedOrder.orderId)}>Xem kết quả đơn</ButtonLink>}
+            />
+          )
+        }
+      </QueryState>
 
-      <BookingPaymentMethod value={paymentMethod} onChange={onPaymentMethodChange} />
-
-      <Button disabled={isSubmitting} onClick={onSubmit}>
-        {isSubmitting ? "Đang chuyển đến cổng thanh toán..." : `Thanh toán ${formatCurrency(hold.finalAmount)}`}
-      </Button>
-      <Button variant="outline" disabled={isCancelling} onClick={onCancel}>
-        {isCancelling ? "Đang hủy..." : "Hủy, chọn lại ghế"}
-      </Button>
+      {showCancel && (
+        <Button variant="outline" disabled={isCancelling} onClick={onCancel}>
+          {isCancelling ? "Đang hủy..." : "Hủy, chọn lại ghế"}
+        </Button>
+      )}
     </div>
   );
-}
+};

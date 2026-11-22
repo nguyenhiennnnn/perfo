@@ -1,4 +1,4 @@
-import { CardSkeleton, LineSkeleton, TicketSkeleton } from "@/components/common/skeleton-shapes";
+import { CardSkeleton, LineSkeleton } from "@/components/common/skeleton-shapes";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const BookingResultSkeleton = () => (
@@ -10,8 +10,8 @@ export const BookingResultSkeleton = () => (
         <LineSkeleton className="w-1/2" />
       </div>
     </div>
-    <TicketSkeleton />
-    <div className="flex gap-3">
+    <CardSkeleton className="h-36" />
+    <div className="flex flex-wrap gap-3">
       <Skeleton className="h-11 w-36 cut-sm" />
       <Skeleton className="h-11 w-32 cut-sm" />
     </div>

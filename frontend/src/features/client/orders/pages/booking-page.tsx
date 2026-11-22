@@ -141,9 +141,8 @@ const BookingPage = () => {
             </p>
           )}
           <BookingPaymentStep
-            seats={flow.selectedSeatsInfo}
-            comboItems={flow.holdComboItems}
-            hold={flow.holdResult}
+            expiresAt={flow.holdResult.expiresAt}
+            orderQuery={flow.paymentOrder}
             paymentMethod={flow.paymentMethod}
             onPaymentMethodChange={flow.setPaymentMethod}
             isSubmitting={flow.isSubmittingPayment}

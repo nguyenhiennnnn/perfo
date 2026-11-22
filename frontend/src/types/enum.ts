@@ -88,6 +88,22 @@ export const PaymentStatus = {
 } as const;
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus];
 
+export const PaymentTransactionType = {
+  Charge: "Charge",
+  Refund: "Refund",
+} as const;
+export type PaymentTransactionType =
+  (typeof PaymentTransactionType)[keyof typeof PaymentTransactionType];
+
+export const PriceAdjustmentType = {
+  TierDiscount: "TierDiscount",
+  MembershipBenefit: "MembershipBenefit",
+  Promotion: "Promotion",
+  PackagePrice: "PackagePrice",
+} as const;
+export type PriceAdjustmentType =
+  (typeof PriceAdjustmentType)[keyof typeof PriceAdjustmentType];
+
 export const VerificationTokenPurpose = {
   EmailConfirmation: "EmailConfirmation",
   PasswordReset: "PasswordReset",

@@ -1,11 +1,11 @@
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { ordersApi } from "../api/orders-api";
 import { queryKeys } from "@/api/query-keys";
-import { OrderStatus } from "@/types/enum";
 import type {
   HoldSeatsRequest,
   CheckoutRequest,
   CancelOrderRequest,
+  OrderDetailDto,
   OrderListParams,
 } from "../types";
 
@@ -26,20 +26,23 @@ export function useMyOrders(params: Omit<OrderListParams, "cursor">) {
   });
 }
 
-export function useOrderDetail(
-  orderId: number,
-  options?: { pollWhilePendingMs?: number },
-) {
-  const pollWhilePendingMs = options?.pollWhilePendingMs;
+interface UseOrderDetailOptions {
+  getRefetchInterval?: (order: OrderDetailDto) => number | false;
+  alwaysRefetchOnMount?: boolean;
+}
+
+export function useOrderDetail(orderId: number, options?: UseOrderDetailOptions) {
+  const { getRefetchInterval, alwaysRefetchOnMount } = options ?? {};
   return useQuery({
     queryKey: queryKeys.orders.detail(orderId),
     queryFn: () => ordersApi.getOrderDetail(orderId),
     enabled: orderId > 0,
-    refetchInterval: pollWhilePendingMs
-      ? (query) =>
-          query.state.data?.data.status === OrderStatus.Pending
-            ? pollWhilePendingMs
-            : false
+    ...(alwaysRefetchOnMount && { refetchOnMount: "always" as const }),
+    refetchInterval: getRefetchInterval
+      ? (query) => {
+          const order = query.state.data?.data;
+          return order ? getRefetchInterval(order) : false;
+        }
       : false,
     refetchIntervalInBackground: true,
     select: (res) => res.data,

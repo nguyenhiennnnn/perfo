@@ -17,7 +17,6 @@ import {
   findLoneSeats,
   toggleSeatSelection,
 } from "@/components/common/seat-map/seat-map-utils";
-import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
 import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings";
 import { useShowtimeSeats } from "@/features/client/showtimes/hooks/use-showtimes";
 import { useRealtimeSeatMap } from "@/hooks/use-realtime-seat-map";
@@ -31,8 +30,7 @@ import {
   useOrderDetail,
 } from "./use-orders";
 import { ordersApi } from "../api/orders-api";
-import type { HoldOrderResponse, OrderComboLine, PricedSeat } from "../types";
-import { getOrderCombos, getOrderSeats } from "../utils/order-lines";
+import type { HoldOrderResponse } from "../types";
 import { ROUTES } from "@/config/routes";
 import { getServerNow } from "@/lib/server-clock";
 
@@ -126,10 +124,9 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
     resumeInvalidReason,
   ]);
 
-  const resumedSeats = useMemo<PricedSeat[]>(
-    () => (resumeOrderQuery.data ? getOrderSeats(resumeOrderQuery.data) : []),
-    [resumeOrderQuery.data],
-  );
+  const paymentOrder = useOrderDetail(holdResult?.orderId ?? 0, {
+    alwaysRefetchOnMount: true,
+  });
 
   const seatStatusMap = useRealtimeSeatMap({
     showtimeId,
@@ -149,14 +146,6 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
   const holdSeatsMutation = useHoldSeats();
   const applyPaymentMutation = useApplyPayment(holdResult?.orderId ?? 0);
   const cancelOrderMutation = useCancelOrder();
-
-  const selectedSeatsInfo = useMemo(
-    () =>
-      (showtimeSeats.data?.seats ?? []).filter((s) =>
-        selectedSeatIds.has(s.showtimeSeatId),
-      ),
-    [showtimeSeats.data, selectedSeatIds],
-  );
 
   const cinemaSettings = useCinemaSettings();
   const loneSeats = useMemo(
@@ -182,16 +171,6 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
         .map(([comboId, quantity]) => ({ comboId: Number(comboId), quantity })),
     [comboQuantities],
   );
-
-  const activeCombos = useActiveCombos();
-  const holdComboItems = useMemo<OrderComboLine[]>(() => {
-    if (isResumeMode)
-      return resumeOrderQuery.data ? getOrderCombos(resumeOrderQuery.data) : [];
-    return Object.entries(comboQuantities).flatMap(([comboId, quantity]) => {
-      const combo = activeCombos.data?.find((c) => c.comboId === Number(comboId));
-      return combo && quantity > 0 ? [{ name: combo.name, quantity, unitPrice: combo.price }] : [];
-    });
-  }, [isResumeMode, resumeOrderQuery.data, comboQuantities, activeCombos.data]);
 
   const toggleSeat = (showtimeSeatId: number) => {
     const allSeats = showtimeSeats.data?.seats ?? [];
@@ -333,7 +312,6 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
     showtimeSeats,
     seatStatusMap,
     selectedSeatIds,
-    selectedSeatsInfo: isResumeMode ? resumedSeats : selectedSeatsInfo,
     toggleSeat,
     selectSeats,
     loneSeats,
@@ -350,7 +328,7 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
     holdAndContinue,
     isHolding: holdSeatsMutation.isPending,
     holdResult,
-    holdComboItems,
+    paymentOrder,
     cancelHold,
     isCancelling: cancelOrderMutation.isPending,
     submitPayment,

@@ -6,7 +6,7 @@ import { useAuthStore } from "@/stores/auth-store";
 
 const ACCOUNT_NAV = [
   { to: ROUTES.account.profile, label: "Thông tin cá nhân", icon: User },
-  { to: ROUTES.account.tickets, label: "Vé đã mua", icon: Ticket },
+  { to: ROUTES.account.tickets, label: "Lịch sử đơn", icon: Ticket },
   { to: ROUTES.account.reviews, label: "Đánh giá của tôi", icon: Star },
   {
     to: ROUTES.account.changePassword,

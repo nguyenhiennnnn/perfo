@@ -73,7 +73,7 @@ export const HeaderUserMenu = ({ user }: HeaderUserMenuProps) => {
             <Link to={ROUTES.account.profile}>Thông tin tài khoản</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link to={ROUTES.account.tickets}>Vé của tôi</Link>
+            <Link to={ROUTES.account.tickets}>Lịch sử đơn</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Link to={ROUTES.account.reviews}>Đánh giá của tôi</Link>

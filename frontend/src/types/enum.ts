@@ -62,6 +62,24 @@ export const OrderLineType = {
 } as const;
 export type OrderLineType = (typeof OrderLineType)[keyof typeof OrderLineType];
 
+export const OrderType = {
+  Ticket: "Ticket",
+  Combo: "Combo",
+  GiftCard: "GiftCard",
+  Membership: "Membership",
+  RoomRental: "RoomRental",
+  Supplement: "Supplement",
+} as const;
+export type OrderType = (typeof OrderType)[keyof typeof OrderType];
+
+export const CancelledBy = {
+  Customer: "Customer",
+  Staff: "Staff",
+  Admin: "Admin",
+  System: "System",
+} as const;
+export type CancelledBy = (typeof CancelledBy)[keyof typeof CancelledBy];
+
 export const CancelReason = {
   CustomerChangedMind: "CustomerChangedMind",
   DuplicateOrder: "DuplicateOrder",

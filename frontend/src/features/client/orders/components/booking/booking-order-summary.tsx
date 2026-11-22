@@ -1,21 +1,10 @@
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { OrderLineType, PriceAdjustmentType } from "@/types/enum";
-import type { OrderDetailDto, OrderLineDto, OrderPriceAdjustmentDto } from "../../types";
+import { OrderLineType } from "@/types/enum";
+import type { OrderDetailDto, OrderLineDto } from "../../types";
 import { getTicketLines } from "../../utils/order-lines";
-
-const ADJUSTMENT_LABELS: Record<string, string> = {
-  [PriceAdjustmentType.TierDiscount]: "Ưu đãi hạng thành viên",
-  [PriceAdjustmentType.MembershipBenefit]: "Quyền lợi gói thành viên",
-  [PriceAdjustmentType.Promotion]: "Mã khuyến mãi",
-  [PriceAdjustmentType.PackagePrice]: "Giá gói sản phẩm",
-};
-
-const getAdjustmentLabel = (adjustment: OrderPriceAdjustmentDto) => {
-  const label = ADJUSTMENT_LABELS[adjustment.type] ?? "Giảm giá";
-  return adjustment.referenceName ? `${label} ${adjustment.referenceName}` : label;
-};
+import { getAdjustmentLabel } from "../../utils/order-labels";
 
 const getLineLabel = (line: OrderLineDto) => {
   const name = line.combo?.name ?? line.description ?? "";

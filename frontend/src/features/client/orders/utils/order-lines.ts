@@ -1,6 +1,5 @@
 import { OrderLineType } from "@/types/enum";
 import type {
-  OrderComboLine,
   OrderDetailDto,
   OrderLineDto,
   OrderTicketDto,
@@ -21,15 +20,6 @@ export const getOrderSeats = (order: OrderDetailDto): PricedSeat[] =>
     seatNumber: line.ticket.seatNumber,
     price: line.lockedUnitPrice,
   }));
-
-export const getOrderCombos = (order: OrderDetailDto): OrderComboLine[] =>
-  order.lines
-    .filter((line) => line.lineType === OrderLineType.Combo)
-    .map((line) => ({
-      name: line.combo?.name ?? line.description ?? "",
-      quantity: line.quantity,
-      unitPrice: line.lockedUnitPrice,
-    }));
 
 export const getOrderShowing = (order: OrderDetailDto) =>
   getTicketLines(order)[0]?.ticket ?? null;

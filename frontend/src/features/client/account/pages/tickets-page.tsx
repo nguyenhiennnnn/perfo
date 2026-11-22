@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { Ticket as TicketIcon } from "lucide-react";
+import { Receipt } from "lucide-react";
 import { Chip, ChipGroup } from "@/components/common/chip";
 import { EmptyState } from "@/components/common/empty-state";
 import { PageTitle } from "@/components/common/page-title";
@@ -7,17 +7,22 @@ import { QueryState } from "@/components/common/query-state";
 import { ButtonLink } from "@/components/common/button-link";
 import { SkeletonList } from "@/components/common/skeleton-list";
 import { InfiniteScrollTrigger } from "@/components/common/infinite-scroll-trigger";
-import { TicketCard } from "@/features/client/account/components/ticket-card";
+import { OrderCard } from "@/features/client/orders/components/history/order-card";
 import { useCancelOrder, useMyOrders } from "@/features/client/orders/hooks/use-orders";
 import { useAlertDialogOpen } from "@/stores/alert-dialog-store";
-import { bookingStatusOptions } from "@/lib/enum-options";
-import { CancelReason } from "@/types/enum";
+import { CancelReason, OrderStatus } from "@/types/enum";
 import { ACCOUNT_LIST_PAGE_LIMIT, SKELETON_LIST_COUNT } from "@/config/default-constants";
 import { ROUTES } from "@/config/routes";
 
 const TAB_ALL_KEY = "all";
 
-const TABS = [{ value: null as string | null, label: "Tất cả" }, ...bookingStatusOptions.map((o) => ({ value: o.value as string | null, label: o.label }))];
+const TABS: { value: string | null; label: string }[] = [
+  { value: null, label: "Tất cả" },
+  { value: OrderStatus.Pending, label: "Chờ thanh toán" },
+  { value: OrderStatus.Confirmed, label: "Đã xác nhận" },
+  { value: OrderStatus.Cancelled, label: "Đã hủy" },
+  { value: OrderStatus.Expired, label: "Hết hạn" },
+];
 
 const AccountTicketsPage = () => {
   const [status, setStatus] = useState<string | null>(null);
@@ -42,9 +47,9 @@ const AccountTicketsPage = () => {
 
   return (
     <div>
-      <PageTitle title="Vé của tôi" />
+      <PageTitle title="Lịch sử đơn" description="Các đơn bạn đã đặt, theo thứ tự mới nhất." />
 
-      <ChipGroup role="tablist" aria-label="Trạng thái vé">
+      <ChipGroup role="tablist" aria-label="Trạng thái đơn">
         {TABS.map((tab) => (
           <Chip
             key={tab.label}
@@ -61,29 +66,29 @@ const AccountTicketsPage = () => {
       <div role="tabpanel" aria-labelledby={getTabId(status)} className="mt-5 space-y-3" aria-busy={ordersQuery.isLoading || undefined}>
         <QueryState
           query={ordersQuery}
-          skeleton={<SkeletonList count={SKELETON_LIST_COUNT} className="h-42 sm:h-23" />}
+          skeleton={<SkeletonList count={SKELETON_LIST_COUNT} className="h-44 sm:h-32" />}
           isEmpty={orders.length === 0}
           empty={
             status ? (
               <EmptyState
                 variant="filtered"
-                title="Không có vé ở trạng thái này"
-                description="Chọn trạng thái khác hoặc xem tất cả vé."
+                title="Không có đơn ở trạng thái này"
+                description="Chọn trạng thái khác hoặc xem tất cả đơn."
                 onClearFilters={() => setStatus(null)}
               />
             ) : (
               <EmptyState
-                icon={TicketIcon}
-                title="Chưa có vé nào"
-                description="Đặt vé xem phim để vé và mã QR hiện ở đây."
+                icon={Receipt}
+                title="Chưa có đơn nào"
+                description="Đặt vé xem phim để đơn hàng hiện ở đây."
                 action={<ButtonLink to={ROUTES.movies.list} variant="secondary">Xem danh sách phim</ButtonLink>}
               />
             )
           }
-          errorTitle="Không tải được danh sách vé"
+          errorTitle="Không tải được lịch sử đơn"
         >
           {orders.map((order) => (
-            <TicketCard key={order.orderId} order={order} onCancel={() => handleCancel(order.orderId)} />
+            <OrderCard key={order.orderId} order={order} onCancel={() => handleCancel(order.orderId)} />
           ))}
           <InfiniteScrollTrigger hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} fetchNextPage={fetchNextPage} />
         </QueryState>

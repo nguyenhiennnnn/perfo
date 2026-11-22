@@ -14,6 +14,7 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
 {
     public async Task<ShowtimeSeatsResponseDto> GetShowtimeSeatsAsync(
         int showtimeId,
+        int? viewerUserId,
         CancellationToken cancellationToken
     )
     {
@@ -26,24 +27,52 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
                 .FirstOrDefaultAsync(s => s.ShowtimeId == showtimeId, cancellationToken)
             ?? throw new NotFoundException(Messages.NotFound_Showtime);
 
-        var seats = await db
-            .ShowtimeSeats.Include(ss => ss.Seat)
-                .ThenInclude(s => s.SeatType)
-            .Where(ss => ss.ShowtimeId == showtimeId)
+        var seatRows = await db
+            .ShowtimeSeats.Where(ss => ss.ShowtimeId == showtimeId)
             .OrderBy(ss => ss.Seat.SeatRow)
             .ThenBy(ss => ss.Seat.SeatNumber)
-            .Select(ss => new ShowtimeSeatItemDto(
+            .Select(ss => new
+            {
                 ss.ShowtimeSeatId,
                 ss.Seat.SeatRow,
                 ss.Seat.SeatNumber,
                 ss.Seat.SeatTypeId,
-                ss.Seat.SeatType != null ? ss.Seat.SeatType.Name : null,
+                SeatTypeName = ss.Seat.SeatType != null ? ss.Seat.SeatType.Name : null,
                 ss.Seat.CoupleId,
-                ss.Status.ToString(),
+                ss.Status,
+                ss.HeldByOrderId,
                 ss.Price,
-                ss.Seat.SeatType != null && ss.Seat.SeatType.IsCouple
-            ))
+                IsCouple = ss.Seat.SeatType != null && ss.Seat.SeatType.IsCouple,
+            })
             .ToListAsync(cancellationToken);
+
+        var myOrder = await FindViewerHoldOrderAsync(showtimeId, viewerUserId, cancellationToken);
+
+        var seats = seatRows
+            .Select(r => new ShowtimeSeatItemDto(
+                r.ShowtimeSeatId,
+                r.SeatRow,
+                r.SeatNumber,
+                r.SeatTypeId,
+                r.SeatTypeName,
+                r.CoupleId,
+                r.Status.ToString(),
+                r.Price,
+                r.IsCouple,
+                myOrder is not null
+                    && r.Status == ShowtimeSeatStatus.Held
+                    && r.HeldByOrderId == myOrder.OrderId
+            ))
+            .ToList();
+
+        var myHold = myOrder is null
+            ? null
+            : new ShowtimeMyHoldDto(
+                myOrder.OrderId,
+                myOrder.OrderCode,
+                myOrder.ExpiresAt,
+                seats.Where(s => s.HeldByMe).Select(s => s.ShowtimeSeatId).ToList()
+            );
 
         var aisles = await db
             .Seats.Where(s => s.RoomId == showtime.RoomId && s.IsAisle)
@@ -77,9 +106,36 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
             seats,
             showtime.Movie.PosterUrl,
             showtime.Movie.AgeRating?.Code,
-            showtime.Room.ScreenType?.Name
+            showtime.Room.ScreenType?.Name,
+            myHold is { ShowtimeSeatIds.Count: > 0 } ? myHold : null
         );
     }
+
+    private async Task<ViewerHoldOrder?> FindViewerHoldOrderAsync(
+        int showtimeId,
+        int? viewerUserId,
+        CancellationToken cancellationToken
+    )
+    {
+        if (viewerUserId is null)
+            return null;
+
+        var now = DateTime.UtcNow;
+        return await db
+            .Orders.AsNoTracking()
+            .Where(o =>
+                o.UserId == viewerUserId
+                && o.Channel == SalesChannel.Online
+                && o.Status == OrderStatus.Pending
+                && o.ExpiresAt > now
+                && o.Lines.Any(l => l.ShowtimeId == showtimeId)
+            )
+            .OrderByDescending(o => o.OrderId)
+            .Select(o => new ViewerHoldOrder(o.OrderId, o.OrderCode, o.ExpiresAt!.Value))
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    private sealed record ViewerHoldOrder(int OrderId, string OrderCode, DateTime ExpiresAt);
 
     public async Task<List<SeatSuggestionDto>> GetSeatSuggestionsAsync(
         int showtimeId,

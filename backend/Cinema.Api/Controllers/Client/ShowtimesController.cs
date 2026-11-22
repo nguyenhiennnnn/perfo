@@ -8,7 +8,7 @@ namespace Cinema.Api.Controllers.Client;
 
 [ApiController]
 [Route(ApiPaths.ApiVersionPrefix + "/showtimes")]
-public class ShowtimesController(IShowtimeQueryService showtimeQueryService) : ControllerBase
+public class ShowtimesController(IShowtimeQueryService showtimeQueryService) : AppControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetSchedule(
@@ -36,6 +36,7 @@ public class ShowtimesController(IShowtimeQueryService showtimeQueryService) : C
     {
         var result = await showtimeQueryService.GetShowtimeSeatsAsync(
             showtimeId,
+            CurrentUserIdOrNull,
             cancellationToken
         );
         return Ok(result);

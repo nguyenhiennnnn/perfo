@@ -16,21 +16,6 @@ public class ShowtimeMappingConfig : IRegister
             .Map(dest => dest.Status, src => src.Status.ToDtoStatus());
 
         config
-            .NewConfig<ShowtimeSeat, ShowtimeSeatItemDto>()
-            .Map(dest => dest.SeatRow, src => src.Seat.SeatRow)
-            .Map(dest => dest.SeatNumber, src => src.Seat.SeatNumber)
-            .Map(
-                dest => dest.SeatType,
-                src => src.Seat.SeatType != null ? src.Seat.SeatType.Name : "Standard"
-            )
-            .Map(dest => dest.Status, src => src.Status.ToDtoStatus())
-            .Map(dest => dest.Price, src => src.Price)
-            .Map(
-                dest => dest.IsCouple,
-                src => src.Seat.SeatType != null && src.Seat.SeatType.IsCouple
-            );
-
-        config
             .NewConfig<Showtime, WholeCinemaShowtimeSlotDto>()
             .Map(dest => dest.RoomName, src => src.Room.RoomName)
             .Map(

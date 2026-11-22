@@ -9,7 +9,9 @@ public record AdminPaymentListFilter(
     DateOnly? FromDate,
     DateOnly? ToDate,
     string? Search,
-    bool? NeedsRefund = null
+    bool? NeedsRefund = null,
+    string? Type = null,
+    string? OrderCode = null
 );
 
 public interface IPaymentAdminService
@@ -21,7 +23,7 @@ public interface IPaymentAdminService
         CancellationToken cancellationToken
     );
     Task<AdminPaymentDetailDto> GetPaymentDetailAsync(
-        int paymentId,
+        int transactionId,
         CancellationToken cancellationToken
     );
 }

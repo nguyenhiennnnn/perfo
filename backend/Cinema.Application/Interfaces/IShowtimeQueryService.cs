@@ -14,6 +14,7 @@ public interface IShowtimeQueryService
 {
     Task<ShowtimeSeatsResponseDto> GetShowtimeSeatsAsync(
         int showtimeId,
+        int? viewerUserId,
         CancellationToken cancellationToken
     );
     Task<List<SeatSuggestionDto>> GetSeatSuggestionsAsync(

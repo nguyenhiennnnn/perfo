@@ -26,7 +26,7 @@ public interface IRealtimeNotifier
 
     Task NotifyHoldExpiredAsync(
         int showtimeId,
-        int bookingId,
+        int orderId,
         List<int> seatIds,
         CancellationToken cancellationToken
     );

@@ -9,7 +9,15 @@ public record ShowtimeSeatItemDto(
     Guid? CoupleId,
     string Status,
     decimal Price,
-    bool IsCouple
+    bool IsCouple,
+    bool HeldByMe = false
+);
+
+public record ShowtimeMyHoldDto(
+    int OrderId,
+    string OrderCode,
+    DateTime ExpiresAt,
+    List<int> ShowtimeSeatIds
 );
 
 public record AislePositionDto(string SeatRow, int SeatNumber);
@@ -25,7 +33,8 @@ public record ShowtimeSeatsResponseDto(
     List<ShowtimeSeatItemDto> Seats,
     string? MoviePosterUrl = null,
     string? AgeRatingCode = null,
-    string? ScreenType = null
+    string? ScreenType = null,
+    ShowtimeMyHoldDto? MyHold = null
 );
 
 public record SeatSuggestionDto(

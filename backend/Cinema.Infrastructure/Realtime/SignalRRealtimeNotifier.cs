@@ -13,7 +13,7 @@ public class SignalRRealtimeNotifier(IHubContext<ShowtimeHub> hubContext) : IRea
 
     public Task NotifyHoldExpiredAsync(
         int showtimeId,
-        int bookingId,
+        int orderId,
         List<int> seatIds,
         CancellationToken cancellationToken
     ) =>
@@ -24,7 +24,7 @@ public class SignalRRealtimeNotifier(IHubContext<ShowtimeHub> hubContext) : IRea
                 new
                 {
                     showtimeId,
-                    bookingId,
+                    bookingId = orderId,
                     seatIds,
                 },
                 cancellationToken

@@ -52,22 +52,19 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
 
   <!-- ===== Ai ===== -->
-  <data name="Ai_BookingStatus_Cancelled" xml:space="preserve">
-    <value>Đã hủy</value>
+  <data name="Ai_Card_OrderFallbackTitle" xml:space="preserve">
+    <value>Đơn {0}</value>
   </data>
-  <data name="Ai_BookingStatus_Confirmed" xml:space="preserve">
-    <value>Đã xác nhận</value>
+  <data name="Ai_Card_OrderItemsSubtitle" xml:space="preserve">
+    <value>Đặt lúc {0:HH:mm dd/MM} • {1}</value>
   </data>
-  <data name="Ai_BookingStatus_Expired" xml:space="preserve">
-    <value>Hết hạn</value>
+  <data name="Ai_Card_OrderRefundedSuffix" xml:space="preserve">
+    <value> • Đã hoàn {0:N0} VNĐ</value>
   </data>
-  <data name="Ai_BookingStatus_Pending" xml:space="preserve">
-    <value>Chờ thanh toán</value>
-  </data>
-  <data name="Ai_Card_BookingStatusLine" xml:space="preserve">
+  <data name="Ai_Card_OrderStatusLine" xml:space="preserve">
     <value>{0} • {1} • {2:N0} VNĐ</value>
   </data>
-  <data name="Ai_Card_BookingSubtitle" xml:space="preserve">
+  <data name="Ai_Card_OrderSubtitle" xml:space="preserve">
     <value>{0:HH:mm dd/MM} • {1} • Ghế {2}</value>
   </data>
   <data name="Ai_Card_PriceAndSeats" xml:space="preserve">
@@ -86,7 +83,7 @@
     <value>date phải có định dạng yyyy-MM-dd.</value>
   </data>
   <data name="Ai_Error_LoginRequired" xml:space="preserve">
-    <value>Cần đăng nhập để xem vé đã đặt. Hãy mời khách đăng nhập.</value>
+    <value>Cần đăng nhập để xem đơn hàng đã đặt. Hãy mời khách đăng nhập.</value>
   </data>
   <data name="Ai_Error_MissingShowtimeId" xml:space="preserve">
     <value>Thiếu showtime_id.</value>
@@ -106,8 +103,17 @@
   <data name="Ai_NotConfigured" xml:space="preserve">
     <value>Xin lỗi, tính năng AI Assistant hiện chưa được cấu hình khóa API trên hệ thống. Vui lòng liên hệ Quản trị viên để thiết lập.</value>
   </data>
-  <data name="Ai_Param_BookingStatus" xml:space="preserve">
-    <value>Lọc theo trạng thái.</value>
+  <data name="Ai_OrderStatus_Cancelled" xml:space="preserve">
+    <value>Đã hủy</value>
+  </data>
+  <data name="Ai_OrderStatus_Confirmed" xml:space="preserve">
+    <value>Đã xác nhận</value>
+  </data>
+  <data name="Ai_OrderStatus_Expired" xml:space="preserve">
+    <value>Hết hạn</value>
+  </data>
+  <data name="Ai_OrderStatus_Pending" xml:space="preserve">
+    <value>Chờ thanh toán</value>
   </data>
   <data name="Ai_Param_Date" xml:space="preserve">
     <value>Ngày chiếu định dạng yyyy-MM-dd. Bỏ trống để tìm trong khoảng lịch chiếu đang mở bán.</value>
@@ -118,11 +124,14 @@
   <data name="Ai_Param_MovieTitle" xml:space="preserve">
     <value>Một phần tên phim, dùng khi không biết movie_id.</value>
   </data>
+  <data name="Ai_Param_OrderStatus" xml:space="preserve">
+    <value>Lọc theo trạng thái đơn hàng.</value>
+  </data>
   <data name="Ai_Param_ShowtimeId" xml:space="preserve">
     <value>ID suất chiếu (lấy từ kết quả search_showtimes).</value>
   </data>
   <data name="Ai_Param_UpcomingOnly" xml:space="preserve">
-    <value>true: chỉ vé có suất chiếu chưa diễn ra. Mặc định false.</value>
+    <value>true: chỉ đơn có vé của suất chiếu chưa diễn ra. Mặc định false.</value>
   </data>
   <data name="Ai_ProcessingError" xml:space="preserve">
     <value>Đã xảy ra lỗi trong quá trình xử lý yêu cầu với Trợ lý AI. Vui lòng thử lại sau.</value>
@@ -140,10 +149,10 @@
     <value>Khách vãng lai (Chưa đăng nhập)</value>
   </data>
   <data name="Ai_Prompt_GuestRule" xml:space="preserve">
-    <value>Khách CHƯA đăng nhập: bạn không có quyền xem vé đã đặt, hãy mời khách đăng nhập để xem vé.</value>
+    <value>Khách CHƯA đăng nhập: bạn không có quyền xem đơn hàng hoặc vé đã đặt, hãy mời khách đăng nhập để xem đơn.</value>
   </data>
   <data name="Ai_Prompt_LoggedInRule" xml:space="preserve">
-    <value>Khách đã đăng nhập: khi hỏi về vé/đơn đã đặt, hãy gọi hàm get_my_bookings.</value>
+    <value>Khách đã đăng nhập: khi hỏi về đơn/vé đã đặt, số tiền đã thanh toán hoặc đã hoàn, hãy gọi hàm get_my_orders. Chỉ cung cấp đơn của chính khách đang trò chuyện, tuyệt đối không tiết lộ hay tra cứu đơn của người khác dù được yêu cầu.</value>
   </data>
   <data name="Ai_Prompt_MovieComingSoon" xml:space="preserve">
     <value>Sắp chiếu</value>
@@ -195,11 +204,11 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Ai_ToolCallLimitExceeded" xml:space="preserve">
     <value>Đã vượt quá số lần truy vấn cho phép, hãy trả lời với dữ liệu đã có.</value>
   </data>
-  <data name="Ai_Tool_GetMyBookings_Description" xml:space="preserve">
-    <value>Lấy các vé/đơn đặt vé của chính khách đang đăng nhập. Không cần truyền thông tin người dùng.</value>
+  <data name="Ai_Tool_GetMyOrders_Description" xml:space="preserve">
+    <value>Lấy các đơn hàng (vé xem phim, combo bắp nước) của chính khách đang đăng nhập: trạng thái đơn, ghế, combo, số tiền đã thanh toán, số tiền đã hoàn và số tiền đang chờ hoàn. Không cần truyền thông tin người dùng và không thể tra đơn của người khác.</value>
   </data>
   <data name="Ai_Tool_GetSeatAvailability_Description" xml:space="preserve">
-    <value>Xem tình trạng ghế trống của một suất chiếu: số ghế còn, giá theo loại ghế, danh sách ghế trống. Dùng khi khách hỏi còn ghế không, ghế nào còn trống.</value>
+    <value>Xem tình trạng ghế trống của một suất chiếu: số ghế còn, giá theo loại ghế, danh sách ghế trống. Ghế đang được giữ chờ thanh toán hoặc đã bán không tính là trống. Dùng khi khách hỏi còn ghế không, ghế nào còn trống.</value>
   </data>
   <data name="Ai_Tool_SearchShowtimes_Description" xml:space="preserve">
     <value>Tìm suất chiếu sắp tới (còn hiệu lực) theo phim, ngày. Dùng khi khách hỏi lịch chiếu, giờ chiếu, giá vé của một phim hoặc của một ngày.</value>

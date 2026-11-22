@@ -11,14 +11,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Cinema.Application.Services.Ai;
 
-public class AiToolExecutor(IAppDbContext db, ILogger<AiToolExecutor> logger)
+public class AiToolExecutor(
+    IAppDbContext db,
+    IPaymentLedgerService paymentLedger,
+    ILogger<AiToolExecutor> logger
+)
 {
     public const string SearchShowtimes = "search_showtimes";
     public const string GetSeatAvailability = "get_seat_availability";
-    public const string GetMyBookings = "get_my_bookings";
+    public const string GetMyOrders = "get_my_orders";
 
     private const int MaxShowtimeResults = 8;
-    private const int MaxBookingResults = 5;
+    private const int MaxOrderResults = 5;
     private const int MaxSeatLabels = 40;
 
     public record ToolResult(JsonObject Response, List<AiCardDto> Cards);
@@ -62,8 +66,8 @@ public class AiToolExecutor(IAppDbContext db, ILogger<AiToolExecutor> logger)
         {
             tools.Add(
                 new AiToolDefinition(
-                    GetMyBookings,
-                    Messages.Ai_Tool_GetMyBookings_Description,
+                    GetMyOrders,
+                    Messages.Ai_Tool_GetMyOrders_Description,
                     [
                         new AiToolParameter(
                             "upcoming_only",
@@ -73,8 +77,8 @@ public class AiToolExecutor(IAppDbContext db, ILogger<AiToolExecutor> logger)
                         new AiToolParameter(
                             "status",
                             AiToolParameterType.String,
-                            Messages.Ai_Param_BookingStatus,
-                            AllowedValues: Enum.GetValues<BookingStatus>()
+                            Messages.Ai_Param_OrderStatus,
+                            AllowedValues: Enum.GetValues<OrderStatus>()
                                 .Select(s => s.ToDtoStatus())
                                 .ToList()
                         ),
@@ -99,7 +103,7 @@ public class AiToolExecutor(IAppDbContext db, ILogger<AiToolExecutor> logger)
             {
                 SearchShowtimes => await SearchShowtimesAsync(args, cancellationToken),
                 GetSeatAvailability => await GetSeatAvailabilityAsync(args, cancellationToken),
-                GetMyBookings => await GetMyBookingsAsync(args, userId, cancellationToken),
+                GetMyOrders => await GetMyOrdersAsync(args, userId, cancellationToken),
                 _ => Error(string.Format(Messages.Ai_Error_UnknownFunction, name)),
             };
         }
@@ -319,7 +323,7 @@ public class AiToolExecutor(IAppDbContext db, ILogger<AiToolExecutor> logger)
         return new ToolResult(response, [card]);
     }
 
-    private async Task<ToolResult> GetMyBookingsAsync(
+    private async Task<ToolResult> GetMyOrdersAsync(
         JsonObject? args,
         int? userId,
         CancellationToken ct
@@ -329,101 +333,168 @@ public class AiToolExecutor(IAppDbContext db, ILogger<AiToolExecutor> logger)
             return Error(Messages.Ai_Error_LoginRequired);
 
         var now = DateTime.UtcNow;
-        var query = db.Bookings.AsNoTracking().Where(b => b.UserId == userId.Value);
+        var query = db.Orders.AsNoTracking().Where(o => o.UserId == userId.Value);
 
         if (
             GetString(args, "status") is { } statusStr
-            && Enum.TryParse<BookingStatus>(statusStr, true, out var status)
+            && Enum.TryParse<OrderStatus>(statusStr, true, out var status)
         )
-            query = query.Where(b => b.Status == status);
+            query = query.Where(o => o.Status == status);
 
         if (GetBool(args, "upcoming_only") == true)
-            query = query.Where(b => b.Showtime.StartTime >= now);
+            query = query.Where(o =>
+                o.Lines.Any(l =>
+                    l.LineType == OrderLineType.Ticket
+                    && l.Showtime != null
+                    && l.Showtime.StartTime >= now
+                )
+            );
 
-        var rows = await query
-            .OrderByDescending(b => b.BookingId)
-            .Take(MaxBookingResults)
-            .Select(b => new
+        var orders = await query
+            .OrderByDescending(o => o.OrderId)
+            .Take(MaxOrderResults)
+            .Select(o => new
             {
-                b.BookingId,
-                b.BookingCode,
-                b.Status,
-                b.FinalAmount,
-                MovieTitle = b.Showtime.Movie.Title,
-                b.Showtime.Movie.PosterUrl,
-                RoomName = b.Showtime.Room.RoomName,
-                b.Showtime.StartTime,
-                Seats = b
-                    .Tickets.Select(t => new
-                    {
-                        t.ShowtimeSeat.Seat.SeatRow,
-                        t.ShowtimeSeat.Seat.SeatNumber,
-                    })
-                    .ToList(),
+                o.OrderId,
+                o.OrderCode,
+                o.Status,
+                o.FinalAmount,
+                o.CreatedAt,
             })
             .ToListAsync(ct);
 
+        var orderIds = orders.Select(o => o.OrderId).ToList();
+        var lines = await db
+            .OrderLines.AsNoTracking()
+            .Where(l =>
+                orderIds.Contains(l.OrderId)
+                && (l.LineType == OrderLineType.Ticket || l.LineType == OrderLineType.Combo)
+            )
+            .OrderBy(l => l.OrderLineId)
+            .Select(l => new
+            {
+                l.OrderId,
+                l.LineType,
+                l.Quantity,
+                l.RefundedQuantity,
+                SeatRow = l.ShowtimeSeat != null ? l.ShowtimeSeat.Seat.SeatRow : null,
+                SeatNumber = l.ShowtimeSeat != null
+                    ? (int?)l.ShowtimeSeat.Seat.SeatNumber
+                    : null,
+                ComboName = l.Combo != null ? l.Combo.Name : l.Description,
+                MovieTitle = l.Showtime != null ? l.Showtime.Movie.Title : null,
+                PosterUrl = l.Showtime != null ? l.Showtime.Movie.PosterUrl : null,
+                RoomName = l.Showtime != null ? l.Showtime.Room.RoomName : null,
+                StartTime = l.Showtime != null ? (DateTime?)l.Showtime.StartTime : null,
+            })
+            .ToListAsync(ct);
+        var linesByOrder = lines.ToLookup(l => l.OrderId);
+
         var items = new JsonArray();
         var cards = new List<AiCardDto>();
-        foreach (var r in rows)
+        foreach (var o in orders)
         {
-            var seats = r
-                .Seats.OrderBy(x => x.SeatRow, StringComparer.Ordinal)
-                .ThenBy(x => x.SeatNumber)
-                .Select(x => $"{x.SeatRow}{x.SeatNumber}")
+            var orderLines = linesByOrder[o.OrderId].ToList();
+            var ticketLines = orderLines.Where(l => l.LineType == OrderLineType.Ticket).ToList();
+            var showtimeLine = ticketLines.FirstOrDefault(l => l.StartTime is not null);
+            var seats = ticketLines
+                .Where(l => l.SeatRow is not null && l.SeatNumber is not null)
+                .OrderBy(l => l.SeatRow, StringComparer.Ordinal)
+                .ThenBy(l => l.SeatNumber)
+                .Select(l => $"{l.SeatRow}{l.SeatNumber}")
                 .ToList();
-            var statusText = StatusText(r.Status);
-            items.Add(
-                new JsonObject
+            var combos = orderLines
+                .Where(l => l.LineType == OrderLineType.Combo)
+                .Select(l => new JsonObject
                 {
-                    ["bookingId"] = r.BookingId,
-                    ["bookingCode"] = r.BookingCode,
-                    ["status"] = statusText,
-                    ["movieTitle"] = r.MovieTitle,
-                    ["room"] = r.RoomName,
-                    ["startTime"] = BusinessTime
-                        .ToLocal(r.StartTime)
-                        .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture),
-                    ["seats"] = new JsonArray(seats.Select(s => (JsonNode?)s).ToArray()),
-                    ["finalAmountVnd"] = r.FinalAmount,
-                }
+                    ["name"] = l.ComboName,
+                    ["quantity"] = l.Quantity,
+                })
+                .ToList();
+            var summary = await paymentLedger.GetSummaryAsync(o.OrderId, ct);
+            var statusText = StatusText(o.Status);
+
+            var item = new JsonObject
+            {
+                ["orderId"] = o.OrderId,
+                ["orderCode"] = o.OrderCode,
+                ["status"] = statusText,
+                ["seats"] = new JsonArray(seats.Select(s => (JsonNode?)s).ToArray()),
+                ["ticketCount"] = ticketLines.Sum(l => l.Quantity),
+                ["refundedTicketCount"] = ticketLines.Sum(l => l.RefundedQuantity),
+                ["combos"] = new JsonArray(combos.Select(c => (JsonNode?)c).ToArray()),
+                ["finalAmountVnd"] = o.FinalAmount,
+                ["paidAmountVnd"] = summary.CollectedAmount,
+                ["refundedAmountVnd"] = summary.RefundedAmount,
+                ["pendingRefundAmountVnd"] = summary.PendingRefundAmount,
+            };
+            if (showtimeLine is not null)
+            {
+                item["movieTitle"] = showtimeLine.MovieTitle;
+                item["room"] = showtimeLine.RoomName;
+                item["startTime"] = BusinessTime
+                    .ToLocal(showtimeLine.StartTime!.Value)
+                    .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture);
+            }
+            items.Add(item);
+
+            var detail = string.Format(
+                Messages.Ai_Card_OrderStatusLine,
+                o.OrderCode,
+                statusText,
+                o.FinalAmount
+            );
+            if (summary.RefundedAmount > 0m)
+                detail += string.Format(
+                    Messages.Ai_Card_OrderRefundedSuffix,
+                    summary.RefundedAmount
+                );
+
+            var comboNames = string.Join(
+                ", ",
+                orderLines
+                    .Where(l => l.LineType == OrderLineType.Combo)
+                    .Select(l => $"{l.ComboName} x{l.Quantity}")
             );
             cards.Add(
                 new AiCardDto(
                     "booking",
-                    r.MovieTitle,
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        Messages.Ai_Card_BookingSubtitle,
-                        BusinessTime.ToLocal(r.StartTime),
-                        r.RoomName,
-                        string.Join(", ", seats)
-                    ),
-                    string.Format(
-                        Messages.Ai_Card_BookingStatusLine,
-                        r.BookingCode,
-                        statusText,
-                        r.FinalAmount
-                    ),
-                    r.PosterUrl,
-                    $"/account/tickets/{r.BookingId}"
+                    showtimeLine?.MovieTitle
+                        ?? string.Format(Messages.Ai_Card_OrderFallbackTitle, o.OrderCode),
+                    showtimeLine is null
+                        ? string.Format(
+                            CultureInfo.InvariantCulture,
+                            Messages.Ai_Card_OrderItemsSubtitle,
+                            BusinessTime.ToLocal(o.CreatedAt),
+                            comboNames
+                        )
+                        : string.Format(
+                            CultureInfo.InvariantCulture,
+                            Messages.Ai_Card_OrderSubtitle,
+                            BusinessTime.ToLocal(showtimeLine.StartTime!.Value),
+                            showtimeLine.RoomName,
+                            string.Join(", ", seats)
+                        ),
+                    detail,
+                    showtimeLine?.PosterUrl,
+                    $"/account/tickets/{o.OrderId}"
                 )
             );
         }
 
         return new ToolResult(
-            new JsonObject { ["count"] = items.Count, ["bookings"] = items },
+            new JsonObject { ["count"] = items.Count, ["orders"] = items },
             cards
         );
     }
 
-    private static string StatusText(BookingStatus s) =>
+    private static string StatusText(OrderStatus s) =>
         s switch
         {
-            BookingStatus.Pending => Messages.Ai_BookingStatus_Pending,
-            BookingStatus.Confirmed => Messages.Ai_BookingStatus_Confirmed,
-            BookingStatus.Cancelled => Messages.Ai_BookingStatus_Cancelled,
-            BookingStatus.Expired => Messages.Ai_BookingStatus_Expired,
+            OrderStatus.Pending => Messages.Ai_OrderStatus_Pending,
+            OrderStatus.Confirmed => Messages.Ai_OrderStatus_Confirmed,
+            OrderStatus.Cancelled => Messages.Ai_OrderStatus_Cancelled,
+            OrderStatus.Expired => Messages.Ai_OrderStatus_Expired,
             _ => s.ToString(),
         };
 

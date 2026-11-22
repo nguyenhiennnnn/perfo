@@ -31,8 +31,27 @@ public interface IPaymentRefundService
         CancellationToken cancellationToken
     );
 
+    Task<PaymentTransaction> ReserveManualCashAsync(
+        PaymentTransaction charge,
+        decimal amount,
+        string? note,
+        CancellationToken cancellationToken
+    );
+
     Task<PaymentRefundResult> ExecuteAsync(
         int refundTransactionId,
+        CancellationToken cancellationToken
+    );
+
+    Task<PaymentRefundResult> ExecuteAsync(
+        int refundTransactionId,
+        bool failOnError,
+        CancellationToken cancellationToken
+    );
+
+    Task<PaymentRefundResult> ConfirmCashRefundAsync(
+        int refundTransactionId,
+        int confirmedByUserId,
         CancellationToken cancellationToken
     );
 }

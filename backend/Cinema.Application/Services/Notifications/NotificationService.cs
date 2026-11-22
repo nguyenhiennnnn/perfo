@@ -140,19 +140,31 @@ public class NotificationService(
             )
         );
 
+    public void SendShowtimeCancelledNotice(
+        string toEmail,
+        string customerName,
+        string orderCode,
+        IReadOnlyList<OrderRefundEmailLine> refunds
+    ) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_ShowtimeCancelledNoticeSubject, orderCode),
+            EmailTemplates.ShowtimeCancelledNotice(_brand, customerName, orderCode, refunds)
+        );
+
     public void SendShowtimeCancelledRefunded(
         string toEmail,
         string customerName,
-        string bookingCode,
+        string orderCode,
         decimal refundAmount
     ) =>
         Enqueue(
             toEmail,
-            string.Format(Messages.Email_ShowtimeCancelledRefundedSubject, bookingCode),
+            string.Format(Messages.Email_ShowtimeCancelledRefundedSubject, orderCode),
             EmailTemplates.ShowtimeCancelledAutoRefunded(
                 _brand,
                 customerName,
-                bookingCode,
+                orderCode,
                 refundAmount
             )
         );
@@ -160,16 +172,16 @@ public class NotificationService(
     public void SendShowtimeCancelledManualRefund(
         string toEmail,
         string customerName,
-        string bookingCode,
+        string orderCode,
         decimal amountDue
     ) =>
         Enqueue(
             toEmail,
-            string.Format(Messages.Email_ShowtimeCancelledManualRefundSubject, bookingCode),
+            string.Format(Messages.Email_ShowtimeCancelledManualRefundSubject, orderCode),
             EmailTemplates.ShowtimeCancelledManualRefund(
                 _brand,
                 customerName,
-                bookingCode,
+                orderCode,
                 amountDue
             )
         );

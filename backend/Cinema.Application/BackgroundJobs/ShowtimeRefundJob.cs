@@ -13,7 +13,8 @@ namespace Cinema.Application.BackgroundJobs;
 
 public class ShowtimeRefundJob(
     IAppDbContext db,
-    IEnumerable<IPaymentGateway> paymentGateways,
+    IPaymentRefundService paymentRefunds,
+    ICommunicationPreferenceService preferences,
     INotificationService notificationService,
     ILogger<ShowtimeRefundJob> logger,
     IOptions<BackgroundJobOptions>? jobOptions = null
@@ -22,125 +23,120 @@ public class ShowtimeRefundJob(
     private readonly int _retryAttempts = (jobOptions?.Value ?? new()).RetryAttempts;
 
     public async Task RunAsync(
-        int paymentId,
+        int orderId,
         PerformContext? context,
         CancellationToken cancellationToken
     )
     {
-        var payment = await db
-            .Payments.Include(p => p.Booking)
-                .ThenInclude(b => b.User)
-            .Include(p => p.Booking)
-                .ThenInclude(b => b.Showtime)
-            .FirstOrDefaultAsync(p => p.PaymentId == paymentId, cancellationToken);
-
-        if (payment is null)
-        {
-            logger.LogWarning("ShowtimeRefundJob: PaymentId {PaymentId} không tồn tại.", paymentId);
+        var pendingIds = await db
+            .PaymentTransactions.AsNoTracking()
+            .Where(t =>
+                t.OrderId == orderId
+                && t.Type == PaymentTransactionType.Refund
+                && t.Status == PaymentStatus.Pending
+                && (t.Method == PaymentMethod.VNPay
+                    || t.Method == PaymentMethod.Momo
+                    || t.Method == PaymentMethod.Stripe)
+            )
+            .OrderBy(t => t.PaymentTransactionId)
+            .Select(t => t.PaymentTransactionId)
+            .ToListAsync(cancellationToken);
+        if (pendingIds.Count == 0)
             return;
+
+        var failures = new List<string>();
+        foreach (var refundId in pendingIds)
+        {
+            var result = await paymentRefunds.ExecuteAsync(refundId, false, cancellationToken);
+            if (result.Status == PaymentStatus.Pending)
+                failures.Add(result.Message ?? Messages.Refund_ExecutionError);
         }
 
-        if (payment.Status != PaymentStatus.Success)
-            return;
-
-        if (
-            payment.Booking.Status != BookingStatus.Cancelled
-            || payment.Booking.Showtime.Status != ShowtimeStatus.Cancelled
-        )
+        if (failures.Count == 0)
         {
-            logger.LogWarning(
-                "ShowtimeRefundJob bỏ qua PaymentId {PaymentId}: booking/suất chiếu chưa ở trạng thái Cancelled.",
-                paymentId
-            );
-            return;
-        }
-
-        if (payment.PaymentMethod == PaymentMethod.Cash)
-            return;
-
-        var booking = payment.Booking;
-        var gateway = paymentGateways.FindByMethod(payment.PaymentMethod.ToString());
-
-        RefundResult refundResult;
-        if (gateway is null)
-            refundResult = new RefundResult(
-                false,
-                null,
-                string.Format(Messages.Rule_RefundGatewayNotConfigured, payment.PaymentMethod)
-            );
-        else
-            try
-            {
-                refundResult = await gateway.RefundAsync(
-                    new RefundRequest(
-                        payment.TransactionId!,
-                        payment.Amount,
-                        string.Format(
-                            Messages.Refund_ShowtimeCancelledDescription,
-                            booking.BookingCode
-                        ),
-                        payment.CreatedAt,
-                        GatewayTransactionId: payment.GatewayTransactionId,
-                        OriginalAmount: payment.Amount
-                    ),
-                    cancellationToken
-                );
-            }
-            catch (Exception ex) when (ex is not OperationCanceledException)
-            {
-                logger.LogError(ex, "ShowtimeRefundGatewayError PaymentId {PaymentId}", paymentId);
-                refundResult = new RefundResult(false, null, ex.Message);
-            }
-
-        if (refundResult.Success)
-        {
-            payment.Status = PaymentStatus.Refunded;
-            payment.RefundedAmount = payment.Amount;
-            payment.RefundedAt = DateTime.UtcNow;
-            payment.RefundTransactionId = refundResult.RefundTransactionId;
-            await db.SaveChangesAsync(cancellationToken);
-
             logger.LogInformation(
-                "ShowtimeRefunded PaymentId {PaymentId} BookingId {BookingId}",
-                payment.PaymentId,
-                booking.BookingId
+                "ShowtimeRefunded OrderId {OrderId} Refunds {Count}",
+                orderId,
+                pendingIds.Count
             );
-
-            if (booking.User is not null)
-                notificationService.SendShowtimeCancelledRefunded(
-                    booking.User.Email,
-                    booking.CustomerName,
-                    booking.BookingCode,
-                    payment.Amount
-                );
             return;
         }
 
         logger.LogWarning(
-            "ShowtimeCancelRefundFailed ShowtimeId {ShowtimeId} BookingId {BookingId} PaymentId {PaymentId} Message {Message}",
-            booking.ShowtimeId,
-            booking.BookingId,
-            payment.PaymentId,
-            refundResult.Message
+            "ShowtimeCancelRefundFailed OrderId {OrderId} Failed {Count} Message {Message}",
+            orderId,
+            failures.Count,
+            failures[0]
         );
 
+        var failureMessage = string.Format(Messages.Refund_JobFailed, orderId, failures[0]);
         var retryCount = context?.GetJobParameter<int>("RetryCount") ?? _retryAttempts;
-        var failureMessage = string.Format(
-            Messages.Refund_JobFailed,
-            paymentId,
-            refundResult.Message
-        );
         if (retryCount < _retryAttempts)
             throw new InvalidOperationException(failureMessage);
 
-        if (booking.User is not null)
-            notificationService.SendShowtimeCancelledManualRefund(
-                booking.User.Email,
-                booking.CustomerName,
-                booking.BookingCode,
-                payment.Amount
-            );
-
+        await MarkManualAsync(orderId, cancellationToken);
         throw new InvalidOperationException(failureMessage);
+    }
+
+    private async Task MarkManualAsync(int orderId, CancellationToken cancellationToken)
+    {
+        var marked = await db
+            .PaymentTransactions.Where(t =>
+                t.OrderId == orderId
+                && t.Type == PaymentTransactionType.Refund
+                && t.Status == PaymentStatus.Pending
+                && !t.NeedsManualRefund
+                && (t.Method == PaymentMethod.VNPay
+                    || t.Method == PaymentMethod.Momo
+                    || t.Method == PaymentMethod.Stripe)
+            )
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(t => t.NeedsManualRefund, true),
+                cancellationToken
+            );
+        if (marked == 0)
+            return;
+
+        logger.LogCritical(
+            "ShowtimeRefundNeedsManual OrderId {OrderId} Refunds {Count}",
+            orderId,
+            marked
+        );
+
+        var order = await db
+            .Orders.AsNoTracking()
+            .Where(o => o.OrderId == orderId && o.UserId != null)
+            .Select(o => new
+            {
+                o.OrderCode,
+                o.CustomerName,
+                UserId = o.UserId!.Value,
+                o.User!.Email,
+                o.User.FullName,
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+        if (order is null || string.IsNullOrWhiteSpace(order.Email))
+            return;
+
+        if (!await preferences.CanSendAsync(order.UserId, EmailCategory.Service, cancellationToken))
+            return;
+
+        var amountDue = await db
+            .PaymentTransactions.AsNoTracking()
+            .Where(t =>
+                t.OrderId == orderId
+                && t.Type == PaymentTransactionType.Refund
+                && t.Status == PaymentStatus.Pending
+                && t.NeedsManualRefund
+                && t.Method != PaymentMethod.Cash
+            )
+            .SumAsync(t => (decimal?)t.Amount, cancellationToken);
+
+        notificationService.SendShowtimeCancelledManualRefund(
+            order.Email,
+            order.CustomerName ?? order.FullName,
+            order.OrderCode,
+            amountDue ?? 0m
+        );
     }
 }

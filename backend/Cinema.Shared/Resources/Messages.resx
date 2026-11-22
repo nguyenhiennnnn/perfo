@@ -585,7 +585,7 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
     <value>[{0}] Đã hoàn tiền — Booking {1}</value>
   </data>
   <data name="Email_ShowtimeCancelledAutoBody" xml:space="preserve">
-    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, rạp đã hủy suất chiếu trong đơn đặt vé &lt;strong&gt;{1}&lt;/strong&gt;. Chúng tôi đã hoàn 100% số tiền về phương thức thanh toán bạn đã dùng.</value>
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, rạp đã hủy suất chiếu trong đơn hàng &lt;strong&gt;{1}&lt;/strong&gt;. Chúng tôi đã hoàn đủ số tiền về phương thức thanh toán bạn đã dùng.</value>
   </data>
   <data name="Email_ShowtimeCancelledAutoPreheader" xml:space="preserve">
     <value>Suất chiếu của đơn {0} đã bị hủy, đã hoàn {1}</value>
@@ -594,13 +594,13 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
     <value>Suất chiếu của bạn đã bị hủy</value>
   </data>
   <data name="Email_ShowtimeCancelledManualBody" xml:space="preserve">
-    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, rạp đã hủy suất chiếu trong đơn đặt vé &lt;strong&gt;{1}&lt;/strong&gt;. Khoản hoàn tiền cần nhân viên rạp xử lý thủ công.</value>
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, rạp đã hủy suất chiếu trong đơn hàng &lt;strong&gt;{1}&lt;/strong&gt;. Khoản hoàn tiền qua cổng thanh toán chưa thực hiện tự động được, cần nhân viên rạp xử lý thủ công.</value>
   </data>
   <data name="Email_ShowtimeCancelledManualNote" xml:space="preserve">
-    <value>Mang mã đặt vé đến quầy hoặc liên hệ rạp để được hoàn tiền sớm nhất.</value>
+    <value>Mang mã đơn hàng đến quầy hoặc liên hệ rạp để được hoàn tiền sớm nhất.</value>
   </data>
   <data name="Email_ShowtimeCancelledManualPreheader" xml:space="preserve">
-    <value>Suất chiếu của đơn {0} đã bị hủy, cần hoàn {1}</value>
+    <value>Suất chiếu của đơn {0} đã bị hủy, cần nhận lại {1} tại quầy</value>
   </data>
   <data name="Email_ShowtimeCancelledManualRefundSubject" xml:space="preserve">
     <value>Suất chiếu bạn đặt vé đã bị hủy — {0}</value>
@@ -1642,7 +1642,7 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
     <value>Danh sách dòng hàng hoàn phải có ít nhất một dòng và số lượng mỗi dòng phải lớn hơn 0.</value>
   </data>
   <data name="Refund_JobFailed" xml:space="preserve">
-    <value>Hoàn tiền thất bại PaymentId {0}: {1}</value>
+    <value>Hoàn tiền thất bại cho đơn hàng {0}: {1}</value>
   </data>
   <data name="Refund_MethodUnsupported" xml:space="preserve">
     <value>Phương thức thanh toán này chưa hỗ trợ hoàn tiền.</value>
@@ -1675,7 +1675,7 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
     <value>Hoàn tiền tự động - ghế hết hạn giữ - Payment {0}</value>
   </data>
   <data name="Refund_ShowtimeCancelledDescription" xml:space="preserve">
-    <value>Hoàn tiền do rạp hủy suất chiếu - booking {0}</value>
+    <value>Hoàn tiền do rạp hủy suất chiếu - đơn hàng {0}</value>
   </data>
   <data name="Refund_TransactionDescription" xml:space="preserve">
     <value>Hoàn tiền giao dịch {0}</value>
@@ -2583,5 +2583,29 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Validation_UserId_Positive" xml:space="preserve">
     <value>userId phải lớn hơn 0.</value>
+  </data>
+  <data name="Email_ShowtimeCancelledNoticeBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, rạp đã hủy suất chiếu trong đơn hàng &lt;strong&gt;{1}&lt;/strong&gt;. Đơn hàng đã được hủy.</value>
+  </data>
+  <data name="Email_ShowtimeCancelledNoticePreheader" xml:space="preserve">
+    <value>Suất chiếu của đơn {0} đã bị hủy</value>
+  </data>
+  <data name="Email_ShowtimeCancelledNoticeSubject" xml:space="preserve">
+    <value>Suất chiếu bạn đặt vé đã bị hủy — {0}</value>
+  </data>
+  <data name="Email_ShowtimeCancelledCashLabel" xml:space="preserve">
+    <value>Tiền mặt cần nhận lại tại quầy</value>
+  </data>
+  <data name="Email_ShowtimeCancelledCashNote" xml:space="preserve">
+    <value>Phần thanh toán bằng tiền mặt vui lòng nhận lại tại quầy của rạp, mang theo mã đơn hàng. Các khoản thanh toán qua cổng sẽ được hoàn tự động.</value>
+  </data>
+  <data name="Refund_CashOnly" xml:space="preserve">
+    <value>Chỉ xác nhận được giao dịch hoàn tiền mặt.</value>
+  </data>
+  <data name="Refund_CashNotConfirmable" xml:space="preserve">
+    <value>Giao dịch hoàn tiền mặt này không còn ở trạng thái chờ hoàn.</value>
+  </data>
+  <data name="Success_CashRefundConfirmed" xml:space="preserve">
+    <value>Đã xác nhận hoàn tiền mặt.</value>
   </data>
 </root>

@@ -6,4 +6,5 @@ public static class AuditActions
     public const string Update = "Update";
     public const string Delete = "Delete";
     public const string Cancel = "Cancel";
+    public const string ManualRefund = "ManualRefund";
 }

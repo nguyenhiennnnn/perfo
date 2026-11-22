@@ -1,5 +1,6 @@
 using Cinema.Application.Events;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Services.Audit;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
@@ -16,6 +17,7 @@ public class PaymentRefundService(
     IPaymentLedgerService ledger,
     IEnumerable<IPaymentGateway> paymentGateways,
     IBusinessEventDispatcher eventDispatcher,
+    IAuditLogger auditLogger,
     ILogger<PaymentRefundService> logger
 ) : IPaymentRefundService
 {
@@ -46,11 +48,33 @@ public class PaymentRefundService(
         return await ExecuteAsync(refund.PaymentTransactionId, cancellationToken);
     }
 
-    public async Task<PaymentTransaction> ReserveAsync(
+    public Task<PaymentTransaction> ReserveAsync(
         PaymentTransaction charge,
         decimal amount,
         string? note,
         int? performedByUserId,
+        CancellationToken cancellationToken
+    ) => ReserveCoreAsync(charge, amount, note, performedByUserId, false, cancellationToken);
+
+    public Task<PaymentTransaction> ReserveManualCashAsync(
+        PaymentTransaction charge,
+        decimal amount,
+        string? note,
+        CancellationToken cancellationToken
+    )
+    {
+        if (charge.Method != PaymentMethod.Cash)
+            throw new BusinessRuleException(Messages.Refund_CashOnly);
+
+        return ReserveCoreAsync(charge, amount, note, null, true, cancellationToken);
+    }
+
+    private async Task<PaymentTransaction> ReserveCoreAsync(
+        PaymentTransaction charge,
+        decimal amount,
+        string? note,
+        int? performedByUserId,
+        bool manualCash,
         CancellationToken cancellationToken
     )
     {
@@ -72,7 +96,7 @@ public class PaymentRefundService(
             throw new BusinessRuleException(Messages.Refund_ExceedsCollected);
 
         var now = DateTime.UtcNow;
-        var isGateway = charge.Method.IsGatewayMethod();
+        var isPending = manualCash || charge.Method.IsGatewayMethod();
         var refund = new PaymentTransaction
         {
             OrderId = charge.OrderId,
@@ -83,16 +107,17 @@ public class PaymentRefundService(
             OriginalTransactionId = charge.PaymentTransactionId,
             PerformedByUserId = performedByUserId,
             Note = Truncate(note),
-            Status = isGateway ? PaymentStatus.Pending : PaymentStatus.Success,
+            NeedsManualRefund = manualCash,
+            Status = isPending ? PaymentStatus.Pending : PaymentStatus.Success,
             CreatedAt = now,
-            CompletedAt = isGateway ? null : now,
+            CompletedAt = isPending ? null : now,
         };
         await db.InTransactionAsync(
             async () =>
             {
                 db.PaymentTransactions.Add(refund);
                 await db.SaveChangesAsync(cancellationToken);
-                if (!isGateway)
+                if (!isPending)
                     await PublishRefundedAsync(refund, cancellationToken);
             },
             cancellationToken
@@ -100,8 +125,14 @@ public class PaymentRefundService(
         return refund;
     }
 
+    public Task<PaymentRefundResult> ExecuteAsync(
+        int refundTransactionId,
+        CancellationToken cancellationToken
+    ) => ExecuteAsync(refundTransactionId, true, cancellationToken);
+
     public async Task<PaymentRefundResult> ExecuteAsync(
         int refundTransactionId,
+        bool failOnError,
         CancellationToken cancellationToken
     )
     {
@@ -109,7 +140,84 @@ public class PaymentRefundService(
         await db.InTransactionAsync(
             async () =>
             {
-                result = await ExecuteLockedAsync(refundTransactionId, cancellationToken);
+                result = await ExecuteLockedAsync(
+                    refundTransactionId,
+                    failOnError,
+                    cancellationToken
+                );
+            },
+            cancellationToken
+        );
+        return result!;
+    }
+
+    public async Task<PaymentRefundResult> ConfirmCashRefundAsync(
+        int refundTransactionId,
+        int confirmedByUserId,
+        CancellationToken cancellationToken
+    )
+    {
+        PaymentRefundResult? result = null;
+        await db.InTransactionAsync(
+            async () =>
+            {
+                await db.LockTransactionAsync(refundTransactionId, cancellationToken);
+                var refund =
+                    await db
+                        .PaymentTransactions.AsNoTracking()
+                        .FirstOrDefaultAsync(
+                            t =>
+                                t.PaymentTransactionId == refundTransactionId
+                                && t.Type == PaymentTransactionType.Refund,
+                            cancellationToken
+                        ) ?? throw new NotFoundException(Messages.NotFound_Payment);
+
+                if (refund.Method != PaymentMethod.Cash)
+                    throw new BusinessRuleException(Messages.Refund_CashOnly);
+                if (refund.Status == PaymentStatus.Success)
+                {
+                    result = ToResult(refund, refund.Note);
+                    return;
+                }
+
+                if (refund.Status != PaymentStatus.Pending)
+                    throw new BusinessRuleException(Messages.Refund_CashNotConfirmable);
+
+                var completedAt = DateTime.UtcNow;
+                var updated = await db
+                    .PaymentTransactions.Where(t =>
+                        t.PaymentTransactionId == refundTransactionId
+                        && t.Status == PaymentStatus.Pending
+                    )
+                    .ExecuteUpdateAsync(
+                        s =>
+                            s.SetProperty(t => t.Status, PaymentStatus.Success)
+                                .SetProperty(t => t.CompletedAt, (DateTime?)completedAt)
+                                .SetProperty(t => t.PerformedByUserId, (int?)confirmedByUserId)
+                                .SetProperty(t => t.NeedsManualRefund, false),
+                        cancellationToken
+                    );
+                if (updated == 0)
+                {
+                    result = ToResult(refund, refund.Note);
+                    return;
+                }
+
+                refund.Status = PaymentStatus.Success;
+                refund.CompletedAt = completedAt;
+                refund.PerformedByUserId = confirmedByUserId;
+                refund.NeedsManualRefund = false;
+
+                auditLogger.Record(
+                    AuditActions.ManualRefund,
+                    AuditEntityTypes.PaymentTransaction,
+                    refundTransactionId.ToString(),
+                    AuditSnapshots.CashRefundBeforeConfirm(),
+                    AuditSnapshots.CashRefundAfterConfirm(refund, confirmedByUserId)
+                );
+                await db.SaveChangesAsync(cancellationToken);
+                await PublishRefundedAsync(refund, cancellationToken);
+                result = ToResult(refund, refund.Note);
             },
             cancellationToken
         );
@@ -118,6 +226,7 @@ public class PaymentRefundService(
 
     private async Task<PaymentRefundResult> ExecuteLockedAsync(
         int refundTransactionId,
+        bool failOnError,
         CancellationToken cancellationToken
     )
     {
@@ -133,7 +242,7 @@ public class PaymentRefundService(
                     cancellationToken
                 ) ?? throw new NotFoundException(Messages.NotFound_Payment);
 
-        if (refund.Status != PaymentStatus.Pending)
+        if (refund.Status != PaymentStatus.Pending || refund.Method == PaymentMethod.Cash)
             return ToResult(refund, refund.Note);
 
         var charge = refund.OriginalTransaction!;
@@ -180,7 +289,12 @@ public class PaymentRefundService(
 
         var completedAt = DateTime.UtcNow;
         var success = gatewayResult is { Success: true };
-        var status = success ? PaymentStatus.Success : PaymentStatus.Failed;
+        var status = success
+            ? PaymentStatus.Success
+            : failOnError
+                ? PaymentStatus.Failed
+                : PaymentStatus.Pending;
+        DateTime? completedValue = status == PaymentStatus.Pending ? null : completedAt;
         var gatewayTransactionId = success
             ? gatewayResult!.RefundTransactionId
             : refund.GatewayTransactionId;
@@ -210,7 +324,7 @@ public class PaymentRefundService(
             .ExecuteUpdateAsync(
                 s =>
                     s.SetProperty(t => t.Status, status)
-                        .SetProperty(t => t.CompletedAt, completedAt)
+                        .SetProperty(t => t.CompletedAt, completedValue)
                         .SetProperty(t => t.GatewayTransactionId, gatewayTransactionId)
                         .SetProperty(t => t.Note, note),
                 cancellationToken

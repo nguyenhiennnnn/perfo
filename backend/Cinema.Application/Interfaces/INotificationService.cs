@@ -45,17 +45,24 @@ public interface INotificationService
         decimal amount
     );
 
+    void SendShowtimeCancelledNotice(
+        string toEmail,
+        string customerName,
+        string orderCode,
+        IReadOnlyList<OrderRefundEmailLine> refunds
+    );
+
     void SendShowtimeCancelledRefunded(
         string toEmail,
         string customerName,
-        string bookingCode,
+        string orderCode,
         decimal refundAmount
     );
 
     void SendShowtimeCancelledManualRefund(
         string toEmail,
         string customerName,
-        string bookingCode,
+        string orderCode,
         decimal amountDue
     );
 }

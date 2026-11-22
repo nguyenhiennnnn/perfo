@@ -392,10 +392,62 @@ public static class EmailTemplates
             _ => string.Format(Messages.Email_RefundMethodGateway, method.ToDtoMethod()),
         };
 
+    public static string ShowtimeCancelledNotice(
+        BrandOptions brand,
+        string customerName,
+        string orderCode,
+        IReadOnlyList<OrderRefundEmailLine> refunds
+    )
+    {
+        var cashAmount = refunds.Where(r => r.Method == PaymentMethod.Cash).Sum(r => r.Amount);
+        var hasGateway = refunds.Any(r => r.Method.IsGatewayMethod());
+
+        var rows = new List<string>
+        {
+            DetailRow(Messages.Email_OrderCodeLabel, Enc(orderCode), isLast: cashAmount <= 0m, code: true),
+        };
+        if (cashAmount > 0m)
+            rows.Add(DetailRowTotal(Messages.Email_ShowtimeCancelledCashLabel, cashAmount));
+
+        var notes = new List<string>();
+        if (refunds.Count == 0)
+            notes.Add(Messages.Email_OrderCancelledUnpaidNote);
+        if (hasGateway)
+            notes.Add(Messages.Email_RefundNoteBankOrGateway);
+        if (cashAmount > 0m)
+            notes.Add(Messages.Email_ShowtimeCancelledCashNote);
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeShowtimeCancelled, Danger, SymbolCross)}
+            {Heading(Messages.Email_ShowtimeCancelledHeading)}
+            {Paragraph(
+                string.Format(
+                    Messages.Email_ShowtimeCancelledNoticeBody,
+                    Enc(customerName),
+                    Enc(orderCode)
+                )
+            )}
+            {DetailCard(rows.ToArray())}
+            {(notes.Count > 0 ? MutedParagraph(string.Join("<br><br>", notes)) : string.Empty)}
+            """;
+
+        return Layout(
+            brand,
+            cashAmount > 0m
+                ? string.Format(
+                    Messages.Email_ShowtimeCancelledManualPreheader,
+                    orderCode,
+                    Money(cashAmount)
+                )
+                : string.Format(Messages.Email_ShowtimeCancelledNoticePreheader, orderCode),
+            body
+        );
+    }
+
     public static string ShowtimeCancelledAutoRefunded(
         BrandOptions brand,
         string customerName,
-        string bookingCode,
+        string orderCode,
         decimal refundAmount
     )
     {
@@ -406,11 +458,11 @@ public static class EmailTemplates
                 string.Format(
                     Messages.Email_ShowtimeCancelledAutoBody,
                     Enc(customerName),
-                    Enc(bookingCode)
+                    Enc(orderCode)
                 )
             )}
             {DetailCard(
-                DetailRow(Messages.Email_BookingCodeLabel, Enc(bookingCode), code: true),
+                DetailRow(Messages.Email_OrderCodeLabel, Enc(orderCode), code: true),
                 DetailRowTotal(Messages.Email_RefundedAmountLabel, refundAmount)
             )}
             {MutedParagraph(
@@ -422,7 +474,7 @@ public static class EmailTemplates
             brand,
             string.Format(
                 Messages.Email_ShowtimeCancelledAutoPreheader,
-                bookingCode,
+                orderCode,
                 Money(refundAmount)
             ),
             body
@@ -432,7 +484,7 @@ public static class EmailTemplates
     public static string ShowtimeCancelledManualRefund(
         BrandOptions brand,
         string customerName,
-        string bookingCode,
+        string orderCode,
         decimal amountDue
     )
     {
@@ -443,11 +495,11 @@ public static class EmailTemplates
                 string.Format(
                     Messages.Email_ShowtimeCancelledManualBody,
                     Enc(customerName),
-                    Enc(bookingCode)
+                    Enc(orderCode)
                 )
             )}
             {DetailCard(
-                DetailRow(Messages.Email_BookingCodeLabel, Enc(bookingCode), code: true),
+                DetailRow(Messages.Email_OrderCodeLabel, Enc(orderCode), code: true),
                 DetailRowTotal(Messages.Email_AmountDueLabel, amountDue)
             )}
             {MutedParagraph(
@@ -459,7 +511,7 @@ public static class EmailTemplates
             brand,
             string.Format(
                 Messages.Email_ShowtimeCancelledManualPreheader,
-                bookingCode,
+                orderCode,
                 Money(amountDue)
             ),
             body

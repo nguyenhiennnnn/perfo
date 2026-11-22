@@ -91,6 +91,8 @@ public static class DependencyInjection
         services.AddScoped<IOrderConfirmationService, OrderConfirmationService>();
         services.AddBackgroundEventHandler<OrderConfirmed, OrderConfirmedEmailHandler>();
         services.AddBackgroundEventHandler<OrderCancelled, OrderCancelledEmailHandler>();
+        services.AddBackgroundEventHandler<OrderCancelled, ShowtimeCancelledEmailHandler>();
+        services.AddBackgroundEventHandler<OrderRefunded, ShowtimeRefundedEmailHandler>();
         services.AddScoped<IBookingQueryService, BookingQueryService>();
         services.AddScoped<IBookingExportService, BookingExportService>();
         services.AddScoped<IBookingTicketPdfService, BookingTicketPdfService>();
@@ -101,6 +103,7 @@ public static class DependencyInjection
         services.AddScoped<IComboService, ComboService>();
         services.AddScoped<IPaymentLedgerService, PaymentLedgerService>();
         services.AddScoped<IPaymentRefundService, PaymentRefundService>();
+        services.AddScoped<ICashRefundService, CashRefundService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IPaymentAdminService, PaymentAdminService>();
         services.AddScoped<IPaymentExportService, PaymentExportService>();

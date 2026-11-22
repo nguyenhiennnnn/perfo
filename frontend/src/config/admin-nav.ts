@@ -90,8 +90,8 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
     label: "Đơn hàng & tài chính",
     items: [
       {
-        to: ROUTES.admin.bookings,
-        label: "Quản lý đặt vé",
+        to: ROUTES.admin.orders,
+        label: "Quản lý đơn hàng",
         icon: Ticket,
         roles: [Role.Admin, Role.Employee],
       },

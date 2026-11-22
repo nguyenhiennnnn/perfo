@@ -39,8 +39,8 @@ const PositionsPage = lazyRoute(() => import("@/features/admin/catalog/pages/pos
 const ActorsPage = lazyRoute(() => import("@/features/admin/catalog/pages/actors-page"));
 const DirectorsPage = lazyRoute(() => import("@/features/admin/catalog/pages/directors-page"));
 const AdminMoviesPage = lazyRoute(() => import("@/features/admin/movies/pages/movies-page"));
-const AdminBookingsPage = lazyRoute(() => import("@/features/admin/bookings/pages/bookings-page"));
-const AdminBookingDetailPage = lazyRoute(() => import("@/features/admin/bookings/pages/booking-detail-page"));
+const AdminOrdersPage = lazyRoute(() => import("@/features/admin/orders/pages/orders-page"));
+const AdminOrderDetailPage = lazyRoute(() => import("@/features/admin/orders/pages/order-detail-page"));
 
 export const adminRoutes: RouteObject[] = [
   {
@@ -74,8 +74,8 @@ export const adminRoutes: RouteObject[] = [
           { path: "dashboard", lazy: AdminDashboardPage },
           { path: "movies", lazy: AdminMoviesPage },
           { path: "showtimes", lazy: AdminShowtimesPage },
-          { path: "bookings", lazy: AdminBookingsPage },
-          { path: "bookings/:id", lazy: AdminBookingDetailPage },
+          { path: "orders", lazy: AdminOrdersPage },
+          { path: "orders/:id", lazy: AdminOrderDetailPage },
           { path: "bookings/counter", lazy: AdminCounterPage },
           { path: "checkin", lazy: AdminCheckinPage },
           { path: "payments", lazy: AdminPaymentsPage },

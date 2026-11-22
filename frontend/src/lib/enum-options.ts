@@ -1,14 +1,17 @@
 import {
+  BookingChannel,
   BookingStatus,
   ImportExportJobStatus,
   ImportExportJobType,
   ImportExportModule,
   MovieStatus,
+  OrderType,
   PaymentMethod,
   PaymentStatus,
   ShowtimeStatus,
 } from "@/types/enum";
 import { FAILED_LABEL } from "@/config/default-constants";
+import { getOrderTypeLabel } from "@/features/client/orders/utils/order-labels";
 
 export interface EnumOption<T extends string = string> {
   value: T;
@@ -37,6 +40,16 @@ export const bookingStatusOptions = toOptions(BookingStatus, {
   Cancelled: "Đã hủy",
   Expired: "Hết hạn",
 });
+
+export const orderChannelOptions = toOptions(BookingChannel, {
+  Online: "Online",
+  Counter: "Tại quầy",
+});
+
+export const orderTypeOptions: EnumOption<OrderType>[] = Object.values(OrderType).map((value) => ({
+  value,
+  label: getOrderTypeLabel(value),
+}));
 
 export const paymentStatusOptions = toOptions(PaymentStatus, {
   Pending: "Chờ xử lý",

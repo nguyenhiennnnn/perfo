@@ -76,19 +76,20 @@ export const useAdminShowtimeCalendarParams = (
   >[1],
 ) => useQueryStates(adminShowtimeCalendarParsers, options);
 
-const adminBookingParsers = {
+const adminOrderParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
   search: searchParser,
   status: parseAsString,
   channel: parseAsString,
+  type: parseAsString,
   fromDate: parseAsString,
   toDate: parseAsString,
 };
 
-export const useAdminBookingParams = (
-  options?: Parameters<typeof useQueryStates<typeof adminBookingParsers>>[1],
-) => useQueryStates(adminBookingParsers, options);
+export const useAdminOrderParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminOrderParsers>>[1],
+) => useQueryStates(adminOrderParsers, options);
 
 const adminUserParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),

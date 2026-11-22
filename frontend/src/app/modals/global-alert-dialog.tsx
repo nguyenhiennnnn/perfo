@@ -17,9 +17,11 @@ export const GlobalAlertDialog = () => {
     isLoading,
     title,
     description,
+    content,
     confirmText,
     cancelText,
     variant,
+    confirmDisabled,
     close,
     confirm,
   } = useAlertDialogState();
@@ -33,12 +35,13 @@ export const GlobalAlertDialog = () => {
             <AlertDialogDescription>{description}</AlertDialogDescription>
           )}
         </AlertDialogHeader>
+        {content}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isLoading} onClick={close}>
             {cancelText}
           </AlertDialogCancel>
           <AlertDialogAction
-            disabled={isLoading}
+            disabled={isLoading || confirmDisabled}
             onClick={(e) => {
               e.preventDefault();
               confirm();

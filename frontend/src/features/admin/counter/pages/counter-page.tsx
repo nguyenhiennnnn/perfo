@@ -10,8 +10,9 @@ import { CounterSeatsStep } from "../components/counter-seats-step";
 import { CounterCheckoutStep } from "../components/counter-checkout-step";
 import { CounterTicketResult } from "../components/counter-ticket-result";
 import { CounterComboSale } from "../components/counter-combo-sale";
+import { CounterCancelTab } from "../components/counter-cancel-tab";
 
-type CounterTab = "tickets" | "combo";
+type CounterTab = "tickets" | "combo" | "cancel";
 
 const AdminCounterPage = () => {
   const [tab, setTab] = useState<CounterTab>("tickets");
@@ -29,7 +30,7 @@ const AdminCounterPage = () => {
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Bán hàng tại quầy"
-        description="Bán vé theo suất chiếu hoặc bán riêng combo bắp nước cho khách."
+        description="Bán vé theo suất chiếu, bán riêng combo bắp nước hoặc hủy đơn hàng cho khách."
         action={
           showTicketReset ? (
             <Button variant="outline" onClick={flow.resetFlow} disabled={ticketBusy}>
@@ -54,6 +55,9 @@ const AdminCounterPage = () => {
           </TabsTrigger>
           <TabsTrigger value="combo" disabled={ticketLocked}>
             Bán combo
+          </TabsTrigger>
+          <TabsTrigger value="cancel" disabled={ticketLocked || comboLocked}>
+            Hủy đơn
           </TabsTrigger>
         </TabsList>
 
@@ -81,6 +85,10 @@ const AdminCounterPage = () => {
 
         <TabsContent value="combo">
           <CounterComboSale sale={comboSale} />
+        </TabsContent>
+
+        <TabsContent value="cancel">
+          <CounterCancelTab />
         </TabsContent>
       </Tabs>
     </div>

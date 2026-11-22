@@ -46,7 +46,7 @@ export const ROUTES = {
     showtimes: "/admin/showtimes",
     rooms: "/admin/rooms",
     combos: "/admin/combos",
-    bookings: "/admin/bookings",
+    orders: "/admin/orders",
     payments: "/admin/payments",
     auditLogs: "/admin/audit-logs",
     reports: "/admin/reports",
@@ -63,8 +63,7 @@ export const ROUTES = {
     catalogPositions: "/admin/catalog/positions",
     catalogActors: "/admin/catalog/actors",
     catalogDirectors: "/admin/catalog/directors",
-    bookingDetail: (bookingId: number | string) =>
-      `/admin/bookings/${bookingId}`,
+    orderDetail: (orderId: number | string) => `/admin/orders/${orderId}`,
     roomSeats: (roomId: number | string) => `/admin/rooms/${roomId}/seats`,
     importExportHistory: "/admin/import-export",
     settings: "/admin/settings",

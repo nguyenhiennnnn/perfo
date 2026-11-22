@@ -72,7 +72,7 @@ public class PaymentRefundService(
             throw new BusinessRuleException(Messages.Refund_ExceedsCollected);
 
         var now = DateTime.UtcNow;
-        var isGateway = IsGatewayMethod(charge.Method);
+        var isGateway = charge.Method.IsGatewayMethod();
         var refund = new PaymentTransaction
         {
             OrderId = charge.OrderId,
@@ -242,9 +242,6 @@ public class PaymentRefundService(
 
     private IPaymentGateway? FindGateway(PaymentMethod method) =>
         paymentGateways.FindByMethod(method.ToString());
-
-    private static bool IsGatewayMethod(PaymentMethod method) =>
-        method is PaymentMethod.VNPay or PaymentMethod.Momo or PaymentMethod.Stripe;
 
     private static PaymentRefundResult ToResult(PaymentTransaction refund, string? message) =>
         new(refund.PaymentTransactionId, refund.Status, refund.Amount, message);

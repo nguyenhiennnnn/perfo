@@ -1197,6 +1197,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
     <value>Khoảng ngày xếp lịch không được vượt quá {0} ngày.</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Invalid_AutoScheduleRangeTooLong, ...)</comment>
   </data>
+  <data name="Invalid_CancelReasonNotAllowed" xml:space="preserve">
+    <value>Lý do hủy không hợp lệ đối với người thực hiện này.</value>
+  </data>
   <data name="Invalid_ComboIdUnavailable" xml:space="preserve">
     <value>comboId không hợp lệ hoặc đã ngừng bán.</value>
   </data>
@@ -1591,6 +1594,10 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Refund_CancelBookingDescription" xml:space="preserve">
     <value>Hoàn tiền hủy vé {0}</value>
+  </data>
+  <data name="Refund_CancelOrderDescription" xml:space="preserve">
+    <value>Hoàn tiền hủy đơn {0}</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Refund_CancelOrderDescription, ...)</comment>
   </data>
   <data name="Refund_ExceedsCollected" xml:space="preserve">
     <value>Số tiền hoàn vượt quá số tiền còn có thể hoàn của giao dịch gốc.</value>

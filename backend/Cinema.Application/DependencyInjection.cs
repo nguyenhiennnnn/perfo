@@ -86,6 +86,8 @@ public static class DependencyInjection
         services.AddScoped<IOrderRefundService, OrderRefundService>();
         services.AddScoped<IOrderLineRefundService, OrderLineRefundService>();
         services.AddScoped<IOrderReleaseService, OrderReleaseService>();
+        services.AddScoped<IOrderCancellationFinalizer, OrderCancellationFinalizer>();
+        services.AddScoped<IOrderCancellationService, OrderCancellationService>();
         services.AddScoped<IOrderConfirmationService, OrderConfirmationService>();
         services.AddBackgroundEventHandler<OrderConfirmed, OrderConfirmedEmailHandler>();
         services.AddScoped<IBookingQueryService, BookingQueryService>();

@@ -404,9 +404,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_BadgeAutoRefunded" xml:space="preserve">
     <value>Đã tự động hoàn tiền</value>
   </data>
-  <data name="Email_BadgeCancelled" xml:space="preserve">
-    <value>Đã hủy vé</value>
-  </data>
   <data name="Email_BadgeConfirmed" xml:space="preserve">
     <value>Đã xác nhận</value>
   </data>
@@ -422,17 +419,8 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_BadgeShowtimeCancelled" xml:space="preserve">
     <value>Suất chiếu bị hủy</value>
   </data>
-  <data name="Email_BookingCancelledBody" xml:space="preserve">
-    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, đơn đặt vé &lt;strong&gt;{1}&lt;/strong&gt; đã được hủy theo yêu cầu của bạn.</value>
-  </data>
-  <data name="Email_BookingCancelledHeading" xml:space="preserve">
-    <value>Đơn đặt vé đã được hủy</value>
-  </data>
-  <data name="Email_BookingCancelledPreheader" xml:space="preserve">
-    <value>Đơn đặt vé {0} đã hủy, hoàn {1}</value>
-  </data>
-  <data name="Email_BookingCancelledRefundedSubject" xml:space="preserve">
-    <value>Xác nhận hủy vé &amp; hoàn tiền — {0}</value>
+  <data name="Email_BadgeOrderCancelled" xml:space="preserve">
+    <value>Đã hủy đơn</value>
   </data>
   <data name="Email_BookingCodeLabel" xml:space="preserve">
     <value>Mã đặt vé</value>
@@ -494,14 +482,50 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_PaymentLabel" xml:space="preserve">
     <value>Thanh toán</value>
   </data>
+  <data name="Email_OrderCancelledBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, đơn hàng &lt;strong&gt;{1}&lt;/strong&gt; đã được hủy.</value>
+  </data>
+  <data name="Email_OrderCancelledHeading" xml:space="preserve">
+    <value>Đơn hàng đã được hủy</value>
+  </data>
+  <data name="Email_OrderCancelledPreheader" xml:space="preserve">
+    <value>Đơn hàng {0} đã được hủy</value>
+  </data>
+  <data name="Email_OrderCancelledRefundPreheader" xml:space="preserve">
+    <value>Đơn hàng {0} đã hủy, hoàn {1}</value>
+  </data>
+  <data name="Email_OrderCancelledSubject" xml:space="preserve">
+    <value>Xác nhận hủy đơn hàng — {0}</value>
+  </data>
+  <data name="Email_OrderCancelledUnpaidNote" xml:space="preserve">
+    <value>Đơn hàng chưa được thanh toán nên không phát sinh khoản hoàn tiền.</value>
+  </data>
+  <data name="Email_OrderCodeLabel" xml:space="preserve">
+    <value>Mã đơn hàng</value>
+  </data>
   <data name="Email_RefundAmountLabel" xml:space="preserve">
     <value>Số tiền hoàn lại</value>
+  </data>
+  <data name="Email_RefundMethodBankTransfer" xml:space="preserve">
+    <value>Hoàn bằng chuyển khoản</value>
+  </data>
+  <data name="Email_RefundMethodCash" xml:space="preserve">
+    <value>Nhận tiền mặt tại quầy</value>
+  </data>
+  <data name="Email_RefundMethodGateway" xml:space="preserve">
+    <value>Hoàn về cổng {0}</value>
+  </data>
+  <data name="Email_RefundMethodGiftCard" xml:space="preserve">
+    <value>Hoàn về thẻ quà tặng</value>
   </data>
   <data name="Email_RefundNoteBank" xml:space="preserve">
     <value>Tiền hoàn về tài khoản hoặc thẻ bạn đã dùng để thanh toán trong vài ngày làm việc, tùy thời gian xử lý của ngân hàng.</value>
   </data>
   <data name="Email_RefundNoteBankOrGateway" xml:space="preserve">
     <value>Tiền hoàn về tài khoản hoặc thẻ bạn đã dùng để thanh toán trong vài ngày làm việc, tùy thời gian xử lý của ngân hàng hoặc cổng thanh toán.</value>
+  </data>
+  <data name="Email_RefundNoteCash" xml:space="preserve">
+    <value>Vui lòng đến quầy của rạp để nhận lại số tiền mặt được hoàn.</value>
   </data>
   <data name="Email_RefundWillBeAmountLabel" xml:space="preserve">
     <value>Số tiền sẽ được hoàn</value>
@@ -1592,9 +1616,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Refund_AmountInvalid" xml:space="preserve">
     <value>Số tiền hoàn phải lớn hơn 0.</value>
   </data>
-  <data name="Refund_CancelBookingDescription" xml:space="preserve">
-    <value>Hoàn tiền hủy vé {0}</value>
-  </data>
   <data name="Refund_CancelOrderDescription" xml:space="preserve">
     <value>Hoàn tiền hủy đơn {0}</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Refund_CancelOrderDescription, ...)</comment>
@@ -1847,9 +1868,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_OnlineSalesClosed" xml:space="preserve">
     <value>Đã ngừng bán vé online cho suất chiếu này (trước giờ chiếu {0} phút).</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Rule_OnlineSalesClosed, ...)</comment>
-  </data>
-  <data name="Rule_OnlyCounterPendingCancellable" xml:space="preserve">
-    <value>Chỉ có thể huỷ đơn bán tại quầy đang ở trạng thái Pending.</value>
   </data>
   <data name="Rule_OnlyEmployeePasswordCanBeReset" xml:space="preserve">
     <value>Chỉ có thể đặt lại mật khẩu cho tài khoản có role Employee.</value>
@@ -2220,6 +2238,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Validation_CancelDeadlineHours_NonNegative" xml:space="preserve">
     <value>cancelDeadlineHours phải &gt;= 0.</value>
+  </data>
+  <data name="Validation_CancelReason_Required" xml:space="preserve">
+    <value>Vui lòng chọn lý do hủy đơn.</value>
   </data>
   <data name="Validation_CancelRefundPercent_Range0To100" xml:space="preserve">
     <value>cancelRefundPercent phải từ 0 đến 100.</value>

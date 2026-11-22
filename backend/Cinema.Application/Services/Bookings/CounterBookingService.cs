@@ -9,7 +9,6 @@ using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Cinema.Application.Services.Bookings;
 
@@ -17,9 +16,8 @@ public class CounterBookingService(
     IAppDbContext db,
     IBookingHoldService holdService,
     IBookingFulfillmentService fulfillmentService,
-    BookingSeatReleaser releaser,
-    IBusinessEventDispatcher eventDispatcher,
-    ILogger<CounterBookingService> logger
+    IOrderCancellationService cancellationService,
+    IBusinessEventDispatcher eventDispatcher
 ) : ICounterBookingService
 {
     public async Task<CounterHoldResponse> CounterHoldSeatsAsync(
@@ -78,61 +76,12 @@ public class CounterBookingService(
         return booking.Adapt<CounterHoldResponse>();
     }
 
-    public async Task<CancelBookingResponse> CounterCancelAsync(
-        int bookingId,
-        int employeeId,
+    public Task<OrderCancellationResult> CounterCancelAsync(
+        int orderId,
+        CancelActor actor,
+        CancelReason reason,
         CancellationToken cancellationToken
-    )
-    {
-        var booking =
-            await db.Bookings.FirstOrDefaultAsync(b => b.BookingId == bookingId, cancellationToken)
-            ?? throw new NotFoundException(Messages.NotFound_Booking);
-
-        var cancelled = new CancelBookingResponse(
-            bookingId,
-            BookingStatus.Cancelled.ToDtoStatus(),
-            RefundAmount: null,
-            RefundStatus: null
-        );
-
-        if (booking.Channel != BookingChannel.Counter)
-            throw new BusinessRuleException(Messages.Rule_OnlyCounterPendingCancellable);
-        if (booking.Status == BookingStatus.Cancelled)
-            return cancelled;
-        if (booking.Status != BookingStatus.Pending)
-            throw new BusinessRuleException(Messages.Rule_OnlyCounterPendingCancellable);
-
-        var claimed = await db
-            .Bookings.Where(b => b.BookingId == bookingId && b.Status == BookingStatus.Pending)
-            .ExecuteUpdateAsync(
-                setters => setters.SetProperty(b => b.Status, BookingStatus.Cancelled),
-                cancellationToken
-            );
-        if (claimed == 0)
-        {
-            var currentStatus = await db
-                .Bookings.AsNoTracking()
-                .Where(b => b.BookingId == bookingId)
-                .Select(b => b.Status)
-                .FirstAsync(cancellationToken);
-            if (currentStatus == BookingStatus.Cancelled)
-                return cancelled;
-            throw new BusinessRuleException(Messages.Rule_OnlyCounterPendingCancellable);
-        }
-
-        await releaser.ReleaseAndCancelBookingAsync(
-            booking,
-            CancelReason.Other,
-            CancelledBy.Staff,
-            cancellationToken
-        );
-        logger.LogInformation(
-            "BookingCancelled(Counter) BookingId {BookingId} EmployeeId {EmployeeId}",
-            bookingId,
-            employeeId
-        );
-        return cancelled;
-    }
+    ) => cancellationService.CancelAsync(orderId, actor, reason, cancellationToken);
 
     public async Task<CounterCheckoutResponse> CounterCheckoutAsync(
         int bookingId,

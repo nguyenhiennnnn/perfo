@@ -1,6 +1,8 @@
 using System.Globalization;
 using System.Net;
+using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
+using Cinema.Domain.Enums;
 using Cinema.Shared.Resources;
 
 namespace Cinema.Application.Utils;
@@ -328,42 +330,67 @@ public static class EmailTemplates
         );
     }
 
-    public static string BookingCancelledRefunded(
+    public static string OrderCancelled(
         BrandOptions brand,
         string customerName,
-        string bookingCode,
-        decimal refundAmount
+        string orderCode,
+        IReadOnlyList<OrderRefundEmailLine> refunds
     )
     {
+        var totalRefund = refunds.Sum(r => r.Amount);
+        var hasRefund = refunds.Count > 0;
+
+        var rows = new List<string>
+        {
+            DetailRow(Messages.Email_OrderCodeLabel, Enc(orderCode), isLast: !hasRefund, code: true),
+        };
+        rows.AddRange(
+            refunds.Select(r =>
+                DetailRow(RefundMethodLabel(r.Method), Money(r.Amount))
+            )
+        );
+        if (hasRefund)
+            rows.Add(DetailRowTotal(Messages.Email_RefundAmountLabel, totalRefund));
+
+        var notes = new List<string>();
+        if (!hasRefund)
+            notes.Add(Messages.Email_OrderCancelledUnpaidNote);
+        if (refunds.Any(r => r.Method.IsGatewayMethod()))
+            notes.Add(Messages.Email_RefundNoteBankOrGateway);
+        if (refunds.Any(r => r.Method == PaymentMethod.Cash))
+            notes.Add(Messages.Email_RefundNoteCash);
+
         var body = $"""
-            {Badge(Messages.Email_BadgeCancelled, Danger, SymbolCross)}
-            {Heading(Messages.Email_BookingCancelledHeading)}
+            {Badge(Messages.Email_BadgeOrderCancelled, Danger, SymbolCross)}
+            {Heading(Messages.Email_OrderCancelledHeading)}
             {Paragraph(
-                string.Format(
-                    Messages.Email_BookingCancelledBody,
-                    Enc(customerName),
-                    Enc(bookingCode)
-                )
+                string.Format(Messages.Email_OrderCancelledBody, Enc(customerName), Enc(orderCode))
             )}
-            {DetailCard(
-                DetailRow(Messages.Email_BookingCodeLabel, Enc(bookingCode), code: true),
-                DetailRowTotal(Messages.Email_RefundAmountLabel, refundAmount)
-            )}
-            {MutedParagraph(
-                Messages.Email_RefundNoteBank
-            )}
+            {DetailCard(rows.ToArray())}
+            {(notes.Count > 0 ? MutedParagraph(string.Join("<br><br>", notes)) : string.Empty)}
             """;
 
         return Layout(
             brand,
-            string.Format(
-                Messages.Email_BookingCancelledPreheader,
-                bookingCode,
-                Money(refundAmount)
-            ),
+            hasRefund
+                ? string.Format(
+                    Messages.Email_OrderCancelledRefundPreheader,
+                    orderCode,
+                    Money(totalRefund)
+                )
+                : string.Format(Messages.Email_OrderCancelledPreheader, orderCode),
             body
         );
     }
+
+    private static string RefundMethodLabel(PaymentMethod method) =>
+        method switch
+        {
+            PaymentMethod.Cash => Messages.Email_RefundMethodCash,
+            PaymentMethod.GiftCard => Messages.Email_RefundMethodGiftCard,
+            PaymentMethod.BankTransfer => Messages.Email_RefundMethodBankTransfer,
+            _ => string.Format(Messages.Email_RefundMethodGateway, method.ToDtoMethod()),
+        };
 
     public static string ShowtimeCancelledAutoRefunded(
         BrandOptions brand,

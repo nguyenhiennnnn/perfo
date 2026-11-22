@@ -31,6 +31,7 @@ public sealed record OrderCancellationRefund(
 
 public sealed record OrderCancellationResult(
     int OrderId,
+    string OrderCode,
     OrderStatus Status,
     decimal TotalRefunded,
     IReadOnlyList<OrderCancellationRefund> Refunds

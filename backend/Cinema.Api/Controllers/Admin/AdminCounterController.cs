@@ -1,5 +1,6 @@
 using Cinema.Application.DTOs.Bookings;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
@@ -53,17 +54,19 @@ public class AdminCounterController(ICounterBookingService counterBookingService
 
     [HttpPost("{bookingId:int}/counter-cancel")]
     [Authorize(Policy = Policies.StaffOnly)]
-    public async Task<ActionResult<CancelBookingResponse>> CounterCancel(
+    public async Task<ActionResult<CancelOrderResponse>> CounterCancel(
         int bookingId,
+        [FromBody] CancelOrderRequest request,
         CancellationToken cancellationToken
     )
     {
         var result = await counterBookingService.CounterCancelAsync(
             bookingId,
-            GetCurrentEmployeeId(),
+            new CancelActor(OrderCancellationRules.KindForRole(CurrentActor.Role), CurrentUserId),
+            OrderCancellationRules.ParseReason(request.Reason),
             cancellationToken
         );
-        return Ok(result);
+        return Ok(CancelOrderResponse.From(result));
     }
 
     [HttpPost("checkin")]

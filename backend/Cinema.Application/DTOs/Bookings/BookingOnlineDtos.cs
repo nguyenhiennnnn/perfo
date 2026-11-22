@@ -50,10 +50,3 @@ public record BookingDetailDto(
 public record CheckoutRequest(string PaymentMethod);
 
 public record CheckoutResponse(string PaymentUrl, int PaymentId);
-
-public record CancelBookingResponse(
-    int BookingId,
-    string Status,
-    decimal? RefundAmount,
-    string? RefundStatus
-);

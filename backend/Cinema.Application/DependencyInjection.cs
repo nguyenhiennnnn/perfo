@@ -90,10 +90,10 @@ public static class DependencyInjection
         services.AddScoped<IOrderCancellationService, OrderCancellationService>();
         services.AddScoped<IOrderConfirmationService, OrderConfirmationService>();
         services.AddBackgroundEventHandler<OrderConfirmed, OrderConfirmedEmailHandler>();
+        services.AddBackgroundEventHandler<OrderCancelled, OrderCancelledEmailHandler>();
         services.AddScoped<IBookingQueryService, BookingQueryService>();
         services.AddScoped<IBookingExportService, BookingExportService>();
         services.AddScoped<IBookingTicketPdfService, BookingTicketPdfService>();
-        services.AddScoped<IBookingCancellationService, BookingCancellationService>();
         services.AddScoped<IOrderHoldService, OrderHoldService>();
         services.AddScoped<IOrderCheckoutService, OrderCheckoutService>();
         services.AddScoped<ICounterBookingService, CounterBookingService>();

@@ -1,4 +1,5 @@
 using Cinema.Application.DTOs.Bookings;
+using Cinema.Domain.Enums;
 
 namespace Cinema.Application.Interfaces;
 
@@ -10,9 +11,10 @@ public interface ICounterBookingService
         CounterHoldRequest request,
         CancellationToken cancellationToken
     );
-    Task<CancelBookingResponse> CounterCancelAsync(
-        int bookingId,
-        int employeeId,
+    Task<OrderCancellationResult> CounterCancelAsync(
+        int orderId,
+        CancelActor actor,
+        CancelReason reason,
         CancellationToken cancellationToken
     );
     Task<CounterCheckoutResponse> CounterCheckoutAsync(

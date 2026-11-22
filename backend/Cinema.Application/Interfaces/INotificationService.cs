@@ -2,6 +2,8 @@ using Cinema.Domain.Enums;
 
 namespace Cinema.Application.Interfaces;
 
+public sealed record OrderRefundEmailLine(PaymentMethod Method, decimal Amount);
+
 public interface INotificationService
 {
     void SendVerificationLink(
@@ -20,11 +22,11 @@ public interface INotificationService
         int seatCount
     );
 
-    void SendBookingCancelledRefunded(
+    void SendOrderCancelled(
         string toEmail,
         string customerName,
-        string bookingCode,
-        decimal refundAmount
+        string orderCode,
+        IReadOnlyList<OrderRefundEmailLine> refunds
     );
 
     void SendSeatsExpiredToAdmin(

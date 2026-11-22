@@ -84,8 +84,6 @@ public abstract class BookingServiceTestBase : IDisposable
         Db.ChangeTracker.Clear();
     }
 
-    private BookingSeatReleaser CreateReleaser() => new(Db, RealtimeNotifierMock.Object);
-
     private BookingFulfillmentService CreateFulfillment() =>
         new(
             Db,
@@ -95,7 +93,6 @@ public abstract class BookingServiceTestBase : IDisposable
                 BackgroundJobClientMock.Object,
                 Options.Create(new BrandOptions())
             ),
-            CreateReleaser(),
             NullLogger<BookingFulfillmentService>.Instance
         );
 
@@ -134,25 +131,7 @@ public abstract class BookingServiceTestBase : IDisposable
             Db,
             CreateHoldSut(),
             CreateFulfillment(),
-            CreateReleaser(),
             NullLogger<CounterBookingService>.Instance
-        );
-    }
-
-    protected BookingCancellationService CreateCancellationSut()
-    {
-        PrepareContext();
-        return new(
-            Db,
-            RealtimeNotifierMock.Object,
-            PaymentGatewayMocks.Select(m => m.Object),
-            new NotificationService(
-                BackgroundJobClientMock.Object,
-                Options.Create(new BrandOptions())
-            ),
-            CreateFulfillment(),
-            CreateReleaser(),
-            NullLogger<BookingCancellationService>.Instance
         );
     }
 

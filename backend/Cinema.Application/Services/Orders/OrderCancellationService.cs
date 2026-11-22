@@ -52,6 +52,7 @@ public class OrderCancellationService(
         {
             OrderStatus.Pending => await CancelPendingAsync(
                 order.OrderId,
+                order.OrderCode,
                 actor,
                 reason,
                 cancellationToken
@@ -69,6 +70,7 @@ public class OrderCancellationService(
 
     private async Task<OrderCancellationResult> CancelPendingAsync(
         int orderId,
+        string orderCode,
         CancelActor actor,
         CancelReason reason,
         CancellationToken cancellationToken
@@ -95,7 +97,7 @@ public class OrderCancellationService(
             actor.Kind,
             actor.UserId
         );
-        return new OrderCancellationResult(orderId, OrderStatus.Cancelled, 0m, []);
+        return new OrderCancellationResult(orderId, orderCode, OrderStatus.Cancelled, 0m, []);
     }
 
     private async Task<OrderCancellationResult> CancelConfirmedAsync(
@@ -215,7 +217,13 @@ public class OrderCancellationService(
             totalRefunded,
             refunds.Count(r => r.Status != PaymentStatus.Success)
         );
-        return new OrderCancellationResult(orderId, OrderStatus.Cancelled, totalRefunded, refunds);
+        return new OrderCancellationResult(
+            orderId,
+            orderCode,
+            OrderStatus.Cancelled,
+            totalRefunded,
+            refunds
+        );
     }
 
     private async Task EnsureCancellableAsync(

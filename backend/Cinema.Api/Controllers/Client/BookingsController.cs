@@ -3,6 +3,7 @@ using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Bookings;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +19,7 @@ public class BookingsController(
     IOrderHoldService bookingHoldService,
     IBookingQueryService bookingQueryService,
     IOrderCheckoutService bookingCheckoutService,
-    IBookingCancellationService bookingCancellationService,
+    IOrderCancellationService orderCancellationService,
     IBookingTicketPdfService bookingTicketPdfService
 ) : AppControllerBase
 {
@@ -101,16 +102,18 @@ public class BookingsController(
 
     [HttpPost("{bookingId:int}/cancel")]
     [SuccessMessage(nameof(Messages.Success_BookingCancelled))]
-    public async Task<ActionResult<CancelBookingResponse>> CancelBooking(
+    public async Task<ActionResult<CancelOrderResponse>> CancelBooking(
         int bookingId,
+        [FromBody] CancelOrderRequest request,
         CancellationToken cancellationToken
     )
     {
-        var result = await bookingCancellationService.CancelBookingAsync(
-            CurrentUserId,
+        var result = await orderCancellationService.CancelAsync(
             bookingId,
+            new CancelActor(CancelActorKind.Customer, CurrentUserId),
+            OrderCancellationRules.ParseReason(request.Reason),
             cancellationToken
         );
-        return Ok(result);
+        return Ok(CancelOrderResponse.From(result));
     }
 }

@@ -61,8 +61,8 @@ public static class DependencyInjection
         services.AddScoped<IExportModule>(sp => new ExportModule<AdminShowtimeListFilter>(
             sp.GetRequiredService<IShowtimeExportService>()
         ));
-        services.AddScoped<IExportModule>(sp => new ExportModule<AdminBookingListFilter>(
-            sp.GetRequiredService<IBookingExportService>()
+        services.AddScoped<IExportModule>(sp => new ExportModule<OrderListFilter>(
+            sp.GetRequiredService<IOrderExportService>()
         ));
         services.AddScoped<IExportModule>(sp => new ExportModule<AdminPaymentListFilter>(
             sp.GetRequiredService<IPaymentExportService>()
@@ -94,7 +94,7 @@ public static class DependencyInjection
         services.AddBackgroundEventHandler<OrderCancelled, ShowtimeCancelledEmailHandler>();
         services.AddBackgroundEventHandler<OrderRefunded, ShowtimeRefundedEmailHandler>();
         services.AddScoped<IOrderQueryService, OrderQueryService>();
-        services.AddScoped<IBookingExportService, BookingExportService>();
+        services.AddScoped<IOrderExportService, OrderExportService>();
         services.AddScoped<IOrderTicketPdfService, OrderTicketPdfService>();
         services.AddScoped<IOrderHoldService, OrderHoldService>();
         services.AddScoped<IOrderCheckoutService, OrderCheckoutService>();

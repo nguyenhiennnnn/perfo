@@ -42,8 +42,8 @@ public class AdminBookingsController(
     [EnableRateLimiting(RateLimitingExtensions.ExportPolicy)]
     [HttpGet("export")]
     [Authorize(Policy = Policies.StaffOnly)]
-    public async Task<IActionResult> ExportBookings(
-        [FromQuery] AdminBookingListFilter filter,
+    public async Task<IActionResult> ExportOrders(
+        [FromQuery] OrderListFilter filter,
         [FromQuery] string? format,
         CancellationToken cancellationToken
     )
@@ -51,7 +51,7 @@ public class AdminBookingsController(
         var exportFormat = ExportFormats.Parse(format);
         var file = await exportJobService.ExportNowAsync(
             CurrentActor,
-            ImportExportModules.Bookings,
+            ImportExportModules.Orders,
             filter,
             exportFormat,
             cancellationToken
@@ -64,7 +64,7 @@ public class AdminBookingsController(
     [SuccessMessage(nameof(Messages.Success_ExportJobQueued))]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> CreateExportJob(
-        [FromQuery] AdminBookingListFilter filter,
+        [FromQuery] OrderListFilter filter,
         [FromQuery] string? format,
         CancellationToken cancellationToken
     ) =>
@@ -72,7 +72,7 @@ public class AdminBookingsController(
             StatusCodes.Status202Accepted,
             await exportJobService.EnqueueAsync(
                 CurrentActor,
-                ImportExportModules.Bookings,
+                ImportExportModules.Orders,
                 filter,
                 ExportFormats.Parse(format),
                 cancellationToken

@@ -640,6 +640,102 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
 
   <!-- ===== Export ===== -->
+  <data name="Export_CancelReasonCustomerChangedMind" xml:space="preserve">
+    <value>Khách đổi ý</value>
+  </data>
+  <data name="Export_CancelReasonDuplicateOrder" xml:space="preserve">
+    <value>Trùng đơn</value>
+  </data>
+  <data name="Export_CancelReasonOther" xml:space="preserve">
+    <value>Khác</value>
+  </data>
+  <data name="Export_CancelReasonPaymentError" xml:space="preserve">
+    <value>Lỗi thanh toán</value>
+  </data>
+  <data name="Export_CancelReasonRoomClosed" xml:space="preserve">
+    <value>Đóng phòng</value>
+  </data>
+  <data name="Export_CancelReasonShowtimeCancelled" xml:space="preserve">
+    <value>Rạp hủy suất</value>
+  </data>
+  <data name="Export_CancelledByAdmin" xml:space="preserve">
+    <value>Quản trị</value>
+  </data>
+  <data name="Export_CancelledByCustomer" xml:space="preserve">
+    <value>Khách hàng</value>
+  </data>
+  <data name="Export_CancelledByStaff" xml:space="preserve">
+    <value>Nhân viên</value>
+  </data>
+  <data name="Export_CancelledBySystem" xml:space="preserve">
+    <value>Hệ thống</value>
+  </data>
+  <data name="Export_ColCancelReason" xml:space="preserve">
+    <value>Lý do hủy</value>
+  </data>
+  <data name="Export_ColCancelledBy" xml:space="preserve">
+    <value>Người hủy</value>
+  </data>
+  <data name="Export_ColGatewayFee" xml:space="preserve">
+    <value>Phí cổng (VND)</value>
+  </data>
+  <data name="Export_ColGrossAmount" xml:space="preserve">
+    <value>Tổng gốc (VND)</value>
+  </data>
+  <data name="Export_ColOrderCode" xml:space="preserve">
+    <value>Mã đơn</value>
+  </data>
+  <data name="Export_ColOrderType" xml:space="preserve">
+    <value>Loại đơn</value>
+  </data>
+  <data name="Export_ColOriginalTransaction" xml:space="preserve">
+    <value>Giao dịch gốc</value>
+  </data>
+  <data name="Export_ColPaidAmount" xml:space="preserve">
+    <value>Đã trả (VND)</value>
+  </data>
+  <data name="Export_ColPayableAmount" xml:space="preserve">
+    <value>Phải trả (VND)</value>
+  </data>
+  <data name="Export_ColRefundedTotal" xml:space="preserve">
+    <value>Đã hoàn (VND)</value>
+  </data>
+  <data name="Export_ColTransactionCode" xml:space="preserve">
+    <value>Mã giao dịch</value>
+  </data>
+  <data name="Export_ColTransactionTime" xml:space="preserve">
+    <value>Thời điểm</value>
+  </data>
+  <data name="Export_ColTransactionType" xml:space="preserve">
+    <value>Loại giao dịch</value>
+  </data>
+  <data name="Export_OrderTypeCombo" xml:space="preserve">
+    <value>Combo</value>
+  </data>
+  <data name="Export_OrderTypeGiftCard" xml:space="preserve">
+    <value>Thẻ quà tặng</value>
+  </data>
+  <data name="Export_OrderTypeMembership" xml:space="preserve">
+    <value>Gói thành viên</value>
+  </data>
+  <data name="Export_OrderTypeRoomRental" xml:space="preserve">
+    <value>Thuê phòng</value>
+  </data>
+  <data name="Export_OrderTypeSupplement" xml:space="preserve">
+    <value>Đơn bổ sung</value>
+  </data>
+  <data name="Export_OrderTypeTicket" xml:space="preserve">
+    <value>Vé xem phim</value>
+  </data>
+  <data name="Export_SheetOrders" xml:space="preserve">
+    <value>Đơn hàng</value>
+  </data>
+  <data name="Export_TypeCharge" xml:space="preserve">
+    <value>Thu</value>
+  </data>
+  <data name="Export_TypeRefund" xml:space="preserve">
+    <value>Hoàn</value>
+  </data>
   <data name="Export_ChannelCounter" xml:space="preserve">
     <value>Tại quầy</value>
   </data>
@@ -821,7 +917,7 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
     <value>Hiệu suất nhân viên</value>
   </data>
   <data name="Export_SheetPayments" xml:space="preserve">
-    <value>Thanh toán</value>
+    <value>Giao dịch thanh toán</value>
   </data>
   <data name="Export_SheetRevenue" xml:space="preserve">
     <value>Doanh thu</value>

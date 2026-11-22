@@ -18,7 +18,7 @@ public class PaymentExportService(IAppDbContext db, IExportWriter exportWriter)
         CancellationToken cancellationToken
     ) =>
         ExportLimits.CountAsync(
-            db.Payments.AsNoTracking().ApplyAdminFilter(filter),
+            db.PaymentTransactions.AsNoTracking().ApplyAdminFilter(filter),
             cancellationToken
         );
 
@@ -30,23 +30,23 @@ public class PaymentExportService(IAppDbContext db, IExportWriter exportWriter)
         CancellationToken cancellationToken
     )
     {
-        var query = db.Payments.AsNoTracking().ApplyAdminFilter(filter);
+        var query = db.PaymentTransactions.AsNoTracking().ApplyAdminFilter(filter);
         await ExportLimits.EnsureWithinLimitAsync(query, cancellationToken);
 
         var rows = query
-            .OrderByDescending(p => p.CreatedAt)
-            .ThenByDescending(p => p.PaymentId)
+            .OrderByDescending(t => t.CreatedAt)
+            .ThenByDescending(t => t.PaymentTransactionId)
             .Take(ExportLimits.MaxRows)
-            .Select(p => new PaymentExportRow(
-                p.Booking.BookingCode,
-                p.PaymentMethod,
-                p.TransactionId,
-                p.Amount,
-                p.Status,
-                p.PaidAt,
-                p.RefundTransactionId,
-                p.RefundedAmount,
-                p.RefundedAt
+            .Select(t => new TransactionExportRow(
+                t.TransactionCode,
+                t.Order.OrderCode,
+                t.Type,
+                t.Method,
+                t.Amount,
+                t.GatewayFee,
+                t.Status,
+                t.CreatedAt,
+                t.OriginalTransaction == null ? null : t.OriginalTransaction.TransactionCode
             ))
             .AsAsyncEnumerable();
 
@@ -62,28 +62,28 @@ public class PaymentExportService(IAppDbContext db, IExportWriter exportWriter)
         );
     }
 
-    private static IReadOnlyList<ExportColumn<PaymentExportRow>> Columns() =>
+    private static IReadOnlyList<ExportColumn<TransactionExportRow>> Columns() =>
         [
-            new(Messages.Export_ColBookingCode, x => x.BookingCode),
+            new(Messages.Export_ColTransactionCode, x => x.TransactionCode),
+            new(Messages.Export_ColOrderCode, x => x.OrderCode),
+            new(Messages.Export_ColTransactionType, x => ExportLabels.TransactionKind(x.Type)),
             new(Messages.Export_ColPaymentMethod, x => ExportLabels.Method(x.Method)),
-            new(Messages.Export_ColTransactionId, x => x.TransactionId),
             new(Messages.Export_ColAmount, x => x.Amount, ExportColumnType.Money),
+            new(Messages.Export_ColGatewayFee, x => x.GatewayFee, ExportColumnType.Money),
             new(Messages.Export_ColStatus, x => ExportLabels.Payment(x.Status)),
-            new(Messages.Export_ColPaidAt, x => x.PaidAt, ExportColumnType.DateTime),
-            new(Messages.Export_ColRefundTransactionId, x => x.RefundTransactionId),
-            new(Messages.Export_ColRefundedAmount, x => x.RefundedAmount, ExportColumnType.Money),
-            new(Messages.Export_ColRefundedAt, x => x.RefundedAt, ExportColumnType.DateTime),
+            new(Messages.Export_ColTransactionTime, x => x.CreatedAt, ExportColumnType.DateTime),
+            new(Messages.Export_ColOriginalTransaction, x => x.OriginalTransactionCode),
         ];
 
-    private sealed record PaymentExportRow(
-        string BookingCode,
+    private sealed record TransactionExportRow(
+        string TransactionCode,
+        string OrderCode,
+        PaymentTransactionType Type,
         PaymentMethod Method,
-        string? TransactionId,
         decimal Amount,
+        decimal GatewayFee,
         PaymentStatus Status,
-        DateTime? PaidAt,
-        string? RefundTransactionId,
-        decimal? RefundedAmount,
-        DateTime? RefundedAt
+        DateTime CreatedAt,
+        string? OriginalTransactionCode
     );
 }

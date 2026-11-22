@@ -1,10 +1,11 @@
+
 namespace Cinema.Shared.Constants;
 
 public class ImportExportModules
 {
     public const string Movies = "movies";
     public const string Showtimes = "showtimes";
-    public const string Bookings = "bookings";
+    public const string Orders = "bookings";
     public const string Payments = "payments";
     public const string Users = "users";
     public const string SeatLayout = "seat-layout";
@@ -12,9 +13,9 @@ public class ImportExportModules
     public const string TopMoviesReport = "top-movies";
     public const string EmployeePerformanceReport = "employee-performance";
 
-    private static readonly HashSet<string> SensitiveModules = [Users, Bookings, Payments];
+    private static readonly HashSet<string> SensitiveModules = [Users, Orders, Payments];
 
-    private static readonly HashSet<string> PersonalDataModules = [Users, Bookings];
+    private static readonly HashSet<string> PersonalDataModules = [Users, Orders];
 
     public static bool ContainsPersonalData(string module) => PersonalDataModules.Contains(module);
 

@@ -227,11 +227,7 @@ public static class DbInitializer
         await BackfillReferralCodesAsync(db, logger, cancellationToken);
 
         var scenariosPending =
-            seedDemoScenarios
-            && !await db.Bookings.AnyAsync(
-                b => b.BookingCode.StartsWith(BookingScenarioSeeder.CodePrefix),
-                cancellationToken
-            );
+            seedDemoScenarios && !await db.Showtimes.AnyAsync(cancellationToken);
 
         if (!scenariosPending)
         {
@@ -287,20 +283,12 @@ public static class DbInitializer
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
         try
         {
-            logger.LogInformation(
-                "Seeding demo scenarios (showtimes, bookings, payments, reviews)..."
-            );
+            logger.LogInformation("Seeding demo scenarios (showtimes)...");
 
             // Thứ tự quan trọng: suất đặc biệt trước (giữ chỗ phòng/giờ), rồi mới lấp suất thường xung quanh.
-            var specials = await ShowtimeSeeder.CreateSpecialsAsync(
-                db,
-                logger,
-                now,
-                cancellationToken
-            );
+            await ShowtimeSeeder.CreateSpecialsAsync(db, logger, now, cancellationToken);
             await ShowtimeSeeder.TopUpFutureAsync(db, logger, now, cancellationToken);
             await ShowtimeSeeder.SeedPastAsync(db, logger, now, cancellationToken);
-            await BookingScenarioSeeder.SeedAsync(db, logger, now, specials, cancellationToken);
 
             await transaction.CommitAsync(cancellationToken);
             logger.LogInformation("Demo scenarios seeded successfully.");

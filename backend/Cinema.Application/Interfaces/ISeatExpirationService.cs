@@ -7,5 +7,5 @@ public interface ISeatExpirationService
         CancellationToken cancellationToken
     );
 
-    Task ExpireDueBookingsAsync(CancellationToken cancellationToken);
+    Task ExpireDueOrdersAsync(CancellationToken cancellationToken);
 }

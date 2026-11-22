@@ -15,9 +15,9 @@ namespace Cinema.Api.Controllers.Client;
 [Route(ApiPaths.ApiVersionPrefix + "/bookings")]
 [Authorize]
 public class BookingsController(
-    IBookingHoldService bookingHoldService,
+    IOrderHoldService bookingHoldService,
     IBookingQueryService bookingQueryService,
-    IBookingCheckoutService bookingCheckoutService,
+    IOrderCheckoutService bookingCheckoutService,
     IBookingCancellationService bookingCancellationService,
     IBookingTicketPdfService bookingTicketPdfService
 ) : AppControllerBase

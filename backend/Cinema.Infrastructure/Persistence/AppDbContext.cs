@@ -42,6 +42,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         Set<OrderPriceAdjustmentAllocation>();
     public DbSet<Combo> Combos => Set<Combo>();
     public DbSet<PaymentTransaction> PaymentTransactions => Set<PaymentTransaction>();
+    public DbSet<OrderResourceHold> OrderResourceHolds => Set<OrderResourceHold>();
+    public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
+    public DbSet<OutboxDelivery> OutboxDeliveries => Set<OutboxDelivery>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<UserVerificationToken> UserVerificationTokens => Set<UserVerificationToken>();
     public DbSet<ImportExportJob> ImportExportJobs => Set<ImportExportJob>();

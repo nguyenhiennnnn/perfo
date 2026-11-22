@@ -32,4 +32,5 @@ public class Order
     public ICollection<OrderLine> Lines { get; set; } = [];
     public ICollection<OrderPriceAdjustment> PriceAdjustments { get; set; } = [];
     public ICollection<PaymentTransaction> PaymentTransactions { get; set; } = [];
+    public ICollection<OrderResourceHold> ResourceHolds { get; set; } = [];
 }

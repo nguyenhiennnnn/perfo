@@ -38,6 +38,9 @@ public interface IAppDbContext
     DbSet<OrderPriceAdjustmentAllocation> OrderPriceAdjustmentAllocations { get; }
     DbSet<Combo> Combos { get; }
     DbSet<PaymentTransaction> PaymentTransactions { get; }
+    DbSet<OrderResourceHold> OrderResourceHolds { get; }
+    DbSet<OutboxMessage> OutboxMessages { get; }
+    DbSet<OutboxDelivery> OutboxDeliveries { get; }
     DbSet<RefreshToken> RefreshTokens { get; }
     DbSet<UserVerificationToken> UserVerificationTokens { get; }
     DbSet<ImportExportJob> ImportExportJobs { get; }

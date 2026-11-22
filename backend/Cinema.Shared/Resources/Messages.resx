@@ -1613,6 +1613,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Refund_MomoInvalidTransId" xml:space="preserve">
     <value>Thiếu hoặc sai MoMo transId</value>
   </data>
+  <data name="Refund_OrderNotPayableNote" xml:space="preserve">
+    <value>Hoàn tiền tự động - đơn hàng đã hết hạn hoặc không còn giữ được chỗ khi nhận thanh toán</value>
+  </data>
   <data name="Refund_OriginalNotRefundable" xml:space="preserve">
     <value>Chỉ hoàn được giao dịch thu đã thành công.</value>
   </data>

@@ -15,6 +15,7 @@ public class PaymentService(
     IAppDbContext db,
     IPaymentLedgerService ledger,
     IPaymentRefundService refundService,
+    IOrderConfirmationService confirmationService,
     IEnumerable<IPaymentGateway> paymentGateways,
     ILogger<PaymentService> logger,
     IOptions<StripeOptions>? stripeOptions = null
@@ -241,7 +242,7 @@ public class PaymentService(
         var chargeId = pending.PaymentTransactionId;
 
         PaymentTransaction? charge = null;
-        PaymentTransaction? overpaidRefund = null;
+        var refunds = new List<PaymentTransaction>();
 
         await using (var transaction = await db.Database.BeginTransactionAsync(cancellationToken))
         {
@@ -298,12 +299,14 @@ public class PaymentService(
             var summary = await ledger.GetSummaryAsync(pending.OrderId, cancellationToken);
             if (summary.OverpaidAmount > 0m)
             {
-                overpaidRefund = await refundService.ReserveAsync(
-                    charge,
-                    Math.Min(summary.OverpaidAmount, charge.Amount),
-                    Messages.Refund_OverpaymentNote,
-                    null,
-                    cancellationToken
+                refunds.Add(
+                    await refundService.ReserveAsync(
+                        charge,
+                        Math.Min(summary.OverpaidAmount, charge.Amount),
+                        Messages.Refund_OverpaymentNote,
+                        null,
+                        cancellationToken
+                    )
                 );
             }
 
@@ -317,17 +320,61 @@ public class PaymentService(
             pending.Amount
         );
 
-        if (overpaidRefund is null)
-            return;
+        var confirmation = await confirmationService.TryConfirmAsync(
+            pending.OrderId,
+            cancellationToken
+        );
+        if (confirmation == OrderConfirmationResult.NotPayable)
+        {
+            var notPayableRefund = await ReserveRemainingRefundAsync(
+                charge!,
+                Messages.Refund_OrderNotPayableNote,
+                cancellationToken
+            );
+            if (notPayableRefund is not null)
+                refunds.Add(notPayableRefund);
+        }
 
+        foreach (var refund in refunds)
+            await ExecuteRefundAsync(refund, chargeId, pending.OrderId, cancellationToken);
+    }
+
+    private async Task<PaymentTransaction?> ReserveRemainingRefundAsync(
+        PaymentTransaction charge,
+        string note,
+        CancellationToken cancellationToken
+    )
+    {
+        await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
+        await db.LockOrderAsync(charge.OrderId, cancellationToken);
+
+        var refundable = await ledger.GetRefundableAmountAsync(
+            charge.PaymentTransactionId,
+            cancellationToken
+        );
+        PaymentTransaction? refund = null;
+        if (refundable > 0m)
+            refund = await refundService.ReserveAsync(charge, refundable, note, null, cancellationToken);
+
+        await transaction.CommitAsync(cancellationToken);
+        return refund;
+    }
+
+    private async Task ExecuteRefundAsync(
+        PaymentTransaction refund,
+        int chargeId,
+        int orderId,
+        CancellationToken cancellationToken
+    )
+    {
         var result = await refundService.ExecuteAsync(
-            overpaidRefund.PaymentTransactionId,
+            refund.PaymentTransactionId,
             cancellationToken
         );
         if (result.Success)
         {
             logger.LogInformation(
-                "OverpaymentRefunded PaymentTransactionId {Id} RefundTransactionId {RefundId} Amount {Amount}",
+                "ChargeRefunded PaymentTransactionId {Id} RefundTransactionId {RefundId} Amount {Amount}",
                 chargeId,
                 result.RefundTransactionId,
                 result.Amount
@@ -342,9 +389,9 @@ public class PaymentService(
                 cancellationToken
             );
         logger.LogCritical(
-            "OverpaymentRefundFailed PaymentTransactionId {Id} OrderId {OrderId} Amount {Amount} — cần hoàn tiền thủ công.",
+            "ChargeRefundFailed PaymentTransactionId {Id} OrderId {OrderId} Amount {Amount} — cần hoàn tiền thủ công.",
             chargeId,
-            pending.OrderId,
+            orderId,
             result.Amount
         );
     }

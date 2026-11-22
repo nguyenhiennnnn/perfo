@@ -19,6 +19,18 @@ public static class EnumConverters
     public static string ToDtoChannel(this BookingChannel channel) =>
         channel == BookingChannel.Online ? "Online" : "Counter";
 
+    public static string ToDtoStatus(this OrderStatus status) =>
+        status switch
+        {
+            OrderStatus.Pending => "Pending",
+            OrderStatus.Confirmed => "Confirmed",
+            OrderStatus.Cancelled => "Cancelled",
+            _ => "Expired",
+        };
+
+    public static string ToDtoChannel(this SalesChannel channel) =>
+        channel == SalesChannel.Online ? "Online" : "Counter";
+
     public static string ToDtoMethod(this PaymentMethod method) =>
         method switch
         {

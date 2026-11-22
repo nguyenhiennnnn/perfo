@@ -8,9 +8,8 @@ import { ButtonLink } from "@/components/common/button-link";
 import { SkeletonList } from "@/components/common/skeleton-list";
 import { InfiniteScrollTrigger } from "@/components/common/infinite-scroll-trigger";
 import { OrderCard } from "@/features/client/orders/components/history/order-card";
-import { useCancelOrder, useMyOrders } from "@/features/client/orders/hooks/use-orders";
-import { useAlertDialogOpen } from "@/stores/alert-dialog-store";
-import { CancelReason, OrderStatus } from "@/types/enum";
+import { useMyOrders } from "@/features/client/orders/hooks/use-orders";
+import { OrderStatus } from "@/types/enum";
 import { ACCOUNT_LIST_PAGE_LIMIT, SKELETON_LIST_COUNT } from "@/config/default-constants";
 import { ROUTES } from "@/config/routes";
 
@@ -29,21 +28,9 @@ const AccountTicketsPage = () => {
   const tabsId = useId();
   const ordersQuery = useMyOrders({ status: status ?? undefined, limit: ACCOUNT_LIST_PAGE_LIMIT });
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = ordersQuery;
-  const cancelOrder = useCancelOrder();
-  const openAlert = useAlertDialogOpen();
 
   const orders = data?.orders ?? [];
   const getTabId = (value: string | null) => `${tabsId}-${value ?? TAB_ALL_KEY}`;
-
-  const handleCancel = (orderId: number) => {
-    openAlert({
-      title: "Hủy vé & hoàn tiền",
-      description: "Bạn có chắc muốn hủy vé này? Số tiền sẽ được hoàn theo chính sách của rạp.",
-      confirmText: "Hủy vé",
-      variant: "destructive",
-      onConfirm: () => cancelOrder.mutate({ orderId, reason: CancelReason.CustomerChangedMind }),
-    });
-  };
 
   return (
     <div>
@@ -88,7 +75,7 @@ const AccountTicketsPage = () => {
           errorTitle="Không tải được lịch sử đơn"
         >
           {orders.map((order) => (
-            <OrderCard key={order.orderId} order={order} onCancel={() => handleCancel(order.orderId)} />
+            <OrderCard key={order.orderId} order={order} />
           ))}
           <InfiniteScrollTrigger hasNextPage={hasNextPage} isFetchingNextPage={isFetchingNextPage} fetchNextPage={fetchNextPage} />
         </QueryState>

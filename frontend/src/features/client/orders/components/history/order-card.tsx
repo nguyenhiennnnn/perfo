@@ -1,11 +1,9 @@
 import { Gift, Receipt, ShoppingBag, Ticket, type LucideIcon } from "lucide-react";
 import { ButtonLink } from "@/components/common/button-link";
 import { BookingStatusBadge } from "@/components/common/status-badge";
-import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/config/routes";
 import { formatCurrency, formatDateTime } from "@/lib/formatters";
 import { OrderStatus, OrderType } from "@/types/enum";
-import { useCancelPolicy } from "../../hooks/use-cancel-policy";
 import type { OrderListItemDto } from "../../types";
 import { getOrderTypeLabel } from "../../utils/order-labels";
 
@@ -17,11 +15,9 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
 
 interface OrderCardProps {
   order: OrderListItemDto;
-  onCancel?: () => void;
 }
 
-export const OrderCard = ({ order, onCancel }: OrderCardProps) => {
-  const { canCancel } = useCancelPolicy(order.status, order.startTime, order.finalAmount);
+export const OrderCard = ({ order }: OrderCardProps) => {
   const Icon = TYPE_ICONS[order.type] ?? Receipt;
   const typeLabel = getOrderTypeLabel(order.type);
   const hasShowtime = Boolean(order.movieTitle && order.startTime);
@@ -63,16 +59,9 @@ export const OrderCard = ({ order, onCancel }: OrderCardProps) => {
             {formatCurrency(order.finalAmount)}
           </p>
         </div>
-        <div className="flex flex-col gap-2">
-          <ButtonLink to={ROUTES.account.ticketDetail(order.orderId)} variant="secondary" size="sm">
-            Xem chi tiết
-          </ButtonLink>
-          {canCancel && onCancel && (
-            <Button variant="destructive" size="sm" onClick={onCancel}>
-              Hủy vé
-            </Button>
-          )}
-        </div>
+        <ButtonLink to={ROUTES.account.ticketDetail(order.orderId)} variant="secondary" size="sm">
+          Xem chi tiết
+        </ButtonLink>
       </div>
     </article>
   );

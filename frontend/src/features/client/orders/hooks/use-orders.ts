@@ -64,9 +64,9 @@ export function useApplyPayment(orderId: number) {
   });
 }
 
-export function useCancelOrder() {
+export function useCancelOrder(options?: { inlineError?: boolean }) {
   return useMutation({
-    meta: { invalidates: "bookingChanged" },
+    meta: { invalidates: "bookingChanged", skipErrorToast: options?.inlineError },
     mutationFn: ({
       orderId,
       ...body

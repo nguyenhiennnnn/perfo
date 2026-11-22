@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { BrandMark, BrandWordmark } from "@/components/common/brand-mark";
 import { BRAND } from "@/config/brand";
-import { formatCurrency, formatDate, formatTime } from "@/lib/formatters";
+import { formatCurrency, formatDate, formatDateTime, formatTime } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 
 interface PerfoTicketProps {
@@ -13,7 +13,9 @@ interface PerfoTicketProps {
   price: number;
   ticketCode: string;
   qrValue: string;
+  ticketType?: string | null;
   isCheckedIn?: boolean;
+  checkedInAt?: string | null;
   isTorn?: boolean;
   className?: string;
 }
@@ -28,7 +30,9 @@ export const PerfoTicket = ({
   price,
   ticketCode,
   qrValue,
+  ticketType,
   isCheckedIn = false,
+  checkedInAt,
   isTorn = false,
   className,
 }: PerfoTicketProps) => {
@@ -52,6 +56,14 @@ export const PerfoTicket = ({
           <div>
             <p className="t-numeral text-5xl text-foreground @xl:text-6xl">{formatTime(startTime)}</p>
             <p className="mt-1 text-sm text-muted-foreground">{formatDate(startTime)}</p>
+            {ticketType && <p className="mt-1 text-sm text-foreground">{ticketType}</p>}
+            <p className="mt-1 text-xs text-muted-foreground">
+              {isCheckedIn
+                ? checkedInAt
+                  ? `Đã soát vé lúc ${formatDateTime(checkedInAt)}`
+                  : "Đã soát vé"
+                : "Chưa soát vé"}
+            </p>
           </div>
 
           <dl className="mt-auto grid grid-cols-2 gap-x-6 gap-y-3 @md:grid-cols-[1fr_auto_auto]">

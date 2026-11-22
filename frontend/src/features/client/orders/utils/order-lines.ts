@@ -3,7 +3,6 @@ import type {
   OrderDetailDto,
   OrderLineDto,
   OrderTicketDto,
-  PricedSeat,
 } from "../types";
 
 export type OrderTicketLine = OrderLineDto & { ticket: OrderTicketDto };
@@ -14,12 +13,11 @@ export const getTicketLines = (order: OrderDetailDto): OrderTicketLine[] =>
       line.lineType === OrderLineType.Ticket && line.ticket != null,
   );
 
-export const getOrderSeats = (order: OrderDetailDto): PricedSeat[] =>
-  getTicketLines(order).map((line) => ({
-    seatRow: line.ticket.seatRow,
-    seatNumber: line.ticket.seatNumber,
-    price: line.lockedUnitPrice,
-  }));
+export const isTicketRefunded = (line: OrderLineDto) =>
+  line.refundedQuantity >= line.quantity;
+
+export const getActiveTicketLines = (order: OrderDetailDto): OrderTicketLine[] =>
+  getTicketLines(order).filter((line) => !isTicketRefunded(line));
 
 export const getOrderShowing = (order: OrderDetailDto) =>
   getTicketLines(order)[0]?.ticket ?? null;

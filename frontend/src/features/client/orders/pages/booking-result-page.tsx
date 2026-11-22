@@ -16,7 +16,7 @@ import { BookingResultActions } from "../components/result/booking-result-action
 import { BookingResultPayment } from "../components/result/booking-result-payment";
 import { BookingResultSkeleton } from "../components/result/booking-result-skeleton";
 import { BookingResultStatus } from "../components/result/booking-result-status";
-import { BookingResultTickets } from "../components/result/booking-result-tickets";
+import { OrderTicketCards } from "../components/detail/order-tickets-section";
 import { getPaymentResultState } from "../utils/order-payment";
 
 const BookingResultPage = () => {
@@ -77,7 +77,7 @@ const BookingResultPage = () => {
             return (
               <>
                 <BookingResultStatus state={resultState} orderCode={loadedOrder.orderCode} />
-                {resultState === "confirmed" && <BookingResultTickets order={loadedOrder} isTorn={celebrate} />}
+                {resultState === "confirmed" && <OrderTicketCards order={loadedOrder} isTorn={celebrate} />}
                 <BookingResultPayment order={loadedOrder} state={resultState} />
                 <BookingResultActions order={loadedOrder} state={resultState} />
               </>

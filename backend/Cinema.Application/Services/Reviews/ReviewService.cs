@@ -72,11 +72,11 @@ public class ReviewService : IReviewService
         if (alreadyReviewed)
             return new CanReviewResponse(false);
 
-        var hasCheckedIn = await db.BookingTickets.AnyAsync(
-            t =>
-                t.IsCheckedIn
-                && t.Booking.UserId == userId
-                && t.ShowtimeSeat.Showtime.MovieId == movieId,
+        var hasCheckedIn = await db.OrderLines.AnyAsync(
+            l =>
+                l.IsCheckedIn
+                && l.Order.UserId == userId
+                && l.Showtime!.MovieId == movieId,
             cancellationToken
         );
 
@@ -101,11 +101,11 @@ public class ReviewService : IReviewService
         if (alreadyReviewed)
             throw new ConflictAppException(Messages.Conflict_ReviewAlreadyExists);
 
-        var hasCheckedIn = await db.BookingTickets.AnyAsync(
-            t =>
-                t.IsCheckedIn
-                && t.Booking.UserId == userId
-                && t.ShowtimeSeat.Showtime.MovieId == movieId,
+        var hasCheckedIn = await db.OrderLines.AnyAsync(
+            l =>
+                l.IsCheckedIn
+                && l.Order.UserId == userId
+                && l.Showtime!.MovieId == movieId,
             cancellationToken
         );
         if (!hasCheckedIn)

@@ -1,4 +1,4 @@
-using Cinema.Application.Services.Bookings;
+using Cinema.Application.Services.Orders;
 
 namespace Cinema.Application.BackgroundJobs;
 

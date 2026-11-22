@@ -56,36 +56,4 @@ internal static class PaymentAdminFilterExtensions
 
         return query;
     }
-
-    public static IQueryable<Payment> ApplyAdminFilter(
-        this IQueryable<Payment> query,
-        AdminPaymentListFilter filter
-    )
-    {
-        if (EnumConverters.TryParseEnum<PaymentStatus>(filter.Status, out var status))
-            query = query.Where(p => p.Status == status);
-        if (EnumConverters.TryParseEnum<PaymentMethod>(filter.PaymentMethod, out var method))
-            query = query.Where(p => p.PaymentMethod == method);
-        if (filter.NeedsRefund == true)
-            query = query.Where(p =>
-                p.Status == PaymentStatus.Success
-                && p.PaymentMethod != PaymentMethod.Cash
-                && p.Booking.Status == BookingStatus.Cancelled
-            );
-        if (filter.FromDate is not null)
-            query = query.Where(p =>
-                p.CreatedAt >= DateTimeUtils.GetStartOfDay(filter.FromDate.Value)
-            );
-        if (filter.ToDate is not null)
-            query = query.Where(p =>
-                p.CreatedAt < DateTimeUtils.GetStartOfNextDay(filter.ToDate.Value)
-            );
-        query = query.ApplySearch(filter.Search, (q, pattern) =>
-            q.Where(p =>
-                (p.TransactionId != null && EF.Functions.ILike(p.TransactionId, pattern))
-                || EF.Functions.ILike(p.Booking.BookingCode, pattern)
-            ));
-
-        return query;
-    }
 }

@@ -1,4 +1,4 @@
-using Cinema.Application.DTOs.Bookings;
+using Cinema.Application.DTOs.Orders;
 
 namespace Cinema.Application.Interfaces;
 

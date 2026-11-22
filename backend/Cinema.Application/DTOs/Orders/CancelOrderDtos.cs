@@ -2,7 +2,7 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 
-namespace Cinema.Application.DTOs.Bookings;
+namespace Cinema.Application.DTOs.Orders;
 
 public record CancelOrderRequest(string? Reason);
 

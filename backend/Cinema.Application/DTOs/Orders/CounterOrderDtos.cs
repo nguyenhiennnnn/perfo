@@ -1,4 +1,3 @@
-using Cinema.Application.DTOs.Bookings;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 

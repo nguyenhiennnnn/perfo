@@ -748,9 +748,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Export_ColBasePrice" xml:space="preserve">
     <value>Giá cơ bản (VND)</value>
   </data>
-  <data name="Export_ColBookingCode" xml:space="preserve">
-    <value>Mã booking</value>
-  </data>
   <data name="Export_ColBookingCount" xml:space="preserve">
     <value>Số đơn</value>
   </data>
@@ -760,14 +757,8 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Export_ColComboRevenue" xml:space="preserve">
     <value>Doanh thu combo (VND)</value>
   </data>
-  <data name="Export_ColCombos" xml:space="preserve">
-    <value>Combo</value>
-  </data>
   <data name="Export_ColCreatedAt" xml:space="preserve">
     <value>Ngày tạo</value>
-  </data>
-  <data name="Export_ColCreatedBy" xml:space="preserve">
-    <value>Nhân viên tạo</value>
   </data>
   <data name="Export_ColCustomer" xml:space="preserve">
     <value>Khách hàng</value>
@@ -784,9 +775,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Export_ColEndTime" xml:space="preserve">
     <value>Giờ kết thúc</value>
   </data>
-  <data name="Export_ColFinalAmount" xml:space="preserve">
-    <value>Thành tiền (VND)</value>
-  </data>
   <data name="Export_ColMovieId" xml:space="preserve">
     <value>Mã phim</value>
   </data>
@@ -801,9 +789,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Export_ColPeriod" xml:space="preserve">
     <value>Kỳ</value>
-  </data>
-  <data name="Export_ColPhone" xml:space="preserve">
-    <value>Số điện thoại</value>
   </data>
   <data name="Export_ColRefundTransactionId" xml:space="preserve">
     <value>Mã giao dịch hoàn tiền</value>
@@ -823,17 +808,11 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Export_ColScreenType" xml:space="preserve">
     <value>Loại màn hình</value>
   </data>
-  <data name="Export_ColSeats" xml:space="preserve">
-    <value>Ghế</value>
-  </data>
   <data name="Export_ColSeatsSold" xml:space="preserve">
     <value>Ghế đã bán</value>
   </data>
   <data name="Export_ColSeatsTotal" xml:space="preserve">
     <value>Tổng ghế</value>
-  </data>
-  <data name="Export_ColShowtime" xml:space="preserve">
-    <value>Suất chiếu</value>
   </data>
   <data name="Export_ColStartTime" xml:space="preserve">
     <value>Giờ bắt đầu</value>
@@ -846,9 +825,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Export_ColTicketsSold" xml:space="preserve">
     <value>Số vé bán</value>
-  </data>
-  <data name="Export_ColTotalAmount" xml:space="preserve">
-    <value>Tổng tiền (VND)</value>
   </data>
   <data name="Export_ColTotalRevenue" xml:space="preserve">
     <value>Tổng doanh thu (VND)</value>
@@ -910,9 +886,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Export_PdfTitleTopMovies" xml:space="preserve">
     <value>Báo cáo phim bán chạy</value>
   </data>
-  <data name="Export_SheetBookings" xml:space="preserve">
-    <value>Đặt vé</value>
-  </data>
   <data name="Export_SheetEmployeePerformance" xml:space="preserve">
     <value>Hiệu suất nhân viên</value>
   </data>
@@ -945,9 +918,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Export_StatusPending" xml:space="preserve">
     <value>Chờ xử lý</value>
-  </data>
-  <data name="Export_StatusRefunded" xml:space="preserve">
-    <value>Đã hoàn tiền</value>
   </data>
   <data name="Export_StatusScheduled" xml:space="preserve">
     <value>Đã lên lịch</value>
@@ -1630,9 +1600,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="NotFound_AuditLog" xml:space="preserve">
     <value>Không tìm thấy dòng nhật ký thao tác.</value>
   </data>
-  <data name="NotFound_Booking" xml:space="preserve">
-    <value>Không tìm thấy booking.</value>
-  </data>
   <data name="NotFound_CinemaSettings" xml:space="preserve">
     <value>Chưa có cấu hình rạp — liên hệ Admin khởi tạo.</value>
   </data>
@@ -1829,9 +1796,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_BookingHasCheckedInTicket" xml:space="preserve">
     <value>Booking đã có vé được check-in — vui lòng liên hệ trực tiếp rạp để được hỗ trợ.</value>
   </data>
-  <data name="Rule_BookingMissingOwner" xml:space="preserve">
-    <value>Booking thiếu cả UserId lẫn CreatedByEmployeeId.</value>
-  </data>
   <data name="Rule_BookingNotCancellable" xml:space="preserve">
     <value>Booking không ở trạng thái có thể hủy (đã Cancelled/Expired).</value>
   </data>
@@ -1984,10 +1948,6 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_RefundFailed" xml:space="preserve">
     <value>Hoàn tiền thất bại: {0}. Vui lòng thử lại sau hoặc liên hệ rạp.</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Rule_RefundFailed, ...)</comment>
-  </data>
-  <data name="Rule_RefundGatewayNotConfigured" xml:space="preserve">
-    <value>Cổng thanh toán '{0}' chưa được cấu hình.</value>
-    <comment>Có 1 tham số: dùng string.Format(Messages.Rule_RefundGatewayNotConfigured, ...)</comment>
   </data>
   <data name="Rule_RefundNotSupported" xml:space="preserve">
     <value>Rạp hiện không hỗ trợ hoàn tiền.</value>

@@ -2,8 +2,8 @@ using Cinema.Shared.Resources;
 
 namespace Cinema.Shared.Exceptions;
 
-public class SeatsNoLongerHeldException(int bookingId)
-    : BusinessRuleException(string.Format(Messages.Rule_SeatsNoLongerHeld, bookingId))
+public class SeatsNoLongerHeldException(int orderId)
+    : BusinessRuleException(string.Format(Messages.Rule_SeatsNoLongerHeld, orderId))
 {
-    public int BookingId { get; } = bookingId;
+    public int OrderId { get; } = orderId;
 }

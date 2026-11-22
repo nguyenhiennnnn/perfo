@@ -1,4 +1,4 @@
-namespace Cinema.Application.DTOs.Bookings;
+namespace Cinema.Application.DTOs.Orders;
 
 public record ComboSelectionRequest(int ComboId, int Quantity);
 
@@ -10,9 +10,9 @@ public record HoldSeatsRequest(
     List<ComboSelectionRequest>? Combos
 );
 
-public record HoldBookingResponse(
-    int BookingId,
-    string BookingCode,
+public record HoldOrderResponse(
+    int OrderId,
+    string OrderCode,
     string Status,
     decimal TotalAmount,
     decimal DiscountAmount,

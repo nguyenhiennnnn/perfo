@@ -1,4 +1,4 @@
-using Cinema.Application.DTOs.Bookings;
+using Cinema.Application.DTOs.Orders;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 
@@ -6,7 +6,7 @@ namespace Cinema.Application.Interfaces;
 
 public interface IOrderHoldService
 {
-    Task<HoldBookingResponse> HoldSeatsAsync(
+    Task<HoldOrderResponse> HoldSeatsAsync(
         int userId,
         HoldSeatsRequest request,
         CancellationToken cancellationToken

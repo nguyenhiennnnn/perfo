@@ -1,5 +1,5 @@
 using Cinema.Application.Caching;
-using Cinema.Application.DTOs.Bookings;
+using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
@@ -23,7 +23,7 @@ public class OrderHoldService(
     IAppCache cache
 ) : IOrderHoldService
 {
-    public async Task<HoldBookingResponse> HoldSeatsAsync(
+    public async Task<HoldOrderResponse> HoldSeatsAsync(
         int userId,
         HoldSeatsRequest request,
         CancellationToken cancellationToken
@@ -52,7 +52,7 @@ public class OrderHoldService(
             cancellationToken
         );
 
-        return new HoldBookingResponse(
+        return new HoldOrderResponse(
             order.OrderId,
             order.OrderCode,
             order.Status.ToDtoStatus(),

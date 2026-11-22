@@ -1,6 +1,5 @@
 using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Utils;
-using Cinema.Application.Validators.Bookings;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using FluentValidation;

@@ -154,8 +154,10 @@ public class ShowtimeService(IAppDbContext db, ILogger<ShowtimeService> logger) 
         if (request.RoomId != showtime.RoomId)
             throw new BusinessRuleException(Messages.Rule_CannotChangeShowtimeRoom);
 
-        var hasConfirmedBooking = await db.Bookings.AnyAsync(
-            b => b.ShowtimeId == showtimeId && b.Status == BookingStatus.Confirmed,
+        var hasConfirmedBooking = await db.Orders.AnyAsync(
+            o =>
+                o.Status == OrderStatus.Confirmed
+                && o.Lines.Any(l => l.ShowtimeId == showtimeId),
             cancellationToken
         );
         if (hasConfirmedBooking)
@@ -163,11 +165,11 @@ public class ShowtimeService(IAppDbContext db, ILogger<ShowtimeService> logger) 
 
         var now = DateTime.UtcNow;
         var hasActiveCheckout =
-            await db.Bookings.AnyAsync(
-                b =>
-                    b.ShowtimeId == showtimeId
-                    && b.Status == BookingStatus.Pending
-                    && (b.ExpiresAt == null || b.ExpiresAt > now),
+            await db.Orders.AnyAsync(
+                o =>
+                    o.Status == OrderStatus.Pending
+                    && (o.ExpiresAt == null || o.ExpiresAt > now)
+                    && o.Lines.Any(l => l.ShowtimeId == showtimeId),
                 cancellationToken
             )
             || await db.ShowtimeSeats.AnyAsync(

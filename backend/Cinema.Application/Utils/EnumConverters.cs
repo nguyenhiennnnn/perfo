@@ -7,18 +7,6 @@ namespace Cinema.Application.Utils;
 
 public static class EnumConverters
 {
-    public static string ToDtoStatus(this BookingStatus status) =>
-        status switch
-        {
-            BookingStatus.Pending => "Pending",
-            BookingStatus.Confirmed => "Confirmed",
-            BookingStatus.Cancelled => "Cancelled",
-            _ => "Expired",
-        };
-
-    public static string ToDtoChannel(this BookingChannel channel) =>
-        channel == BookingChannel.Online ? "Online" : "Counter";
-
     public static string ToDtoStatus(this OrderStatus status) =>
         status switch
         {

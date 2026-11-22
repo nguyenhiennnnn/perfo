@@ -6,7 +6,6 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Services.Ai;
 using Cinema.Application.Services.Audit;
 using Cinema.Application.Services.Auth;
-using Cinema.Application.Services.Bookings;
 using Cinema.Application.Services.Catalog;
 using Cinema.Application.Services.Combos;
 using Cinema.Application.Services.Dashboard;

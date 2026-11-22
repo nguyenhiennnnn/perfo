@@ -118,13 +118,15 @@ public class ShowtimeAutoScheduleService(
 
         var since = DateTime.UtcNow.AddDays(-scheduler.HeatLookbackDays);
         var tickets = await db
-            .BookingTickets.Where(t =>
-                t.Booking.Status == BookingStatus.Confirmed
-                && t.Booking.CreatedAt >= since
-                && movieIds.Contains(t.ShowtimeSeat.Showtime.MovieId)
+            .OrderLines.Where(l =>
+                l.LineType == OrderLineType.Ticket
+                && l.Showtime != null
+                && l.Order.Status == OrderStatus.Confirmed
+                && l.Order.CreatedAt >= since
+                && movieIds.Contains(l.Showtime.MovieId)
             )
-            .GroupBy(t => t.ShowtimeSeat.Showtime.MovieId)
-            .Select(g => new { MovieId = g.Key, Count = g.Count() })
+            .GroupBy(l => l.Showtime!.MovieId)
+            .Select(g => new { MovieId = g.Key, Count = g.Sum(l => l.Quantity) })
             .ToDictionaryAsync(x => x.MovieId, x => x.Count, cancellationToken);
         var maxTickets = tickets.Values.DefaultIfEmpty(0).Max();
 

@@ -1,10 +1,10 @@
-using Cinema.Application.DTOs.Bookings;
+using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Shared.Resources;
 using FluentValidation;
 
-namespace Cinema.Application.Validators.Bookings;
+namespace Cinema.Application.Validators.Orders;
 
 public class CancelOrderRequestValidator : AbstractValidator<CancelOrderRequest>
 {

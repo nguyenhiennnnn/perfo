@@ -3,7 +3,7 @@ using Cinema.Application.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Cinema.Application.Services.Bookings;
+namespace Cinema.Application.Services.Orders;
 
 public class LoyaltyExpiryService(IAppDbContext db, ILogger<LoyaltyExpiryService> logger)
 {

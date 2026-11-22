@@ -57,13 +57,16 @@ public class ComboService(IAppDbContext db) : IComboService
             .ToListAsync(cancellationToken);
 
         var sales = await db
-            .BookingCombos.Where(bc =>
-                bc.Booking.Status == BookingStatus.Confirmed
+            .OrderLines.Where(l =>
+                l.LineType == OrderLineType.Combo
+                && l.ComboId != null
+                && l.Showtime != null
+                && l.Order.Status == OrderStatus.Confirmed
                 && db.MovieGenres.Any(mg =>
-                    mg.MovieId == bc.Booking.Showtime.MovieId && genreIds.Contains(mg.GenreId)
+                    mg.MovieId == l.Showtime.MovieId && genreIds.Contains(mg.GenreId)
                 )
             )
-            .GroupBy(bc => bc.ComboId)
+            .GroupBy(l => l.ComboId!.Value)
             .Select(g => new { ComboId = g.Key, Quantity = g.Sum(x => x.Quantity) })
             .ToDictionaryAsync(x => x.ComboId, x => x.Quantity, cancellationToken);
 

@@ -22,27 +22,27 @@ public class DashboardService(IAppDbContext db, IReportService reportService) : 
         var yesterdayStart = BusinessTime.StartOfDayUtc(today.AddDays(-1));
 
         var paidRows = await db
-            .Payments.Where(p =>
-                (p.Status == PaymentStatus.Success || p.Status == PaymentStatus.Refunded)
-                && p.PaidAt != null
-                && p.PaidAt >= yesterdayStart
-                && p.PaidAt < todayEnd
-            )
-            .Select(p => new
+            .PaymentTransactions.SuccessfulChargesCompletedBetween(yesterdayStart, todayEnd)
+            .Select(t => new
             {
-                PaidAt = p.PaidAt!.Value,
-                p.Amount,
-                p.RefundedAmount,
+                CompletedAt = t.CompletedAt!.Value,
+                t.Amount,
+                Refunded = t
+                    .Refunds.Where(r =>
+                        r.Type == PaymentTransactionType.Refund
+                        && r.Status == PaymentStatus.Success
+                    )
+                    .Sum(r => (decimal?)r.Amount) ?? 0m,
             })
             .ToListAsync(cancellationToken);
 
         var todayRevenue = paidRows
-            .Where(p => p.PaidAt >= todayStart)
-            .Sum(p => Math.Max(0m, p.Amount - (p.RefundedAmount ?? 0m)));
+            .Where(p => p.CompletedAt >= todayStart)
+            .Sum(p => ChargeRevenueQuery.NetOf(p.Amount, p.Refunded));
 
         var yesterdayRevenue = paidRows
-            .Where(p => p.PaidAt < todayStart)
-            .Sum(p => Math.Max(0m, p.Amount - (p.RefundedAmount ?? 0m)));
+            .Where(p => p.CompletedAt < todayStart)
+            .Sum(p => ChargeRevenueQuery.NetOf(p.Amount, p.Refunded));
 
         decimal? revenueChangePercent =
             yesterdayRevenue > 0
@@ -53,24 +53,26 @@ public class DashboardService(IAppDbContext db, IReportService reportService) : 
                 )
                 : null;
 
-        var ticketsSoldToday = await db.BookingTickets.CountAsync(
-            t =>
-                t.Booking.Status == BookingStatus.Confirmed
-                && t.Booking.CreatedAt >= todayStart
-                && t.Booking.CreatedAt < todayEnd,
+        var ticketsSoldToday =
+            await db
+                .OrderLines.Where(l =>
+                    l.LineType == OrderLineType.Ticket
+                    && l.Order.Status == OrderStatus.Confirmed
+                    && l.Order.CreatedAt >= todayStart
+                    && l.Order.CreatedAt < todayEnd
+                )
+                .SumAsync(l => (int?)l.Quantity, cancellationToken) ?? 0;
+
+        var confirmedBookingsToday = await db.Orders.CountAsync(
+            o =>
+                o.Status == OrderStatus.Confirmed
+                && o.CreatedAt >= todayStart
+                && o.CreatedAt < todayEnd,
             cancellationToken
         );
 
-        var confirmedBookingsToday = await db.Bookings.CountAsync(
-            b =>
-                b.Status == BookingStatus.Confirmed
-                && b.CreatedAt >= todayStart
-                && b.CreatedAt < todayEnd,
-            cancellationToken
-        );
-
-        var activePendingBookings = await db.Bookings.CountAsync(
-            b => b.Status == BookingStatus.Pending && b.ExpiresAt != null && b.ExpiresAt > now,
+        var activePendingBookings = await db.Orders.CountAsync(
+            o => o.Status == OrderStatus.Pending && o.ExpiresAt != null && o.ExpiresAt > now,
             cancellationToken
         );
 

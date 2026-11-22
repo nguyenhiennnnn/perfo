@@ -29,40 +29,42 @@ public class ReportService(IAppDbContext db) : IReportService
         var fromDateVal = DateTimeUtils.GetStartOfDay(fromDate);
         var toDateVal = DateTimeUtils.GetStartOfNextDay(toDate);
 
-        var payments = await db
-            .Payments.Where(p =>
-                (p.Status == PaymentStatus.Success || p.Status == PaymentStatus.Refunded)
-                && p.PaidAt != null
-                && p.PaidAt >= fromDateVal
-                && p.PaidAt < toDateVal
-            )
-            .Select(p => new
+        var charges = await db
+            .PaymentTransactions.SuccessfulChargesCompletedBetween(fromDateVal, toDateVal)
+            .Select(t => new
             {
-                p.BookingId,
-                PaidAt = p.PaidAt!.Value,
-                p.Amount,
-                p.RefundedAmount,
-                BookingFinalAmount = p.Booking.FinalAmount,
-                TicketRevenue = p.Booking.Tickets.Sum(t => (decimal?)t.Price) ?? 0m,
-                ComboRevenue = p.Booking.BookingCombos.Sum(bc =>
-                    (decimal?)(bc.Quantity * bc.UnitPrice)
-                ) ?? 0m,
+                t.OrderId,
+                CompletedAt = t.CompletedAt!.Value,
+                t.Amount,
+                Refunded = t
+                    .Refunds.Where(r =>
+                        r.Type == PaymentTransactionType.Refund
+                        && r.Status == PaymentStatus.Success
+                    )
+                    .Sum(r => (decimal?)r.Amount) ?? 0m,
+                OrderFinalAmount = t.Order.FinalAmount,
+                TicketRevenue = t
+                    .Order.Lines.Where(l => l.LineType == OrderLineType.Ticket)
+                    .Sum(l => (decimal?)(l.LockedUnitPrice * l.Quantity)) ?? 0m,
+                ComboRevenue = t
+                    .Order.Lines.Where(l => l.LineType == OrderLineType.Combo)
+                    .Sum(l => (decimal?)(l.LockedUnitPrice * l.Quantity)) ?? 0m,
             })
             .ToListAsync(cancellationToken);
 
-        var rows = payments
-            .Select(p =>
+        var rows = charges
+            .Select(c =>
             {
-                var net = Math.Max(0m, p.Amount - (p.RefundedAmount ?? 0m));
+                var net = ChargeRevenueQuery.NetOf(c.Amount, c.Refunded);
                 var ratio =
-                    p.BookingFinalAmount > 0m ? Math.Min(1m, net / p.BookingFinalAmount) : 0m;
+                    c.OrderFinalAmount > 0m ? Math.Min(1m, net / c.OrderFinalAmount) : 0m;
                 return new
                 {
-                    p.BookingId,
-                    p.PaidAt,
+                    c.OrderId,
+                    PaidAt = c.CompletedAt,
                     Net = net,
-                    TicketRevenue = p.TicketRevenue * ratio,
-                    ComboRevenue = p.ComboRevenue * ratio,
+                    TicketRevenue = c.TicketRevenue * ratio,
+                    ComboRevenue = c.ComboRevenue * ratio,
                 };
             })
             .Where(r => r.Net > 0m)
@@ -76,14 +78,14 @@ public class ReportService(IAppDbContext db) : IReportService
                 TicketRevenue = g.Sum(x => x.TicketRevenue),
                 ComboRevenue = g.Sum(x => x.ComboRevenue),
                 TotalRevenue = g.Sum(x => x.Net),
-                BookingCount = g.Select(x => x.BookingId).Distinct().Count(),
+                BookingCount = g.Select(x => x.OrderId).Distinct().Count(),
             })
             .Adapt<List<RevenueReportItemDto>>();
 
         var summary = new
         {
             TotalRevenue = rows.Sum(r => r.Net),
-            TotalBookings = rows.Select(r => r.BookingId).Distinct().Count(),
+            TotalBookings = rows.Select(r => r.OrderId).Distinct().Count(),
         }.Adapt<RevenueSummaryDto>();
 
         return new RevenueReportDto(groupBy, items, summary);
@@ -100,22 +102,20 @@ public class ReportService(IAppDbContext db) : IReportService
         var toDateVal = DateTimeUtils.GetStartOfNextDay(toDate);
 
         var query = db
-            .BookingTickets.Where(t =>
-                t.Booking.Status == BookingStatus.Confirmed
-                && t.Booking.CreatedAt >= fromDateVal
-                && t.Booking.CreatedAt < toDateVal
+            .OrderLines.Where(l =>
+                l.LineType == OrderLineType.Ticket
+                && l.Showtime != null
+                && l.Order.Status == OrderStatus.Confirmed
+                && l.Order.CreatedAt >= fromDateVal
+                && l.Order.CreatedAt < toDateVal
             )
-            .GroupBy(t => new
-            {
-                t.ShowtimeSeat.Showtime.MovieId,
-                t.ShowtimeSeat.Showtime.Movie.Title,
-            })
+            .GroupBy(l => new { l.Showtime!.MovieId, l.Showtime.Movie.Title })
             .Select(g => new
             {
                 g.Key.MovieId,
                 g.Key.Title,
-                TicketsSold = g.Count(),
-                Revenue = g.Sum(t => t.Price),
+                TicketsSold = g.Sum(l => l.Quantity),
+                Revenue = g.Sum(l => l.LockedUnitPrice * l.Quantity),
             })
             .OrderByDescending(x => x.Revenue)
             .Take(limit);
@@ -133,26 +133,46 @@ public class ReportService(IAppDbContext db) : IReportService
         var fromDateVal = DateTimeUtils.GetStartOfDay(fromDate);
         var toDateVal = DateTimeUtils.GetStartOfNextDay(toDate);
 
-        var query = db
-            .Bookings.Where(b =>
-                b.Status == BookingStatus.Confirmed
-                && b.Channel == BookingChannel.Counter
-                && b.CreatedByEmployeeId != null
-                && b.CreatedAt >= fromDateVal
-                && b.CreatedAt < toDateVal
+        var orders = await db
+            .Orders.Where(o =>
+                o.Status == OrderStatus.Confirmed
+                && o.Channel == SalesChannel.Counter
+                && o.CreatedByEmployeeId != null
+                && o.CreatedAt >= fromDateVal
+                && o.CreatedAt < toDateVal
             )
-            .GroupBy(b => new { b.CreatedByEmployeeId, b.CreatedByEmployee!.User.FullName })
+            .GroupBy(o => new { o.CreatedByEmployeeId, o.CreatedByEmployee!.User.FullName })
             .Select(g => new
             {
                 EmployeeId = g.Key.CreatedByEmployeeId!.Value,
                 g.Key.FullName,
-                TicketsSold = g.SelectMany(b => b.Tickets).Count(),
-                Revenue = g.Sum(b => b.FinalAmount),
+                Revenue = g.Sum(o => o.FinalAmount),
                 BookingCount = g.Count(),
             })
-            .OrderByDescending(x => x.Revenue);
+            .ToListAsync(cancellationToken);
 
-        var results = await query.ToListAsync(cancellationToken);
-        return results.Adapt<List<EmployeePerformanceDto>>();
+        var ticketsByEmployee = await db
+            .OrderLines.Where(l =>
+                l.LineType == OrderLineType.Ticket
+                && l.Order.Status == OrderStatus.Confirmed
+                && l.Order.Channel == SalesChannel.Counter
+                && l.Order.CreatedByEmployeeId != null
+                && l.Order.CreatedAt >= fromDateVal
+                && l.Order.CreatedAt < toDateVal
+            )
+            .GroupBy(l => l.Order.CreatedByEmployeeId!.Value)
+            .Select(g => new { EmployeeId = g.Key, Tickets = g.Sum(l => l.Quantity) })
+            .ToDictionaryAsync(x => x.EmployeeId, x => x.Tickets, cancellationToken);
+
+        return orders
+            .OrderByDescending(x => x.Revenue)
+            .Select(x => new EmployeePerformanceDto(
+                x.EmployeeId,
+                x.FullName,
+                ticketsByEmployee.GetValueOrDefault(x.EmployeeId),
+                x.Revenue,
+                x.BookingCount
+            ))
+            .ToList();
     }
 }

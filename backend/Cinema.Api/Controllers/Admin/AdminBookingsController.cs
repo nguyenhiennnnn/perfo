@@ -1,7 +1,7 @@
 using Cinema.Api.Extensions;
 using Cinema.Api.Filters;
-using Cinema.Application.DTOs.Bookings;
 using Cinema.Application.DTOs.Common;
+using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
@@ -16,21 +16,21 @@ namespace Cinema.Api.Controllers.Admin;
 [Route(ApiPaths.AdminRoutePrefix + "/bookings")]
 [Authorize]
 public class AdminBookingsController(
-    IBookingQueryService bookingQueryService,
-    IBookingTicketPdfService bookingTicketPdfService,
+    IOrderQueryService orderQueryService,
+    IOrderTicketPdfService orderTicketPdfService,
     IExportJobService exportJobService
 ) : AppControllerBase
 {
     [HttpGet]
     [Authorize(Policy = Policies.StaffOnly)]
-    public async Task<ActionResult<OffsetPageResult<AdminBookingListItemDto>>> GetBookings(
-        [FromQuery] AdminBookingListFilter filter,
+    public async Task<ActionResult<OffsetPageResult<OrderListItemDto>>> GetOrders(
+        [FromQuery] OrderListFilter filter,
         [FromQuery] int page = Pagination.DefaultPage,
         [FromQuery] int pageSize = Pagination.DefaultPageSize,
         CancellationToken cancellationToken = default
     )
     {
-        var result = await bookingQueryService.GetBookingsAdminAsync(
+        var result = await orderQueryService.GetOrdersAdminAsync(
             filter,
             page,
             pageSize,
@@ -79,31 +79,25 @@ public class AdminBookingsController(
             )
         );
 
-    [HttpGet("{bookingId:int}")]
+    [HttpGet("{orderId:int}")]
     [Authorize(Policy = Policies.StaffOnly)]
-    public async Task<ActionResult<AdminBookingDetailDto>> GetBookingDetail(
-        int bookingId,
+    public async Task<ActionResult<OrderDetailDto>> GetOrderDetail(
+        int orderId,
         CancellationToken cancellationToken
     )
     {
-        var result = await bookingQueryService.GetBookingDetailAdminAsync(
-            bookingId,
-            cancellationToken
-        );
+        var result = await orderQueryService.GetOrderDetailAdminAsync(orderId, cancellationToken);
         return Ok(result);
     }
 
-    [HttpGet("{bookingId:int}/tickets/pdf")]
+    [HttpGet("{orderId:int}/tickets/pdf")]
     [Authorize(Policy = Policies.StaffOnly)]
     public async Task<IActionResult> DownloadTicketsPdf(
-        int bookingId,
+        int orderId,
         CancellationToken cancellationToken
     )
     {
-        var file = await bookingTicketPdfService.GenerateForStaffAsync(
-            bookingId,
-            cancellationToken
-        );
+        var file = await orderTicketPdfService.GenerateForStaffAsync(orderId, cancellationToken);
         return File(file.Content, file.ContentType, file.FileName);
     }
 }

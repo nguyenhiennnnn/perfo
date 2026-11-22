@@ -1937,8 +1937,11 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_StripeSecretKeyMissing" xml:space="preserve">
     <value>Stripe SecretKey chưa được cấu hình.</value>
   </data>
+  <data name="Rule_TicketPdfNoTickets" xml:space="preserve">
+    <value>Đơn hàng không có vé xem phim để in.</value>
+  </data>
   <data name="Rule_TicketPdfNotPaid" xml:space="preserve">
-    <value>Chỉ có thể tải vé PDF của booking đã thanh toán.</value>
+    <value>Chỉ có thể tải vé PDF của đơn hàng đã thanh toán.</value>
   </data>
   <data name="Rule_UserIsNotCustomer" xml:space="preserve">
     <value>UserId không phải là tài khoản khách hàng.</value>

@@ -93,9 +93,9 @@ public static class DependencyInjection
         services.AddBackgroundEventHandler<OrderCancelled, OrderCancelledEmailHandler>();
         services.AddBackgroundEventHandler<OrderCancelled, ShowtimeCancelledEmailHandler>();
         services.AddBackgroundEventHandler<OrderRefunded, ShowtimeRefundedEmailHandler>();
-        services.AddScoped<IBookingQueryService, BookingQueryService>();
+        services.AddScoped<IOrderQueryService, OrderQueryService>();
         services.AddScoped<IBookingExportService, BookingExportService>();
-        services.AddScoped<IBookingTicketPdfService, BookingTicketPdfService>();
+        services.AddScoped<IOrderTicketPdfService, OrderTicketPdfService>();
         services.AddScoped<IOrderHoldService, OrderHoldService>();
         services.AddScoped<IOrderCheckoutService, OrderCheckoutService>();
         services.AddScoped<ICounterOrderService, CounterOrderService>();

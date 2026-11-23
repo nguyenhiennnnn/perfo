@@ -243,6 +243,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Common_CurrencyVnd" xml:space="preserve">
     <value>VNĐ</value>
   </data>
+  <data name="Common_TicketTypeStandard" xml:space="preserve">
+    <value>Vé tiêu chuẩn</value>
+  </data>
   <data name="Common_DurationMinutes" xml:space="preserve">
     <value>{0} phút</value>
   </data>
@@ -563,6 +566,12 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_SeatCountValue" xml:space="preserve">
     <value>{0} ghế</value>
   </data>
+  <data name="Email_CardPresentationNote" xml:space="preserve">
+    <value>Đơn hàng có vé cần xuất trình thẻ ({0}). Vui lòng mang theo thẻ hợp lệ khi vào rạp; nếu không xuất trình được, bạn có thể phải trả thêm phần chênh lệch giá vé.</value>
+  </data>
+  <data name="Email_TicketLineLabel" xml:space="preserve">
+    <value>Ghế {0} · {1}</value>
+  </data>
   <data name="Email_SeatsExpiredAdminAutoPreheader" xml:space="preserve">
     <value>Đã tự động hoàn tiền cho đơn đặt vé #{0}</value>
   </data>
@@ -871,11 +880,17 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Export_PdfTicketBookingCode" xml:space="preserve">
     <value>Mã booking</value>
   </data>
+  <data name="Export_PdfTicketCardNotice" xml:space="preserve">
+    <value>Vé này cần xuất trình thẻ ({0}) khi vào rạp.</value>
+  </data>
   <data name="Export_PdfTicketHint" xml:space="preserve">
     <value>Vui lòng xuất trình mã QR này tại quầy soát vé.</value>
   </data>
   <data name="Export_PdfTicketMovie" xml:space="preserve">
     <value>Phim</value>
+  </data>
+  <data name="Export_PdfTicketPrice" xml:space="preserve">
+    <value>Giá vé</value>
   </data>
   <data name="Export_PdfTicketRoom" xml:space="preserve">
     <value>Phòng</value>
@@ -888,6 +903,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Export_PdfTicketTitle" xml:space="preserve">
     <value>Vé xem phim</value>
+  </data>
+  <data name="Export_PdfTicketType" xml:space="preserve">
+    <value>Loại vé</value>
   </data>
   <data name="Export_PdfTitleEmployeePerformance" xml:space="preserve">
     <value>Báo cáo hiệu suất nhân viên</value>

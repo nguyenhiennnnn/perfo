@@ -114,6 +114,9 @@ public static class DependencyInjection
         services.AddScoped<IOrderCheckoutService, OrderCheckoutService>();
         services.AddScoped<ICounterOrderService, CounterOrderService>();
         services.AddScoped<ICounterPaymentService, CounterPaymentService>();
+        services.AddScoped<ICounterComboSaleService, CounterComboSaleService>();
+        services.AddScoped<IComboPickupService, ComboPickupService>();
+        services.AddScoped<IUnclaimedComboOrderService, UnclaimedComboOrderService>();
         services.AddScoped<ITicketCheckInService, TicketCheckInService>();
         services.AddScoped<ICardCheckService, CardCheckService>();
         services.AddScoped<ISupplementOrderService, SupplementOrderService>();
@@ -128,6 +131,7 @@ public static class DependencyInjection
         services.AddScoped<IStocktakeService, StocktakeService>();
         services.AddScoped<IWasteService, WasteService>();
         services.AddScoped<IInventoryStockQueryService, InventoryStockQueryService>();
+        services.AddScoped<ILowStockAlertService, LowStockAlertService>();
         services.AddScoped<ITicketTypeService, TicketTypeService>();
         services.AddScoped<IPricingRuleService, PricingRuleService>();
         services.AddScoped<ISpecialDayService, SpecialDayService>();

@@ -23,4 +23,10 @@ public interface IReportService
         DateOnly toDate,
         CancellationToken cancellationToken
     );
+
+    Task<ComboReportDto> GetComboReportAsync(
+        DateOnly fromDate,
+        DateOnly toDate,
+        CancellationToken cancellationToken
+    );
 }

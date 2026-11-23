@@ -68,6 +68,17 @@ public class AdminReportsController(
         return Ok(result);
     }
 
+    [HttpGet("combos")]
+    public async Task<IActionResult> GetCombos(
+        [FromQuery] DateOnly fromDate,
+        [FromQuery] DateOnly toDate,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await reportService.GetComboReportAsync(fromDate, toDate, cancellationToken);
+        return Ok(result);
+    }
+
     [EnableRateLimiting(RateLimitingExtensions.ExportPolicy)]
     [HttpGet("revenue/export")]
     public async Task<IActionResult> ExportRevenue(

@@ -14,6 +14,7 @@ namespace Cinema.Api.Controllers.Admin;
 [Authorize]
 public class AdminCounterController(
     ICounterOrderService counterOrderService,
+    ICounterComboSaleService counterComboSaleService,
     ICounterPaymentService counterPaymentService,
     ITicketCheckInService ticketCheckInService,
     ICardCheckService cardCheckService,
@@ -49,6 +50,22 @@ public class AdminCounterController(
     )
     {
         var result = await counterOrderService.CreateComboOrderAsync(
+            GetCurrentEmployeeId(),
+            CurrentUserId,
+            request,
+            cancellationToken
+        );
+        return StatusCode(StatusCodes.Status201Created, result);
+    }
+
+    [HttpPost("counter-combo-sale")]
+    [Authorize(Policy = Policies.StaffOnly)]
+    public async Task<ActionResult<CounterComboSaleResponse>> CounterComboSale(
+        [FromBody] CounterComboSaleRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await counterComboSaleService.SellAsync(
             GetCurrentEmployeeId(),
             CurrentUserId,
             request,

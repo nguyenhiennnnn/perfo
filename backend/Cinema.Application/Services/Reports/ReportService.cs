@@ -181,4 +181,71 @@ public class ReportService(IAppDbContext db) : IReportService
             ))
             .ToList();
     }
+
+    public async Task<ComboReportDto> GetComboReportAsync(
+        DateOnly fromDate,
+        DateOnly toDate,
+        CancellationToken cancellationToken
+    )
+    {
+        if (toDate < fromDate)
+            throw new ValidationAppException(
+                Messages.Validation_To_BeforeFrom,
+                new Dictionary<string, string[]> { ["toDate"] = [Messages.Validation_To_BeforeFrom] }
+            );
+
+        var fromDateVal = DateTimeUtils.GetStartOfDay(fromDate);
+        var toDateVal = DateTimeUtils.GetStartOfNextDay(toDate);
+
+        var lines = await db
+            .OrderLines.AsNoTracking()
+            .Where(l =>
+                l.LineType == OrderLineType.Combo
+                && l.ComboId != null
+                && l.Order.Status == OrderStatus.Confirmed
+            )
+            .Select(l => new
+            {
+                ComboId = l.ComboId!.Value,
+                ComboName = l.Combo!.Name,
+                l.Quantity,
+                l.RefundedQuantity,
+                l.QuantityFulfilled,
+                l.PaidAmount,
+                l.RefundedAmount,
+                WithTickets = l.ShowtimeId != null,
+                RecognizedAt = l.Showtime != null ? l.Showtime.StartTime : l.Order.CreatedAt,
+            })
+            .Where(l => l.RecognizedAt >= fromDateVal && l.RecognizedAt < toDateVal)
+            .ToListAsync(cancellationToken);
+
+        var items = lines
+            .GroupBy(l => new { l.ComboId, l.ComboName })
+            .Select(g =>
+            {
+                var sold = g.Sum(l => l.Quantity - l.RefundedQuantity);
+                var delivered = g.Sum(l => l.QuantityFulfilled);
+                return new ComboReportItemDto(
+                    g.Key.ComboId,
+                    g.Key.ComboName,
+                    sold,
+                    delivered,
+                    Math.Max(0, sold - delivered),
+                    g.Where(l => l.WithTickets).Sum(l => l.Quantity - l.RefundedQuantity),
+                    g.Where(l => !l.WithTickets).Sum(l => l.Quantity - l.RefundedQuantity),
+                    g.Sum(l => l.PaidAmount - l.RefundedAmount)
+                );
+            })
+            .OrderByDescending(i => i.Revenue)
+            .ThenBy(i => i.ComboName)
+            .ToList();
+
+        var summary = new ComboReportSummaryDto(
+            items.Sum(i => i.QuantitySold),
+            items.Sum(i => i.QuantityDelivered),
+            items.Sum(i => i.QuantityPending),
+            items.Sum(i => i.Revenue)
+        );
+        return new ComboReportDto(fromDate, toDate, items, summary);
+    }
 }

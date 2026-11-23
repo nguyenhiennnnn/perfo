@@ -22,4 +22,6 @@ public interface IInventoryStockQueryService
     );
 
     Task<InventoryValuationDto> GetValuationAsync(CancellationToken cancellationToken);
+
+    Task<LowStockAlertsResponse> GetAlertsAsync(CancellationToken cancellationToken);
 }

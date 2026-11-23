@@ -178,4 +178,48 @@ public class InventoryStockQueryService(IAppDbContext db) : IInventoryStockQuery
 
         return new InventoryValuationDto(DateTime.UtcNow, rows.Sum(r => r.StockValue), rows);
     }
+
+    public async Task<LowStockAlertsResponse> GetAlertsAsync(CancellationToken cancellationToken)
+    {
+        var items = await db
+            .InventoryItems.AsNoTracking()
+            .Where(i => i.IsActive)
+            .Where(InventoryStockRules.IsLowStockExpression)
+            .OrderBy(i => i.QuantityOnHand - i.ReservedQuantity)
+            .ThenBy(i => i.Name)
+            .ThenBy(i => i.InventoryItemId)
+            .ToListAsync(cancellationToken);
+        if (items.Count == 0)
+            return new LowStockAlertsResponse(0, []);
+
+        var itemIds = items.Select(i => i.InventoryItemId).ToList();
+        var comboRows = await db
+            .ComboRecipeLines.AsNoTracking()
+            .Where(l => itemIds.Contains(l.InventoryItemId) && l.Recipe.Combo.IsActive)
+            .Select(l => new { l.InventoryItemId, ComboName = l.Recipe.Combo.Name })
+            .ToListAsync(cancellationToken);
+        var combosByItem = comboRows.ToLookup(r => r.InventoryItemId, r => r.ComboName);
+
+        var alerts = items
+            .Select(i =>
+            {
+                var available = i.QuantityOnHand - i.ReservedQuantity;
+                return new LowStockAlertDto(
+                    i.InventoryItemId,
+                    i.Code,
+                    i.Name,
+                    i.Unit,
+                    i.QuantityOnHand,
+                    i.ReservedQuantity,
+                    available,
+                    i.LowStockThreshold,
+                    available <= 0,
+                    i.LowStockAlertedAt,
+                    [.. combosByItem[i.InventoryItemId].Distinct().Order()]
+                );
+            })
+            .ToList();
+
+        return new LowStockAlertsResponse(alerts.Count, alerts);
+    }
 }

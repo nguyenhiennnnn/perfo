@@ -85,6 +85,12 @@ public static class BackgroundJobExtensions
             options.CleanupImportSessionsCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<LowStockAlertJob>(
+            RecurringJobIds.LowStockAlert,
+            j => j.RunAsync(CancellationToken.None),
+            options.LowStockAlertCron,
+            jobOptions
+        );
         RecurringJob.AddOrUpdate<ProcessOutboxJob>(
             RecurringJobIds.ProcessOutbox,
             j => j.RunAsync(CancellationToken.None),

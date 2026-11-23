@@ -219,6 +219,22 @@ public record StockLevelDto(
 
 public record StockLevelFilter(string? Search, bool? LowStockOnly);
 
+public record LowStockAlertDto(
+    int InventoryItemId,
+    string Code,
+    string Name,
+    string Unit,
+    decimal QuantityOnHand,
+    decimal ReservedQuantity,
+    decimal AvailableQuantity,
+    decimal LowStockThreshold,
+    bool IsOutOfStock,
+    DateTime? AlertedAt,
+    List<string> AffectedCombos
+);
+
+public record LowStockAlertsResponse(int Count, List<LowStockAlertDto> Items);
+
 public record StockLedgerEntryDto(
     long StockLedgerId,
     DateTime OccurredAt,

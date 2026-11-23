@@ -30,6 +30,11 @@ public class AdminInventoryStockController(IInventoryStockQueryService stockQuer
             )
         );
 
+    [HttpGet("alerts")]
+    [Authorize(Policy = Policies.StaffOnly)]
+    public async Task<IActionResult> GetAlerts(CancellationToken cancellationToken) =>
+        Ok(await stockQueryService.GetAlertsAsync(cancellationToken));
+
     [HttpGet("ledger")]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> GetLedger(

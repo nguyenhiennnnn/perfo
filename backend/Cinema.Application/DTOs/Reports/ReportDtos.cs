@@ -25,3 +25,28 @@ public record EmployeePerformanceDto(
     decimal Revenue,
     int BookingCount
 );
+
+public record ComboReportItemDto(
+    int ComboId,
+    string ComboName,
+    int QuantitySold,
+    int QuantityDelivered,
+    int QuantityPending,
+    int QuantitySoldWithTickets,
+    int QuantitySoldStandalone,
+    decimal Revenue
+);
+
+public record ComboReportSummaryDto(
+    int QuantitySold,
+    int QuantityDelivered,
+    int QuantityPending,
+    decimal Revenue
+);
+
+public record ComboReportDto(
+    DateOnly FromDate,
+    DateOnly ToDate,
+    List<ComboReportItemDto> Items,
+    ComboReportSummaryDto Summary
+);

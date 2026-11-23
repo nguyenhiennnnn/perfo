@@ -10,12 +10,12 @@ import type {
 export const counterCancelApi = {
   searchOrders: (params: CounterOrderSearchParams) =>
     apiGet<ApiResponse<OffsetPageResult<CounterOrderListItem>>>(
-      ENDPOINTS.admin.bookings.root,
+      ENDPOINTS.admin.orders.root,
       { params },
     ),
 
   getOrderDetail: (orderId: number) =>
     apiGet<ApiResponse<CounterOrderDetail>>(
-      ENDPOINTS.admin.bookings.byId(orderId),
+      ENDPOINTS.admin.orders.byId(orderId),
     ),
 };

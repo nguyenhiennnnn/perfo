@@ -21,3 +21,6 @@ export const getActiveTicketLines = (order: OrderDetailDto): OrderTicketLine[] =
 
 export const getOrderShowing = (order: OrderDetailDto) =>
   getTicketLines(order)[0]?.ticket ?? null;
+
+export const getOrderSeats = (order: OrderDetailDto): OrderTicketDto[] =>
+  getTicketLines(order).map((line) => line.ticket);

@@ -10,6 +10,15 @@ export interface CounterComboSelection {
   quantity: number;
 }
 
+export interface CounterHoldRequest {
+  showtimeId: number;
+  seatIds: number[];
+  combos?: CounterComboSelection[];
+  userId?: number;
+  customerName: string;
+  customerPhone?: string;
+}
+
 export interface CounterComboOrderRequest {
   combos: CounterComboSelection[];
   userId?: number | null;

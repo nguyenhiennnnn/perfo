@@ -19,7 +19,7 @@ const AdminCounterPage = () => {
   const flow = useCounterFlow();
   const comboSale = useCounterComboSale();
 
-  const ticketBusy = flow.isHolding || flow.isCheckingOut || flow.isCancelling;
+  const ticketBusy = flow.isHolding || flow.isPaying || flow.isCancelling;
   const ticketLocked = flow.step === "checkout" || ticketBusy;
   const comboLocked = comboSale.hasPendingOrder;
 

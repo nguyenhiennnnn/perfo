@@ -118,7 +118,17 @@ internal sealed class OrderSeedPool
                 .OrderBy(ss => ss.Seat.SeatRow)
                 .ThenBy(ss => ss.Seat.SeatNumber)
                 .ToListAsync(cancellationToken);
-            available.RemoveAll(ss => _usedSeatIds.Contains(ss.ShowtimeSeatId));
+            var ordered = (
+                await db
+                    .OrderLines.Where(l =>
+                        l.ShowtimeId == showtime.ShowtimeId && l.ShowtimeSeatId != null
+                    )
+                    .Select(l => l.ShowtimeSeatId!.Value)
+                    .ToListAsync(cancellationToken)
+            ).ToHashSet();
+            available.RemoveAll(ss =>
+                _usedSeatIds.Contains(ss.ShowtimeSeatId) || ordered.Contains(ss.ShowtimeSeatId)
+            );
 
             var block = PickBlock(available, seatCount);
             if (block is null)

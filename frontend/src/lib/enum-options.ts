@@ -6,8 +6,6 @@ import {
   OrderChannel,
   OrderStatus,
   OrderType,
-  PaymentMethod,
-  PaymentStatus,
   ShowtimeStatus,
 } from "@/types/enum";
 import { FAILED_LABEL } from "@/config/default-constants";
@@ -50,23 +48,6 @@ export const orderTypeOptions: EnumOption<OrderType>[] = Object.values(OrderType
   value,
   label: getOrderTypeLabel(value),
 }));
-
-export const paymentStatusOptions = toOptions(PaymentStatus, {
-  Pending: "Chờ xử lý",
-  Success: "Thành công",
-  Failed: FAILED_LABEL,
-  Refunded: "Đã hoàn tiền",
-});
-
-export const paymentMethodOptions = toOptions(PaymentMethod, {
-  VNPay: "VNPay",
-  Momo: "Momo",
-  Cash: "Tiền mặt",
-  Stripe: "Stripe",
-  GiftCard: "Thẻ quà tặng",
-  BankTransfer: "Chuyển khoản",
-  Card: "Thẻ",
-});
 
 export const movieStatusOptions = toOptions(MovieStatus, {
   ComingSoon: "Sắp chiếu",

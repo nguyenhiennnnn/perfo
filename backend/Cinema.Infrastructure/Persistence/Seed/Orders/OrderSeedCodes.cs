@@ -13,6 +13,10 @@ internal static class OrderSeedCodes
     public const string CounterComboOnly = "DEMOCMBO01";
     public const string OnlineComboOnly = "DEMOCMBO02";
     public const string CheckedIn = "DEMOCHKN01";
+    public const string PendingHold = "DEMOPEND01";
+    public const string SplitGateway = "DEMOSPLT01";
+    public const string ShowtimeCancelledCashPending = "DEMOCNCL03";
+    public const string ShowtimeCancelledCashRefunded = "DEMOCNCL04";
 
     private static readonly string[] All =
     [
@@ -27,6 +31,10 @@ internal static class OrderSeedCodes
         CounterComboOnly,
         OnlineComboOnly,
         CheckedIn,
+        PendingHold,
+        SplitGateway,
+        ShowtimeCancelledCashPending,
+        ShowtimeCancelledCashRefunded,
     ];
 
     public static int Sequence(string orderCode) => Array.IndexOf(All, orderCode) + 1;

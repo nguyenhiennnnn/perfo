@@ -14,7 +14,7 @@ internal sealed class MovieSeedGroup : ISeedGroup
     private sealed class MovieSeed
     {
         public required string Title { get; init; }
-        public required string OriginalTitle { get; init; }
+        public required string? OriginalTitle { get; init; }
         public required string Description { get; init; }
         public required string Director { get; init; }
         public required int DurationMinutes { get; init; }
@@ -23,7 +23,7 @@ internal sealed class MovieSeedGroup : ISeedGroup
         public required string Subtitle { get; init; }
         public required string AgeRating { get; init; }
         public required string PosterUrl { get; init; }
-        public required string TrailerUrl { get; init; }
+        public required string? TrailerUrl { get; init; }
         public required MovieStatus Status { get; init; }
         public required decimal AverageRating { get; init; }
         public required string[] Genres { get; init; }

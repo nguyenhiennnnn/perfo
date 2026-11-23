@@ -32,6 +32,10 @@ internal sealed class CinemaSeedGroup : ISeedGroup
                 ClosingTime = new TimeOnly(23, 59),
                 PointsPerAmount = 10000m,
                 StopSellingMinutesBefore = 10,
+                CancelRefundPercent = 80m,
+                CancelDeadlineHours = 2,
+                HoldDurationMinutes = CinemaSettings.DefaultHoldDurationMinutes,
+                CheckInOpenMinutes = CinemaSettings.DefaultCheckInOpenMinutes,
                 DefaultEmployeePassword = CinemaSettings.DefaultEmployeePasswordValue,
             }
         );

@@ -15,12 +15,18 @@ public static class DbInitializer
         new MovieSeedGroup(),
         new MembershipTierSeedGroup(),
         new ComboSeedGroup(),
+        new TicketTypeSeedGroup(),
         new StaffSeedGroup(),
         new CustomerSeedGroup(),
         new VerificationTokenSeedGroup(),
         new ReferralCodeSeedGroup(),
         new ShowtimeSeedGroup(),
-        new OrderSeedGroup(),
+        new OnlineSoldOrderSeedGroup(),
+        new PendingOrderSeedGroup(),
+        new CounterOrderSeedGroup(),
+        new CancelledOrderSeedGroup(),
+        new PartialRefundOrderSeedGroup(),
+        new ShowtimeCancelledOrderSeedGroup(),
     ];
 
     public static async Task SeedAsync(

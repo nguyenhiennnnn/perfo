@@ -106,45 +106,17 @@ internal static class OrderSeedKit
             return;
 
         var tickets = order.Lines.Where(l => l.LineType == OrderLineType.Ticket).ToList();
-        var ticketAmount = tickets.Sum(l => l.LockedUnitPrice);
-        var amount = Math.Min(
-            OrderPricing.RoundToDong(ticketAmount * tier.DiscountPercent / 100m),
-            ticketAmount
+        var amount = OrderPricing.TierDiscountAmount(
+            tickets.Sum(l => l.LockedUnitPrice),
+            tier.DiscountPercent
         );
         if (amount <= 0m)
             return;
 
-        var adjustment = new OrderPriceAdjustment
-        {
-            Type = PriceAdjustmentType.TierDiscount,
-            Amount = amount,
-            ReferenceType = nameof(MembershipTier),
-            ReferenceId = tier.TierId,
-        };
-        var shares = OrderPricing.AllocateProportionally(
-            amount,
-            tickets.Select(l => l.LockedUnitPrice).ToList()
-        );
-        for (var i = 0; i < tickets.Count; i++)
-        {
-            if (shares[i] <= 0m)
-                continue;
-
-            adjustment.Allocations.Add(
-                new OrderPriceAdjustmentAllocation { OrderLine = tickets[i], Amount = shares[i] }
-            );
-            tickets[i].PaidAmount -= shares[i];
-        }
-
-        order.PriceAdjustments.Add(adjustment);
+        order.PriceAdjustments.Add(OrderPricing.BuildTierAdjustment(amount, tier.TierId, tickets));
     }
 
-    public static void FinalizeAmounts(Order order)
-    {
-        order.TotalAmount = order.Lines.Sum(l => l.LockedUnitPrice * l.Quantity);
-        order.DiscountAmount = order.PriceAdjustments.Sum(a => a.Amount);
-        order.FinalAmount = order.TotalAmount - order.DiscountAmount;
-    }
+    public static void FinalizeAmounts(Order order) => OrderPricing.ApplyTotals(order);
 
     public static PaymentTransaction AddGatewayCharge(
         Order order,
@@ -270,6 +242,41 @@ internal static class OrderSeedKit
         return refund;
     }
 
+    public static PaymentTransaction AddPendingCashRefund(
+        Order order,
+        PaymentTransaction charge,
+        decimal amount,
+        DateTime at,
+        string? note,
+        int index
+    )
+    {
+        var refund = new PaymentTransaction
+        {
+            Type = PaymentTransactionType.Refund,
+            Method = PaymentMethod.Cash,
+            Amount = amount,
+            TransactionCode = $"{charge.TransactionCode}R{index:D4}",
+            Status = PaymentStatus.Pending,
+            CreatedAt = at,
+            NeedsManualRefund = true,
+            OriginalTransaction = charge,
+            Note = note,
+        };
+        order.PaymentTransactions.Add(refund);
+        return refund;
+    }
+
+    public static void HoldSeats(Order order, IReadOnlyList<SeedTicket> tickets)
+    {
+        foreach (var ticket in tickets)
+        {
+            ticket.Seat.Status = ShowtimeSeatStatus.Held;
+            ticket.Seat.HeldByUserId = order.UserId;
+            ticket.Seat.HeldUntil = order.ExpiresAt;
+        }
+    }
+
     public static void IssueTickets(
         Order order,
         IReadOnlyList<SeedTicket> tickets,
@@ -364,7 +371,6 @@ internal static class OrderSeedKit
         var paid = order
             .Lines.Where(l => l.LineType is OrderLineType.Ticket or OrderLineType.Combo)
             .Sum(l => l.PaidAmount);
-        var basePoints = await LoyaltyWindow.SumActiveAsync(db, userId, now, cancellationToken);
         var earned = LoyaltyWindow.PointsFor(paid, pointsPerAmount);
 
         var revokedPoints = 0;
@@ -396,10 +402,13 @@ internal static class OrderSeedKit
             );
 
         profile.TotalSpent = Math.Max(0m, profile.TotalSpent + paid - revokedSpend);
-        profile.Points = basePoints + earned - revokedPoints;
-        profile.TierId = (
-            await LoyaltyWindow.ResolveTierAsync(db, profile.Points, cancellationToken)
-        )?.TierId;
+        await LoyaltyWindow.ResyncProfileAsync(
+            db,
+            profile,
+            earned - revokedPoints,
+            now,
+            cancellationToken
+        );
     }
 
     private static string TransactionCode(string orderCode, DateTime at, int index)

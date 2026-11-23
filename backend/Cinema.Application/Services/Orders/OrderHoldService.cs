@@ -173,7 +173,7 @@ public class OrderHoldService(
         var comboLines = comboSelectionList.Select(x => NewComboLine(showtimeId, x)).ToList();
         var lines = ticketLines.Concat(comboLines).ToList();
 
-        var totalAmount = lines.Sum(l => l.LockedUnitPrice * l.Quantity);
+        var totalAmount = OrderPricing.TotalAmount(lines);
         var tierDiscount = await ResolveTierDiscountAsync(
             orderUserId,
             ticketLines.Sum(l => l.LockedUnitPrice),
@@ -200,12 +200,11 @@ public class OrderHoldService(
             order.Lines.Add(line);
 
         if (tierDiscount.Amount > 0m)
-            order.PriceAdjustments.Add(BuildTierAdjustment(tierDiscount, ticketLines));
+            order.PriceAdjustments.Add(
+                OrderPricing.BuildTierAdjustment(tierDiscount.Amount, tierDiscount.TierId, ticketLines)
+            );
 
-        foreach (var line in lines)
-            line.PaidAmount = line.LockedUnitPrice * line.Quantity;
-        foreach (var allocation in order.PriceAdjustments.SelectMany(a => a.Allocations))
-            allocation.OrderLine.PaidAmount -= allocation.Amount;
+        OrderPricing.SettlePaidAmounts(order);
 
         db.Orders.Add(order);
         await db.SaveChangesAsync(cancellationToken);
@@ -290,7 +289,7 @@ public class OrderHoldService(
         var now = DateTime.UtcNow;
         var holdUntil = now.AddMinutes(holdSettings.HoldDurationMinutes);
         var lines = comboSelectionList.Select(x => NewComboLine(null, x)).ToList();
-        var totalAmount = lines.Sum(l => l.LockedUnitPrice * l.Quantity);
+        var totalAmount = OrderPricing.TotalAmount(lines);
         foreach (var line in lines)
             line.PaidAmount = line.LockedUnitPrice * line.Quantity;
 
@@ -384,37 +383,6 @@ public class OrderHoldService(
             LockedUnitPrice = selection.Combo.Price,
         };
 
-    private static OrderPriceAdjustment BuildTierAdjustment(
-        TierDiscount discount,
-        IReadOnlyList<OrderLine> ticketLines
-    )
-    {
-        var shares = OrderPricing.AllocateProportionally(
-            discount.Amount,
-            ticketLines.Select(l => l.LockedUnitPrice).ToList()
-        );
-        var adjustment = new OrderPriceAdjustment
-        {
-            Type = PriceAdjustmentType.TierDiscount,
-            Amount = discount.Amount,
-            ReferenceType = nameof(MembershipTier),
-            ReferenceId = discount.TierId,
-        };
-        for (var i = 0; i < ticketLines.Count; i++)
-        {
-            if (shares[i] > 0m)
-                adjustment.Allocations.Add(
-                    new OrderPriceAdjustmentAllocation
-                    {
-                        OrderLine = ticketLines[i],
-                        Amount = shares[i],
-                    }
-                );
-        }
-
-        return adjustment;
-    }
-
     private async Task<TierDiscount> ResolveTierDiscountAsync(
         int? orderUserId,
         decimal ticketAmount,
@@ -442,10 +410,7 @@ public class OrderHoldService(
         if (tier is null)
             return TierDiscount.None;
 
-        var amount = Math.Min(
-            OrderPricing.RoundToDong(ticketAmount * tier.DiscountPercent / 100m),
-            ticketAmount
-        );
+        var amount = OrderPricing.TierDiscountAmount(ticketAmount, tier.DiscountPercent);
         return amount > 0m ? new TierDiscount(amount, tier.TierId) : TierDiscount.None;
     }
 

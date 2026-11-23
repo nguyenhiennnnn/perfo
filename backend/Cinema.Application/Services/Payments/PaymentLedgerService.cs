@@ -43,14 +43,14 @@ public class PaymentLedgerService(IAppDbContext db) : IPaymentLedgerService
 
         return new OrderPaymentSummary(
             orderId,
-            finalAmount.Value,
+            finalAmount,
             collected,
             refunded,
             pendingRefund,
             netPaid,
-            Math.Max(0m, finalAmount.Value - netPaid),
-            Math.Max(0m, netPaid - pendingRefund - finalAmount.Value),
-            netPaid >= finalAmount.Value
+            Math.Max(0m, finalAmount - netPaid),
+            Math.Max(0m, netPaid - pendingRefund - finalAmount),
+            netPaid >= finalAmount
         );
     }
 

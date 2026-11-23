@@ -33,7 +33,7 @@ public static class CacheRegistrationExtensions
                 async (db, ct) =>
                     CinemaSettingsSnapshot.From(await db.LoadCinemaSettingsOrDefaultAsync(ct))
             )
-            .AddCachedData(
+            .AddCachedData<IReadOnlyList<MembershipTierSnapshot>>(
                 CacheKeys.MembershipTiers,
                 async (db, ct) =>
                     await db

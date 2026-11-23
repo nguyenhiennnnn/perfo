@@ -8,6 +8,17 @@ internal sealed class CustomerSeedGroup : ISeedGroup
 {
     private sealed record CustomerSeed(UserSeed User, int Points, decimal TotalSpent);
 
+    private sealed record OptIns(bool Marketing, bool Personalized, bool Reminder);
+
+    private static readonly Dictionary<string, OptIns> OptInsByEmail = new()
+    {
+        [SeedEmails.Customer1] = new(true, true, true),
+        [SeedEmails.Customer2] = new(false, true, false),
+        [SeedEmails.Customer3] = new(true, false, true),
+        [SeedEmails.Customer4] = new(true, true, true),
+        [SeedEmails.CustomerNew] = new(false, false, false),
+    };
+
     private static readonly CustomerSeed[] Customers =
     [
         new(
@@ -137,6 +148,7 @@ internal sealed class CustomerSeedGroup : ISeedGroup
             }
 
             var tier = tiers.FirstOrDefault(t => t.MinPoints <= seed.Points);
+            var optIns = OptInsByEmail.GetValueOrDefault(seed.User.Email);
             db.CustomerProfiles.Add(
                 new CustomerProfile
                 {
@@ -144,6 +156,9 @@ internal sealed class CustomerSeedGroup : ISeedGroup
                     TierId = tier?.TierId,
                     Points = seed.Points,
                     TotalSpent = seed.TotalSpent,
+                    MarketingOptIn = optIns?.Marketing ?? false,
+                    PersonalizedRecommendations = optIns?.Personalized ?? true,
+                    ReminderAndReviewInvites = optIns?.Reminder ?? true,
                 }
             );
 

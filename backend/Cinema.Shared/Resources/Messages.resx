@@ -1713,6 +1713,12 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Refund_LineQuantityInvalid" xml:space="preserve">
     <value>Danh sách dòng hàng hoàn phải có ít nhất một dòng và số lượng mỗi dòng phải lớn hơn 0.</value>
   </data>
+  <data name="Event_TypeNotRegistered" xml:space="preserve">
+    <value>Loại sự kiện chưa được đăng ký: {0}</value>
+  </data>
+  <data name="Event_HandlerNotRegistered" xml:space="preserve">
+    <value>Bộ xử lý {0} chưa được đăng ký cho sự kiện {1}</value>
+  </data>
   <data name="Refund_JobFailed" xml:space="preserve">
     <value>Hoàn tiền thất bại cho đơn hàng {0}: {1}</value>
   </data>

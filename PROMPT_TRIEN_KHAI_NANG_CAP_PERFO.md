@@ -17,44 +17,21 @@ Nguồn nghiệp vụ: `NANG_CAP_BUSINESS_PERFO.md` (23 hạng mục). Mỗi h�
 ```text
 QUY TẮC CHUNG CHO MỌI TASK
 
-Nguồn và phạm vi
-- Nguồn nghiệp vụ: NANG_CAP_BUSINESS_PERFO.md. Đọc phần 3 và hạng mục của task trước khi code. Prompt lệch tài liệu thì theo tài liệu và nêu chỗ lệch ở cuối.
-- Chỉ làm đúng phạm vi task; chỉ chừa điểm mở rộng tối thiểu khi prompt nêu rõ. Không đổi route, DTO, hành vi hiện có nếu task không yêu cầu.
-- Tìm bằng grep rồi đọc đúng file cần, không đọc cả thư mục. Trước khi đổi tên hoặc xóa key, type, hook thì grep xem ai dùng.
-
-Cấm
-- Không build, không chạy lệnh của dự án, không viết comment, xóa code thừa.
-- Không viết, sửa, xóa test (tests, e2e, loadtest), kể cả khi test cũ lệch. Chỉ nêu test có thể bị ảnh hưởng.
-- Không tạo file migration hay file tự generate.
-
-Backend
-- Cinema.Api / Application / Infrastructure / Shared. Truy cập dữ liệu qua IAppDbContext. Service nhỏ theo trách nhiệm, logic dùng chung ở lớp static hoặc service riêng.
-- Chuỗi người dùng thấy (lỗi, email, thông báo) lưu trong Messages.resx, không hard-code tiếng Việt (Designer.cs nếu có trong repo thì cập nhật, nếu sinh khi build thì chỉ sửa resx).
-- Thời gian: VietnamTime, BusinessTime, Brand:TimeZoneId, cột timestamp without time zone. "Theo ngày" là ngày kinh doanh.
-- Tiền: decimal, làm tròn đến đồng, hiển thị VND, không dùng số thực.
-- Đồng thời (giữ ghế, tài nguyên, tồn, số dư, lượt dùng mã): nguyên tử bằng UPDATE có điều kiện hoặc transaction kèm concurrency token. Xử lý nền và sự kiện phải an toàn khi chạy lặp.
-- Thao tác nhạy cảm ghi audit log (3.8, hạ tầng T1.4). Dữ liệu cấu hình đọc nhiều dùng cache (3.9), tự làm mới khi sửa.
-- Phân quyền theo 3.11: endpoint admin chỉ quản trị; endpoint quầy cho nhân viên và quản trị.
-- Cài đặt rạp mới thêm đúng theo Phụ lục. Đổi schema thì cập nhật entity và cấu hình EF, không chuyển dữ liệu cũ.
-
-Frontend
-- React 19 + TS, theo skill cinema-design-system: semantic token, cn, component ở @/components/ui, PageHeader, data-table, dialog/sheet store, TanStack Query, formatter ở @/lib/formatters.
-- Tiếng Việt, responsive (khách và quầy dùng được trên điện thoại), có skeleton và empty state, không hard-code màu.
-
-Quản lý hạn mức (claude.ai không cho Claude xem hạn mức còn lại)
-- Trước khi code, ước lượng khối lượng task so với độ dài chat. Nếu người dùng báo hạn mức ít, chat đã dài, hoặc task có vẻ không xong trong một lượt: chỉ làm phần lõi chắc chắn xong, mỗi phần tự nhất quán, không để file dở hay code tham chiếu thứ chưa có.
-- Đóng gói sớm: xuất zip ngay khi xong từng phần, không dồn đến cuối. Không cố làm hết rồi hết hạn mức mà không có gì để giao.
-
-Đầu ra
-- Chỉ xuất file mới hoặc thay đổi trong .zip theo cấu trúc thư mục dự án; file cần xóa liệt kê riêng.
-- Cuối câu trả lời, ngắn gọn: việc thủ công (package, migration, appsettings, seed), chỗ lệch tài liệu, quyết định thiết kế đã chọn, test có thể bị ảnh hưởng.
-- Nếu chưa xong, thêm PROMPT TIẾP TỤC trong khối code để dán sang chat mới:
-  Áp dụng QUY TẮC CHUNG. Tiếp tục <mã task> (<tên>), đọc <mục tài liệu>.
-  Đã xong (không làm lại): <file và hành vi>.
-  Còn lại, theo thứ tự: <việc cụ thể>.
-  Đã chốt: <công thức, tên interface, giả định>.
-  Lưu ý: <việc thủ công, test ảnh hưởng>.
-  Đính kèm: NANG_CAP_BUSINESS_PERFO.md, mã nguồn, zip đã xuất.
+- Nguồn nghiệp vụ là NANG_CAP_BUSINESS_PERFO.md. Đọc phần 3 (quy ước chung) và hạng mục của task trước khi code. Nếu prompt lệch tài liệu thì theo tài liệu và nêu chỗ lệch ở cuối câu trả lời.
+- Chỉ làm đúng phạm vi task. Không làm trước phần của task sau; chỉ chừa điểm mở rộng tối thiểu khi prompt nêu rõ.
+- Không build, không chạy lệnh, không viết comment trong code, xóa code thừa.
+- Không làm và không sửa phần testing: không viết test mới (backend lẫn frontend, gồm unit, integration, e2e, loadtest), không sửa, không xóa project hay file test hiện có (thư mục tests, e2e, loadtest và các file test khác), kể cả khi test cũ không còn khớp với code mới. Chỉ nêu ở cuối câu trả lời những test có thể bị ảnh hưởng.
+- Bám convention hiện có: Cinema.Api / Cinema.Application / Cinema.Infrastructure / Cinema.Shared; truy cập dữ liệu qua IAppDbContext; service tách theo trách nhiệm nhỏ, logic dùng chung đặt ở lớp static hoặc service riêng; không đổi route, DTO, hành vi hiện có nếu task không yêu cầu.
+- Mọi chuỗi người dùng nhìn thấy (lỗi, email, thông báo) lưu trong Messages.resx và cập nhật Messages.Designer.cs viết tay; không hard-code tiếng Việt trong code.
+- Thời gian: dùng VietnamTime và Brand:TimeZoneId, cột timestamp without time zone. "Theo ngày" luôn là ngày kinh doanh theo mục 3.1.
+- Tiền: decimal, làm tròn đến đồng, hiển thị VND; không dùng số thực.
+- Đồng thời: giữ ghế, giữ chỗ tài nguyên, trừ tồn, trừ số dư, giữ lượt là thao tác nguyên tử (UPDATE có điều kiện hoặc transaction kèm concurrency token). Xử lý nền và xử lý sự kiện phải an toàn khi chạy lặp.
+- Thao tác nhạy cảm ghi nhật ký theo mục 3.8 qua hạ tầng của T1.4. Dữ liệu cấu hình đọc nhiều dùng bộ nhớ đệm theo mục 3.9 và tự làm mới khi quản trị chỉnh sửa.
+- Phân quyền theo bảng 3.11: endpoint admin chỉ quản trị; endpoint quầy cho nhân viên và quản trị.
+- Tham số cấu hình mới của task thêm vào cài đặt rạp đúng theo Phụ lục của tài liệu.
+- Frontend: React 19 + TypeScript, theo skill cinema-design-system (semantic token, cn, component ở @/components/ui, PageHeader, data-table, useDialogStore / useAlertDialogStore / useSheetStore, TanStack Query, formatter tiền và ngày ở @/lib/formatters). Giao diện tiếng Việt, responsive (màn hình khách và quầy dùng được trên điện thoại), có skeleton và empty state, không hard-code màu.
+- Thay đổi schema: cập nhật entity và cấu hình EF; không chạy lệnh. Không chuyển đổi dữ liệu cũ.
+- Đầu ra: chỉ xuất các file mới hoặc thay đổi .zip theo cấu trúc thư mục project. Cuối câu trả lời liệt kê ngắn việc thủ công (package, lệnh migration, appsettings, seed), có thể điều chỉnh project gốc nếu thấy vướng khi thực hiện, không cần tạo các file migration hay các file có thể tự generate.
 ```
 
 ---

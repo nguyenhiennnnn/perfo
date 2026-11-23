@@ -114,6 +114,9 @@ public static class DependencyInjection
         services.AddScoped<ISpecialDayService, SpecialDayService>();
         services.AddScoped<IPricingService, PricingService>();
         services.AddScoped<IPromotionService, PromotionService>();
+        services.AddScoped<IPromotionEngine, PromotionEngine>();
+        services.AddScoped<IMembershipBenefitPricer, NullMembershipBenefitPricer>();
+        services.AddScoped<IOrderPriceCalculator, OrderPriceCalculator>();
         services.AddSingleton<IShowtimePricingScopeResolver, StandardShowtimePricingScopeResolver>();
         services.AddSingleton<ISalesVelocityProvider, NullSalesVelocityProvider>();
         services.AddScoped<IPaymentLedgerService, PaymentLedgerService>();

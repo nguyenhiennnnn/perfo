@@ -3033,4 +3033,52 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Order_SupplementFeeDescription" xml:space="preserve">
     <value>Phụ thu chênh lệch giá vé ghế {0}: {1} → {2}</value>
   </data>
+  <data name="Promotion_Rejected_NotFound" xml:space="preserve">
+    <value>Mã khuyến mãi không tồn tại hoặc đã ngừng áp dụng.</value>
+  </data>
+  <data name="Promotion_Rejected_NotStarted" xml:space="preserve">
+    <value>Mã khuyến mãi chưa đến thời gian áp dụng.</value>
+  </data>
+  <data name="Promotion_Rejected_Expired" xml:space="preserve">
+    <value>Mã khuyến mãi đã hết hạn.</value>
+  </data>
+  <data name="Promotion_Rejected_ChannelNotAllowed" xml:space="preserve">
+    <value>Mã khuyến mãi không áp dụng cho kênh bán này.</value>
+  </data>
+  <data name="Promotion_Rejected_OrderTypeNotAllowed" xml:space="preserve">
+    <value>Loại đơn hàng này không được áp dụng khuyến mãi.</value>
+  </data>
+  <data name="Promotion_Rejected_ShowtimeNotEligible" xml:space="preserve">
+    <value>Mã khuyến mãi không áp dụng cho phim, suất chiếu hoặc loại phòng chiếu này.</value>
+  </data>
+  <data name="Promotion_Rejected_DayNotEligible" xml:space="preserve">
+    <value>Mã khuyến mãi không áp dụng vào ngày chiếu này.</value>
+  </data>
+  <data name="Promotion_Rejected_TierNotEligible" xml:space="preserve">
+    <value>Mã khuyến mãi không áp dụng cho hạng thành viên của bạn.</value>
+  </data>
+  <data name="Promotion_Rejected_NewCustomersOnly" xml:space="preserve">
+    <value>Mã khuyến mãi chỉ dành cho khách hàng mới.</value>
+  </data>
+  <data name="Promotion_Rejected_NotAssignedToCustomer" xml:space="preserve">
+    <value>Mã khuyến mãi không thuộc tài khoản này.</value>
+  </data>
+  <data name="Promotion_Rejected_MinOrderNotMet" xml:space="preserve">
+    <value>Đơn hàng chưa đạt giá trị tối thiểu {0} để dùng mã này.</value>
+  </data>
+  <data name="Promotion_Rejected_NothingToDiscount" xml:space="preserve">
+    <value>Đơn hàng không có sản phẩm thuộc phạm vi áp dụng của mã này.</value>
+  </data>
+  <data name="Promotion_Rejected_UsageLimitReached" xml:space="preserve">
+    <value>Mã khuyến mãi đã hết lượt sử dụng.</value>
+  </data>
+  <data name="Promotion_Rejected_CustomerLimitReached" xml:space="preserve">
+    <value>Bạn đã dùng hết số lượt cho phép của mã khuyến mãi này.</value>
+  </data>
+  <data name="Promotion_Rejected_BudgetExhausted" xml:space="preserve">
+    <value>Ngân sách của khuyến mãi đã hết.</value>
+  </data>
+  <data name="Promotion_Rejected_NotCombinable" xml:space="preserve">
+    <value>Mã khuyến mãi không dùng chung được với ưu đãi đang áp dụng, hoặc ưu đãi đó có lợi hơn cho bạn.</value>
+  </data>
 </root>

@@ -19,6 +19,7 @@ public class OrderHoldService(
     IEnumerable<IOrderHoldPolicy> holdPolicies,
     IOrderResourceHoldService resourceHolds,
     IOrderTicketPricer ticketPricer,
+    IOrderPriceCalculator priceCalculator,
     IOptions<BookingOptions> bookingOptions,
     ILogger<OrderHoldService> logger,
     IAppCache cache
@@ -187,13 +188,6 @@ public class OrderHoldService(
         var comboLines = comboSelectionList.Select(x => NewComboLine(showtimeId, x)).ToList();
         var lines = ticketLines.Concat(comboLines).ToList();
 
-        var totalAmount = OrderPricing.TotalAmount(lines);
-        var tierDiscount = await ResolveTierDiscountAsync(
-            orderUserId,
-            ticketLines.Sum(l => l.LockedUnitPrice),
-            cancellationToken
-        );
-
         var order = new Order
         {
             OrderCode = orderCode,
@@ -206,19 +200,15 @@ public class OrderHoldService(
             CreatedAt = now,
             ExpiresAt = holdUntil,
             CreatedByEmployeeId = createdByEmployeeId,
-            TotalAmount = totalAmount,
-            DiscountAmount = tierDiscount.Amount,
-            FinalAmount = totalAmount - tierDiscount.Amount,
         };
         foreach (var line in lines)
             order.Lines.Add(line);
 
-        if (tierDiscount.Amount > 0m)
-            order.PriceAdjustments.Add(
-                OrderPricing.BuildTierAdjustment(tierDiscount.Amount, tierDiscount.TierId, ticketLines)
-            );
-
-        OrderPricing.SettlePaidAmounts(order);
+        await priceCalculator.ApplyAsync(
+            order,
+            OrderPricingOptions.NoPromotions,
+            cancellationToken
+        );
 
         db.Orders.Add(order);
         await db.SaveChangesAsync(cancellationToken);
@@ -404,37 +394,6 @@ public class OrderHoldService(
             LockedUnitPrice = selection.Combo.Price,
         };
 
-    private async Task<TierDiscount> ResolveTierDiscountAsync(
-        int? orderUserId,
-        decimal ticketAmount,
-        CancellationToken cancellationToken
-    )
-    {
-        if (orderUserId is null)
-            return TierDiscount.None;
-
-        var hasProfile = await db.CustomerProfiles.AnyAsync(
-            p => p.UserId == orderUserId,
-            cancellationToken
-        );
-        if (!hasProfile)
-            return TierDiscount.None;
-
-        var points = await LoyaltyWindow.SumActiveAsync(
-            db,
-            orderUserId.Value,
-            DateTime.UtcNow,
-            cancellationToken
-        );
-        var tiers = await cache.GetAsync(CacheKeys.MembershipTiers, cancellationToken);
-        var tier = LoyaltyWindow.ResolveTier(tiers, points);
-        if (tier is null)
-            return TierDiscount.None;
-
-        var amount = OrderPricing.TierDiscountAmount(ticketAmount, tier.DiscountPercent);
-        return amount > 0m ? new TierDiscount(amount, tier.TierId) : TierDiscount.None;
-    }
-
     private async Task<List<(Combo Combo, int Quantity)>> LoadComboSelectionsAsync(
         List<ComboSelectionRequest>? comboSelections,
         CancellationToken cancellationToken
@@ -462,10 +421,5 @@ public class OrderHoldService(
         foreach (var selection in comboSelections)
             result.Add((lookup[selection.ComboId], selection.Quantity));
         return result;
-    }
-
-    private readonly record struct TierDiscount(decimal Amount, int? TierId)
-    {
-        public static readonly TierDiscount None = new(0m, null);
     }
 }

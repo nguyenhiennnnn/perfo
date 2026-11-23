@@ -27,7 +27,8 @@ public sealed record PromotionSnapshot(
     int? PerCustomerLimit,
     decimal? BudgetAmount,
     int Priority,
-    bool IsExclusive
+    bool IsExclusive,
+    int? AssignedUserId
 )
 {
     public static PromotionSnapshot From(Promotion p) =>
@@ -55,6 +56,7 @@ public sealed record PromotionSnapshot(
             p.PerCustomerLimit,
             p.BudgetAmount,
             p.Priority,
-            p.IsExclusive
+            p.IsExclusive,
+            p.AssignedUserId
         );
 }

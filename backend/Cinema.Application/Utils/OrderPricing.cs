@@ -8,30 +8,8 @@ public static class OrderPricing
     public static decimal RoundToDong(decimal value) =>
         Math.Round(value, 0, MidpointRounding.AwayFromZero);
 
-    public static decimal[] AllocateProportionally(decimal amount, IReadOnlyList<decimal> bases)
-    {
-        var result = new decimal[bases.Count];
-        var total = bases.Sum();
-        if (amount <= 0m || total <= 0m)
-            return result;
-
-        amount = Math.Min(RoundToDong(amount), total);
-        var allocated = 0m;
-        for (var i = 0; i < bases.Count; i++)
-        {
-            result[i] = Math.Min(bases[i], Math.Floor(amount * bases[i] / total));
-            allocated += result[i];
-        }
-
-        for (var i = 0; allocated < amount && i < bases.Count; i++)
-        {
-            var extra = Math.Min(bases[i] - result[i], amount - allocated);
-            result[i] += extra;
-            allocated += extra;
-        }
-
-        return result;
-    }
+    public static decimal[] AllocateProportionally(decimal amount, IReadOnlyList<decimal> bases) =>
+        DiscountAllocator.Allocate(amount, bases);
 
     public static decimal TotalAmount(IEnumerable<OrderLine> lines) =>
         lines.Sum(l => l.LockedUnitPrice * l.Quantity);
@@ -39,36 +17,49 @@ public static class OrderPricing
     public static decimal TierDiscountAmount(decimal ticketAmount, decimal discountPercent) =>
         Math.Min(RoundToDong(ticketAmount * discountPercent / 100m), ticketAmount);
 
+    public static OrderPriceAdjustment BuildAdjustment(
+        PriceAdjustmentType type,
+        string? referenceType,
+        int? referenceId,
+        IReadOnlyList<OrderLine> lines,
+        IReadOnlyList<decimal> shares
+    )
+    {
+        var adjustment = new OrderPriceAdjustment
+        {
+            Type = type,
+            Amount = shares.Sum(),
+            ReferenceType = referenceType,
+            ReferenceId = referenceId,
+        };
+        for (var i = 0; i < lines.Count; i++)
+        {
+            if (shares[i] > 0m)
+                adjustment.Allocations.Add(
+                    new OrderPriceAdjustmentAllocation { OrderLine = lines[i], Amount = shares[i] }
+                );
+        }
+
+        return adjustment;
+    }
+
     public static OrderPriceAdjustment BuildTierAdjustment(
         decimal amount,
         int? tierId,
         IReadOnlyList<OrderLine> ticketLines
     )
     {
-        var shares = AllocateProportionally(
+        var shares = DiscountAllocator.Allocate(
             amount,
-            ticketLines.Select(l => l.LockedUnitPrice).ToList()
+            ticketLines.Select(l => l.LockedUnitPrice * l.Quantity).ToList()
         );
-        var adjustment = new OrderPriceAdjustment
-        {
-            Type = PriceAdjustmentType.TierDiscount,
-            Amount = amount,
-            ReferenceType = nameof(MembershipTier),
-            ReferenceId = tierId,
-        };
-        for (var i = 0; i < ticketLines.Count; i++)
-        {
-            if (shares[i] > 0m)
-                adjustment.Allocations.Add(
-                    new OrderPriceAdjustmentAllocation
-                    {
-                        OrderLine = ticketLines[i],
-                        Amount = shares[i],
-                    }
-                );
-        }
-
-        return adjustment;
+        return BuildAdjustment(
+            PriceAdjustmentType.TierDiscount,
+            nameof(MembershipTier),
+            tierId,
+            ticketLines,
+            shares
+        );
     }
 
     public static void SettlePaidAmounts(Order order)

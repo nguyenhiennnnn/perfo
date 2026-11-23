@@ -12,6 +12,10 @@ public class OrderLine
     public int? ShowtimeSeatId { get; set; }
     public int? TicketTypeId { get; set; }
     public bool RequiresCardPresentation { get; set; }
+    public CardCheckStatus CardCheckStatus { get; set; } = CardCheckStatus.NotRequired;
+    public DateTime? CardCheckRecordedAt { get; set; }
+    public int? CardCheckRecordedByUserId { get; set; }
+    public int? SupplementedLineId { get; set; }
     public int? ComboId { get; set; }
     public int Quantity { get; set; } = 1;
     public int QuantityFulfilled { get; set; }
@@ -29,6 +33,7 @@ public class OrderLine
     public Showtime? Showtime { get; set; }
     public ShowtimeSeat? ShowtimeSeat { get; set; }
     public TicketType? TicketType { get; set; }
+    public OrderLine? SupplementedLine { get; set; }
     public Combo? Combo { get; set; }
     public ICollection<OrderPriceAdjustmentAllocation> AdjustmentAllocations { get; set; } = [];
 }

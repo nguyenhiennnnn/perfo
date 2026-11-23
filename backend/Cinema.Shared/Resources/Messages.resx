@@ -73,6 +73,9 @@
   <data name="Ai_Card_SeatsLeft" xml:space="preserve">
     <value>Còn {0}/{1} ghế</value>
   </data>
+  <data name="Ai_Card_SeatsOnly" xml:space="preserve">
+    <value>Còn {0} ghế</value>
+  </data>
   <data name="Ai_Card_ShowtimeSubtitle" xml:space="preserve">
     <value>{0:HH:mm dd/MM} • {1}</value>
   </data>
@@ -310,6 +313,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Conflict_CannotDowngradeRoleWithActiveEmployee" xml:space="preserve">
     <value>Không thể hạ role xuống Customer khi còn hồ sơ Employee đang hoạt động — vô hiệu hóa Employee trước.</value>
   </data>
+  <data name="Conflict_CardCheckAlreadyRecorded" xml:space="preserve">
+    <value>Vé này đã được ghi nhận không xuất trình thẻ.</value>
+  </data>
   <data name="Conflict_DirectorInUse" xml:space="preserve">
     <value>Đạo diễn đang được phim tham chiếu, không thể xóa.</value>
   </data>
@@ -393,6 +399,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Conflict_SpecialDayInUse" xml:space="preserve">
     <value>Ngày đặc biệt đang được quy tắc giá sử dụng. Hãy gỡ khỏi quy tắc trước khi xóa.</value>
+  </data>
+  <data name="Conflict_SupplementAlreadyExists" xml:space="preserve">
+    <value>Vé này đã có đơn bổ sung đang chờ thanh toán hoặc đã thanh toán.</value>
   </data>
   <data name="Conflict_TicketAlreadyCheckedIn" xml:space="preserve">
     <value>Vé đã check-in trước đó.</value>
@@ -1890,6 +1899,12 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_CannotResetOwnPassword" xml:space="preserve">
     <value>Không thể tự đặt lại mật khẩu của chính mình bằng chức năng này.</value>
   </data>
+  <data name="Rule_CardCheckNotRequired" xml:space="preserve">
+    <value>Vé này không yêu cầu xuất trình thẻ.</value>
+  </data>
+  <data name="Rule_CardCheckOrderInvalid" xml:space="preserve">
+    <value>Chỉ ghi nhận được cho vé còn hiệu lực của đơn hàng đã thanh toán.</value>
+  </data>
   <data name="Rule_CheckInNotOpenYet" xml:space="preserve">
     <value>Chưa tới giờ check-in (mở trước giờ chiếu {0} phút).</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Rule_CheckInNotOpenYet, ...)</comment>
@@ -2055,6 +2070,18 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Rule_StripeSecretKeyMissing" xml:space="preserve">
     <value>Stripe SecretKey chưa được cấu hình.</value>
+  </data>
+  <data name="Rule_SupplementNoDifference" xml:space="preserve">
+    <value>Giá vé thay thế không cao hơn số tiền đã thanh toán cho vé này nên không có chênh lệch để thu.</value>
+  </data>
+  <data name="Rule_SupplementRequiresNotPresented" xml:space="preserve">
+    <value>Chỉ tạo được đơn bổ sung cho vé đã được ghi nhận không xuất trình thẻ.</value>
+  </data>
+  <data name="Rule_SupplementTicketTypeIneligible" xml:space="preserve">
+    <value>Loại vé thay thế chưa đủ điều kiện áp dụng: {0}</value>
+  </data>
+  <data name="Rule_SupplementTicketTypeRequiresCard" xml:space="preserve">
+    <value>Loại vé thay thế không được yêu cầu xuất trình thẻ.</value>
   </data>
   <data name="Rule_TicketPdfNoTickets" xml:space="preserve">
     <value>Đơn hàng không có vé xem phim để in.</value>
@@ -2532,6 +2559,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Validation_OpeningTime_TimeFormat" xml:space="preserve">
     <value>openingTime phải có định dạng HH:mm.</value>
   </data>
+  <data name="Validation_OrderLineId_Positive" xml:space="preserve">
+    <value>Mã dòng hàng không hợp lệ.</value>
+  </data>
   <data name="Validation_OriginalTitle_MaxLength200" xml:space="preserve">
     <value>Tên gốc không được vượt quá 200 ký tự.</value>
   </data>
@@ -2924,5 +2954,8 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Rule_TicketTypeNotEligible" xml:space="preserve">
     <value>Loại vé {0} chưa đủ điều kiện áp dụng: {1}</value>
+  </data>
+  <data name="Order_SupplementFeeDescription" xml:space="preserve">
+    <value>Phụ thu chênh lệch giá vé ghế {0}: {1} → {2}</value>
   </data>
 </root>

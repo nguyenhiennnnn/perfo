@@ -1,4 +1,5 @@
 using Cinema.Domain.Entities;
+using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -59,6 +60,26 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
                     "CK_OrderLines_CardPresentation",
                     "(NOT \"RequiresCardPresentation\") OR \"LineType\" = 'Ticket'"
                 );
+                t.HasCheckConstraint(
+                    "CK_OrderLines_CardCheckStatus",
+                    "\"CardCheckStatus\" IN ('NotRequired','Pending','NotPresented','Supplemented')"
+                );
+                t.HasCheckConstraint(
+                    "CK_OrderLines_CardCheck",
+                    "\"CardCheckStatus\" = 'NotRequired' "
+                        + "OR (\"LineType\" = 'Ticket' AND \"RequiresCardPresentation\")"
+                );
+                t.HasCheckConstraint(
+                    "CK_OrderLines_CardCheckRecord",
+                    "((\"CardCheckStatus\" IN ('NotPresented','Supplemented')) "
+                        + "= (\"CardCheckRecordedAt\" IS NOT NULL)) "
+                        + "AND ((\"CardCheckRecordedAt\" IS NULL) "
+                        + "= (\"CardCheckRecordedByUserId\" IS NULL))"
+                );
+                t.HasCheckConstraint(
+                    "CK_OrderLines_SupplementedLine",
+                    "\"SupplementedLineId\" IS NULL OR \"LineType\" = 'Fee'"
+                );
             }
         );
         builder.HasKey(x => x.OrderLineId);
@@ -78,6 +99,15 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
         builder.Property(x => x.RefundedQuantity).HasDefaultValue(0);
         builder.Property(x => x.QrCode).HasMaxLength(255);
         builder.Property(x => x.RequiresCardPresentation).HasDefaultValue(false);
+        builder
+            .Property(x => x.CardCheckStatus)
+            .HasConversion<string>()
+            .HasMaxLength(FieldLengths.EnumValue)
+            .HasDefaultValue(CardCheckStatus.NotRequired)
+            .IsRequired();
+        builder
+            .Property(x => x.CardCheckRecordedAt)
+            .HasColumnType("timestamp without time zone");
         builder.Property(x => x.IsCheckedIn).HasDefaultValue(false);
         builder.Property(x => x.CheckedInAt).HasColumnType("timestamp without time zone");
 
@@ -127,6 +157,22 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
             .HasIndex(x => x.TicketTypeId)
             .HasFilter("\"TicketTypeId\" IS NOT NULL")
             .HasDatabaseName("IX_OrderLines_TicketType");
+
+        builder
+            .HasOne(x => x.SupplementedLine)
+            .WithMany()
+            .HasForeignKey(x => x.SupplementedLineId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasIndex(x => x.SupplementedLineId)
+            .HasFilter("\"SupplementedLineId\" IS NOT NULL")
+            .HasDatabaseName("IX_OrderLines_SupplementedLine");
+
+        builder
+            .HasOne<User>()
+            .WithMany()
+            .HasForeignKey(x => x.CardCheckRecordedByUserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .HasIndex(x => x.QrCode)

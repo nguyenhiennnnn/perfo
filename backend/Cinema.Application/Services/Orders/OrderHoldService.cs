@@ -387,6 +387,7 @@ public class OrderHoldService(
             ShowtimeSeatId = seat.ShowtimeSeatId,
             TicketTypeId = priced.TicketTypeId,
             RequiresCardPresentation = priced.RequiresCardPresentation,
+            CardCheckStatus = CardCheckRules.InitialStatus(priced.RequiresCardPresentation),
             Quantity = 1,
             UnitListPrice = priced.ListPrice,
             LockedUnitPrice = priced.ListPrice,

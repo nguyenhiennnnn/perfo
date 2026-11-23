@@ -89,7 +89,7 @@ public class PromotionService(IAppDbContext db, IAppCache cache, IAuditLogger au
         await EnsureValidAsync(0, code, request, cancellationToken);
 
         var entity = new Promotion { CreatedAt = DateTime.UtcNow };
-        Apply(entity, code, request);
+        PromotionMapper.Apply(entity, code, request);
 
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
         db.Promotions.Add(entity);
@@ -120,7 +120,7 @@ public class PromotionService(IAppDbContext db, IAppCache cache, IAuditLogger au
         await EnsureIdentityUnchangedIfRedeemedAsync(entity, code, request, cancellationToken);
 
         var before = AuditSnapshots.PromotionState(entity);
-        Apply(entity, code, request);
+        PromotionMapper.Apply(entity, code, request);
         entity.UpdatedAt = DateTime.UtcNow;
         auditLogger.Record(
             AuditActions.Update,
@@ -233,45 +233,14 @@ public class PromotionService(IAppDbContext db, IAppCache cache, IAuditLogger au
         if (duplicated)
             throw new ConflictAppException(Messages.Conflict_PromotionCodeExists);
 
-        var errors = new Dictionary<string, string[]>();
-
-        var movieIds = PromotionMapper.NormalizeIds(request.MovieIds);
-        if (
-            movieIds.Count > 0
-            && await db.Movies.CountAsync(m => movieIds.Contains(m.MovieId), cancellationToken)
-                != movieIds.Count
-        )
-            errors["movieIds"] = [Messages.Invalid_Promotion_ReferenceNotFound];
-
-        var showtimeIds = PromotionMapper.NormalizeIds(request.ShowtimeIds);
-        if (
-            showtimeIds.Count > 0
-            && await db.Showtimes.CountAsync(
-                s => showtimeIds.Contains(s.ShowtimeId),
-                cancellationToken
-            ) != showtimeIds.Count
-        )
-            errors["showtimeIds"] = [Messages.Invalid_Promotion_ReferenceNotFound];
-
-        var screenTypeIds = PromotionMapper.NormalizeIds(request.ScreenTypeIds);
-        if (
-            screenTypeIds.Count > 0
-            && await db.ScreenTypes.CountAsync(
-                s => screenTypeIds.Contains(s.ScreenTypeId),
-                cancellationToken
-            ) != screenTypeIds.Count
-        )
-            errors["screenTypeIds"] = [Messages.Invalid_Promotion_ReferenceNotFound];
-
-        var tierIds = PromotionMapper.NormalizeIds(request.MembershipTierIds);
-        if (
-            tierIds.Count > 0
-            && await db.MembershipTiers.CountAsync(
-                t => tierIds.Contains(t.TierId),
-                cancellationToken
-            ) != tierIds.Count
-        )
-            errors["membershipTierIds"] = [Messages.Invalid_Promotion_ReferenceNotFound];
+        var errors = await PromotionReferences.FindErrorsAsync(
+            db,
+            request.MovieIds,
+            request.ShowtimeIds,
+            request.ScreenTypeIds,
+            request.MembershipTierIds,
+            cancellationToken
+        );
 
         if (request.AssignedUserId is { } userId)
         {
@@ -285,46 +254,5 @@ public class PromotionService(IAppDbContext db, IAppCache cache, IAuditLogger au
 
         if (errors.Count > 0)
             throw new ValidationAppException(Messages.Common_InvalidData, errors);
-    }
-
-    private static void Apply(Promotion entity, string code, UpsertPromotionRequest request)
-    {
-        var type = EnumConverters.ParseEnum<PromotionType>(request.Type, "type");
-        var discountType = EnumConverters.ParseEnum<PromotionDiscountType>(
-            request.DiscountType,
-            "discountType"
-        );
-        var isPersonal = type == PromotionType.PersonalCode;
-
-        entity.Code = code;
-        entity.Name = request.Name.Trim();
-        entity.Description = string.IsNullOrWhiteSpace(request.Description)
-            ? null
-            : request.Description.Trim();
-        entity.Type = type;
-        entity.DiscountType = discountType;
-        entity.DiscountValue = request.DiscountValue;
-        entity.MaxDiscountAmount =
-            discountType == PromotionDiscountType.Percent ? request.MaxDiscountAmount : null;
-        entity.Scope = EnumConverters.ParseEnum<PromotionScope>(request.Scope, "scope");
-        entity.MinOrderAmount = request.MinOrderAmount;
-        entity.StartsAt = request.StartsAt is { } startsAt ? BusinessTime.ToUtc(startsAt) : null;
-        entity.EndsAt = request.EndsAt is { } endsAt ? BusinessTime.ToUtc(endsAt) : null;
-        entity.Channel = string.IsNullOrWhiteSpace(request.Channel)
-            ? null
-            : EnumConverters.ParseEnum<SalesChannel>(request.Channel, "channel");
-        entity.MovieIds = PromotionMapper.NormalizeIds(request.MovieIds);
-        entity.ShowtimeIds = PromotionMapper.NormalizeIds(request.ShowtimeIds);
-        entity.ScreenTypeIds = PromotionMapper.NormalizeIds(request.ScreenTypeIds);
-        entity.DaysOfWeek = PromotionMapper.NormalizeIds(request.DaysOfWeek);
-        entity.MembershipTierIds = PromotionMapper.NormalizeIds(request.MembershipTierIds);
-        entity.NewCustomersOnly = request.NewCustomersOnly;
-        entity.TotalUsageLimit = isPersonal ? 1 : request.TotalUsageLimit;
-        entity.PerCustomerLimit = isPersonal ? 1 : request.PerCustomerLimit;
-        entity.BudgetAmount = request.BudgetAmount;
-        entity.Priority = request.Priority;
-        entity.IsExclusive = request.IsExclusive;
-        entity.AssignedUserId = isPersonal ? request.AssignedUserId : null;
-        entity.IsActive = request.IsActive;
     }
 }

@@ -3093,4 +3093,46 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Validation_PromotionCode_Required" xml:space="preserve">
     <value>Vui lòng nhập mã khuyến mãi.</value>
   </data>
+  <data name="Export_SheetPromotionRedemptions" xml:space="preserve">
+    <value>Lịch sử dùng khuyến mãi</value>
+  </data>
+  <data name="Export_ColPromotionCode" xml:space="preserve">
+    <value>Mã khuyến mãi</value>
+  </data>
+  <data name="Export_ColReservedAt" xml:space="preserve">
+    <value>Thời điểm giữ chỗ</value>
+  </data>
+  <data name="Export_ColRedeemedAt" xml:space="preserve">
+    <value>Thời điểm sử dụng</value>
+  </data>
+  <data name="Export_ColReleasedAt" xml:space="preserve">
+    <value>Thời điểm nhả</value>
+  </data>
+  <data name="Export_StatusReserved" xml:space="preserve">
+    <value>Đang giữ chỗ</value>
+  </data>
+  <data name="Export_StatusRedeemed" xml:space="preserve">
+    <value>Đã dùng</value>
+  </data>
+  <data name="Export_StatusReleased" xml:space="preserve">
+    <value>Đã nhả</value>
+  </data>
+  <data name="Invalid_Promotion_BulkUsersNotFound" xml:space="preserve">
+    <value>Có tài khoản không tồn tại, đã bị khóa hoặc không phải khách hàng.</value>
+  </data>
+  <data name="Validation_Promotion_BulkPrefixFormat" xml:space="preserve">
+    <value>Tiền tố mã gồm chữ và số, dài từ 2 đến {0} ký tự.</value>
+  </data>
+  <data name="Validation_Promotion_BulkUsersRequired" xml:space="preserve">
+    <value>Vui lòng chọn ít nhất một khách hàng.</value>
+  </data>
+  <data name="Validation_Promotion_BulkUsersRange" xml:space="preserve">
+    <value>Mỗi lần chỉ tạo tối đa {0} mã và mã tài khoản phải hợp lệ.</value>
+  </data>
+  <data name="Validation_Promotion_BulkValidDaysRange" xml:space="preserve">
+    <value>Số ngày hiệu lực phải từ 1 đến {0}.</value>
+  </data>
+  <data name="Success_PromotionPersonalCodesCreated" xml:space="preserve">
+    <value>Đã tạo mã khuyến mãi cá nhân.</value>
+  </data>
 </root>

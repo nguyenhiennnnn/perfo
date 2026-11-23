@@ -1,6 +1,8 @@
 using Cinema.Application.DTOs.Promotions;
 using Cinema.Application.Services.Pricing;
+using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
+using Cinema.Domain.Enums;
 
 namespace Cinema.Application.Services.Promotions;
 
@@ -45,6 +47,47 @@ public static class PromotionMapper
             p.CreatedAt,
             p.UpdatedAt
         );
+    }
+
+    public static void Apply(Promotion entity, string code, UpsertPromotionRequest request)
+    {
+        var type = EnumConverters.ParseEnum<PromotionType>(request.Type, "type");
+        var discountType = EnumConverters.ParseEnum<PromotionDiscountType>(
+            request.DiscountType,
+            "discountType"
+        );
+        var isPersonal = type == PromotionType.PersonalCode;
+
+        entity.Code = code;
+        entity.Name = request.Name.Trim();
+        entity.Description = string.IsNullOrWhiteSpace(request.Description)
+            ? null
+            : request.Description.Trim();
+        entity.Type = type;
+        entity.DiscountType = discountType;
+        entity.DiscountValue = request.DiscountValue;
+        entity.MaxDiscountAmount =
+            discountType == PromotionDiscountType.Percent ? request.MaxDiscountAmount : null;
+        entity.Scope = EnumConverters.ParseEnum<PromotionScope>(request.Scope, "scope");
+        entity.MinOrderAmount = request.MinOrderAmount;
+        entity.StartsAt = request.StartsAt is { } startsAt ? BusinessTime.ToUtc(startsAt) : null;
+        entity.EndsAt = request.EndsAt is { } endsAt ? BusinessTime.ToUtc(endsAt) : null;
+        entity.Channel = string.IsNullOrWhiteSpace(request.Channel)
+            ? null
+            : EnumConverters.ParseEnum<SalesChannel>(request.Channel, "channel");
+        entity.MovieIds = NormalizeIds(request.MovieIds);
+        entity.ShowtimeIds = NormalizeIds(request.ShowtimeIds);
+        entity.ScreenTypeIds = NormalizeIds(request.ScreenTypeIds);
+        entity.DaysOfWeek = NormalizeIds(request.DaysOfWeek);
+        entity.MembershipTierIds = NormalizeIds(request.MembershipTierIds);
+        entity.NewCustomersOnly = request.NewCustomersOnly;
+        entity.TotalUsageLimit = isPersonal ? 1 : request.TotalUsageLimit;
+        entity.PerCustomerLimit = isPersonal ? 1 : request.PerCustomerLimit;
+        entity.BudgetAmount = request.BudgetAmount;
+        entity.Priority = request.Priority;
+        entity.IsExclusive = request.IsExclusive;
+        entity.AssignedUserId = isPersonal ? request.AssignedUserId : null;
+        entity.IsActive = request.IsActive;
     }
 
     public static List<int> NormalizeIds(IEnumerable<int>? ids) => PricingMapper.NormalizeIds(ids);

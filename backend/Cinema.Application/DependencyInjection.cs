@@ -1,4 +1,5 @@
 using Cinema.Application.DTOs.Movies;
+using Cinema.Application.DTOs.Promotions;
 using Cinema.Application.DTOs.Showtimes;
 using Cinema.Application.Caching;
 using Cinema.Application.Events;
@@ -68,6 +69,9 @@ public static class DependencyInjection
         services.AddScoped<IExportModule>(sp => new ExportModule<AdminPaymentListFilter>(
             sp.GetRequiredService<IPaymentExportService>()
         ));
+        services.AddScoped<IExportModule>(sp => new ExportModule<PromotionRedemptionListFilter>(
+            sp.GetRequiredService<IPromotionRedemptionExportService>()
+        ));
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<ISeatLayoutImportService, SeatLayoutImportService>();
         services.AddScoped<ISeatExpirationService, SeatExpirationService>();
@@ -119,6 +123,10 @@ public static class DependencyInjection
         services.AddScoped<IPromotionService, PromotionService>();
         services.AddScoped<IPromotionEngine, PromotionEngine>();
         services.AddScoped<IMyPromotionService, MyPromotionService>();
+        services.AddScoped<IPromotionReportService, PromotionReportService>();
+        services.AddScoped<IPromotionRedemptionService, PromotionRedemptionService>();
+        services.AddScoped<IPromotionRedemptionExportService, PromotionRedemptionExportService>();
+        services.AddScoped<IPromotionBulkCodeService, PromotionBulkCodeService>();
         services.AddScoped<IMembershipBenefitPricer, NullMembershipBenefitPricer>();
         services.AddScoped<IOrderPriceCalculator, OrderPriceCalculator>();
         services.AddSingleton<IShowtimePricingScopeResolver, StandardShowtimePricingScopeResolver>();

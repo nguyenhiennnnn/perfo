@@ -60,6 +60,14 @@ public static class ExportLabels
             _ => Messages.Export_StatusFailed,
         };
 
+    public static string PromotionRedemption(PromotionRedemptionStatus status) =>
+        status switch
+        {
+            PromotionRedemptionStatus.Reserved => Messages.Export_StatusReserved,
+            PromotionRedemptionStatus.Redeemed => Messages.Export_StatusRedeemed,
+            _ => Messages.Export_StatusReleased,
+        };
+
     public static string TransactionKind(PaymentTransactionType type) =>
         type == PaymentTransactionType.Charge
             ? Messages.Export_TypeCharge

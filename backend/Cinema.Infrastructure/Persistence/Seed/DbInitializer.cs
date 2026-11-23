@@ -20,6 +20,7 @@ public static class DbInitializer
         new VerificationTokenSeedGroup(),
         new ReferralCodeSeedGroup(),
         new ShowtimeSeedGroup(),
+        new OrderSeedGroup(),
     ];
 
     public static async Task SeedAsync(

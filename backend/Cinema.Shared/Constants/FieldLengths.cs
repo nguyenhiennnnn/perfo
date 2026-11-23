@@ -28,6 +28,11 @@ public static class FieldLengths
     public const int AuditAction = 50;
     public const int AuditEntityType = 100;
     public const int AuditEntityId = 100;
+    public const int InventoryItemCode = 30;
+    public const int InventoryItemName = 150;
+    public const int InventoryUnit = 20;
+    public const int SupplierName = 150;
+    public const int StockNote = 255;
 
     public const int FileName = 255;
     public const int ErrorMessage = 2000;

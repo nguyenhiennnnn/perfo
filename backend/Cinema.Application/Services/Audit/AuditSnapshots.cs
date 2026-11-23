@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
 using Cinema.Application.Caching;
+using Cinema.Application.DTOs.Inventory;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Services.Pricing;
 using Cinema.Domain.Entities;
@@ -100,6 +101,57 @@ public static class AuditSnapshots
                 d.EndDate,
                 d.IsActive,
                 d.IsDeleted,
+            }
+        );
+
+    public static JsonObject InventoryItemState(InventoryItem i) =>
+        AuditJson.ToObject(
+            new
+            {
+                i.Code,
+                i.Name,
+                i.Unit,
+                i.LowStockThreshold,
+                i.IsActive,
+                i.IsDeleted,
+            }
+        );
+
+    public static JsonObject ComboRecipeState(int comboId, IEnumerable<ComboRecipeLine> lines) =>
+        AuditJson.ToObject(
+            new
+            {
+                comboId,
+                lines = lines
+                    .OrderBy(l => l.InventoryItemId)
+                    .Select(l => new { l.InventoryItemId, l.Quantity }),
+            }
+        );
+
+    public static JsonObject StockReceiptState(
+        StockReceipt r,
+        IEnumerable<StockReceiptCostChange> costChanges
+    ) =>
+        AuditJson.ToObject(
+            new
+            {
+                r.SupplierName,
+                r.ReceivedDate,
+                r.Note,
+                lines = r.Lines.OrderBy(l => l.StockReceiptLineId)
+                    .Select(l => new
+                    {
+                        l.InventoryItemId,
+                        l.Quantity,
+                        l.UnitCost,
+                    }),
+                costChanges = costChanges.Select(c => new
+                {
+                    c.InventoryItemId,
+                    c.QuantityBefore,
+                    c.CostBefore,
+                    c.CostAfter,
+                }),
             }
         );
 

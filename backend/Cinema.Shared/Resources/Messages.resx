@@ -3135,4 +3135,86 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_PromotionPersonalCodesCreated" xml:space="preserve">
     <value>Đã tạo mã khuyến mãi cá nhân.</value>
   </data>
+
+  <!-- ===== Inventory ===== -->
+  <data name="Conflict_InventoryItemCodeExists" xml:space="preserve">
+    <value>Mã sản phẩm kho đã tồn tại.</value>
+  </data>
+  <data name="Conflict_InventoryItemHasStock" xml:space="preserve">
+    <value>Sản phẩm kho còn tồn, cần đưa tồn về 0 trước khi xóa.</value>
+  </data>
+  <data name="Conflict_InventoryItemInRecipe" xml:space="preserve">
+    <value>Sản phẩm kho đang được dùng trong công thức combo.</value>
+  </data>
+  <data name="Conflict_InventoryItemUnitLocked" xml:space="preserve">
+    <value>Không thể đổi đơn vị tính khi sản phẩm kho đã có biến động.</value>
+  </data>
+  <data name="Invalid_ComboRecipe_ItemNotFound" xml:space="preserve">
+    <value>Công thức có sản phẩm kho không tồn tại hoặc đã ngừng sử dụng.</value>
+  </data>
+  <data name="Invalid_StockReceipt_ItemNotFound" xml:space="preserve">
+    <value>Phiếu nhập có sản phẩm kho không tồn tại hoặc đã ngừng sử dụng.</value>
+  </data>
+  <data name="NotFound_ComboRecipe" xml:space="preserve">
+    <value>Combo chưa khai báo công thức.</value>
+  </data>
+  <data name="NotFound_InventoryItem" xml:space="preserve">
+    <value>Không tìm thấy sản phẩm kho.</value>
+  </data>
+  <data name="NotFound_StockReceipt" xml:space="preserve">
+    <value>Không tìm thấy phiếu nhập kho.</value>
+  </data>
+  <data name="Rule_InventoryInsufficientStock" xml:space="preserve">
+    <value>Tồn kho không đủ.</value>
+  </data>
+  <data name="Success_ComboRecipeDeleted" xml:space="preserve">
+    <value>Đã xóa công thức combo.</value>
+  </data>
+  <data name="Success_ComboRecipeSaved" xml:space="preserve">
+    <value>Đã lưu công thức combo.</value>
+  </data>
+  <data name="Success_InventoryItemCreated" xml:space="preserve">
+    <value>Đã thêm sản phẩm kho.</value>
+  </data>
+  <data name="Success_InventoryItemDeleted" xml:space="preserve">
+    <value>Đã xóa sản phẩm kho.</value>
+  </data>
+  <data name="Success_InventoryItemUpdated" xml:space="preserve">
+    <value>Đã cập nhật sản phẩm kho.</value>
+  </data>
+  <data name="Success_StockReceiptCreated" xml:space="preserve">
+    <value>Đã lập phiếu nhập kho.</value>
+  </data>
+  <data name="Validation_ComboRecipe_ItemDuplicated" xml:space="preserve">
+    <value>Sản phẩm kho trong công thức không được trùng nhau.</value>
+  </data>
+  <data name="Validation_ComboRecipe_LinesRange" xml:space="preserve">
+    <value>Công thức cần từ 1 đến {0} dòng.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Validation_ComboRecipe_LinesRange, ...)</comment>
+  </data>
+  <data name="Validation_InventoryItem_CodeFormat" xml:space="preserve">
+    <value>Mã sản phẩm kho gồm 2 đến 30 ký tự chữ, số, gạch ngang hoặc gạch dưới.</value>
+  </data>
+  <data name="Validation_InventoryItemId_Positive" xml:space="preserve">
+    <value>inventoryItemId phải lớn hơn 0.</value>
+  </data>
+  <data name="Validation_Inventory_QuantityRange" xml:space="preserve">
+    <value>Số lượng phải lớn hơn 0, tối đa {0} và không quá 3 chữ số thập phân.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Validation_Inventory_QuantityRange, ...)</comment>
+  </data>
+  <data name="Validation_Inventory_ThresholdRange" xml:space="preserve">
+    <value>Ngưỡng cảnh báo phải từ 0 đến {0} và không quá 3 chữ số thập phân.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Validation_Inventory_ThresholdRange, ...)</comment>
+  </data>
+  <data name="Validation_Inventory_UnitCostRange" xml:space="preserve">
+    <value>Đơn giá nhập phải là số nguyên đồng từ 0 đến {0}.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Validation_Inventory_UnitCostRange, ...)</comment>
+  </data>
+  <data name="Validation_StockReceipt_DateInvalid" xml:space="preserve">
+    <value>Ngày nhập không hợp lệ hoặc sau ngày hôm nay.</value>
+  </data>
+  <data name="Validation_StockReceipt_LinesRange" xml:space="preserve">
+    <value>Phiếu nhập cần từ 1 đến {0} dòng.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Validation_StockReceipt_LinesRange, ...)</comment>
+  </data>
 </root>

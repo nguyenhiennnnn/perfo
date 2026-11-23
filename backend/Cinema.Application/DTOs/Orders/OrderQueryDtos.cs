@@ -31,6 +31,8 @@ public record OrderTicketDto(
     int? TicketTypeId,
     string TicketTypeName,
     bool RequiresCardPresentation,
+    string CardCheckStatus,
+    DateTime? CardCheckRecordedAt,
     string? QrCodeImage,
     bool IsCheckedIn,
     DateTime? CheckedInAt

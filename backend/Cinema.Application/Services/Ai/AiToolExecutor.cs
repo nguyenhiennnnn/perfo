@@ -220,11 +220,13 @@ public class AiToolExecutor(
                         BusinessTime.ToLocal(r.StartTime),
                         r.RoomName
                     ),
-                    string.Format(
-                        Messages.Ai_Card_PriceAndSeats,
-                        fromPrice?.FromPrice ?? 0m,
-                        r.AvailableSeats
-                    ),
+                    fromPrice is null
+                        ? string.Format(Messages.Ai_Card_SeatsOnly, r.AvailableSeats)
+                        : string.Format(
+                            Messages.Ai_Card_PriceAndSeats,
+                            fromPrice.FromPrice,
+                            r.AvailableSeats
+                        ),
                     r.PosterUrl,
                     $"/booking/{r.ShowtimeId}"
                 )

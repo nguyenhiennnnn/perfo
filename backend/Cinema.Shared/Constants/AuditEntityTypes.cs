@@ -8,6 +8,7 @@ public static class AuditEntityTypes
     public const string PricingRule = "PricingRule";
     public const string SpecialDay = "SpecialDay";
     public const string Order = "Order";
+    public const string OrderLine = "OrderLine";
     public const string Showtime = "Showtime";
     public const string PaymentTransaction = "PaymentTransaction";
 }

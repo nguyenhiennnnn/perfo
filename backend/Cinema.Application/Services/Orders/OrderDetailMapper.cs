@@ -116,6 +116,8 @@ internal static class OrderDetailMapper
             line.TicketTypeId,
             line.TicketType?.Name ?? Messages.Common_TicketTypeStandard,
             line.RequiresCardPresentation,
+            line.CardCheckStatus.ToString(),
+            line.CardCheckRecordedAt,
             showQr ? QrCodeHelper.GenerateDataUri(line.QrCode!) : null,
             line.IsCheckedIn,
             line.CheckedInAt

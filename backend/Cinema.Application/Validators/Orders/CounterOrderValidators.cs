@@ -123,3 +123,27 @@ public class CheckinRequestValidator : AbstractValidator<CheckinRequest>
         RuleFor(x => x.QrCode).NotEmpty().WithMessage(Messages.Validation_QrCode_Required);
     }
 }
+
+public class RecordCardNotPresentedRequestValidator : AbstractValidator<RecordCardNotPresentedRequest>
+{
+    public RecordCardNotPresentedRequestValidator()
+    {
+        RuleFor(x => x.OrderLineId)
+            .GreaterThan(0)
+            .WithMessage(Messages.Validation_OrderLineId_Positive);
+    }
+}
+
+public class CounterSupplementOrderRequestValidator : AbstractValidator<CounterSupplementOrderRequest>
+{
+    public CounterSupplementOrderRequestValidator()
+    {
+        RuleFor(x => x.OrderLineId)
+            .GreaterThan(0)
+            .WithMessage(Messages.Validation_OrderLineId_Positive);
+
+        RuleFor(x => x.ReplacementTicketTypeId)
+            .GreaterThan(0)
+            .When(x => x.ReplacementTicketTypeId is not null);
+    }
+}

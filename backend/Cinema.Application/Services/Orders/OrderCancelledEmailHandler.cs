@@ -22,6 +22,7 @@ public class OrderCancelledEmailHandler(
             .Select(o => new
             {
                 o.OrderCode,
+                o.Type,
                 o.CustomerName,
                 UserId = o.UserId!.Value,
                 o.User!.Email,
@@ -45,6 +46,9 @@ public class OrderCancelledEmailHandler(
             .GroupBy(t => t.Method)
             .Select(g => new { Method = g.Key, Amount = g.Sum(t => t.Amount) })
             .ToListAsync(cancellationToken);
+
+        if (order.Type == OrderType.Supplement && refunds.Count == 0)
+            return;
 
         var tickets = await OrderTicketEmailLineLoader.LoadAsync(
             db,

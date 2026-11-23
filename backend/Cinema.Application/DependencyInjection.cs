@@ -102,6 +102,10 @@ public static class DependencyInjection
         services.AddScoped<ICounterOrderService, CounterOrderService>();
         services.AddScoped<ICounterPaymentService, CounterPaymentService>();
         services.AddScoped<ITicketCheckInService, TicketCheckInService>();
+        services.AddScoped<ICardCheckService, CardCheckService>();
+        services.AddScoped<ISupplementOrderService, SupplementOrderService>();
+        services.AddInTransactionEventHandler<OrderConfirmed, SupplementCardCheckHandler>();
+        services.AddInTransactionEventHandler<OrderCancelled, SupplementCardCheckRevertHandler>();
         services.AddScoped<LoyaltyExpiryService>();
         services.AddScoped<IComboService, ComboService>();
         services.AddScoped<ITicketTypeService, TicketTypeService>();

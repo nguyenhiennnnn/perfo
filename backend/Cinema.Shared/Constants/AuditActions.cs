@@ -7,4 +7,5 @@ public static class AuditActions
     public const string Delete = "Delete";
     public const string Cancel = "Cancel";
     public const string ManualRefund = "ManualRefund";
+    public const string CardNotPresented = "CardNotPresented";
 }

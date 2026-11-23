@@ -15,7 +15,9 @@ namespace Cinema.Api.Controllers.Admin;
 public class AdminCounterController(
     ICounterOrderService counterOrderService,
     ICounterPaymentService counterPaymentService,
-    ITicketCheckInService ticketCheckInService
+    ITicketCheckInService ticketCheckInService,
+    ICardCheckService cardCheckService,
+    ISupplementOrderService supplementOrderService
 ) : AppControllerBase
 {
     private int GetCurrentEmployeeId() =>
@@ -97,5 +99,36 @@ public class AdminCounterController(
     {
         var result = await ticketCheckInService.CheckInAsync(request, cancellationToken);
         return Ok(result);
+    }
+
+    [HttpPost("card-not-presented")]
+    [Authorize(Policy = Policies.StaffOnly)]
+    public async Task<ActionResult<RecordCardNotPresentedResponse>> RecordCardNotPresented(
+        [FromBody] RecordCardNotPresentedRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await cardCheckService.RecordNotPresentedAsync(
+            CurrentUserId,
+            request,
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpPost("counter-supplement-order")]
+    [Authorize(Policy = Policies.StaffOnly)]
+    public async Task<ActionResult<CounterOrderResponse>> CounterSupplementOrder(
+        [FromBody] CounterSupplementOrderRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await supplementOrderService.CreateAsync(
+            GetCurrentEmployeeId(),
+            CurrentUserId,
+            request,
+            cancellationToken
+        );
+        return StatusCode(StatusCodes.Status201Created, result);
     }
 }

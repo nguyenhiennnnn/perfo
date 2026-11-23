@@ -87,5 +87,20 @@ public record CheckinResponse(
     string MovieTitle,
     string RoomName,
     DateTime StartTime,
-    DateTime CheckedInAt
+    DateTime CheckedInAt,
+    int? TicketTypeId,
+    string TicketTypeName,
+    bool RequiresCardPresentation,
+    string CardCheckStatus
 );
+
+public record RecordCardNotPresentedRequest(int OrderLineId);
+
+public record RecordCardNotPresentedResponse(
+    int OrderLineId,
+    int OrderId,
+    string CardCheckStatus,
+    DateTime CardCheckRecordedAt
+);
+
+public record CounterSupplementOrderRequest(int OrderLineId, int? ReplacementTicketTypeId);

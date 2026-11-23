@@ -44,6 +44,7 @@ public class TicketCheckInService(
                     await db
                         .OrderLines.AsNoTracking()
                         .Include(l => l.Order)
+                        .Include(l => l.TicketType)
                         .Include(l => l.ShowtimeSeat)
                         .ThenInclude(ss => ss!.Seat)
                         .Include(l => l.Showtime)
@@ -106,7 +107,11 @@ public class TicketCheckInService(
                     showtime.Movie.Title,
                     showtime.Room.RoomName,
                     showtime.StartTime,
-                    now
+                    now,
+                    line.TicketTypeId,
+                    line.TicketType?.Name ?? Messages.Common_TicketTypeStandard,
+                    line.RequiresCardPresentation,
+                    line.CardCheckStatus.ToString()
                 );
             },
             cancellationToken

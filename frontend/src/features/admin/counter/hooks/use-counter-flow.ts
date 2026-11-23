@@ -12,6 +12,7 @@ import { useCounterSelection } from "./use-counter-selection";
 import { useCounterHoldFlow } from "./use-counter-hold";
 import { useCounterCheckoutFlow } from "./use-counter-checkout";
 import { useCounterLeaveCancel } from "./use-counter-leave-cancel";
+import { useCounterPromotionFlow } from "./use-counter-promotion";
 import type { CounterCheckoutRequest } from "../types";
 
 export type { CounterStep };
@@ -41,6 +42,7 @@ export function useCounterFlow() {
     leave,
   });
   const checkout = useCounterCheckoutFlow(hold.order, step === "done");
+  const promotion = useCounterPromotionFlow(hold.order, hold.updatePricing);
 
   const hasPartialPayment = step !== "done" && checkout.totalPaid > 0;
 
@@ -155,6 +157,7 @@ export function useCounterFlow() {
     totalChange: checkout.totalChange,
     hasPartialPayment,
     orderDetail: checkout.orderDetail,
+    promotion,
     pickShowtime,
     backToSeats,
     cancelOrder,

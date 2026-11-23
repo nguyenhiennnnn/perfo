@@ -2,6 +2,7 @@ import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { ordersApi } from "../api/orders-api";
 import { queryKeys } from "@/api/query-keys";
 import type {
+  ApplyPromotionRequest,
   HoldSeatsRequest,
   CheckoutRequest,
   CancelOrderRequest,
@@ -61,6 +62,21 @@ export function useApplyPayment(orderId: number) {
     meta: { invalidates: "bookingChanged" },
     mutationFn: (body: CheckoutRequest) =>
       ordersApi.applyPayment(orderId, body),
+  });
+}
+
+export function useApplyPromotion(orderId: number) {
+  return useMutation({
+    meta: { invalidates: "orderPromotionChanged", skipErrorToast: true },
+    mutationFn: (body: ApplyPromotionRequest) =>
+      ordersApi.applyPromotion(orderId, body),
+  });
+}
+
+export function useRemovePromotion(orderId: number) {
+  return useMutation({
+    meta: { invalidates: "orderPromotionChanged", skipErrorToast: true },
+    mutationFn: () => ordersApi.removePromotion(orderId),
   });
 }
 

@@ -7,12 +7,15 @@ using Cinema.Shared.Resources;
 
 namespace Cinema.Application.Services.Orders;
 
+internal sealed record OrderPromotionInfo(string Code, string Name, bool IsCodeBased);
+
 internal static class OrderDetailMapper
 {
     public static OrderDetailDto ToDetail(
         Order order,
         OrderPaymentSummary summary,
         IReadOnlyDictionary<int, string> tierNames,
+        IReadOnlyDictionary<int, OrderPromotionInfo> promotions,
         bool includeStaffInfo
     ) =>
         new(
@@ -44,7 +47,7 @@ internal static class OrderDetailMapper
                 .ToList(),
             order
                 .PriceAdjustments.OrderBy(a => a.AdjustmentId)
-                .Select(a => ToAdjustment(a, tierNames))
+                .Select(a => ToAdjustment(a, tierNames, promotions))
                 .ToList(),
             order
                 .PaymentTransactions.OrderBy(t => t.CreatedAt)
@@ -126,20 +129,34 @@ internal static class OrderDetailMapper
 
     private static OrderPriceAdjustmentDto ToAdjustment(
         OrderPriceAdjustment adjustment,
-        IReadOnlyDictionary<int, string> tierNames
-    ) =>
-        new(
+        IReadOnlyDictionary<int, string> tierNames,
+        IReadOnlyDictionary<int, OrderPromotionInfo> promotions
+    )
+    {
+        var promotion =
+            adjustment.ReferenceType == nameof(Promotion)
+            && adjustment.ReferenceId is { } promotionId
+            && promotions.TryGetValue(promotionId, out var info)
+                ? info
+                : null;
+
+        var referenceName =
+            adjustment.ReferenceType == nameof(MembershipTier)
+            && adjustment.ReferenceId is { } tierId
+            && tierNames.TryGetValue(tierId, out var tierName)
+                ? tierName
+                : promotion?.Name;
+
+        return new OrderPriceAdjustmentDto(
             adjustment.AdjustmentId,
             adjustment.Type.ToString(),
             adjustment.Amount,
             adjustment.ReferenceType,
             adjustment.ReferenceId,
-            adjustment.ReferenceType == nameof(MembershipTier)
-            && adjustment.ReferenceId is { } tierId
-            && tierNames.TryGetValue(tierId, out var tierName)
-                ? tierName
-                : null
+            referenceName,
+            promotion is { IsCodeBased: true } ? promotion.Code : null
         );
+    }
 
     private static OrderTransactionDto ToTransaction(
         PaymentTransaction transaction,

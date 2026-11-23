@@ -1,4 +1,5 @@
 import { IdCard } from "lucide-react";
+import { PromotionCodeBox } from "@/components/common/promotion-code-box";
 import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
 
 import type { CounterFlow } from "../hooks/use-counter-flow";
@@ -38,6 +39,21 @@ export function CounterCheckoutStep({ flow }: CounterCheckoutStepProps) {
           </span>
         </p>
       )}
+      <PromotionCodeBox
+        inputId="counter-promotion-code"
+        title="Mã khuyến mãi của khách"
+        appliedCode={flow.promotion.appliedCode}
+        appliedName={flow.promotion.appliedName}
+        discountAmount={flow.promotion.appliedDiscount}
+        onApply={flow.promotion.applyPromotion}
+        onRemove={flow.promotion.removePromotion}
+        disabled={flow.hasPartialPayment || flow.isPaying || flow.isCancelling}
+        disabledHint={
+          flow.hasPartialPayment
+            ? "Đơn đã thu một phần nên không thể đổi mã khuyến mãi."
+            : undefined
+        }
+      />
       <CounterCheckoutPanel
         order={flow.order}
         payments={flow.payments}

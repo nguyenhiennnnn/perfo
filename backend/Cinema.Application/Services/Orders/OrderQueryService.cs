@@ -3,6 +3,7 @@ using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Domain.Entities;
+using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -125,8 +126,47 @@ public class OrderQueryService(
 
         var summary = await paymentLedger.GetSummaryAsync(orderId, cancellationToken);
         var tierNames = await LoadTierNamesAsync(order.PriceAdjustments, cancellationToken);
+        var promotions = await LoadPromotionsAsync(order.PriceAdjustments, cancellationToken);
 
-        return OrderDetailMapper.ToDetail(order, summary, tierNames, ownerUserId is null);
+        return OrderDetailMapper.ToDetail(
+            order,
+            summary,
+            tierNames,
+            promotions,
+            ownerUserId is null
+        );
+    }
+
+    private async Task<Dictionary<int, OrderPromotionInfo>> LoadPromotionsAsync(
+        IEnumerable<OrderPriceAdjustment> adjustments,
+        CancellationToken cancellationToken
+    )
+    {
+        var promotionIds = adjustments
+            .Where(a => a.ReferenceType == nameof(Promotion) && a.ReferenceId is not null)
+            .Select(a => a.ReferenceId!.Value)
+            .Distinct()
+            .ToList();
+
+        if (promotionIds.Count == 0)
+            return [];
+
+        return await db
+            .Promotions.IgnoreQueryFilters()
+            .AsNoTracking()
+            .Where(p => promotionIds.Contains(p.PromotionId))
+            .Select(p => new
+            {
+                p.PromotionId,
+                p.Code,
+                p.Name,
+                p.Type,
+            })
+            .ToDictionaryAsync(
+                p => p.PromotionId,
+                p => new OrderPromotionInfo(p.Code, p.Name, p.Type != PromotionType.AutoApply),
+                cancellationToken
+            );
     }
 
     private async Task<Dictionary<int, string>> LoadTierNamesAsync(

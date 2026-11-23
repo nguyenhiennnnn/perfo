@@ -6,13 +6,19 @@ import { QueryState } from "@/components/common/query-state";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/config/routes";
 import { formatCurrency } from "@/lib/formatters";
-import { OrderStatus, PaymentMethod } from "@/types/enum";
+import { OrderStatus, OrderType, PaymentMethod } from "@/types/enum";
 import type { OrderDetailDto } from "@/features/client/orders/types";
 import { canPayOutstanding } from "../../utils/order-payment";
 import { BookingHoldTimer } from "./booking-hold-timer";
 import { BookingOrderSummary } from "./booking-order-summary";
 import { BookingPaymentMethod } from "./booking-payment-method";
 import { BookingPaymentSkeleton } from "./booking-payment-skeleton";
+import { BookingPromotionSection } from "./booking-promotion-section";
+
+const canUsePromotion = (order: OrderDetailDto) =>
+  order.status === OrderStatus.Pending &&
+  (order.type === OrderType.Ticket || order.type === OrderType.Combo) &&
+  order.payment.netPaidAmount === 0;
 
 interface BookingPaymentStepProps {
   expiresAt: string;
@@ -57,6 +63,7 @@ export const BookingPaymentStep = ({
                 </p>
               )}
               <BookingOrderSummary order={loadedOrder} />
+              {canUsePromotion(loadedOrder) && <BookingPromotionSection order={loadedOrder} />}
               <BookingPaymentMethod value={paymentMethod} onChange={onPaymentMethodChange} />
               <Button disabled={isSubmitting} onClick={onSubmit}>
                 {isSubmitting

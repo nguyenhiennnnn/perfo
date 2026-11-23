@@ -21,6 +21,7 @@ export const ENDPOINTS = {
     myReviews: "/users/me/reviews",
     changePassword: "/users/me/change-password",
     preferences: "/users/me/preferences",
+    myPromotions: "/users/me/promotions",
   },
   emailPreferences: {
     unsubscribe: "/email-preferences/unsubscribe",
@@ -57,6 +58,7 @@ export const ENDPOINTS = {
     hold: "/bookings/hold",
     byId: (id: number) => `/bookings/${id}`,
     checkout: (id: number) => `/bookings/${id}/checkout`,
+    promotion: (id: number) => `/bookings/${id}/promotion`,
     cancel: (id: number) => `/bookings/${id}/cancel`,
     ticketsPdf: (id: number) => `/bookings/${id}/tickets/pdf`,
   },
@@ -100,6 +102,7 @@ export const ENDPOINTS = {
       counterHold: "/admin/bookings/counter-hold",
       counterComboOrder: "/admin/bookings/counter-combo-order",
       counterCheckout: (id: number) => `/admin/bookings/${id}/counter-checkout`,
+      counterPromotion: (id: number) => `/admin/bookings/${id}/counter-promotion`,
       counterCancel: (id: number) => `/admin/bookings/${id}/counter-cancel`,
       checkin: "/admin/bookings/checkin",
       cardNotPresented: "/admin/bookings/card-not-presented",

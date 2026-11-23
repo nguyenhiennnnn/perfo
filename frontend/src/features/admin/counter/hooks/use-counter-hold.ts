@@ -4,6 +4,7 @@ import { useRealtimeSeatMap } from "@/hooks/use-realtime-seat-map";
 import { CancelReason } from "@/types/enum";
 import { useCounterHoldOrder, useCounterCancelOrder } from "./use-counter-orders";
 import type { CounterHoldRequest, CounterOrderResponse } from "../types";
+import type { OrderPromotionResponse } from "@/features/client/orders/types";
 import type { ShowtimeSeatItemDto } from "@/features/client/showtimes/types";
 import type { CounterLeaveCancel } from "./use-counter-leave-cancel";
 
@@ -60,12 +61,26 @@ export function useCounterHoldFlow({
 
   const clearHold = () => setOrder(null);
 
+  const updatePricing = (pricing: OrderPromotionResponse) =>
+    setOrder((current) =>
+      current && current.orderId === pricing.orderId
+        ? {
+            ...current,
+            totalAmount: pricing.totalAmount,
+            discountAmount: pricing.discountAmount,
+            finalAmount: pricing.finalAmount,
+            expiresAt: pricing.expiresAt,
+          }
+        : current,
+    );
+
   return {
     order,
     seatStatusMap,
     holdSeats,
     cancelHold,
     clearHold,
+    updatePricing,
     isHolding: holdOrder.isPending,
     isCancelling: cancelOrder.isPending,
   };

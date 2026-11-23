@@ -33,6 +33,22 @@ export function useCounterCheckout() {
   });
 }
 
+export function useCounterApplyPromotion() {
+  return useMutation({
+    meta: { invalidates: "orderPromotionChanged", skipErrorToast: true },
+    mutationFn: ({ orderId, code }: { orderId: number; code: string }) =>
+      counterApi.applyPromotion(orderId, code),
+  });
+}
+
+export function useCounterRemovePromotion() {
+  return useMutation({
+    meta: { invalidates: "orderPromotionChanged", skipErrorToast: true },
+    mutationFn: ({ orderId }: { orderId: number }) =>
+      counterApi.removePromotion(orderId),
+  });
+}
+
 export function useCounterCancelOrder() {
   return useMutation({
     meta: { invalidates: "bookingChanged" },

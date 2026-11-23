@@ -19,7 +19,8 @@ public class UsersController(
     IUserProfileService userProfileService,
     IPasswordService passwordService,
     IReviewService reviewService,
-    ICommunicationPreferenceService preferenceService
+    ICommunicationPreferenceService preferenceService,
+    IMyPromotionService myPromotionService
 ) : AppControllerBase
 {
     [HttpGet("me")]
@@ -46,6 +47,10 @@ public class UsersController(
         [FromBody] UpdateCommunicationPreferencesRequest request,
         CancellationToken cancellationToken
     ) => Ok(await preferenceService.UpdateAsync(CurrentUserId, request, cancellationToken));
+
+    [HttpGet("me/promotions")]
+    public async Task<IActionResult> GetMyPromotions(CancellationToken cancellationToken) =>
+        Ok(await myPromotionService.GetPersonalCodesAsync(CurrentUserId, cancellationToken));
 
     [HttpGet("me/reviews")]
     public async Task<ActionResult<CursorPageResult<UserMyReviewDto>>> GetMyReviews(

@@ -61,7 +61,8 @@ public record OrderPriceAdjustmentDto(
     decimal Amount,
     string? ReferenceType,
     int? ReferenceId,
-    string? ReferenceName
+    string? ReferenceName,
+    string? PromotionCode = null
 );
 
 public record OrderTransactionDto(

@@ -124,6 +124,20 @@ export const PriceAdjustmentType = {
 export type PriceAdjustmentType =
   (typeof PriceAdjustmentType)[keyof typeof PriceAdjustmentType];
 
+export const PromotionDiscountType = {
+  Percent: "Percent",
+  FixedAmount: "FixedAmount",
+} as const;
+export type PromotionDiscountType =
+  (typeof PromotionDiscountType)[keyof typeof PromotionDiscountType];
+
+export const PromotionScope = {
+  TicketsOnly: "TicketsOnly",
+  CombosOnly: "CombosOnly",
+  WholeOrder: "WholeOrder",
+} as const;
+export type PromotionScope = (typeof PromotionScope)[keyof typeof PromotionScope];
+
 export const VerificationTokenPurpose = {
   EmailConfirmation: "EmailConfirmation",
   PasswordReset: "PasswordReset",

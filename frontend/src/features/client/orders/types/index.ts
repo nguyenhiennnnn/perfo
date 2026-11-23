@@ -132,6 +132,23 @@ export interface OrderPriceAdjustmentDto {
   referenceType?: string | null;
   referenceId?: number | null;
   referenceName?: string | null;
+  promotionCode?: string | null;
+}
+
+export interface ApplyPromotionRequest {
+  code: string;
+}
+
+export interface OrderPromotionResponse {
+  orderId: number;
+  orderCode: string;
+  totalAmount: number;
+  discountAmount: number;
+  finalAmount: number;
+  expiresAt: string;
+  promotionCode?: string | null;
+  promotionName?: string | null;
+  promotionDiscount: number;
 }
 
 export interface OrderTransactionDto {

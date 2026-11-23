@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "@/api/axios";
+import { apiDelete, apiGet, apiPost } from "@/api/axios";
 import type { ApiResponse, CursorPageResult } from "@/types/api";
 import type {
   HoldSeatsRequest,
@@ -7,6 +7,8 @@ import type {
   CheckoutResponse,
   CancelOrderRequest,
   CancelOrderResponse,
+  ApplyPromotionRequest,
+  OrderPromotionResponse,
   OrderListParams,
   OrderListItemDto,
   OrderDetailDto,
@@ -25,6 +27,12 @@ export const ordersApi = {
 
   applyPayment: (orderId: number, body: CheckoutRequest) =>
     apiPost<ApiResponse<CheckoutResponse>>(ENDPOINTS.orders.checkout(orderId), body),
+
+  applyPromotion: (orderId: number, body: ApplyPromotionRequest) =>
+    apiPost<ApiResponse<OrderPromotionResponse>>(ENDPOINTS.orders.promotion(orderId), body),
+
+  removePromotion: (orderId: number) =>
+    apiDelete<ApiResponse<OrderPromotionResponse>>(ENDPOINTS.orders.promotion(orderId)),
 
   cancelOrder: (orderId: number, body: CancelOrderRequest) =>
     apiPost<ApiResponse<CancelOrderResponse>>(ENDPOINTS.orders.cancel(orderId), body),

@@ -28,6 +28,10 @@ export const queryKeys = {
     detail: (orderId: number) => ["orders", "detail", orderId] as const,
   },
 
+  promotions: {
+    mine: () => ["promotions", "mine"] as const,
+  },
+
   combos: {
     all: () => ["combos"] as const,
     active: () => ["combos", "active"] as const,

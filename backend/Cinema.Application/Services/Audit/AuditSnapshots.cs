@@ -58,6 +58,39 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject PromotionState(Promotion p) =>
+        AuditJson.ToObject(
+            new
+            {
+                p.Code,
+                p.Name,
+                p.Description,
+                p.Type,
+                p.DiscountType,
+                p.DiscountValue,
+                p.MaxDiscountAmount,
+                p.Scope,
+                p.MinOrderAmount,
+                p.StartsAt,
+                p.EndsAt,
+                p.Channel,
+                movieIds = p.MovieIds.Order(),
+                showtimeIds = p.ShowtimeIds.Order(),
+                screenTypeIds = p.ScreenTypeIds.Order(),
+                daysOfWeek = p.DaysOfWeek.Order(),
+                membershipTierIds = p.MembershipTierIds.Order(),
+                p.NewCustomersOnly,
+                p.TotalUsageLimit,
+                p.PerCustomerLimit,
+                p.BudgetAmount,
+                p.Priority,
+                p.IsExclusive,
+                p.AssignedUserId,
+                p.IsActive,
+                p.IsDeleted,
+            }
+        );
+
     public static JsonObject SpecialDayState(SpecialDay d) =>
         AuditJson.ToObject(
             new

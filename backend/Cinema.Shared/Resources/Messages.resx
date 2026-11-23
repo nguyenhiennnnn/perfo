@@ -355,6 +355,12 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Conflict_PricingRuleExists" xml:space="preserve">
     <value>Tên quy tắc giá đã tồn tại.</value>
   </data>
+  <data name="Conflict_PromotionCodeExists" xml:space="preserve">
+    <value>Mã khuyến mãi đã tồn tại.</value>
+  </data>
+  <data name="Conflict_PromotionHasRedemptions" xml:space="preserve">
+    <value>Khuyến mãi đã có lượt dùng nên không thể đổi mã, loại hoặc khách được gán.</value>
+  </data>
   <data name="Conflict_ReviewAlreadyExists" xml:space="preserve">
     <value>Bạn đã đánh giá phim này rồi.</value>
   </data>
@@ -1563,6 +1569,12 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Invalid_PricingRule_SpecialDayNotFound" xml:space="preserve">
     <value>Ngày đặc biệt trong điều kiện không tồn tại.</value>
   </data>
+  <data name="Invalid_Promotion_AssignedUserNotFound" xml:space="preserve">
+    <value>Không tìm thấy tài khoản khách hàng được gán.</value>
+  </data>
+  <data name="Invalid_Promotion_ReferenceNotFound" xml:space="preserve">
+    <value>Một hoặc nhiều mục được chọn không tồn tại.</value>
+  </data>
   <data name="Invalid_ReferenceData" xml:space="preserve">
     <value>Dữ liệu tham chiếu không hợp lệ.</value>
   </data>
@@ -1698,6 +1710,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="NotFound_PricingRule" xml:space="preserve">
     <value>Không tìm thấy quy tắc giá.</value>
+  </data>
+  <data name="NotFound_Promotion" xml:space="preserve">
+    <value>Không tìm thấy khuyến mãi.</value>
   </data>
   <data name="NotFound_QrCode" xml:space="preserve">
     <value>QR không hợp lệ.</value>
@@ -2247,6 +2262,21 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_PricingRuleUpdated" xml:space="preserve">
     <value>Đã cập nhật quy tắc giá.</value>
   </data>
+  <data name="Success_PromotionCreated" xml:space="preserve">
+    <value>Đã thêm khuyến mãi mới.</value>
+  </data>
+  <data name="Success_PromotionDeleted" xml:space="preserve">
+    <value>Đã xóa khuyến mãi.</value>
+  </data>
+  <data name="Success_PromotionPaused" xml:space="preserve">
+    <value>Đã tạm dừng khuyến mãi.</value>
+  </data>
+  <data name="Success_PromotionResumed" xml:space="preserve">
+    <value>Đã kích hoạt lại khuyến mãi.</value>
+  </data>
+  <data name="Success_PromotionUpdated" xml:space="preserve">
+    <value>Đã cập nhật khuyến mãi.</value>
+  </data>
   <data name="Success_ProfileUpdated" xml:space="preserve">
     <value>Cập nhật thông tin thành công.</value>
   </data>
@@ -2642,6 +2672,51 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Validation_PricingRule_WeekDayRequired" xml:space="preserve">
     <value>Quy tắc theo thứ trong tuần cần chọn ít nhất một thứ.</value>
+  </data>
+  <data name="Validation_Promotion_AmountRange" xml:space="preserve">
+    <value>Số tiền giảm phải là số nguyên đồng, lớn hơn 0 và trong giới hạn cho phép.</value>
+  </data>
+  <data name="Validation_Promotion_AssignedUserNotAllowed" xml:space="preserve">
+    <value>Chỉ mã cá nhân mới được gán cho tài khoản.</value>
+  </data>
+  <data name="Validation_Promotion_AssignedUserRequired" xml:space="preserve">
+    <value>Mã cá nhân phải được gán cho một tài khoản.</value>
+  </data>
+  <data name="Validation_Promotion_BudgetRange" xml:space="preserve">
+    <value>Ngân sách phải là số nguyên đồng, lớn hơn 0 và trong giới hạn cho phép.</value>
+  </data>
+  <data name="Validation_Promotion_ChannelInvalid" xml:space="preserve">
+    <value>Kênh bán không hợp lệ.</value>
+  </data>
+  <data name="Validation_Promotion_CodeFormat" xml:space="preserve">
+    <value>Mã khuyến mãi gồm 3 đến 30 ký tự chữ, số, gạch ngang hoặc gạch dưới.</value>
+  </data>
+  <data name="Validation_Promotion_DiscountTypeInvalid" xml:space="preserve">
+    <value>Loại ưu đãi không hợp lệ.</value>
+  </data>
+  <data name="Validation_Promotion_LimitRange" xml:space="preserve">
+    <value>Giới hạn lượt dùng phải là số nguyên dương trong mức cho phép.</value>
+  </data>
+  <data name="Validation_Promotion_MaxDiscountNotAllowed" xml:space="preserve">
+    <value>Trần giảm chỉ áp dụng cho khuyến mãi giảm theo phần trăm.</value>
+  </data>
+  <data name="Validation_Promotion_MaxDiscountRange" xml:space="preserve">
+    <value>Trần giảm phải là số nguyên đồng, lớn hơn 0 và trong giới hạn cho phép.</value>
+  </data>
+  <data name="Validation_Promotion_MinOrderRange" xml:space="preserve">
+    <value>Giá trị đơn tối thiểu phải là số nguyên đồng, không âm và trong giới hạn cho phép.</value>
+  </data>
+  <data name="Validation_Promotion_PercentRange" xml:space="preserve">
+    <value>Phần trăm giảm phải lớn hơn 0, không vượt quá 100 và tối đa 2 chữ số thập phân.</value>
+  </data>
+  <data name="Validation_Promotion_ScopeInvalid" xml:space="preserve">
+    <value>Phạm vi giảm không hợp lệ.</value>
+  </data>
+  <data name="Validation_Promotion_TypeInvalid" xml:space="preserve">
+    <value>Loại khuyến mãi không hợp lệ.</value>
+  </data>
+  <data name="Validation_Promotion_ValidRangeOrder" xml:space="preserve">
+    <value>Thời điểm kết thúc phải sau thời điểm bắt đầu.</value>
   </data>
   <data name="Validation_QrCode_Required" xml:space="preserve">
     <value>qrCode không được để trống.</value>

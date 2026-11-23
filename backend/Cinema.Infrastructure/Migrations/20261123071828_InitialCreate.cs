@@ -615,6 +615,64 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Promotions",
+                columns: table => new
+                {
+                    PromotionId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Code = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    Name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    Type = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    DiscountType = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    DiscountValue = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    MaxDiscountAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    Scope = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    MinOrderAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    StartsAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    EndsAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Channel = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    MovieIds = table.Column<List<int>>(type: "integer[]", nullable: false, defaultValueSql: "'{}'"),
+                    ShowtimeIds = table.Column<List<int>>(type: "integer[]", nullable: false, defaultValueSql: "'{}'"),
+                    ScreenTypeIds = table.Column<List<int>>(type: "integer[]", nullable: false, defaultValueSql: "'{}'"),
+                    DaysOfWeek = table.Column<List<int>>(type: "integer[]", nullable: false, defaultValueSql: "'{}'"),
+                    MembershipTierIds = table.Column<List<int>>(type: "integer[]", nullable: false, defaultValueSql: "'{}'"),
+                    NewCustomersOnly = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    TotalUsageLimit = table.Column<int>(type: "integer", nullable: true),
+                    PerCustomerLimit = table.Column<int>(type: "integer", nullable: true),
+                    BudgetAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    Priority = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    IsExclusive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    AssignedUserId = table.Column<int>(type: "integer", nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Promotions", x => x.PromotionId);
+                    table.CheckConstraint("CK_Promotions_Assignment", "(\"Type\" = 'PersonalCode') = (\"AssignedUserId\" IS NOT NULL)");
+                    table.CheckConstraint("CK_Promotions_Channel", "\"Channel\" IS NULL OR \"Channel\" IN ('Online','Counter')");
+                    table.CheckConstraint("CK_Promotions_DiscountType", "\"DiscountType\" IN ('Percent','FixedAmount')");
+                    table.CheckConstraint("CK_Promotions_DiscountValue", "(\"DiscountType\" = 'Percent' AND \"DiscountValue\" > 0 AND \"DiscountValue\" <= 100) OR (\"DiscountType\" = 'FixedAmount' AND \"DiscountValue\" > 0)");
+                    table.CheckConstraint("CK_Promotions_Limits", "(\"TotalUsageLimit\" IS NULL OR \"TotalUsageLimit\" > 0) AND (\"PerCustomerLimit\" IS NULL OR \"PerCustomerLimit\" > 0) AND (\"BudgetAmount\" IS NULL OR \"BudgetAmount\" > 0)");
+                    table.CheckConstraint("CK_Promotions_MaxDiscount", "\"MaxDiscountAmount\" IS NULL OR (\"DiscountType\" = 'Percent' AND \"MaxDiscountAmount\" > 0)");
+                    table.CheckConstraint("CK_Promotions_MinOrder", "\"MinOrderAmount\" IS NULL OR \"MinOrderAmount\" >= 0");
+                    table.CheckConstraint("CK_Promotions_Priority", "\"Priority\" >= 0");
+                    table.CheckConstraint("CK_Promotions_Scope", "\"Scope\" IN ('TicketsOnly','CombosOnly','WholeOrder')");
+                    table.CheckConstraint("CK_Promotions_Type", "\"Type\" IN ('ManualCode','AutoApply','PersonalCode')");
+                    table.CheckConstraint("CK_Promotions_ValidRange", "\"StartsAt\" IS NULL OR \"EndsAt\" IS NULL OR \"EndsAt\" > \"StartsAt\"");
+                    table.ForeignKey(
+                        name: "FK_Promotions_Users_AssignedUserId",
+                        column: x => x.AssignedUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RefreshTokens",
                 columns: table => new
                 {
@@ -969,6 +1027,46 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PromotionRedemptions",
+                columns: table => new
+                {
+                    PromotionRedemptionId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PromotionId = table.Column<int>(type: "integer", nullable: false),
+                    OrderId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: true),
+                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    DiscountAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    ReservedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    RedeemedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ReleasedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PromotionRedemptions", x => x.PromotionRedemptionId);
+                    table.CheckConstraint("CK_PromotionRedemptions_DiscountAmount", "\"DiscountAmount\" >= 0");
+                    table.CheckConstraint("CK_PromotionRedemptions_Status", "\"Status\" IN ('Reserved','Redeemed','Released')");
+                    table.ForeignKey(
+                        name: "FK_PromotionRedemptions_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PromotionRedemptions_Promotions_PromotionId",
+                        column: x => x.PromotionId,
+                        principalTable: "Promotions",
+                        principalColumn: "PromotionId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PromotionRedemptions_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ShowtimeSeats",
                 columns: table => new
                 {
@@ -1026,6 +1124,10 @@ namespace Cinema.Infrastructure.Migrations
                     ShowtimeSeatId = table.Column<int>(type: "integer", nullable: true),
                     TicketTypeId = table.Column<int>(type: "integer", nullable: true),
                     RequiresCardPresentation = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    CardCheckStatus = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "NotRequired"),
+                    CardCheckRecordedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CardCheckRecordedByUserId = table.Column<int>(type: "integer", nullable: true),
+                    SupplementedLineId = table.Column<int>(type: "integer", nullable: true),
                     ComboId = table.Column<int>(type: "integer", nullable: true),
                     Quantity = table.Column<int>(type: "integer", nullable: false, defaultValue: 1),
                     QuantityFulfilled = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
@@ -1042,6 +1144,9 @@ namespace Cinema.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OrderLines", x => x.OrderLineId);
+                    table.CheckConstraint("CK_OrderLines_CardCheck", "\"CardCheckStatus\" = 'NotRequired' OR (\"LineType\" = 'Ticket' AND \"RequiresCardPresentation\")");
+                    table.CheckConstraint("CK_OrderLines_CardCheckRecord", "((\"CardCheckStatus\" IN ('NotPresented','Supplemented')) = (\"CardCheckRecordedAt\" IS NOT NULL)) AND ((\"CardCheckRecordedAt\" IS NULL) = (\"CardCheckRecordedByUserId\" IS NULL))");
+                    table.CheckConstraint("CK_OrderLines_CardCheckStatus", "\"CardCheckStatus\" IN ('NotRequired','Pending','NotPresented','Supplemented')");
                     table.CheckConstraint("CK_OrderLines_CardPresentation", "(NOT \"RequiresCardPresentation\") OR \"LineType\" = 'Ticket'");
                     table.CheckConstraint("CK_OrderLines_CheckIn", "(NOT \"IsCheckedIn\") OR \"LineType\" = 'Ticket'");
                     table.CheckConstraint("CK_OrderLines_LineType", "\"LineType\" IN ('Ticket','Combo','GiftCard','Fee')");
@@ -1052,6 +1157,7 @@ namespace Cinema.Infrastructure.Migrations
                     table.CheckConstraint("CK_OrderLines_RefundedAmount", "\"RefundedAmount\" >= 0 AND \"RefundedAmount\" <= \"PaidAmount\"");
                     table.CheckConstraint("CK_OrderLines_RefundedQuantity", "\"RefundedQuantity\" >= 0 AND \"RefundedQuantity\" <= \"Quantity\"");
                     table.CheckConstraint("CK_OrderLines_Shape", "(\"LineType\" = 'Ticket' AND \"ShowtimeId\" IS NOT NULL AND \"ShowtimeSeatId\" IS NOT NULL AND \"ComboId\" IS NULL AND \"Quantity\" = 1) OR (\"LineType\" = 'Combo' AND \"ComboId\" IS NOT NULL AND \"ShowtimeSeatId\" IS NULL AND \"TicketTypeId\" IS NULL) OR (\"LineType\" IN ('GiftCard','Fee') AND \"ComboId\" IS NULL AND \"ShowtimeId\" IS NULL AND \"ShowtimeSeatId\" IS NULL AND \"TicketTypeId\" IS NULL)");
+                    table.CheckConstraint("CK_OrderLines_SupplementedLine", "\"SupplementedLineId\" IS NULL OR \"LineType\" = 'Fee'");
                     table.CheckConstraint("CK_OrderLines_UnitCost", "\"UnitCost\" >= 0");
                     table.CheckConstraint("CK_OrderLines_UnitListPrice", "\"UnitListPrice\" >= 0");
                     table.ForeignKey(
@@ -1059,6 +1165,12 @@ namespace Cinema.Infrastructure.Migrations
                         column: x => x.ComboId,
                         principalTable: "Combos",
                         principalColumn: "ComboId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderLines_OrderLines_SupplementedLineId",
+                        column: x => x.SupplementedLineId,
+                        principalTable: "OrderLines",
+                        principalColumn: "OrderLineId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_OrderLines_Orders_OrderId",
@@ -1083,6 +1195,12 @@ namespace Cinema.Infrastructure.Migrations
                         column: x => x.TicketTypeId,
                         principalTable: "TicketTypes",
                         principalColumn: "TicketTypeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderLines_Users_CardCheckRecordedByUserId",
+                        column: x => x.CardCheckRecordedByUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -1285,6 +1403,11 @@ namespace Cinema.Infrastructure.Migrations
                 column: "Status");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrderLines_CardCheckRecordedByUserId",
+                table: "OrderLines",
+                column: "CardCheckRecordedByUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderLines_Combo",
                 table: "OrderLines",
                 column: "ComboId",
@@ -1306,6 +1429,12 @@ namespace Cinema.Infrastructure.Migrations
                 table: "OrderLines",
                 column: "ShowtimeSeatId",
                 filter: "\"ShowtimeSeatId\" IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderLines_SupplementedLine",
+                table: "OrderLines",
+                column: "SupplementedLineId",
+                filter: "\"SupplementedLineId\" IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderLines_TicketType",
@@ -1480,6 +1609,48 @@ namespace Cinema.Infrastructure.Migrations
                 name: "UX_PricingRules_Name",
                 table: "PricingRules",
                 column: "Name",
+                unique: true,
+                filter: "\"IsDeleted\" = FALSE");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PromotionRedemptions_Order",
+                table: "PromotionRedemptions",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PromotionRedemptions_Promotion_Status",
+                table: "PromotionRedemptions",
+                columns: new[] { "PromotionId", "Status" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PromotionRedemptions_User_Promotion",
+                table: "PromotionRedemptions",
+                columns: new[] { "UserId", "PromotionId" },
+                filter: "\"UserId\" IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_PromotionRedemptions_Promotion_Order_Active",
+                table: "PromotionRedemptions",
+                columns: new[] { "PromotionId", "OrderId" },
+                unique: true,
+                filter: "\"Status\" <> 'Released'");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Promotions_AssignedUser",
+                table: "Promotions",
+                column: "AssignedUserId",
+                filter: "\"AssignedUserId\" IS NOT NULL AND \"IsDeleted\" = FALSE");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Promotions_Type_Active",
+                table: "Promotions",
+                columns: new[] { "Type", "IsActive" },
+                filter: "\"IsDeleted\" = FALSE");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_Promotions_Code",
+                table: "Promotions",
+                column: "Code",
                 unique: true,
                 filter: "\"IsDeleted\" = FALSE");
 
@@ -1665,6 +1836,9 @@ namespace Cinema.Infrastructure.Migrations
                 name: "PricingRules");
 
             migrationBuilder.DropTable(
+                name: "PromotionRedemptions");
+
+            migrationBuilder.DropTable(
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
@@ -1693,6 +1867,9 @@ namespace Cinema.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "OutboxMessages");
+
+            migrationBuilder.DropTable(
+                name: "Promotions");
 
             migrationBuilder.DropTable(
                 name: "Combos");

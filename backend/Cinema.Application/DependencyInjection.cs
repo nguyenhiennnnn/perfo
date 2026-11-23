@@ -18,6 +18,7 @@ using Cinema.Application.Services.Notifications;
 using Cinema.Application.Services.Orders;
 using Cinema.Application.Services.Payments;
 using Cinema.Application.Services.Pricing;
+using Cinema.Application.Services.Promotions;
 using Cinema.Application.Services.Reports;
 using Cinema.Application.Services.Reviews;
 using Cinema.Application.Services.Rooms;
@@ -112,6 +113,7 @@ public static class DependencyInjection
         services.AddScoped<IPricingRuleService, PricingRuleService>();
         services.AddScoped<ISpecialDayService, SpecialDayService>();
         services.AddScoped<IPricingService, PricingService>();
+        services.AddScoped<IPromotionService, PromotionService>();
         services.AddSingleton<IShowtimePricingScopeResolver, StandardShowtimePricingScopeResolver>();
         services.AddSingleton<ISalesVelocityProvider, NullSalesVelocityProvider>();
         services.AddScoped<IPaymentLedgerService, PaymentLedgerService>();

@@ -18,6 +18,7 @@ const ENTITY_TYPE_LABELS: Record<string, string> = {
   TicketType: "Loại vé",
   PricingRule: "Quy tắc giá",
   SpecialDay: "Ngày đặc biệt",
+  Promotion: "Khuyến mãi",
 };
 
 export const SYSTEM_ACTOR_LABEL = "Hệ thống";

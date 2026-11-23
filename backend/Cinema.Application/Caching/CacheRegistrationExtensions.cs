@@ -1,4 +1,5 @@
 using Cinema.Application.Interfaces;
+using Cinema.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -74,6 +75,20 @@ public static class CacheRegistrationExtensions
                     )
                         .Select(PricingRuleSnapshot.From)
                         .OfType<PricingRuleSnapshot>()
+                        .ToList()
+            )
+            .AddCachedData<IReadOnlyList<PromotionSnapshot>>(
+                CacheKeys.Promotions,
+                async (db, ct) =>
+                    (
+                        await db
+                            .Promotions.AsNoTracking()
+                            .Where(p => p.IsActive && p.Type != PromotionType.PersonalCode)
+                            .OrderByDescending(p => p.Priority)
+                            .ThenBy(p => p.PromotionId)
+                            .ToListAsync(ct)
+                    )
+                        .Select(PromotionSnapshot.From)
                         .ToList()
             )
             .AddCachedData<IReadOnlyList<SpecialDaySnapshot>>(

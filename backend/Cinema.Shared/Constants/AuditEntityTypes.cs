@@ -7,6 +7,7 @@ public static class AuditEntityTypes
     public const string TicketType = "TicketType";
     public const string PricingRule = "PricingRule";
     public const string SpecialDay = "SpecialDay";
+    public const string Promotion = "Promotion";
     public const string Order = "Order";
     public const string OrderLine = "OrderLine";
     public const string Showtime = "Showtime";

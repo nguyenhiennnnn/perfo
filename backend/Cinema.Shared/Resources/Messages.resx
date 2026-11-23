@@ -2847,4 +2847,46 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_CheckInTicketRefunded" xml:space="preserve">
     <value>Vé không hợp lệ: vé đã được hoàn tiền.</value>
   </data>
+  <data name="NotFound_SeatInShowtime" xml:space="preserve">
+    <value>Ghế không thuộc phòng chiếu của suất này.</value>
+  </data>
+  <data name="Pricing_SeatType_Default" xml:space="preserve">
+    <value>Ghế thường</value>
+  </data>
+  <data name="Pricing_Reason_TimeOfDay" xml:space="preserve">
+    <value>Suất chiếu lúc {0} nằm trong khung giờ {1} - {2}.</value>
+  </data>
+  <data name="Pricing_Reason_WeekDay" xml:space="preserve">
+    <value>Ngày chiếu {0} thuộc các thứ trong tuần được áp dụng.</value>
+  </data>
+  <data name="Pricing_Reason_SpecialDay" xml:space="preserve">
+    <value>Ngày chiếu {0} thuộc ngày đặc biệt {1}.</value>
+  </data>
+  <data name="Pricing_Reason_OccupancyTier" xml:space="preserve">
+    <value>Mức lấp đầy {0}% thuộc bậc từ {1}% đến dưới {2}%.</value>
+  </data>
+  <data name="Pricing_Reason_OccupancyTierOpen" xml:space="preserve">
+    <value>Mức lấp đầy {0}% thuộc bậc từ {1}% trở lên.</value>
+  </data>
+  <data name="Pricing_Reason_OccupancyHours" xml:space="preserve">
+    <value> Còn {0} giờ đến giờ chiếu, bậc này áp dụng khi còn tối đa {1} giờ.</value>
+  </data>
+  <data name="Pricing_Limit_MaxIncrease" xml:space="preserve">
+    <value>Phần điều chỉnh giá động bị chặn ở mức tăng tối đa {0}% so với giá cơ sở theo loại ghế.</value>
+  </data>
+  <data name="Pricing_Limit_MaxDecrease" xml:space="preserve">
+    <value>Phần điều chỉnh giá động bị chặn ở mức giảm tối đa {0}% so với giá cơ sở theo loại ghế.</value>
+  </data>
+  <data name="Pricing_Limit_MinPrice" xml:space="preserve">
+    <value>Áp dụng giá tối thiểu một vé là {0:N0} VNĐ.</value>
+  </data>
+  <data name="Pricing_Ineligible_AgeRating" xml:space="preserve">
+    <value>Loại vé này không áp dụng cho độ tuổi của phim.</value>
+  </data>
+  <data name="Pricing_Ineligible_TimeWindow" xml:space="preserve">
+    <value>Loại vé này chỉ áp dụng cho suất chiếu từ {0} đến dưới {1}.</value>
+  </data>
+  <data name="Pricing_Ineligible_DayOfWeek" xml:space="preserve">
+    <value>Loại vé này không áp dụng cho ngày chiếu của suất.</value>
+  </data>
 </root>

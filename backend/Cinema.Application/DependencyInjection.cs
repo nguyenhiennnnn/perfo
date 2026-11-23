@@ -106,6 +106,9 @@ public static class DependencyInjection
         services.AddScoped<ITicketTypeService, TicketTypeService>();
         services.AddScoped<IPricingRuleService, PricingRuleService>();
         services.AddScoped<ISpecialDayService, SpecialDayService>();
+        services.AddScoped<IPricingService, PricingService>();
+        services.AddSingleton<IShowtimePricingScopeResolver, StandardShowtimePricingScopeResolver>();
+        services.AddSingleton<ISalesVelocityProvider, NullSalesVelocityProvider>();
         services.AddScoped<IPaymentLedgerService, PaymentLedgerService>();
         services.AddScoped<IPaymentRefundService, PaymentRefundService>();
         services.AddScoped<ICashRefundService, CashRefundService>();

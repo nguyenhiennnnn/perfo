@@ -1,3 +1,4 @@
+import { IdCard } from "lucide-react";
 import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
 
 import type { CounterFlow } from "../hooks/use-counter-flow";
@@ -13,6 +14,8 @@ export function CounterCheckoutStep({ flow }: CounterCheckoutStepProps) {
 
   if (!flow.order) return null;
 
+  const cardSeats = flow.seatTicketTypes.cardRequiredSeats;
+
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4">
       <CounterPriceSummary
@@ -22,6 +25,19 @@ export function CounterCheckoutStep({ flow }: CounterCheckoutStepProps) {
         discountAmount={flow.order.discountAmount}
         finalAmount={flow.order.finalAmount}
       />
+      {cardSeats.length > 0 && (
+        <p
+          role="note"
+          className="flex items-start gap-2 bg-warning/10 p-3 text-sm text-foreground"
+        >
+          <IdCard className="mt-0.5 size-4 shrink-0 text-warning" />
+          <span>
+            Nhắc khách xuất trình thẻ cho ghế{" "}
+            {cardSeats.map((s) => `${s.seatRow}${s.seatNumber}`).join(", ")}. Nhân viên soát vé sẽ
+            kiểm tra lại khi khách vào rạp.
+          </span>
+        </p>
+      )}
       <CounterCheckoutPanel
         order={flow.order}
         payments={flow.payments}

@@ -9,6 +9,7 @@ export interface WholeCinemaShowtimeSlotDto {
   availableSeats: number;
   totalSeats: number;
   status: string;
+  fromPrice?: number | null;
 }
 
 export interface WholeCinemaMovieDto {
@@ -26,6 +27,20 @@ export interface WholeCinemaScheduleDto {
   formats: string[];
 }
 
+export interface SeatTicketPriceDto {
+  ticketTypeId: number;
+  price: number;
+}
+
+export interface ShowtimeTicketTypeDto {
+  ticketTypeId: number;
+  name: string;
+  priceMultiplier: number;
+  requiresCardVerification: boolean;
+  isEligible: boolean;
+  ineligibleReason?: string | null;
+}
+
 export interface ShowtimeSeatItemDto {
   showtimeSeatId: number;
   seatRow: string;
@@ -37,6 +52,7 @@ export interface ShowtimeSeatItemDto {
   status: string;
   price: number;
   heldByMe?: boolean;
+  ticketPrices?: SeatTicketPriceDto[] | null;
 }
 
 export interface ShowtimeMyHoldDto {
@@ -64,6 +80,8 @@ export interface ShowtimeSeatsResponseDto {
   ageRatingCode?: string | null;
   screenType?: string | null;
   myHold?: ShowtimeMyHoldDto | null;
+  ticketTypes?: ShowtimeTicketTypeDto[] | null;
+  pricedAt?: string | null;
 }
 
 export interface SeatSuggestionDto {

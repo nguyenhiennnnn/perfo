@@ -9,6 +9,18 @@ interface BookingPriceSummaryProps {
   comboQuantities: Record<number, number>;
 }
 
+const groupSeatsByTicketType = (seats: PricedSeat[]) => {
+  const groups = new Map<string, { name: string; seats: PricedSeat[]; total: number }>();
+  for (const seat of seats) {
+    const name = seat.ticketTypeName ?? "Ghế";
+    const group = groups.get(name) ?? { name, seats: [], total: 0 };
+    group.seats.push(seat);
+    group.total += seat.price;
+    groups.set(name, group);
+  }
+  return Array.from(groups.values());
+};
+
 export const calcBookingEstimate = (
   seats: PricedSeat[],
   combos: ComboOption[] | undefined,
@@ -23,7 +35,8 @@ export const calcBookingEstimate = (
 };
 
 export const BookingPriceSummary = ({ seats, combos, comboQuantities }: BookingPriceSummaryProps) => {
-  const { seatsTotal, total } = calcBookingEstimate(seats, combos, comboQuantities);
+  const { total } = calcBookingEstimate(seats, combos, comboQuantities);
+  const seatGroups = groupSeatsByTicketType(seats);
   const comboLines: OrderComboLine[] = Object.entries(comboQuantities).flatMap(([comboId, quantity]) => {
     const combo = combos?.find((c) => c.comboId === Number(comboId));
     return combo && quantity > 0 ? [{ name: combo.name, quantity, unitPrice: combo.price }] : [];
@@ -32,12 +45,14 @@ export const BookingPriceSummary = ({ seats, combos, comboQuantities }: BookingP
   return (
     <div className="flex flex-col gap-2 bg-card p-4">
       <h3 className="t-h3 mb-1 text-foreground">Chi tiết đơn hàng</h3>
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-muted-foreground">
-          Ghế ({seats.length}): {seats.map((s) => `${s.seatRow}${s.seatNumber}`).join(", ")}
-        </span>
-        <span className="font-medium">{formatCurrency(seatsTotal)}</span>
-      </div>
+      {seatGroups.map((group) => (
+        <div key={group.name} className="flex items-center justify-between gap-3 text-sm">
+          <span className="text-muted-foreground">
+            {group.name} ({group.seats.length}): {group.seats.map((s) => `${s.seatRow}${s.seatNumber}`).join(", ")}
+          </span>
+          <span className="font-medium tabular-nums">{formatCurrency(group.total)}</span>
+        </div>
+      ))}
       {comboLines.map((line) => (
         <div key={line.name} className="flex items-center justify-between gap-3 text-sm">
           <span className="text-muted-foreground">

@@ -9,6 +9,7 @@ export interface ApiErrorResponse {
   message: string;
   errors?: Record<string, string[]> | null;
   errorCode?: string | null;
+  data?: unknown;
 }
 
 export interface CursorPageResult<T> {

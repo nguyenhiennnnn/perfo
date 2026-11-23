@@ -58,7 +58,12 @@ export const ShowtimeRow = ({ item, disabled = false, onBook }: ShowtimeRowProps
             <p className="t-h3">Hết ghế</p>
           ) : (
             <>
-              <p className="t-numeral text-2xl">{formatCurrency(item.basePrice)}</p>
+              <p className="flex flex-col items-start @md:items-center">
+                <span className="text-xs leading-none">Từ</span>
+                <span className="t-numeral text-2xl">
+                  {formatCurrency(item.fromPrice ?? item.basePrice)}
+                </span>
+              </p>
               <button
                 type="button"
                 disabled={disabled}

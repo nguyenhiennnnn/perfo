@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SeatTicketList } from "@/components/common/seat-ticket-list";
 import { SelectableSeatMap } from "@/components/common/seat-map/selectable-seat-map";
 import { formatSeatCodes } from "@/components/common/seat-map/seat-map-utils";
 import { ComboPicker } from "@/components/common/combo-picker/combo-picker";
@@ -9,6 +10,7 @@ import { formatCurrency } from "@/lib/formatters";
 import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings";
 import { ShowtimeSeatStatus } from "@/types/enum";
 import type { ShowtimeSeatsResponseDto } from "@/features/client/showtimes/types";
+import type { SeatTicketTypes } from "@/features/client/showtimes/hooks/use-seat-ticket-types";
 
 import { BookingCustomerForm } from "./booking-customer-form";
 import { BookingPendingOrderNotice } from "./booking-pending-order-notice";
@@ -24,6 +26,7 @@ interface BookingSelectionStepProps {
   selectedIds: Set<number>;
   onToggleSeat: (showtimeSeatId: number) => void;
   onSelectSeats: (showtimeSeatIds: number[]) => void;
+  seatTicketTypes: SeatTicketTypes;
   comboQuantities: Record<number, number>;
   onComboChange: (comboId: number, quantity: number) => void;
   customerName: string;
@@ -43,6 +46,7 @@ export const BookingSelectionStep = ({
   selectedIds,
   onToggleSeat,
   onSelectSeats,
+  seatTicketTypes,
   comboQuantities,
   onComboChange,
   customerName,
@@ -62,7 +66,13 @@ export const BookingSelectionStep = ({
 
   if (!data) return null;
 
-  const selectedSeats = data.seats.filter((s) => selectedIds.has(s.showtimeSeatId));
+  const selectedSeats = seatTicketTypes.pricedSeats.map((s) => ({
+    seatRow: s.seatRow,
+    seatNumber: s.seatNumber,
+    coupleId: s.coupleId,
+    price: s.unitPrice,
+    ticketTypeName: s.ticketType?.name ?? null,
+  }));
   const { total } = calcBookingEstimate(selectedSeats, activeCombos.data, comboQuantities);
   const seatCodes = formatSeatCodes(selectedSeats);
   const suggestions = comboSuggestions.data ?? [];
@@ -97,6 +107,12 @@ export const BookingSelectionStep = ({
           onToggle={(seat) => onToggleSeat(seat.showtimeSeatId)}
           highlightedIds={highlightedIds}
           fitWidth
+        />
+
+        <SeatTicketList
+          seats={seatTicketTypes.pricedSeats}
+          ticketTypes={seatTicketTypes.ticketTypes}
+          onChange={seatTicketTypes.setTicketType}
         />
 
         <div className="bg-card p-4">

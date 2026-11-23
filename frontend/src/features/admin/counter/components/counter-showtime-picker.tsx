@@ -81,7 +81,7 @@ export const CounterShowtimePicker = ({ date, onDateChange, onPickShowtime }: Co
                   <span className="text-muted-foreground">
                     P.{st.roomName}, {st.availableSeats}/{st.totalSeats} ghế trống
                   </span>
-                  <span className="font-semibold text-primary-text">{formatCurrency(st.basePrice)}</span>
+                  <span className="font-semibold text-primary-text">Từ {formatCurrency(st.fromPrice ?? st.basePrice)}</span>
                 </button>
               ))}
             </div>

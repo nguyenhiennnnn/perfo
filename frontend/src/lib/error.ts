@@ -60,6 +60,36 @@ export function isPasswordChangeRequiredError(error: unknown): boolean {
   return statusCode === HTTP_STATUS.forbidden && errorCode === API_ERROR_CODES.passwordChangeRequired;
 }
 
+export interface SeatPriceChange {
+  showtimeSeatId: number;
+  ticketTypeId?: number | null;
+  previousPrice?: number | null;
+  newPrice: number;
+}
+
+export interface PriceChangeRequired {
+  seats: SeatPriceChange[];
+  newTicketTotal: number;
+}
+
+export function getPriceChangeRequired(error: unknown): PriceChangeRequired | null {
+  if (!axios.isAxiosError(error)) return null;
+  const data = error.response?.data as
+    | { errorCode?: unknown; data?: Partial<PriceChangeRequired> | null }
+    | undefined;
+  if (
+    error.response?.status !== HTTP_STATUS.conflict ||
+    data?.errorCode !== API_ERROR_CODES.priceChangeConfirmationRequired ||
+    !Array.isArray(data.data?.seats)
+  ) {
+    return null;
+  }
+  return {
+    seats: data.data.seats,
+    newTicketTotal: Number(data.data.newTicketTotal ?? 0),
+  };
+}
+
 export function logDevError(error: unknown, context?: string): void {
   if (!ENV.IS_DEV) return;
 
@@ -149,6 +179,7 @@ export function showApiErrorToast(
 ): void {
   if (isCancelledError(error)) return;
   if (isPasswordChangeRequiredError(error)) return;
+  if (getPriceChangeRequired(error)) return;
 
   const { statusCode } = extractApiError(error);
   if (statusCode && SILENT_TOAST_STATUSES.includes(statusCode)) return;

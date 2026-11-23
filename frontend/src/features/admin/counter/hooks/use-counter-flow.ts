@@ -5,6 +5,9 @@ import {
   initialCounterStep,
   type CounterStep,
 } from "./counter-flow-reducer";
+import { useSeatTicketTypes } from "@/features/client/showtimes/hooks/use-seat-ticket-types";
+import { usePriceChangeConfirm } from "@/hooks/use-price-change-confirm";
+import { getPriceChangeRequired } from "@/lib/error";
 import { useCounterSelection } from "./use-counter-selection";
 import { useCounterHoldFlow } from "./use-counter-hold";
 import { useCounterCheckoutFlow } from "./use-counter-checkout";
@@ -20,6 +23,15 @@ export function useCounterFlow() {
     onRestoredAfterCancel: () => resetLocalFlow(),
   });
   const selection = useCounterSelection();
+  const seatTicketTypes = useSeatTicketTypes(
+    selection.showtimeSeats.data,
+    selection.selectedSeatIds,
+  );
+  const confirmPriceChange = usePriceChangeConfirm();
+  const selectedSeatsInfo = seatTicketTypes.pricedSeats.map((seat) => ({
+    ...seat,
+    price: seat.unitPrice,
+  }));
   const hold = useCounterHoldFlow({
     showtimeId: selection.showtimeId,
     initialSeats: selection.showtimeSeats.data?.seats,
@@ -47,6 +59,7 @@ export function useCounterFlow() {
   const pickShowtime = async (id: number) => {
     if (id !== selection.showtimeId && !(await hold.cancelHold())) return;
     selection.selectShowtime(id);
+    seatTicketTypes.reset();
     dispatch({ type: "SHOWTIME_PICKED" });
   };
 
@@ -54,9 +67,29 @@ export function useCounterFlow() {
     selection.toggleSeat(showtimeSeatId, hold.seatStatusMap);
 
   const holdSeats = async () => {
-    const request = selection.buildHoldRequest();
+    const onHeld = () => dispatch({ type: "HOLD_SUCCEEDED" });
+    const request = selection.buildHoldRequest({ tickets: seatTicketTypes.tickets });
     if (!request) return;
-    await hold.holdSeats(request, () => dispatch({ type: "HOLD_SUCCEEDED" }));
+    try {
+      await hold.holdSeats(request, onHeld);
+    } catch (error) {
+      const change = getPriceChangeRequired(error);
+      if (!change) return;
+      const accepted = await confirmPriceChange(
+        change,
+        seatTicketTypes.pricedSeats,
+        seatTicketTypes.seatsTotal,
+      );
+      if (!accepted) {
+        void selection.showtimeSeats.refetch();
+        return;
+      }
+      try {
+        await hold.holdSeats({ ...request, acceptPriceChange: true }, onHeld);
+      } catch {
+        return;
+      }
+    }
   };
 
   const pay = async (request: CounterCheckoutRequest) => {
@@ -72,6 +105,7 @@ export function useCounterFlow() {
   const resetLocalFlow = () => {
     dispatch({ type: "RESET" });
     selection.resetSelection();
+    seatTicketTypes.reset();
     hold.clearHold();
     checkout.clearCheckout();
   };
@@ -97,7 +131,8 @@ export function useCounterFlow() {
     showtimeSeats: selection.showtimeSeats,
     seatStatusMap: hold.seatStatusMap,
     selectedSeatIds: selection.selectedSeatIds,
-    selectedSeatsInfo: selection.selectedSeatsInfo,
+    selectedSeatsInfo,
+    seatTicketTypes,
     toggleSeat,
     comboQuantities: selection.comboQuantities,
     setComboQuantity: selection.setComboQuantity,

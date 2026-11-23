@@ -102,6 +102,8 @@ export const ENDPOINTS = {
       counterCheckout: (id: number) => `/admin/bookings/${id}/counter-checkout`,
       counterCancel: (id: number) => `/admin/bookings/${id}/counter-cancel`,
       checkin: "/admin/bookings/checkin",
+      cardNotPresented: "/admin/bookings/card-not-presented",
+      counterSupplementOrder: "/admin/bookings/counter-supplement-order",
     },
     combos: {
       root: "/admin/combos",

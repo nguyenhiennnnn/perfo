@@ -12,7 +12,30 @@ export interface CheckinResponse {
   roomName: string;
   startTime: string;
   checkedInAt: string;
+  ticketTypeId?: number | null;
   ticketTypeName?: string | null;
+  requiresCardPresentation: boolean;
+  cardCheckStatus: CardCheckStatus;
+}
+
+export const CardCheckStatus = {
+  NotRequired: "NotRequired",
+  Pending: "Pending",
+  NotPresented: "NotPresented",
+  Supplemented: "Supplemented",
+} as const;
+export type CardCheckStatus = (typeof CardCheckStatus)[keyof typeof CardCheckStatus];
+
+export interface RecordCardNotPresentedResponse {
+  orderLineId: number;
+  orderId: number;
+  cardCheckStatus: CardCheckStatus;
+  cardCheckRecordedAt: string;
+}
+
+export interface CounterSupplementOrderRequest {
+  orderLineId: number;
+  replacementTicketTypeId?: number | null;
 }
 
 export type CheckinErrorKind = "duplicate" | "notFound" | "invalid" | "unknown";

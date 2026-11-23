@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { AgeRatingBadge } from "@/components/common/status-badge";
 import { TrailerPlayer } from "@/features/client/movies/components/trailer-player";
 import { formatDuration } from "@/lib/cinema-format";
-import { formatDate, formatRating } from "@/lib/formatters";
+import { formatCurrency, formatDate, formatRating } from "@/lib/formatters";
 import { useDialogOpen } from "@/stores/dialog-store";
 import type { MovieDetailDto } from "@/features/client/movies/types";
 
@@ -75,6 +75,14 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
+            {movie.fromPrice != null && (
+              <p className="flex items-baseline gap-1.5 self-center text-sm text-muted-foreground">
+                Vé từ
+                <span className="t-numeral text-2xl text-primary-text">
+                  {formatCurrency(movie.fromPrice)}
+                </span>
+              </p>
+            )}
             <Button
               size="lg"
               onClick={() => document.getElementById("showtimes")?.scrollIntoView({ behavior: "smooth" })}

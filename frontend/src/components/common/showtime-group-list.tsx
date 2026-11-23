@@ -13,6 +13,7 @@ export interface ShowtimeSlotItem {
   availableSeats: number;
   totalSeats: number;
   basePrice: number;
+  fromPrice?: number | null;
 }
 
 interface ShowtimeGroupListProps {

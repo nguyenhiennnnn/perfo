@@ -1,4 +1,4 @@
-import { CheckCircle2, Copy, Film, QrCode, TicketX, X, XCircle } from "lucide-react";
+import { CheckCircle2, Copy, Film, IdCard, QrCode, TicketX, X, XCircle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -169,6 +169,12 @@ export const CheckinResultCard = ({
         </span>
         {result.ticketTypeName && (
           <Badge variant="secondary">{result.ticketTypeName}</Badge>
+        )}
+        {result.requiresCardPresentation && (
+          <Badge variant="secondary">
+            <IdCard />
+            Cần kiểm tra thẻ
+          </Badge>
         )}
       </div>
     </div>

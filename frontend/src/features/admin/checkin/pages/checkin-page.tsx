@@ -6,9 +6,10 @@ import { Card } from "@/components/ui/card";
 import { useCheckin } from "../hooks/use-checkin";
 import { useCheckinSound } from "../hooks/use-checkin-sound";
 import { classifyCheckinError } from "../lib/classify-checkin-error";
-import type { CheckinFailure, CheckinResponse } from "../types";
+import type { CardCheckStatus, CheckinFailure, CheckinResponse } from "../types";
 import { CheckinCodeInput } from "../components/checkin-code-input";
 import { CheckinCameraPanel } from "../components/checkin-camera-panel";
+import { CheckinCardCheck } from "../components/checkin-card-check";
 import { CheckinResultCard } from "../components/checkin-result-card";
 
 type ScanSource = "camera" | "manual";
@@ -76,6 +77,14 @@ const AdminCheckinPage = () => {
 
   const cardStatus = checkinMutation.isPending ? "pending" : outcome.status;
 
+  const handleCardStatusChange = useCallback((status: CardCheckStatus) => {
+    setOutcome((prev) =>
+      prev.status === "success"
+        ? { status: "success", result: { ...prev.result, cardCheckStatus: status } }
+        : prev,
+    );
+  }, []);
+
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
@@ -89,6 +98,14 @@ const AdminCheckinPage = () => {
         failure={outcome.status === "error" ? outcome.failure : null}
         onClose={handleCloseResult}
       />
+
+      {outcome.status === "success" && !checkinMutation.isPending && (
+        <CheckinCardCheck
+          result={outcome.result}
+          onStatusChange={handleCardStatusChange}
+          onAcknowledge={handleCloseResult}
+        />
+      )}
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card className="flex flex-col gap-4 p-5">

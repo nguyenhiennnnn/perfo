@@ -5,12 +5,20 @@ export interface ComboSelectionRequest {
   quantity: number;
 }
 
+export interface SeatTicketSelectionRequest {
+  showtimeSeatId: number;
+  ticketTypeId?: number | null;
+  expectedPrice?: number | null;
+}
+
 export interface HoldSeatsRequest {
   showtimeId: number;
   customerName: string;
   customerPhone?: string | null;
   seatIds: number[];
   combos?: ComboSelectionRequest[] | null;
+  tickets?: SeatTicketSelectionRequest[] | null;
+  acceptPriceChange?: boolean;
 }
 
 export interface HoldOrderResponse {
@@ -184,6 +192,7 @@ export interface PricedSeat {
   seatRow: string;
   seatNumber: number;
   price: number;
+  ticketTypeName?: string | null;
 }
 
 export interface OrderComboLine {

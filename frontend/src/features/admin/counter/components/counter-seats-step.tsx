@@ -3,6 +3,7 @@ import { ComboPicker } from "@/components/common/combo-picker/combo-picker";
 import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
 
 import type { CounterFlow } from "../hooks/use-counter-flow";
+import { SeatTicketList } from "@/components/common/seat-ticket-list";
 import { CounterSeatPanel } from "./counter-seat-panel";
 import { CounterCustomerForm } from "./counter-customer-form";
 import { CounterPriceSummary } from "./counter-price-summary";
@@ -27,6 +28,14 @@ export function CounterSeatsStep({ flow }: CounterSeatsStepProps) {
       </div>
 
       <div className="flex flex-col gap-4">
+        <SeatTicketList
+          audience="counter"
+          seats={flow.seatTicketTypes.pricedSeats}
+          ticketTypes={flow.seatTicketTypes.ticketTypes}
+          onChange={flow.seatTicketTypes.setTicketType}
+          disabled={flow.isHolding}
+        />
+
         <div className="bg-card p-4">
           <h3 className="t-h3 mb-3 text-foreground">Combo</h3>
           <ComboPicker

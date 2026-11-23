@@ -60,7 +60,9 @@ export function useCounterSelection() {
     selectedSeatIds.size > 0 &&
     (userId != null || customerName.trim().length > 0);
 
-  const buildHoldRequest = (): CounterHoldRequest | null => {
+  const buildHoldRequest = (
+    extra?: Pick<CounterHoldRequest, "tickets" | "acceptPriceChange">,
+  ): CounterHoldRequest | null => {
     if (!showtimeId) return null;
     return {
       showtimeId,
@@ -69,6 +71,7 @@ export function useCounterSelection() {
       userId: userId ?? undefined,
       customerName: customerName.trim(),
       customerPhone: customerPhone.trim() || undefined,
+      ...extra,
     };
   };
 

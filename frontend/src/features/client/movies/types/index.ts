@@ -65,6 +65,7 @@ export interface UpcomingShowtimeDto {
   basePrice: number;
   availableSeats: number;
   totalSeats: number;
+  fromPrice?: number | null;
 }
 
 export interface MovieDetailDto {
@@ -85,6 +86,7 @@ export interface MovieDetailDto {
   genres: GenreDto[];
   cast: CastMemberDto[];
   upcomingShowtimes: UpcomingShowtimeDto[];
+  fromPrice?: number | null;
 }
 
 export interface ReviewListParams {

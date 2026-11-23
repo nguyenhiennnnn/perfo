@@ -137,7 +137,7 @@ export const SelectableSeatMap = ({
                   price: cell.price ?? 0,
                 })
               }
-              title={`${code}${cell.seatTypeName ? `, ${seatTypeLabel(cell.seatTypeName, cell.isCouple)}` : ""}`}
+              title={`${code}${cell.seatTypeName ? `, ${seatTypeLabel(cell.seatTypeName, cell.isCouple)}` : ""}${cell.price != null ? `, ${formatCurrency(cell.price)}` : ""}`}
             />
           );
         }}

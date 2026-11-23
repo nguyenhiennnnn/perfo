@@ -167,6 +167,135 @@ public class PricingService(
         );
     }
 
+    public async Task<IReadOnlyDictionary<int, ShowtimeFromPriceDto>> GetFromPricesAsync(
+        IReadOnlyCollection<int> showtimeIds,
+        DateTime atUtc,
+        CancellationToken cancellationToken
+    )
+    {
+        var ids = showtimeIds.Distinct().ToList();
+        var result = new Dictionary<int, ShowtimeFromPriceDto>(ids.Count);
+        if (ids.Count == 0)
+            return result;
+
+        var rows = await db
+            .Showtimes.AsNoTracking()
+            .Where(s => ids.Contains(s.ShowtimeId))
+            .Select(s => new ShowtimeRow(
+                s,
+                s.Movie.Title,
+                s.Movie.AgeRatingId,
+                s.Room.RoomName,
+                s.Room.ScreenTypeId
+            ))
+            .ToListAsync(cancellationToken);
+        if (rows.Count == 0)
+            return result;
+
+        var seatTypePairs = await db
+            .ShowtimeSeats.AsNoTracking()
+            .Where(ss => ids.Contains(ss.ShowtimeId))
+            .Select(ss => new { ss.ShowtimeId, ss.Seat.SeatTypeId })
+            .Distinct()
+            .ToListAsync(cancellationToken);
+        var seatTypesByShowtime = seatTypePairs
+            .GroupBy(p => p.ShowtimeId)
+            .ToDictionary(g => g.Key, g => g.Select(p => p.SeatTypeId).ToList());
+        var multipliers = await LoadSeatTypeMultipliersAsync(
+            seatTypePairs.Select(p => p.SeatTypeId),
+            cancellationToken
+        );
+
+        var shared = await LoadSharedAsync(cancellationToken);
+        var resolved = rows.Where(r => seatTypesByShowtime.ContainsKey(r.Showtime.ShowtimeId))
+            .Select(r =>
+            {
+                var scope = scopeResolver.Resolve(r.Showtime);
+                return (Row: r, Scope: scope, Candidates: ResolveCandidates(scope, shared));
+            })
+            .ToList();
+
+        var occupancyIds = resolved
+            .Where(x => x.Candidates.Any(c => c.RuleType == PricingRuleType.Occupancy))
+            .Select(x => x.Row.Showtime.ShowtimeId)
+            .ToList();
+        var occupancy = await LoadOccupancyAsync(occupancyIds, atUtc, cancellationToken);
+
+        foreach (var item in resolved)
+        {
+            var showtimeId = item.Row.Showtime.ShowtimeId;
+            var context = await BuildContextAsync(
+                item.Row,
+                item.Scope,
+                item.Candidates,
+                shared,
+                atUtc,
+                occupancy.GetValueOrDefault(showtimeId) ?? EmptyOccupancy,
+                cancellationToken
+            );
+            var seatTypeIds = seatTypesByShowtime[showtimeId];
+
+            var defaultPrice = seatTypeIds.Min(seatTypeId =>
+                BuildQuote(
+                    context,
+                    seatTypeId,
+                    SeatMultiplier(multipliers, seatTypeId),
+                    null
+                ).ListPrice
+            );
+
+            var byTicketType = new List<TicketTypeFromPriceDto>();
+            foreach (var ticketType in context.TicketTypes)
+            {
+                var quotes = seatTypeIds
+                    .Select(seatTypeId =>
+                        BuildQuote(
+                            context,
+                            seatTypeId,
+                            SeatMultiplier(multipliers, seatTypeId),
+                            ticketType
+                        )
+                    )
+                    .ToList();
+                if (!quotes[0].IsEligible)
+                    continue;
+
+                byTicketType.Add(
+                    new TicketTypeFromPriceDto(
+                        ticketType.TicketTypeId,
+                        ticketType.Name,
+                        quotes.Min(q => q.ListPrice)
+                    )
+                );
+            }
+
+            var fromPrice = byTicketType.Count > 0
+                ? Math.Min(defaultPrice, byTicketType.Min(t => t.FromPrice))
+                : defaultPrice;
+            result[showtimeId] = new ShowtimeFromPriceDto(showtimeId, fromPrice, byTicketType);
+        }
+
+        return result;
+    }
+
+    private async Task<PricingShared> LoadSharedAsync(CancellationToken cancellationToken) =>
+        new(
+            await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken),
+            await cache.GetAsync(CacheKeys.TicketTypes, cancellationToken),
+            await cache.GetAsync(CacheKeys.PricingRules, cancellationToken)
+        );
+
+    private static IReadOnlyList<PricingRuleSnapshot> ResolveCandidates(
+        PricingScope scope,
+        PricingShared shared
+    ) =>
+        scope.Mode switch
+        {
+            ShowtimePricingMode.Standard => shared.StandardRules,
+            ShowtimePricingMode.Event => scope.EventRules,
+            _ => [],
+        };
+
     private async Task<PricingContext> LoadContextAsync(
         int showtimeId,
         DateTime atUtc,
@@ -187,33 +316,45 @@ public class PricingService(
                 ))
                 .FirstOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(Messages.NotFound_Showtime);
-        var showtime = row.Showtime;
 
-        var settings = await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken);
-        var ticketTypes = await cache.GetAsync(CacheKeys.TicketTypes, cancellationToken);
-
-        var scope = scopeResolver.Resolve(showtime);
-        IReadOnlyList<PricingRuleSnapshot> candidates = scope.Mode switch
-        {
-            ShowtimePricingMode.Standard => await cache.GetAsync(
-                CacheKeys.PricingRules,
-                cancellationToken
-            ),
-            ShowtimePricingMode.Event => scope.EventRules,
-            _ => [],
-        };
-
-        var localStart = BusinessTime.ToLocal(showtime.StartTime);
-        var businessDate = PricingCalendar.BusinessDate(
-            localStart,
-            settings.OpeningTime,
-            settings.ClosingTime
-        );
+        var shared = await LoadSharedAsync(cancellationToken);
+        var scope = scopeResolver.Resolve(row.Showtime);
+        var candidates = ResolveCandidates(scope, shared);
 
         var occupancy =
             forceOccupancy || candidates.Any(r => r.RuleType == PricingRuleType.Occupancy)
-                ? await LoadOccupancyAsync(showtimeId, atUtc, cancellationToken)
-                : new OccupancySnapshot(0, 0, 0, null);
+                ? (await LoadOccupancyAsync([showtimeId], atUtc, cancellationToken))[showtimeId]
+                : EmptyOccupancy;
+
+        return await BuildContextAsync(
+            row,
+            scope,
+            candidates,
+            shared,
+            atUtc,
+            occupancy,
+            cancellationToken
+        );
+    }
+
+    private async Task<PricingContext> BuildContextAsync(
+        ShowtimeRow row,
+        PricingScope scope,
+        IReadOnlyList<PricingRuleSnapshot> candidates,
+        PricingShared shared,
+        DateTime atUtc,
+        OccupancySnapshot occupancy,
+        CancellationToken cancellationToken
+    )
+    {
+        var showtime = row.Showtime;
+        var localStart = BusinessTime.ToLocal(showtime.StartTime);
+        var businessDate = PricingCalendar.BusinessDate(
+            localStart,
+            shared.Settings.OpeningTime,
+            shared.Settings.ClosingTime
+        );
+
         IReadOnlyList<SpecialDaySnapshot> specialDays = candidates.Any(r =>
             r.RuleType == PricingRuleType.SpecialDay
         )
@@ -244,26 +385,32 @@ public class PricingService(
             scope.Mode,
             businessDate,
             localTime,
-            PricingParameters.From(settings),
+            PricingParameters.From(shared.Settings),
             rules,
             occupancy,
-            ticketTypes
+            shared.TicketTypes
         );
     }
 
-    private async Task<OccupancySnapshot> LoadOccupancyAsync(
-        int showtimeId,
+    private async Task<Dictionary<int, OccupancySnapshot>> LoadOccupancyAsync(
+        IReadOnlyCollection<int> showtimeIds,
         DateTime atUtc,
         CancellationToken cancellationToken
     )
     {
+        var result = new Dictionary<int, OccupancySnapshot>(showtimeIds.Count);
+        if (showtimeIds.Count == 0)
+            return result;
+
+        var ids = showtimeIds.ToList();
         var now = DateTime.UtcNow;
         var counts = await db
             .ShowtimeSeats.AsNoTracking()
-            .Where(ss => ss.ShowtimeId == showtimeId)
+            .Where(ss => ids.Contains(ss.ShowtimeId))
             .GroupBy(ss => ss.ShowtimeId)
             .Select(g => new
             {
+                ShowtimeId = g.Key,
                 Total = g.Count(),
                 Booked = g.Count(ss => ss.Status == ShowtimeSeatStatus.Booked),
                 Held = g.Count(ss =>
@@ -271,19 +418,22 @@ public class PricingService(
                     && (ss.HeldUntil == null || ss.HeldUntil > now)
                 ),
             })
-            .FirstOrDefaultAsync(cancellationToken);
+            .ToListAsync(cancellationToken);
+        var countById = counts.ToDictionary(c => c.ShowtimeId);
 
-        var velocity = await salesVelocity.GetTicketsPerHourAsync(
-            showtimeId,
-            atUtc,
-            cancellationToken
-        );
-        return new OccupancySnapshot(
-            counts?.Total ?? 0,
-            counts?.Booked ?? 0,
-            counts?.Held ?? 0,
-            velocity
-        );
+        foreach (var id in ids)
+        {
+            var velocity = await salesVelocity.GetTicketsPerHourAsync(id, atUtc, cancellationToken);
+            var count = countById.GetValueOrDefault(id);
+            result[id] = new OccupancySnapshot(
+                count?.Total ?? 0,
+                count?.Booked ?? 0,
+                count?.Held ?? 0,
+                velocity
+            );
+        }
+
+        return result;
     }
 
     private async Task<Dictionary<int, decimal>> LoadSeatTypeMultipliersAsync(
@@ -353,7 +503,15 @@ public class PricingService(
         int? ScreenTypeId
     );
 
+    private static readonly OccupancySnapshot EmptyOccupancy = new(0, 0, 0, null);
+
     private sealed record SeatTypeInfo(int? SeatTypeId, string Name, decimal PriceMultiplier);
+
+    private sealed record PricingShared(
+        CinemaSettingsSnapshot Settings,
+        IReadOnlyList<TicketTypeSnapshot> TicketTypes,
+        IReadOnlyList<PricingRuleSnapshot> StandardRules
+    );
 
     private sealed record PricingContext(
         Showtime Showtime,

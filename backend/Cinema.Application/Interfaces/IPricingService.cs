@@ -19,6 +19,12 @@ public interface IPricingService
         CancellationToken cancellationToken
     );
 
+    Task<IReadOnlyDictionary<int, ShowtimeFromPriceDto>> GetFromPricesAsync(
+        IReadOnlyCollection<int> showtimeIds,
+        DateTime atUtc,
+        CancellationToken cancellationToken
+    );
+
     Task<ShowtimePriceTableDto> GetPriceTableAsync(
         int showtimeId,
         DateTime atUtc,

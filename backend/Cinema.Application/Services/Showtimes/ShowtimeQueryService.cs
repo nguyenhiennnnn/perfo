@@ -291,6 +291,11 @@ public class ShowtimeQueryService(
             })
             .ToListAsync(cancellationToken);
         var seatCountLookup = seatCounts.ToDictionary(x => x.ShowtimeId, x => x);
+        var fromPrices = await pricingService.GetFromPricesAsync(
+            showtimeIds,
+            DateTime.UtcNow,
+            cancellationToken
+        );
 
         var movies = showtimes
             .GroupBy(s => s.Movie)
@@ -308,6 +313,7 @@ public class ShowtimeQueryService(
                         {
                             AvailableSeats = counts?.Available ?? 0,
                             TotalSeats = counts?.Total ?? 0,
+                            FromPrice = fromPrices.GetValueOrDefault(s.ShowtimeId)?.FromPrice,
                         };
                     })
                     .ToList()
@@ -359,6 +365,11 @@ public class ShowtimeQueryService(
             })
             .ToListAsync(cancellationToken);
         var seatCountLookup = seatCounts.ToDictionary(x => x.ShowtimeId, x => x);
+        var fromPrices = await pricingService.GetFromPricesAsync(
+            showtimeIds,
+            DateTime.UtcNow,
+            cancellationToken
+        );
 
         var days = showtimes
             .GroupBy(s => BusinessTime.LocalDate(s.StartTime))
@@ -373,6 +384,7 @@ public class ShowtimeQueryService(
                         {
                             AvailableSeats = counts?.Available ?? 0,
                             TotalSeats = counts?.Total ?? 0,
+                            FromPrice = fromPrices.GetValueOrDefault(s.ShowtimeId)?.FromPrice,
                         };
                     })
                     .ToList()

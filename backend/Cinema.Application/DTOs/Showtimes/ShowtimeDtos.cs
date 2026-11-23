@@ -109,7 +109,8 @@ public record WholeCinemaShowtimeSlotDto(
     decimal BasePrice,
     int AvailableSeats,
     int TotalSeats,
-    string Status
+    string Status,
+    decimal? FromPrice = null
 );
 
 public record WholeCinemaMovieDto(
@@ -175,7 +176,8 @@ public record ShowtimeCalendarItemDto(
     decimal BasePrice,
     int AvailableSeats,
     int TotalSeats,
-    string Status
+    string Status,
+    decimal? FromPrice = null
 );
 
 public record ShowtimeCalendarDayDto(string Date, List<ShowtimeCalendarItemDto> Showtimes);

@@ -17,11 +17,17 @@ namespace Cinema.Application.Services.Movies;
 public class MovieService : IMovieService
 {
     private readonly IAppDbContext db;
+    private readonly IPricingService pricingService;
     private readonly ILogger<MovieService> logger;
 
-    public MovieService(IAppDbContext db, ILogger<MovieService>? logger = null)
+    public MovieService(
+        IAppDbContext db,
+        IPricingService pricingService,
+        ILogger<MovieService>? logger = null
+    )
     {
         this.db = db;
+        this.pricingService = pricingService;
         this.logger = logger ?? NullLogger<MovieService>.Instance;
     }
 
@@ -132,6 +138,11 @@ public class MovieService : IMovieService
             .ToListAsync(cancellationToken);
 
         var seatCountLookup = seatsCounts.ToDictionary(x => x.ShowtimeId, x => x);
+        var fromPrices = await pricingService.GetFromPricesAsync(
+            showtimeIds,
+            now,
+            cancellationToken
+        );
 
         var upcoming = upcomingShowtimes
             .Select(s =>
@@ -142,6 +153,7 @@ public class MovieService : IMovieService
                 {
                     AvailableSeats = counts?.Available ?? 0,
                     TotalSeats = counts?.Total ?? 0,
+                    FromPrice = fromPrices.GetValueOrDefault(s.ShowtimeId)?.FromPrice,
                 };
             })
             .ToList();
@@ -149,6 +161,7 @@ public class MovieService : IMovieService
         return dto with
         {
             UpcomingShowtimes = upcoming,
+            FromPrice = upcoming.Where(u => u.FromPrice.HasValue).Min(u => u.FromPrice),
         };
     }
 

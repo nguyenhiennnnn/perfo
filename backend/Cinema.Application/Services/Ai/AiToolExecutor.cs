@@ -1,6 +1,8 @@
 using System.Globalization;
 using System.Text.Json.Nodes;
+using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Ai;
+using Cinema.Application.DTOs.Pricing;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
@@ -14,6 +16,8 @@ namespace Cinema.Application.Services.Ai;
 public class AiToolExecutor(
     IAppDbContext db,
     IPaymentLedgerService paymentLedger,
+    IPricingService pricingService,
+    IAppCache cache,
     ILogger<AiToolExecutor> logger
 )
 {
@@ -170,7 +174,6 @@ public class AiToolExecutor(
                 RoomName = s.Room.RoomName,
                 ScreenType = s.Room.ScreenType != null ? s.Room.ScreenType.Name : null,
                 s.StartTime,
-                s.BasePrice,
                 AvailableSeats = s.ShowtimeSeats.Count(ss =>
                     ss.Status == ShowtimeSeatStatus.Available
                     || (ss.Status == ShowtimeSeatStatus.Held && ss.HeldUntil < now)
@@ -178,25 +181,35 @@ public class AiToolExecutor(
             })
             .ToListAsync(ct);
 
+        var fromPrices = await pricingService.GetFromPricesAsync(
+            [.. rows.Select(r => r.ShowtimeId)],
+            now,
+            ct
+        );
+
         var items = new JsonArray();
         var cards = new List<AiCardDto>();
         foreach (var r in rows)
         {
-            items.Add(
-                new JsonObject
-                {
-                    ["showtimeId"] = r.ShowtimeId,
-                    ["movieId"] = r.MovieId,
-                    ["movieTitle"] = r.MovieTitle,
-                    ["room"] = r.RoomName,
-                    ["screenType"] = r.ScreenType,
-                    ["startTime"] = BusinessTime
-                        .ToLocal(r.StartTime)
-                        .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture),
-                    ["basePriceVnd"] = r.BasePrice,
-                    ["availableSeats"] = r.AvailableSeats,
-                }
-            );
+            var fromPrice = fromPrices.GetValueOrDefault(r.ShowtimeId);
+            var item = new JsonObject
+            {
+                ["showtimeId"] = r.ShowtimeId,
+                ["movieId"] = r.MovieId,
+                ["movieTitle"] = r.MovieTitle,
+                ["room"] = r.RoomName,
+                ["screenType"] = r.ScreenType,
+                ["startTime"] = BusinessTime
+                    .ToLocal(r.StartTime)
+                    .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture),
+                ["fromPriceVnd"] = fromPrice?.FromPrice,
+                ["availableSeats"] = r.AvailableSeats,
+            };
+            if (fromPrice is { TicketTypes.Count: > 0 })
+                item["ticketTypeFromPricesVnd"] = TicketTypePrices(
+                    fromPrice.TicketTypes.Select(t => (t.Name, t.FromPrice))
+                );
+            items.Add(item);
             cards.Add(
                 new AiCardDto(
                     "showtime",
@@ -207,7 +220,11 @@ public class AiToolExecutor(
                         BusinessTime.ToLocal(r.StartTime),
                         r.RoomName
                     ),
-                    string.Format(Messages.Ai_Card_PriceAndSeats, r.BasePrice, r.AvailableSeats),
+                    string.Format(
+                        Messages.Ai_Card_PriceAndSeats,
+                        fromPrice?.FromPrice ?? 0m,
+                        r.AvailableSeats
+                    ),
                     r.PosterUrl,
                     $"/booking/{r.ShowtimeId}"
                 )
@@ -218,6 +235,14 @@ public class AiToolExecutor(
             new JsonObject { ["count"] = items.Count, ["showtimes"] = items },
             cards
         );
+    }
+
+    private static JsonArray TicketTypePrices(IEnumerable<(string Name, decimal Price)> prices)
+    {
+        var array = new JsonArray();
+        foreach (var (name, price) in prices)
+            array.Add(new JsonObject { ["ticketType"] = name, ["priceVnd"] = price });
+        return array;
     }
 
     private async Task<ToolResult> GetSeatAvailabilityAsync(JsonObject? args, CancellationToken ct)
@@ -235,7 +260,6 @@ public class AiToolExecutor(
                 s.ShowtimeId,
                 s.Status,
                 s.StartTime,
-                s.BasePrice,
                 MovieTitle = s.Movie.Title,
                 s.Movie.PosterUrl,
                 RoomName = s.Room.RoomName,
@@ -253,10 +277,10 @@ public class AiToolExecutor(
             .Where(ss => ss.ShowtimeId == showtimeId.Value && ss.Seat.IsActive && !ss.Seat.IsAisle)
             .Select(ss => new
             {
+                ss.SeatId,
                 ss.Seat.SeatRow,
                 ss.Seat.SeatNumber,
                 TypeName = ss.Seat.SeatType != null ? ss.Seat.SeatType.Name : defaultSeatTypeName,
-                ss.Price,
                 IsFree = ss.Status == ShowtimeSeatStatus.Available
                     || (ss.Status == ShowtimeSeatStatus.Held && ss.HeldUntil < now),
             })
@@ -264,18 +288,44 @@ public class AiToolExecutor(
 
         var free = seats.Where(x => x.IsFree).ToList();
 
-        var byType = new JsonArray();
-        foreach (var g in seats.GroupBy(x => x.TypeName))
-        {
-            byType.Add(
-                new JsonObject
-                {
-                    ["seatType"] = g.Key,
-                    ["priceVnd"] = g.Max(x => x.Price),
-                    ["total"] = g.Count(),
-                    ["available"] = g.Count(x => x.IsFree),
-                }
+        var ticketTypes = await cache.GetAsync(CacheKeys.TicketTypes, ct);
+        var typeGroups = seats.GroupBy(x => x.TypeName).ToList();
+        var quotesPerType = ticketTypes.Count + 1;
+        IReadOnlyList<PriceQuoteDto> quotes = [];
+        if (typeGroups.Count > 0)
+            quotes = await pricingService.QuoteBatchAsync(
+                showtime.ShowtimeId,
+                [
+                    .. typeGroups.SelectMany(g =>
+                        new int?[] { null }
+                            .Concat(ticketTypes.Select(t => (int?)t.TicketTypeId))
+                            .Select(typeId => new SeatPriceRequest(g.First().SeatId, typeId))
+                    ),
+                ],
+                now,
+                ct
             );
+
+        var byType = new JsonArray();
+        for (var i = 0; i < typeGroups.Count; i++)
+        {
+            var group = typeGroups[i];
+            var typeQuotes = quotes.Skip(i * quotesPerType).Take(quotesPerType).ToList();
+            var entry = new JsonObject
+            {
+                ["seatType"] = group.Key,
+                ["priceVnd"] = typeQuotes[0].ListPrice,
+                ["total"] = group.Count(),
+                ["available"] = group.Count(x => x.IsFree),
+            };
+            if (ticketTypes.Count > 0)
+                entry["ticketTypePricesVnd"] = TicketTypePrices(
+                    ticketTypes
+                        .Select((t, index) => (t.Name, Quote: typeQuotes[index + 1]))
+                        .Where(x => x.Quote.IsEligible)
+                        .Select(x => (x.Name, x.Quote.ListPrice))
+                );
+            byType.Add(entry);
         }
 
         var byRow = new JsonArray();

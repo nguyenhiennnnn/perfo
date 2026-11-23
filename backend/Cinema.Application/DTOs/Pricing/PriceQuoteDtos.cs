@@ -96,3 +96,11 @@ public record ShowtimePriceTableDto(
     IReadOnlyList<PricingTicketTypeDto> TicketTypes,
     IReadOnlyList<SeatTypePriceRowDto> Rows
 );
+
+public record TicketTypeFromPriceDto(int TicketTypeId, string Name, decimal FromPrice);
+
+public record ShowtimeFromPriceDto(
+    int ShowtimeId,
+    decimal FromPrice,
+    IReadOnlyList<TicketTypeFromPriceDto> TicketTypes
+);

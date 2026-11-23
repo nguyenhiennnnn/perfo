@@ -27,7 +27,8 @@ public record UpcomingShowtimeDto(
     DateTime EndTime,
     decimal BasePrice,
     int AvailableSeats,
-    int TotalSeats
+    int TotalSeats,
+    decimal? FromPrice = null
 );
 
 public record MovieDetailDto(
@@ -47,7 +48,8 @@ public record MovieDetailDto(
     AgeRatingDto? AgeRating,
     List<GenreDto> Genres,
     List<CastMemberDto> Cast,
-    List<UpcomingShowtimeDto> UpcomingShowtimes
+    List<UpcomingShowtimeDto> UpcomingShowtimes,
+    decimal? FromPrice = null
 );
 
 public record AdminMovieListItemDto(

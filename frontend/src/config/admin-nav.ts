@@ -12,6 +12,7 @@ import {
   CalendarHeart,
   Calculator,
   SlidersHorizontal,
+  TicketPercent,
   FileClock,
   BarChart3,
   Users,
@@ -109,6 +110,23 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
       {
         to: ROUTES.admin.reports,
         label: "Báo cáo & doanh thu",
+        icon: BarChart3,
+        roles: [Role.Admin],
+      },
+    ],
+  },
+  {
+    label: "Khuyến mãi",
+    items: [
+      {
+        to: ROUTES.admin.promotions,
+        label: "Quản lý khuyến mãi",
+        icon: TicketPercent,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.promotionReports,
+        label: "Báo cáo khuyến mãi",
         icon: BarChart3,
         roles: [Role.Admin],
       },

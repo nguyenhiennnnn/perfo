@@ -49,6 +49,12 @@ export const ROUTES = {
     orders: "/admin/orders",
     cashRefunds: "/admin/cash-refunds",
     auditLogs: "/admin/audit-logs",
+    promotions: "/admin/promotions",
+    promotionReports: "/admin/promotions/reports",
+    promotionRedemptions: (promotionId: number | string) =>
+      `/admin/promotions/${promotionId}/redemptions`,
+    promotionReport: (promotionId: number | string) =>
+      `/admin/promotions/${promotionId}/report`,
     pricingTicketTypes: "/admin/pricing/ticket-types",
     pricingRules: "/admin/pricing/rules",
     pricingRuleHistory: "/admin/pricing/rule-history",

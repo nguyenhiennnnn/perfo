@@ -81,6 +81,18 @@ export const queryKeys = {
     detail: (orderId: number) => ["admin", "orders", "detail", orderId] as const,
   },
 
+  adminPromotions: {
+    all: () => ["admin", "promotions"] as const,
+    list: (params?: object) => ["admin", "promotions", "list", params] as const,
+    usage: (params?: object) => ["admin", "promotions", "usage", params] as const,
+    detail: (id: number) => ["admin", "promotions", "detail", id] as const,
+    redemptions: (id: number, params?: object) =>
+      ["admin", "promotions", "redemptions", id, params] as const,
+    reports: (params?: object) => ["admin", "promotions", "reports", params] as const,
+    report: (id: number, params?: object) =>
+      ["admin", "promotions", "report", id, params] as const,
+  },
+
   adminTicketTypes: {
     all: () => ["admin", "ticket-types"] as const,
     list: (params?: object) => ["admin", "ticket-types", "list", params] as const,

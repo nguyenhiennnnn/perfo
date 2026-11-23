@@ -92,6 +92,55 @@ export const useAdminOrderParams = (
   options?: Parameters<typeof useQueryStates<typeof adminOrderParsers>>[1],
 ) => useQueryStates(adminOrderParsers, options);
 
+const adminPromotionParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  type: parseAsString,
+  isActive: parseAsString,
+};
+
+export const useAdminPromotionParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminPromotionParsers>>[1],
+) => useQueryStates(adminPromotionParsers, options);
+
+const adminPromotionReportParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  type: parseAsString,
+  isActive: parseAsString,
+  fromDate: parseAsString,
+  toDate: parseAsString,
+};
+
+export const useAdminPromotionReportParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminPromotionReportParsers>>[1],
+) => useQueryStates(adminPromotionReportParsers, options);
+
+const adminPromotionDetailReportParsers = {
+  fromDate: parseAsString,
+  toDate: parseAsString,
+};
+
+export const useAdminPromotionDetailReportParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminPromotionDetailReportParsers>>[1],
+) => useQueryStates(adminPromotionDetailReportParsers, options);
+
+const adminPromotionRedemptionParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  status: parseAsString,
+  channel: parseAsString,
+  fromDate: parseAsString,
+  toDate: parseAsString,
+};
+
+export const useAdminPromotionRedemptionParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminPromotionRedemptionParsers>>[1],
+) => useQueryStates(adminPromotionRedemptionParsers, options);
+
 const adminUserParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),

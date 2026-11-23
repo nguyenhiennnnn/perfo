@@ -131,6 +131,21 @@ export const PromotionDiscountType = {
 export type PromotionDiscountType =
   (typeof PromotionDiscountType)[keyof typeof PromotionDiscountType];
 
+export const PromotionType = {
+  ManualCode: "ManualCode",
+  AutoApply: "AutoApply",
+  PersonalCode: "PersonalCode",
+} as const;
+export type PromotionType = (typeof PromotionType)[keyof typeof PromotionType];
+
+export const PromotionRedemptionStatus = {
+  Reserved: "Reserved",
+  Redeemed: "Redeemed",
+  Released: "Released",
+} as const;
+export type PromotionRedemptionStatus =
+  (typeof PromotionRedemptionStatus)[keyof typeof PromotionRedemptionStatus];
+
 export const PromotionScope = {
   TicketsOnly: "TicketsOnly",
   CombosOnly: "CombosOnly",
@@ -191,6 +206,7 @@ export const ImportExportModule = {
   Showtimes: "showtimes",
   Orders: "bookings",
   Payments: "payments",
+  PromotionRedemptions: "promotion-redemptions",
 } as const;
 export type ImportExportModule =
   (typeof ImportExportModule)[keyof typeof ImportExportModule];

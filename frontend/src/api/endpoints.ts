@@ -108,6 +108,19 @@ export const ENDPOINTS = {
       cardNotPresented: "/admin/bookings/card-not-presented",
       counterSupplementOrder: "/admin/bookings/counter-supplement-order",
     },
+    promotions: {
+      root: "/admin/promotions",
+      byId: (id: number) => `/admin/promotions/${id}`,
+      pause: (id: number) => `/admin/promotions/${id}/pause`,
+      resume: (id: number) => `/admin/promotions/${id}/resume`,
+      personalCodesBulk: "/admin/promotions/personal-codes/bulk",
+      reports: "/admin/promotions/reports",
+      report: (id: number) => `/admin/promotions/${id}/report`,
+      redemptions: (id: number) => `/admin/promotions/${id}/redemptions`,
+      redemptionsExport: (id: number) => `/admin/promotions/${id}/redemptions/export`,
+      redemptionsExportJobs: (id: number) =>
+        `/admin/promotions/${id}/redemptions/export-jobs`,
+    },
     combos: {
       root: "/admin/combos",
       byId: (id: number) => `/admin/combos/${id}`,

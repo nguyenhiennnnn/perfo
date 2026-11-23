@@ -78,4 +78,5 @@ export const importExportModuleOptions = toOptions(ImportExportModule, {
   showtimes: "Suất chiếu",
   bookings: "Đơn hàng",
   payments: "Giao dịch thanh toán",
+  "promotion-redemptions": "Lịch sử dùng khuyến mãi",
 });

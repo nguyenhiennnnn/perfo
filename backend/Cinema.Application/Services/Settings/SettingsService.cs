@@ -100,6 +100,14 @@ public class SettingsService(
             settings.SchedulerHeatRatingWeight = ratingWeight;
         if (request.SchedulerMaxRating is { } schedulerMaxRating)
             settings.SchedulerMaxRating = schedulerMaxRating;
+        if (request.TicketPriceRoundingStep is { } ticketPriceRoundingStep)
+            settings.TicketPriceRoundingStep = ticketPriceRoundingStep;
+        if (request.DynamicPricingMaxIncreasePercent is { } maxIncreasePercent)
+            settings.DynamicPricingMaxIncreasePercent = maxIncreasePercent;
+        if (request.DynamicPricingMaxDecreasePercent is { } maxDecreasePercent)
+            settings.DynamicPricingMaxDecreasePercent = maxDecreasePercent;
+        if (request.MinTicketPrice is { } minTicketPrice)
+            settings.MinTicketPrice = minTicketPrice;
         if (settings.SchedulerHeatSalesWeight + settings.SchedulerHeatRatingWeight <= 0)
             throw new BusinessRuleException(Messages.Validation_SchedulerHeatWeights_SumPositive);
         var passwordChanged = false;
@@ -124,7 +132,13 @@ public class SettingsService(
     }
 
     private AdminCinemaSettingsDto ToAdminDto(CinemaSettings settings) =>
-        new(ToDto(settings), settings.DefaultEmployeePassword);
+        new(ToDto(settings), settings.DefaultEmployeePassword)
+        {
+            TicketPriceRoundingStep = settings.TicketPriceRoundingStep,
+            DynamicPricingMaxIncreasePercent = settings.DynamicPricingMaxIncreasePercent,
+            DynamicPricingMaxDecreasePercent = settings.DynamicPricingMaxDecreasePercent,
+            MinTicketPrice = settings.MinTicketPrice,
+        };
 
     private CinemaSettingsDto ToDto(object settings) =>
         settings.Adapt<CinemaSettingsDto>() with

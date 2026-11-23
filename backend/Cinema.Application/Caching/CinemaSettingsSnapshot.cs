@@ -30,7 +30,11 @@ public sealed record CinemaSettingsSnapshot(
     int SchedulerHeatLookbackDays,
     double SchedulerHeatSalesWeight,
     double SchedulerHeatRatingWeight,
-    double SchedulerMaxRating
+    double SchedulerMaxRating,
+    decimal TicketPriceRoundingStep,
+    decimal DynamicPricingMaxIncreasePercent,
+    decimal DynamicPricingMaxDecreasePercent,
+    decimal MinTicketPrice
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -61,6 +65,10 @@ public sealed record CinemaSettingsSnapshot(
             s.SchedulerHeatLookbackDays,
             s.SchedulerHeatSalesWeight,
             s.SchedulerHeatRatingWeight,
-            s.SchedulerMaxRating
+            s.SchedulerMaxRating,
+            s.TicketPriceRoundingStep,
+            s.DynamicPricingMaxIncreasePercent,
+            s.DynamicPricingMaxDecreasePercent,
+            s.MinTicketPrice
         );
 }

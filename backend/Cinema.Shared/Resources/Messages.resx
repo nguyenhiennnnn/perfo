@@ -343,6 +343,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Conflict_PositionInUse" xml:space="preserve">
     <value>Vị trí đang được nhân viên tham chiếu, không thể xóa.</value>
   </data>
+  <data name="Conflict_PricingRuleExists" xml:space="preserve">
+    <value>Tên quy tắc giá đã tồn tại.</value>
+  </data>
   <data name="Conflict_ReviewAlreadyExists" xml:space="preserve">
     <value>Bạn đã đánh giá phim này rồi.</value>
   </data>
@@ -382,8 +385,17 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Conflict_ShowtimeOverlapInRoom" xml:space="preserve">
     <value>Trùng khung giờ chiếu trong phòng này.</value>
   </data>
+  <data name="Conflict_SpecialDayExists" xml:space="preserve">
+    <value>Ngày đặc biệt này đã được khai báo.</value>
+  </data>
+  <data name="Conflict_SpecialDayInUse" xml:space="preserve">
+    <value>Ngày đặc biệt đang được quy tắc giá sử dụng. Hãy gỡ khỏi quy tắc trước khi xóa.</value>
+  </data>
   <data name="Conflict_TicketAlreadyCheckedIn" xml:space="preserve">
     <value>Vé đã check-in trước đó.</value>
+  </data>
+  <data name="Conflict_TicketTypeExists" xml:space="preserve">
+    <value>Loại vé đã tồn tại.</value>
   </data>
 
   <!-- ===== Db ===== -->
@@ -1518,6 +1530,12 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Invalid_NewPasswordSameAsCurrent" xml:space="preserve">
     <value>Mật khẩu mới không được trùng với mật khẩu hiện tại.</value>
   </data>
+  <data name="Invalid_PricingRule_ScopeNotFound" xml:space="preserve">
+    <value>Phòng, định dạng hoặc phim trong phạm vi áp dụng không tồn tại.</value>
+  </data>
+  <data name="Invalid_PricingRule_SpecialDayNotFound" xml:space="preserve">
+    <value>Ngày đặc biệt trong điều kiện không tồn tại.</value>
+  </data>
   <data name="Invalid_ReferenceData" xml:space="preserve">
     <value>Dữ liệu tham chiếu không hợp lệ.</value>
   </data>
@@ -1541,6 +1559,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Invalid_ShowtimeInvalid" xml:space="preserve">
     <value>Suất chiếu không hợp lệ.</value>
+  </data>
+  <data name="Invalid_TicketType_AgeRatingNotFound" xml:space="preserve">
+    <value>Nhãn độ tuổi phim không tồn tại.</value>
   </data>
   <data name="Invalid_ToDateBeforeDate" xml:space="preserve">
     <value>toDate phải &gt;= date.</value>
@@ -1648,6 +1669,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="NotFound_PositionId" xml:space="preserve">
     <value>positionId không tồn tại.</value>
   </data>
+  <data name="NotFound_PricingRule" xml:space="preserve">
+    <value>Không tìm thấy quy tắc giá.</value>
+  </data>
   <data name="NotFound_QrCode" xml:space="preserve">
     <value>QR không hợp lệ.</value>
   </data>
@@ -1668,6 +1692,12 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="NotFound_Showtime" xml:space="preserve">
     <value>Không tìm thấy suất chiếu.</value>
+  </data>
+  <data name="NotFound_SpecialDay" xml:space="preserve">
+    <value>Không tìm thấy ngày đặc biệt.</value>
+  </data>
+  <data name="NotFound_TicketType" xml:space="preserve">
+    <value>Không tìm thấy loại vé.</value>
   </data>
   <data name="NotFound_User" xml:space="preserve">
     <value>Không tìm thấy người dùng.</value>
@@ -2163,6 +2193,15 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_ReferralCodeGenerationFailed" xml:space="preserve">
     <value>Không thể tạo mã giới thiệu, vui lòng thử lại.</value>
   </data>
+  <data name="Success_PricingRuleCreated" xml:space="preserve">
+    <value>Đã thêm quy tắc giá mới.</value>
+  </data>
+  <data name="Success_PricingRuleDeleted" xml:space="preserve">
+    <value>Đã xóa quy tắc giá.</value>
+  </data>
+  <data name="Success_PricingRuleUpdated" xml:space="preserve">
+    <value>Đã cập nhật quy tắc giá.</value>
+  </data>
   <data name="Success_ProfileUpdated" xml:space="preserve">
     <value>Cập nhật thông tin thành công.</value>
   </data>
@@ -2228,6 +2267,24 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Success_ShowtimesCloned" xml:space="preserve">
     <value>Đã sao chép suất chiếu.</value>
+  </data>
+  <data name="Success_SpecialDayCreated" xml:space="preserve">
+    <value>Đã thêm ngày đặc biệt.</value>
+  </data>
+  <data name="Success_SpecialDayDeleted" xml:space="preserve">
+    <value>Đã xóa ngày đặc biệt.</value>
+  </data>
+  <data name="Success_SpecialDayUpdated" xml:space="preserve">
+    <value>Đã cập nhật ngày đặc biệt.</value>
+  </data>
+  <data name="Success_TicketTypeCreated" xml:space="preserve">
+    <value>Đã thêm loại vé mới.</value>
+  </data>
+  <data name="Success_TicketTypeDeleted" xml:space="preserve">
+    <value>Đã xóa loại vé.</value>
+  </data>
+  <data name="Success_TicketTypeUpdated" xml:space="preserve">
+    <value>Đã cập nhật loại vé.</value>
   </data>
   <data name="Success_UserLocked" xml:space="preserve">
     <value>Đã khóa tài khoản.</value>
@@ -2357,6 +2414,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
     <value>daysOfWeek chỉ chấp nhận: {0}</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Validation_DaysOfWeek_AllowedValues, ...)</comment>
   </data>
+  <data name="Validation_DaysOfWeek_Invalid" xml:space="preserve">
+    <value>Thứ trong tuần phải từ 0 (Chủ nhật) đến 6 (Thứ bảy) và không được trùng nhau.</value>
+  </data>
   <data name="Validation_DaysOfWeek_Required" xml:space="preserve">
     <value>daysOfWeek không được để trống.</value>
   </data>
@@ -2390,6 +2450,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Validation_HoldDurationMinutes_Range1To120" xml:space="preserve">
     <value>holdDurationMinutes phải từ 1 đến 120.</value>
+  </data>
+  <data name="Validation_IdList_Invalid" xml:space="preserve">
+    <value>Danh sách mã chứa giá trị không hợp lệ hoặc bị trùng.</value>
   </data>
   <data name="Validation_IdToken_Required" xml:space="preserve">
     <value>idToken không được để trống.</value>
@@ -2489,6 +2552,48 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Validation_PreviewId_Required" xml:space="preserve">
     <value>previewId không được để trống.</value>
+  </data>
+  <data name="Validation_PricingRule_AdjustmentRequired" xml:space="preserve">
+    <value>Cần nhập giá trị điều chỉnh cho quy tắc này.</value>
+  </data>
+  <data name="Validation_PricingRule_AmountRange" xml:space="preserve">
+    <value>Số tiền điều chỉnh phải là số nguyên đồng, khác 0 và có giá trị tuyệt đối không quá 10.000.000.</value>
+  </data>
+  <data name="Validation_PricingRule_ConditionRequired" xml:space="preserve">
+    <value>Cần nhập điều kiện áp dụng của quy tắc.</value>
+  </data>
+  <data name="Validation_PricingRule_ModeInvalid" xml:space="preserve">
+    <value>Cách điều chỉnh giá không hợp lệ.</value>
+  </data>
+  <data name="Validation_PricingRule_MultiplierRange" xml:space="preserve">
+    <value>Hệ số điều chỉnh phải từ 0,1 đến 5, khác 1 và tối đa 4 chữ số thập phân.</value>
+  </data>
+  <data name="Validation_PricingRule_TierHoursRange" xml:space="preserve">
+    <value>Số giờ trước giờ chiếu của bậc phải từ 1 đến 720.</value>
+  </data>
+  <data name="Validation_PricingRule_TierInvalid" xml:space="preserve">
+    <value>Bậc mức lấp đầy không hợp lệ: mức bắt đầu từ 0 đến 100 và mức kết thúc phải lớn hơn mức bắt đầu, tối đa 100.</value>
+  </data>
+  <data name="Validation_PricingRule_TiersOverlap" xml:space="preserve">
+    <value>Các bậc mức lấp đầy không được chồng lấn; chỉ bậc cuối cùng được để trống mức kết thúc.</value>
+  </data>
+  <data name="Validation_PricingRule_TiersRequired" xml:space="preserve">
+    <value>Quy tắc mức lấp đầy cần có ít nhất một bậc.</value>
+  </data>
+  <data name="Validation_PricingRule_TimeWindowRequired" xml:space="preserve">
+    <value>Quy tắc khung giờ cần có giờ bắt đầu và giờ kết thúc.</value>
+  </data>
+  <data name="Validation_PricingRule_TooManyTiers" xml:space="preserve">
+    <value>Quy tắc mức lấp đầy có tối đa 20 bậc.</value>
+  </data>
+  <data name="Validation_PricingRule_TypeInvalid" xml:space="preserve">
+    <value>Loại quy tắc giá không hợp lệ.</value>
+  </data>
+  <data name="Validation_PricingRule_ValidRangeOrder" xml:space="preserve">
+    <value>Ngày hết hiệu lực phải sau hoặc bằng ngày bắt đầu hiệu lực.</value>
+  </data>
+  <data name="Validation_PricingRule_WeekDayRequired" xml:space="preserve">
+    <value>Quy tắc theo thứ trong tuần cần chọn ít nhất một thứ.</value>
   </data>
   <data name="Validation_QrCode_Required" xml:space="preserve">
     <value>qrCode không được để trống.</value>
@@ -2609,6 +2714,15 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Validation_SourceTo_Required" xml:space="preserve">
     <value>sourceTo không được để trống.</value>
   </data>
+  <data name="Validation_SpecialDay_DateRange" xml:space="preserve">
+    <value>Ngày phải nằm trong khoảng từ năm 2000 đến năm 2100.</value>
+  </data>
+  <data name="Validation_SpecialDay_RangeOrder" xml:space="preserve">
+    <value>Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.</value>
+  </data>
+  <data name="Validation_SpecialDay_RangeTooLong" xml:space="preserve">
+    <value>Một ngày đặc biệt không kéo dài quá 31 ngày.</value>
+  </data>
   <data name="Validation_StartTime_Required" xml:space="preserve">
     <value>startTime không được để trống.</value>
   </data>
@@ -2627,6 +2741,18 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Validation_Text_InvalidCharacters" xml:space="preserve">
     <value>Giá trị chứa ký tự không hợp lệ. Xóa ký tự lạ rồi thử lại.</value>
+  </data>
+  <data name="Validation_TicketType_PriceMultiplierRange" xml:space="preserve">
+    <value>Hệ số giá phải từ 0,01 đến 5 và tối đa 4 chữ số thập phân.</value>
+  </data>
+  <data name="Validation_TicketType_TimeWindowBoth" xml:space="preserve">
+    <value>Khung giờ được phép phải có cả giờ bắt đầu và giờ kết thúc.</value>
+  </data>
+  <data name="Validation_TimeFormat_HourMinute" xml:space="preserve">
+    <value>Giờ phải theo định dạng HH:mm.</value>
+  </data>
+  <data name="Validation_TimeWindow_Order" xml:space="preserve">
+    <value>Giờ bắt đầu phải sớm hơn giờ kết thúc.</value>
   </data>
   <data name="Validation_Times_Required" xml:space="preserve">
     <value>times không được để trống.</value>

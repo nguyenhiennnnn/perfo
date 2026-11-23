@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using Cinema.Application.Caching;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Services.Pricing;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 
@@ -18,6 +19,56 @@ public static class AuditSnapshots
 
     public static MembershipTierSnapshot Tier(MembershipTier tier) =>
         MembershipTierSnapshot.From(tier);
+
+    public static JsonObject TicketTypeState(TicketType t) =>
+        AuditJson.ToObject(
+            new
+            {
+                t.Name,
+                t.PriceMultiplier,
+                t.RequiresCardVerification,
+                allowedAgeRatingIds = t.AllowedAgeRatingIds.Order(),
+                allowedFromTime = PricingMapper.FormatTime(t.AllowedFromTime),
+                allowedToTime = PricingMapper.FormatTime(t.AllowedToTime),
+                allowedDaysOfWeek = t.AllowedDaysOfWeek.Order(),
+                t.IsActive,
+                t.IsDeleted,
+            }
+        );
+
+    public static JsonObject PricingRuleState(PricingRule r) =>
+        AuditJson.ToObject(
+            new
+            {
+                r.Name,
+                r.RuleType,
+                condition = PricingMapper.ToDto(
+                    PricingRuleCondition.TryParse(r.ConditionJson) ?? new PricingRuleCondition()
+                ),
+                r.AdjustmentMode,
+                r.AdjustmentValue,
+                r.Priority,
+                r.ValidFrom,
+                r.ValidTo,
+                roomIds = r.RoomIds.Order(),
+                screenTypeIds = r.ScreenTypeIds.Order(),
+                movieIds = r.MovieIds.Order(),
+                r.IsActive,
+                r.IsDeleted,
+            }
+        );
+
+    public static JsonObject SpecialDayState(SpecialDay d) =>
+        AuditJson.ToObject(
+            new
+            {
+                d.Name,
+                d.StartDate,
+                d.EndDate,
+                d.IsActive,
+                d.IsDeleted,
+            }
+        );
 
     public static JsonObject OrderBeforeCancel(OrderStatus status) =>
         AuditJson.ToObject(new { status });

@@ -105,6 +105,20 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         DoubleRange(x => x.SchedulerHeatSalesWeight, "schedulerHeatSalesWeight", 0, 10);
         DoubleRange(x => x.SchedulerHeatRatingWeight, "schedulerHeatRatingWeight", 0, 10);
         DoubleRange(x => x.SchedulerMaxRating, "schedulerMaxRating", 1, 10);
+        WholeDecimalRange(x => x.TicketPriceRoundingStep, "ticketPriceRoundingStep", 1, 100_000);
+        DecimalRange(
+            x => x.DynamicPricingMaxIncreasePercent,
+            "dynamicPricingMaxIncreasePercent",
+            0,
+            300
+        );
+        DecimalRange(
+            x => x.DynamicPricingMaxDecreasePercent,
+            "dynamicPricingMaxDecreasePercent",
+            0,
+            100
+        );
+        WholeDecimalRange(x => x.MinTicketPrice, "minTicketPrice", 0, 10_000_000);
 
         RuleFor(x => x)
             .Must(x => x.SchedulerHeatSalesWeight!.Value + x.SchedulerHeatRatingWeight!.Value > 0)
@@ -139,6 +153,34 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         var get = selector.Compile();
         RuleFor(selector)
             .Must(v => v is not null && !double.IsNaN(v.Value) && v >= min && v <= max)
+            .When(x => get(x) is not null)
+            .WithMessage(string.Format(Messages.Validation_Setting_NumberRange, name, min, max));
+    }
+
+    private void DecimalRange(
+        System.Linq.Expressions.Expression<Func<UpdateSettingsRequest, decimal?>> selector,
+        string name,
+        decimal min,
+        decimal max
+    )
+    {
+        var get = selector.Compile();
+        RuleFor(selector)
+            .Must(v => v is not null && v >= min && v <= max)
+            .When(x => get(x) is not null)
+            .WithMessage(string.Format(Messages.Validation_Setting_NumberRange, name, min, max));
+    }
+
+    private void WholeDecimalRange(
+        System.Linq.Expressions.Expression<Func<UpdateSettingsRequest, decimal?>> selector,
+        string name,
+        decimal min,
+        decimal max
+    )
+    {
+        var get = selector.Compile();
+        RuleFor(selector)
+            .Must(v => v is not null && v >= min && v <= max && v == decimal.Truncate(v.Value))
             .When(x => get(x) is not null)
             .WithMessage(string.Format(Messages.Validation_Setting_NumberRange, name, min, max));
     }

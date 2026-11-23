@@ -52,6 +52,14 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     }
 
     public string DefaultEmployeePassword { get; init; }
+
+    public decimal TicketPriceRoundingStep { get; init; }
+
+    public decimal DynamicPricingMaxIncreasePercent { get; init; }
+
+    public decimal DynamicPricingMaxDecreasePercent { get; init; }
+
+    public decimal MinTicketPrice { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -82,5 +90,9 @@ public record UpdateSettingsRequest(
     double? SchedulerHeatSalesWeight = null,
     double? SchedulerHeatRatingWeight = null,
     double? SchedulerMaxRating = null,
-    string? DefaultEmployeePassword = null
+    string? DefaultEmployeePassword = null,
+    decimal? TicketPriceRoundingStep = null,
+    decimal? DynamicPricingMaxIncreasePercent = null,
+    decimal? DynamicPricingMaxDecreasePercent = null,
+    decimal? MinTicketPrice = null
 );

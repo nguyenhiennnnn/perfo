@@ -46,5 +46,48 @@ public static class CacheRegistrationExtensions
                             t.DiscountPercent
                         ))
                         .ToListAsync(ct)
+            )
+            .AddCachedData<IReadOnlyList<TicketTypeSnapshot>>(
+                CacheKeys.TicketTypes,
+                async (db, ct) =>
+                    (
+                        await db
+                            .TicketTypes.AsNoTracking()
+                            .Where(t => t.IsActive)
+                            .OrderBy(t => t.PriceMultiplier)
+                            .ThenBy(t => t.TicketTypeId)
+                            .ToListAsync(ct)
+                    )
+                        .Select(TicketTypeSnapshot.From)
+                        .ToList()
+            )
+            .AddCachedData<IReadOnlyList<PricingRuleSnapshot>>(
+                CacheKeys.PricingRules,
+                async (db, ct) =>
+                    (
+                        await db
+                            .PricingRules.AsNoTracking()
+                            .Where(r => r.IsActive)
+                            .OrderByDescending(r => r.Priority)
+                            .ThenBy(r => r.PricingRuleId)
+                            .ToListAsync(ct)
+                    )
+                        .Select(PricingRuleSnapshot.From)
+                        .OfType<PricingRuleSnapshot>()
+                        .ToList()
+            )
+            .AddCachedData<IReadOnlyList<SpecialDaySnapshot>>(
+                CacheKeys.HolidayCalendar,
+                async (db, ct) =>
+                    (
+                        await db
+                            .SpecialDays.AsNoTracking()
+                            .Where(d => d.IsActive)
+                            .OrderBy(d => d.StartDate)
+                            .ThenBy(d => d.SpecialDayId)
+                            .ToListAsync(ct)
+                    )
+                        .Select(SpecialDaySnapshot.From)
+                        .ToList()
             );
 }

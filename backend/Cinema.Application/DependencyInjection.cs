@@ -17,6 +17,7 @@ using Cinema.Application.Services.Movies;
 using Cinema.Application.Services.Notifications;
 using Cinema.Application.Services.Orders;
 using Cinema.Application.Services.Payments;
+using Cinema.Application.Services.Pricing;
 using Cinema.Application.Services.Reports;
 using Cinema.Application.Services.Reviews;
 using Cinema.Application.Services.Rooms;
@@ -102,6 +103,9 @@ public static class DependencyInjection
         services.AddScoped<ITicketCheckInService, TicketCheckInService>();
         services.AddScoped<LoyaltyExpiryService>();
         services.AddScoped<IComboService, ComboService>();
+        services.AddScoped<ITicketTypeService, TicketTypeService>();
+        services.AddScoped<IPricingRuleService, PricingRuleService>();
+        services.AddScoped<ISpecialDayService, SpecialDayService>();
         services.AddScoped<IPaymentLedgerService, PaymentLedgerService>();
         services.AddScoped<IPaymentRefundService, PaymentRefundService>();
         services.AddScoped<ICashRefundService, CashRefundService>();

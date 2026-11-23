@@ -41,6 +41,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<OrderPriceAdjustmentAllocation> OrderPriceAdjustmentAllocations =>
         Set<OrderPriceAdjustmentAllocation>();
     public DbSet<Combo> Combos => Set<Combo>();
+    public DbSet<TicketType> TicketTypes => Set<TicketType>();
+    public DbSet<PricingRule> PricingRules => Set<PricingRule>();
+    public DbSet<SpecialDay> SpecialDays => Set<SpecialDay>();
     public DbSet<PaymentTransaction> PaymentTransactions => Set<PaymentTransaction>();
     public DbSet<OrderResourceHold> OrderResourceHolds => Set<OrderResourceHold>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();

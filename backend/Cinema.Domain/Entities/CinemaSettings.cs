@@ -61,6 +61,11 @@ public class CinemaSettings
     public const double DefaultSchedulerHeatRatingWeight = 0.3;
     public const double DefaultSchedulerMaxRating = 5;
 
+    public const decimal DefaultTicketPriceRoundingStep = 1000m;
+    public const decimal DefaultDynamicPricingMaxIncreasePercent = 30m;
+    public const decimal DefaultDynamicPricingMaxDecreasePercent = 30m;
+    public const decimal DefaultMinTicketPrice = 45000m;
+
     public int SchedulerStepMinutes { get; set; } = DefaultSchedulerStepMinutes;
 
     public int SchedulerMinSameMovieGapMinutes { get; set; } =
@@ -73,4 +78,14 @@ public class CinemaSettings
     public double SchedulerHeatRatingWeight { get; set; } = DefaultSchedulerHeatRatingWeight;
 
     public double SchedulerMaxRating { get; set; } = DefaultSchedulerMaxRating;
+
+    public decimal TicketPriceRoundingStep { get; set; } = DefaultTicketPriceRoundingStep;
+
+    public decimal DynamicPricingMaxIncreasePercent { get; set; } =
+        DefaultDynamicPricingMaxIncreasePercent;
+
+    public decimal DynamicPricingMaxDecreasePercent { get; set; } =
+        DefaultDynamicPricingMaxDecreasePercent;
+
+    public decimal MinTicketPrice { get; set; } = DefaultMinTicketPrice;
 }

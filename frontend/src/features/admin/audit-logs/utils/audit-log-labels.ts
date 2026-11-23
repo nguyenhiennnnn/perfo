@@ -15,6 +15,9 @@ const ACTION_VARIANTS: Record<string, BadgeVariant> = {
 const ENTITY_TYPE_LABELS: Record<string, string> = {
   CinemaSettings: "Cấu hình rạp",
   MembershipTier: "Hạng thành viên",
+  TicketType: "Loại vé",
+  PricingRule: "Quy tắc giá",
+  SpecialDay: "Ngày đặc biệt",
 };
 
 export const SYSTEM_ACTOR_LABEL = "Hệ thống";

@@ -79,5 +79,21 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.SchedulerMaxRating)
             .HasDefaultValue(CinemaSettings.DefaultSchedulerMaxRating);
+        builder
+            .Property(x => x.TicketPriceRoundingStep)
+            .HasColumnType("decimal(18,2)")
+            .HasDefaultValue(CinemaSettings.DefaultTicketPriceRoundingStep);
+        builder
+            .Property(x => x.DynamicPricingMaxIncreasePercent)
+            .HasColumnType("decimal(5,2)")
+            .HasDefaultValue(CinemaSettings.DefaultDynamicPricingMaxIncreasePercent);
+        builder
+            .Property(x => x.DynamicPricingMaxDecreasePercent)
+            .HasColumnType("decimal(5,2)")
+            .HasDefaultValue(CinemaSettings.DefaultDynamicPricingMaxDecreasePercent);
+        builder
+            .Property(x => x.MinTicketPrice)
+            .HasColumnType("decimal(18,2)")
+            .HasDefaultValue(CinemaSettings.DefaultMinTicketPrice);
     }
 }

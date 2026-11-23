@@ -37,6 +37,9 @@ public interface IAppDbContext
     DbSet<OrderPriceAdjustment> OrderPriceAdjustments { get; }
     DbSet<OrderPriceAdjustmentAllocation> OrderPriceAdjustmentAllocations { get; }
     DbSet<Combo> Combos { get; }
+    DbSet<TicketType> TicketTypes { get; }
+    DbSet<PricingRule> PricingRules { get; }
+    DbSet<SpecialDay> SpecialDays { get; }
     DbSet<PaymentTransaction> PaymentTransactions { get; }
     DbSet<OrderResourceHold> OrderResourceHolds { get; }
     DbSet<OutboxMessage> OutboxMessages { get; }

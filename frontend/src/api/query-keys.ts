@@ -77,6 +77,27 @@ export const queryKeys = {
     detail: (orderId: number) => ["admin", "orders", "detail", orderId] as const,
   },
 
+  adminTicketTypes: {
+    all: () => ["admin", "ticket-types"] as const,
+    list: (params?: object) => ["admin", "ticket-types", "list", params] as const,
+  },
+
+  adminPricingRules: {
+    all: () => ["admin", "pricing-rules"] as const,
+    list: (params?: object) => ["admin", "pricing-rules", "list", params] as const,
+  },
+
+  adminSpecialDays: {
+    all: () => ["admin", "special-days"] as const,
+    list: (params?: object) => ["admin", "special-days", "list", params] as const,
+  },
+
+  adminPricingPreview: {
+    all: () => ["admin", "pricing-preview"] as const,
+    table: (showtimeId: number, at?: string) =>
+      ["admin", "pricing-preview", showtimeId, at ?? null] as const,
+  },
+
   adminCashRefunds: {
     all: () => ["admin", "cash-refunds"] as const,
     list: (params: object) => ["admin", "cash-refunds", "list", params] as const,

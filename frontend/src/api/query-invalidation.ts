@@ -41,6 +41,22 @@ export const invalidations = {
 
   comboChanged: (): KeyList => [k.adminCombos.all(), k.combos.all()],
 
+  ticketTypeChanged: (): KeyList => [
+    k.adminTicketTypes.all(),
+    k.adminPricingPreview.all(),
+    k.adminAuditLogs.all(),
+  ],
+  pricingRuleChanged: (): KeyList => [
+    k.adminPricingRules.all(),
+    k.adminPricingPreview.all(),
+    k.adminAuditLogs.all(),
+  ],
+  specialDayChanged: (): KeyList => [
+    k.adminSpecialDays.all(),
+    k.adminPricingPreview.all(),
+    k.adminAuditLogs.all(),
+  ],
+
   roomChanged: (): KeyList => [
     k.adminRooms.all(),
     ...showtimeViews(),

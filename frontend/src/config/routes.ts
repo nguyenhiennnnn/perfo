@@ -49,6 +49,13 @@ export const ROUTES = {
     orders: "/admin/orders",
     cashRefunds: "/admin/cash-refunds",
     auditLogs: "/admin/audit-logs",
+    pricingTicketTypes: "/admin/pricing/ticket-types",
+    pricingRules: "/admin/pricing/rules",
+    pricingRuleHistory: "/admin/pricing/rule-history",
+    pricingRuleHistoryByRule: (ruleId: number | string) =>
+      `/admin/pricing/rule-history?entityId=${ruleId}`,
+    pricingSpecialDays: "/admin/pricing/special-days",
+    pricingPreview: "/admin/pricing/preview",
     reports: "/admin/reports",
     users: "/admin/users",
     employees: "/admin/employees",

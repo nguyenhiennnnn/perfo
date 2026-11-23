@@ -137,6 +137,38 @@ export const useAdminCashRefundParams = (
   options?: Parameters<typeof useQueryStates<typeof adminCashRefundParsers>>[1],
 ) => useQueryStates(adminCashRefundParsers, options);
 
+const adminSpecialDayParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  year: parseAsInteger,
+};
+
+export const useAdminSpecialDayParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminSpecialDayParsers>>[1],
+) => useQueryStates(adminSpecialDayParsers, options);
+
+const adminPricingRuleParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  ruleType: parseAsString,
+};
+
+export const useAdminPricingRuleParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminPricingRuleParsers>>[1],
+) => useQueryStates(adminPricingRuleParsers, options);
+
+const adminPricePreviewParsers = {
+  date: parseAsString,
+  showtimeId: parseAsInteger,
+  at: parseAsString,
+};
+
+export const useAdminPricePreviewParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminPricePreviewParsers>>[1],
+) => useQueryStates(adminPricePreviewParsers, options);
+
 const adminAuditLogParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),

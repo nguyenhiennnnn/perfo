@@ -128,6 +128,21 @@ export const ENDPOINTS = {
       filterOptions: "/admin/audit-logs/filter-options",
       byId: (id: number) => `/admin/audit-logs/${id}`,
     },
+    ticketTypes: {
+      root: "/admin/ticket-types",
+      byId: (id: number) => `/admin/ticket-types/${id}`,
+    },
+    pricingRules: {
+      root: "/admin/pricing-rules",
+      byId: (id: number) => `/admin/pricing-rules/${id}`,
+    },
+    specialDays: {
+      root: "/admin/special-days",
+      byId: (id: number) => `/admin/special-days/${id}`,
+    },
+    pricing: {
+      preview: "/admin/pricing/preview",
+    },
     cashRefunds: {
       root: "/admin/cash-refunds",
       confirm: (id: number) => `/admin/cash-refunds/${id}/confirm`,

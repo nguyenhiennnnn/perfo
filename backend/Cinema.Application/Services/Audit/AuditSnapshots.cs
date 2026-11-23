@@ -155,6 +155,58 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject StocktakeSheetState(
+        StocktakeSheet s,
+        IEnumerable<StockQuantityChange> quantityChanges
+    ) =>
+        AuditJson.ToObject(
+            new
+            {
+                s.StocktakeDate,
+                s.Note,
+                lines = s.Lines.OrderBy(l => l.StocktakeSheetLineId)
+                    .Select(l => new
+                    {
+                        l.InventoryItemId,
+                        l.BookQuantity,
+                        l.CountedQuantity,
+                        l.Difference,
+                    }),
+                quantityChanges = quantityChanges.Select(c => new
+                {
+                    c.InventoryItemId,
+                    c.QuantityBefore,
+                    c.QuantityAfter,
+                }),
+            }
+        );
+
+    public static JsonObject WasteSheetState(
+        WasteSheet s,
+        IEnumerable<StockQuantityChange> quantityChanges
+    ) =>
+        AuditJson.ToObject(
+            new
+            {
+                s.WasteDate,
+                s.Reason,
+                s.Note,
+                lines = s.Lines.OrderBy(l => l.WasteSheetLineId)
+                    .Select(l => new
+                    {
+                        l.InventoryItemId,
+                        l.Quantity,
+                        l.UnitCost,
+                    }),
+                quantityChanges = quantityChanges.Select(c => new
+                {
+                    c.InventoryItemId,
+                    c.QuantityBefore,
+                    c.QuantityAfter,
+                }),
+            }
+        );
+
     public static JsonObject OrderBeforeCancel(OrderStatus status) =>
         AuditJson.ToObject(new { status });
 

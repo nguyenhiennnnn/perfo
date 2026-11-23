@@ -108,6 +108,101 @@ public record CreateStockReceiptRequest(
     List<StockReceiptLineRequest> Lines
 );
 
+public record StocktakeSheetLineRequest(int InventoryItemId, decimal CountedQuantity);
+
+public record CreateStocktakeSheetRequest(
+    DateOnly StocktakeDate,
+    string? Note,
+    List<StocktakeSheetLineRequest> Lines
+);
+
+public record StocktakeSheetLineDto(
+    int StocktakeSheetLineId,
+    int InventoryItemId,
+    string ItemCode,
+    string ItemName,
+    string Unit,
+    decimal BookQuantity,
+    decimal CountedQuantity,
+    decimal Difference
+);
+
+public record StocktakeSheetDto(
+    int StocktakeSheetId,
+    DateOnly StocktakeDate,
+    string? Note,
+    decimal TotalDifference,
+    int? CreatedByUserId,
+    string? CreatedByName,
+    DateTime CreatedAt,
+    List<StocktakeSheetLineDto> Lines
+);
+
+public record StocktakeSheetListItemDto(
+    int StocktakeSheetId,
+    DateOnly StocktakeDate,
+    string? Note,
+    int LineCount,
+    decimal TotalDifference,
+    DateTime CreatedAt
+);
+
+public record StocktakeSheetListFilter(
+    string? Search,
+    DateOnly? FromDate,
+    DateOnly? ToDate,
+    int? InventoryItemId
+);
+
+public record WasteSheetLineRequest(int InventoryItemId, decimal Quantity);
+
+public record CreateWasteSheetRequest(
+    DateOnly WasteDate,
+    string Reason,
+    string? Note,
+    List<WasteSheetLineRequest> Lines
+);
+
+public record WasteSheetLineDto(
+    int WasteSheetLineId,
+    int InventoryItemId,
+    string ItemCode,
+    string ItemName,
+    string Unit,
+    decimal Quantity,
+    decimal UnitCost,
+    decimal LineAmount
+);
+
+public record WasteSheetDto(
+    int WasteSheetId,
+    DateOnly WasteDate,
+    string Reason,
+    string? Note,
+    decimal TotalAmount,
+    int? CreatedByUserId,
+    string? CreatedByName,
+    DateTime CreatedAt,
+    List<WasteSheetLineDto> Lines
+);
+
+public record WasteSheetListItemDto(
+    int WasteSheetId,
+    DateOnly WasteDate,
+    string Reason,
+    int LineCount,
+    decimal TotalAmount,
+    DateTime CreatedAt
+);
+
+public record WasteSheetListFilter(
+    string? Search,
+    DateOnly? FromDate,
+    DateOnly? ToDate,
+    string? Reason,
+    int? InventoryItemId
+);
+
 public record StockLevelDto(
     int InventoryItemId,
     string Code,

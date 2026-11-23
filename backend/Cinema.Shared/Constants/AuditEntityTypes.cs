@@ -11,6 +11,8 @@ public static class AuditEntityTypes
     public const string InventoryItem = "InventoryItem";
     public const string ComboRecipe = "ComboRecipe";
     public const string StockReceipt = "StockReceipt";
+    public const string StocktakeSheet = "StocktakeSheet";
+    public const string WasteSheet = "WasteSheet";
     public const string Order = "Order";
     public const string OrderLine = "OrderLine";
     public const string Showtime = "Showtime";

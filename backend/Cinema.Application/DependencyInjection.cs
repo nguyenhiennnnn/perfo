@@ -121,6 +121,8 @@ public static class DependencyInjection
         services.AddScoped<IComboRecipeService, ComboRecipeService>();
         services.AddScoped<IStockLedgerService, StockLedgerService>();
         services.AddScoped<IStockReceiptService, StockReceiptService>();
+        services.AddScoped<IStocktakeService, StocktakeService>();
+        services.AddScoped<IWasteService, WasteService>();
         services.AddScoped<IInventoryStockQueryService, InventoryStockQueryService>();
         services.AddScoped<ITicketTypeService, TicketTypeService>();
         services.AddScoped<IPricingRuleService, PricingRuleService>();

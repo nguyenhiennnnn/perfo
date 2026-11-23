@@ -14,6 +14,12 @@ public sealed record StockMovement(
 
 public sealed record StockPosting(long StockLedgerId, decimal BalanceAfter, decimal UnitCost);
 
+public sealed record StockQuantityChange(
+    int InventoryItemId,
+    decimal QuantityBefore,
+    decimal QuantityAfter
+);
+
 public sealed record StockReceiptCostChange(
     int InventoryItemId,
     decimal QuantityBefore,

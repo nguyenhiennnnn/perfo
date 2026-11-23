@@ -3217,4 +3217,52 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
     <value>Phiếu nhập cần từ 1 đến {0} dòng.</value>
     <comment>Có 1 tham số: dùng string.Format(Messages.Validation_StockReceipt_LinesRange, ...)</comment>
   </data>
+  <data name="Invalid_StocktakeSheet_ItemNotFound" xml:space="preserve">
+    <value>Phiếu kiểm kê có sản phẩm kho không tồn tại.</value>
+  </data>
+  <data name="Invalid_WasteSheet_ItemNotFound" xml:space="preserve">
+    <value>Phiếu hao hụt có sản phẩm kho không tồn tại.</value>
+  </data>
+  <data name="NotFound_StocktakeSheet" xml:space="preserve">
+    <value>Không tìm thấy phiếu kiểm kê.</value>
+  </data>
+  <data name="NotFound_WasteSheet" xml:space="preserve">
+    <value>Không tìm thấy phiếu hao hụt.</value>
+  </data>
+  <data name="Success_StocktakeSheetCreated" xml:space="preserve">
+    <value>Đã lập phiếu kiểm kê.</value>
+  </data>
+  <data name="Success_WasteSheetCreated" xml:space="preserve">
+    <value>Đã lập phiếu hao hụt.</value>
+  </data>
+  <data name="Validation_Inventory_CountedQuantityRange" xml:space="preserve">
+    <value>Số đếm thực tế phải từ 0 đến {0} và không quá 3 chữ số thập phân.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Validation_Inventory_CountedQuantityRange, ...)</comment>
+  </data>
+  <data name="Validation_StocktakeSheet_DateInvalid" xml:space="preserve">
+    <value>Ngày kiểm kê không hợp lệ hoặc sau ngày hôm nay.</value>
+  </data>
+  <data name="Validation_StocktakeSheet_ItemDuplicated" xml:space="preserve">
+    <value>Sản phẩm kho trong phiếu kiểm kê không được trùng nhau.</value>
+  </data>
+  <data name="Validation_StocktakeSheet_LinesRange" xml:space="preserve">
+    <value>Phiếu kiểm kê cần từ 1 đến {0} dòng.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Validation_StocktakeSheet_LinesRange, ...)</comment>
+  </data>
+  <data name="Validation_WasteSheet_DateInvalid" xml:space="preserve">
+    <value>Ngày hủy hàng không hợp lệ hoặc sau ngày hôm nay.</value>
+  </data>
+  <data name="Validation_WasteSheet_ItemDuplicated" xml:space="preserve">
+    <value>Sản phẩm kho trong phiếu hao hụt không được trùng nhau.</value>
+  </data>
+  <data name="Validation_WasteSheet_LinesRange" xml:space="preserve">
+    <value>Phiếu hao hụt cần từ 1 đến {0} dòng.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Validation_WasteSheet_LinesRange, ...)</comment>
+  </data>
+  <data name="Validation_WasteSheet_NoteRequiredForOther" xml:space="preserve">
+    <value>Lý do khác cần có ghi chú.</value>
+  </data>
+  <data name="Validation_WasteSheet_ReasonInvalid" xml:space="preserve">
+    <value>Lý do hao hụt không hợp lệ.</value>
+  </data>
 </root>

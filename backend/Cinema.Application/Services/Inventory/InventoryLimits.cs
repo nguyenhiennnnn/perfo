@@ -7,4 +7,6 @@ public static class InventoryLimits
     public const int QuantityDecimals = 3;
     public const int MaxRecipeLines = 30;
     public const int MaxReceiptLines = 100;
+    public const int MaxStocktakeLines = 200;
+    public const int MaxWasteLines = 50;
 }

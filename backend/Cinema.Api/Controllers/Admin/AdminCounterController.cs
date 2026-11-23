@@ -17,7 +17,8 @@ public class AdminCounterController(
     ICounterPaymentService counterPaymentService,
     ITicketCheckInService ticketCheckInService,
     ICardCheckService cardCheckService,
-    ISupplementOrderService supplementOrderService
+    ISupplementOrderService supplementOrderService,
+    IOrderPromotionService orderPromotionService
 ) : AppControllerBase
 {
     private int GetCurrentEmployeeId() =>
@@ -68,6 +69,38 @@ public class AdminCounterController(
             orderId,
             CurrentUserId,
             request,
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpPost("{orderId:int}/counter-promotion")]
+    [Authorize(Policy = Policies.StaffOnly)]
+    public async Task<ActionResult<OrderPromotionResponse>> CounterApplyPromotion(
+        int orderId,
+        [FromBody] ApplyPromotionRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderPromotionService.ApplyAsync(
+            orderId,
+            OrderPromotionCaller.Counter,
+            request.Code,
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpDelete("{orderId:int}/counter-promotion")]
+    [Authorize(Policy = Policies.StaffOnly)]
+    public async Task<ActionResult<OrderPromotionResponse>> CounterRemovePromotion(
+        int orderId,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderPromotionService.RemoveAsync(
+            orderId,
+            OrderPromotionCaller.Counter,
             cancellationToken
         );
         return Ok(result);

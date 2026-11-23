@@ -26,6 +26,8 @@ public class Promotion
     public int? TotalUsageLimit { get; set; }
     public int? PerCustomerLimit { get; set; }
     public decimal? BudgetAmount { get; set; }
+    public int ConsumedCount { get; set; }
+    public decimal ConsumedBudget { get; set; }
     public int Priority { get; set; }
     public bool IsExclusive { get; set; }
     public int? AssignedUserId { get; set; }

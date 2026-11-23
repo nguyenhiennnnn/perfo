@@ -1,6 +1,7 @@
 using System.Globalization;
 using Cinema.Application.Caching;
 using Cinema.Shared.Constants;
+using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 
 namespace Cinema.Application.Services.Promotions;
@@ -11,6 +12,12 @@ public static class PromotionRejections
         PromotionRejectionReason reason,
         PromotionSnapshot? promotion = null
     ) => new(false, 0m, reason, ErrorCode(reason), Message(reason, promotion));
+
+    public static PromotionRejectedException ToException(PromotionCheckResult result) =>
+        new(
+            result.Message ?? Message(PromotionRejectionReason.NotFound, null),
+            result.ErrorCode ?? ErrorCode(PromotionRejectionReason.NotFound)
+        );
 
     public static string ErrorCode(PromotionRejectionReason reason) =>
         reason switch

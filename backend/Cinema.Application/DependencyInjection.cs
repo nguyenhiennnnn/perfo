@@ -83,6 +83,9 @@ public static class DependencyInjection
         services.AddScoped<IOrderHoldPolicy, OnlineHoldPolicy>();
         services.AddScoped<IOrderHoldPolicy, CounterHoldPolicy>();
         services.AddScoped<IOrderResourceHoldService, OrderResourceHoldService>();
+        services.AddScoped<PromotionResourceHold>();
+        services.AddResourceHold<PromotionResourceHold>();
+        services.AddScoped<IOrderPromotionService, OrderPromotionService>();
         services.AddScoped<IOrderLoyaltyService, OrderLoyaltyService>();
         services.AddScoped<IOrderRefundService, OrderRefundService>();
         services.AddScoped<IOrderLineRefundService, OrderLineRefundService>();

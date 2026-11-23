@@ -53,6 +53,10 @@ public class PromotionConfiguration : IEntityTypeConfiguration<Promotion>
                         + "AND (\"PerCustomerLimit\" IS NULL OR \"PerCustomerLimit\" > 0) "
                         + "AND (\"BudgetAmount\" IS NULL OR \"BudgetAmount\" > 0)"
                 );
+                t.HasCheckConstraint(
+                    "CK_Promotions_Consumed",
+                    "\"ConsumedCount\" >= 0 AND \"ConsumedBudget\" >= 0"
+                );
                 t.HasCheckConstraint("CK_Promotions_Priority", "\"Priority\" >= 0");
                 t.HasCheckConstraint(
                     "CK_Promotions_Assignment",
@@ -106,6 +110,8 @@ public class PromotionConfiguration : IEntityTypeConfiguration<Promotion>
             .HasDefaultValueSql("'{}'");
         builder.Property(x => x.NewCustomersOnly).HasDefaultValue(false);
         builder.Property(x => x.BudgetAmount).HasColumnType("decimal(18,2)");
+        builder.Property(x => x.ConsumedCount).HasDefaultValue(0);
+        builder.Property(x => x.ConsumedBudget).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
         builder.Property(x => x.Priority).HasDefaultValue(0);
         builder.Property(x => x.IsExclusive).HasDefaultValue(false);
         builder.Property(x => x.IsActive).HasDefaultValue(true);

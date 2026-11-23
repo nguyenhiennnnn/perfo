@@ -3081,4 +3081,16 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Promotion_Rejected_NotCombinable" xml:space="preserve">
     <value>Mã khuyến mãi không dùng chung được với ưu đãi đang áp dụng, hoặc ưu đãi đó có lợi hơn cho bạn.</value>
   </data>
+  <data name="Rule_PromotionCounterOrderOnly" xml:space="preserve">
+    <value>Quầy chỉ áp hoặc gỡ mã khuyến mãi trên đơn bán tại quầy.</value>
+  </data>
+  <data name="Success_OrderPromotionApplied" xml:space="preserve">
+    <value>Đã áp mã khuyến mãi.</value>
+  </data>
+  <data name="Success_OrderPromotionRemoved" xml:space="preserve">
+    <value>Đã gỡ mã khuyến mãi.</value>
+  </data>
+  <data name="Validation_PromotionCode_Required" xml:space="preserve">
+    <value>Vui lòng nhập mã khuyến mãi.</value>
+  </data>
 </root>

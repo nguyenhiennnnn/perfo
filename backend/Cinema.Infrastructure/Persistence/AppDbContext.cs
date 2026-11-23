@@ -46,6 +46,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<SpecialDay> SpecialDays => Set<SpecialDay>();
     public DbSet<Promotion> Promotions => Set<Promotion>();
     public DbSet<PromotionRedemption> PromotionRedemptions => Set<PromotionRedemption>();
+    public DbSet<PromotionCustomerUsage> PromotionCustomerUsages => Set<PromotionCustomerUsage>();
     public DbSet<PaymentTransaction> PaymentTransactions => Set<PaymentTransaction>();
     public DbSet<OrderResourceHold> OrderResourceHolds => Set<OrderResourceHold>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();

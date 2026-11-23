@@ -20,7 +20,8 @@ public class BookingsController(
     IOrderQueryService orderQueryService,
     IOrderCheckoutService bookingCheckoutService,
     IOrderCancellationService orderCancellationService,
-    IOrderTicketPdfService orderTicketPdfService
+    IOrderTicketPdfService orderTicketPdfService,
+    IOrderPromotionService orderPromotionService
 ) : AppControllerBase
 {
     [HttpPost("hold")]
@@ -95,6 +96,39 @@ public class BookingsController(
             CurrentUserId,
             bookingId,
             request,
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpPost("{orderId:int}/promotion")]
+    [EnableRateLimiting(RateLimitingExtensions.BookingHoldPolicy)]
+    [SuccessMessage(nameof(Messages.Success_OrderPromotionApplied))]
+    public async Task<ActionResult<OrderPromotionResponse>> ApplyPromotion(
+        int orderId,
+        [FromBody] ApplyPromotionRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderPromotionService.ApplyAsync(
+            orderId,
+            OrderPromotionCaller.Customer(CurrentUserId),
+            request.Code,
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpDelete("{orderId:int}/promotion")]
+    [SuccessMessage(nameof(Messages.Success_OrderPromotionRemoved))]
+    public async Task<ActionResult<OrderPromotionResponse>> RemovePromotion(
+        int orderId,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderPromotionService.RemoveAsync(
+            orderId,
+            OrderPromotionCaller.Customer(CurrentUserId),
             cancellationToken
         );
         return Ok(result);

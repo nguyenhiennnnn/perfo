@@ -42,6 +42,7 @@ public interface IAppDbContext
     DbSet<SpecialDay> SpecialDays { get; }
     DbSet<Promotion> Promotions { get; }
     DbSet<PromotionRedemption> PromotionRedemptions { get; }
+    DbSet<PromotionCustomerUsage> PromotionCustomerUsages { get; }
     DbSet<PaymentTransaction> PaymentTransactions { get; }
     DbSet<OrderResourceHold> OrderResourceHolds { get; }
     DbSet<OutboxMessage> OutboxMessages { get; }

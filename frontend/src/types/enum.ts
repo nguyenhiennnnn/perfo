@@ -36,12 +36,11 @@ export const SeatGapRuleMode = {
 export type SeatGapRuleMode =
   (typeof SeatGapRuleMode)[keyof typeof SeatGapRuleMode];
 
-export const BookingChannel = {
+export const OrderChannel = {
   Online: "Online",
   Counter: "Counter",
 } as const;
-export type BookingChannel =
-  (typeof BookingChannel)[keyof typeof BookingChannel];
+export type OrderChannel = (typeof OrderChannel)[keyof typeof OrderChannel];
 
 export const OrderStatus = {
   Pending: "Pending",
@@ -176,7 +175,7 @@ export type ImportExportJobStatus =
 export const ImportExportModule = {
   Movies: "movies",
   Showtimes: "showtimes",
-  Bookings: "bookings",
+  Orders: "bookings",
   Payments: "payments",
 } as const;
 export type ImportExportModule =

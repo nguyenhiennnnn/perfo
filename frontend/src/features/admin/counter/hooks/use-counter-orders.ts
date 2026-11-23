@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
+import { ordersAdminApi } from "@/features/admin/orders/api/orders-admin-api";
+import type { CancelReason } from "@/types/enum";
 import { counterApi } from "../api/counter-api";
-import type { CancelOrderRequest } from "@/features/admin/orders/types";
 import type {
   CounterCheckoutRequest,
   CounterComboOrderRequest,
@@ -35,10 +36,7 @@ export function useCounterCheckout() {
 export function useCounterCancelOrder() {
   return useMutation({
     meta: { invalidates: "bookingChanged" },
-    mutationFn: ({
-      orderId,
-      ...body
-    }: CancelOrderRequest & { orderId: number }) =>
-      counterApi.cancelOrder(orderId, body),
+    mutationFn: ({ orderId, reason }: { orderId: number; reason: CancelReason }) =>
+      ordersAdminApi.cancelOrder(orderId, reason),
   });
 }

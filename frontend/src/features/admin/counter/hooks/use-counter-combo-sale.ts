@@ -4,17 +4,17 @@ import { COUNTER_WALK_IN_NAME } from "@/config/default-constants";
 import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
 import { formatCurrency } from "@/lib/formatters";
 import { CancelReason } from "@/types/enum";
-import { counterOrderApi } from "../api/counter-order-api";
+import { ordersAdminApi } from "@/features/admin/orders/api/orders-admin-api";
 import {
   CounterPaymentMethod,
   type CounterCheckoutResponse,
   type CounterOrderResponse,
 } from "../types";
 import {
-  useCancelCounterOrder,
-  useCounterOrderCheckout,
-  useCreateCounterComboOrder,
-} from "./use-counter-order-mutations";
+  useCounterCancelOrder,
+  useCounterCheckout,
+  useCounterComboOrder,
+} from "./use-counter-orders";
 
 export type CounterComboStep = "build" | "payment" | "done";
 
@@ -30,9 +30,9 @@ const isOrderExpired = (order: CounterOrderResponse | null) =>
 
 export function useCounterComboSale() {
   const activeCombos = useActiveCombos();
-  const createOrder = useCreateCounterComboOrder();
-  const checkout = useCounterOrderCheckout();
-  const cancelOrder = useCancelCounterOrder();
+  const createOrder = useCounterComboOrder();
+  const checkout = useCounterCheckout();
+  const cancelOrder = useCounterCancelOrder();
 
   const [step, setStep] = useState<CounterComboStep>("build");
   const [quantities, setQuantities] = useState<Record<number, number>>({});
@@ -96,7 +96,7 @@ export function useCounterComboSale() {
       if (id === null) return;
       pendingOrderIdRef.current = null;
       cancelledOnHideRef.current = true;
-      counterOrderApi.cancelKeepalive(id, CancelReason.Other);
+      ordersAdminApi.cancelOrderKeepalive(id, CancelReason.Other);
     };
     const onPageShow = (event: PageTransitionEvent) => {
       if (!event.persisted || !cancelledOnHideRef.current) return;
@@ -115,7 +115,7 @@ export function useCounterComboSale() {
         const id = pendingOrderIdRef.current;
         if (id === null) return;
         pendingOrderIdRef.current = null;
-        void counterOrderApi.cancel(id, CancelReason.Other).catch(() => undefined);
+        void ordersAdminApi.cancelOrder(id, CancelReason.Other).catch(() => undefined);
       }, 0);
     };
   }, []);
@@ -130,8 +130,8 @@ export function useCounterComboSale() {
         customerPhone: customerPhone.trim() || undefined,
       });
       if (!mountedRef.current) {
-        void counterOrderApi
-          .cancel(res.data.orderId, CancelReason.Other)
+        void ordersAdminApi
+          .cancelOrder(res.data.orderId, CancelReason.Other)
           .catch(() => undefined);
         return;
       }
@@ -152,10 +152,9 @@ export function useCounterComboSale() {
     try {
       const res = await checkout.mutateAsync({
         orderId: order.orderId,
-        body:
-          method === CounterPaymentMethod.Cash
-            ? { paymentMethod: method, amountReceived }
-            : { paymentMethod: method },
+        ...(method === CounterPaymentMethod.Cash
+          ? { paymentMethod: method, amountReceived }
+          : { paymentMethod: method }),
       });
       if (!res.data.isFullyPaid) {
         toast.add({

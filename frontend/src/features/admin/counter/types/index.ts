@@ -1,5 +1,3 @@
-import type { CancelReason } from "@/types/enum";
-
 export const CounterPaymentMethod = {
   Cash: "Cash",
   Card: "Card",
@@ -54,8 +52,4 @@ export interface CounterCheckoutResponse {
   totalPaid: number;
   outstandingAmount: number;
   isFullyPaid: boolean;
-}
-
-export interface CounterCancelRequest {
-  reason: CancelReason;
 }

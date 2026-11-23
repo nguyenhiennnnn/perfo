@@ -26,7 +26,7 @@ export const RevenueSummaryCards = ({ query }: RevenueSummaryCardsProps) => (
     {({ summary }) => {
       const items = [
         { label: "Tổng doanh thu", value: formatCurrency(summary.totalRevenue), icon: Wallet },
-        { label: "Tổng đơn đặt vé", value: formatNumber(summary.totalBookings), icon: Receipt },
+        { label: "Tổng số đơn hàng", value: formatNumber(summary.totalBookings), icon: Receipt },
       ];
 
       return (

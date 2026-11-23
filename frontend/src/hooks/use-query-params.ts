@@ -1,6 +1,5 @@
 import {
   debounce,
-  parseAsBoolean,
   parseAsInteger,
   parseAsString,
   parseAsStringLiteral,
@@ -124,23 +123,6 @@ const adminReviewParsers = {
 export const useAdminReviewParams = (
   options?: Parameters<typeof useQueryStates<typeof adminReviewParsers>>[1],
 ) => useQueryStates(adminReviewParsers, options);
-
-const adminPaymentParsers = {
-  page: parseAsInteger.withDefault(DEFAULT_PAGE),
-  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
-  search: searchParser,
-  type: parseAsString,
-  status: parseAsString,
-  paymentMethod: parseAsString,
-  orderCode: searchParser,
-  needsRefund: parseAsBoolean,
-  fromDate: parseAsString,
-  toDate: parseAsString,
-};
-
-export const useAdminPaymentParams = (
-  options?: Parameters<typeof useQueryStates<typeof adminPaymentParsers>>[1],
-) => useQueryStates(adminPaymentParsers, options);
 
 const adminCashRefundParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),

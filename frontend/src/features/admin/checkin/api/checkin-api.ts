@@ -5,5 +5,5 @@ import type { CheckinRequest, CheckinResponse } from "../types";
 
 export const checkinApi = {
   checkin: (body: CheckinRequest) =>
-    apiPost<ApiResponse<CheckinResponse>>(ENDPOINTS.admin.bookings.checkin, body),
+    apiPost<ApiResponse<CheckinResponse>>(ENDPOINTS.admin.orders.checkin, body),
 };

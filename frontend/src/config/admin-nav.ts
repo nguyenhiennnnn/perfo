@@ -7,7 +7,6 @@ import {
   Tv,
   Popcorn,
   Ticket,
-  CreditCard,
   Banknote,
   BarChart3,
   Users,
@@ -50,7 +49,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
     label: "Nghiệp vụ rạp",
     items: [
       {
-        to: ROUTES.admin.bookingCounter,
+        to: ROUTES.admin.counter,
         label: "Bán hàng tại quầy",
         icon: ShoppingBag,
         roles: [Role.Admin, Role.Employee],
@@ -101,12 +100,6 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         label: "Đơn tiền mặt cần hoàn",
         icon: Banknote,
         roles: [Role.Admin, Role.Employee],
-      },
-      {
-        to: ROUTES.admin.payments,
-        label: "Giao dịch & thanh toán",
-        icon: CreditCard,
-        roles: [Role.Admin],
       },
       {
         to: ROUTES.admin.reports,

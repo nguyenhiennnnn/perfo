@@ -286,7 +286,7 @@ const AdminSettingsPage = () => {
               </div>
             </SettingsSection>
 
-            <SettingsSection title="Lịch chiếu & đặt vé" disabled={updateSettings.isPending}>
+            <SettingsSection title="Lịch chiếu & đơn hàng" disabled={updateSettings.isPending}>
               <FormInputField
                 name="roomBufferMinutes"
                 control={form.control}
@@ -298,7 +298,7 @@ const AdminSettingsPage = () => {
               <FormInputField
                 name="maxSeatsPerBooking"
                 control={form.control}
-                label="Số ghế tối đa / booking"
+                label="Số ghế tối đa mỗi đơn hàng"
                 type="number"
                 min={1}
                 max={SETTINGS_FIELD_MAX.maxSeatsPerBooking}

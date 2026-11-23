@@ -74,10 +74,11 @@ const AdminCounterPage = () => {
 
           {flow.step === "checkout" && <CounterCheckoutStep flow={flow} />}
 
-          {flow.step === "done" && flow.checkoutResult && (
+          {flow.step === "done" && (
             <CounterTicketResult
-              bookingQuery={flow.bookingDetail}
-              checkout={flow.checkoutResult}
+              orderQuery={flow.orderDetail}
+              payments={flow.payments}
+              totalChange={flow.totalChange}
               onNewSale={flow.resetFlow}
             />
           )}

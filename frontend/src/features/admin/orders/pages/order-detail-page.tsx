@@ -52,7 +52,7 @@ const OrderDetailView = ({ order, onReload }: OrderDetailViewProps) => {
             {showPdf && (
               <DownloadTicketsPdfButton
                 size="default"
-                endpoint={ENDPOINTS.admin.bookings.ticketsPdf(order.orderId)}
+                endpoint={ENDPOINTS.admin.orders.ticketsPdf(order.orderId)}
                 fallbackFilename={`tickets-${order.orderCode}.pdf`}
               />
             )}

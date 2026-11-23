@@ -14,7 +14,7 @@ import { ROUTES } from "@/config/routes";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useAdminOrderParams } from "@/hooks/use-query-params";
 import { useTablePagination } from "@/hooks/use-table-pagination";
-import { bookingStatusOptions, orderChannelOptions, orderTypeOptions } from "@/lib/enum-options";
+import { orderChannelOptions, orderStatusOptions, orderTypeOptions } from "@/lib/enum-options";
 import { stripNulls } from "@/lib/query-params";
 
 import { createOrderColumns } from "../components/order-columns";
@@ -50,8 +50,8 @@ const AdminOrdersPage = () => {
         description="Theo dõi đơn hàng, kênh bán và trạng thái xử lý."
         action={
           <ExportButton
-            endpoint={ENDPOINTS.admin.bookings.export}
-            jobEndpoint={ENDPOINTS.admin.bookings.exportJobs}
+            endpoint={ENDPOINTS.admin.orders.export}
+            jobEndpoint={ENDPOINTS.admin.orders.exportJobs}
             params={{
               search: listParams.search || undefined,
               status: listParams.status,
@@ -93,7 +93,7 @@ const AdminOrdersPage = () => {
         <EnumSelectFilter
           value={params.status}
           onChange={(status) => setParams({ status, page: DEFAULT_PAGE })}
-          options={bookingStatusOptions}
+          options={orderStatusOptions}
           placeholder={STATUS_LABEL}
           allLabel={ALL_STATUSES_LABEL}
         />

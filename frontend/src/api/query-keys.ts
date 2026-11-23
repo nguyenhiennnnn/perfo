@@ -89,13 +89,6 @@ export const queryKeys = {
     filterOptions: () => ["admin", "audit-logs", "filter-options"] as const,
   },
 
-  adminPayments: {
-    all: () => ["admin", "payments"] as const,
-    list: (params: object) => ["admin", "payments", "list", params] as const,
-    detail: (paymentId: number) =>
-      ["admin", "payments", "detail", paymentId] as const,
-  },
-
   adminRooms: {
     all: () => ["admin", "rooms"] as const,
     list: (params?: object) => ["admin", "rooms", "list", params] as const,

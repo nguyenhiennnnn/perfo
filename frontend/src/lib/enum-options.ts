@@ -1,10 +1,10 @@
 import {
-  BookingChannel,
-  BookingStatus,
   ImportExportJobStatus,
   ImportExportJobType,
   ImportExportModule,
   MovieStatus,
+  OrderChannel,
+  OrderStatus,
   OrderType,
   PaymentMethod,
   PaymentStatus,
@@ -34,14 +34,14 @@ export const roleOptions: EnumOption[] = [
   { value: "3", label: "Nhân viên" },
 ];
 
-export const bookingStatusOptions = toOptions(BookingStatus, {
+export const orderStatusOptions = toOptions(OrderStatus, {
   Pending: "Chờ xử lý",
   Confirmed: "Đã xác nhận",
   Cancelled: "Đã hủy",
   Expired: "Hết hạn",
 });
 
-export const orderChannelOptions = toOptions(BookingChannel, {
+export const orderChannelOptions = toOptions(OrderChannel, {
   Online: "Online",
   Counter: "Tại quầy",
 });
@@ -95,6 +95,6 @@ export const importExportJobStatusOptions = toOptions(ImportExportJobStatus, {
 export const importExportModuleOptions = toOptions(ImportExportModule, {
   movies: "Phim",
   showtimes: "Suất chiếu",
-  bookings: "Đặt vé",
-  payments: "Thanh toán",
+  bookings: "Đơn hàng",
+  payments: "Giao dịch thanh toán",
 });

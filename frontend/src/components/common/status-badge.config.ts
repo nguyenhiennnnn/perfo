@@ -1,9 +1,9 @@
 import {
   MovieStatus,
   ShowtimeStatus,
-  BookingStatus,
+  OrderStatus,
   PaymentStatus,
-  BookingChannel,
+  OrderChannel,
   PaymentMethod,
   Role,
   ImportExportJobStatus,
@@ -94,11 +94,11 @@ export const showtimeStatusMap: Record<ShowtimeStatus, BadgeItem> = {
   [ShowtimeStatus.Completed]: { label: "Đã chiếu xong", variant: "secondary" },
 };
 
-export const bookingStatusMap: Record<BookingStatus, BadgeItem> = {
-  [BookingStatus.Pending]: { label: "Chờ thanh toán", variant: "warning", icon: Clock },
-  [BookingStatus.Confirmed]: { label: "Đã xác nhận", variant: "success", icon: CheckCircle2 },
-  [BookingStatus.Cancelled]: { label: "Đã hủy", variant: "destructive", icon: XCircle },
-  [BookingStatus.Expired]: { label: "Hết hạn giữ vé", variant: "outline", icon: XCircle },
+export const orderStatusMap: Record<OrderStatus, BadgeItem> = {
+  [OrderStatus.Pending]: { label: "Chờ thanh toán", variant: "warning", icon: Clock },
+  [OrderStatus.Confirmed]: { label: "Đã xác nhận", variant: "success", icon: CheckCircle2 },
+  [OrderStatus.Cancelled]: { label: "Đã hủy", variant: "destructive", icon: XCircle },
+  [OrderStatus.Expired]: { label: "Hết hạn giữ vé", variant: "outline", icon: XCircle },
 };
 
 export const paymentStatusMap: Record<PaymentStatus, BadgeItem> = {
@@ -120,9 +120,9 @@ export const importExportJobStatusMap: Record<ImportExportJobStatus, BadgeItem> 
   [ImportExportJobStatus.Failed]: { label: FAILED_LABEL, variant: "destructive", icon: XCircle },
 };
 
-export const bookingChannelMap: Record<BookingChannel, BadgeItem> = {
-  [BookingChannel.Online]: { label: "Online", variant: "outline", className: "font-medium" },
-  [BookingChannel.Counter]: { label: "Tại quầy", variant: "secondary", className: "font-medium" },
+export const orderChannelMap: Record<OrderChannel, BadgeItem> = {
+  [OrderChannel.Online]: { label: "Online", variant: "outline", className: "font-medium" },
+  [OrderChannel.Counter]: { label: "Tại quầy", variant: "secondary", className: "font-medium" },
 };
 
 export const paymentMethodMap: Record<PaymentMethod, BadgeItem> = {
@@ -189,28 +189,28 @@ export interface StatusResultConfig {
   className: string;
 }
 
-export const bookingResultStatusConfig: Record<BookingStatus, StatusResultConfig> = {
-  [BookingStatus.Confirmed]: {
+export const bookingResultStatusConfig: Record<OrderStatus, StatusResultConfig> = {
+  [OrderStatus.Confirmed]: {
     icon: CheckCircle2,
     label: "Thanh toán thành công",
     description: "Vé của bạn đã được xác nhận. Vé điện tử đã sẵn sàng bên dưới.",
     className: "text-success",
   },
-  [BookingStatus.Pending]: {
+  [OrderStatus.Pending]: {
     icon: Clock,
     label: "Đang xử lý thanh toán",
     description: "Hệ thống đang chờ xác nhận từ cổng thanh toán, vui lòng đợi trong giây lát.",
     className: "text-warning",
   },
-  [BookingStatus.Cancelled]: {
+  [OrderStatus.Cancelled]: {
     icon: XCircle,
-    label: "Đơn đặt vé đã bị hủy",
+    label: "Đơn hàng đã bị hủy",
     description: "Giao dịch không thành công hoặc đã bị hủy. Vui lòng đặt lại vé.",
     className: "text-destructive",
   },
-  [BookingStatus.Expired]: {
+  [OrderStatus.Expired]: {
     icon: XCircle,
-    label: "Đơn đặt vé đã hết hạn",
+    label: "Đơn hàng đã hết hạn",
     description: "Bạn chưa hoàn tất thanh toán trong thời gian giữ ghế. Vui lòng đặt lại vé.",
     className: "text-destructive",
   },

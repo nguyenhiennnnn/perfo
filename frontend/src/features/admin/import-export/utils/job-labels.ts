@@ -4,8 +4,8 @@ import type { ImportExportJobDto } from "@/types/import-export";
 const MODULE_LABELS: Record<string, string> = {
   movies: "Phim",
   showtimes: "Suất chiếu",
-  bookings: "Đặt vé",
-  payments: "Thanh toán",
+  bookings: "Đơn hàng",
+  payments: "Giao dịch thanh toán",
   users: "Người dùng",
   "seat-layout": "Sơ đồ ghế",
   revenue: "Báo cáo doanh thu",

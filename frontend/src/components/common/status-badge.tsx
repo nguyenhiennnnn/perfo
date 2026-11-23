@@ -3,17 +3,17 @@ import { cn } from "@/lib/utils";
 import type {
   MovieStatus,
   ShowtimeStatus,
-  BookingStatus,
+  OrderStatus,
   PaymentStatus,
-  BookingChannel,
+  OrderChannel,
   PaymentMethod,
   ImportExportJobStatus,
 } from "@/types/enum";
 import {
   activeStatusConfigMap,
   ageRatingConfigMap,
-  bookingChannelMap,
-  bookingStatusMap,
+  orderChannelMap,
+  orderStatusMap,
   defaultAgeRatingConfig,
   defaultSeatTypeConfig,
   importExportJobStatusMap,
@@ -132,8 +132,8 @@ export const ShowtimeStatusBadge = ({ status, className }: StatusBadgeProps<Show
   <MappedBadge value={status} map={showtimeStatusMap} className={className} />
 );
 
-export const BookingStatusBadge = ({ status, className }: StatusBadgeProps<BookingStatus>) => (
-  <MappedBadge value={status} map={bookingStatusMap} className={className} />
+export const BookingStatusBadge = ({ status, className }: StatusBadgeProps<OrderStatus>) => (
+  <MappedBadge value={status} map={orderStatusMap} className={className} />
 );
 
 export const PaymentStatusBadge = ({ status, className }: StatusBadgeProps<PaymentStatus>) => (
@@ -151,12 +151,12 @@ export const BookingChannelBadge = ({
   channel,
   className,
 }: {
-  channel: BookingChannel | string;
+  channel: OrderChannel | string;
   className?: string;
 }) => (
   <MappedBadge
     value={channel}
-    map={bookingChannelMap}
+    map={orderChannelMap}
     fallbackClassName="font-medium"
     className={className}
   />

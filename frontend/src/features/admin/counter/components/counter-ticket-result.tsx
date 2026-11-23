@@ -53,7 +53,7 @@ export const CounterTicketResult = ({
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="t-code text-sm text-foreground">{order.orderCode}</p>
               <DownloadTicketsPdfButton
-                endpoint={ENDPOINTS.admin.bookings.ticketsPdf(order.orderId)}
+                endpoint={ENDPOINTS.admin.orders.ticketsPdf(order.orderId)}
                 fallbackFilename={`tickets-${order.orderCode}.pdf`}
               />
             </div>

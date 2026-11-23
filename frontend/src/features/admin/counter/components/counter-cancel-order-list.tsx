@@ -3,11 +3,14 @@ import { EmptyState } from "@/components/common/empty-state";
 import { QueryState } from "@/components/common/query-state";
 import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { BookingStatusBadge } from "@/components/common/status-badge";
+import { useAdminOrders } from "@/features/admin/orders/hooks/use-admin-orders";
+import type { AdminOrderListItemDto } from "@/features/admin/orders/types";
 import { formatCurrency, formatDateTime } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { useCounterOrderSearch } from "../hooks/use-counter-cancel";
-import type { CounterOrderListItem } from "../types/counter-cancel";
-import { COUNTER_ORDER_SEARCH_MIN_LENGTH } from "../utils/cancel-order";
+import {
+  COUNTER_ORDER_SEARCH_MIN_LENGTH,
+  COUNTER_ORDER_SEARCH_PAGE_SIZE,
+} from "../utils/cancel-order";
 
 const ListSkeleton = () => (
   <div aria-busy="true" className="flex flex-col gap-2">
@@ -17,7 +20,7 @@ const ListSkeleton = () => (
   </div>
 );
 
-const getOrderSummary = (item: CounterOrderListItem) =>
+const getOrderSummary = (item: AdminOrderListItemDto) =>
   item.movieTitle
     ? `${item.movieTitle} · ${formatDateTime(item.startTime)} · ${item.ticketCount} vé`
     : "Combo bắp nước";
@@ -34,7 +37,10 @@ export const CounterCancelOrderList = ({
   onSelect,
 }: CounterCancelOrderListProps) => {
   const term = search.trim();
-  const query = useCounterOrderSearch(term);
+  const query = useAdminOrders(
+    { search: term, page: 1, pageSize: COUNTER_ORDER_SEARCH_PAGE_SIZE },
+    { enabled: term.length >= COUNTER_ORDER_SEARCH_MIN_LENGTH },
+  );
 
   if (term.length < COUNTER_ORDER_SEARCH_MIN_LENGTH) {
     return (

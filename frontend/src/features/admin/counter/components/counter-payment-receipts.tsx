@@ -1,5 +1,5 @@
 import { formatCurrency } from "@/lib/formatters";
-import { getPaymentMethodLabel } from "@/features/client/orders/utils/order-labels";
+import { getPaymentMethodLabel } from "@/features/admin/orders/utils/order-cancel";
 import type { CounterCheckoutResponse } from "../types";
 
 interface CounterPaymentReceiptsProps {

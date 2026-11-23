@@ -10,7 +10,9 @@ import { Button } from "@/components/ui/button";
 import { InfoRow, Section } from "@/features/admin/orders/components/order-detail-parts";
 import { OrderCancelErrorNotice } from "@/features/admin/orders/components/order-cancel-error-notice";
 import { OrderCancelResult } from "@/features/admin/orders/components/order-cancel-result";
+import { useAdminOrderDetail } from "@/features/admin/orders/hooks/use-admin-orders";
 import { useOrderCancelFlow } from "@/features/admin/orders/hooks/use-order-cancel-flow";
+import type { OrderDetailDto } from "@/features/admin/orders/types";
 import {
   canCancelOrder,
   getCancelledByLabel,
@@ -21,8 +23,6 @@ import {
 } from "@/features/admin/orders/utils/order-cancel";
 import { formatCurrency, formatDateTime } from "@/lib/formatters";
 import { OrderStatus } from "@/types/enum";
-import { useCounterOrderDetail } from "../hooks/use-counter-cancel";
-import type { CounterOrderDetail } from "../types/counter-cancel";
 
 const DetailSkeleton = () => (
   <div aria-busy="true" className="flex flex-col gap-4 bg-card p-4">
@@ -34,7 +34,7 @@ const DetailSkeleton = () => (
   </div>
 );
 
-const OrderLines = ({ order }: { order: CounterOrderDetail }) => (
+const OrderLines = ({ order }: { order: OrderDetailDto }) => (
   <ul className="divide-y divide-border cut-sm bg-secondary px-4">
     {order.lines.map((line) => (
       <li
@@ -82,7 +82,7 @@ const OrderLines = ({ order }: { order: CounterOrderDetail }) => (
   </ul>
 );
 
-const PaymentSummary = ({ order }: { order: CounterOrderDetail }) => {
+const PaymentSummary = ({ order }: { order: OrderDetailDto }) => {
   const methods = getPaidMethodAmounts(order);
 
   return (
@@ -124,7 +124,7 @@ const PaymentSummary = ({ order }: { order: CounterOrderDetail }) => {
   );
 };
 
-const ClosedOrderNotice = ({ order }: { order: CounterOrderDetail }) => (
+const ClosedOrderNotice = ({ order }: { order: OrderDetailDto }) => (
   <div
     data-testid="counter-cancel-closed-notice"
     className="flex flex-col gap-2 cut-sm bg-secondary p-4"
@@ -161,7 +161,7 @@ interface CounterCancelOrderDetailProps {
 export const CounterCancelOrderDetail = ({
   orderId,
 }: CounterCancelOrderDetailProps) => {
-  const detail = useCounterOrderDetail(orderId);
+  const detail = useAdminOrderDetail(orderId);
   const { cancel, start } = useOrderCancelFlow();
 
   return (

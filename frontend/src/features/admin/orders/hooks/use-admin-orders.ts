@@ -4,10 +4,18 @@ import type { CancelReason } from "@/types/enum";
 import { ordersAdminApi } from "../api/orders-admin-api";
 import type { AdminOrderListParams, OrderDetailDto } from "../types";
 
-export function useAdminOrders(params: AdminOrderListParams) {
+interface UseAdminOrdersOptions {
+  enabled?: boolean;
+}
+
+export function useAdminOrders(
+  params: AdminOrderListParams,
+  options?: UseAdminOrdersOptions,
+) {
   return useQuery({
     queryKey: queryKeys.adminOrders.list(params),
     queryFn: () => ordersAdminApi.getOrders(params),
+    enabled: options?.enabled,
     placeholderData: keepPreviousData,
     select: (res) => res.data,
   });

@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { CancelReason } from "@/types/enum";
-import { counterApi } from "../api/counter-api";
-
-const ABANDON_BODY = { reason: CancelReason.Other } as const;
+import { ordersAdminApi } from "@/features/admin/orders/api/orders-admin-api";
 
 interface UseCounterLeaveCancelParams {
   onRestoredAfterCancel: () => void;
@@ -26,7 +24,7 @@ export function useCounterLeaveCancel({
 
   const cancelQuietly = useCallback(async (orderId: number) => {
     try {
-      await counterApi.cancelOrder(orderId, ABANDON_BODY);
+      await ordersAdminApi.cancelOrder(orderId, CancelReason.Other);
     } catch {
       // Best-effort: bỏ qua lỗi.
     }
@@ -42,7 +40,7 @@ export function useCounterLeaveCancel({
       if (id === null) return;
       cancellableIdRef.current = null;
       cancelledOnHideRef.current = true;
-      counterApi.cancelOrderKeepalive(id, ABANDON_BODY);
+      ordersAdminApi.cancelOrderKeepalive(id, CancelReason.Other);
     };
     const onPageShow = (event: PageTransitionEvent) => {
       if (!event.persisted || !cancelledOnHideRef.current) return;

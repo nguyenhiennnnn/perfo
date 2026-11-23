@@ -40,14 +40,13 @@ export const ROUTES = {
     resetPassword: "/admin/reset-password",
     changePassword: "/admin/change-password",
     dashboard: "/admin/dashboard",
-    bookingCounter: "/admin/bookings/counter",
+    counter: "/admin/bookings/counter",
     checkin: "/admin/checkin",
     movies: "/admin/movies",
     showtimes: "/admin/showtimes",
     rooms: "/admin/rooms",
     combos: "/admin/combos",
     orders: "/admin/orders",
-    payments: "/admin/payments",
     cashRefunds: "/admin/cash-refunds",
     auditLogs: "/admin/audit-logs",
     reports: "/admin/reports",
@@ -74,4 +73,4 @@ export const ROUTES = {
 } as const;
 
 export const getAdminHomePath = (role?: string | null) =>
-  role === Role.Employee ? ROUTES.admin.bookingCounter : ROUTES.admin.dashboard;
+  role === Role.Employee ? ROUTES.admin.counter : ROUTES.admin.dashboard;

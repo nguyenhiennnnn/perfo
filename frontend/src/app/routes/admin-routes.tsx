@@ -18,8 +18,7 @@ const AdminShowtimesPage = lazyRoute(() => import("@/features/admin/showtimes/pa
 const AdminCounterPage = lazyRoute(() => import("@/features/admin/counter/pages/counter-page"));
 const AdminCheckinPage = lazyRoute(() => import("@/features/admin/checkin/pages/checkin-page"));
 const AdminAuditLogsPage = lazyRoute(() => import("@/features/admin/audit-logs/pages/audit-logs-page"));
-const AdminPaymentsPage = lazyRoute(() => import("@/features/admin/payments/pages/payments-page"));
-const AdminCashRefundsPage = lazyRoute(() => import("@/features/admin/payments/pages/cash-refunds-page"));
+const AdminCashRefundsPage = lazyRoute(() => import("@/features/admin/cash-refunds/pages/cash-refunds-page"));
 const AdminUsersPage = lazyRoute(() => import("@/features/admin/users/pages/users-page"));
 const AdminReportsPage = lazyRoute(() => import("@/features/admin/reports/pages/reports.page"));
 const AdminRoomsPage = lazyRoute(() => import("@/features/admin/rooms/pages/rooms-page"));
@@ -79,7 +78,6 @@ export const adminRoutes: RouteObject[] = [
           { path: "orders/:id", lazy: AdminOrderDetailPage },
           { path: "bookings/counter", lazy: AdminCounterPage },
           { path: "checkin", lazy: AdminCheckinPage },
-          { path: "payments", lazy: AdminPaymentsPage },
           { path: "cash-refunds", lazy: AdminCashRefundsPage },
           { path: "audit-logs", lazy: AdminAuditLogsPage },
           { path: "reports", lazy: AdminReportsPage },

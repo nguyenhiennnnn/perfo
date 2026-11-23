@@ -91,7 +91,7 @@ export const ENDPOINTS = {
       jobById: (id: string) => `/admin/import-export/jobs/${id}`,
       jobDownload: (id: string) => `/admin/import-export/jobs/${id}/download`,
     },
-    bookings: {
+    orders: {
       root: "/admin/bookings",
       export: "/admin/bookings/export",
       exportJobs: "/admin/bookings/export-jobs",
@@ -127,12 +127,6 @@ export const ENDPOINTS = {
       root: "/admin/audit-logs",
       filterOptions: "/admin/audit-logs/filter-options",
       byId: (id: number) => `/admin/audit-logs/${id}`,
-    },
-    payments: {
-      root: "/admin/payments",
-      export: "/admin/payments/export",
-      exportJobs: "/admin/payments/export-jobs",
-      byId: (id: number) => `/admin/payments/${id}`,
     },
     cashRefunds: {
       root: "/admin/cash-refunds",

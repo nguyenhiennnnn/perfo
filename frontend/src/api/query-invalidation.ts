@@ -9,11 +9,10 @@ const showtimeViews = (): KeyList => [
   k.adminShowtimes.all(),
   k.showtimes.all(),
 ];
-const bookingViews = (): KeyList => [
+const orderViews = (): KeyList => [
   k.adminOrders.all(),
   k.adminCashRefunds.all(),
   k.orders.all(),
-  k.adminPayments.all(),
 ];
 
 export const invalidations = {
@@ -30,11 +29,11 @@ export const invalidations = {
   ],
   showtimeCancelled: (): KeyList => [
     ...invalidations.showtimeChanged(),
-    ...bookingViews(),
+    ...orderViews(),
   ],
 
   bookingChanged: (): KeyList => [
-    ...bookingViews(),
+    ...orderViews(),
     ...showtimeViews(),
     k.users.me(),
     ...dashboard(),

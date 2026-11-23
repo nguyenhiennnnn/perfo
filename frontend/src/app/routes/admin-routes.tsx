@@ -39,6 +39,10 @@ const PositionsPage = lazyRoute(() => import("@/features/admin/catalog/pages/pos
 const ActorsPage = lazyRoute(() => import("@/features/admin/catalog/pages/actors-page"));
 const DirectorsPage = lazyRoute(() => import("@/features/admin/catalog/pages/directors-page"));
 const AdminMoviesPage = lazyRoute(() => import("@/features/admin/movies/pages/movies-page"));
+const AdminPromotionsPage = lazyRoute(() => import("@/features/admin/promotions/pages/promotions-page"));
+const AdminPromotionReportsPage = lazyRoute(() => import("@/features/admin/promotions/pages/promotion-reports-page"));
+const AdminPromotionReportDetailPage = lazyRoute(() => import("@/features/admin/promotions/pages/promotion-report-detail-page"));
+const AdminPromotionRedemptionsPage = lazyRoute(() => import("@/features/admin/promotions/pages/promotion-redemptions-page"));
 const AdminTicketTypesPage = lazyRoute(() => import("@/features/admin/pricing/pages/ticket-types-page"));
 const AdminPricingRulesPage = lazyRoute(() => import("@/features/admin/pricing/pages/pricing-rules-page"));
 const AdminPricingRuleHistoryPage = lazyRoute(() => import("@/features/admin/pricing/pages/pricing-rule-history-page"));
@@ -91,6 +95,10 @@ export const adminRoutes: RouteObject[] = [
           { path: "rooms", lazy: AdminRoomsPage },
           { path: "rooms/:id/seats", lazy: AdminRoomSeatsPage },
           { path: "combos", lazy: AdminCombosPage },
+          { path: "promotions", lazy: AdminPromotionsPage },
+          { path: "promotions/reports", lazy: AdminPromotionReportsPage },
+          { path: "promotions/:id/report", lazy: AdminPromotionReportDetailPage },
+          { path: "promotions/:id/redemptions", lazy: AdminPromotionRedemptionsPage },
           { path: "pricing/ticket-types", lazy: AdminTicketTypesPage },
           { path: "pricing/rules", lazy: AdminPricingRulesPage },
           { path: "pricing/rule-history", lazy: AdminPricingRuleHistoryPage },

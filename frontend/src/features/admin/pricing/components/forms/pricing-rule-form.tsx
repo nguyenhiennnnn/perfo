@@ -56,12 +56,12 @@ const toText = (value?: number | null) => (value === null || value === undefined
 
 const toNumberOrNull = (value: string) => (value.trim() === "" ? null : Number(value));
 
-interface LookupOption {
+export interface LookupOption {
   id: number;
   label: string;
 }
 
-const buildOptions = <T,>(
+export const buildOptions = <T,>(
   selectedIds: number[],
   items: T[],
   getId: (item: T) => number,

@@ -5,10 +5,10 @@ import { LOOKUP_PAGE_SIZE } from "@/config/default-constants";
 import { promotionsAdminApi } from "../api/promotions-admin-api";
 import type {
   BulkPersonalCodesRequest,
-  PromotionConsumption,
   PromotionListParams,
   UpsertPromotionRequest,
 } from "../types";
+import type { PromotionConsumption } from "../utils/promotion-admin-labels";
 
 const USAGE_MAX_PAGES = 10;
 

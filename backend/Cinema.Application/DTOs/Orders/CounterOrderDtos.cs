@@ -9,7 +9,9 @@ public record CounterHoldRequest(
     List<ComboSelectionRequest>? Combos,
     int? UserId,
     string CustomerName,
-    string? CustomerPhone
+    string? CustomerPhone,
+    List<SeatTicketSelectionRequest>? Tickets = null,
+    bool AcceptPriceChange = false
 );
 
 public record CounterComboOrderRequest(

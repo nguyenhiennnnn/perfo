@@ -37,6 +37,18 @@ public record PriceQuoteDto(
     IReadOnlyList<PriceAdjustmentDto> Adjustments
 );
 
+public record SeatPriceChangeDto(
+    int ShowtimeSeatId,
+    int? TicketTypeId,
+    decimal? PreviousPrice,
+    decimal NewPrice
+);
+
+public record PriceChangeRequiredDto(
+    IReadOnlyList<SeatPriceChangeDto> Seats,
+    decimal NewTicketTotal
+);
+
 public record PricingOccupancyDto(
     int TotalSeats,
     int BookedSeats,

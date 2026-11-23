@@ -18,6 +18,7 @@ public class OrderHoldService(
     IRealtimeNotifier realtimeNotifier,
     IEnumerable<IOrderHoldPolicy> holdPolicies,
     IOrderResourceHoldService resourceHolds,
+    IOrderTicketPricer ticketPricer,
     IOptions<BookingOptions> bookingOptions,
     ILogger<OrderHoldService> logger,
     IAppCache cache
@@ -49,7 +50,9 @@ public class OrderHoldService(
             createdByEmployeeId: null,
             customerName: request.CustomerName,
             customerPhone: request.CustomerPhone,
-            cancellationToken
+            cancellationToken,
+            ticketSelections: request.Tickets,
+            acceptPriceChange: request.AcceptPriceChange
         );
 
         return new HoldOrderResponse(
@@ -73,7 +76,9 @@ public class OrderHoldService(
         int? createdByEmployeeId,
         string customerName,
         string? customerPhone,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken,
+        IReadOnlyList<SeatTicketSelectionRequest>? ticketSelections = null,
+        bool acceptPriceChange = false
     )
     {
         var showtime =
@@ -108,6 +113,13 @@ public class OrderHoldService(
         );
 
         var comboSelectionList = await LoadComboSelectionsAsync(comboSelections, cancellationToken);
+        var pricedSeats = await ticketPricer.PriceAsync(
+            showtimeId,
+            showtimeSeatIds,
+            ticketSelections,
+            acceptPriceChange,
+            cancellationToken
+        );
         var orderCode = await OrderCodes.GenerateUniqueAsync(
             db,
             bookingOptions.Value.BookingCodeMaxAttempts,
@@ -169,7 +181,9 @@ public class OrderHoldService(
             )
             .ToListAsync(cancellationToken);
 
-        var ticketLines = heldSeats.Select(seat => NewTicketLine(showtimeId, seat)).ToList();
+        var ticketLines = heldSeats
+            .Select(seat => NewTicketLine(showtimeId, seat, pricedSeats[seat.ShowtimeSeatId]))
+            .ToList();
         var comboLines = comboSelectionList.Select(x => NewComboLine(showtimeId, x)).ToList();
         var lines = ticketLines.Concat(comboLines).ToList();
 
@@ -361,15 +375,21 @@ public class OrderHoldService(
         }
     }
 
-    private static OrderLine NewTicketLine(int showtimeId, ShowtimeSeat seat) =>
+    private static OrderLine NewTicketLine(
+        int showtimeId,
+        ShowtimeSeat seat,
+        PricedTicketSeat priced
+    ) =>
         new()
         {
             LineType = OrderLineType.Ticket,
             ShowtimeId = showtimeId,
             ShowtimeSeatId = seat.ShowtimeSeatId,
+            TicketTypeId = priced.TicketTypeId,
+            RequiresCardPresentation = priced.RequiresCardPresentation,
             Quantity = 1,
-            UnitListPrice = seat.Price,
-            LockedUnitPrice = seat.Price,
+            UnitListPrice = priced.ListPrice,
+            LockedUnitPrice = priced.ListPrice,
         };
 
     private static OrderLine NewComboLine(int? showtimeId, (Combo Combo, int Quantity) selection) =>

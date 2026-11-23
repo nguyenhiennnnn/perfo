@@ -55,6 +55,10 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
                     "CK_OrderLines_CheckIn",
                     "(NOT \"IsCheckedIn\") OR \"LineType\" = 'Ticket'"
                 );
+                t.HasCheckConstraint(
+                    "CK_OrderLines_CardPresentation",
+                    "(NOT \"RequiresCardPresentation\") OR \"LineType\" = 'Ticket'"
+                );
             }
         );
         builder.HasKey(x => x.OrderLineId);
@@ -73,6 +77,7 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
         builder.Property(x => x.RefundedAmount).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
         builder.Property(x => x.RefundedQuantity).HasDefaultValue(0);
         builder.Property(x => x.QrCode).HasMaxLength(255);
+        builder.Property(x => x.RequiresCardPresentation).HasDefaultValue(false);
         builder.Property(x => x.IsCheckedIn).HasDefaultValue(false);
         builder.Property(x => x.CheckedInAt).HasColumnType("timestamp without time zone");
 
@@ -113,6 +118,11 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
             .HasFilter("\"ComboId\" IS NOT NULL")
             .HasDatabaseName("IX_OrderLines_Combo");
 
+        builder
+            .HasOne(x => x.TicketType)
+            .WithMany()
+            .HasForeignKey(x => x.TicketTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
         builder
             .HasIndex(x => x.TicketTypeId)
             .HasFilter("\"TicketTypeId\" IS NOT NULL")

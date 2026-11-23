@@ -1,5 +1,7 @@
 namespace Cinema.Application.DTOs.Showtimes;
 
+public record SeatTicketPriceDto(int TicketTypeId, decimal Price);
+
 public record ShowtimeSeatItemDto(
     int ShowtimeSeatId,
     string SeatRow,
@@ -10,7 +12,17 @@ public record ShowtimeSeatItemDto(
     string Status,
     decimal Price,
     bool IsCouple,
-    bool HeldByMe = false
+    bool HeldByMe = false,
+    IReadOnlyList<SeatTicketPriceDto>? TicketPrices = null
+);
+
+public record ShowtimeTicketTypeDto(
+    int TicketTypeId,
+    string Name,
+    decimal PriceMultiplier,
+    bool RequiresCardVerification,
+    bool IsEligible,
+    string? IneligibleReason
 );
 
 public record ShowtimeMyHoldDto(
@@ -34,7 +46,9 @@ public record ShowtimeSeatsResponseDto(
     string? MoviePosterUrl = null,
     string? AgeRatingCode = null,
     string? ScreenType = null,
-    ShowtimeMyHoldDto? MyHold = null
+    ShowtimeMyHoldDto? MyHold = null,
+    IReadOnlyList<ShowtimeTicketTypeDto>? TicketTypes = null,
+    DateTime? PricedAt = null
 );
 
 public record SeatSuggestionDto(

@@ -1,3 +1,5 @@
+using Cinema.Application.Caching;
+using Cinema.Application.DTOs.Pricing;
 using Cinema.Application.DTOs.Showtimes;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
@@ -10,7 +12,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Services.Showtimes;
 
-public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
+public class ShowtimeQueryService(
+    IAppDbContext db,
+    IPricingService pricingService,
+    IAppCache cache
+) : IShowtimeQueryService
 {
     public async Task<ShowtimeSeatsResponseDto> GetShowtimeSeatsAsync(
         int showtimeId,
@@ -34,6 +40,7 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
             .Select(ss => new
             {
                 ss.ShowtimeSeatId,
+                ss.SeatId,
                 ss.Seat.SeatRow,
                 ss.Seat.SeatNumber,
                 ss.Seat.SeatTypeId,
@@ -41,28 +48,78 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
                 ss.Seat.CoupleId,
                 ss.Status,
                 ss.HeldByOrderId,
-                ss.Price,
                 IsCouple = ss.Seat.SeatType != null && ss.Seat.SeatType.IsCouple,
             })
             .ToListAsync(cancellationToken);
 
         var myOrder = await FindViewerHoldOrderAsync(showtimeId, viewerUserId, cancellationToken);
 
+        var ticketTypes = await cache.GetAsync(CacheKeys.TicketTypes, cancellationToken);
+        var pricedAt = DateTime.UtcNow;
+        var priceRequests = seatRows
+            .SelectMany(r =>
+                new int?[] { null }
+                    .Concat(ticketTypes.Select(t => (int?)t.TicketTypeId))
+                    .Select(typeId => new SeatPriceRequest(r.SeatId, typeId))
+            )
+            .ToList();
+        var quotes = await pricingService.QuoteBatchAsync(
+            showtimeId,
+            priceRequests,
+            pricedAt,
+            cancellationToken
+        );
+        var quotesPerSeat = ticketTypes.Count + 1;
+
         var seats = seatRows
-            .Select(r => new ShowtimeSeatItemDto(
-                r.ShowtimeSeatId,
-                r.SeatRow,
-                r.SeatNumber,
-                r.SeatTypeId,
-                r.SeatTypeName,
-                r.CoupleId,
-                r.Status.ToString(),
-                r.Price,
-                r.IsCouple,
-                myOrder is not null
-                    && r.Status == ShowtimeSeatStatus.Held
-                    && r.HeldByOrderId == myOrder.OrderId
-            ))
+            .Select(
+                (r, index) =>
+                {
+                    var seatQuotes = quotes
+                        .Skip(index * quotesPerSeat)
+                        .Take(quotesPerSeat)
+                        .ToList();
+                    return new ShowtimeSeatItemDto(
+                        r.ShowtimeSeatId,
+                        r.SeatRow,
+                        r.SeatNumber,
+                        r.SeatTypeId,
+                        r.SeatTypeName,
+                        r.CoupleId,
+                        r.Status.ToString(),
+                        seatQuotes[0].ListPrice,
+                        r.IsCouple,
+                        myOrder is not null
+                            && r.Status == ShowtimeSeatStatus.Held
+                            && r.HeldByOrderId == myOrder.OrderId,
+                        [
+                            .. seatQuotes
+                                .Skip(1)
+                                .Select(q => new SeatTicketPriceDto(
+                                    q.TicketTypeId!.Value,
+                                    q.ListPrice
+                                )),
+                        ]
+                    );
+                }
+            )
+            .ToList();
+
+        var ticketTypeItems = ticketTypes
+            .Select(
+                (t, index) =>
+                {
+                    var reference = quotes.Count > 0 ? quotes[index + 1] : null;
+                    return new ShowtimeTicketTypeDto(
+                        t.TicketTypeId,
+                        t.Name,
+                        t.PriceMultiplier,
+                        t.RequiresCardVerification,
+                        reference?.IsEligible ?? true,
+                        reference?.IneligibleReason
+                    );
+                }
+            )
             .ToList();
 
         var myHold = myOrder is null
@@ -107,7 +164,9 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
             showtime.Movie.PosterUrl,
             showtime.Movie.AgeRating?.Code,
             showtime.Room.ScreenType?.Name,
-            myHold is { ShowtimeSeatIds.Count: > 0 } ? myHold : null
+            myHold is { ShowtimeSeatIds.Count: > 0 } ? myHold : null,
+            ticketTypeItems,
+            pricedAt
         );
     }
 
@@ -152,7 +211,33 @@ public class ShowtimeQueryService(IAppDbContext db) : IShowtimeQueryService
 
         var seats = await db.LoadSeatSlotsAsync(showtimeId, cancellationToken);
         var cols = Math.Max(roomCols, seats.Count > 0 ? seats.Max(s => s.Number) : 1);
-        return SeatLayoutRules.Suggest(seats, cols, count);
+        var suggestions = SeatLayoutRules.Suggest(seats, cols, count);
+        if (suggestions.Count == 0)
+            return suggestions;
+
+        var suggestedIds = suggestions.SelectMany(s => s.ShowtimeSeatIds).Distinct().ToList();
+        var seatIdByShowtimeSeat = await db
+            .ShowtimeSeats.Where(ss =>
+                ss.ShowtimeId == showtimeId && suggestedIds.Contains(ss.ShowtimeSeatId)
+            )
+            .ToDictionaryAsync(ss => ss.ShowtimeSeatId, ss => ss.SeatId, cancellationToken);
+        var quotes = await pricingService.QuoteBatchAsync(
+            showtimeId,
+            [.. seatIdByShowtimeSeat.Values.Select(seatId => new SeatPriceRequest(seatId, null))],
+            DateTime.UtcNow,
+            cancellationToken
+        );
+        var priceBySeat = quotes.ToDictionary(q => q.SeatId!.Value, q => q.ListPrice);
+
+        return
+        [
+            .. suggestions.Select(s =>
+                s with
+                {
+                    TotalPrice = s.ShowtimeSeatIds.Sum(id => priceBySeat[seatIdByShowtimeSeat[id]]),
+                }
+            ),
+        ];
     }
 
     public async Task<WholeCinemaScheduleDto> GetWholeCinemaScheduleAsync(

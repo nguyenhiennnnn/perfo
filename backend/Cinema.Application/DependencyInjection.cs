@@ -96,6 +96,7 @@ public static class DependencyInjection
         services.AddScoped<IOrderQueryService, OrderQueryService>();
         services.AddScoped<IOrderExportService, OrderExportService>();
         services.AddScoped<IOrderTicketPdfService, OrderTicketPdfService>();
+        services.AddScoped<IOrderTicketPricer, OrderTicketPricer>();
         services.AddScoped<IOrderHoldService, OrderHoldService>();
         services.AddScoped<IOrderCheckoutService, OrderCheckoutService>();
         services.AddScoped<ICounterOrderService, CounterOrderService>();

@@ -2889,4 +2889,22 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Pricing_Ineligible_DayOfWeek" xml:space="preserve">
     <value>Loại vé này không áp dụng cho ngày chiếu của suất.</value>
   </data>
+  <data name="Conflict_PriceChanged" xml:space="preserve">
+    <value>Giá vé đã thay đổi. Vui lòng xem giá mới và xác nhận để tiếp tục.</value>
+  </data>
+  <data name="Validation_TicketTypeId_Positive" xml:space="preserve">
+    <value>Mã loại vé không hợp lệ.</value>
+  </data>
+  <data name="Validation_ExpectedPrice_NonNegative" xml:space="preserve">
+    <value>Giá vé hiển thị không hợp lệ.</value>
+  </data>
+  <data name="Validation_Tickets_Duplicated" xml:space="preserve">
+    <value>Mỗi ghế chỉ được chọn một loại vé.</value>
+  </data>
+  <data name="Validation_Tickets_SeatNotSelected" xml:space="preserve">
+    <value>Loại vé được chọn cho ghế không nằm trong danh sách ghế đã chọn.</value>
+  </data>
+  <data name="Rule_TicketTypeNotEligible" xml:space="preserve">
+    <value>Loại vé {0} chưa đủ điều kiện áp dụng: {1}</value>
+  </data>
 </root>

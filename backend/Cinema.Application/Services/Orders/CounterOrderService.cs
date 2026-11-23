@@ -51,7 +51,9 @@ public class CounterOrderService(
             createdByEmployeeId: employeeId,
             customerName: customerName,
             customerPhone: customerPhone,
-            cancellationToken
+            cancellationToken,
+            ticketSelections: request.Tickets,
+            acceptPriceChange: request.AcceptPriceChange
         );
 
         return CounterOrderResponse.From(order);

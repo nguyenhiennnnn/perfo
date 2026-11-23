@@ -16,6 +16,44 @@ public class ComboSelectionRequestValidator : AbstractValidator<ComboSelectionRe
     }
 }
 
+public class SeatTicketSelectionRequestValidator : AbstractValidator<SeatTicketSelectionRequest>
+{
+    public SeatTicketSelectionRequestValidator()
+    {
+        RuleFor(x => x.ShowtimeSeatId).GreaterThan(0).WithMessage(Messages.Validation_SeatId_Positive);
+
+        RuleFor(x => x.TicketTypeId)
+            .GreaterThan(0)
+            .When(x => x.TicketTypeId is not null)
+            .WithMessage(Messages.Validation_TicketTypeId_Positive);
+
+        RuleFor(x => x.ExpectedPrice)
+            .GreaterThanOrEqualTo(0m)
+            .When(x => x.ExpectedPrice is not null)
+            .WithMessage(Messages.Validation_ExpectedPrice_NonNegative);
+    }
+}
+
+public static class SeatTicketSelectionRules
+{
+    public static IRuleBuilderOptions<T, List<SeatTicketSelectionRequest>?> ApplyTicketRules<T>(
+        this IRuleBuilder<T, List<SeatTicketSelectionRequest>?> rule,
+        Func<T, List<int>> seatIds
+    ) =>
+        rule.Must(
+                (_, tickets) =>
+                    tickets is null
+                    || tickets.Select(t => t.ShowtimeSeatId).Distinct().Count() == tickets.Count
+            )
+            .WithMessage(Messages.Validation_Tickets_Duplicated)
+            .Must(
+                (root, tickets) =>
+                    tickets is null
+                    || tickets.All(t => seatIds(root).Contains(t.ShowtimeSeatId))
+            )
+            .WithMessage(Messages.Validation_Tickets_SeatNotSelected);
+}
+
 public class HoldSeatsRequestValidator : AbstractValidator<HoldSeatsRequest>
 {
     public HoldSeatsRequestValidator()
@@ -45,6 +83,10 @@ public class HoldSeatsRequestValidator : AbstractValidator<HoldSeatsRequest>
             .WithMessage(Messages.Validation_Seats_Duplicated);
 
         RuleForEach(x => x.Combos).SetValidator(new ComboSelectionRequestValidator());
+
+        RuleForEach(x => x.Tickets).SetValidator(new SeatTicketSelectionRequestValidator());
+
+        RuleFor(x => x.Tickets).ApplyTicketRules(x => x.SeatIds);
     }
 }
 

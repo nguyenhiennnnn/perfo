@@ -19,11 +19,13 @@ public class ApiResponse
     public static ApiResponse ErrorResponse(
         string message,
         IDictionary<string, string[]>? errors = null,
-        string? errorCode = null
+        string? errorCode = null,
+        object? data = null
     ) =>
         new()
         {
             Success = false,
+            Data = data,
             Message = message,
             Errors = errors,
             ErrorCode = errorCode,

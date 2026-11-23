@@ -21,7 +21,12 @@ public static class ApiErrorWriter
         WriteAsync(
             context,
             error.StatusCode,
-            ApiResponse.ErrorResponse(error.Message, error.Errors)
+            ApiResponse.ErrorResponse(
+                error.Message,
+                error.Errors,
+                error.ErrorCode,
+                error.Payload
+            )
         );
 
     public static Task WriteAsync(HttpContext context, int statusCode, ApiResponse response)

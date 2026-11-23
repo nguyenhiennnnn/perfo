@@ -2,12 +2,20 @@ namespace Cinema.Application.DTOs.Orders;
 
 public record ComboSelectionRequest(int ComboId, int Quantity);
 
+public record SeatTicketSelectionRequest(
+    int ShowtimeSeatId,
+    int? TicketTypeId,
+    decimal? ExpectedPrice
+);
+
 public record HoldSeatsRequest(
     int ShowtimeId,
     string CustomerName,
     string? CustomerPhone,
     List<int> SeatIds,
-    List<ComboSelectionRequest>? Combos
+    List<ComboSelectionRequest>? Combos,
+    List<SeatTicketSelectionRequest>? Tickets = null,
+    bool AcceptPriceChange = false
 );
 
 public record HoldOrderResponse(

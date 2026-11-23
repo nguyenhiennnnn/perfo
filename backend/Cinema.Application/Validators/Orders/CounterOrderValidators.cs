@@ -24,6 +24,10 @@ public class CounterHoldRequestValidator : AbstractValidator<CounterHoldRequest>
 
         RuleForEach(x => x.Combos).SetValidator(new ComboSelectionRequestValidator());
 
+        RuleForEach(x => x.Tickets).SetValidator(new SeatTicketSelectionRequestValidator());
+
+        RuleFor(x => x.Tickets).ApplyTicketRules(x => x.SeatIds);
+
         RuleFor(x => x.UserId)
             .GreaterThan(0)
             .When(x => x.UserId is not null)

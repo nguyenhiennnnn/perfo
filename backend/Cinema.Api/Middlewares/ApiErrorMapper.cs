@@ -12,7 +12,13 @@ public static class ApiErrorMapper
     public static ApiError Map(Exception exception, bool includeDebugDetails) =>
         exception switch
         {
-            AppException app => new ApiError(app.StatusCode, app.Message, app.Errors),
+            AppException app => new ApiError(
+                app.StatusCode,
+                app.Message,
+                app.Errors,
+                ErrorCode: app.ErrorCode,
+                Payload: app.Payload
+            ),
 
             DbUpdateConcurrencyException => new ApiError(
                 StatusCodes.Status409Conflict,

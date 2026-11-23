@@ -21,7 +21,9 @@ public interface IOrderHoldService
         int? createdByEmployeeId,
         string customerName,
         string? customerPhone,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken,
+        IReadOnlyList<SeatTicketSelectionRequest>? ticketSelections = null,
+        bool acceptPriceChange = false
     );
     Task<Order> CreateComboHoldOrderAsync(
         List<ComboSelectionRequest> comboSelections,

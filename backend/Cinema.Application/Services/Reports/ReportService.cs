@@ -44,11 +44,17 @@ public class ReportService(IAppDbContext db) : IReportService
                     .Sum(r => (decimal?)r.Amount) ?? 0m,
                 OrderFinalAmount = t.Order.FinalAmount,
                 TicketRevenue = t
-                    .Order.Lines.Where(l => l.LineType == OrderLineType.Ticket)
-                    .Sum(l => (decimal?)(l.LockedUnitPrice * l.Quantity)) ?? 0m,
+                    .Order.Lines.Where(l =>
+                        l.LineType == OrderLineType.Ticket
+                        || (
+                            l.LineType == OrderLineType.Fee
+                            && l.Order.Type == OrderType.Supplement
+                        )
+                    )
+                    .Sum(l => (decimal?)l.PaidAmount) ?? 0m,
                 ComboRevenue = t
                     .Order.Lines.Where(l => l.LineType == OrderLineType.Combo)
-                    .Sum(l => (decimal?)(l.LockedUnitPrice * l.Quantity)) ?? 0m,
+                    .Sum(l => (decimal?)l.PaidAmount) ?? 0m,
             })
             .ToListAsync(cancellationToken);
 
@@ -115,7 +121,7 @@ public class ReportService(IAppDbContext db) : IReportService
                 g.Key.MovieId,
                 g.Key.Title,
                 TicketsSold = g.Sum(l => l.Quantity),
-                Revenue = g.Sum(l => l.LockedUnitPrice * l.Quantity),
+                Revenue = g.Sum(l => l.PaidAmount - l.RefundedAmount),
             })
             .OrderByDescending(x => x.Revenue)
             .Take(limit);

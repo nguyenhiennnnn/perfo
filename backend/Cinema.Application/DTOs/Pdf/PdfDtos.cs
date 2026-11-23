@@ -21,10 +21,18 @@ public record PdfTicketLabels(
     string Room,
     string Seat,
     string BookingCode,
+    string TicketType,
+    string Price,
     string Hint
 );
 
-public record PdfTicketItem(string SeatLabel, byte[] QrCodePng);
+public record PdfTicketItem(
+    string SeatLabel,
+    byte[] QrCodePng,
+    string TicketTypeName,
+    string PriceText,
+    string? CardNotice
+);
 
 public record PdfTicketDocument(
     string CinemaName,

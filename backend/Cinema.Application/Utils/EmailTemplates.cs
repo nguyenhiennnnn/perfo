@@ -295,17 +295,25 @@ public static class EmailTemplates
         string customerName,
         string bookingCode,
         string movieTitle,
-        int seatCount
+        IReadOnlyList<OrderTicketEmailLine> tickets
     )
     {
         var rows = new List<string>();
         if (!string.IsNullOrWhiteSpace(movieTitle))
             rows.Add(DetailRow(Messages.Email_MovieLabel, Enc(movieTitle)));
-        rows.Add(DetailRow(
+        rows.Add(
+            DetailRow(
                 Messages.Email_SeatCountLabel,
-                string.Format(Messages.Email_SeatCountValue, seatCount),
-                isLast: true
-            ));
+                string.Format(Messages.Email_SeatCountValue, tickets.Count),
+                isLast: tickets.Count == 0
+            )
+        );
+        rows.AddRange(TicketRows(tickets, lastIsLast: true));
+
+        var notes = new List<string> { Messages.Email_BookingConfirmedNote };
+        var cardTypes = CardTypeNames(tickets);
+        if (cardTypes.Count > 0)
+            notes.Add(string.Format(Messages.Email_CardPresentationNote, Enc(string.Join(", ", cardTypes))));
 
         var body = $"""
             {Badge(Messages.Email_BadgeConfirmed, Success, SymbolCheck)}
@@ -317,9 +325,7 @@ public static class EmailTemplates
                 )
             )}
             {DetailCard([.. rows])}
-            {MutedParagraph(
-                Messages.Email_BookingConfirmedNote
-            )}
+            {MutedParagraph(string.Join("<br><br>", notes))}
             """;
 
         return Layout(
@@ -334,6 +340,7 @@ public static class EmailTemplates
         BrandOptions brand,
         string customerName,
         string orderCode,
+        IReadOnlyList<OrderTicketEmailLine> tickets,
         IReadOnlyList<OrderRefundEmailLine> refunds
     )
     {
@@ -342,8 +349,14 @@ public static class EmailTemplates
 
         var rows = new List<string>
         {
-            DetailRow(Messages.Email_OrderCodeLabel, Enc(orderCode), isLast: !hasRefund, code: true),
+            DetailRow(
+                Messages.Email_OrderCodeLabel,
+                Enc(orderCode),
+                isLast: !hasRefund && tickets.Count == 0,
+                code: true
+            ),
         };
+        rows.AddRange(TicketRows(tickets, lastIsLast: !hasRefund));
         rows.AddRange(
             refunds.Select(r =>
                 DetailRow(RefundMethodLabel(r.Method), Money(r.Amount))
@@ -382,6 +395,26 @@ public static class EmailTemplates
             body
         );
     }
+
+    private static IEnumerable<string> TicketRows(
+        IReadOnlyList<OrderTicketEmailLine> tickets,
+        bool lastIsLast
+    ) =>
+        tickets.Select(
+            (t, i) =>
+                DetailRow(
+                    Enc(string.Format(Messages.Email_TicketLineLabel, t.SeatLabel, t.TicketTypeName)),
+                    Money(t.PaidAmount),
+                    isLast: lastIsLast && i == tickets.Count - 1
+                )
+        );
+
+    private static List<string> CardTypeNames(IReadOnlyList<OrderTicketEmailLine> tickets) =>
+        tickets
+            .Where(t => t.RequiresCardPresentation)
+            .Select(t => t.TicketTypeName)
+            .Distinct()
+            .ToList();
 
     private static string RefundMethodLabel(PaymentMethod method) =>
         method switch

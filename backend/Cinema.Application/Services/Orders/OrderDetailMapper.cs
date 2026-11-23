@@ -3,6 +3,7 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Resources;
 
 namespace Cinema.Application.Services.Orders;
 
@@ -113,6 +114,8 @@ internal static class OrderDetailMapper
             seat.SeatRow,
             seat.SeatNumber,
             line.TicketTypeId,
+            line.TicketType?.Name ?? Messages.Common_TicketTypeStandard,
+            line.RequiresCardPresentation,
             showQr ? QrCodeHelper.GenerateDataUri(line.QrCode!) : null,
             line.IsCheckedIn,
             line.CheckedInAt

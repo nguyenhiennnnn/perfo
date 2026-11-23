@@ -107,6 +107,8 @@ public class OrderQueryService(
                 .Include(o => o.Lines)
                     .ThenInclude(l => l.Combo)
                 .Include(o => o.Lines)
+                    .ThenInclude(l => l.TicketType)
+                .Include(o => o.Lines)
                     .ThenInclude(l => l.ShowtimeSeat)
                         .ThenInclude(ss => ss!.Seat)
                 .Include(o => o.Lines)

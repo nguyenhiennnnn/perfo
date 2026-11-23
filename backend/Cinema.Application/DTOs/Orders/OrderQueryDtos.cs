@@ -29,6 +29,8 @@ public record OrderTicketDto(
     string SeatRow,
     int SeatNumber,
     int? TicketTypeId,
+    string TicketTypeName,
+    bool RequiresCardPresentation,
     string? QrCodeImage,
     bool IsCheckedIn,
     DateTime? CheckedInAt

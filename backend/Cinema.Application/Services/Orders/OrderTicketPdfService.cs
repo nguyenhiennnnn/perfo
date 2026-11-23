@@ -5,6 +5,7 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +71,9 @@ public class OrderTicketPdfService(
                 l.ShowtimeSeat!.Seat.SeatRow,
                 l.ShowtimeSeat.Seat.SeatNumber,
                 l.QrCode,
+                TicketTypeName = l.TicketType != null ? l.TicketType.Name : null,
+                l.PaidAmount,
+                l.RequiresCardPresentation,
                 MovieTitle = l.Showtime!.Movie.Title,
                 l.Showtime.StartTime,
                 l.Showtime.Room.RoomName,
@@ -97,9 +101,15 @@ public class OrderTicketPdfService(
                         t.SeatRow,
                         t.SeatNumber
                     );
+                var typeName = t.TicketTypeName ?? Messages.Common_TicketTypeStandard;
                 return new PdfTicketItem(
                     $"{t.SeatRow}{t.SeatNumber}",
-                    QrCodeHelper.GeneratePngBytes(payload)
+                    QrCodeHelper.GeneratePngBytes(payload),
+                    typeName,
+                    FormatMoney(t.PaidAmount),
+                    t.RequiresCardPresentation
+                        ? string.Format(Messages.Export_PdfTicketCardNotice, typeName)
+                        : null
                 );
             })
             .ToList();
@@ -119,6 +129,8 @@ public class OrderTicketPdfService(
                 Messages.Export_PdfTicketRoom,
                 Messages.Export_PdfTicketSeat,
                 Messages.Export_PdfTicketBookingCode,
+                Messages.Export_PdfTicketType,
+                Messages.Export_PdfTicketPrice,
                 Messages.Export_PdfTicketHint
             ),
             items
@@ -130,4 +142,7 @@ public class OrderTicketPdfService(
             $"tickets-{order.OrderCode}.{ExportFormats.Extension(ExportFormat.Pdf)}"
         );
     }
+
+    private static string FormatMoney(decimal amount) =>
+        $"{amount.ToString("N0", CultureInfo.GetCultureInfo(RegionalDefaults.Locale))} {Messages.Common_CurrencyVnd}";
 }

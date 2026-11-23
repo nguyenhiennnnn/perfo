@@ -19,7 +19,6 @@ public class OrderConfirmedEmailHandler(IAppDbContext db, INotificationService n
                 o.CustomerName,
                 o.User!.Email,
                 o.User.FullName,
-                SeatCount = o.Lines.Count(l => l.LineType == OrderLineType.Ticket),
                 MovieTitle = o
                     .Lines.Where(l => l.LineType == OrderLineType.Ticket)
                     .Select(l => l.Showtime!.Movie.Title)
@@ -27,7 +26,15 @@ public class OrderConfirmedEmailHandler(IAppDbContext db, INotificationService n
             })
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (order is null || order.SeatCount == 0)
+        if (order is null)
+            return;
+
+        var tickets = await OrderTicketEmailLineLoader.LoadAsync(
+            db,
+            businessEvent.OrderId,
+            cancellationToken
+        );
+        if (tickets.Count == 0)
             return;
 
         notificationService.SendBookingConfirmed(
@@ -35,7 +42,7 @@ public class OrderConfirmedEmailHandler(IAppDbContext db, INotificationService n
             order.CustomerName ?? order.FullName,
             order.OrderCode,
             order.MovieTitle ?? string.Empty,
-            order.SeatCount
+            tickets
         );
     }
 }

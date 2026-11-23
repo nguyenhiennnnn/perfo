@@ -231,6 +231,18 @@ public class QuestPdfGenerator(IOptions<PdfOptions> options) : IPdfGenerator
 
             column
                 .Item()
+                .Row(row =>
+                {
+                    row.Spacing(12);
+                    LabeledValue(row.RelativeItem(2), labels.TicketType, ticket.TicketTypeName);
+                    LabeledValue(row.RelativeItem(1), labels.Price, ticket.PriceText);
+                });
+
+            if (!string.IsNullOrEmpty(ticket.CardNotice))
+                column.Item().Text(ticket.CardNotice).Bold().FontSize(10);
+
+            column
+                .Item()
                 .PaddingTop(4)
                 .AlignCenter()
                 .Width(QrSize)

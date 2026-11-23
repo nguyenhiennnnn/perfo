@@ -4,6 +4,13 @@ namespace Cinema.Application.Interfaces;
 
 public sealed record OrderRefundEmailLine(PaymentMethod Method, decimal Amount);
 
+public sealed record OrderTicketEmailLine(
+    string SeatLabel,
+    string TicketTypeName,
+    decimal PaidAmount,
+    bool RequiresCardPresentation
+);
+
 public interface INotificationService
 {
     void SendVerificationLink(
@@ -19,13 +26,14 @@ public interface INotificationService
         string customerName,
         string bookingCode,
         string movieTitle,
-        int seatCount
+        IReadOnlyList<OrderTicketEmailLine> tickets
     );
 
     void SendOrderCancelled(
         string toEmail,
         string customerName,
         string orderCode,
+        IReadOnlyList<OrderTicketEmailLine> tickets,
         IReadOnlyList<OrderRefundEmailLine> refunds
     );
 

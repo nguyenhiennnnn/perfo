@@ -46,10 +46,17 @@ public class OrderCancelledEmailHandler(
             .Select(g => new { Method = g.Key, Amount = g.Sum(t => t.Amount) })
             .ToListAsync(cancellationToken);
 
+        var tickets = await OrderTicketEmailLineLoader.LoadAsync(
+            db,
+            businessEvent.OrderId,
+            cancellationToken
+        );
+
         notificationService.SendOrderCancelled(
             order.Email,
             order.CustomerName ?? order.FullName,
             order.OrderCode,
+            tickets,
             [
                 .. refunds
                     .OrderBy(r => r.Method)

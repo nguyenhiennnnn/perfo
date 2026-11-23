@@ -64,7 +64,7 @@ public class NotificationService(
         string customerName,
         string bookingCode,
         string movieTitle,
-        int seatCount
+        IReadOnlyList<OrderTicketEmailLine> tickets
     ) =>
         Enqueue(
             toEmail,
@@ -74,7 +74,7 @@ public class NotificationService(
                 customerName,
                 bookingCode,
                 movieTitle: movieTitle,
-                seatCount: seatCount
+                tickets: tickets
             )
         );
 
@@ -82,12 +82,13 @@ public class NotificationService(
         string toEmail,
         string customerName,
         string orderCode,
+        IReadOnlyList<OrderTicketEmailLine> tickets,
         IReadOnlyList<OrderRefundEmailLine> refunds
     ) =>
         Enqueue(
             toEmail,
             string.Format(Messages.Email_OrderCancelledSubject, _brand.Name),
-            EmailTemplates.OrderCancelled(_brand, customerName, orderCode, refunds)
+            EmailTemplates.OrderCancelled(_brand, customerName, orderCode, tickets, refunds)
         );
 
     public void SendSeatsExpiredToAdmin(

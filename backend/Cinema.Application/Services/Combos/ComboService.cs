@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 using Cinema.Application.DTOs.Combos;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Services.Inventory;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
@@ -41,6 +42,7 @@ public class ComboService(IAppDbContext db) : IComboService
 
         var combos = await db
             .Combos.Where(c => c.IsActive)
+            .InStock(db)
             .Select(c => new
             {
                 c.ComboId,
@@ -124,6 +126,7 @@ public class ComboService(IAppDbContext db) : IComboService
     public async Task<List<ComboDto>> GetActiveCombosAsync(CancellationToken cancellationToken) =>
         await db
             .Combos.Where(c => c.IsActive)
+            .InStock(db)
             .OrderBy(c => c.Name)
             .ProjectToType<ComboDto>()
             .ToListAsync(cancellationToken);

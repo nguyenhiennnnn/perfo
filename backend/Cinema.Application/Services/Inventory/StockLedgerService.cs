@@ -2,6 +2,7 @@ using Cinema.Application.DTOs.Inventory;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
+using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -36,9 +37,11 @@ public class StockLedgerService(IAppDbContext db, ICurrentActorAccessor actorAcc
         var delta = movement.QuantityChange;
         var itemId = movement.InventoryItemId;
 
-        var candidate = db
-            .InventoryItems.IgnoreQueryFilters()
-            .Where(i => i.InventoryItemId == itemId && i.QuantityOnHand + delta >= 0);
+        var keepsReserved = delta < 0 && movement.MovementType != StockMovementType.Sale;
+        var items = db.InventoryItems.IgnoreQueryFilters().Where(i => i.InventoryItemId == itemId);
+        var candidate = keepsReserved
+            ? items.Where(i => i.QuantityOnHand + delta >= i.ReservedQuantity)
+            : items.Where(i => i.QuantityOnHand + delta >= 0);
 
         var affected = movement.NewUnitCost is { } newCost
             ? await candidate.ExecuteUpdateAsync(
@@ -63,7 +66,11 @@ public class StockLedgerService(IAppDbContext db, ICurrentActorAccessor actorAcc
                 .InventoryItems.IgnoreQueryFilters()
                 .AnyAsync(i => i.InventoryItemId == itemId, cancellationToken);
             throw exists
-                ? new BusinessRuleException(Messages.Rule_InventoryInsufficientStock)
+                ? new BusinessRuleException(
+                    keepsReserved
+                        ? Messages.Rule_InventoryStockReserved
+                        : Messages.Rule_InventoryInsufficientStock
+                )
                 : new NotFoundException(Messages.NotFound_InventoryItem);
         }
 

@@ -90,6 +90,10 @@ public static class DependencyInjection
         services.AddScoped<IOrderResourceHoldService, OrderResourceHoldService>();
         services.AddScoped<PromotionResourceHold>();
         services.AddResourceHold<PromotionResourceHold>();
+        services.AddResourceHold<InventoryResourceHold>();
+        services.AddScoped<IComboAvailabilityService, ComboAvailabilityService>();
+        services.AddInTransactionEventHandler<OrderConfirmed, InventorySaleHandler>();
+        services.AddInTransactionEventHandler<OrderCancelled, InventoryReturnHandler>();
         services.AddScoped<IOrderPromotionService, OrderPromotionService>();
         services.AddScoped<IOrderLoyaltyService, OrderLoyaltyService>();
         services.AddScoped<IOrderRefundService, OrderRefundService>();

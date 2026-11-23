@@ -7,6 +7,7 @@ public class InventoryItem
     public string Name { get; set; } = null!;
     public string Unit { get; set; } = null!;
     public decimal QuantityOnHand { get; set; }
+    public decimal ReservedQuantity { get; set; }
     public decimal UnitCost { get; set; }
     public decimal LowStockThreshold { get; set; }
     public bool IsActive { get; set; } = true;
@@ -17,4 +18,5 @@ public class InventoryItem
 
     public ICollection<ComboRecipeLine> RecipeLines { get; set; } = [];
     public ICollection<StockLedger> LedgerEntries { get; set; } = [];
+    public ICollection<InventoryReservation> Reservations { get; set; } = [];
 }

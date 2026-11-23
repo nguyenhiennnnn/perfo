@@ -3167,6 +3167,12 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_InventoryInsufficientStock" xml:space="preserve">
     <value>Tồn kho không đủ.</value>
   </data>
+  <data name="Rule_InventoryStockReserved" xml:space="preserve">
+    <value>Tồn kho không đủ: một phần đang được giữ chỗ cho đơn hàng chờ thanh toán.</value>
+  </data>
+  <data name="Conflict_ComboOutOfStock" xml:space="preserve">
+    <value>Combo {0} đã hết hàng hoặc không đủ số lượng.</value>
+  </data>
   <data name="Success_ComboRecipeDeleted" xml:space="preserve">
     <value>Đã xóa công thức combo.</value>
   </data>

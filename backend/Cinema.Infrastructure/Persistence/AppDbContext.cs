@@ -47,6 +47,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<StockReceipt> StockReceipts => Set<StockReceipt>();
     public DbSet<StockReceiptLine> StockReceiptLines => Set<StockReceiptLine>();
     public DbSet<StockLedger> StockLedgers => Set<StockLedger>();
+    public DbSet<InventoryReservation> InventoryReservations => Set<InventoryReservation>();
     public DbSet<StocktakeSheet> StocktakeSheets => Set<StocktakeSheet>();
     public DbSet<StocktakeSheetLine> StocktakeSheetLines => Set<StocktakeSheetLine>();
     public DbSet<WasteSheet> WasteSheets => Set<WasteSheet>();

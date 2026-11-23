@@ -8,6 +8,8 @@ public record InventoryItemDto(
     string Name,
     string Unit,
     decimal QuantityOnHand,
+    decimal ReservedQuantity,
+    decimal AvailableQuantity,
     decimal UnitCost,
     decimal StockValue,
     decimal LowStockThreshold,
@@ -209,6 +211,8 @@ public record StockLevelDto(
     string Name,
     string Unit,
     decimal QuantityOnHand,
+    decimal ReservedQuantity,
+    decimal AvailableQuantity,
     decimal LowStockThreshold,
     bool IsLowStock
 );

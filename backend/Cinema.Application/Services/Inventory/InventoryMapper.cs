@@ -12,6 +12,8 @@ public static class InventoryMapper
             i.Name,
             i.Unit,
             i.QuantityOnHand,
+            i.ReservedQuantity,
+            i.QuantityOnHand - i.ReservedQuantity,
             i.UnitCost,
             InventoryCosting.StockValue(i.QuantityOnHand, i.UnitCost),
             i.LowStockThreshold,
@@ -28,6 +30,8 @@ public static class InventoryMapper
             i.Name,
             i.Unit,
             i.QuantityOnHand,
+            i.ReservedQuantity,
+            i.QuantityOnHand - i.ReservedQuantity,
             i.LowStockThreshold,
             InventoryStockRules.IsLowStock(i.QuantityOnHand, i.LowStockThreshold)
         );

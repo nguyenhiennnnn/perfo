@@ -18,6 +18,7 @@ public class OrderHoldService(
     IRealtimeNotifier realtimeNotifier,
     IEnumerable<IOrderHoldPolicy> holdPolicies,
     IOrderResourceHoldService resourceHolds,
+    IComboAvailabilityService comboAvailability,
     IOrderTicketPricer ticketPricer,
     IOrderPriceCalculator priceCalculator,
     IOptions<BookingOptions> bookingOptions,
@@ -420,6 +421,11 @@ public class OrderHoldService(
         var lookup = combos.ToDictionary(c => c.ComboId);
         foreach (var selection in comboSelections)
             result.Add((lookup[selection.ComboId], selection.Quantity));
+
+        await comboAvailability.EnsureAvailableAsync(
+            [.. result.Select(r => (r.Combo.ComboId, r.Quantity))],
+            cancellationToken
+        );
         return result;
     }
 }

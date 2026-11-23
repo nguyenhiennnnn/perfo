@@ -104,6 +104,7 @@ public class WasteService(
             {
                 i.InventoryItemId,
                 i.QuantityOnHand,
+                i.ReservedQuantity,
                 i.UnitCost,
             })
             .ToDictionaryAsync(i => i.InventoryItemId, cancellationToken);
@@ -116,7 +117,12 @@ public class WasteService(
                 }
             );
 
-        if (request.Lines.Any(l => states[l.InventoryItemId].QuantityOnHand < l.Quantity))
+        if (
+            request.Lines.Any(l =>
+                states[l.InventoryItemId].QuantityOnHand - states[l.InventoryItemId].ReservedQuantity
+                < l.Quantity
+            )
+        )
             throw new BusinessRuleException(Messages.Rule_InventoryInsufficientStock);
 
         var sheet = new WasteSheet

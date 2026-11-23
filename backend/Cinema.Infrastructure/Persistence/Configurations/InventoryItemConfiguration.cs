@@ -14,6 +14,10 @@ public class InventoryItemConfiguration : IEntityTypeConfiguration<InventoryItem
             t =>
             {
                 t.HasCheckConstraint("CK_InventoryItems_QuantityOnHand", "\"QuantityOnHand\" >= 0");
+                t.HasCheckConstraint(
+                    "CK_InventoryItems_ReservedQuantity",
+                    "\"ReservedQuantity\" >= 0 AND \"ReservedQuantity\" <= \"QuantityOnHand\""
+                );
                 t.HasCheckConstraint("CK_InventoryItems_UnitCost", "\"UnitCost\" >= 0");
                 t.HasCheckConstraint(
                     "CK_InventoryItems_LowStockThreshold",
@@ -31,6 +35,10 @@ public class InventoryItemConfiguration : IEntityTypeConfiguration<InventoryItem
         builder.Property(x => x.Name).HasMaxLength(FieldLengths.InventoryItemName).IsRequired();
         builder.Property(x => x.Unit).HasMaxLength(FieldLengths.InventoryUnit).IsRequired();
         builder.Property(x => x.QuantityOnHand).HasColumnType("decimal(18,3)").HasDefaultValue(0m);
+        builder
+            .Property(x => x.ReservedQuantity)
+            .HasColumnType("decimal(18,3)")
+            .HasDefaultValue(0m);
         builder.Property(x => x.UnitCost).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
         builder
             .Property(x => x.LowStockThreshold)

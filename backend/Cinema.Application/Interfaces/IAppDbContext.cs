@@ -43,6 +43,7 @@ public interface IAppDbContext
     DbSet<StockReceipt> StockReceipts { get; }
     DbSet<StockReceiptLine> StockReceiptLines { get; }
     DbSet<StockLedger> StockLedgers { get; }
+    DbSet<InventoryReservation> InventoryReservations { get; }
     DbSet<StocktakeSheet> StocktakeSheets { get; }
     DbSet<StocktakeSheetLine> StocktakeSheetLines { get; }
     DbSet<WasteSheet> WasteSheets { get; }

@@ -24,6 +24,8 @@ const AdminReportsPage = lazyRoute(() => import("@/features/admin/reports/pages/
 const AdminRoomsPage = lazyRoute(() => import("@/features/admin/rooms/pages/rooms-page"));
 const AdminEmployeesPage = lazyRoute(() => import("@/features/admin/employees/pages/employees-page"));
 const AdminRoomSeatsPage = lazyRoute(() => import("@/features/admin/rooms/pages/room-seats-page"));
+const AdminRoomClosuresPage = lazyRoute(() => import("@/features/admin/room-closures/pages/room-closures-page"));
+const AdminRoomClosureDetailPage = lazyRoute(() => import("@/features/admin/room-closures/pages/room-closure-detail-page"));
 const AdminCombosPage = lazyRoute(() => import("@/features/admin/combos/pages/combos-page"));
 const AdminInventoryStockPage = lazyRoute(() => import("@/features/admin/inventory/pages/inventory-stock-page"));
 const AdminInventoryItemsPage = lazyRoute(() => import("@/features/admin/inventory/pages/inventory-items-page"));
@@ -104,6 +106,8 @@ export const adminRoutes: RouteObject[] = [
           { path: "employees", lazy: AdminEmployeesPage },
           { path: "rooms", lazy: AdminRoomsPage },
           { path: "rooms/:id/seats", lazy: AdminRoomSeatsPage },
+          { path: "room-closures", lazy: AdminRoomClosuresPage },
+          { path: "room-closures/:id", lazy: AdminRoomClosureDetailPage },
           { path: "combos", lazy: AdminCombosPage },
           { path: "inventory", lazy: AdminInventoryStockPage },
           { path: "inventory/items", lazy: AdminInventoryItemsPage },

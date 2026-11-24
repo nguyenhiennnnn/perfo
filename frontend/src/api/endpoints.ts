@@ -198,11 +198,21 @@ export const ENDPOINTS = {
       seatLayoutExport: (id: number) => `/admin/rooms/${id}/seat-layout/export`,
       seatLayoutImport: (id: number) => `/admin/rooms/${id}/seat-layout/import`,
     },
+    roomClosures: {
+      root: "/admin/room-closures",
+      byId: (id: number) => `/admin/room-closures/${id}`,
+      affectedShowtimes: (id: number) =>
+        `/admin/room-closures/${id}/affected-showtimes`,
+      affectedPreview: "/admin/room-closures/affected-showtimes",
+    },
     showtimes: {
       root: "/admin/showtimes",
       export: "/admin/showtimes/export",
       exportJobs: "/admin/showtimes/export-jobs",
       byId: (id: number) => `/admin/showtimes/${id}`,
+      roomChangePreview: (id: number) =>
+        `/admin/showtimes/${id}/room-change/preview`,
+      roomChange: (id: number) => `/admin/showtimes/${id}/room-change`,
       bulk: "/admin/showtimes/bulk",
       autoSchedulePreview: "/admin/showtimes/auto-schedule/preview",
       autoScheduleApply: "/admin/showtimes/auto-schedule/apply",

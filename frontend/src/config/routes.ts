@@ -45,6 +45,7 @@ export const ROUTES = {
     movies: "/admin/movies",
     showtimes: "/admin/showtimes",
     rooms: "/admin/rooms",
+    roomClosures: "/admin/room-closures",
     combos: "/admin/combos",
     inventory: "/admin/inventory",
     inventoryItems: "/admin/inventory/items",
@@ -92,6 +93,8 @@ export const ROUTES = {
     ordersByShowtime: (showtimeId: number | string) =>
       `/admin/orders?showtimeId=${showtimeId}`,
     roomSeats: (roomId: number | string) => `/admin/rooms/${roomId}/seats`,
+    roomClosureDetail: (closureId: number | string) =>
+      `/admin/room-closures/${closureId}`,
     importExportHistory: "/admin/import-export",
     settings: "/admin/settings",
   },

@@ -3,16 +3,25 @@ import { useDialogClose, useDialogOpen } from "@/stores/dialog-store";
 
 import { ShowtimeCancelConsequences } from "../components/showtime-cancel-consequences";
 import { ShowtimeCancelResult } from "../components/showtime-cancel-result";
-import type { AdminShowtimeDto } from "../types";
+import type { AdminShowtimeDto, ShowtimeCancelReason } from "../types";
 import { useAdminDeleteShowtime } from "./use-admin-showtimes";
 
-export function useShowtimeCancelFlow(onCancelled?: (showtimeId: number) => void) {
+interface ShowtimeCancelFlowOptions {
+  reason?: ShowtimeCancelReason;
+}
+
+type CancellableShowtime = Pick<AdminShowtimeDto, "showtimeId" | "movieTitle">;
+
+export function useShowtimeCancelFlow(
+  onCancelled?: (showtimeId: number) => void,
+  options?: ShowtimeCancelFlowOptions,
+) {
   const cancel = useAdminDeleteShowtime();
   const openAlertDialog = useAlertDialogOpen();
   const openDialog = useDialogOpen();
   const closeDialog = useDialogClose();
 
-  const start = (showtime: AdminShowtimeDto) => {
+  const start = (showtime: CancellableShowtime) => {
     openAlertDialog({
       title: `Hủy suất chiếu "${showtime.movieTitle}"?`,
       description: "Thao tác không thể hoàn tác. Hệ quả của việc hủy suất:",
@@ -21,7 +30,10 @@ export function useShowtimeCancelFlow(onCancelled?: (showtimeId: number) => void
       cancelText: "Giữ lại suất chiếu",
       variant: "destructive",
       onConfirm: async () => {
-        const res = await cancel.mutateAsync(showtime.showtimeId);
+        const res = await cancel.mutateAsync({
+          id: showtime.showtimeId,
+          reason: options?.reason,
+        });
         onCancelled?.(showtime.showtimeId);
         if (!res.data) return;
         openDialog({

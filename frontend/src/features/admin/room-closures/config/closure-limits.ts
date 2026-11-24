@@ -1,0 +1,2 @@
+export const ROOM_CLOSURE_REASON_MAX_LENGTH = 500;
+export const ROOM_CLOSURE_MAX_SPAN_DAYS = 366;

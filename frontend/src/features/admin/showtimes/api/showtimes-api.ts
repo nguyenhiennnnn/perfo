@@ -16,6 +16,10 @@ import type {
   AutoScheduleResponseDto,
   ApplyAutoScheduleRequest,
   CloneShowtimesRequest,
+  ShowtimeCancelReason,
+  ShowtimeRoomChangeRequest,
+  RoomChangePreviewResponse,
+  ShowtimeRoomChangeResponse,
 } from "../types";
 import { ENDPOINTS } from "@/api/endpoints";
 
@@ -29,8 +33,22 @@ export const showtimesAdminApi = {
   updateShowtime: (id: number, body: UpsertShowtimeRequest) =>
     apiPut<ApiResponse<AdminShowtimeDto>>(ENDPOINTS.admin.showtimes.byId(id), body),
 
-  deleteShowtime: (id: number) =>
-    apiDelete<ApiResponse<DeleteShowtimeResponse>>(ENDPOINTS.admin.showtimes.byId(id)),
+  deleteShowtime: (id: number, reason?: ShowtimeCancelReason) =>
+    apiDelete<ApiResponse<DeleteShowtimeResponse>>(ENDPOINTS.admin.showtimes.byId(id), {
+      params: reason ? { reason } : undefined,
+    }),
+
+  previewRoomChange: (id: number, body: ShowtimeRoomChangeRequest) =>
+    apiPost<ApiResponse<RoomChangePreviewResponse>>(
+      ENDPOINTS.admin.showtimes.roomChangePreview(id),
+      body,
+    ),
+
+  changeRoom: (id: number, body: ShowtimeRoomChangeRequest) =>
+    apiPost<ApiResponse<ShowtimeRoomChangeResponse>>(
+      ENDPOINTS.admin.showtimes.roomChange(id),
+      body,
+    ),
 
   bulkCreate: (body: BulkCreateShowtimesRequest) =>
     apiPost<ApiResponse<BulkCreateShowtimesResponse>>(ENDPOINTS.admin.showtimes.bulk, body),

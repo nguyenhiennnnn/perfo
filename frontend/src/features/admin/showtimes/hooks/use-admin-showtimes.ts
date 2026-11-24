@@ -9,6 +9,8 @@ import type {
   AutoScheduleRequest,
   ApplyAutoScheduleRequest,
   CloneShowtimesRequest,
+  ShowtimeCancelReason,
+  ShowtimeRoomChangeRequest,
 } from "../types";
 import { showtimesAdminApi } from "../api/showtimes-api";
 
@@ -49,7 +51,24 @@ export function useAdminUpdateShowtime() {
 export function useAdminDeleteShowtime() {
   return useMutation({
     meta: { invalidates: "showtimeCancelled", skipSuccessToast: true },
-    mutationFn: (id: number) => showtimesAdminApi.deleteShowtime(id),
+    mutationFn: ({ id, reason }: { id: number; reason?: ShowtimeCancelReason }) =>
+      showtimesAdminApi.deleteShowtime(id, reason),
+  });
+}
+
+export function useAdminPreviewRoomChange() {
+  return useMutation({
+    meta: { skipErrorToast: true },
+    mutationFn: ({ id, body }: { id: number; body: ShowtimeRoomChangeRequest }) =>
+      showtimesAdminApi.previewRoomChange(id, body),
+  });
+}
+
+export function useAdminChangeShowtimeRoom() {
+  return useMutation({
+    meta: { invalidates: "showtimeRoomChanged" },
+    mutationFn: ({ id, body }: { id: number; body: ShowtimeRoomChangeRequest }) =>
+      showtimesAdminApi.changeRoom(id, body),
   });
 }
 

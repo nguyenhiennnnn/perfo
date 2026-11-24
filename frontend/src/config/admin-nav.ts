@@ -5,6 +5,7 @@ import {
   Film,
   Calendar,
   Tv,
+  DoorClosed,
   Popcorn,
   Warehouse,
   Package,
@@ -100,6 +101,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         roles: [Role.Admin, Role.Employee],
       },
       { to: ROUTES.admin.rooms, label: "Phòng chiếu", icon: Tv, roles: [Role.Admin] },
+      {
+        to: ROUTES.admin.roomClosures,
+        label: "Đóng phòng",
+        icon: DoorClosed,
+        roles: [Role.Admin],
+      },
       {
         to: ROUTES.admin.combos,
         label: "Bắp nước & Combo",

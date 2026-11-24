@@ -133,6 +133,17 @@ export const queryKeys = {
     seats: (roomId: number) => ["admin", "rooms", "seats", roomId] as const,
   },
 
+  adminRoomClosures: {
+    all: () => ["admin", "room-closures"] as const,
+    list: (params?: object) =>
+      ["admin", "room-closures", "list", params] as const,
+    detail: (id: number) => ["admin", "room-closures", "detail", id] as const,
+    affected: (id: number) =>
+      ["admin", "room-closures", "affected", id] as const,
+    affectedPreview: (params: object) =>
+      ["admin", "room-closures", "affected-preview", params] as const,
+  },
+
   adminCombos: {
     all: () => ["admin", "combos"] as const,
     list: (params?: object) => ["admin", "combos", "list", params] as const,

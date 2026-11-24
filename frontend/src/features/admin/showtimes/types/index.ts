@@ -182,3 +182,73 @@ export interface CloneShowtimesRequest {
   roomIds?: number[];
   allowAfterHours?: boolean;
 }
+
+export type ShowtimeCancelReason = "ShowtimeCancelled" | "RoomClosed";
+
+export type RoomChangeMatchKind = "Exact" | "Nearest" | "Manual" | "Unmapped";
+
+export interface RoomChangeSeatOverride {
+  showtimeSeatId: number;
+  targetSeatId: number;
+}
+
+export interface ShowtimeRoomChangeRequest {
+  targetRoomId: number;
+  overrides?: RoomChangeSeatOverride[];
+  note?: string | null;
+}
+
+export interface RoomChangeSeatRef {
+  row: string;
+  number: number;
+  seatTypeId?: number | null;
+  seatType?: string | null;
+  isCouple: boolean;
+}
+
+export interface RoomChangeTargetSeat extends RoomChangeSeatRef {
+  seatId: number;
+  coupleId?: string | null;
+}
+
+export interface RoomChangeSeatMapping {
+  showtimeSeatId: number;
+  status: string;
+  hasOrders: boolean;
+  source: RoomChangeSeatRef;
+  targetSeatId?: number | null;
+  target?: RoomChangeSeatRef | null;
+  matchKind: RoomChangeMatchKind;
+  needsReview: boolean;
+  refundDue: number;
+}
+
+export interface RoomChangePreviewResponse {
+  showtimeId: number;
+  sourceRoomId: number;
+  sourceRoomName: string;
+  targetRoomId: number;
+  targetRoomName: string;
+  canApply: boolean;
+  issues: string[];
+  occupiedSeatCount: number;
+  targetSeatCount: number;
+  needsReviewCount: number;
+  refundDueCount: number;
+  refundDueTotal: number;
+  mappings: RoomChangeSeatMapping[];
+  targetSeats: RoomChangeTargetSeat[];
+}
+
+export interface ShowtimeRoomChangeResponse {
+  showtimeRoomChangeId: number;
+  showtimeId: number;
+  fromRoomId: number;
+  fromRoomName: string;
+  toRoomId: number;
+  toRoomName: string;
+  seatsMoved: number;
+  orderCount: number;
+  refundDueCount: number;
+  refundDueTotal: number;
+}

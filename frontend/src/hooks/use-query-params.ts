@@ -298,6 +298,18 @@ export const useAdminAuditLogParams = (
   options?: Parameters<typeof useQueryStates<typeof adminAuditLogParsers>>[1],
 ) => useQueryStates(adminAuditLogParsers, options);
 
+const adminInvoiceRequestParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  tab: parseAsStringLiteral(["requests", "adjustments"] as const).withDefault("requests"),
+  status: parseAsString,
+  search: searchParser,
+};
+
+export const useAdminInvoiceRequestParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminInvoiceRequestParsers>>[1],
+) => useQueryStates(adminInvoiceRequestParsers, options);
+
 const adminCounterShiftParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),

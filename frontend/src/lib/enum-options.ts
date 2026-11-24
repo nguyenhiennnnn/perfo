@@ -80,4 +80,6 @@ export const importExportModuleOptions = toOptions(ImportExportModule, {
   bookings: "Đơn hàng",
   payments: "Giao dịch thanh toán",
   "promotion-redemptions": "Lịch sử dùng khuyến mãi",
+  reconciliation: "Đối soát",
+  "reconciliation-stripe": "Đối soát Stripe",
 });

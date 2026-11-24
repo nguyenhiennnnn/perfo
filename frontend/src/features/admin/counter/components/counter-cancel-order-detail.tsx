@@ -7,6 +7,7 @@ import {
 } from "@/components/common/status-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CounterInvoiceSection } from "./counter-invoice-section";
 import { InfoRow, Section } from "@/features/admin/orders/components/order-detail-parts";
 import { OrderCancelErrorNotice } from "@/features/admin/orders/components/order-cancel-error-notice";
 import { OrderCancelResult } from "@/features/admin/orders/components/order-cancel-result";
@@ -236,6 +237,12 @@ export const CounterCancelOrderDetail = ({
                   `Chưa có vé nào check-in (0/${checkIn.total}).`
                 )}
               </p>
+            )}
+
+            {order.status === OrderStatus.Confirmed && !order.userId && (
+              <Section title="Hóa đơn VAT">
+                <CounterInvoiceSection orderId={order.orderId} orderCode={order.orderCode} />
+              </Section>
             )}
 
             {!cancellable && <ClosedOrderNotice order={order} />}

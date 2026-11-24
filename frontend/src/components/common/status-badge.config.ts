@@ -7,6 +7,7 @@ import {
   PaymentMethod,
   Role,
   ImportExportJobStatus,
+  InvoiceRequestStatus,
 } from "@/types/enum";
 import {
   CheckCircle2,
@@ -99,6 +100,12 @@ export const orderStatusMap: Record<OrderStatus, BadgeItem> = {
   [OrderStatus.Confirmed]: { label: "Đã xác nhận", variant: "success", icon: CheckCircle2 },
   [OrderStatus.Cancelled]: { label: "Đã hủy", variant: "destructive", icon: XCircle },
   [OrderStatus.Expired]: { label: "Hết hạn giữ vé", variant: "outline", icon: XCircle },
+};
+
+export const invoiceRequestStatusMap: Record<InvoiceRequestStatus, BadgeItem> = {
+  [InvoiceRequestStatus.Pending]: { label: "Chờ xuất", variant: "warning", icon: Clock },
+  [InvoiceRequestStatus.Issued]: { label: "Đã xuất", variant: "success", icon: CheckCircle2 },
+  [InvoiceRequestStatus.Rejected]: { label: "Từ chối", variant: "destructive", icon: XCircle },
 };
 
 export const paymentStatusMap: Record<PaymentStatus, BadgeItem> = {

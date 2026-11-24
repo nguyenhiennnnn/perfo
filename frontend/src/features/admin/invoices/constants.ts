@@ -1,0 +1,3 @@
+export const INVOICE_NUMBER_MAX_LENGTH = 50;
+export const INVOICE_REASON_MAX_LENGTH = 500;
+export const INVOICE_FILE_MAX_BYTES = 10 * 1024 * 1024;

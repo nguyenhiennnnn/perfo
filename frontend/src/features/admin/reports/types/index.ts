@@ -52,6 +52,7 @@ export interface EmployeePerformanceDto {
 export interface FinanceReportParams {
   from: string;
   to: string;
+  blocks?: string;
 }
 
 export type FinanceColumnType = "Text" | "Number" | "Money" | "Percent";

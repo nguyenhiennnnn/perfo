@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cinema.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261124093731_InitialCreate")]
+    [Migration("20261124143005_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -193,6 +193,16 @@ namespace Cinema.Infrastructure.Migrations
                     b.Property<TimeOnly?>("ClosingTime")
                         .HasColumnType("time");
 
+                    b.Property<decimal>("ComboVatPercent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(5,2)")
+                        .HasDefaultValue(10m);
+
+                    b.Property<bool>("DailyClosingAllowOverride")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("DefaultEmployeePassword")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -214,8 +224,18 @@ namespace Cinema.Infrastructure.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
 
+                    b.Property<decimal>("GiftCardVatPercent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(5,2)")
+                        .HasDefaultValue(10m);
+
                     b.Property<int>("HoldDurationMinutes")
                         .HasColumnType("integer");
+
+                    b.Property<int>("InvoiceRequestWindowDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(30);
 
                     b.Property<string>("LogoUrl")
                         .HasMaxLength(255)
@@ -235,6 +255,11 @@ namespace Cinema.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasDefaultValue(10);
+
+                    b.Property<decimal>("MembershipVatPercent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(5,2)")
+                        .HasDefaultValue(10m);
 
                     b.Property<decimal>("MinTicketPrice")
                         .ValueGeneratedOnAdd()
@@ -346,6 +371,11 @@ namespace Cinema.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(18,2)")
                         .HasDefaultValue(1000m);
+
+                    b.Property<decimal>("TicketVatPercent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(5,2)")
+                        .HasDefaultValue(10m);
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
@@ -492,6 +522,85 @@ namespace Cinema.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Entities.CounterShift", b =>
+                {
+                    b.Property<int>("CounterShiftId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CounterShiftId"));
+
+                    b.Property<DateTime?>("ClosedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<decimal?>("CountedCash")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal?>("ExpectedCash")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("OpenedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<decimal>("OpeningCash")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("Open");
+
+                    b.Property<DateTime?>("UnclosedAlertedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<decimal?>("Variance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("CounterShiftId");
+
+                    b.HasIndex("EmployeeId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_CounterShifts_Employee_Open")
+                        .HasFilter("\"Status\" = 'Open'");
+
+                    b.HasIndex("OpenedAt")
+                        .HasDatabaseName("IX_CounterShifts_OpenedAt");
+
+                    b.HasIndex("Status")
+                        .HasDatabaseName("IX_CounterShifts_Open")
+                        .HasFilter("\"Status\" = 'Open'");
+
+                    b.HasIndex("EmployeeId", "OpenedAt")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("IX_CounterShifts_Employee_OpenedAt");
+
+                    b.ToTable("CounterShifts", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_CounterShifts_Closure", "(\"Status\" = 'Open' AND \"ClosedAt\" IS NULL AND \"CountedCash\" IS NULL AND \"ExpectedCash\" IS NULL AND \"Variance\" IS NULL) OR (\"Status\" = 'Closed' AND \"ClosedAt\" IS NOT NULL AND \"ClosedAt\" >= \"OpenedAt\" AND \"CountedCash\" IS NOT NULL AND \"CountedCash\" >= 0 AND \"ExpectedCash\" IS NOT NULL AND \"Variance\" IS NOT NULL AND \"Variance\" = \"CountedCash\" - \"ExpectedCash\")");
+
+                            t.HasCheckConstraint("CK_CounterShifts_OpeningCash", "\"OpeningCash\" >= 0");
+
+                            t.HasCheckConstraint("CK_CounterShifts_Status", "\"Status\" IN ('Open','Closed')");
+                        });
+                });
+
             modelBuilder.Entity("Cinema.Domain.Entities.CustomerProfile", b =>
                 {
                     b.Property<int>("UserId")
@@ -539,6 +648,71 @@ namespace Cinema.Infrastructure.Migrations
                         .HasDatabaseName("IX_CustomerProfiles_Tier");
 
                     b.ToTable("CustomerProfiles", (string)null);
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.DailyClosing", b =>
+                {
+                    b.Property<int>("DailyClosingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DailyClosingId"));
+
+                    b.Property<DateOnly>("BusinessDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("ClosedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("ClosedByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal?>("CountedCash")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("ExpectedCash")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<DateTime?>("ReportEmailedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("SnapshotJson")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("Draft");
+
+                    b.Property<decimal?>("Variance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("DailyClosingId");
+
+                    b.HasIndex("BusinessDate")
+                        .IsUnique()
+                        .HasDatabaseName("UX_DailyClosings_BusinessDate");
+
+                    b.HasIndex("ClosedByUserId");
+
+                    b.ToTable("DailyClosings", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_DailyClosings_Closure", "(\"Status\" = 'Draft' AND \"ClosedAt\" IS NULL AND \"ClosedByUserId\" IS NULL AND \"CountedCash\" IS NULL AND \"Variance\" IS NULL) OR (\"Status\" = 'Closed' AND \"SnapshotJson\" IS NOT NULL AND \"ClosedAt\" IS NOT NULL AND \"ClosedByUserId\" IS NOT NULL AND \"ExpectedCash\" IS NOT NULL AND \"CountedCash\" IS NOT NULL AND \"CountedCash\" >= 0 AND \"Variance\" IS NOT NULL AND \"Variance\" = \"CountedCash\" - \"ExpectedCash\")");
+
+                            t.HasCheckConstraint("CK_DailyClosings_Status", "\"Status\" IN ('Draft','Closed')");
+                        });
                 });
 
             modelBuilder.Entity("Cinema.Domain.Entities.Director", b =>
@@ -905,6 +1079,181 @@ namespace Cinema.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Entities.InvoiceProfile", b =>
+                {
+                    b.Property<int>("InvoiceProfileId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("InvoiceProfileId"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("TaxCode")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("character varying(14)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("InvoiceProfileId");
+
+                    b.HasIndex("UserId", "TaxCode")
+                        .IsUnique()
+                        .HasDatabaseName("UX_InvoiceProfiles_User_TaxCode")
+                        .HasFilter("\"IsDeleted\" = FALSE");
+
+                    b.ToTable("InvoiceProfiles", (string)null);
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.InvoiceRequest", b =>
+                {
+                    b.Property<int>("InvoiceRequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("InvoiceRequestId"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("AdjustmentFlaggedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("AdjustmentNote")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<decimal>("AdjustmentRefundAmount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<int?>("AdjustmentRefundTransactionId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("AdjustmentResolvedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("AdjustmentResolvedByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("FileName")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("FilePublicId")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("FileUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("InvoiceNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int?>("InvoiceProfileId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("IssuedByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("NeedsAdjustment")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("ProcessedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("RejectReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<int?>("RequestedByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("TaxCode")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("character varying(14)");
+
+                    b.HasKey("InvoiceRequestId");
+
+                    b.HasIndex("AdjustmentFlaggedAt")
+                        .HasDatabaseName("IX_InvoiceRequests_NeedsAdjustment")
+                        .HasFilter("\"NeedsAdjustment\" = TRUE");
+
+                    b.HasIndex("InvoiceProfileId");
+
+                    b.HasIndex("IssuedByUserId");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_InvoiceRequests_Order_Active")
+                        .HasFilter("\"Status\" <> 'Rejected'");
+
+                    b.HasIndex("RequestedByUserId");
+
+                    b.HasIndex("Status", "CreatedAt")
+                        .HasDatabaseName("IX_InvoiceRequests_Status_CreatedAt");
+
+                    b.ToTable("InvoiceRequests", (string)null);
+                });
+
             modelBuilder.Entity("Cinema.Domain.Entities.Language", b =>
                 {
                     b.Property<int>("LanguageId")
@@ -924,6 +1273,96 @@ namespace Cinema.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Languages", (string)null);
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.LedgerAdjustment", b =>
+                {
+                    b.Property<int>("LedgerAdjustmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LedgerAdjustmentId"));
+
+                    b.Property<int>("CancelledOrdersDelta")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("ComboRevenueDelta")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<int?>("CreatedByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("DiscountDelta")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("GiftCardSoldDelta")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly>("OriginalDate")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("PaymentTransactionId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly>("PostingDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<decimal>("RefundAmountDelta")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SourceKey")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<decimal>("TicketRevenueDelta")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("LedgerAdjustmentId");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("OrderId")
+                        .HasDatabaseName("IX_LedgerAdjustments_OrderId");
+
+                    b.HasIndex("OriginalDate")
+                        .HasDatabaseName("IX_LedgerAdjustments_OriginalDate");
+
+                    b.HasIndex("PaymentTransactionId");
+
+                    b.HasIndex("PostingDate")
+                        .HasDatabaseName("IX_LedgerAdjustments_PostingDate");
+
+                    b.HasIndex("SourceKey", "OriginalDate")
+                        .IsUnique()
+                        .HasDatabaseName("UX_LedgerAdjustments_Source_OriginalDate")
+                        .HasFilter("\"SourceKey\" IS NOT NULL");
+
+                    b.ToTable("LedgerAdjustments", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_LedgerAdjustments_Dates", "\"PostingDate\" > \"OriginalDate\"");
+
+                            t.HasCheckConstraint("CK_LedgerAdjustments_NotEmpty", "\"TicketRevenueDelta\" <> 0 OR \"ComboRevenueDelta\" <> 0 OR \"GiftCardSoldDelta\" <> 0 OR \"DiscountDelta\" <> 0 OR \"RefundAmountDelta\" <> 0 OR \"CancelledOrdersDelta\" <> 0");
+
+                            t.HasCheckConstraint("CK_LedgerAdjustments_Type", "\"Type\" IN ('Refund','Cancellation','ShowtimeChange','Manual')");
+                        });
                 });
 
             modelBuilder.Entity("Cinema.Domain.Entities.LoyaltyPointEntry", b =>
@@ -1738,6 +2177,9 @@ namespace Cinema.Infrastructure.Migrations
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<int?>("CounterShiftId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
@@ -1797,6 +2239,10 @@ namespace Cinema.Infrastructure.Migrations
                         .HasColumnType("character varying(20)");
 
                     b.HasKey("PaymentTransactionId");
+
+                    b.HasIndex("CounterShiftId")
+                        .HasDatabaseName("IX_PaymentTransactions_CounterShift")
+                        .HasFilter("\"CounterShiftId\" IS NOT NULL");
 
                     b.HasIndex("CreatedAt")
                         .HasDatabaseName("IX_PaymentTransactions_CreatedAt");
@@ -2246,6 +2692,236 @@ namespace Cinema.Infrastructure.Migrations
                             t.HasCheckConstraint("CK_PromotionRedemptions_DiscountAmount", "\"DiscountAmount\" >= 0");
 
                             t.HasCheckConstraint("CK_PromotionRedemptions_Status", "\"Status\" IN ('Reserved','Redeemed','Released')");
+                        });
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.ReconciliationItem", b =>
+                {
+                    b.Property<int>("ReconciliationItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ReconciliationItemId"));
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("AssignedToUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Gateway")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<decimal>("GatewayFee")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<string>("GatewayStatus")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime?>("GatewayTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("GatewayTransactionCode")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<int?>("PaymentTransactionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ReconciliationSessionId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Resolution")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("Open");
+
+                    b.Property<DateTime?>("ResolvedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("ResolvedByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Result")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.HasKey("ReconciliationItemId");
+
+                    b.HasIndex("AssignedToUserId")
+                        .HasDatabaseName("IX_ReconciliationItems_AssignedTo")
+                        .HasFilter("\"AssignedToUserId\" IS NOT NULL");
+
+                    b.HasIndex("PaymentTransactionId")
+                        .HasDatabaseName("IX_ReconciliationItems_PaymentTransaction")
+                        .HasFilter("\"PaymentTransactionId\" IS NOT NULL");
+
+                    b.HasIndex("ResolvedByUserId");
+
+                    b.HasIndex("ReconciliationSessionId", "GatewayTransactionCode")
+                        .IsUnique()
+                        .HasDatabaseName("UX_ReconciliationItems_Session_Code");
+
+                    b.HasIndex("Resolution", "Result")
+                        .HasDatabaseName("IX_ReconciliationItems_Resolution_Result");
+
+                    b.ToTable("ReconciliationItems", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_ReconciliationItems_Amounts", "(\"Amount\" IS NULL OR \"Amount\" >= 0) AND \"GatewayFee\" >= 0");
+
+                            t.HasCheckConstraint("CK_ReconciliationItems_Gateway", "\"Gateway\" IN ('VNPay','Momo','Stripe')");
+
+                            t.HasCheckConstraint("CK_ReconciliationItems_PaymentTransaction", "(\"Result\" = 'MissingInSystem') = (\"PaymentTransactionId\" IS NULL)");
+
+                            t.HasCheckConstraint("CK_ReconciliationItems_Resolution", "\"Resolution\" IN ('Open','Resolved','Ignored')");
+
+                            t.HasCheckConstraint("CK_ReconciliationItems_Resolved", "(\"Resolution\" = 'Open' AND \"ResolvedAt\" IS NULL AND \"ResolvedByUserId\" IS NULL) OR (\"Resolution\" <> 'Open' AND \"ResolvedAt\" IS NOT NULL AND \"ResolvedByUserId\" IS NOT NULL)");
+
+                            t.HasCheckConstraint("CK_ReconciliationItems_Result", "\"Result\" IN ('Matched','MissingInSystem','MissingAtGateway','AmountMismatch','StatusMismatch','PaidAtGatewayOrderUnconfirmed')");
+                        });
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.ReconciliationSession", b =>
+                {
+                    b.Property<int>("ReconciliationSessionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ReconciliationSessionId"));
+
+                    b.Property<int>("AmountMismatchCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("NOW() AT TIME ZONE 'UTC'");
+
+                    b.Property<int>("CreatedByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("FileHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("FileName")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Gateway")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<decimal>("GatewayTotalAmount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<int>("MatchedCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("MissingAtGatewayCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("MissingInSystemCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("PaidAtGatewayOrderUnconfirmedCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<DateOnly?>("PeriodFrom")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("PeriodTo")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("Running");
+
+                    b.Property<int>("StatusMismatchCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<decimal>("SystemTotalAmount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<int>("TotalRows")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("ReconciliationSessionId");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("Gateway", "CreatedAt")
+                        .HasDatabaseName("IX_ReconciliationSessions_Gateway_CreatedAt");
+
+                    b.HasIndex("Gateway", "FileHash")
+                        .IsUnique()
+                        .HasDatabaseName("UX_ReconciliationSessions_Gateway_FileHash")
+                        .HasFilter("\"Source\" = 'File'");
+
+                    b.ToTable("ReconciliationSessions", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_ReconciliationSessions_Amounts", "\"GatewayTotalAmount\" >= 0 AND \"SystemTotalAmount\" >= 0");
+
+                            t.HasCheckConstraint("CK_ReconciliationSessions_Completed", "\"Status\" = 'Running' OR \"CompletedAt\" IS NOT NULL");
+
+                            t.HasCheckConstraint("CK_ReconciliationSessions_Counts", "\"TotalRows\" >= 0 AND \"MatchedCount\" >= 0 AND \"MissingInSystemCount\" >= 0 AND \"MissingAtGatewayCount\" >= 0 AND \"AmountMismatchCount\" >= 0 AND \"StatusMismatchCount\" >= 0 AND \"PaidAtGatewayOrderUnconfirmedCount\" >= 0");
+
+                            t.HasCheckConstraint("CK_ReconciliationSessions_FileHash", "\"Source\" <> 'File' OR \"FileHash\" IS NOT NULL");
+
+                            t.HasCheckConstraint("CK_ReconciliationSessions_Gateway", "\"Gateway\" IN ('VNPay','Momo','Stripe')");
+
+                            t.HasCheckConstraint("CK_ReconciliationSessions_Period", "\"PeriodFrom\" IS NULL OR \"PeriodTo\" IS NULL OR \"PeriodFrom\" <= \"PeriodTo\"");
+
+                            t.HasCheckConstraint("CK_ReconciliationSessions_Source", "\"Source\" IN ('File','Api')");
+
+                            t.HasCheckConstraint("CK_ReconciliationSessions_Status", "\"Status\" IN ('Running','Completed','Failed')");
                         });
                 });
 
@@ -3558,6 +4234,17 @@ namespace Cinema.Infrastructure.Migrations
                     b.Navigation("Recipe");
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Entities.CounterShift", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("Cinema.Domain.Entities.CustomerProfile", b =>
                 {
                     b.HasOne("Cinema.Domain.Entities.MembershipTier", "Tier")
@@ -3574,6 +4261,16 @@ namespace Cinema.Infrastructure.Migrations
                     b.Navigation("Tier");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.DailyClosing", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.User", "ClosedByUser")
+                        .WithMany()
+                        .HasForeignKey("ClosedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ClosedByUser");
                 });
 
             modelBuilder.Entity("Cinema.Domain.Entities.Employee", b =>
@@ -3630,6 +4327,73 @@ namespace Cinema.Infrastructure.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("OrderLine");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.InvoiceProfile", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.InvoiceRequest", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.InvoiceProfile", "InvoiceProfile")
+                        .WithMany()
+                        .HasForeignKey("InvoiceProfileId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Cinema.Domain.Entities.User", "IssuedByUser")
+                        .WithMany()
+                        .HasForeignKey("IssuedByUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Cinema.Domain.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.User", "RequestedByUser")
+                        .WithMany()
+                        .HasForeignKey("RequestedByUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("InvoiceProfile");
+
+                    b.Navigation("IssuedByUser");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("RequestedByUser");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.LedgerAdjustment", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Cinema.Domain.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Cinema.Domain.Entities.PaymentTransaction", "PaymentTransaction")
+                        .WithMany()
+                        .HasForeignKey("PaymentTransactionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("PaymentTransaction");
                 });
 
             modelBuilder.Entity("Cinema.Domain.Entities.LoyaltyPointEntry", b =>
@@ -3714,6 +4478,11 @@ namespace Cinema.Infrastructure.Migrations
 
             modelBuilder.Entity("Cinema.Domain.Entities.Order", b =>
                 {
+                    b.HasOne("Cinema.Domain.Entities.CounterShift", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("CounterShiftId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Cinema.Domain.Entities.Employee", "CreatedByEmployee")
                         .WithMany("CreatedOrders")
                         .HasForeignKey("CreatedByEmployeeId")
@@ -3841,6 +4610,11 @@ namespace Cinema.Infrastructure.Migrations
 
             modelBuilder.Entity("Cinema.Domain.Entities.PaymentTransaction", b =>
                 {
+                    b.HasOne("Cinema.Domain.Entities.CounterShift", "CounterShift")
+                        .WithMany()
+                        .HasForeignKey("CounterShiftId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Cinema.Domain.Entities.Order", "Order")
                         .WithMany("PaymentTransactions")
                         .HasForeignKey("OrderId")
@@ -3856,6 +4630,8 @@ namespace Cinema.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("PerformedByUserId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CounterShift");
 
                     b.Navigation("Order");
 
@@ -3917,6 +4693,49 @@ namespace Cinema.Infrastructure.Migrations
                     b.Navigation("Promotion");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.ReconciliationItem", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.User", "AssignedToUser")
+                        .WithMany()
+                        .HasForeignKey("AssignedToUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Cinema.Domain.Entities.PaymentTransaction", "PaymentTransaction")
+                        .WithMany()
+                        .HasForeignKey("PaymentTransactionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Cinema.Domain.Entities.ReconciliationSession", "Session")
+                        .WithMany("Items")
+                        .HasForeignKey("ReconciliationSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.User", "ResolvedByUser")
+                        .WithMany()
+                        .HasForeignKey("ResolvedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("AssignedToUser");
+
+                    b.Navigation("PaymentTransaction");
+
+                    b.Navigation("ResolvedByUser");
+
+                    b.Navigation("Session");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.ReconciliationSession", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
                 });
 
             modelBuilder.Entity("Cinema.Domain.Entities.RefreshToken", b =>
@@ -4284,6 +5103,11 @@ namespace Cinema.Infrastructure.Migrations
                     b.Navigation("Lines");
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Entities.CounterShift", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("Cinema.Domain.Entities.Director", b =>
                 {
                     b.Navigation("Movies");
@@ -4370,6 +5194,11 @@ namespace Cinema.Infrastructure.Migrations
             modelBuilder.Entity("Cinema.Domain.Entities.Promotion", b =>
                 {
                     b.Navigation("Redemptions");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.ReconciliationSession", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("Cinema.Domain.Entities.Role", b =>

@@ -10,6 +10,7 @@ import { OrderCancelAction } from "@/features/client/orders/components/detail/or
 import { OrderCancelSection } from "@/features/client/orders/components/detail/order-cancel-section";
 import { OrderDetailHeader } from "@/features/client/orders/components/detail/order-detail-header";
 import { OrderDetailSkeleton } from "@/features/client/orders/components/detail/order-detail-skeleton";
+import { OrderInvoiceSection } from "@/features/client/invoices/components/order-invoice-section";
 import { OrderLinesSection } from "@/features/client/orders/components/detail/order-lines-section";
 import { OrderPaymentPrompt } from "@/features/client/orders/components/detail/order-payment-prompt";
 import { OrderPriceSection } from "@/features/client/orders/components/detail/order-price-section";
@@ -55,6 +56,8 @@ const TicketDetailContent = ({ order }: { order: OrderDetailDto }) => {
       <OrderPriceSection order={order} />
 
       <OrderTransactionsSection order={order} />
+
+      <OrderInvoiceSection order={order} />
 
       <OrderCancelAction order={order} />
     </div>

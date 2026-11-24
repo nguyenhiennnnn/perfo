@@ -61,6 +61,13 @@ export const ENDPOINTS = {
     promotion: (id: number) => `/bookings/${id}/promotion`,
     cancel: (id: number) => `/bookings/${id}/cancel`,
     ticketsPdf: (id: number) => `/bookings/${id}/tickets/pdf`,
+    invoiceRequests: (id: number) => `/bookings/${id}/invoice-requests`,
+    invoiceFile: (id: number, requestId: number) =>
+      `/bookings/${id}/invoice-requests/${requestId}/file`,
+  },
+  invoiceProfiles: {
+    root: "/invoice-profiles",
+    byId: (id: number) => `/invoice-profiles/${id}`,
   },
   admin: {
     settings: "/admin/settings",
@@ -99,6 +106,13 @@ export const ENDPOINTS = {
       finance: "/admin/reports/finance",
       financeExport: "/admin/reports/finance/export",
       financeExportJobs: "/admin/reports/finance/export-jobs",
+    },
+    invoiceRequests: {
+      root: "/admin/invoice-requests",
+      issue: (id: number) => `/admin/invoice-requests/${id}/issue`,
+      file: (id: number) => `/admin/invoice-requests/${id}/file`,
+      reject: (id: number) => `/admin/invoice-requests/${id}/reject`,
+      resolveAdjustment: (id: number) => `/admin/invoice-requests/${id}/resolve-adjustment`,
     },
     users: {
       root: "/admin/users",
@@ -144,6 +158,7 @@ export const ENDPOINTS = {
       checkin: "/admin/bookings/checkin",
       cardNotPresented: "/admin/bookings/card-not-presented",
       counterSupplementOrder: "/admin/bookings/counter-supplement-order",
+      counterInvoiceRequest: (id: number) => `/admin/bookings/${id}/invoice-request`,
     },
     promotions: {
       root: "/admin/promotions",

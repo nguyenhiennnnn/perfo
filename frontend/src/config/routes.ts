@@ -86,6 +86,8 @@ export const ROUTES = {
     pricingPreview: "/admin/pricing/preview",
     reports: "/admin/reports",
     financeReport: "/admin/reports/finance",
+    taxReport: "/admin/reports/tax",
+    invoiceRequests: "/admin/invoice-requests",
     reconciliation: "/admin/reconciliation",
     reconciliationDetail: (id: number | string) => `/admin/reconciliation/${id}`,
     users: "/admin/users",

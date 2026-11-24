@@ -230,3 +230,10 @@ export const ShowtimeKind = {
   Event: "Event",
 } as const;
 export type ShowtimeKind = (typeof ShowtimeKind)[keyof typeof ShowtimeKind];
+
+export const InvoiceRequestStatus = {
+  Pending: "Pending",
+  Issued: "Issued",
+  Rejected: "Rejected",
+} as const;
+export type InvoiceRequestStatus = (typeof InvoiceRequestStatus)[keyof typeof InvoiceRequestStatus];

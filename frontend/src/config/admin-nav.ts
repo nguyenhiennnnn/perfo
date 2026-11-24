@@ -21,6 +21,8 @@ import {
   PackageX,
   PackageCheck,
   Ticket,
+  FileText,
+  Receipt,
   Banknote,
   Clock,
   LockKeyhole,
@@ -222,6 +224,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         roles: [Role.Admin],
       },
       {
+        to: ROUTES.admin.invoiceRequests,
+        label: "Yêu cầu hóa đơn VAT",
+        icon: FileText,
+        roles: [Role.Admin],
+      },
+      {
         to: ROUTES.admin.cashRefunds,
         label: "Đơn tiền mặt cần hoàn",
         icon: Banknote,
@@ -243,6 +251,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         to: ROUTES.admin.financeReport,
         label: "Báo cáo tài chính",
         icon: Wallet,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.taxReport,
+        label: "Báo cáo thuế",
+        icon: Receipt,
         roles: [Role.Admin],
       },
       {
@@ -379,6 +393,7 @@ export interface AdminBreadcrumb {
 const ADMIN_SEGMENT_LABELS: Record<string, string> = {
   "schedule-analysis": "Phân tích lịch chiếu",
   finance: "Báo cáo tài chính",
+  tax: "Báo cáo thuế",
   reconciliation: "Đối soát cổng thanh toán",
   genres: "Thể loại phim",
   languages: "Ngôn ngữ",

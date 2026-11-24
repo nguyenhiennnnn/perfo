@@ -8,6 +8,7 @@ import type {
   OrderChannel,
   PaymentMethod,
   ImportExportJobStatus,
+  InvoiceRequestStatus,
 } from "@/types/enum";
 import {
   activeStatusConfigMap,
@@ -17,6 +18,7 @@ import {
   defaultAgeRatingConfig,
   defaultSeatTypeConfig,
   importExportJobStatusMap,
+  invoiceRequestStatusMap,
   movieStatusMap,
   paymentMethodMap,
   paymentStatusMap,
@@ -134,6 +136,13 @@ export const ShowtimeStatusBadge = ({ status, className }: StatusBadgeProps<Show
 
 export const BookingStatusBadge = ({ status, className }: StatusBadgeProps<OrderStatus>) => (
   <MappedBadge value={status} map={orderStatusMap} className={className} />
+);
+
+export const InvoiceRequestStatusBadge = ({
+  status,
+  className,
+}: StatusBadgeProps<InvoiceRequestStatus>) => (
+  <MappedBadge value={status} map={invoiceRequestStatusMap} className={className} />
 );
 
 export const PaymentStatusBadge = ({ status, className }: StatusBadgeProps<PaymentStatus>) => (

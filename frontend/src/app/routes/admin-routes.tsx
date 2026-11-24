@@ -29,6 +29,8 @@ const AdminRoomChangeRefundsPage = lazyRoute(
   () => import("@/features/admin/room-change-refunds/pages/room-change-refunds-page"),
 );
 const AdminUsersPage = lazyRoute(() => import("@/features/admin/users/pages/users-page"));
+const AdminInvoiceRequestsPage = lazyRoute(() => import("@/features/admin/invoices/pages/invoice-requests-page"));
+const AdminTaxReportPage = lazyRoute(() => import("@/features/admin/reports/pages/tax-report-page"));
 const AdminFinanceReportPage = lazyRoute(() => import("@/features/admin/reports/pages/finance-report-page"));
 const AdminReconciliationPage = lazyRoute(() => import("@/features/admin/reconciliation/pages/reconciliation-page"));
 const AdminReconciliationDetailPage = lazyRoute(() => import("@/features/admin/reconciliation/pages/reconciliation-detail-page"));
@@ -122,6 +124,8 @@ export const adminRoutes: RouteObject[] = [
           { path: "audit-logs", lazy: AdminAuditLogsPage },
           { path: "reports", lazy: AdminReportsPage },
           { path: "reports/finance", lazy: AdminFinanceReportPage },
+          { path: "reports/tax", lazy: AdminTaxReportPage },
+          { path: "invoice-requests", lazy: AdminInvoiceRequestsPage },
           { path: "reconciliation", lazy: AdminReconciliationPage },
           { path: "reconciliation/:id", lazy: AdminReconciliationDetailPage },
           { path: "users", lazy: AdminUsersPage },

@@ -14,6 +14,8 @@ import { cn } from "@/lib/utils";
 interface DownloadTicketsPdfButtonProps {
   endpoint: string;
   fallbackFilename: string;
+  label?: string;
+  errorTitle?: string;
   disabled?: boolean;
   size?: "sm" | "default";
   className?: string;
@@ -22,12 +24,14 @@ interface DownloadTicketsPdfButtonProps {
 export const DownloadTicketsPdfButton = ({
   endpoint,
   fallbackFilename,
+  label = "Tải vé PDF",
+  errorTitle = "Không thể tải vé PDF",
   disabled = false,
   size = "sm",
   className,
 }: DownloadTicketsPdfButtonProps) => {
   const { mutate, isPending } = useMutation({
-    meta: { errorTitle: "Không thể tải vé PDF", skipSuccessToast: true },
+    meta: { errorTitle, skipSuccessToast: true },
     mutationFn: async () => {
       try {
         const response = await apiClient.get<Blob>(endpoint, {
@@ -54,7 +58,7 @@ export const DownloadTicketsPdfButton = ({
       onClick={() => mutate()}
     >
       {isPending ? <Spinner size="sm" decorative /> : <FileDown />}
-      <span>{isPending ? "Đang tải" : "Tải vé PDF"}</span>
+      <span>{isPending ? "Đang tải" : label}</span>
     </Button>
   );
 };

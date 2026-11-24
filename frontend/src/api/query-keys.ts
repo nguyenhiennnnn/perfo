@@ -32,6 +32,12 @@ export const queryKeys = {
     mine: () => ["promotions", "mine"] as const,
   },
 
+  invoices: {
+    all: () => ["invoices"] as const,
+    profiles: () => ["invoices", "profiles"] as const,
+    orderRequests: (orderId: number) => ["invoices", "order-requests", orderId] as const,
+  },
+
   combos: {
     all: () => ["combos"] as const,
     active: () => ["combos", "active"] as const,
@@ -145,6 +151,11 @@ export const queryKeys = {
   adminRoomChangeRefunds: {
     all: () => ["admin", "room-change-refunds"] as const,
     list: (params: object) => ["admin", "room-change-refunds", "list", params] as const,
+  },
+
+  adminInvoiceRequests: {
+    all: () => ["admin", "invoice-requests"] as const,
+    list: (params: object) => ["admin", "invoice-requests", "list", params] as const,
   },
 
   adminAuditLogs: {

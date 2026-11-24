@@ -21,7 +21,6 @@ import {
   getHeatLevel,
   getHeatSeatStyle,
   getHeatSwatchStyle,
-  getSeatHeatValue,
 } from "../utils/seat-heatmap";
 
 const INACTIVE_LEGEND = [{ label: "Ghế đã tắt", state: "inactive" as const, group: "status" }];

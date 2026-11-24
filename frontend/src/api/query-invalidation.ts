@@ -81,6 +81,14 @@ export const invalidations = {
     ...dashboard(),
   ],
 
+  invoiceProfileChanged: (): KeyList => [k.invoices.profiles()],
+
+  invoiceRequestChanged: (): KeyList => [
+    k.invoices.all(),
+    k.adminInvoiceRequests.all(),
+    k.adminAuditLogs.all(),
+  ],
+
   orderPromotionChanged: (): KeyList => [...orderViews(), k.promotions.mine()],
 
   promotionChanged: (): KeyList => [

@@ -104,7 +104,13 @@ namespace Cinema.Infrastructure.Migrations
                     SuggestionHighOccupancyPercent = table.Column<int>(type: "integer", nullable: false, defaultValue: 80),
                     SuggestionLowOccupancyPercent = table.Column<int>(type: "integer", nullable: false, defaultValue: 35),
                     SuggestionMinShowtimes = table.Column<int>(type: "integer", nullable: false, defaultValue: 5),
-                    SuggestionLookbackDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 14)
+                    SuggestionLookbackDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 14),
+                    DailyClosingAllowOverride = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    TicketVatPercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false, defaultValue: 10m),
+                    ComboVatPercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false, defaultValue: 10m),
+                    GiftCardVatPercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false, defaultValue: 10m),
+                    MembershipVatPercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false, defaultValue: 10m),
+                    InvoiceRequestWindowDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 30)
                 },
                 constraints: table =>
                 {
@@ -841,6 +847,37 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DailyClosings",
+                columns: table => new
+                {
+                    DailyClosingId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    BusinessDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Draft"),
+                    SnapshotJson = table.Column<string>(type: "jsonb", nullable: true),
+                    ExpectedCash = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    CountedCash = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    Variance = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    Note = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
+                    ClosedByUserId = table.Column<int>(type: "integer", nullable: true),
+                    ClosedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ReportEmailedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DailyClosings", x => x.DailyClosingId);
+                    table.CheckConstraint("CK_DailyClosings_Closure", "(\"Status\" = 'Draft' AND \"ClosedAt\" IS NULL AND \"ClosedByUserId\" IS NULL AND \"CountedCash\" IS NULL AND \"Variance\" IS NULL) OR (\"Status\" = 'Closed' AND \"SnapshotJson\" IS NOT NULL AND \"ClosedAt\" IS NOT NULL AND \"ClosedByUserId\" IS NOT NULL AND \"ExpectedCash\" IS NOT NULL AND \"CountedCash\" IS NOT NULL AND \"CountedCash\" >= 0 AND \"Variance\" IS NOT NULL AND \"Variance\" = \"CountedCash\" - \"ExpectedCash\")");
+                    table.CheckConstraint("CK_DailyClosings_Status", "\"Status\" IN ('Draft','Closed')");
+                    table.ForeignKey(
+                        name: "FK_DailyClosings_Users_ClosedByUserId",
+                        column: x => x.ClosedByUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
@@ -914,6 +951,33 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "InvoiceProfiles",
+                columns: table => new
+                {
+                    InvoiceProfileId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    TaxCode = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: false),
+                    CompanyName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Address = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    Email = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvoiceProfiles", x => x.InvoiceProfileId);
+                    table.ForeignKey(
+                        name: "FK_InvoiceProfiles_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Promotions",
                 columns: table => new
                 {
@@ -969,6 +1033,52 @@ namespace Cinema.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Promotions_Users_AssignedUserId",
                         column: x => x.AssignedUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReconciliationSessions",
+                columns: table => new
+                {
+                    ReconciliationSessionId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Gateway = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Source = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    FileName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    FileHash = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: true),
+                    PeriodFrom = table.Column<DateOnly>(type: "date", nullable: true),
+                    PeriodTo = table.Column<DateOnly>(type: "date", nullable: true),
+                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Running"),
+                    TotalRows = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    MatchedCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    MissingInSystemCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    MissingAtGatewayCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    AmountMismatchCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    StatusMismatchCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    PaidAtGatewayOrderUnconfirmedCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    GatewayTotalAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
+                    SystemTotalAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
+                    ErrorMessage = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
+                    CreatedByUserId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW() AT TIME ZONE 'UTC'"),
+                    CompletedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReconciliationSessions", x => x.ReconciliationSessionId);
+                    table.CheckConstraint("CK_ReconciliationSessions_Amounts", "\"GatewayTotalAmount\" >= 0 AND \"SystemTotalAmount\" >= 0");
+                    table.CheckConstraint("CK_ReconciliationSessions_Completed", "\"Status\" = 'Running' OR \"CompletedAt\" IS NOT NULL");
+                    table.CheckConstraint("CK_ReconciliationSessions_Counts", "\"TotalRows\" >= 0 AND \"MatchedCount\" >= 0 AND \"MissingInSystemCount\" >= 0 AND \"MissingAtGatewayCount\" >= 0 AND \"AmountMismatchCount\" >= 0 AND \"StatusMismatchCount\" >= 0 AND \"PaidAtGatewayOrderUnconfirmedCount\" >= 0");
+                    table.CheckConstraint("CK_ReconciliationSessions_FileHash", "\"Source\" <> 'File' OR \"FileHash\" IS NOT NULL");
+                    table.CheckConstraint("CK_ReconciliationSessions_Gateway", "\"Gateway\" IN ('VNPay','Momo','Stripe')");
+                    table.CheckConstraint("CK_ReconciliationSessions_Period", "\"PeriodFrom\" IS NULL OR \"PeriodTo\" IS NULL OR \"PeriodFrom\" <= \"PeriodTo\"");
+                    table.CheckConstraint("CK_ReconciliationSessions_Source", "\"Source\" IN ('File','Api')");
+                    table.CheckConstraint("CK_ReconciliationSessions_Status", "\"Status\" IN ('Running','Completed','Failed')");
+                    table.ForeignKey(
+                        name: "FK_ReconciliationSessions_Users_CreatedByUserId",
+                        column: x => x.CreatedByUserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
@@ -1151,64 +1261,34 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
+                name: "CounterShifts",
                 columns: table => new
                 {
-                    OrderId = table.Column<int>(type: "integer", nullable: false)
+                    CounterShiftId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    OrderCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    Type = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Ticket"),
-                    Channel = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Online"),
-                    UserId = table.Column<int>(type: "integer", nullable: true),
-                    CustomerName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    CustomerPhone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Pending"),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()"),
-                    ExpiresAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    CreatedByEmployeeId = table.Column<int>(type: "integer", nullable: true),
-                    CounterShiftId = table.Column<int>(type: "integer", nullable: true),
-                    OriginalOrderId = table.Column<int>(type: "integer", nullable: true),
-                    TotalAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    DiscountAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
-                    FinalAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    CancelReason = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    CancelledBy = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    CancelledAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    EmployeeId = table.Column<int>(type: "integer", nullable: false),
+                    OpenedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()"),
+                    OpeningCash = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    ClosedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CountedCash = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    ExpectedCash = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    Variance = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    Note = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    UnclosedAlertedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Open"),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.OrderId);
-                    table.CheckConstraint("CK_Orders_Amounts", "\"DiscountAmount\" <= \"TotalAmount\" AND \"FinalAmount\" = \"TotalAmount\" - \"DiscountAmount\"");
-                    table.CheckConstraint("CK_Orders_Cancellation", "(\"Status\" = 'Cancelled' AND \"CancelReason\" IS NOT NULL AND \"CancelledBy\" IS NOT NULL AND \"CancelledAt\" IS NOT NULL) OR (\"Status\" <> 'Cancelled' AND \"CancelReason\" IS NULL AND \"CancelledBy\" IS NULL AND \"CancelledAt\" IS NULL)");
-                    table.CheckConstraint("CK_Orders_CancelledBy", "\"CancelledBy\" IS NULL OR \"CancelledBy\" IN ('Customer','Staff','Admin','System')");
-                    table.CheckConstraint("CK_Orders_CancelReason", "\"CancelReason\" IS NULL OR \"CancelReason\" IN ('CustomerChangedMind','DuplicateOrder','PaymentError','ShowtimeCancelled','RoomClosed','Other')");
-                    table.CheckConstraint("CK_Orders_Channel", "\"Channel\" IN ('Online','Counter')");
-                    table.CheckConstraint("CK_Orders_Channel_Employee", "(\"Channel\" = 'Counter' AND \"CreatedByEmployeeId\" IS NOT NULL) OR (\"Channel\" = 'Online' AND \"CreatedByEmployeeId\" IS NULL)");
-                    table.CheckConstraint("CK_Orders_Customer_Identity", "\"UserId\" IS NOT NULL OR \"CustomerName\" IS NOT NULL");
-                    table.CheckConstraint("CK_Orders_DiscountAmount", "\"DiscountAmount\" >= 0");
-                    table.CheckConstraint("CK_Orders_FinalAmount", "\"FinalAmount\" >= 0");
-                    table.CheckConstraint("CK_Orders_Status", "\"Status\" IN ('Pending','Confirmed','Cancelled','Expired')");
-                    table.CheckConstraint("CK_Orders_Supplement_Original", "(\"Type\" = 'Supplement') = (\"OriginalOrderId\" IS NOT NULL)");
-                    table.CheckConstraint("CK_Orders_TotalAmount", "\"TotalAmount\" >= 0");
-                    table.CheckConstraint("CK_Orders_Type", "\"Type\" IN ('Ticket','Combo','GiftCard','Membership','RoomRental','Supplement')");
+                    table.PrimaryKey("PK_CounterShifts", x => x.CounterShiftId);
+                    table.CheckConstraint("CK_CounterShifts_Closure", "(\"Status\" = 'Open' AND \"ClosedAt\" IS NULL AND \"CountedCash\" IS NULL AND \"ExpectedCash\" IS NULL AND \"Variance\" IS NULL) OR (\"Status\" = 'Closed' AND \"ClosedAt\" IS NOT NULL AND \"ClosedAt\" >= \"OpenedAt\" AND \"CountedCash\" IS NOT NULL AND \"CountedCash\" >= 0 AND \"ExpectedCash\" IS NOT NULL AND \"Variance\" IS NOT NULL AND \"Variance\" = \"CountedCash\" - \"ExpectedCash\")");
+                    table.CheckConstraint("CK_CounterShifts_OpeningCash", "\"OpeningCash\" >= 0");
+                    table.CheckConstraint("CK_CounterShifts_Status", "\"Status\" IN ('Open','Closed')");
                     table.ForeignKey(
-                        name: "FK_Orders_Employees_CreatedByEmployeeId",
-                        column: x => x.CreatedByEmployeeId,
+                        name: "FK_CounterShifts_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "EmployeeId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Orders_Orders_OriginalOrderId",
-                        column: x => x.OriginalOrderId,
-                        principalTable: "Orders",
-                        principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Orders_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -1333,6 +1413,133 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    OrderId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    OrderCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Type = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Ticket"),
+                    Channel = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Online"),
+                    UserId = table.Column<int>(type: "integer", nullable: true),
+                    CustomerName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    CustomerPhone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Pending"),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()"),
+                    ExpiresAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreatedByEmployeeId = table.Column<int>(type: "integer", nullable: true),
+                    CounterShiftId = table.Column<int>(type: "integer", nullable: true),
+                    OriginalOrderId = table.Column<int>(type: "integer", nullable: true),
+                    TotalAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    DiscountAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
+                    FinalAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    CancelReason = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    CancelledBy = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    CancelledAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.OrderId);
+                    table.CheckConstraint("CK_Orders_Amounts", "\"DiscountAmount\" <= \"TotalAmount\" AND \"FinalAmount\" = \"TotalAmount\" - \"DiscountAmount\"");
+                    table.CheckConstraint("CK_Orders_Cancellation", "(\"Status\" = 'Cancelled' AND \"CancelReason\" IS NOT NULL AND \"CancelledBy\" IS NOT NULL AND \"CancelledAt\" IS NOT NULL) OR (\"Status\" <> 'Cancelled' AND \"CancelReason\" IS NULL AND \"CancelledBy\" IS NULL AND \"CancelledAt\" IS NULL)");
+                    table.CheckConstraint("CK_Orders_CancelledBy", "\"CancelledBy\" IS NULL OR \"CancelledBy\" IN ('Customer','Staff','Admin','System')");
+                    table.CheckConstraint("CK_Orders_CancelReason", "\"CancelReason\" IS NULL OR \"CancelReason\" IN ('CustomerChangedMind','DuplicateOrder','PaymentError','ShowtimeCancelled','RoomClosed','Other')");
+                    table.CheckConstraint("CK_Orders_Channel", "\"Channel\" IN ('Online','Counter')");
+                    table.CheckConstraint("CK_Orders_Channel_Employee", "(\"Channel\" = 'Counter' AND \"CreatedByEmployeeId\" IS NOT NULL) OR (\"Channel\" = 'Online' AND \"CreatedByEmployeeId\" IS NULL)");
+                    table.CheckConstraint("CK_Orders_Customer_Identity", "\"UserId\" IS NOT NULL OR \"CustomerName\" IS NOT NULL");
+                    table.CheckConstraint("CK_Orders_DiscountAmount", "\"DiscountAmount\" >= 0");
+                    table.CheckConstraint("CK_Orders_FinalAmount", "\"FinalAmount\" >= 0");
+                    table.CheckConstraint("CK_Orders_Status", "\"Status\" IN ('Pending','Confirmed','Cancelled','Expired')");
+                    table.CheckConstraint("CK_Orders_Supplement_Original", "(\"Type\" = 'Supplement') = (\"OriginalOrderId\" IS NOT NULL)");
+                    table.CheckConstraint("CK_Orders_TotalAmount", "\"TotalAmount\" >= 0");
+                    table.CheckConstraint("CK_Orders_Type", "\"Type\" IN ('Ticket','Combo','GiftCard','Membership','RoomRental','Supplement')");
+                    table.ForeignKey(
+                        name: "FK_Orders_CounterShifts_CounterShiftId",
+                        column: x => x.CounterShiftId,
+                        principalTable: "CounterShifts",
+                        principalColumn: "CounterShiftId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Orders_Employees_CreatedByEmployeeId",
+                        column: x => x.CreatedByEmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Orders_Orders_OriginalOrderId",
+                        column: x => x.OriginalOrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Orders_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InvoiceRequests",
+                columns: table => new
+                {
+                    InvoiceRequestId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    OrderId = table.Column<int>(type: "integer", nullable: false),
+                    InvoiceProfileId = table.Column<int>(type: "integer", nullable: true),
+                    TaxCode = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: false),
+                    CompanyName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Address = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    Email = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    RejectReason = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    InvoiceNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    FileUrl = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    FilePublicId = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    FileName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    NeedsAdjustment = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    AdjustmentFlaggedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    AdjustmentRefundTransactionId = table.Column<int>(type: "integer", nullable: true),
+                    AdjustmentRefundAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
+                    AdjustmentResolvedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    AdjustmentResolvedByUserId = table.Column<int>(type: "integer", nullable: true),
+                    AdjustmentNote = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    RequestedByUserId = table.Column<int>(type: "integer", nullable: true),
+                    IssuedByUserId = table.Column<int>(type: "integer", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ProcessedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InvoiceRequests", x => x.InvoiceRequestId);
+                    table.ForeignKey(
+                        name: "FK_InvoiceRequests_InvoiceProfiles_InvoiceProfileId",
+                        column: x => x.InvoiceProfileId,
+                        principalTable: "InvoiceProfiles",
+                        principalColumn: "InvoiceProfileId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_InvoiceRequests_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_InvoiceRequests_Users_IssuedByUserId",
+                        column: x => x.IssuedByUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_InvoiceRequests_Users_RequestedByUserId",
+                        column: x => x.RequestedByUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "LoyaltyPointEntries",
                 columns: table => new
                 {
@@ -1438,6 +1645,7 @@ namespace Cinema.Infrastructure.Migrations
                     AmountReceived = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
                     ChangeGiven = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
                     OriginalTransactionId = table.Column<int>(type: "integer", nullable: true),
+                    CounterShiftId = table.Column<int>(type: "integer", nullable: true),
                     NeedsManualRefund = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     Note = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true)
                 },
@@ -1453,6 +1661,12 @@ namespace Cinema.Infrastructure.Migrations
                     table.CheckConstraint("CK_PaymentTransactions_Original", "(\"Type\" = 'Refund') = (\"OriginalTransactionId\" IS NOT NULL)");
                     table.CheckConstraint("CK_PaymentTransactions_Status", "\"Status\" IN ('Pending','Success','Failed')");
                     table.CheckConstraint("CK_PaymentTransactions_Type", "\"Type\" IN ('Charge','Refund')");
+                    table.ForeignKey(
+                        name: "FK_PaymentTransactions_CounterShifts_CounterShiftId",
+                        column: x => x.CounterShiftId,
+                        principalTable: "CounterShifts",
+                        principalColumn: "CounterShiftId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PaymentTransactions_Orders_OrderId",
                         column: x => x.OrderId,
@@ -1514,6 +1728,31 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ShowtimeRoomChangeNotices",
+                columns: table => new
+                {
+                    ShowtimeRoomChangeId = table.Column<int>(type: "integer", nullable: false),
+                    OrderId = table.Column<int>(type: "integer", nullable: false),
+                    SentAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShowtimeRoomChangeNotices", x => new { x.ShowtimeRoomChangeId, x.OrderId });
+                    table.ForeignKey(
+                        name: "FK_ShowtimeRoomChangeNotices_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShowtimeRoomChangeNotices_ShowtimeRoomChanges_ShowtimeRoomC~",
+                        column: x => x.ShowtimeRoomChangeId,
+                        principalTable: "ShowtimeRoomChanges",
+                        principalColumn: "ShowtimeRoomChangeId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ShowtimeSeats",
                 columns: table => new
                 {
@@ -1559,28 +1798,107 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ShowtimeRoomChangeNotices",
+                name: "LedgerAdjustments",
                 columns: table => new
                 {
-                    ShowtimeRoomChangeId = table.Column<int>(type: "integer", nullable: false),
-                    OrderId = table.Column<int>(type: "integer", nullable: false),
-                    SentAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
+                    LedgerAdjustmentId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PostingDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    OriginalDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Type = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    TicketRevenueDelta = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    ComboRevenueDelta = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    GiftCardSoldDelta = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    DiscountDelta = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    RefundAmountDelta = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    CancelledOrdersDelta = table.Column<int>(type: "integer", nullable: false),
+                    Reason = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    CreatedByUserId = table.Column<int>(type: "integer", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()"),
+                    OrderId = table.Column<int>(type: "integer", nullable: true),
+                    PaymentTransactionId = table.Column<int>(type: "integer", nullable: true),
+                    SourceKey = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ShowtimeRoomChangeNotices", x => new { x.ShowtimeRoomChangeId, x.OrderId });
+                    table.PrimaryKey("PK_LedgerAdjustments", x => x.LedgerAdjustmentId);
+                    table.CheckConstraint("CK_LedgerAdjustments_Dates", "\"PostingDate\" > \"OriginalDate\"");
+                    table.CheckConstraint("CK_LedgerAdjustments_NotEmpty", "\"TicketRevenueDelta\" <> 0 OR \"ComboRevenueDelta\" <> 0 OR \"GiftCardSoldDelta\" <> 0 OR \"DiscountDelta\" <> 0 OR \"RefundAmountDelta\" <> 0 OR \"CancelledOrdersDelta\" <> 0");
+                    table.CheckConstraint("CK_LedgerAdjustments_Type", "\"Type\" IN ('Refund','Cancellation','ShowtimeChange','Manual')");
                     table.ForeignKey(
-                        name: "FK_ShowtimeRoomChangeNotices_Orders_OrderId",
+                        name: "FK_LedgerAdjustments_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LedgerAdjustments_PaymentTransactions_PaymentTransactionId",
+                        column: x => x.PaymentTransactionId,
+                        principalTable: "PaymentTransactions",
+                        principalColumn: "PaymentTransactionId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LedgerAdjustments_Users_CreatedByUserId",
+                        column: x => x.CreatedByUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReconciliationItems",
+                columns: table => new
+                {
+                    ReconciliationItemId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ReconciliationSessionId = table.Column<int>(type: "integer", nullable: false),
+                    Gateway = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    GatewayTransactionCode = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    GatewayFee = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
+                    GatewayStatus = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    GatewayTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    PaymentTransactionId = table.Column<int>(type: "integer", nullable: true),
+                    Result = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
+                    Resolution = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Open"),
+                    Note = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
+                    AssignedToUserId = table.Column<int>(type: "integer", nullable: true),
+                    ResolvedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ResolvedByUserId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReconciliationItems", x => x.ReconciliationItemId);
+                    table.CheckConstraint("CK_ReconciliationItems_Amounts", "(\"Amount\" IS NULL OR \"Amount\" >= 0) AND \"GatewayFee\" >= 0");
+                    table.CheckConstraint("CK_ReconciliationItems_Gateway", "\"Gateway\" IN ('VNPay','Momo','Stripe')");
+                    table.CheckConstraint("CK_ReconciliationItems_PaymentTransaction", "(\"Result\" = 'MissingInSystem') = (\"PaymentTransactionId\" IS NULL)");
+                    table.CheckConstraint("CK_ReconciliationItems_Resolution", "\"Resolution\" IN ('Open','Resolved','Ignored')");
+                    table.CheckConstraint("CK_ReconciliationItems_Resolved", "(\"Resolution\" = 'Open' AND \"ResolvedAt\" IS NULL AND \"ResolvedByUserId\" IS NULL) OR (\"Resolution\" <> 'Open' AND \"ResolvedAt\" IS NOT NULL AND \"ResolvedByUserId\" IS NOT NULL)");
+                    table.CheckConstraint("CK_ReconciliationItems_Result", "\"Result\" IN ('Matched','MissingInSystem','MissingAtGateway','AmountMismatch','StatusMismatch','PaidAtGatewayOrderUnconfirmed')");
+                    table.ForeignKey(
+                        name: "FK_ReconciliationItems_PaymentTransactions_PaymentTransactionId",
+                        column: x => x.PaymentTransactionId,
+                        principalTable: "PaymentTransactions",
+                        principalColumn: "PaymentTransactionId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ReconciliationItems_ReconciliationSessions_ReconciliationSe~",
+                        column: x => x.ReconciliationSessionId,
+                        principalTable: "ReconciliationSessions",
+                        principalColumn: "ReconciliationSessionId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ShowtimeRoomChangeNotices_ShowtimeRoomChanges_ShowtimeRoomC~",
-                        column: x => x.ShowtimeRoomChangeId,
-                        principalTable: "ShowtimeRoomChanges",
-                        principalColumn: "ShowtimeRoomChangeId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_ReconciliationItems_Users_AssignedToUserId",
+                        column: x => x.AssignedToUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ReconciliationItems_Users_ResolvedByUserId",
+                        column: x => x.ResolvedByUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1959,6 +2277,30 @@ namespace Cinema.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CounterShifts_Employee_OpenedAt",
+                table: "CounterShifts",
+                columns: new[] { "EmployeeId", "OpenedAt" },
+                descending: new[] { false, true });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CounterShifts_Open",
+                table: "CounterShifts",
+                column: "Status",
+                filter: "\"Status\" = 'Open'");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CounterShifts_OpenedAt",
+                table: "CounterShifts",
+                column: "OpenedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_CounterShifts_Employee_Open",
+                table: "CounterShifts",
+                column: "EmployeeId",
+                unique: true,
+                filter: "\"Status\" = 'Open'");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CustomerProfiles_Tier",
                 table: "CustomerProfiles",
                 column: "TierId");
@@ -1967,6 +2309,17 @@ namespace Cinema.Infrastructure.Migrations
                 name: "UX_CustomerProfiles_ReferralCode",
                 table: "CustomerProfiles",
                 column: "ReferralCode",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DailyClosings_ClosedByUserId",
+                table: "DailyClosings",
+                column: "ClosedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_DailyClosings_BusinessDate",
+                table: "DailyClosings",
+                column: "BusinessDate",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -2032,10 +2385,82 @@ namespace Cinema.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "UX_InvoiceProfiles_User_TaxCode",
+                table: "InvoiceProfiles",
+                columns: new[] { "UserId", "TaxCode" },
+                unique: true,
+                filter: "\"IsDeleted\" = FALSE");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvoiceRequests_InvoiceProfileId",
+                table: "InvoiceRequests",
+                column: "InvoiceProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvoiceRequests_IssuedByUserId",
+                table: "InvoiceRequests",
+                column: "IssuedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvoiceRequests_NeedsAdjustment",
+                table: "InvoiceRequests",
+                column: "AdjustmentFlaggedAt",
+                filter: "\"NeedsAdjustment\" = TRUE");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvoiceRequests_RequestedByUserId",
+                table: "InvoiceRequests",
+                column: "RequestedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InvoiceRequests_Status_CreatedAt",
+                table: "InvoiceRequests",
+                columns: new[] { "Status", "CreatedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "UX_InvoiceRequests_Order_Active",
+                table: "InvoiceRequests",
+                column: "OrderId",
+                unique: true,
+                filter: "\"Status\" <> 'Rejected'");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Languages_Name",
                 table: "Languages",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LedgerAdjustments_CreatedByUserId",
+                table: "LedgerAdjustments",
+                column: "CreatedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LedgerAdjustments_OrderId",
+                table: "LedgerAdjustments",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LedgerAdjustments_OriginalDate",
+                table: "LedgerAdjustments",
+                column: "OriginalDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LedgerAdjustments_PaymentTransactionId",
+                table: "LedgerAdjustments",
+                column: "PaymentTransactionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LedgerAdjustments_PostingDate",
+                table: "LedgerAdjustments",
+                column: "PostingDate");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_LedgerAdjustments_Source_OriginalDate",
+                table: "LedgerAdjustments",
+                columns: new[] { "SourceKey", "OriginalDate" },
+                unique: true,
+                filter: "\"SourceKey\" IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LoyaltyPointEntries_User_EarnedAt",
@@ -2237,6 +2662,12 @@ namespace Cinema.Infrastructure.Migrations
                 column: "CreatedAt");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PaymentTransactions_CounterShift",
+                table: "PaymentTransactions",
+                column: "CounterShiftId",
+                filter: "\"CounterShiftId\" IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PaymentTransactions_CreatedAt",
                 table: "PaymentTransactions",
                 column: "CreatedAt");
@@ -2346,6 +2777,51 @@ namespace Cinema.Infrastructure.Migrations
                 column: "Code",
                 unique: true,
                 filter: "\"IsDeleted\" = FALSE");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReconciliationItems_AssignedTo",
+                table: "ReconciliationItems",
+                column: "AssignedToUserId",
+                filter: "\"AssignedToUserId\" IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReconciliationItems_PaymentTransaction",
+                table: "ReconciliationItems",
+                column: "PaymentTransactionId",
+                filter: "\"PaymentTransactionId\" IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReconciliationItems_Resolution_Result",
+                table: "ReconciliationItems",
+                columns: new[] { "Resolution", "Result" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReconciliationItems_ResolvedByUserId",
+                table: "ReconciliationItems",
+                column: "ResolvedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_ReconciliationItems_Session_Code",
+                table: "ReconciliationItems",
+                columns: new[] { "ReconciliationSessionId", "GatewayTransactionCode" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReconciliationSessions_CreatedByUserId",
+                table: "ReconciliationSessions",
+                column: "CreatedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReconciliationSessions_Gateway_CreatedAt",
+                table: "ReconciliationSessions",
+                columns: new[] { "Gateway", "CreatedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "UX_ReconciliationSessions_Gateway_FileHash",
+                table: "ReconciliationSessions",
+                columns: new[] { "Gateway", "FileHash" },
+                unique: true,
+                filter: "\"Source\" = 'File'");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshTokens_ReplacedByTokenId",
@@ -2658,10 +3134,19 @@ namespace Cinema.Infrastructure.Migrations
                 name: "CustomerProfiles");
 
             migrationBuilder.DropTable(
+                name: "DailyClosings");
+
+            migrationBuilder.DropTable(
                 name: "ImportExportJobs");
 
             migrationBuilder.DropTable(
                 name: "InventoryReservations");
+
+            migrationBuilder.DropTable(
+                name: "InvoiceRequests");
+
+            migrationBuilder.DropTable(
+                name: "LedgerAdjustments");
 
             migrationBuilder.DropTable(
                 name: "LoyaltyPointEntries");
@@ -2685,9 +3170,6 @@ namespace Cinema.Infrastructure.Migrations
                 name: "PaymentDailyStats");
 
             migrationBuilder.DropTable(
-                name: "PaymentTransactions");
-
-            migrationBuilder.DropTable(
                 name: "PricingRules");
 
             migrationBuilder.DropTable(
@@ -2695,6 +3177,9 @@ namespace Cinema.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "PromotionRedemptions");
+
+            migrationBuilder.DropTable(
+                name: "ReconciliationItems");
 
             migrationBuilder.DropTable(
                 name: "RefreshTokens");
@@ -2748,6 +3233,9 @@ namespace Cinema.Infrastructure.Migrations
                 name: "MembershipTiers");
 
             migrationBuilder.DropTable(
+                name: "InvoiceProfiles");
+
+            migrationBuilder.DropTable(
                 name: "Actors");
 
             migrationBuilder.DropTable(
@@ -2761,6 +3249,12 @@ namespace Cinema.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Promotions");
+
+            migrationBuilder.DropTable(
+                name: "PaymentTransactions");
+
+            migrationBuilder.DropTable(
+                name: "ReconciliationSessions");
 
             migrationBuilder.DropTable(
                 name: "OrderLines");
@@ -2799,7 +3293,7 @@ namespace Cinema.Infrastructure.Migrations
                 name: "Showtimes");
 
             migrationBuilder.DropTable(
-                name: "Employees");
+                name: "CounterShifts");
 
             migrationBuilder.DropTable(
                 name: "SeatTypes");
@@ -2811,10 +3305,7 @@ namespace Cinema.Infrastructure.Migrations
                 name: "Movies");
 
             migrationBuilder.DropTable(
-                name: "Positions");
-
-            migrationBuilder.DropTable(
-                name: "Users");
+                name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "ScreenTypes");
@@ -2827,6 +3318,12 @@ namespace Cinema.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Languages");
+
+            migrationBuilder.DropTable(
+                name: "Positions");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Roles");

@@ -15,6 +15,7 @@ import { FormSelectField } from "@/components/common/form/form-select-field";
 import { FormDatePickerField } from "@/components/common/form/form-date-picker-field";
 import { AvatarUpload } from "@/features/client/account/components/avatar-upload";
 import { CommunicationPreferencesCard } from "@/features/client/account/components/communication-preferences-card";
+import { InvoiceProfilesCard } from "@/features/client/invoices/components/invoice-profiles-card";
 import { ProfileStatsCard } from "@/features/client/account/components/profile-stats-card";
 import { useMyProfile, useUpdateMyProfile } from "@/features/client/account/hooks/use-account";
 import { toDateInputValue } from "@/lib/formatters";
@@ -171,6 +172,8 @@ const AccountProfilePage = () => {
           </form>
 
           <CommunicationPreferencesCard />
+
+          <InvoiceProfilesCard />
         </div>
       )}
     </QueryState>

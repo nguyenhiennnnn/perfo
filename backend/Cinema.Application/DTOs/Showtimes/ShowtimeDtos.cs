@@ -182,10 +182,20 @@ public record ShowtimeCalendarItemDto(
 
 public record ShowtimeCalendarDayDto(string Date, List<ShowtimeCalendarItemDto> Showtimes);
 
+public record ShowtimeCalendarClosureDto(
+    int RoomClosureId,
+    int RoomId,
+    string RoomName,
+    DateTime StartTime,
+    DateTime EndTime,
+    string Reason
+);
+
 public record ShowtimeCalendarResponseDto(
     string From,
     string To,
-    List<ShowtimeCalendarDayDto> Days
+    List<ShowtimeCalendarDayDto> Days,
+    List<ShowtimeCalendarClosureDto>? Closures = null
 );
 
 public record AutoScheduleMovieRequest(int MovieId, int Shows, decimal? BasePrice = null);

@@ -364,6 +364,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Conflict_ReviewAlreadyExists" xml:space="preserve">
     <value>Bạn đã đánh giá phim này rồi.</value>
   </data>
+  <data name="Conflict_RoomClosureOverlap" xml:space="preserve">
+    <value>Khoảng đóng phòng trùng với một khoảng đóng đã có của phòng này.</value>
+  </data>
   <data name="Conflict_RoomHasHeldSeatsCannotDeactivate" xml:space="preserve">
     <value>Phòng đang có ghế đã đặt hoặc đang được giữ ở suất chiếu sắp tới, không thể ngừng hoạt động.</value>
   </data>
@@ -399,6 +402,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Conflict_ShowtimeOverlapInRoom" xml:space="preserve">
     <value>Trùng khung giờ chiếu trong phòng này.</value>
+  </data>
+  <data name="Conflict_ShowtimeOverlapRoomClosure" xml:space="preserve">
+    <value>Phòng đang đóng trong khoảng thời gian này, không thể tạo hoặc sửa suất chiếu.</value>
   </data>
   <data name="Conflict_SpecialDayExists" xml:space="preserve">
     <value>Ngày đặc biệt này đã được khai báo.</value>
@@ -1726,6 +1732,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="NotFound_Room" xml:space="preserve">
     <value>Không tìm thấy phòng chiếu.</value>
   </data>
+  <data name="NotFound_RoomClosure" xml:space="preserve">
+    <value>Không tìm thấy khoảng đóng phòng.</value>
+  </data>
   <data name="NotFound_ScreenType" xml:space="preserve">
     <value>Không tìm thấy loại màn hình.</value>
   </data>
@@ -2039,6 +2048,12 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_ReviewRequiresCheckIn" xml:space="preserve">
     <value>Bạn cần check-in xem phim này trước khi đánh giá.</value>
   </data>
+  <data name="Rule_RoomClosureAlreadyEnded" xml:space="preserve">
+    <value>Khoảng đóng phòng đã kết thúc, không thể thay đổi.</value>
+  </data>
+  <data name="Rule_RoomClosureMustEndInFuture" xml:space="preserve">
+    <value>Thời điểm kết thúc đóng phòng phải ở tương lai.</value>
+  </data>
   <data name="Rule_RoomHasNoSeatLayout" xml:space="preserve">
     <value>Phòng chiếu chưa được thiết lập sơ đồ ghế.</value>
   </data>
@@ -2291,6 +2306,12 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Success_ReviewUpdated" xml:space="preserve">
     <value>Đã cập nhật đánh giá.</value>
+  </data>
+  <data name="Success_RoomClosureCreated" xml:space="preserve">
+    <value>Đã đóng phòng chiếu.</value>
+  </data>
+  <data name="Success_RoomClosureDeleted" xml:space="preserve">
+    <value>Đã mở lại phòng chiếu.</value>
   </data>
   <data name="Success_RoomCreated" xml:space="preserve">
     <value>Đã thêm phòng chiếu mới.</value>
@@ -2752,6 +2773,19 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Validation_Role_Required" xml:space="preserve">
     <value>Role không được để trống.</value>
+  </data>
+  <data name="Validation_RoomClosure_RangeOrder" xml:space="preserve">
+    <value>Thời điểm kết thúc phải sau thời điểm bắt đầu.</value>
+  </data>
+  <data name="Validation_RoomClosure_RangeTooLong" xml:space="preserve">
+    <value>Một khoảng đóng phòng tối đa {0} ngày.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Validation_RoomClosure_RangeTooLong, ...)</comment>
+  </data>
+  <data name="Validation_RoomClosure_ReasonMaxLength" xml:space="preserve">
+    <value>Lý do đóng phòng tối đa 500 ký tự.</value>
+  </data>
+  <data name="Validation_RoomClosure_ReasonRequired" xml:space="preserve">
+    <value>Vui lòng nhập lý do đóng phòng.</value>
   </data>
   <data name="Validation_RoomId_Positive" xml:space="preserve">
     <value>roomId phải lớn hơn 0.</value>

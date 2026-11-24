@@ -1,6 +1,7 @@
 using System.Globalization;
 using Cinema.Application.DTOs.Showtimes;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Services.Rooms;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
@@ -276,6 +277,12 @@ public class ShowtimeBatchService(
             drafts.Max(d => d.StartTime).AddDays(ShowtimeRules.ConflictLookaheadDays),
             cancellationToken
         );
+        var closures = await db.LoadIntervalsAsync(
+            roomIds,
+            drafts.Min(d => d.StartTime).AddDays(-ConflictLookbackDays),
+            drafts.Max(d => d.StartTime).AddDays(ShowtimeRules.ConflictLookaheadDays),
+            cancellationToken
+        );
 
         var planned = new List<Showtime>();
         var now = DateTime.UtcNow;
@@ -316,6 +323,11 @@ public class ShowtimeBatchService(
                         intervals[draft.RoomId]
                             .Any(i => i.End > draft.StartTime && i.Start < endTime)
                             ? overlapMessage
+                            : null
+                    )
+                    ?? (
+                        RoomClosureRules.Overlaps(closures[draft.RoomId], draft.StartTime, endTime)
+                            ? Messages.Conflict_ShowtimeOverlapRoomClosure
                             : null
                     );
             }

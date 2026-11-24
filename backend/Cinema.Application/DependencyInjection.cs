@@ -135,6 +135,7 @@ public static class DependencyInjection
         services.AddScoped<ITicketTypeService, TicketTypeService>();
         services.AddScoped<IPricingRuleService, PricingRuleService>();
         services.AddScoped<ISpecialDayService, SpecialDayService>();
+        services.AddScoped<IRoomClosureService, RoomClosureService>();
         services.AddScoped<IPricingService, PricingService>();
         services.AddScoped<IPromotionService, PromotionService>();
         services.AddScoped<IPromotionEngine, PromotionEngine>();

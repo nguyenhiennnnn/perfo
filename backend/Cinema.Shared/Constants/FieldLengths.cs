@@ -34,6 +34,7 @@ public static class FieldLengths
     public const int InventoryUnit = 20;
     public const int SupplierName = 150;
     public const int StockNote = 255;
+    public const int RoomClosureReason = 500;
 
     public const int FileName = 255;
     public const int ErrorMessage = 2000;

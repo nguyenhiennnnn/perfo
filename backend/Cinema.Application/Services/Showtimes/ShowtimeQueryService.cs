@@ -391,10 +391,29 @@ public class ShowtimeQueryService(
             ))
             .ToList();
 
+        var closureQuery = db.RoomClosures.AsNoTracking().Where(c =>
+            c.EndTime > rangeStart && c.StartTime < rangeEndExclusive
+        );
+        if (filter.RoomId is not null)
+            closureQuery = closureQuery.Where(c => c.RoomId == filter.RoomId);
+        var closures = await closureQuery
+            .OrderBy(c => c.StartTime)
+            .ThenBy(c => c.RoomClosureId)
+            .Select(c => new ShowtimeCalendarClosureDto(
+                c.RoomClosureId,
+                c.RoomId,
+                c.Room.RoomName,
+                c.StartTime,
+                c.EndTime,
+                c.Reason
+            ))
+            .ToListAsync(cancellationToken);
+
         return new ShowtimeCalendarResponseDto(
             filter.From.ToString(DateTimePatterns.Date),
             filter.To.ToString(DateTimePatterns.Date),
-            days
+            days,
+            closures
         );
     }
 }

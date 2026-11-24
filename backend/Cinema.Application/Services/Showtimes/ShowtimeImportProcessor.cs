@@ -4,6 +4,7 @@ using Cinema.Application.DTOs.Import;
 using Cinema.Application.DTOs.Showtimes;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Services.Import;
+using Cinema.Application.Services.Rooms;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
@@ -222,6 +223,7 @@ public class ShowtimeImportProcessor(
                 starts.Add(start);
 
         var existing = new Dictionary<int, List<(DateTime Start, DateTime End)>>();
+        var closures = new Dictionary<int, List<(DateTime Start, DateTime End)>>();
         if (starts.Count > 0)
         {
             var from = starts.Min().AddDays(-1);
@@ -249,6 +251,13 @@ public class ShowtimeImportProcessor(
 
                 intervals.Add((item.StartTime, item.EndTime));
             }
+
+            closures = await db.LoadIntervalsAsync(
+                rooms.Select(r => r.RoomId).ToList(),
+                from,
+                to,
+                cancellationToken
+            );
         }
 
         return new ShowtimeImportContext(
@@ -261,7 +270,8 @@ public class ShowtimeImportProcessor(
             settings.OpeningTime,
             settings.ClosingTime,
             settings.RoomBufferMinutes,
-            existing
+            existing,
+            closures
         );
     }
 
@@ -577,6 +587,12 @@ public class ShowtimeImportProcessor(
         )
             return Messages.Conflict_ShowtimeOverlapExisting;
 
+        if (
+            lookups.Closures.TryGetValue(roomId, out var closed)
+            && RoomClosureRules.Overlaps(closed, start, blockedUntil)
+        )
+            return Messages.Conflict_ShowtimeOverlapRoomClosure;
+
         if (lookups.Planned.TryGetValue(roomId, out var planned))
         {
             var clash = planned.FirstOrDefault(i => i.End > start && i.Start < blockedUntil);
@@ -714,7 +730,8 @@ public class ShowtimeImportProcessor(
         TimeOnly? openingTime,
         TimeOnly? closingTime,
         int bufferMinutes,
-        Dictionary<int, List<(DateTime Start, DateTime End)>> existing
+        Dictionary<int, List<(DateTime Start, DateTime End)>> existing,
+        Dictionary<int, List<(DateTime Start, DateTime End)>> closures
     ) : IImportContext
     {
         public Dictionary<string, List<MovieInfo>> Movies { get; } = movies;
@@ -724,6 +741,7 @@ public class ShowtimeImportProcessor(
         public TimeOnly? ClosingTime { get; } = closingTime;
         public int BufferMinutes { get; } = bufferMinutes;
         public Dictionary<int, List<(DateTime Start, DateTime End)>> Existing { get; } = existing;
+        public Dictionary<int, List<(DateTime Start, DateTime End)>> Closures { get; } = closures;
         public Dictionary<
             int,
             List<(DateTime Start, DateTime End, int RowNumber)>

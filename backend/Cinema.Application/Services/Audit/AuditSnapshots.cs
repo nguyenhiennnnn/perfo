@@ -249,6 +249,17 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject RoomClosureState(RoomClosure c) =>
+        AuditJson.ToObject(
+            new
+            {
+                c.RoomId,
+                c.StartTime,
+                c.EndTime,
+                c.Reason,
+            }
+        );
+
     public static JsonObject CashRefundBeforeConfirm() =>
         AuditJson.ToObject(new { status = PaymentStatus.Pending, needsManualRefund = true });
 

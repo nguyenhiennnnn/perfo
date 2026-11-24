@@ -1,4 +1,5 @@
 using Cinema.Application.Interfaces;
+using Cinema.Application.Services.Rooms;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
@@ -67,6 +68,8 @@ public static class ShowtimeRules
             )
         )
             throw new ConflictAppException(Messages.Conflict_ShowtimeOverlapInRoom);
+
+        await db.EnsureRoomOpenAsync(roomId, startTime, endTime, cancellationToken);
     }
 
     public static async Task ValidateOperatingHoursAsync(

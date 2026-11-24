@@ -1,6 +1,7 @@
 using Cinema.Application.DTOs.Showtimes;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
+using Cinema.Application.Services.Rooms;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
@@ -115,6 +116,17 @@ public class ShowtimeAutoScheduleService(
             )
             .Select(s => new SchedulerBusy(s.RoomId, s.StartTime, s.EndTime))
             .ToListAsync(cancellationToken);
+        var closedIntervals = await db.LoadIntervalsAsync(
+            scheduledRoomIds,
+            open,
+            horizon,
+            cancellationToken
+        );
+        busy.AddRange(
+            closedIntervals.SelectMany(kv =>
+                kv.Value.Select(i => new SchedulerBusy(kv.Key, i.Start, i.End))
+            )
+        );
 
         var since = DateTime.UtcNow.AddDays(-scheduler.HeatLookbackDays);
         var tickets = await db

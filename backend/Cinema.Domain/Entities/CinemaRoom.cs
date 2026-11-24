@@ -14,4 +14,5 @@ public class CinemaRoom
     public ScreenType? ScreenType { get; set; }
     public ICollection<Seat> Seats { get; set; } = [];
     public ICollection<Showtime> Showtimes { get; set; } = [];
+    public ICollection<RoomClosure> Closures { get; set; } = [];
 }

@@ -19,6 +19,7 @@ public interface IAppDbContext
     DbSet<Employee> Employees { get; }
     DbSet<ScreenType> ScreenTypes { get; }
     DbSet<CinemaRoom> CinemaRooms { get; }
+    DbSet<RoomClosure> RoomClosures { get; }
     DbSet<SeatType> SeatTypes { get; }
     DbSet<Seat> Seats { get; }
     DbSet<Genre> Genres { get; }

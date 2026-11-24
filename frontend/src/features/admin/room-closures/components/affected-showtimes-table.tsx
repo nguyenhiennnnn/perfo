@@ -17,12 +17,14 @@ interface AffectedShowtimesTableProps {
   showtimes: AffectedShowtimeDto[];
   onChangeRoom: (showtime: AffectedShowtimeDto) => void;
   onCancel: (showtime: AffectedShowtimeDto) => void;
+  readOnly?: boolean;
 }
 
 export const AffectedShowtimesTable = ({
   showtimes,
   onChangeRoom,
   onCancel,
+  readOnly = false,
 }: AffectedShowtimesTableProps) => (
   <Table>
     <TableHeader>
@@ -32,7 +34,7 @@ export const AffectedShowtimesTable = ({
         <TableHead className="text-right">Đơn</TableHead>
         <TableHead className="text-right">Khách</TableHead>
         <TableHead className="text-right">Vé</TableHead>
-        <TableHead className="text-right">Xử lý</TableHead>
+        {!readOnly && <TableHead className="text-right">Xử lý</TableHead>}
       </TableRow>
     </TableHeader>
     <TableBody>
@@ -57,18 +59,20 @@ export const AffectedShowtimesTable = ({
           <TableCell className="text-right tabular-nums">{formatNumber(showtime.orderCount)}</TableCell>
           <TableCell className="text-right tabular-nums">{formatNumber(showtime.customerCount)}</TableCell>
           <TableCell className="text-right tabular-nums">{formatNumber(showtime.ticketCount)}</TableCell>
-          <TableCell>
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" size="sm" onClick={() => onChangeRoom(showtime)}>
-                <ArrowRightLeft className="size-4" />
-                <span>Chuyển phòng</span>
-              </Button>
-              <Button variant="destructive" size="sm" onClick={() => onCancel(showtime)}>
-                <Ban className="size-4" />
-                <span>Hủy suất</span>
-              </Button>
-            </div>
-          </TableCell>
+          {!readOnly && (
+            <TableCell>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" size="sm" onClick={() => onChangeRoom(showtime)}>
+                  <ArrowRightLeft className="size-4" />
+                  <span>Chuyển phòng</span>
+                </Button>
+                <Button variant="destructive" size="sm" onClick={() => onCancel(showtime)}>
+                  <Ban className="size-4" />
+                  <span>Hủy suất</span>
+                </Button>
+              </div>
+            </TableCell>
+          )}
         </TableRow>
       ))}
     </TableBody>

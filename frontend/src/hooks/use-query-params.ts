@@ -62,6 +62,19 @@ export const useAdminShowtimeParams = (
   options?: Parameters<typeof useQueryStates<typeof adminShowtimeParsers>>[1],
 ) => useQueryStates(adminShowtimeParsers, options);
 
+const roomClosureScopes = ["active", "ended", "all"] as const;
+
+const adminRoomClosureParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  roomId: parseAsInteger,
+  scope: parseAsStringLiteral(roomClosureScopes).withDefault("active"),
+};
+
+export const useAdminRoomClosureParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminRoomClosureParsers>>[1],
+) => useQueryStates(adminRoomClosureParsers, options);
+
 const adminShowtimeCalendarParsers = {
   from: parseAsString,
   to: parseAsString,

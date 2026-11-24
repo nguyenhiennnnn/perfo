@@ -406,6 +406,7 @@ public class PricingService(
         var now = DateTime.UtcNow;
         var counts = await db
             .ShowtimeSeats.AsNoTracking()
+            .WhereSellable()
             .Where(ss => ids.Contains(ss.ShowtimeId))
             .GroupBy(ss => ss.ShowtimeId)
             .Select(g => new

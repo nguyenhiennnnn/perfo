@@ -172,9 +172,21 @@ public class OrderHoldService(
                 .Select(ss => ss.ShowtimeSeatId)
                 .ToListAsync(cancellationToken);
             var conflictSeatIds = distinctSeatIds.Except(heldSeatIds).ToList();
+            var hasBlockedConflict = await db.ShowtimeSeats.AnyAsync(
+                ss =>
+                    conflictSeatIds.Contains(ss.ShowtimeSeatId)
+                    && ss.ShowtimeId == showtimeId
+                    && ss.Status == ShowtimeSeatStatus.Blocked,
+                cancellationToken
+            );
 
             await transaction.RollbackAsync(cancellationToken);
-            throw new SeatConflictException(Messages.Conflict_SeatsAlreadyTaken, conflictSeatIds);
+            throw new SeatConflictException(
+                hasBlockedConflict
+                    ? Messages.Conflict_SeatsBlocked
+                    : Messages.Conflict_SeatsAlreadyTaken,
+                conflictSeatIds
+            );
         }
 
         var heldSeats = await db

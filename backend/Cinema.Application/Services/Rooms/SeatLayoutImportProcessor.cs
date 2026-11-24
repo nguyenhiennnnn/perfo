@@ -191,7 +191,11 @@ public sealed class SeatLayoutImportProcessor(
             .ShowtimeSeats.AsNoTracking()
             .Where(ss =>
                 ss.Seat.RoomId == roomId
-                && (ss.Status == ShowtimeSeatStatus.Booked || ss.Status == ShowtimeSeatStatus.Held)
+                && (
+                    ss.Status == ShowtimeSeatStatus.Booked
+                    || ss.Status == ShowtimeSeatStatus.Held
+                    || ss.Status == ShowtimeSeatStatus.Blocked
+                )
                 && ss.Showtime.Status == ShowtimeStatus.Scheduled
                 && ss.Showtime.StartTime > now
             )

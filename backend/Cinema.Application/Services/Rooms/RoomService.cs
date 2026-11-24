@@ -108,7 +108,7 @@ public class RoomService(IAppDbContext db) : IRoomService
         if (room.IsActive && !request.IsActive)
         {
             var seatIdsInRoom = db.Seats.Where(s => s.RoomId == roomId).Select(s => s.SeatId);
-            if (await HasLiveFutureSeatsAsync(seatIdsInRoom, cancellationToken))
+            if (await HasLiveFutureSeatsAsync(seatIdsInRoom, false, cancellationToken))
                 throw new ConflictAppException(Messages.Conflict_RoomHasHeldSeatsCannotDeactivate);
         }
 
@@ -282,6 +282,7 @@ public class RoomService(IAppDbContext db) : IRoomService
             changedIds.Count > 0
             && await HasLiveFutureSeatsAsync(
                 db.Seats.Where(s => changedIds.Contains(s.SeatId)).Select(s => s.SeatId),
+                true,
                 cancellationToken
             )
         )
@@ -386,6 +387,7 @@ public class RoomService(IAppDbContext db) : IRoomService
 
     private async Task<bool> HasLiveFutureSeatsAsync(
         IQueryable<int> seatIds,
+        bool includeBlocked,
         CancellationToken cancellationToken
     )
     {
@@ -393,7 +395,11 @@ public class RoomService(IAppDbContext db) : IRoomService
         return await db.ShowtimeSeats.AnyAsync(
             ss =>
                 seatIds.Contains(ss.SeatId)
-                && (ss.Status == ShowtimeSeatStatus.Booked || ss.Status == ShowtimeSeatStatus.Held)
+                && (
+                    ss.Status == ShowtimeSeatStatus.Booked
+                    || ss.Status == ShowtimeSeatStatus.Held
+                    || (includeBlocked && ss.Status == ShowtimeSeatStatus.Blocked)
+                )
                 && ss.Showtime.Status == ShowtimeStatus.Scheduled
                 && ss.Showtime.StartTime > now,
             cancellationToken

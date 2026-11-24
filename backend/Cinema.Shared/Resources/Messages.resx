@@ -211,7 +211,7 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
     <value>Lấy các đơn hàng (vé xem phim, combo bắp nước) của chính khách đang đăng nhập: trạng thái đơn, ghế, combo, số tiền đã thanh toán, số tiền đã hoàn và số tiền đang chờ hoàn. Không cần truyền thông tin người dùng và không thể tra đơn của người khác.</value>
   </data>
   <data name="Ai_Tool_GetSeatAvailability_Description" xml:space="preserve">
-    <value>Xem tình trạng ghế trống của một suất chiếu: số ghế còn, giá theo loại ghế, danh sách ghế trống. Ghế đang được giữ chờ thanh toán hoặc đã bán không tính là trống. Dùng khi khách hỏi còn ghế không, ghế nào còn trống.</value>
+    <value>Xem tình trạng ghế trống của một suất chiếu: số ghế còn, giá theo loại ghế, danh sách ghế trống. Ghế đang được giữ chờ thanh toán, đã bán hoặc đang bị khóa không tính là trống và không tính vào tổng ghế. Dùng khi khách hỏi còn ghế không, ghế nào còn trống.</value>
   </data>
   <data name="Ai_Tool_SearchShowtimes_Description" xml:space="preserve">
     <value>Tìm suất chiếu sắp tới (còn hiệu lực) theo phim, ngày. Dùng khi khách hỏi lịch chiếu, giờ chiếu, giá vé của một phim hoặc của một ngày.</value>
@@ -388,8 +388,11 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Conflict_SeatsAlreadyTaken" xml:space="preserve">
     <value>Một hoặc nhiều ghế đã bị giữ/đặt bởi người khác.</value>
   </data>
+  <data name="Conflict_SeatsBlocked" xml:space="preserve">
+    <value>Một hoặc nhiều ghế đang bị khóa, không thể đặt.</value>
+  </data>
   <data name="Conflict_SeatsHeldOrBookedCannotChange" xml:space="preserve">
-    <value>Không thể thay đổi ghế đang được đặt hoặc giữ ở suất chiếu sắp tới.</value>
+    <value>Không thể thay đổi ghế đang được đặt, giữ hoặc khóa ở suất chiếu sắp tới.</value>
   </data>
   <data name="Conflict_ShowtimeHasConfirmedBookings" xml:space="preserve">
     <value>Suất chiếu đã có booking đã xác nhận (Confirmed), không thể sửa.</value>
@@ -1325,7 +1328,7 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
     <comment>Có 1 tham số: dùng string.Format(Messages.Import_Warn_SeatLayoutFutureShowtimes, ...)</comment>
   </data>
   <data name="Import_Warn_SeatLayoutLiveSeats" xml:space="preserve">
-    <value>{0} ghế sẽ thay đổi hoặc bị gỡ đang có vé đã đặt hoặc đang giữ chỗ ở {1} suất chiếu sắp tới (ví dụ {2}). Hệ thống sẽ từ chối áp dụng cho đến khi các vé này được xử lý.</value>
+    <value>{0} ghế sẽ thay đổi hoặc bị gỡ đang có vé đã đặt, đang giữ chỗ hoặc đang bị khóa ở {1} suất chiếu sắp tới (ví dụ {2}). Hệ thống sẽ từ chối áp dụng cho đến khi các vé này được xử lý.</value>
     <comment>Có 3 tham số: dùng string.Format(Messages.Import_Warn_SeatLayoutLiveSeats, ...)</comment>
   </data>
   <data name="Import_Warn_SeatLayoutRemoved" xml:space="preserve">

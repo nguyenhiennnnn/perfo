@@ -17,6 +17,9 @@ public class DashboardMappingConfig : IRegister
                 dest => dest.BookedSeats,
                 src => src.ShowtimeSeats.Count(ss => ss.Status == ShowtimeSeatStatus.Booked)
             )
-            .Map(dest => dest.TotalSeats, src => src.ShowtimeSeats.Count());
+            .Map(
+                dest => dest.TotalSeats,
+                src => src.ShowtimeSeats.Count(ss => ss.Status != ShowtimeSeatStatus.Blocked)
+            );
     }
 }

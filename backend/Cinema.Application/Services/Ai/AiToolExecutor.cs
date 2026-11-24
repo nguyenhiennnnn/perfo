@@ -276,6 +276,7 @@ public class AiToolExecutor(
         var defaultSeatTypeName = Messages.Ai_SeatTypeDefault;
         var seats = await db
             .ShowtimeSeats.AsNoTracking()
+            .WhereSellable()
             .Where(ss => ss.ShowtimeId == showtimeId.Value && ss.Seat.IsActive && !ss.Seat.IsAisle)
             .Select(ss => new
             {

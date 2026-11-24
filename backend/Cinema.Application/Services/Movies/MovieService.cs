@@ -127,7 +127,8 @@ public class MovieService : IMovieService
         var showtimeIds = upcomingShowtimes.Select(s => s.ShowtimeId).ToList();
 
         var seatsCounts = await db
-            .ShowtimeSeats.Where(ss => showtimeIds.Contains(ss.ShowtimeId))
+            .ShowtimeSeats.WhereSellable()
+            .Where(ss => showtimeIds.Contains(ss.ShowtimeId))
             .GroupBy(ss => ss.ShowtimeId)
             .Select(g => new
             {

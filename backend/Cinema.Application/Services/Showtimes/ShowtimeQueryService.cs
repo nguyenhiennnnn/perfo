@@ -86,7 +86,7 @@ public class ShowtimeQueryService(
                         r.SeatTypeId,
                         r.SeatTypeName,
                         r.CoupleId,
-                        r.Status.ToString(),
+                        r.Status.ToDtoStatus(),
                         seatQuotes[0].ListPrice,
                         r.IsCouple,
                         myOrder is not null
@@ -281,7 +281,8 @@ public class ShowtimeQueryService(
         var showtimeIds = showtimes.Select(s => s.ShowtimeId).ToList();
 
         var seatCounts = await db
-            .ShowtimeSeats.Where(ss => showtimeIds.Contains(ss.ShowtimeId))
+            .ShowtimeSeats.WhereSellable()
+            .Where(ss => showtimeIds.Contains(ss.ShowtimeId))
             .GroupBy(ss => ss.ShowtimeId)
             .Select(g => new
             {
@@ -355,7 +356,8 @@ public class ShowtimeQueryService(
         var showtimeIds = showtimes.Select(s => s.ShowtimeId).ToList();
 
         var seatCounts = await db
-            .ShowtimeSeats.Where(ss => showtimeIds.Contains(ss.ShowtimeId))
+            .ShowtimeSeats.WhereSellable()
+            .Where(ss => showtimeIds.Contains(ss.ShowtimeId))
             .GroupBy(ss => ss.ShowtimeId)
             .Select(g => new
             {

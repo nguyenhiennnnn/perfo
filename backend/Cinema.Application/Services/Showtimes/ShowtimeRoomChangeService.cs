@@ -283,15 +283,40 @@ public class ShowtimeRoomChangeService(
                 throw new ConflictAppException(Messages.Conflict_RoomChangeConcurrent);
         }
 
-        var dropIds = plan
+        var dropSources = plan
             .Mappings.Where(m => m.TargetId is null && !sourcesById[m.SourceId].Required)
-            .Select(m => m.SourceId)
+            .Select(m => sourcesById[m.SourceId])
             .ToList();
+        var dropIds = dropSources.Select(s => s.ShowtimeSeatId).ToList();
         if (dropIds.Count > 0)
         {
+            var blockedDropIds = dropSources
+                .Where(s => s.Status == ShowtimeSeatStatus.Blocked)
+                .Select(s => s.ShowtimeSeatId)
+                .ToList();
+            if (blockedDropIds.Count > 0)
+            {
+                var droppedBlocks = await db
+                    .SeatBlocks.AsNoTracking()
+                    .Where(b => blockedDropIds.Contains(b.ShowtimeSeatId))
+                    .ToListAsync(cancellationToken);
+                foreach (var block in droppedBlocks)
+                    auditLogger.Record(
+                        AuditActions.Delete,
+                        AuditEntityTypes.SeatBlock,
+                        block.SeatBlockId.ToString(),
+                        AuditSnapshots.SeatBlockState(block),
+                        null
+                    );
+            }
+
             var deleted = await db
                 .ShowtimeSeats.Where(ss =>
-                    dropIds.Contains(ss.ShowtimeSeatId) && ss.Status == ShowtimeSeatStatus.Available
+                    dropIds.Contains(ss.ShowtimeSeatId)
+                    && (
+                        ss.Status == ShowtimeSeatStatus.Available
+                        || ss.Status == ShowtimeSeatStatus.Blocked
+                    )
                 )
                 .ExecuteDeleteAsync(cancellationToken);
             if (deleted != dropIds.Count)
@@ -681,7 +706,9 @@ public class ShowtimeRoomChangeService(
         bool HasOrders
     )
     {
-        public bool Required => Status != ShowtimeSeatStatus.Available || HasOrders;
+        public bool Required =>
+            (Status != ShowtimeSeatStatus.Available && Status != ShowtimeSeatStatus.Blocked)
+            || HasOrders;
     }
 
     private sealed record TargetSeat(

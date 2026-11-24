@@ -46,7 +46,7 @@ public class ShowtimeExportService(IAppDbContext db, IExportWriter exportWriter)
                 s.BasePrice,
                 s.Status,
                 s.ShowtimeSeats.Count(ss => ss.Status == ShowtimeSeatStatus.Booked),
-                s.ShowtimeSeats.Count()
+                s.ShowtimeSeats.Count(ss => ss.Status != ShowtimeSeatStatus.Blocked)
             ))
             .AsAsyncEnumerable();
 

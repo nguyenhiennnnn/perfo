@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "@/components/ui/toast";
 import { ENV } from "@/config/env";
-import { API_ERROR_CODES } from "@/config/api-error-codes";
+import { API_ERROR_CODES, SEAT_CONFLICT_ERROR_KEY } from "@/config/api-error-codes";
 import {
   ERROR_MESSAGES,
   ERROR_TOAST_DEDUPE_MS,
@@ -88,6 +88,20 @@ export function getPriceChangeRequired(error: unknown): PriceChangeRequired | nu
     seats: data.data.seats,
     newTicketTotal: Number(data.data.newTicketTotal ?? 0),
   };
+}
+
+export function isGenericConflictError(error: unknown): boolean {
+  if (!axios.isAxiosError(error)) return false;
+  if (error.response?.status !== HTTP_STATUS.conflict) return false;
+  const data = error.response.data as
+    | { errorCode?: unknown; errors?: Record<string, unknown> | null }
+    | undefined;
+  if (data?.errorCode) return false;
+  if (getPriceChangeRequired(error)) return false;
+  const errorKeys = Object.keys(data?.errors ?? {});
+  return !errorKeys.some(
+    (key) => key.toLowerCase() === SEAT_CONFLICT_ERROR_KEY.toLowerCase(),
+  );
 }
 
 export function logDevError(error: unknown, context?: string): void {

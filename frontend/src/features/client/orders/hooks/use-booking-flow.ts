@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "@/components/ui/toast";
 import {
   BOOKING_HOLD_POLL_INTERVAL_MS,
+  BOOKING_COMBO_SECTION_ID,
   BOOKING_HOLD_POLL_MAX_FAILURES,
 } from "@/config/default-constants";
 import { queryKeys } from "@/api/query-keys";
@@ -18,10 +19,11 @@ import {
   toggleSeatSelection,
 } from "@/components/common/seat-map/seat-map-utils";
 import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings";
+import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
 import { useShowtimeSeats } from "@/features/client/showtimes/hooks/use-showtimes";
 import { useSeatTicketTypes } from "@/features/client/showtimes/hooks/use-seat-ticket-types";
 import { usePriceChangeConfirm } from "@/hooks/use-price-change-confirm";
-import { getPriceChangeRequired } from "@/lib/error";
+import { getPriceChangeRequired, isGenericConflictError } from "@/lib/error";
 import { useRealtimeSeatMap } from "@/hooks/use-realtime-seat-map";
 import { isValidVnPhone } from "@/lib/validators";
 import { useAuthUser, useIsAuthenticated } from "@/stores/auth-store";
@@ -57,6 +59,8 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
   const [freshHoldResult, setFreshHoldResult] =
     useState<HoldOrderResponse | null>(null);
 
+  const comboQuantitiesRef = useRef<Record<number, number>>({});
+  const comboNamesRef = useRef(new Map<number, string>());
   const expiredNotifiedRef = useRef(false);
   const pollFailureCountRef = useRef(0);
 
@@ -90,6 +94,51 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
   }, [authUser?.fullName, customerName]);
 
   const showtimeSeats = useShowtimeSeats(showtimeId);
+  const activeCombos = useActiveCombos();
+
+  const updateComboQuantities = useCallback(
+    (update: (prev: Record<number, number>) => Record<number, number>) => {
+      const next = update(comboQuantitiesRef.current);
+      comboQuantitiesRef.current = next;
+      setComboQuantities(next);
+    },
+    [],
+  );
+
+  const pruneUnavailableCombos = useCallback(
+    (combos: { comboId: number; name: string }[], silent: boolean) => {
+      const availableIds = new Set(combos.map((combo) => combo.comboId));
+      combos.forEach((combo) => comboNamesRef.current.set(combo.comboId, combo.name));
+
+      const removedIds = Object.entries(comboQuantitiesRef.current)
+        .filter(([comboId, quantity]) => quantity > 0 && !availableIds.has(Number(comboId)))
+        .map(([comboId]) => Number(comboId));
+      if (removedIds.length === 0) return;
+
+      updateComboQuantities((prev) =>
+        Object.fromEntries(
+          Object.entries(prev).filter(([comboId]) => !removedIds.includes(Number(comboId))),
+        ),
+      );
+
+      if (silent) return;
+      const names = removedIds.map(
+        (comboId) => comboNamesRef.current.get(comboId) ?? "đã chọn",
+      );
+      toast.add({
+        title:
+          names.length === 1
+            ? `Combo ${names[0]} đã hết hàng và được bỏ khỏi lựa chọn.`
+            : `Các combo ${names.join(", ")} đã hết hàng và được bỏ khỏi lựa chọn.`,
+        type: "warning",
+      });
+    },
+    [updateComboQuantities],
+  );
+
+  useEffect(() => {
+    if (activeCombos.data) pruneUnavailableCombos(activeCombos.data, false);
+  }, [activeCombos.data, pruneUnavailableCombos]);
 
   const resumeOrderQuery = useOrderDetail(isResumeMode ? resumeOrderId! : 0);
 
@@ -170,13 +219,17 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
     ],
   );
 
-  const combosPayload = useMemo(
-    () =>
-      Object.entries(comboQuantities)
-        .filter(([, qty]) => qty > 0)
-        .map(([comboId, quantity]) => ({ comboId: Number(comboId), quantity })),
-    [comboQuantities],
-  );
+  const combosPayload = useMemo(() => {
+    const availableIds = activeCombos.data
+      ? new Set(activeCombos.data.map((combo) => combo.comboId))
+      : null;
+    return Object.entries(comboQuantities)
+      .filter(
+        ([comboId, qty]) =>
+          qty > 0 && (!availableIds || availableIds.has(Number(comboId))),
+      )
+      .map(([comboId, quantity]) => ({ comboId: Number(comboId), quantity }));
+  }, [comboQuantities, activeCombos.data]);
 
   const toggleSeat = (showtimeSeatId: number) => {
     const allSeats = showtimeSeats.data?.seats ?? [];
@@ -188,7 +241,7 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
   const selectSeats = (ids: number[]) => setSelectedSeatIds(new Set(ids));
 
   const setComboQuantity = (comboId: number, quantity: number) => {
-    setComboQuantities((prev) => ({ ...prev, [comboId]: quantity }));
+    updateComboQuantities((prev) => ({ ...prev, [comboId]: quantity }));
   };
 
   const effectiveCustomerName = customerName.trim() || (authUser?.fullName ?? '').trim();
@@ -221,11 +274,23 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
       setStep("payment");
     };
 
+    const recoverFromComboConflict = async (error: unknown) => {
+      if (combosPayload.length === 0 || !isGenericConflictError(error)) return;
+      const refreshed = await activeCombos.refetch();
+      if (refreshed.data) pruneUnavailableCombos(refreshed.data, true);
+      document
+        .getElementById(BOOKING_COMBO_SECTION_ID)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+
     try {
       await submitHold(false);
     } catch (error) {
       const change = getPriceChangeRequired(error);
-      if (!change) return;
+      if (!change) {
+        await recoverFromComboConflict(error);
+        return;
+      }
       const accepted = await confirmPriceChange(
         change,
         seatTicketTypes.pricedSeats,
@@ -237,7 +302,8 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
       }
       try {
         await submitHold(true);
-      } catch {
+      } catch (retryError) {
+        await recoverFromComboConflict(retryError);
         return;
       }
     }

@@ -88,6 +88,7 @@ export const FORM_CANCEL_LABEL = "Hủy";
 export const FORM_SAVE_CHANGES_LABEL = "Lưu thay đổi";
 export const FORM_PROCESSING_LABEL = "Đang xử lý...";
 export const HOLDING_SEATS_LABEL = "Đang giữ ghế...";
+export const BOOKING_COMBO_SECTION_ID = "booking-combo-section";
 export const FAILED_LABEL = "Thất bại";
 export const STATUS_LABEL = "Trạng thái";
 export const ALL_STATUSES_LABEL = "Tất cả trạng thái";

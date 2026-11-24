@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, PackageOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/common/empty-state";
 import { SeatTicketList } from "@/components/common/seat-ticket-list";
 import { SelectableSeatMap } from "@/components/common/seat-map/selectable-seat-map";
 import { formatSeatCodes } from "@/components/common/seat-map/seat-map-utils";
@@ -16,7 +17,7 @@ import { BookingCustomerForm } from "./booking-customer-form";
 import { BookingPendingOrderNotice } from "./booking-pending-order-notice";
 import { BookingPriceSummary, calcBookingEstimate } from "./booking-price-summary";
 import { SeatSuggestionPanel } from "./seat-suggestion-panel";
-import { HOLDING_SEATS_LABEL } from "@/config/default-constants";
+import { BOOKING_COMBO_SECTION_ID, HOLDING_SEATS_LABEL } from "@/config/default-constants";
 
 export const BOOKING_SELECTION_GRID_CLASS = "grid grid-cols-1 gap-6 lg:grid-cols-[1fr_22.5rem]";
 
@@ -59,7 +60,7 @@ export const BookingSelectionStep = ({
   isHolding,
   onContinue,
 }: BookingSelectionStepProps) => {
-  const activeCombos = useActiveCombos();
+  const activeCombos = useActiveCombos({ alwaysRefetchOnMount: true });
   const holdDurationMinutes = useCinemaSettings().data?.holdDurationMinutes;
   const comboSuggestions = useComboSuggestions(data?.showtimeId ?? 0, selectedIds.size);
   const [highlightedIds, setHighlightedIds] = useState<Set<number>>(new Set());
@@ -78,6 +79,7 @@ export const BookingSelectionStep = ({
   const suggestions = comboSuggestions.data ?? [];
   const comboRank = new Map(suggestions.map((s, i) => [s.comboId, i]));
   const comboLabels = Object.fromEntries(suggestions.map((s) => [s.comboId, s.label]));
+  const allCombosSoldOut = activeCombos.isSuccess && activeCombos.data.length === 0;
   const sortedCombos = activeCombos.data
     ? [...activeCombos.data].sort(
       (a, b) => (comboRank.get(a.comboId) ?? 99) - (comboRank.get(b.comboId) ?? 99),
@@ -115,18 +117,32 @@ export const BookingSelectionStep = ({
           onChange={seatTicketTypes.setTicketType}
         />
 
-        <div className="bg-card p-4">
+        <div id={BOOKING_COMBO_SECTION_ID} className="scroll-mt-24 bg-card p-4">
           <h3 className="t-h3 mb-3 text-foreground">Chọn combo (tuỳ chọn)</h3>
-          <ComboPicker
-            combos={sortedCombos}
-            isLoading={activeCombos.isLoading}
-            isError={activeCombos.isError}
-            error={activeCombos.error}
-            onRetry={() => void activeCombos.refetch()}
-            quantities={comboQuantities}
-            onChange={onComboChange}
-            labels={comboLabels}
-          />
+          {allCombosSoldOut ? (
+            <EmptyState
+              icon={PackageOpen}
+              title="Combo hiện đã hết hàng"
+              description="Bạn vẫn có thể bỏ qua bước này và tiếp tục đặt vé. Combo sẽ hiện lại khi rạp có hàng."
+              action={
+                <Button variant="outline" disabled={!canHold || isHolding} onClick={onContinue}>
+                  Bỏ qua combo & giữ ghế
+                </Button>
+              }
+              className="py-8"
+            />
+          ) : (
+            <ComboPicker
+              combos={sortedCombos}
+              isLoading={activeCombos.isLoading}
+              isError={activeCombos.isError}
+              error={activeCombos.error}
+              onRetry={() => void activeCombos.refetch()}
+              quantities={comboQuantities}
+              onChange={onComboChange}
+              labels={comboLabels}
+            />
+          )}
         </div>
 
         <BookingCustomerForm

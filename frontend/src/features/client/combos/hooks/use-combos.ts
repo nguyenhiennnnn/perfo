@@ -2,10 +2,15 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { combosApi } from "../api/combos-api";
 import { queryKeys } from "@/api/query-keys";
 
-export function useActiveCombos() {
+interface UseActiveCombosOptions {
+  alwaysRefetchOnMount?: boolean;
+}
+
+export function useActiveCombos(options?: UseActiveCombosOptions) {
   return useQuery({
     queryKey: queryKeys.combos.active(),
     queryFn: () => combosApi.getActiveCombos(),
+    ...(options?.alwaysRefetchOnMount && { refetchOnMount: "always" as const }),
     select: (res) => res.data,
   });
 }

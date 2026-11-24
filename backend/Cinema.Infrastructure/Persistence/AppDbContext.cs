@@ -23,6 +23,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<ScreenType> ScreenTypes => Set<ScreenType>();
     public DbSet<CinemaRoom> CinemaRooms => Set<CinemaRoom>();
     public DbSet<RoomClosure> RoomClosures => Set<RoomClosure>();
+    public DbSet<ShowtimeRoomChange> ShowtimeRoomChanges => Set<ShowtimeRoomChange>();
+    public DbSet<RoomChangeRefundDue> RoomChangeRefundDues => Set<RoomChangeRefundDue>();
     public DbSet<SeatType> SeatTypes => Set<SeatType>();
     public DbSet<Seat> Seats => Set<Seat>();
     public DbSet<Genre> Genres => Set<Genre>();

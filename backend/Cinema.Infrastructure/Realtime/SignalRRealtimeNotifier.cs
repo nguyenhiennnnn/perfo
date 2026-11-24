@@ -11,6 +11,25 @@ public class SignalRRealtimeNotifier(IHubContext<ShowtimeHub> hubContext) : IRea
 
     private static string UserGroupName(int userId) => $"user-{userId}";
 
+    public Task NotifyShowtimeRoomChangedAsync(
+        int showtimeId,
+        int roomId,
+        string roomName,
+        CancellationToken cancellationToken
+    ) =>
+        hubContext
+            .Clients.Group(GroupName(showtimeId))
+            .SendAsync(
+                SignalREvents.ShowtimeRoomChanged,
+                new
+                {
+                    showtimeId,
+                    roomId,
+                    roomName,
+                },
+                cancellationToken
+            );
+
     public Task NotifyHoldExpiredAsync(
         int showtimeId,
         int orderId,

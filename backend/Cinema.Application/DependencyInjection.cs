@@ -78,6 +78,7 @@ public static class DependencyInjection
         services.AddScoped<ISeatExpirationService, SeatExpirationService>();
         services.AddScoped<IShowtimeService, ShowtimeService>();
         services.AddScoped<IShowtimeCancellationService, ShowtimeCancellationService>();
+        services.AddScoped<IShowtimeRoomChangeService, ShowtimeRoomChangeService>();
         services.AddScoped<IShowtimeBatchService, ShowtimeBatchService>();
         services.AddScoped<IShowtimeAutoScheduleService, ShowtimeAutoScheduleService>();
         services.AddScoped<IShowtimeQueryService, ShowtimeQueryService>();

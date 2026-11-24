@@ -3362,4 +3362,37 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_LowStockNote" xml:space="preserve">
     <value>Mỗi sản phẩm chỉ được báo một lần cho đến khi tồn kho vượt lại trên ngưỡng.</value>
   </data>
+  <data name="Common_ActionChangeRoom" xml:space="preserve">
+    <value>chuyển phòng</value>
+  </data>
+  <data name="Rule_ShowtimeStartedCannotChangeRoom" xml:space="preserve">
+    <value>Suất chiếu đã bắt đầu, không thể chuyển phòng.</value>
+  </data>
+  <data name="Rule_RoomChangeSameRoom" xml:space="preserve">
+    <value>Phòng đích trùng với phòng hiện tại của suất chiếu.</value>
+  </data>
+  <data name="Rule_RoomChangeNotEnoughSeats" xml:space="preserve">
+    <value>Phòng đích chỉ có {1} ghế khả dụng, không đủ cho {0} ghế đã có đơn.</value>
+  </data>
+  <data name="Rule_RoomChangeSeatsUnmapped" xml:space="preserve">
+    <value>Còn {0} ghế đã có đơn chưa được ánh xạ sang phòng mới.</value>
+  </data>
+  <data name="Rule_RoomChangeCoupleBroken" xml:space="preserve">
+    <value>Có ghế đôi bị tách cặp hoặc ghép sai loại ghế, vui lòng điều chỉnh lại ánh xạ.</value>
+  </data>
+  <data name="Conflict_RoomChangeHasActiveHolds" xml:space="preserve">
+    <value>Suất chiếu đang có khách giữ ghế hoặc đang thanh toán, không thể chuyển phòng lúc này. Vui lòng thử lại sau vài phút.</value>
+  </data>
+  <data name="Conflict_RoomChangeConcurrent" xml:space="preserve">
+    <value>Dữ liệu ghế của suất chiếu vừa thay đổi. Vui lòng tải lại bản xem trước và thử lại.</value>
+  </data>
+  <data name="Validation_RoomChange_NoteMaxLength" xml:space="preserve">
+    <value>Ghi chú chuyển phòng tối đa 500 ký tự.</value>
+  </data>
+  <data name="Validation_RoomChange_InvalidMapping" xml:space="preserve">
+    <value>Ánh xạ ghế không hợp lệ: ghế nguồn hoặc ghế đích không tồn tại, hoặc một ghế bị dùng nhiều lần.</value>
+  </data>
+  <data name="Success_ShowtimeRoomChanged" xml:space="preserve">
+    <value>Đã chuyển suất chiếu sang phòng mới.</value>
+  </data>
 </root>

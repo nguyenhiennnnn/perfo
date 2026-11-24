@@ -249,6 +249,29 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject ShowtimeRoomBeforeChange(int roomId) =>
+        AuditJson.ToObject(new { roomId });
+
+    public static JsonObject ShowtimeRoomAfterChange(
+        int roomId,
+        int seatsMoved,
+        int seatsNeedingReview,
+        int refundDueCount,
+        decimal refundDueTotal,
+        string? note
+    ) =>
+        AuditJson.ToObject(
+            new
+            {
+                roomId,
+                seatsMoved,
+                seatsNeedingReview,
+                refundDueCount,
+                refundDueTotal,
+                note,
+            }
+        );
+
     public static JsonObject RoomClosureState(RoomClosure c) =>
         AuditJson.ToObject(
             new

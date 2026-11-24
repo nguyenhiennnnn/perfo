@@ -20,6 +20,14 @@ public sealed record OrderRefunded(
 
 public sealed record ShowtimeEnded(int ShowtimeId, DateTime OccurredAt) : IBusinessEvent;
 
+public sealed record ShowtimeRoomChanged(
+    int ShowtimeRoomChangeId,
+    int ShowtimeId,
+    int FromRoomId,
+    int ToRoomId,
+    DateTime OccurredAt
+) : IBusinessEvent;
+
 public sealed record TicketCheckedIn(
     int OrderId,
     int OrderLineId,

@@ -20,6 +20,7 @@ namespace Cinema.Api.Controllers.Admin;
 public class AdminShowtimesController(
     IShowtimeService showtimeService,
     IShowtimeCancellationService showtimeCancellationService,
+    IShowtimeRoomChangeService showtimeRoomChangeService,
     IShowtimeBatchService showtimeBatchService,
     IShowtimeAutoScheduleService showtimeAutoScheduleService,
     IShowtimeQueryService showtimeQueryService,
@@ -114,6 +115,23 @@ public class AdminShowtimesController(
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken) =>
         Ok(await showtimeCancellationService.DeleteShowtimeAsync(id, cancellationToken));
+
+    [HttpPost("{id:int}/room-change/preview")]
+    [Authorize(Policy = Policies.AdminOnly)]
+    public async Task<IActionResult> PreviewRoomChange(
+        int id,
+        [FromBody] ShowtimeRoomChangeRequest request,
+        CancellationToken cancellationToken
+    ) => Ok(await showtimeRoomChangeService.PreviewAsync(id, request, cancellationToken));
+
+    [HttpPost("{id:int}/room-change")]
+    [SuccessMessage(nameof(Messages.Success_ShowtimeRoomChanged))]
+    [Authorize(Policy = Policies.AdminOnly)]
+    public async Task<IActionResult> ChangeRoom(
+        int id,
+        [FromBody] ShowtimeRoomChangeRequest request,
+        CancellationToken cancellationToken
+    ) => Ok(await showtimeRoomChangeService.ApplyAsync(id, request, cancellationToken));
 
     [HttpPost("bulk")]
     [SuccessMessage(nameof(Messages.Success_ShowtimesBulkCreated))]

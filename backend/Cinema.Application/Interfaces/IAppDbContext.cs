@@ -20,6 +20,8 @@ public interface IAppDbContext
     DbSet<ScreenType> ScreenTypes { get; }
     DbSet<CinemaRoom> CinemaRooms { get; }
     DbSet<RoomClosure> RoomClosures { get; }
+    DbSet<ShowtimeRoomChange> ShowtimeRoomChanges { get; }
+    DbSet<RoomChangeRefundDue> RoomChangeRefundDues { get; }
     DbSet<SeatType> SeatTypes { get; }
     DbSet<Seat> Seats { get; }
     DbSet<Genre> Genres { get; }

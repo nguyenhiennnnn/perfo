@@ -18,6 +18,10 @@ public record OpenCounterShiftRequest(decimal OpeningCash);
 
 public record CloseCounterShiftRequest(decimal CountedCash, string? Note);
 
+public record AdminCloseCounterShiftRequest(decimal CountedCash, string Note);
+
+public record OpenCounterShiftItemDto(CounterShiftDto Shift, bool IsOverdue, DateTime? AlertedAt);
+
 public record CounterShiftListFilter(
     int? EmployeeId,
     string? Status,

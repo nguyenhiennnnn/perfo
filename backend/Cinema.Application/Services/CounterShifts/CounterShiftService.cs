@@ -1,3 +1,4 @@
+using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.CounterShifts;
 using Cinema.Application.Interfaces;
@@ -12,8 +13,40 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Services.CounterShifts;
 
-public class CounterShiftService(IAppDbContext db, IAuditLogger auditLogger) : ICounterShiftService
+public class CounterShiftService(IAppDbContext db, IAuditLogger auditLogger, IAppCache cache)
+    : ICounterShiftService
 {
+    public async Task<IReadOnlyList<OpenCounterShiftItemDto>> GetOpenShiftsAsync(
+        CancellationToken cancellationToken
+    )
+    {
+        var settings = await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken);
+        var overdueBefore = BusinessDay.CurrentStartUtc(
+            DateTime.UtcNow,
+            settings.OpeningTime,
+            settings.ClosingTime
+        );
+
+        var rows = await db
+            .CounterShifts.AsNoTracking()
+            .Where(s => s.Status == CounterShiftStatus.Open)
+            .OrderBy(s => s.OpenedAt)
+            .ThenBy(s => s.CounterShiftId)
+            .Select(s => new
+            {
+                Shift = s,
+                EmployeeName = s.Employee.User.FullName,
+            })
+            .ToListAsync(cancellationToken);
+
+        return rows.Select(r => new OpenCounterShiftItemDto(
+                ToDto(r.Shift, r.EmployeeName),
+                r.Shift.OpenedAt < overdueBefore,
+                r.Shift.UnclosedAlertedAt
+            ))
+            .ToList();
+    }
+
     public async Task<OffsetPageResult<CounterShiftDto>> GetShiftsAsync(
         CounterShiftActor actor,
         CounterShiftListFilter filter,
@@ -139,6 +172,43 @@ public class CounterShiftService(IAppDbContext db, IAuditLogger auditLogger) : I
     {
         var shift = await FindAsync(id, tracking: true, cancellationToken);
         EnsureCanAccess(actor, shift);
+        return await CloseShiftAsync(
+            shift,
+            request.CountedCash,
+            request.Note,
+            AuditActions.CloseShift,
+            cancellationToken
+        );
+    }
+
+    public async Task<CounterShiftDto> CloseByAdminAsync(
+        CounterShiftActor actor,
+        int id,
+        AdminCloseCounterShiftRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!actor.IsAdmin)
+            throw new ForbiddenAppException(Messages.Forbidden_NotCounterShiftOwner);
+
+        var shift = await FindAsync(id, tracking: true, cancellationToken);
+        return await CloseShiftAsync(
+            shift,
+            request.CountedCash,
+            request.Note,
+            AuditActions.AdminCloseShift,
+            cancellationToken
+        );
+    }
+
+    private async Task<CounterShiftDto> CloseShiftAsync(
+        CounterShift shift,
+        decimal countedCash,
+        string? note,
+        string closeAction,
+        CancellationToken cancellationToken
+    )
+    {
         if (shift.Status != CounterShiftStatus.Open)
             throw new ConflictAppException(Messages.Conflict_CounterShiftAlreadyClosed);
 
@@ -146,14 +216,14 @@ public class CounterShiftService(IAppDbContext db, IAuditLogger auditLogger) : I
         var before = AuditSnapshots.CounterShiftState(shift);
 
         shift.ClosedAt = DateTime.UtcNow;
-        shift.CountedCash = OrderPricing.RoundToDong(request.CountedCash);
+        shift.CountedCash = OrderPricing.RoundToDong(countedCash);
         shift.ExpectedCash = OrderPricing.RoundToDong(totals.Expected(shift.OpeningCash));
         shift.Variance = shift.CountedCash - shift.ExpectedCash;
-        shift.Note = string.IsNullOrWhiteSpace(request.Note) ? null : request.Note.Trim();
+        shift.Note = string.IsNullOrWhiteSpace(note) ? null : note.Trim();
         shift.Status = CounterShiftStatus.Closed;
 
         auditLogger.Record(
-            AuditActions.CloseShift,
+            closeAction,
             AuditEntityTypes.CounterShift,
             shift.CounterShiftId.ToString(),
             before,
@@ -183,7 +253,17 @@ public class CounterShiftService(IAppDbContext db, IAuditLogger auditLogger) : I
         }
         catch (DbUpdateConcurrencyException)
         {
-            throw new ConflictAppException(Messages.Conflict_CounterShiftAlreadyClosed);
+            var stillOpen = await db
+                .CounterShifts.AsNoTracking()
+                .AnyAsync(
+                    s => s.CounterShiftId == shift.CounterShiftId && s.Status == CounterShiftStatus.Open,
+                    cancellationToken
+                );
+            throw new ConflictAppException(
+                stillOpen
+                    ? Messages.Conflict_CounterShiftConcurrentUpdate
+                    : Messages.Conflict_CounterShiftAlreadyClosed
+            );
         }
 
         return ToDto(shift, await LoadEmployeeNameAsync(shift.EmployeeId, cancellationToken));

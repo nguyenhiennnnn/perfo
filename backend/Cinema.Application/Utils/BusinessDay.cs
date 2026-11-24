@@ -13,6 +13,12 @@ public static class BusinessDay
     public static DateTime EndUtc(DateOnly businessDay, TimeOnly? opening, TimeOnly? closing) =>
         StartUtc(businessDay.AddDays(1), opening, closing);
 
+    public static DateTime CurrentStartUtc(
+        DateTime utcNow,
+        TimeOnly? opening,
+        TimeOnly? closing
+    ) => StartUtc(Of(utcNow, opening, closing), opening, closing);
+
     private static TimeOnly CutOff(TimeOnly? opening, TimeOnly? closing) =>
         opening is { } open && closing is { } close && close <= open ? close : TimeOnly.MinValue;
 }

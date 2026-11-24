@@ -103,6 +103,12 @@ public static class BackgroundJobExtensions
             options.SalesStatsRefreshCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<UnclosedShiftAlertJob>(
+            RecurringJobIds.UnclosedShiftAlert,
+            j => j.RunAsync(CancellationToken.None),
+            options.UnclosedShiftAlertCron,
+            jobOptions
+        );
 
         return app;
     }

@@ -70,6 +70,8 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int SuggestionMinShowtimes { get; init; }
 
     public int SuggestionLookbackDays { get; init; }
+
+    public bool DailyClosingAllowOverride { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -109,5 +111,6 @@ public record UpdateSettingsRequest(
     int? SuggestionHighOccupancyPercent = null,
     int? SuggestionLowOccupancyPercent = null,
     int? SuggestionMinShowtimes = null,
-    int? SuggestionLookbackDays = null
+    int? SuggestionLookbackDays = null,
+    bool? DailyClosingAllowOverride = null
 );

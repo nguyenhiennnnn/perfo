@@ -770,6 +770,48 @@ public static class EmailTemplates
         );
     }
 
+    public static string UnclosedShiftAlert(
+        BrandOptions brand,
+        IReadOnlyList<UnclosedShiftEmailLine> shifts
+    )
+    {
+        var rows = shifts
+            .Select(
+                (shift, index) =>
+                    DetailRow(
+                        Enc(shift.EmployeeName),
+                        Enc(
+                            string.Format(
+                                Messages.Email_UnclosedShiftRowValue,
+                                BusinessTime
+                                    .ToLocal(shift.OpenedAtUtc)
+                                    .ToString(
+                                        DateTimePatterns.DateHourMinute,
+                                        CultureInfo.InvariantCulture
+                                    ),
+                                Money(shift.OpeningCash)
+                            )
+                        ),
+                        isLast: index == shifts.Count - 1
+                    )
+            )
+            .ToArray();
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeUnclosedShift, Warning, SymbolAlert)}
+            {Heading(Messages.Email_UnclosedShiftHeading)}
+            {Paragraph(Messages.Email_UnclosedShiftIntro)}
+            {DetailCard(rows)}
+            {MutedParagraph(Messages.Email_UnclosedShiftNote)}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_UnclosedShiftPreheader, shifts.Count),
+            body
+        );
+    }
+
     private static string FormatQuantity(decimal quantity) =>
         quantity.ToString("0.###", CultureInfo.InvariantCulture);
 }

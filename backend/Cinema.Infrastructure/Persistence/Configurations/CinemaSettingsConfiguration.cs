@@ -110,5 +110,6 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.SuggestionLookbackDays)
             .HasDefaultValue(CinemaSettings.DefaultSuggestionLookbackDays);
+        builder.Property(x => x.DailyClosingAllowOverride).HasDefaultValue(false);
     }
 }

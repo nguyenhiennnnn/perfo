@@ -25,6 +25,11 @@ public class AdminCounterShiftsController(ICounterShiftService counterShiftServi
         CancellationToken cancellationToken = default
     ) => Ok(await counterShiftService.GetShiftsAsync(Actor, filter, page, pageSize, cancellationToken));
 
+    [HttpGet("open")]
+    [Authorize(Policy = Policies.AdminOnly)]
+    public async Task<IActionResult> GetOpen(CancellationToken cancellationToken) =>
+        Ok(await counterShiftService.GetOpenShiftsAsync(cancellationToken));
+
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken) =>
         Ok(await counterShiftService.GetByIdAsync(Actor, id, cancellationToken));
@@ -47,4 +52,13 @@ public class AdminCounterShiftsController(ICounterShiftService counterShiftServi
         [FromBody] CloseCounterShiftRequest request,
         CancellationToken cancellationToken
     ) => Ok(await counterShiftService.CloseAsync(Actor, id, request, cancellationToken));
+
+    [HttpPost("{id:int}/close-by-admin")]
+    [Authorize(Policy = Policies.AdminOnly)]
+    [SuccessMessage(nameof(Messages.Success_CounterShiftClosedByAdmin))]
+    public async Task<IActionResult> CloseByAdmin(
+        int id,
+        [FromBody] AdminCloseCounterShiftRequest request,
+        CancellationToken cancellationToken
+    ) => Ok(await counterShiftService.CloseByAdminAsync(Actor, id, request, cancellationToken));
 }

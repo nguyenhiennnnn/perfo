@@ -10,4 +10,5 @@ public class RecurringJobIds
     public const string ProcessOutbox = "process-outbox";
     public const string LowStockAlert = "low-stock-alert";
     public const string RefreshSalesStats = "refresh-sales-stats";
+    public const string UnclosedShiftAlert = "unclosed-shift-alert";
 }

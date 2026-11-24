@@ -3829,4 +3829,100 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_CounterShiftRequired" xml:space="preserve">
     <value>Bạn cần mở ca quầy trước khi bán hàng, thu tiền hoặc xác nhận hoàn tiền mặt.</value>
   </data>
+  <data name="Email_UnclosedShiftSubject" xml:space="preserve">
+    <value>[{0}] Cảnh báo: {1} ca quầy chưa đóng</value>
+  </data>
+  <data name="Email_UnclosedShiftPreheader" xml:space="preserve">
+    <value>{0} ca quầy đã qua ngày kinh doanh mà chưa được đóng.</value>
+  </data>
+  <data name="Email_BadgeUnclosedShift" xml:space="preserve">
+    <value>Ca quầy chưa đóng</value>
+  </data>
+  <data name="Email_UnclosedShiftHeading" xml:space="preserve">
+    <value>Có ca quầy quên đóng</value>
+  </data>
+  <data name="Email_UnclosedShiftIntro" xml:space="preserve">
+    <value>Các ca quầy dưới đây được mở từ ngày kinh doanh trước và vẫn chưa đóng. Quản trị có thể đóng thay ca kèm ghi chú trong trang quản lý ca quầy.</value>
+  </data>
+  <data name="Email_UnclosedShiftRowValue" xml:space="preserve">
+    <value>Mở lúc {0}, tiền đầu ca {1}</value>
+  </data>
+  <data name="Email_UnclosedShiftNote" xml:space="preserve">
+    <value>Mỗi ca chỉ được cảnh báo một lần.</value>
+  </data>
+  <data name="Conflict_CounterShiftConcurrentUpdate" xml:space="preserve">
+    <value>Ca quầy vừa được cập nhật. Hãy tải lại và thử đóng ca một lần nữa.</value>
+  </data>
+  <data name="Success_CounterShiftClosedByAdmin" xml:space="preserve">
+    <value>Đã đóng thay ca quầy.</value>
+  </data>
+  <data name="Validation_CounterShift_AdminCloseNoteRequired" xml:space="preserve">
+    <value>Cần nhập ghi chú khi đóng thay ca quầy.</value>
+  </data>
+  <data name="Rule_DailyClosingDateInvalid" xml:space="preserve">
+    <value>Ngày kinh doanh không hợp lệ hoặc chưa tới.</value>
+  </data>
+  <data name="Conflict_DailyClosingAlreadyClosed" xml:space="preserve">
+    <value>Ngày kinh doanh này đã được chốt.</value>
+  </data>
+  <data name="NotFound_DailyClosing" xml:space="preserve">
+    <value>Không tìm thấy bản chốt của ngày này.</value>
+  </data>
+  <data name="Success_DailyClosingClosed" xml:space="preserve">
+    <value>Đã chốt ngày kinh doanh.</value>
+  </data>
+  <data name="Rule_DailyClosingDayNotEnded" xml:space="preserve">
+    <value>Chỉ chốt được các ngày kinh doanh đã kết thúc.</value>
+  </data>
+  <data name="Rule_DailyClosingOpenShifts" xml:space="preserve">
+    <value>Còn {0} ca quầy chưa đóng.</value>
+  </data>
+  <data name="Rule_DailyClosingProblemOrders" xml:space="preserve">
+    <value>Còn {0} đơn lỗi chưa xử lý.</value>
+  </data>
+  <data name="Rule_DailyClosingOverrideNotAllowed" xml:space="preserve">
+    <value>Cài đặt rạp không cho phép chốt ngày khi còn ca chưa đóng hoặc đơn lỗi.</value>
+  </data>
+  <data name="Rule_DailyClosingOverrideNoteRequired" xml:space="preserve">
+    <value>Cần nhập ghi chú giải thích khi chốt ngày bỏ qua điều kiện.</value>
+  </data>
+  <data name="Validation_DailyClosing_CountedCashRange" xml:space="preserve">
+    <value>Số tiền thực đếm không được âm và không vượt quá giới hạn cho phép.</value>
+  </data>
+  <data name="Validation_DailyClosing_NoteMaxLength" xml:space="preserve">
+    <value>Ghi chú chốt ngày không được vượt quá 1000 ký tự.</value>
+  </data>
+  <data name="Ledger_Reason_RefundAfterClose" xml:space="preserve">
+    <value>Hoàn tiền đơn {0} (giao dịch {1}) phát sinh sau khi ngày gốc đã chốt.</value>
+  </data>
+  <data name="Ledger_Reason_CancelAfterClose" xml:space="preserve">
+    <value>Đơn {0} bị hủy sau khi ngày gốc đã chốt.</value>
+  </data>
+  <data name="Success_LedgerAdjustmentCreated" xml:space="preserve">
+    <value>Đã tạo bút toán điều chỉnh.</value>
+  </data>
+  <data name="Rule_LedgerAdjustmentDayNotClosed" xml:space="preserve">
+    <value>Chỉ tạo được bút toán điều chỉnh cho ngày đã chốt.</value>
+  </data>
+  <data name="Rule_LedgerAdjustmentReferenceMismatch" xml:space="preserve">
+    <value>Giao dịch tham chiếu không thuộc đơn hàng đã chọn.</value>
+  </data>
+  <data name="Validation_LedgerAdjustment_DateRequired" xml:space="preserve">
+    <value>Cần chọn ngày gốc của bút toán.</value>
+  </data>
+  <data name="Validation_LedgerAdjustment_ReasonRequired" xml:space="preserve">
+    <value>Cần nhập lý do điều chỉnh.</value>
+  </data>
+  <data name="Validation_LedgerAdjustment_ReasonMaxLength" xml:space="preserve">
+    <value>Lý do điều chỉnh không được vượt quá 500 ký tự.</value>
+  </data>
+  <data name="Validation_LedgerAdjustment_AmountInvalid" xml:space="preserve">
+    <value>Số tiền điều chỉnh phải là số nguyên đồng và không vượt quá giới hạn cho phép.</value>
+  </data>
+  <data name="Validation_LedgerAdjustment_CountInvalid" xml:space="preserve">
+    <value>Số lượng điều chỉnh không hợp lệ.</value>
+  </data>
+  <data name="Validation_LedgerAdjustment_NothingToAdjust" xml:space="preserve">
+    <value>Cần điều chỉnh ít nhất một chỉ tiêu khác 0.</value>
+  </data>
 </root>

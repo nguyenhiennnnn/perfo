@@ -13,6 +13,7 @@ public class CounterShift
     public decimal? ExpectedCash { get; set; }
     public decimal? Variance { get; set; }
     public string? Note { get; set; }
+    public DateTime? UnclosedAlertedAt { get; set; }
     public CounterShiftStatus Status { get; set; } = CounterShiftStatus.Open;
     public uint RowVersion { get; set; }
 

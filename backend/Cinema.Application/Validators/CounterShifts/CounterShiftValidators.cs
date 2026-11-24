@@ -17,6 +17,24 @@ public class OpenCounterShiftRequestValidator : AbstractValidator<OpenCounterShi
     }
 }
 
+public class AdminCloseCounterShiftRequestValidator
+    : AbstractValidator<AdminCloseCounterShiftRequest>
+{
+    public AdminCloseCounterShiftRequestValidator()
+    {
+        RuleFor(x => x.CountedCash)
+            .InclusiveBetween(0m, CounterShiftLimits.MaxCashAmount)
+            .WithMessage(Messages.Validation_CounterShift_CountedCashRange);
+
+        RuleFor(x => x.Note)
+            .NotEmpty()
+            .WithMessage(Messages.Validation_CounterShift_AdminCloseNoteRequired)
+            .MaximumLength(FieldLengths.CounterShiftNote)
+            .WithMessage(Messages.Validation_CounterShift_NoteMaxLength)
+            .NoControlCharacters();
+    }
+}
+
 public class CloseCounterShiftRequestValidator : AbstractValidator<CloseCounterShiftRequest>
 {
     public CloseCounterShiftRequestValidator()

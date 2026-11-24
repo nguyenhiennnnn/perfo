@@ -104,4 +104,6 @@ public class CinemaSettings
     public int SuggestionMinShowtimes { get; set; } = DefaultSuggestionMinShowtimes;
 
     public int SuggestionLookbackDays { get; set; } = DefaultSuggestionLookbackDays;
+
+    public bool DailyClosingAllowOverride { get; set; }
 }

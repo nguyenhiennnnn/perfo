@@ -25,6 +25,17 @@ public interface ICounterShiftService
         CancellationToken cancellationToken
     );
 
+    Task<IReadOnlyList<OpenCounterShiftItemDto>> GetOpenShiftsAsync(
+        CancellationToken cancellationToken
+    );
+
+    Task<CounterShiftDto> CloseByAdminAsync(
+        CounterShiftActor actor,
+        int id,
+        AdminCloseCounterShiftRequest request,
+        CancellationToken cancellationToken
+    );
+
     Task<CounterShiftDto> CloseAsync(
         CounterShiftActor actor,
         int id,

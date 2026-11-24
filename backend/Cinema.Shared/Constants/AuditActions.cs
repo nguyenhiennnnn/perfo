@@ -11,5 +11,8 @@ public static class AuditActions
     public const string CardNotPresented = "CardNotPresented";
     public const string OpenShift = "OpenShift";
     public const string CloseShift = "CloseShift";
+    public const string AdminCloseShift = "AdminCloseShift";
     public const string ShiftVariance = "ShiftVariance";
+    public const string CloseDay = "CloseDay";
+    public const string CreateLedgerAdjustment = "CreateLedgerAdjustment";
 }

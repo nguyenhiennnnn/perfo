@@ -12,6 +12,7 @@ public class BackgroundJobOptions
     public string ProcessOutboxCron { get; set; } = "* * * * *";
     public string LowStockAlertCron { get; set; } = "*/15 * * * *";
     public string SalesStatsRefreshCron { get; set; } = "*/5 * * * *";
+    public string UnclosedShiftAlertCron { get; set; } = "*/15 * * * *";
     public int OutboxBatchSize { get; set; } = 50;
     public int OutboxMaxAttempts { get; set; } = 5;
     public int[] OutboxRetryDelaysSeconds { get; set; } = [30, 120, 600, 1800];

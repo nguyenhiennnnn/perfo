@@ -19,6 +19,13 @@ public sealed record LowStockEmailLine(
     decimal LowStockThreshold
 );
 
+public sealed record UnclosedShiftEmailLine(
+    int ShiftId,
+    string EmployeeName,
+    DateTime OpenedAtUtc,
+    decimal OpeningCash
+);
+
 public interface INotificationService
 {
     void SendVerificationLink(
@@ -95,4 +102,6 @@ public interface INotificationService
     );
 
     void SendLowStockAlert(string toEmail, IReadOnlyList<LowStockEmailLine> items);
+
+    void SendUnclosedShiftAlert(string toEmail, IReadOnlyList<UnclosedShiftEmailLine> shifts);
 }

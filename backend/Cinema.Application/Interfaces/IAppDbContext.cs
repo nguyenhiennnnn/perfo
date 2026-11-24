@@ -62,6 +62,8 @@ public interface IAppDbContext
     DbSet<PromotionCustomerUsage> PromotionCustomerUsages { get; }
     DbSet<PaymentTransaction> PaymentTransactions { get; }
     DbSet<CounterShift> CounterShifts { get; }
+    DbSet<DailyClosing> DailyClosings { get; }
+    DbSet<LedgerAdjustment> LedgerAdjustments { get; }
     DbSet<OrderResourceHold> OrderResourceHolds { get; }
     DbSet<OutboxMessage> OutboxMessages { get; }
     DbSet<OutboxDelivery> OutboxDeliveries { get; }

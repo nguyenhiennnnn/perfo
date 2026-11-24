@@ -79,6 +79,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<ReconciliationItem> ReconciliationItems => Set<ReconciliationItem>();
     public DbSet<SeatHoldEvent> SeatHoldEvents => Set<SeatHoldEvent>();
     public DbSet<CounterShift> CounterShifts => Set<CounterShift>();
+    public DbSet<DailyClosing> DailyClosings => Set<DailyClosing>();
+    public DbSet<LedgerAdjustment> LedgerAdjustments => Set<LedgerAdjustment>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {

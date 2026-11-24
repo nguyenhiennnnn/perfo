@@ -221,6 +221,16 @@ public class NotificationService(
             EmailTemplates.LowStockAlert(_brand, items)
         );
 
+    public void SendUnclosedShiftAlert(
+        string toEmail,
+        IReadOnlyList<UnclosedShiftEmailLine> shifts
+    ) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_UnclosedShiftSubject, _brand.Name, shifts.Count),
+            EmailTemplates.UnclosedShiftAlert(_brand, shifts)
+        );
+
     private void Enqueue(string toEmail, string subject, string html) =>
         backgroundJobClient.Enqueue<SendEmailJob>(j =>
             j.RunAsync(toEmail, subject, html, CancellationToken.None)

@@ -118,6 +118,8 @@ public class SettingsService(
             settings.SuggestionMinShowtimes = suggestionMin;
         if (request.SuggestionLookbackDays is { } suggestionLookback)
             settings.SuggestionLookbackDays = suggestionLookback;
+        if (request.DailyClosingAllowOverride is { } dailyClosingAllowOverride)
+            settings.DailyClosingAllowOverride = dailyClosingAllowOverride;
         if (settings.SchedulerHeatSalesWeight + settings.SchedulerHeatRatingWeight <= 0)
             throw new BusinessRuleException(Messages.Validation_SchedulerHeatWeights_SumPositive);
         if (settings.SuggestionHighOccupancyPercent <= settings.SuggestionLowOccupancyPercent)
@@ -157,6 +159,7 @@ public class SettingsService(
             SuggestionLowOccupancyPercent = settings.SuggestionLowOccupancyPercent,
             SuggestionMinShowtimes = settings.SuggestionMinShowtimes,
             SuggestionLookbackDays = settings.SuggestionLookbackDays,
+            DailyClosingAllowOverride = settings.DailyClosingAllowOverride,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

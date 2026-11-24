@@ -17,6 +17,8 @@ type DetailResponse = ApiResponse<ImportExportJobDto>;
 const IMPORT_INVALIDATIONS: Record<string, InvalidationName> = {
   [ImportExportModule.Movies]: "movieChanged",
   [ImportExportModule.Showtimes]: "showtimeChanged",
+  [ImportExportModule.Reconciliation]: "reconciliationChanged",
+  [ImportExportModule.ReconciliationStripe]: "reconciliationChanged",
 };
 
 const STATUS_RANK: Record<ImportExportJobStatus, number> = {

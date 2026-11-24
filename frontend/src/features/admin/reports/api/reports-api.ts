@@ -7,6 +7,8 @@ import type {
   TopMovieDto,
   ReportDateParams,
   EmployeePerformanceDto,
+  FinanceReportDto,
+  FinanceReportParams,
 } from "../types";
 import { ENDPOINTS } from "@/api/endpoints";
 
@@ -19,4 +21,7 @@ export const reportsApi = {
 
   getEmployeePerformance: (params: ReportDateParams) =>
     apiGet<ApiResponse<EmployeePerformanceDto[]>>(ENDPOINTS.admin.reports.employeePerformance, { params }),
+
+  getFinance: (params: FinanceReportParams) =>
+    apiGet<ApiResponse<FinanceReportDto>>(ENDPOINTS.admin.reports.finance, { params }),
 };

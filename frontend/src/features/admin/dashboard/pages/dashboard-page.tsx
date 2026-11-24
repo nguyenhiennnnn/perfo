@@ -7,6 +7,8 @@ import { TopMoviesCard } from "../components/top-movies-card";
 import { TodayShowtimesCard } from "../components/today-showtimes-card";
 import { DashboardDaysFilter } from "../components/dashboard-days-filter";
 import { OccupancySection } from "../components/occupancy-section";
+import { ComboRevenueSection } from "../components/combo-revenue-section";
+import { CancellationsSection } from "../components/cancellations-section";
 import { SeatHeatmapSection } from "../components/seat-heatmap-section";
 
 const AdminDashboardPage = () => {
@@ -31,6 +33,10 @@ const AdminDashboardPage = () => {
       </div>
 
       <OccupancySection />
+
+      <ComboRevenueSection />
+
+      <CancellationsSection />
 
       <SeatHeatmapSection />
 

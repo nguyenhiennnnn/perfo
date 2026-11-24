@@ -25,7 +25,7 @@ import {
   useAdminApplyAutoSchedule,
   useAdminPreviewAutoSchedule,
 } from "@/features/admin/showtimes/hooks/use-admin-showtimes";
-import type { AutoScheduleResponseDto } from "@/features/admin/showtimes/types";
+import type { AutoScheduleRequest, AutoScheduleResponseDto } from "@/features/admin/showtimes/types";
 import { FormSwitchField } from "@/components/common/form/form-switch-field";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getCurrencyLabel } from "@/lib/regional-settings";
@@ -56,28 +56,51 @@ type FormValues = z.infer<typeof formSchema>;
 
 interface ShowtimeAutoScheduleFormProps {
   onSuccess: () => void;
+  /** Mở thẳng màn xem trước với dữ liệu có sẵn (vd. từ gợi ý lịch chiếu). */
+  initialDraft?: AutoScheduleResponseDto | null;
+  /** Yêu cầu xếp lịch dùng để điền sẵn biểu mẫu khi quay lại từ màn xem trước. */
+  initialRequest?: AutoScheduleRequest | null;
 }
 
-export const ShowtimeAutoScheduleForm = ({ onSuccess }: ShowtimeAutoScheduleFormProps) => {
+export const ShowtimeAutoScheduleForm = ({
+  onSuccess,
+  initialDraft,
+  initialRequest,
+}: ShowtimeAutoScheduleFormProps) => {
   const preview = useAdminPreviewAutoSchedule();
   const apply = useAdminApplyAutoSchedule();
 
   useBlockDialogClose(apply.isPending);
 
   const [movieSearch, setMovieSearch] = useState("");
-  const [draft, setDraft] = useState<AutoScheduleResponseDto | null>(null);
+  const [draft, setDraft] = useState<AutoScheduleResponseDto | null>(initialDraft ?? null);
 
   const movies = useAdminMovies({ search: useDebouncedValue(movieSearch), pageSize: SEARCH_LOOKUP_PAGE_SIZE });
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      date: "",
-      toDate: "",
-      movies: [{ movieId: undefined, shows: 3, basePrice: undefined }],
-      basePrice: DEFAULT_SHOWTIME_BASE_PRICE,
-      allowAfterHours: false,
-    },
+    defaultValues: initialRequest
+      ? {
+          date: initialRequest.date,
+          toDate: initialRequest.toDate ?? "",
+          movies:
+            initialRequest.movies.length > 0
+              ? initialRequest.movies.map((m) => ({
+                  movieId: m.movieId,
+                  shows: m.shows,
+                  basePrice: m.basePrice,
+                }))
+              : [{ movieId: undefined, shows: 3, basePrice: undefined }],
+          basePrice: initialRequest.basePrice,
+          allowAfterHours: initialRequest.allowAfterHours ?? false,
+        }
+      : {
+          date: "",
+          toDate: "",
+          movies: [{ movieId: undefined, shows: 3, basePrice: undefined }],
+          basePrice: DEFAULT_SHOWTIME_BASE_PRICE,
+          allowAfterHours: false,
+        },
   });
 
   const { fields, append, remove } = useFieldArray({ control: form.control, name: "movies" });

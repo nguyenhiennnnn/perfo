@@ -1,7 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { reportsApi } from "../api/reports-api";
 import { queryKeys } from "@/api/query-keys";
-import type { RevenueReportParams, TopMovieReportParams, ReportDateParams } from "../types";
+import type {
+  RevenueReportParams,
+  TopMovieReportParams,
+  ReportDateParams,
+  FinanceReportParams,
+} from "../types";
 
 export function useRevenueReport(params: RevenueReportParams, enabled = true) {
   return useQuery({
@@ -27,5 +32,15 @@ export function useEmployeePerformanceReport(params: ReportDateParams, enabled =
     queryFn: () => reportsApi.getEmployeePerformance(params),
     enabled,
     select: (res) => res.data,
+  });
+}
+
+export function useFinanceReport(params: FinanceReportParams, enabled = true) {
+  return useQuery({
+    queryKey: queryKeys.adminReports.finance(params),
+    queryFn: () => reportsApi.getFinance(params),
+    enabled,
+    select: (res) => res.data,
+    placeholderData: keepPreviousData,
   });
 }

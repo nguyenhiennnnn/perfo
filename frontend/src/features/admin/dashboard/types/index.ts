@@ -1,4 +1,4 @@
-import type { OccupancyGroupBy, ShowtimeKind } from "@/types/enum";
+import type { OccupancyGroupBy, OrderChannel, ShowtimeKind } from "@/types/enum";
 
 export interface DashboardSummaryDto {
   todayRevenue: number;
@@ -105,4 +105,78 @@ export interface DashboardSeatHeatmapDto {
   maxTimesSold: number;
   maxTimesAbandoned: number;
   seats: DashboardSeatHeatmapSeatDto[];
+}
+
+export interface DashboardDateRangeParams {
+  from: string;
+  to: string;
+}
+
+export interface DashboardComboRevenueItemDto {
+  comboId: number;
+  comboName: string | null;
+  quantitySold: number;
+  quantityFulfilled: number;
+  fulfilledPercent: number | null;
+  netRevenue: number;
+}
+
+export interface DashboardComboRevenueChannelDto {
+  channel: OrderChannel;
+  quantitySold: number;
+  quantityFulfilled: number;
+  fulfilledPercent: number | null;
+  netRevenue: number;
+}
+
+export interface DashboardComboRevenueTotalDto {
+  quantitySold: number;
+  quantityFulfilled: number;
+  fulfilledPercent: number | null;
+  netRevenue: number;
+  confirmedOrders: number;
+  ordersWithCombo: number;
+  comboOrderRatePercent: number | null;
+  averageComboValuePerOrder: number | null;
+}
+
+export interface DashboardComboRevenueDto {
+  from: string;
+  to: string;
+  total: DashboardComboRevenueTotalDto;
+  byCombo: DashboardComboRevenueItemDto[];
+  byChannel: DashboardComboRevenueChannelDto[];
+}
+
+export interface DashboardCancellationTotalDto {
+  paidOrders: number;
+  cancelledOrders: number;
+  cancellationRatePercent: number | null;
+  refundedAmount: number;
+}
+
+export interface DashboardCancellationGroupDto {
+  key: string;
+  cancelledOrders: number;
+  refundedAmount: number;
+  sharePercent: number | null;
+}
+
+export interface DashboardCancellationMovieDto {
+  movieId: number | null;
+  movieTitle: string | null;
+  paidOrders: number;
+  cancelledOrders: number;
+  cancellationRatePercent: number | null;
+  refundedAmount: number;
+}
+
+export interface DashboardCancellationsDto {
+  from: string;
+  to: string;
+  total: DashboardCancellationTotalDto;
+  byReason: DashboardCancellationGroupDto[];
+  byCancelledBy: DashboardCancellationGroupDto[];
+  byTimeToShowtime: DashboardCancellationGroupDto[];
+  byMovie: DashboardCancellationMovieDto[];
 }

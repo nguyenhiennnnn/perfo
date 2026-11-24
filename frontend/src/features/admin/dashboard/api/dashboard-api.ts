@@ -8,6 +8,9 @@ import type {
   DashboardOccupancyParams,
   DashboardSeatHeatmapDto,
   DashboardSeatHeatmapParams,
+  DashboardDateRangeParams,
+  DashboardComboRevenueDto,
+  DashboardCancellationsDto,
 } from "@/features/admin/dashboard/types";
 import { ENDPOINTS } from "@/api/endpoints";
 
@@ -25,6 +28,16 @@ export const dashboardApi = {
 
   getSeatHeatmap: (params: DashboardSeatHeatmapParams) =>
     apiGet<ApiResponse<DashboardSeatHeatmapDto>>(ENDPOINTS.admin.dashboard.seatHeatmap, {
+      params,
+    }),
+
+  getComboRevenue: (params: DashboardDateRangeParams) =>
+    apiGet<ApiResponse<DashboardComboRevenueDto>>(ENDPOINTS.admin.dashboard.comboRevenue, {
+      params,
+    }),
+
+  getCancellations: (params: DashboardDateRangeParams) =>
+    apiGet<ApiResponse<DashboardCancellationsDto>>(ENDPOINTS.admin.dashboard.cancellations, {
       params,
     }),
 };

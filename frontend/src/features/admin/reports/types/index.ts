@@ -48,3 +48,33 @@ export interface EmployeePerformanceDto {
   revenue: number;
   bookingCount: number;
 }
+
+export interface FinanceReportParams {
+  from: string;
+  to: string;
+}
+
+export type FinanceColumnType = "Text" | "Number" | "Money" | "Percent";
+
+export interface FinanceReportColumnDto {
+  key: string;
+  title: string;
+  type: FinanceColumnType | string;
+}
+
+export type FinanceReportCell = string | number | boolean | null | undefined;
+
+export interface FinanceReportBlockDto {
+  key: string;
+  title: string;
+  columns: FinanceReportColumnDto[];
+  rows: Record<string, FinanceReportCell>[];
+  totals?: Record<string, FinanceReportCell> | null;
+  warnings?: string[] | null;
+}
+
+export interface FinanceReportDto {
+  from: string;
+  to: string;
+  blocks: FinanceReportBlockDto[];
+}

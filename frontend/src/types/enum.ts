@@ -209,6 +209,8 @@ export const ImportExportModule = {
   Orders: "bookings",
   Payments: "payments",
   PromotionRedemptions: "promotion-redemptions",
+  Reconciliation: "reconciliation",
+  ReconciliationStripe: "reconciliation-stripe",
 } as const;
 export type ImportExportModule =
   (typeof ImportExportModule)[keyof typeof ImportExportModule];

@@ -73,6 +73,19 @@ export const ENDPOINTS = {
       insights: "/admin/dashboard/insights",
       occupancy: "/admin/dashboard/occupancy",
       seatHeatmap: "/admin/dashboard/seat-heatmap",
+      comboRevenue: "/admin/dashboard/combo-revenue",
+      cancellations: "/admin/dashboard/cancellations",
+    },
+    reconciliation: {
+      sessions: "/admin/reconciliation/sessions",
+      sessionById: (id: number) => `/admin/reconciliation/sessions/${id}`,
+      stripe: "/admin/reconciliation/stripe",
+      import: "/admin/reconciliation/import",
+    },
+    scheduleAnalysis: {
+      report: "/admin/dashboard/schedule-report",
+      suggestions: "/admin/dashboard/schedule-suggestions",
+      applySuggestions: "/admin/dashboard/schedule-suggestions/apply",
     },
     reports: {
       revenue: "/admin/reports/revenue",
@@ -81,6 +94,9 @@ export const ENDPOINTS = {
       topMoviesExport: "/admin/reports/top-movies/export",
       employeePerformance: "/admin/reports/employee-performance",
       employeePerformanceExport: "/admin/reports/employee-performance/export",
+      finance: "/admin/reports/finance",
+      financeExport: "/admin/reports/finance/export",
+      financeExportJobs: "/admin/reports/finance/export-jobs",
     },
     users: {
       root: "/admin/users",

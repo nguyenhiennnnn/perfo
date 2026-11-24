@@ -203,6 +203,22 @@ export const queryKeys = {
       ["admin", "dashboard", "occupancy", params] as const,
     seatHeatmap: (params: object) =>
       ["admin", "dashboard", "seat-heatmap", params] as const,
+    comboRevenue: (params: object) =>
+      ["admin", "dashboard", "combo-revenue", params] as const,
+    cancellations: (params: object) =>
+      ["admin", "dashboard", "cancellations", params] as const,
+  },
+
+  adminScheduleAnalysis: {
+    all: () => ["admin", "schedule-analysis"] as const,
+    report: (params: object) => ["admin", "schedule-analysis", "report", params] as const,
+    suggestions: () => ["admin", "schedule-analysis", "suggestions"] as const,
+  },
+
+  adminReconciliation: {
+    all: () => ["admin", "reconciliation"] as const,
+    sessions: (params: object) => ["admin", "reconciliation", "sessions", params] as const,
+    session: (id: number) => ["admin", "reconciliation", "session", id] as const,
   },
 
   adminReports: {
@@ -213,6 +229,8 @@ export const queryKeys = {
       ["admin", "reports", "top-movies", params] as const,
     employeePerformance: (params: object) =>
       ["admin", "reports", "employee-performance", params] as const,
+    finance: (params: object) =>
+      ["admin", "reports", "finance", params] as const,
   },
 
   adminImportExport: {

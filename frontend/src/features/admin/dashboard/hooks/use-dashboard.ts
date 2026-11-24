@@ -5,6 +5,7 @@ import type {
   DashboardInsightsParams,
   DashboardOccupancyParams,
   DashboardSeatHeatmapParams,
+  DashboardDateRangeParams,
 } from "@/features/admin/dashboard/types";
 import { DASHBOARD_REFETCH_INTERVAL_MS } from "@/config/default-constants";
 
@@ -41,5 +42,23 @@ export function useDashboardSeatHeatmap(params: DashboardSeatHeatmapParams | nul
     select: (res) => res.data,
     placeholderData: keepPreviousData,
     enabled: params != null,
+  });
+}
+
+export function useDashboardComboRevenue(params: DashboardDateRangeParams) {
+  return useQuery({
+    queryKey: queryKeys.adminDashboard.comboRevenue(params),
+    queryFn: () => dashboardApi.getComboRevenue(params),
+    select: (res) => res.data,
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useDashboardCancellations(params: DashboardDateRangeParams) {
+  return useQuery({
+    queryKey: queryKeys.adminDashboard.cancellations(params),
+    queryFn: () => dashboardApi.getCancellations(params),
+    select: (res) => res.data,
+    placeholderData: keepPreviousData,
   });
 }

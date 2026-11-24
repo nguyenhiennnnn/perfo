@@ -374,3 +374,39 @@ const adminDashboardSeatHeatmapParsers = {
 export const useAdminDashboardSeatHeatmapParams = (
   options?: Parameters<typeof useQueryStates<typeof adminDashboardSeatHeatmapParsers>>[1],
 ) => useQueryStates(adminDashboardSeatHeatmapParsers, options);
+
+const adminScheduleAnalysisParsers = {
+  from: parseAsString,
+  to: parseAsString,
+};
+
+export const useAdminScheduleAnalysisParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminScheduleAnalysisParsers>>[1],
+) => useQueryStates(adminScheduleAnalysisParsers, options);
+
+export const FINANCE_REPORT_PERIODS = ["day", "week", "month", "custom"] as const;
+
+export type FinanceReportPeriod = (typeof FINANCE_REPORT_PERIODS)[number];
+
+const adminFinanceReportParsers = {
+  period: parseAsStringLiteral(FINANCE_REPORT_PERIODS).withDefault("month"),
+  date: parseAsString,
+  from: parseAsString,
+  to: parseAsString,
+};
+
+export const useAdminFinanceReportParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminFinanceReportParsers>>[1],
+) => useQueryStates(adminFinanceReportParsers, options);
+
+const adminReconciliationParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  gateway: parseAsString,
+  fromDate: parseAsString,
+  toDate: parseAsString,
+};
+
+export const useAdminReconciliationParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminReconciliationParsers>>[1],
+) => useQueryStates(adminReconciliationParsers, options);

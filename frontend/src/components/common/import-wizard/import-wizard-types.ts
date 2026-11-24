@@ -13,6 +13,7 @@ export interface ImportWizardConfig {
   itemLabel: string;
   templateFilename: string;
   errorsFilename: string;
+  requestParams?: Record<string, string | number>;
   columns: ImportColumnConfig[];
   invalidates: InvalidationName;
   summarizeApply?: (data: unknown) => ImportSummary;

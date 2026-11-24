@@ -16,9 +16,14 @@ import type {
 } from "@/types/import";
 import type { ImportWizardConfig } from "./import-wizard-types";
 
-async function downloadFile(url: string, fallbackFilename: string) {
+async function downloadFile(
+  url: string,
+  fallbackFilename: string,
+  params?: Record<string, string | number>,
+) {
   try {
     const response = await apiClient.get<Blob>(url, {
+      params,
       responseType: "blob",
       timeout: EXPORT_TIMEOUT_MS,
     });
@@ -36,7 +41,11 @@ export function useImportTemplate(config: ImportWizardConfig) {
   return useMutation({
     meta: { errorTitle: "Không thể tải file mẫu", skipSuccessToast: true },
     mutationFn: () =>
-      downloadFile(`${config.baseUrl}/template`, config.templateFilename),
+      downloadFile(
+        `${config.baseUrl}/template`,
+        config.templateFilename,
+        config.requestParams,
+      ),
   });
 }
 
@@ -70,6 +79,7 @@ export function useImportPreview(config: ImportWizardConfig) {
         `${config.baseUrl}/preview`,
         formData,
         {
+          params: config.requestParams,
           timeout: IMPORT_TIMEOUT_MS,
           onUploadProgress: (event) =>
             onProgress(Math.round((event.progress ?? 0) * 100)),

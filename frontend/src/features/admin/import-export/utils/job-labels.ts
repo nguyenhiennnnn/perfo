@@ -12,6 +12,8 @@ const MODULE_LABELS: Record<string, string> = {
   "top-movies": "Báo cáo top phim",
   "employee-performance": "Báo cáo hiệu suất nhân viên",
   "sales-stats": "Số liệu tổng hợp bán hàng",
+  reconciliation: "Đối soát (sao kê)",
+  "reconciliation-stripe": "Đối soát Stripe",
 };
 
 export const getJobModuleLabel = (module: string) =>

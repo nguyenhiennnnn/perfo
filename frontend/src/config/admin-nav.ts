@@ -4,6 +4,9 @@ import {
   ScanLine,
   Film,
   Calendar,
+  Wallet,
+  Landmark,
+  CalendarClock,
   Tv,
   DoorClosed,
   Popcorn,
@@ -100,6 +103,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         icon: Calendar,
         roles: [Role.Admin, Role.Employee],
       },
+      {
+        to: ROUTES.admin.scheduleAnalysis,
+        label: "Phân tích lịch chiếu",
+        icon: CalendarClock,
+        roles: [Role.Admin],
+      },
       { to: ROUTES.admin.rooms, label: "Phòng chiếu", icon: Tv, roles: [Role.Admin] },
       {
         to: ROUTES.admin.roomClosures,
@@ -193,6 +202,18 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         to: ROUTES.admin.reports,
         label: "Báo cáo & doanh thu",
         icon: BarChart3,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.financeReport,
+        label: "Báo cáo tài chính",
+        icon: Wallet,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.reconciliation,
+        label: "Đối soát thanh toán",
+        icon: Landmark,
         roles: [Role.Admin],
       },
     ],
@@ -321,6 +342,9 @@ export interface AdminBreadcrumb {
 }
 
 const ADMIN_SEGMENT_LABELS: Record<string, string> = {
+  "schedule-analysis": "Phân tích lịch chiếu",
+  finance: "Báo cáo tài chính",
+  reconciliation: "Đối soát cổng thanh toán",
   genres: "Thể loại phim",
   languages: "Ngôn ngữ",
   "age-ratings": "Phân loại độ tuổi",

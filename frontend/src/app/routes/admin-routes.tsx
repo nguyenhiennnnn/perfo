@@ -15,11 +15,15 @@ const AdminResetPasswordPage = lazyRoute(() => import("@/features/admin/login/pa
 const AdminChangePasswordPage = lazyRoute(() => import("@/features/admin/account/pages/change-password-page"));
 const AdminDashboardPage = lazyRoute(() => import("@/features/admin/dashboard/pages/dashboard-page"));
 const AdminShowtimesPage = lazyRoute(() => import("@/features/admin/showtimes/pages/showtimes-page"));
+const AdminScheduleAnalysisPage = lazyRoute(() => import("@/features/admin/schedule-analysis/pages/schedule-analysis-page"));
 const AdminCounterPage = lazyRoute(() => import("@/features/admin/counter/pages/counter-page"));
 const AdminCheckinPage = lazyRoute(() => import("@/features/admin/checkin/pages/checkin-page"));
 const AdminAuditLogsPage = lazyRoute(() => import("@/features/admin/audit-logs/pages/audit-logs-page"));
 const AdminCashRefundsPage = lazyRoute(() => import("@/features/admin/cash-refunds/pages/cash-refunds-page"));
 const AdminUsersPage = lazyRoute(() => import("@/features/admin/users/pages/users-page"));
+const AdminFinanceReportPage = lazyRoute(() => import("@/features/admin/reports/pages/finance-report-page"));
+const AdminReconciliationPage = lazyRoute(() => import("@/features/admin/reconciliation/pages/reconciliation-page"));
+const AdminReconciliationDetailPage = lazyRoute(() => import("@/features/admin/reconciliation/pages/reconciliation-detail-page"));
 const AdminReportsPage = lazyRoute(() => import("@/features/admin/reports/pages/reports.page"));
 const AdminRoomsPage = lazyRoute(() => import("@/features/admin/rooms/pages/rooms-page"));
 const AdminEmployeesPage = lazyRoute(() => import("@/features/admin/employees/pages/employees-page"));
@@ -95,6 +99,7 @@ export const adminRoutes: RouteObject[] = [
           { path: "dashboard", lazy: AdminDashboardPage },
           { path: "movies", lazy: AdminMoviesPage },
           { path: "showtimes", lazy: AdminShowtimesPage },
+          { path: "schedule-analysis", lazy: AdminScheduleAnalysisPage },
           { path: "orders", lazy: AdminOrdersPage },
           { path: "orders/:id", lazy: AdminOrderDetailPage },
           { path: "bookings/counter", lazy: AdminCounterPage },
@@ -102,6 +107,9 @@ export const adminRoutes: RouteObject[] = [
           { path: "cash-refunds", lazy: AdminCashRefundsPage },
           { path: "audit-logs", lazy: AdminAuditLogsPage },
           { path: "reports", lazy: AdminReportsPage },
+          { path: "reports/finance", lazy: AdminFinanceReportPage },
+          { path: "reconciliation", lazy: AdminReconciliationPage },
+          { path: "reconciliation/:id", lazy: AdminReconciliationDetailPage },
           { path: "users", lazy: AdminUsersPage },
           { path: "employees", lazy: AdminEmployeesPage },
           { path: "rooms", lazy: AdminRoomsPage },

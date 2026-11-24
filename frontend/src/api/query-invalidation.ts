@@ -61,7 +61,25 @@ export const invalidations = {
     k.combos.all(),
   ],
 
-  counterShiftChanged: (): KeyList => [k.adminCounterShifts.all(), k.adminAuditLogs.all()],
+  counterShiftChanged: (): KeyList => [
+    k.adminCounterShifts.all(),
+    k.adminDailyClosings.all(),
+    k.adminAuditLogs.all(),
+  ],
+
+  ledgerAdjustmentChanged: (): KeyList => [
+    k.adminLedgerAdjustments.all(),
+    k.adminDailyClosings.all(),
+    k.adminAuditLogs.all(),
+    ...dashboard(),
+  ],
+
+  dailyClosingChanged: (): KeyList => [
+    k.adminDailyClosings.all(),
+    k.adminCounterShifts.all(),
+    k.adminAuditLogs.all(),
+    ...dashboard(),
+  ],
 
   orderPromotionChanged: (): KeyList => [...orderViews(), k.promotions.mine()],
 

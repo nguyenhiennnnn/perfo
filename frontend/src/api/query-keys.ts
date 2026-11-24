@@ -80,6 +80,22 @@ export const queryKeys = {
   adminCounterShifts: {
     all: () => ["admin", "counter-shifts"] as const,
     current: () => ["admin", "counter-shifts", "current"] as const,
+    list: (params: object) => ["admin", "counter-shifts", "list", params] as const,
+    open: () => ["admin", "counter-shifts", "open"] as const,
+  },
+
+  adminDailyClosings: {
+    all: () => ["admin", "daily-closings"] as const,
+    list: (params: object) => ["admin", "daily-closings", "list", params] as const,
+    detail: (date: string) => ["admin", "daily-closings", "detail", date] as const,
+    draft: (date: string) => ["admin", "daily-closings", "draft", date] as const,
+    report: (date: string, mode: string) =>
+      ["admin", "daily-closings", "report", date, mode] as const,
+  },
+
+  adminLedgerAdjustments: {
+    all: () => ["admin", "ledger-adjustments"] as const,
+    list: (params: object) => ["admin", "ledger-adjustments", "list", params] as const,
   },
 
   adminOrders: {

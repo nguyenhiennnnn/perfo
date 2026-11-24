@@ -70,6 +70,8 @@ public class CinemaSettings
     public const int DefaultSuggestionLowOccupancyPercent = 35;
     public const int DefaultSuggestionMinShowtimes = 5;
     public const int DefaultSuggestionLookbackDays = 14;
+    public const decimal DefaultVatPercent = 10m;
+    public const int DefaultInvoiceRequestWindowDays = 30;
 
     public int SchedulerStepMinutes { get; set; } = DefaultSchedulerStepMinutes;
 
@@ -106,4 +108,14 @@ public class CinemaSettings
     public int SuggestionLookbackDays { get; set; } = DefaultSuggestionLookbackDays;
 
     public bool DailyClosingAllowOverride { get; set; }
+
+    public decimal TicketVatPercent { get; set; } = DefaultVatPercent;
+
+    public decimal ComboVatPercent { get; set; } = DefaultVatPercent;
+
+    public decimal GiftCardVatPercent { get; set; } = DefaultVatPercent;
+
+    public decimal MembershipVatPercent { get; set; } = DefaultVatPercent;
+
+    public int InvoiceRequestWindowDays { get; set; } = DefaultInvoiceRequestWindowDays;
 }

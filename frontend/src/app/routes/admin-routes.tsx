@@ -19,6 +19,11 @@ const AdminScheduleAnalysisPage = lazyRoute(() => import("@/features/admin/sched
 const AdminCounterPage = lazyRoute(() => import("@/features/admin/counter/pages/counter-page"));
 const AdminCheckinPage = lazyRoute(() => import("@/features/admin/checkin/pages/checkin-page"));
 const AdminAuditLogsPage = lazyRoute(() => import("@/features/admin/audit-logs/pages/audit-logs-page"));
+const AdminCounterShiftsPage = lazyRoute(() => import("@/features/admin/counter-shifts/pages/counter-shifts-page"));
+const AdminDailyClosingPage = lazyRoute(() => import("@/features/admin/daily-closings/pages/daily-closing-page"));
+const AdminDailyClosingHistoryPage = lazyRoute(() => import("@/features/admin/daily-closings/pages/daily-closing-history-page"));
+const AdminDailyClosingReportPage = lazyRoute(() => import("@/features/admin/daily-closings/pages/daily-closing-report-page"));
+const AdminLedgerAdjustmentsPage = lazyRoute(() => import("@/features/admin/ledger-adjustments/pages/ledger-adjustments-page"));
 const AdminCashRefundsPage = lazyRoute(() => import("@/features/admin/cash-refunds/pages/cash-refunds-page"));
 const AdminRoomChangeRefundsPage = lazyRoute(
   () => import("@/features/admin/room-change-refunds/pages/room-change-refunds-page"),
@@ -107,6 +112,11 @@ export const adminRoutes: RouteObject[] = [
           { path: "orders/:id", lazy: AdminOrderDetailPage },
           { path: "bookings/counter", lazy: AdminCounterPage },
           { path: "checkin", lazy: AdminCheckinPage },
+          { path: "counter-shifts", lazy: AdminCounterShiftsPage },
+          { path: "daily-closings", lazy: AdminDailyClosingPage },
+          { path: "daily-closings/history", lazy: AdminDailyClosingHistoryPage },
+          { path: "daily-closings/:date/report", lazy: AdminDailyClosingReportPage },
+          { path: "ledger-adjustments", lazy: AdminLedgerAdjustmentsPage },
           { path: "cash-refunds", lazy: AdminCashRefundsPage },
           { path: "room-change-refunds", lazy: AdminRoomChangeRefundsPage },
           { path: "audit-logs", lazy: AdminAuditLogsPage },

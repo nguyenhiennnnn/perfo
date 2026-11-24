@@ -66,6 +66,11 @@ export const ROUTES = {
     roomChangeRefundsByShowtime: (showtimeId: number | string) =>
       `/admin/room-change-refunds?showtimeId=${showtimeId}`,
     auditLogs: "/admin/audit-logs",
+    counterShifts: "/admin/counter-shifts",
+    dailyClosings: "/admin/daily-closings",
+    dailyClosingHistory: "/admin/daily-closings/history",
+    dailyClosingReport: (date: string) => `/admin/daily-closings/${date}/report`,
+    ledgerAdjustments: "/admin/ledger-adjustments",
     promotions: "/admin/promotions",
     promotionReports: "/admin/promotions/reports",
     promotionRedemptions: (promotionId: number | string) =>

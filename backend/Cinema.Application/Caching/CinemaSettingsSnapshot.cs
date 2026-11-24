@@ -40,7 +40,12 @@ public sealed record CinemaSettingsSnapshot(
     int SuggestionLowOccupancyPercent,
     int SuggestionMinShowtimes,
     int SuggestionLookbackDays,
-    bool DailyClosingAllowOverride
+    bool DailyClosingAllowOverride,
+    decimal TicketVatPercent,
+    decimal ComboVatPercent,
+    decimal GiftCardVatPercent,
+    decimal MembershipVatPercent,
+    int InvoiceRequestWindowDays
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -81,6 +86,11 @@ public sealed record CinemaSettingsSnapshot(
             s.SuggestionLowOccupancyPercent,
             s.SuggestionMinShowtimes,
             s.SuggestionLookbackDays,
-            s.DailyClosingAllowOverride
+            s.DailyClosingAllowOverride,
+            s.TicketVatPercent,
+            s.ComboVatPercent,
+            s.GiftCardVatPercent,
+            s.MembershipVatPercent,
+            s.InvoiceRequestWindowDays
         );
 }

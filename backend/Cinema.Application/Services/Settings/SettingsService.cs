@@ -120,6 +120,16 @@ public class SettingsService(
             settings.SuggestionLookbackDays = suggestionLookback;
         if (request.DailyClosingAllowOverride is { } dailyClosingAllowOverride)
             settings.DailyClosingAllowOverride = dailyClosingAllowOverride;
+        if (request.TicketVatPercent is { } ticketVatPercent)
+            settings.TicketVatPercent = ticketVatPercent;
+        if (request.ComboVatPercent is { } comboVatPercent)
+            settings.ComboVatPercent = comboVatPercent;
+        if (request.GiftCardVatPercent is { } giftCardVatPercent)
+            settings.GiftCardVatPercent = giftCardVatPercent;
+        if (request.MembershipVatPercent is { } membershipVatPercent)
+            settings.MembershipVatPercent = membershipVatPercent;
+        if (request.InvoiceRequestWindowDays is { } invoiceRequestWindowDays)
+            settings.InvoiceRequestWindowDays = invoiceRequestWindowDays;
         if (settings.SchedulerHeatSalesWeight + settings.SchedulerHeatRatingWeight <= 0)
             throw new BusinessRuleException(Messages.Validation_SchedulerHeatWeights_SumPositive);
         if (settings.SuggestionHighOccupancyPercent <= settings.SuggestionLowOccupancyPercent)
@@ -160,6 +170,11 @@ public class SettingsService(
             SuggestionMinShowtimes = settings.SuggestionMinShowtimes,
             SuggestionLookbackDays = settings.SuggestionLookbackDays,
             DailyClosingAllowOverride = settings.DailyClosingAllowOverride,
+            TicketVatPercent = settings.TicketVatPercent,
+            ComboVatPercent = settings.ComboVatPercent,
+            GiftCardVatPercent = settings.GiftCardVatPercent,
+            MembershipVatPercent = settings.MembershipVatPercent,
+            InvoiceRequestWindowDays = settings.InvoiceRequestWindowDays,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

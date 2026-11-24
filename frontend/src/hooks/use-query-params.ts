@@ -298,6 +298,59 @@ export const useAdminAuditLogParams = (
   options?: Parameters<typeof useQueryStates<typeof adminAuditLogParsers>>[1],
 ) => useQueryStates(adminAuditLogParsers, options);
 
+const adminCounterShiftParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  employeeId: parseAsString,
+  status: parseAsString,
+  fromDate: parseAsString,
+  toDate: parseAsString,
+};
+
+export const useAdminCounterShiftParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminCounterShiftParsers>>[1],
+) => useQueryStates(adminCounterShiftParsers, options);
+
+const adminDailyClosingHistoryParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  fromDate: parseAsString,
+  toDate: parseAsString,
+};
+
+export const useAdminDailyClosingHistoryParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminDailyClosingHistoryParsers>>[1],
+) => useQueryStates(adminDailyClosingHistoryParsers, options);
+
+const adminDailyClosingReportParsers = {
+  mode: parseAsStringLiteral(["OriginalDate", "PostingDate"] as const).withDefault("OriginalDate"),
+};
+
+export const useAdminDailyClosingReportParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminDailyClosingReportParsers>>[1],
+) => useQueryStates(adminDailyClosingReportParsers, options);
+
+const adminLedgerAdjustmentParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  postingFrom: parseAsString,
+  postingTo: parseAsString,
+  originalDate: parseAsString,
+  type: parseAsString,
+};
+
+export const useAdminLedgerAdjustmentParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminLedgerAdjustmentParsers>>[1],
+) => useQueryStates(adminLedgerAdjustmentParsers, options);
+
+const adminDailyClosingParsers = {
+  date: parseAsString,
+};
+
+export const useAdminDailyClosingParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminDailyClosingParsers>>[1],
+) => useQueryStates(adminDailyClosingParsers, options);
+
 const adminImportExportJobParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),

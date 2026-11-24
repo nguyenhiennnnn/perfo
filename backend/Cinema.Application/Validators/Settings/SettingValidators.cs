@@ -124,6 +124,11 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         IntRange(x => x.SuggestionLowOccupancyPercent, "suggestionLowOccupancyPercent", 0, 100);
         IntRange(x => x.SuggestionMinShowtimes, "suggestionMinShowtimes", 1, 1000);
         IntRange(x => x.SuggestionLookbackDays, "suggestionLookbackDays", 1, 365);
+        DecimalRange(x => x.TicketVatPercent, "ticketVatPercent", 0, 30);
+        DecimalRange(x => x.ComboVatPercent, "comboVatPercent", 0, 30);
+        DecimalRange(x => x.GiftCardVatPercent, "giftCardVatPercent", 0, 30);
+        DecimalRange(x => x.MembershipVatPercent, "membershipVatPercent", 0, 30);
+        IntRange(x => x.InvoiceRequestWindowDays, "invoiceRequestWindowDays", 1, 365);
 
         RuleFor(x => x)
             .Must(x => x.SuggestionHighOccupancyPercent!.Value > x.SuggestionLowOccupancyPercent!.Value)

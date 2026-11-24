@@ -72,6 +72,16 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int SuggestionLookbackDays { get; init; }
 
     public bool DailyClosingAllowOverride { get; init; }
+
+    public decimal TicketVatPercent { get; init; }
+
+    public decimal ComboVatPercent { get; init; }
+
+    public decimal GiftCardVatPercent { get; init; }
+
+    public decimal MembershipVatPercent { get; init; }
+
+    public int InvoiceRequestWindowDays { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -112,5 +122,10 @@ public record UpdateSettingsRequest(
     int? SuggestionLowOccupancyPercent = null,
     int? SuggestionMinShowtimes = null,
     int? SuggestionLookbackDays = null,
-    bool? DailyClosingAllowOverride = null
+    bool? DailyClosingAllowOverride = null,
+    decimal? TicketVatPercent = null,
+    decimal? ComboVatPercent = null,
+    decimal? GiftCardVatPercent = null,
+    decimal? MembershipVatPercent = null,
+    int? InvoiceRequestWindowDays = null
 );

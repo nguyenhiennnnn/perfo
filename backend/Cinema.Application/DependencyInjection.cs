@@ -28,6 +28,7 @@ using Cinema.Application.Services.Promotions;
 using Cinema.Application.Services.Reconciliation;
 using Cinema.Application.Services.Reports;
 using Cinema.Application.Services.Reports.Finance;
+using Cinema.Application.Services.Tax;
 using Cinema.Application.Services.Reviews;
 using Cinema.Application.Services.Rooms;
 using Cinema.Application.Services.SalesStats;
@@ -172,6 +173,7 @@ public static class DependencyInjection
         services.AddScoped<IPromotionBulkCodeService, PromotionBulkCodeService>();
         services.AddScoped<IMembershipBenefitPricer, NullMembershipBenefitPricer>();
         services.AddScoped<IOrderPriceCalculator, OrderPriceCalculator>();
+        services.AddScoped<IVatService, VatService>();
         services.AddSingleton<IShowtimePricingScopeResolver, StandardShowtimePricingScopeResolver>();
         services.AddScoped<ISalesVelocityProvider, PaceSalesVelocityProvider>();
         services.AddScoped<IPaymentLedgerService, PaymentLedgerService>();

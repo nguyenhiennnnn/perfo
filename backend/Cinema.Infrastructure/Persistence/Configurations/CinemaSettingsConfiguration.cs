@@ -111,5 +111,24 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
             .Property(x => x.SuggestionLookbackDays)
             .HasDefaultValue(CinemaSettings.DefaultSuggestionLookbackDays);
         builder.Property(x => x.DailyClosingAllowOverride).HasDefaultValue(false);
+        builder
+            .Property(x => x.TicketVatPercent)
+            .HasColumnType("decimal(5,2)")
+            .HasDefaultValue(CinemaSettings.DefaultVatPercent);
+        builder
+            .Property(x => x.ComboVatPercent)
+            .HasColumnType("decimal(5,2)")
+            .HasDefaultValue(CinemaSettings.DefaultVatPercent);
+        builder
+            .Property(x => x.GiftCardVatPercent)
+            .HasColumnType("decimal(5,2)")
+            .HasDefaultValue(CinemaSettings.DefaultVatPercent);
+        builder
+            .Property(x => x.MembershipVatPercent)
+            .HasColumnType("decimal(5,2)")
+            .HasDefaultValue(CinemaSettings.DefaultVatPercent);
+        builder
+            .Property(x => x.InvoiceRequestWindowDays)
+            .HasDefaultValue(CinemaSettings.DefaultInvoiceRequestWindowDays);
     }
 }

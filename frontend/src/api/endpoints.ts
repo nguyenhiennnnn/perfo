@@ -113,6 +113,17 @@ export const ENDPOINTS = {
       current: "/admin/counter-shifts/current",
       open: "/admin/counter-shifts/open",
       close: (id: number) => `/admin/counter-shifts/${id}/close`,
+      closeByAdmin: (id: number) => `/admin/counter-shifts/${id}/close-by-admin`,
+    },
+    dailyClosings: {
+      root: "/admin/daily-closings",
+      draft: "/admin/daily-closings/draft",
+      byDate: (date: string) => `/admin/daily-closings/${date}`,
+      report: (date: string) => `/admin/daily-closings/${date}/report`,
+      close: (date: string) => `/admin/daily-closings/${date}/close`,
+    },
+    ledgerAdjustments: {
+      root: "/admin/ledger-adjustments",
     },
     importExport: {
       jobs: "/admin/import-export/jobs",

@@ -64,6 +64,7 @@ export const showtimeStatusOptions = toOptions(ShowtimeStatus, {
 export const importExportJobTypeOptions = toOptions(ImportExportJobType, {
   Import: "Nhập dữ liệu",
   Export: "Xuất dữ liệu",
+  Rebuild: "Dựng lại",
 });
 
 export const importExportJobStatusOptions = toOptions(ImportExportJobStatus, {

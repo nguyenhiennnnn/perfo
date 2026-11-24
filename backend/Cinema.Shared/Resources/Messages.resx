@@ -3522,4 +3522,10 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Validation_SalesStatsRebuild_ToDate_Required" xml:space="preserve">
     <value>Vui lòng chọn ngày kết thúc.</value>
   </data>
+  <data name="Rule_OccupancyRangeInvalid" xml:space="preserve">
+    <value>Khoảng ngày không hợp lệ: cần chọn ngày bắt đầu và ngày kết thúc, ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.</value>
+  </data>
+  <data name="Rule_OccupancyRangeTooLong" xml:space="preserve">
+    <value>Mỗi lần chỉ xem được tối đa {0} ngày.</value>
+  </data>
 </root>

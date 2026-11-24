@@ -176,6 +176,7 @@ public static class DependencyInjection
         services.AddBackgroundEventHandler<ShowtimeRoomChanged, SalesStatsShowtimeChangedHandler>();
         services.AddScoped<IReportExportService, ReportExportService>();
         services.AddScoped<IDashboardService, DashboardService>();
+        services.AddScoped<IOccupancyAnalyticsService, OccupancyAnalyticsService>();
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IUserAdminService, UserAdminService>();
         services.AddScoped<AiToolExecutor>();

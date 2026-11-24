@@ -105,6 +105,7 @@ public class ShowtimeCancellationService(
                     orderId,
                     order.OrderCode,
                     adminUserId,
+                    reason,
                     cancellationToken
                 );
                 cancelledCount++;

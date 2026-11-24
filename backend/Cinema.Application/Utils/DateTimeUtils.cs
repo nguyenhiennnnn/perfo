@@ -19,9 +19,12 @@ public static class DateTimeUtils
             ? string.Format(Messages.Common_DurationMinutes, (int)Math.Ceiling(span.TotalMinutes))
             : string.Format(Messages.Common_DurationSeconds, (int)Math.Ceiling(span.TotalSeconds));
 
-    public static string GetPeriodKey(DateTime createdAt, string groupBy)
+    public static string GetPeriodKey(DateTime createdAt, string groupBy) =>
+        GetPeriodKey(DateOnly.FromDateTime(BusinessTime.ToLocal(createdAt)), groupBy);
+
+    public static string GetPeriodKey(DateOnly date, string groupBy)
     {
-        var local = BusinessTime.ToLocal(createdAt);
+        var local = date.ToDateTime(TimeOnly.MinValue);
         return groupBy switch
         {
             "day" => local.ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture),

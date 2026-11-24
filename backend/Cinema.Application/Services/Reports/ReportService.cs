@@ -1,3 +1,4 @@
+using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Reports;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Services.Reports;
 
-public class ReportService(IAppDbContext db) : IReportService
+public class ReportService(IAppDbContext db, IAppCache cache) : IReportService
 {
     private static readonly string[] ValidGroupBy = ["day", "week", "month"];
 
@@ -26,75 +27,207 @@ public class ReportService(IAppDbContext db) : IReportService
                 new Dictionary<string, string[]> { ["groupBy"] = [Messages.Invalid_GroupBy] }
             );
 
-        var fromDateVal = DateTimeUtils.GetStartOfDay(fromDate);
-        var toDateVal = DateTimeUtils.GetStartOfNextDay(toDate);
+        var settings = await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken);
+        var fromUtc = BusinessDay.StartUtc(fromDate, settings.OpeningTime, settings.ClosingTime);
+        var toUtc = BusinessDay.EndUtc(toDate, settings.OpeningTime, settings.ClosingTime);
 
-        var charges = await db
-            .PaymentTransactions.SuccessfulChargesCompletedBetween(fromDateVal, toDateVal)
-            .Select(t => new
-            {
-                t.OrderId,
-                CompletedAt = t.CompletedAt!.Value,
-                t.Amount,
-                Refunded = t
-                    .Refunds.Where(r =>
-                        r.Type == PaymentTransactionType.Refund
-                        && r.Status == PaymentStatus.Success
-                    )
-                    .Sum(r => (decimal?)r.Amount) ?? 0m,
-                OrderFinalAmount = t.Order.FinalAmount,
-                TicketRevenue = t
-                    .Order.Lines.Where(l =>
-                        l.LineType == OrderLineType.Ticket
-                        || (
-                            l.LineType == OrderLineType.Fee
-                            && l.Order.Type == OrderType.Supplement
-                        )
-                    )
-                    .Sum(l => (decimal?)l.PaidAmount) ?? 0m,
-                ComboRevenue = t
-                    .Order.Lines.Where(l => l.LineType == OrderLineType.Combo)
-                    .Sum(l => (decimal?)l.PaidAmount) ?? 0m,
-            })
-            .ToListAsync(cancellationToken);
+        var days = new Dictionary<DateOnly, RevenueDay>();
+        RevenueDay DayOf(DateOnly date)
+        {
+            if (!days.TryGetValue(date, out var day))
+                days[date] = day = new RevenueDay();
+            return day;
+        }
 
-        var rows = charges
-            .Select(c =>
-            {
-                var net = ChargeRevenueQuery.NetOf(c.Amount, c.Refunded);
-                var ratio =
-                    c.OrderFinalAmount > 0m ? Math.Min(1m, net / c.OrderFinalAmount) : 0m;
-                return new
-                {
-                    c.OrderId,
-                    PaidAt = c.CompletedAt,
-                    Net = net,
-                    TicketRevenue = c.TicketRevenue * ratio,
-                    ComboRevenue = c.ComboRevenue * ratio,
-                };
-            })
-            .Where(r => r.Net > 0m)
-            .ToList();
-
-        var items = rows.GroupBy(r => DateTimeUtils.GetPeriodKey(r.PaidAt, groupBy))
-            .OrderBy(g => g.Min(x => x.PaidAt))
+        var showtimeStats = await db
+            .ShowtimeDailyStats.AsNoTracking()
+            .Where(s =>
+                s.BusinessDate >= fromDate
+                && s.BusinessDate <= toDate
+                && s.Kind == ShowtimeKind.Regular
+            )
+            .GroupBy(s => s.BusinessDate)
             .Select(g => new
             {
-                Period = g.Key,
-                TicketRevenue = g.Sum(x => x.TicketRevenue),
-                ComboRevenue = g.Sum(x => x.ComboRevenue),
-                TotalRevenue = g.Sum(x => x.Net),
-                BookingCount = g.Select(x => x.OrderId).Distinct().Count(),
+                Date = g.Key,
+                Ticket = g.Sum(s => s.GrossTicketRevenue - s.DiscountAmount - s.RefundAmount),
+                Combo = g.Sum(s => s.ComboRevenue),
             })
-            .Adapt<List<RevenueReportItemDto>>();
-
-        var summary = new
+            .ToListAsync(cancellationToken);
+        foreach (var row in showtimeStats)
         {
-            TotalRevenue = rows.Sum(r => r.Net),
-            TotalBookings = rows.Select(r => r.OrderId).Distinct().Count(),
-        }.Adapt<RevenueSummaryDto>();
+            var day = DayOf(row.Date);
+            day.Ticket += row.Ticket;
+            day.Combo += row.Combo;
+        }
+
+        var showtimeOrders = await db
+            .OrderLines.AsNoTracking()
+            .Where(l =>
+                l.ShowtimeId != null
+                && (l.LineType == OrderLineType.Ticket || l.LineType == OrderLineType.Combo)
+                && l.Order.Status == OrderStatus.Confirmed
+                && l.Showtime!.StartTime >= fromUtc
+                && l.Showtime.StartTime < toUtc
+                && !db.ShowtimeDailyStats.Any(d =>
+                    d.ShowtimeId == l.ShowtimeId && d.Kind != ShowtimeKind.Regular
+                )
+            )
+            .Select(l => new { l.OrderId, l.Showtime!.StartTime })
+            .Distinct()
+            .ToListAsync(cancellationToken);
+        foreach (var o in showtimeOrders)
+            DayOf(BusinessDay.Of(o.StartTime, settings.OpeningTime, settings.ClosingTime))
+                .Orders.Add(o.OrderId);
+
+        var standaloneLines = await db
+            .OrderLines.AsNoTracking()
+            .Where(l =>
+                l.ShowtimeId == null
+                && (
+                    l.LineType == OrderLineType.Combo
+                    || (
+                        l.LineType == OrderLineType.Fee
+                        && l.Order.Type == OrderType.Supplement
+                    )
+                )
+                && (
+                    l.Order.Status == OrderStatus.Confirmed
+                    || (
+                        l.Order.Status == OrderStatus.Cancelled
+                        && l.Order.PaymentTransactions.Any(t =>
+                            t.Type == PaymentTransactionType.Charge
+                            && t.Status == PaymentStatus.Success
+                        )
+                    )
+                )
+            )
+            .Select(l => new
+            {
+                l.OrderId,
+                l.OrderLineId,
+                l.LineType,
+                l.PaidAmount,
+                l.RefundedAmount,
+                OrderStatus = l.Order.Status,
+                PaidAt = l
+                    .Order.PaymentTransactions.Where(t =>
+                        t.Type == PaymentTransactionType.Charge
+                        && t.Status == PaymentStatus.Success
+                        && t.CompletedAt != null
+                    )
+                    .Min(t => t.CompletedAt) ?? l.Order.CreatedAt,
+                Charged = l
+                    .Order.PaymentTransactions.Where(t =>
+                        t.Type == PaymentTransactionType.Charge
+                        && t.Status == PaymentStatus.Success
+                    )
+                    .Sum(t => (decimal?)t.Amount) ?? 0m,
+                Refunded = l
+                    .Order.PaymentTransactions.Where(t =>
+                        t.Type == PaymentTransactionType.Refund
+                        && t.Status == PaymentStatus.Success
+                    )
+                    .Sum(t => (decimal?)t.Amount) ?? 0m,
+            })
+            .Where(l => l.PaidAt >= fromUtc && l.PaidAt < toUtc)
+            .ToListAsync(cancellationToken);
+
+        foreach (var order in standaloneLines.GroupBy(l => l.OrderId))
+        {
+            var lines = order.OrderBy(l => l.PaidAmount).ThenBy(l => l.OrderLineId).ToList();
+            var cancelled = lines[0].OrderStatus == OrderStatus.Cancelled;
+            var refunds = cancelled
+                ? RefundShares(lines.Select(l => l.PaidAmount).ToList(), lines[0].Charged, lines[0].Refunded)
+                : lines.Select(l => Math.Min(l.PaidAmount, l.RefundedAmount)).ToArray();
+
+            var day = DayOf(
+                BusinessDay.Of(lines[0].PaidAt, settings.OpeningTime, settings.ClosingTime)
+            );
+            for (var i = 0; i < lines.Count; i++)
+            {
+                var net = lines[i].PaidAmount - refunds[i];
+                if (lines[i].LineType == OrderLineType.Combo)
+                    day.Combo += net;
+                else
+                    day.Ticket += net;
+            }
+
+            if (!cancelled)
+                day.Orders.Add(order.Key);
+        }
+
+        var payments = await db
+            .PaymentDailyStats.AsNoTracking()
+            .Where(p => p.BusinessDate >= fromDate && p.BusinessDate <= toDate)
+            .GroupBy(p => p.BusinessDate)
+            .Select(g => new
+            {
+                Date = g.Key,
+                Collected = g.Sum(p => p.CollectedAmount),
+                Refunded = g.Sum(p => p.RefundedAmount),
+            })
+            .ToListAsync(cancellationToken);
+        foreach (var row in payments)
+        {
+            var day = DayOf(row.Date);
+            day.Collected += row.Collected;
+            day.Refunded += row.Refunded;
+        }
+
+        var items = days
+            .GroupBy(d => DateTimeUtils.GetPeriodKey(d.Key, groupBy))
+            .OrderBy(g => g.Min(d => d.Key))
+            .Select(g =>
+            {
+                var ticket = g.Sum(d => d.Value.Ticket);
+                var combo = g.Sum(d => d.Value.Combo);
+                return new RevenueReportItemDto(
+                    g.Key,
+                    ticket,
+                    combo,
+                    ticket + combo,
+                    g.SelectMany(d => d.Value.Orders).Distinct().Count(),
+                    g.Sum(d => d.Value.Collected),
+                    g.Sum(d => d.Value.Refunded)
+                );
+            })
+            .ToList();
+
+        var summary = new RevenueSummaryDto(
+            items.Sum(i => i.TotalRevenue),
+            days.Values.SelectMany(d => d.Orders).Distinct().Count(),
+            items.Sum(i => i.CollectedAmount),
+            items.Sum(i => i.RefundedAmount)
+        );
 
         return new RevenueReportDto(groupBy, items, summary);
+    }
+
+    private static decimal[] RefundShares(
+        IReadOnlyList<decimal> paidAmounts,
+        decimal charged,
+        decimal refunded
+    )
+    {
+        if (charged <= 0m)
+            return new decimal[paidAmounts.Count];
+
+        var total = paidAmounts.Sum();
+        var ratio = Math.Min(1m, refunded / charged);
+        return OrderPricing.AllocateProportionally(
+            OrderPricing.RoundToDong(total * ratio),
+            paidAmounts
+        );
+    }
+
+    private sealed class RevenueDay
+    {
+        public decimal Ticket { get; set; }
+        public decimal Combo { get; set; }
+        public decimal Collected { get; set; }
+        public decimal Refunded { get; set; }
+        public HashSet<int> Orders { get; } = [];
     }
 
     public async Task<List<TopMovieDto>> GetTopMoviesReportAsync(

@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cinema.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261124074917_InitialCreate")]
+    [Migration("20261124093731_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -317,6 +317,26 @@ namespace Cinema.Infrastructure.Migrations
 
                     b.Property<int>("StopSellingMinutesBefore")
                         .HasColumnType("integer");
+
+                    b.Property<int>("SuggestionHighOccupancyPercent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(80);
+
+                    b.Property<int>("SuggestionLookbackDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(14);
+
+                    b.Property<int>("SuggestionLowOccupancyPercent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(35);
+
+                    b.Property<int>("SuggestionMinShowtimes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(5);
 
                     b.Property<string>("TaxCode")
                         .HasMaxLength(50)

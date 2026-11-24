@@ -5,10 +5,17 @@ public record RevenueReportItemDto(
     decimal TicketRevenue,
     decimal ComboRevenue,
     decimal TotalRevenue,
-    int BookingCount
+    int BookingCount,
+    decimal CollectedAmount,
+    decimal RefundedAmount
 );
 
-public record RevenueSummaryDto(decimal TotalRevenue, int TotalBookings);
+public record RevenueSummaryDto(
+    decimal TotalRevenue,
+    int TotalBookings,
+    decimal TotalCollected,
+    decimal TotalRefunded
+);
 
 public record RevenueReportDto(
     string GroupBy,

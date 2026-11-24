@@ -185,6 +185,8 @@ public static class DependencyInjection
         services.AddScoped<IScheduleSuggestionService, ScheduleSuggestionService>();
         services.AddScoped<IScheduleSuggestionApplyService, ScheduleSuggestionApplyService>();
         services.AddScoped<IFinanceReportService, FinanceReportService>();
+        services.AddReportBlock<RevenueByChannelBlock>();
+        services.AddReportBlock<DiscountBlock>();
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IUserAdminService, UserAdminService>();
         services.AddScoped<AiToolExecutor>();

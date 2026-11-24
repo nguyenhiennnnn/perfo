@@ -100,7 +100,11 @@ namespace Cinema.Infrastructure.Migrations
                     DynamicPricingMaxIncreasePercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false, defaultValue: 30m),
                     DynamicPricingMaxDecreasePercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false, defaultValue: 30m),
                     MinTicketPrice = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 45000m),
-                    SalesPaceCustomMarkMinutes = table.Column<int>(type: "integer", nullable: false, defaultValue: 60)
+                    SalesPaceCustomMarkMinutes = table.Column<int>(type: "integer", nullable: false, defaultValue: 60),
+                    SuggestionHighOccupancyPercent = table.Column<int>(type: "integer", nullable: false, defaultValue: 80),
+                    SuggestionLowOccupancyPercent = table.Column<int>(type: "integer", nullable: false, defaultValue: 35),
+                    SuggestionMinShowtimes = table.Column<int>(type: "integer", nullable: false, defaultValue: 5),
+                    SuggestionLookbackDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 14)
                 },
                 constraints: table =>
                 {

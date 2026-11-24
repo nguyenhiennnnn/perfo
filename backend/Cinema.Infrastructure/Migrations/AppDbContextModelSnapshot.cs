@@ -315,6 +315,26 @@ namespace Cinema.Infrastructure.Migrations
                     b.Property<int>("StopSellingMinutesBefore")
                         .HasColumnType("integer");
 
+                    b.Property<int>("SuggestionHighOccupancyPercent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(80);
+
+                    b.Property<int>("SuggestionLookbackDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(14);
+
+                    b.Property<int>("SuggestionLowOccupancyPercent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(35);
+
+                    b.Property<int>("SuggestionMinShowtimes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(5);
+
                     b.Property<string>("TaxCode")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");

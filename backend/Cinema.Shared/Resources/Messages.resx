@@ -3588,4 +3588,34 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Invalid_ReportBlockNotFound" xml:space="preserve">
     <value>Không có khối báo cáo nào có khóa: {0}.</value>
   </data>
+  <data name="Report_Finance_RevenueByChannel_Title" xml:space="preserve">
+    <value>Doanh thu theo kênh</value>
+  </data>
+  <data name="Report_Finance_Discount_Title" xml:space="preserve">
+    <value>Giảm giá</value>
+  </data>
+  <data name="Report_Finance_Col_GiftCardSold" xml:space="preserve">
+    <value>Thẻ quà tặng đã bán – khoản phải trả (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_Collected" xml:space="preserve">
+    <value>Thu tiền (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_Refunded" xml:space="preserve">
+    <value>Hoàn tiền (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_Date" xml:space="preserve">
+    <value>Ngày</value>
+  </data>
+  <data name="Report_Finance_Col_TierDiscount" xml:space="preserve">
+    <value>Ưu đãi hạng thành viên (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_PromotionDiscount" xml:space="preserve">
+    <value>Khuyến mãi (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_OtherDiscount" xml:space="preserve">
+    <value>Khoản khác (VND)</value>
+  </data>
+  <data name="Report_Finance_Method_Unknown" xml:space="preserve">
+    <value>Chưa xác định</value>
+  </data>
 </root>

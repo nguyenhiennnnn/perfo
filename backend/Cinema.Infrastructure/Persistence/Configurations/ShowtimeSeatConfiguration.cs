@@ -16,7 +16,7 @@ public class ShowtimeSeatConfiguration : IEntityTypeConfiguration<ShowtimeSeat>
                 t.HasCheckConstraint("CK_ShowtimeSeats_Price", "\"Price\" >= 0");
                 t.HasCheckConstraint(
                     "CK_ShowtimeSeats_Status",
-                    "\"Status\" IN ('Available','Held','Booked')"
+                    "\"Status\" IN ('Available','Held','Booked','Blocked')"
                 );
             }
         );

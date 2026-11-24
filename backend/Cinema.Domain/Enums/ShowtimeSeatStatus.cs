@@ -5,4 +5,5 @@ public enum ShowtimeSeatStatus
     Available,
     Held,
     Booked,
+    Blocked,
 }

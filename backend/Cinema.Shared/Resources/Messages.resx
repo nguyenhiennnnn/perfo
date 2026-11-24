@@ -3461,4 +3461,47 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_RoomChangeRefundConfirmed" xml:space="preserve">
     <value>Đã ghi nhận hoàn chênh lệch đổi phòng.</value>
   </data>
+  <data name="Conflict_SeatBlockHasOrders" xml:space="preserve">
+    <value>Ghế đã có người giữ hoặc đặt. Vui lòng xử lý (hủy hoặc hoàn) các đơn hàng liên quan trước khi khóa ghế.</value>
+  </data>
+  <data name="Conflict_SeatBlockAlreadyBlocked" xml:space="preserve">
+    <value>Một hoặc nhiều ghế đã bị khóa.</value>
+  </data>
+  <data name="Conflict_SeatBlockStateChanged" xml:space="preserve">
+    <value>Trạng thái ghế vừa thay đổi. Vui lòng tải lại sơ đồ ghế và thử lại.</value>
+  </data>
+  <data name="Rule_SeatBlockShowtimeNotActive" xml:space="preserve">
+    <value>Chỉ khóa được ghế của suất chiếu chưa bị hủy và chưa kết thúc.</value>
+  </data>
+  <data name="Rule_SeatBlockTypeNotManual" xml:space="preserve">
+    <value>Loại khóa này do hệ thống sử dụng (thuê phòng, danh sách chờ), không thể khóa thủ công.</value>
+  </data>
+  <data name="Rule_SeatBlockSeatsNotBlocked" xml:space="preserve">
+    <value>Một hoặc nhiều ghế không ở trạng thái bị khóa.</value>
+  </data>
+  <data name="Rule_SeatBlockUnblockNotManual" xml:space="preserve">
+    <value>Ghế đang được khóa cho đơn thuê phòng hoặc danh sách chờ, không thể mở khóa thủ công.</value>
+  </data>
+  <data name="Validation_SeatBlock_TypeInvalid" xml:space="preserve">
+    <value>Loại khóa không hợp lệ. Chỉ chấp nhận bảo trì hoặc hỏng.</value>
+  </data>
+  <data name="Validation_SeatBlock_ReasonRequired" xml:space="preserve">
+    <value>Vui lòng nhập lý do khóa ghế.</value>
+  </data>
+  <data name="Validation_SeatBlock_ReasonMaxLength" xml:space="preserve">
+    <value>Lý do khóa ghế tối đa 500 ký tự.</value>
+  </data>
+  <data name="Validation_SeatBlock_ExpiresAtPast" xml:space="preserve">
+    <value>Thời hạn khóa phải ở tương lai.</value>
+  </data>
+  <data name="Validation_SeatBlock_TooManySeats" xml:space="preserve">
+    <value>Mỗi lần chỉ thao tác tối đa {0} ghế.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Validation_SeatBlock_TooManySeats, ...)</comment>
+  </data>
+  <data name="Success_SeatsBlocked" xml:space="preserve">
+    <value>Đã khóa ghế.</value>
+  </data>
+  <data name="Success_SeatsUnblocked" xml:space="preserve">
+    <value>Đã mở khóa ghế.</value>
+  </data>
 </root>

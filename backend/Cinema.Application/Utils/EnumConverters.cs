@@ -52,6 +52,7 @@ public static class EnumConverters
         {
             ShowtimeSeatStatus.Available => "Available",
             ShowtimeSeatStatus.Held => "Held",
+            ShowtimeSeatStatus.Blocked => "Blocked",
             _ => "Booked",
         };
 

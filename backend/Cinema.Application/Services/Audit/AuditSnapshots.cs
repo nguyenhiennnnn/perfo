@@ -297,6 +297,18 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject SeatBlockState(SeatBlock b) =>
+        AuditJson.ToObject(
+            new
+            {
+                b.ShowtimeId,
+                b.ShowtimeSeatId,
+                b.Type,
+                b.Reason,
+                b.ExpiresAt,
+            }
+        );
+
     public static JsonObject CashRefundBeforeConfirm() =>
         AuditJson.ToObject(new { status = PaymentStatus.Pending, needsManualRefund = true });
 

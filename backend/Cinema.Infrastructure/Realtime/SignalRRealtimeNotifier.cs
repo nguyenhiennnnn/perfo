@@ -58,6 +58,15 @@ public class SignalRRealtimeNotifier(IHubContext<ShowtimeHub> hubContext) : IRea
             .Clients.Group(GroupName(showtimeId))
             .SendAsync(SignalREvents.SeatBooked, new { showtimeId, seatIds }, cancellationToken);
 
+    public Task NotifySeatBlockedAsync(
+        int showtimeId,
+        List<int> seatIds,
+        CancellationToken cancellationToken
+    ) =>
+        hubContext
+            .Clients.Group(GroupName(showtimeId))
+            .SendAsync(SignalREvents.SeatBlocked, new { showtimeId, seatIds }, cancellationToken);
+
     public Task NotifySeatHeldAsync(
         int showtimeId,
         List<int> seatIds,

@@ -16,5 +16,6 @@ public class ShowtimeSeat
     public Showtime Showtime { get; set; } = null!;
     public Seat Seat { get; set; } = null!;
     public User? HeldByUser { get; set; }
+    public SeatBlock? SeatBlock { get; set; }
     public ICollection<OrderLine> OrderLines { get; set; } = [];
 }

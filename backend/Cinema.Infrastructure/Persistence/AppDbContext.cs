@@ -39,6 +39,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<Showtime> Showtimes => Set<Showtime>();
     public DbSet<ShowtimeSeat> ShowtimeSeats => Set<ShowtimeSeat>();
+    public DbSet<SeatBlock> SeatBlocks => Set<SeatBlock>();
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderLine> OrderLines => Set<OrderLine>();
     public DbSet<OrderPriceAdjustment> OrderPriceAdjustments => Set<OrderPriceAdjustment>();

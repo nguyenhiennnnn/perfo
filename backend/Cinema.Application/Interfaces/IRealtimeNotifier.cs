@@ -24,6 +24,12 @@ public interface IRealtimeNotifier
         CancellationToken cancellationToken
     );
 
+    Task NotifySeatBlockedAsync(
+        int showtimeId,
+        List<int> seatIds,
+        CancellationToken cancellationToken
+    );
+
     Task NotifyShowtimeRoomChangedAsync(
         int showtimeId,
         int roomId,

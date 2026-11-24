@@ -36,6 +36,7 @@ public interface IAppDbContext
     DbSet<Review> Reviews { get; }
     DbSet<Showtime> Showtimes { get; }
     DbSet<ShowtimeSeat> ShowtimeSeats { get; }
+    DbSet<SeatBlock> SeatBlocks { get; }
     DbSet<Order> Orders { get; }
     DbSet<OrderLine> OrderLines { get; }
     DbSet<OrderPriceAdjustment> OrderPriceAdjustments { get; }

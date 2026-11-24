@@ -18,6 +18,7 @@ using Cinema.Application.Services.Dashboard;
 using Cinema.Application.Services.Employees;
 using Cinema.Application.Services.Events;
 using Cinema.Application.Services.Import;
+using Cinema.Application.Services.Invoices;
 using Cinema.Application.Services.ImportExport;
 using Cinema.Application.Services.Movies;
 using Cinema.Application.Services.Notifications;
@@ -151,6 +152,9 @@ public static class DependencyInjection
         services.AddScoped<ITicketTypeService, TicketTypeService>();
         services.AddScoped<IPricingRuleService, PricingRuleService>();
         services.AddScoped<ISpecialDayService, SpecialDayService>();
+        services.AddScoped<IInvoiceProfileService, InvoiceProfileService>();
+        services.AddScoped<IInvoiceRequestService, InvoiceRequestService>();
+        services.AddScoped<IInvoiceAdminService, InvoiceAdminService>();
         services.AddScoped<IRoomClosureService, RoomClosureService>();
         services.AddScoped<ICounterShiftService, CounterShiftService>();
         services.AddScoped<IUnclosedShiftAlertService, UnclosedShiftAlertService>();
@@ -200,6 +204,7 @@ public static class DependencyInjection
         services.AddBackgroundEventHandler<OrderConfirmed, SalesStatsOrderChangedHandler>();
         services.AddBackgroundEventHandler<OrderCancelled, SalesStatsOrderChangedHandler>();
         services.AddBackgroundEventHandler<OrderRefunded, SalesStatsOrderChangedHandler>();
+        services.AddBackgroundEventHandler<OrderRefunded, InvoiceRefundAdjustmentHandler>();
         services.AddBackgroundEventHandler<ShowtimeEnded, SalesStatsShowtimeChangedHandler>();
         services.AddBackgroundEventHandler<ShowtimeRoomChanged, SalesStatsShowtimeChangedHandler>();
         services.AddScoped<IReportExportService, ReportExportService>();
@@ -219,6 +224,7 @@ public static class DependencyInjection
         services.AddReportBlock<ComboProfitBlock>();
         services.AddReportBlock<MovieProfitBlock>();
         services.AddReportBlock<GiftCardLiabilityBlock>();
+        services.AddReportBlock<VatReportBlock>();
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IUserAdminService, UserAdminService>();
         services.AddScoped<AiToolExecutor>();

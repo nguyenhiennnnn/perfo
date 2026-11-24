@@ -15,4 +15,9 @@ public static class AuditActions
     public const string ShiftVariance = "ShiftVariance";
     public const string CloseDay = "CloseDay";
     public const string CreateLedgerAdjustment = "CreateLedgerAdjustment";
+    public const string IssueInvoice = "IssueInvoice";
+    public const string RejectInvoice = "RejectInvoice";
+    public const string ReplaceInvoiceFile = "ReplaceInvoiceFile";
+    public const string FlagInvoiceAdjustment = "FlagInvoiceAdjustment";
+    public const string ResolveInvoiceAdjustment = "ResolveInvoiceAdjustment";
 }

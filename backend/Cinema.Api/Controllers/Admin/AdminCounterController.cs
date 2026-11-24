@@ -1,3 +1,5 @@
+using Cinema.Api.Filters;
+using Cinema.Application.DTOs.Invoices;
 using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
@@ -19,7 +21,8 @@ public class AdminCounterController(
     ITicketCheckInService ticketCheckInService,
     ICardCheckService cardCheckService,
     ISupplementOrderService supplementOrderService,
-    IOrderPromotionService orderPromotionService
+    IOrderPromotionService orderPromotionService,
+    IInvoiceRequestService invoiceRequestService
 ) : AppControllerBase
 {
     private int GetCurrentEmployeeId() =>
@@ -176,6 +179,24 @@ public class AdminCounterController(
         var result = await supplementOrderService.CreateAsync(
             GetCurrentEmployeeId(),
             CurrentUserId,
+            request,
+            cancellationToken
+        );
+        return StatusCode(StatusCodes.Status201Created, result);
+    }
+
+    [HttpPost("{orderId:int}/invoice-request")]
+    [Authorize(Policy = Policies.StaffOnly)]
+    [SuccessMessage(nameof(Messages.Success_InvoiceRequestCreated))]
+    public async Task<ActionResult<InvoiceRequestDto>> CreateInvoiceRequest(
+        int orderId,
+        [FromBody] CounterInvoiceRequestRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await invoiceRequestService.CreateForCounterAsync(
+            CurrentUserId,
+            orderId,
             request,
             cancellationToken
         );

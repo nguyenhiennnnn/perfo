@@ -24,4 +24,5 @@ public static class AuditEntityTypes
     public const string CounterShift = "CounterShift";
     public const string DailyClosing = "DailyClosing";
     public const string LedgerAdjustment = "LedgerAdjustment";
+    public const string InvoiceRequest = "InvoiceRequest";
 }

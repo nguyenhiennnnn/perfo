@@ -3991,4 +3991,157 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_DailyClosingFooter" xml:space="preserve">
     <value>Xem chi tiết theo ngày gốc và ngày ghi sổ trong trang báo cáo chốt của quản trị. Mỗi ngày chỉ gửi một email chốt.</value>
   </data>
+  <data name="Conflict_InvoiceProfileExists" xml:space="preserve">
+    <value>Bạn đã có hồ sơ xuất hóa đơn với mã số thuế này.</value>
+  </data>
+  <data name="Conflict_InvoiceRequestExists" xml:space="preserve">
+    <value>Đơn hàng này đã có yêu cầu xuất hóa đơn đang hiệu lực.</value>
+  </data>
+  <data name="NotFound_InvoiceProfile" xml:space="preserve">
+    <value>Không tìm thấy hồ sơ xuất hóa đơn.</value>
+  </data>
+  <data name="Rule_InvoiceOrderNotPaid" xml:space="preserve">
+    <value>Chỉ đơn hàng đã thanh toán mới được yêu cầu xuất hóa đơn.</value>
+  </data>
+  <data name="Rule_InvoiceWindowExpired" xml:space="preserve">
+    <value>Đã quá thời hạn yêu cầu xuất hóa đơn ({0} ngày kể từ ngày thanh toán).</value>
+  </data>
+  <data name="Rule_InvoiceCounterWalkInOnly" xml:space="preserve">
+    <value>Quầy chỉ nhập yêu cầu hóa đơn cho đơn của khách vãng lai. Khách có tài khoản vui lòng gửi yêu cầu trong lịch sử đơn.</value>
+  </data>
+  <data name="Success_InvoiceProfileCreated" xml:space="preserve">
+    <value>Đã tạo hồ sơ xuất hóa đơn.</value>
+  </data>
+  <data name="Success_InvoiceProfileUpdated" xml:space="preserve">
+    <value>Đã cập nhật hồ sơ xuất hóa đơn.</value>
+  </data>
+  <data name="Success_InvoiceProfileDeleted" xml:space="preserve">
+    <value>Đã xóa hồ sơ xuất hóa đơn.</value>
+  </data>
+  <data name="Success_InvoiceRequestCreated" xml:space="preserve">
+    <value>Đã gửi yêu cầu xuất hóa đơn.</value>
+  </data>
+  <data name="Validation_Invoice_TaxCode" xml:space="preserve">
+    <value>Mã số thuế phải gồm 10 chữ số, hoặc 10 chữ số kèm 3 chữ số chi nhánh (ví dụ 0123456789-001).</value>
+  </data>
+  <data name="Conflict_InvoiceRequestNotPending" xml:space="preserve">
+    <value>Yêu cầu hóa đơn này không còn ở trạng thái chờ xuất.</value>
+  </data>
+  <data name="Conflict_InvoiceRequestNotIssued" xml:space="preserve">
+    <value>Chỉ thay tệp được cho yêu cầu hóa đơn đã xuất.</value>
+  </data>
+  <data name="NotFound_InvoiceRequest" xml:space="preserve">
+    <value>Không tìm thấy yêu cầu xuất hóa đơn.</value>
+  </data>
+  <data name="NotFound_InvoiceFile" xml:space="preserve">
+    <value>Hóa đơn chưa có tệp để tải.</value>
+  </data>
+  <data name="Invalid_InvoiceFileType" xml:space="preserve">
+    <value>Tệp hóa đơn phải là PDF.</value>
+  </data>
+  <data name="Validation_Invoice_Number" xml:space="preserve">
+    <value>Số hóa đơn không được để trống, tối đa 50 ký tự và không chứa ký tự điều khiển.</value>
+  </data>
+  <data name="Success_InvoiceIssued" xml:space="preserve">
+    <value>Đã cập nhật số hóa đơn và gửi email cho khách.</value>
+  </data>
+  <data name="Success_InvoiceRejected" xml:space="preserve">
+    <value>Đã từ chối yêu cầu xuất hóa đơn.</value>
+  </data>
+  <data name="Success_InvoiceFileReplaced" xml:space="preserve">
+    <value>Đã thay tệp hóa đơn.</value>
+  </data>
+  <data name="Email_InvoiceIssuedSubject" xml:space="preserve">
+    <value>Hóa đơn VAT đã được xuất — {1} — {0}</value>
+  </data>
+  <data name="Email_InvoiceRejectedSubject" xml:space="preserve">
+    <value>Yêu cầu xuất hóa đơn bị từ chối — {1} — {0}</value>
+  </data>
+  <data name="Email_BadgeInvoiceIssued" xml:space="preserve">
+    <value>Đã xuất hóa đơn</value>
+  </data>
+  <data name="Email_BadgeInvoiceRejected" xml:space="preserve">
+    <value>Từ chối xuất hóa đơn</value>
+  </data>
+  <data name="Email_InvoiceIssuedHeading" xml:space="preserve">
+    <value>Hóa đơn của bạn đã sẵn sàng</value>
+  </data>
+  <data name="Email_InvoiceRejectedHeading" xml:space="preserve">
+    <value>Chưa thể xuất hóa đơn</value>
+  </data>
+  <data name="Email_InvoiceIssuedBody" xml:space="preserve">
+    <value>Xin chào {0}, hóa đơn VAT cho đơn hàng {1} đã được xuất.</value>
+  </data>
+  <data name="Email_InvoiceRejectedBody" xml:space="preserve">
+    <value>Xin chào {0}, rất tiếc yêu cầu xuất hóa đơn VAT cho đơn hàng {1} đã bị từ chối.</value>
+  </data>
+  <data name="Email_InvoiceNumberLabel" xml:space="preserve">
+    <value>Số hóa đơn</value>
+  </data>
+  <data name="Email_InvoiceRejectReasonLabel" xml:space="preserve">
+    <value>Lý do</value>
+  </data>
+  <data name="Email_InvoiceIssuedNote" xml:space="preserve">
+    <value>Bạn có thể tải hóa đơn trong lịch sử đơn hàng trên tài khoản của mình. Khách vãng lai vui lòng liên hệ quầy để nhận bản hóa đơn.</value>
+  </data>
+  <data name="Email_InvoiceRejectedNote" xml:space="preserve">
+    <value>Nếu cần hỗ trợ thêm, vui lòng liên hệ rạp để được giải đáp.</value>
+  </data>
+  <data name="Email_InvoiceIssuedPreheader" xml:space="preserve">
+    <value>Hóa đơn VAT cho đơn hàng {0} đã được xuất.</value>
+  </data>
+  <data name="Email_InvoiceRejectedPreheader" xml:space="preserve">
+    <value>Yêu cầu xuất hóa đơn cho đơn hàng {0} bị từ chối.</value>
+  </data>
+  <data name="Conflict_InvoiceNoAdjustmentNeeded" xml:space="preserve">
+    <value>Hóa đơn này không có yêu cầu điều chỉnh nào đang chờ xử lý.</value>
+  </data>
+  <data name="Success_InvoiceAdjustmentResolved" xml:space="preserve">
+    <value>Đã đánh dấu hóa đơn đã được điều chỉnh.</value>
+  </data>
+  <data name="Email_InvoiceAdjustmentSubject" xml:space="preserve">
+    <value>Cần điều chỉnh hóa đơn VAT — {1} — {0}</value>
+  </data>
+  <data name="Email_BadgeInvoiceAdjustment" xml:space="preserve">
+    <value>Cần điều chỉnh hóa đơn</value>
+  </data>
+  <data name="Email_InvoiceAdjustmentHeading" xml:space="preserve">
+    <value>Đơn đã xuất hóa đơn vừa được hoàn tiền</value>
+  </data>
+  <data name="Email_InvoiceAdjustmentBody" xml:space="preserve">
+    <value>Đơn hàng {0} đã được xuất hóa đơn VAT nhưng vừa phát sinh hoàn tiền. Hóa đơn cần được điều chỉnh hoặc thay thế.</value>
+  </data>
+  <data name="Email_InvoiceAdjustmentNote" xml:space="preserve">
+    <value>Sau khi xử lý hóa đơn, vào trang quản lý yêu cầu hóa đơn và đánh dấu đã điều chỉnh.</value>
+  </data>
+  <data name="Email_InvoiceAdjustmentPreheader" xml:space="preserve">
+    <value>Đơn {0} đã hoàn tiền sau khi xuất hóa đơn.</value>
+  </data>
+  <data name="Report_Finance_Vat_Title" xml:space="preserve">
+    <value>Thuế VAT</value>
+  </data>
+  <data name="Report_Finance_Vat_LineTicket" xml:space="preserve">
+    <value>Vé xem phim</value>
+  </data>
+  <data name="Report_Finance_Vat_GiftCardNote" xml:space="preserve">
+    <value>Thẻ quà tặng chưa tính thuế: thuế được ghi nhận khi thẻ được dùng để thanh toán.</value>
+  </data>
+  <data name="Report_Finance_Col_VatLineType" xml:space="preserve">
+    <value>Loại dòng hàng</value>
+  </data>
+  <data name="Report_Finance_Col_VatRate" xml:space="preserve">
+    <value>Thuế suất</value>
+  </data>
+  <data name="Report_Finance_Col_VatLines" xml:space="preserve">
+    <value>Số dòng hàng</value>
+  </data>
+  <data name="Report_Finance_Col_VatGross" xml:space="preserve">
+    <value>Doanh thu đã gồm VAT (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_VatNet" xml:space="preserve">
+    <value>Doanh thu trước thuế (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_VatTax" xml:space="preserve">
+    <value>Thuế phải nộp (VND)</value>
+  </data>
 </root>

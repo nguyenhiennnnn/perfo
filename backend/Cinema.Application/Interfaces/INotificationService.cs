@@ -66,6 +66,22 @@ public interface INotificationService
         IReadOnlyList<OrderTicketEmailLine> tickets
     );
 
+    void SendInvoiceRequestProcessed(
+        string toEmail,
+        string customerName,
+        string orderCode,
+        InvoiceRequestStatus status,
+        string? invoiceNumber,
+        string? rejectReason
+    );
+
+    void SendInvoiceAdjustmentNeeded(
+        string toEmail,
+        string orderCode,
+        string invoiceNumber,
+        decimal refundAmount
+    );
+
     void SendOrderCancelled(
         string toEmail,
         string customerName,

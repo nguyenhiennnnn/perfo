@@ -80,6 +80,45 @@ public class NotificationService(
             )
         );
 
+    public void SendInvoiceRequestProcessed(
+        string toEmail,
+        string customerName,
+        string orderCode,
+        InvoiceRequestStatus status,
+        string? invoiceNumber,
+        string? rejectReason
+    ) =>
+        Enqueue(
+            toEmail,
+            string.Format(
+                status == InvoiceRequestStatus.Issued
+                    ? Messages.Email_InvoiceIssuedSubject
+                    : Messages.Email_InvoiceRejectedSubject,
+                _brand.Name,
+                orderCode
+            ),
+            EmailTemplates.InvoiceRequestProcessed(
+                _brand,
+                customerName,
+                orderCode,
+                status,
+                invoiceNumber,
+                rejectReason
+            )
+        );
+
+    public void SendInvoiceAdjustmentNeeded(
+        string toEmail,
+        string orderCode,
+        string invoiceNumber,
+        decimal refundAmount
+    ) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_InvoiceAdjustmentSubject, _brand.Name, orderCode),
+            EmailTemplates.InvoiceAdjustmentNeeded(_brand, orderCode, invoiceNumber, refundAmount)
+        );
+
     public void SendOrderCancelled(
         string toEmail,
         string customerName,

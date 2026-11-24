@@ -93,6 +93,21 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject InvoiceRequestState(InvoiceRequest r) =>
+        AuditJson.ToObject(
+            new
+            {
+                r.Status,
+                r.InvoiceNumber,
+                r.RejectReason,
+                r.FileName,
+                r.IssuedByUserId,
+                r.NeedsAdjustment,
+                r.AdjustmentNote,
+                r.ProcessedAt,
+            }
+        );
+
     public static JsonObject SpecialDayState(SpecialDay d) =>
         AuditJson.ToObject(
             new

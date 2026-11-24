@@ -77,6 +77,8 @@ public interface IAppDbContext
     DbSet<ReconciliationSession> ReconciliationSessions { get; }
     DbSet<ReconciliationItem> ReconciliationItems { get; }
     DbSet<SeatHoldEvent> SeatHoldEvents { get; }
+    DbSet<InvoiceProfile> InvoiceProfiles { get; }
+    DbSet<InvoiceRequest> InvoiceRequests { get; }
 }
 
 public static class AppDbContextExtensions

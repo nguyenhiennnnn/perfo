@@ -337,6 +337,84 @@ public static class EmailTemplates
         );
     }
 
+    public static string InvoiceAdjustmentNeeded(
+        BrandOptions brand,
+        string orderCode,
+        string invoiceNumber,
+        decimal refundAmount
+    )
+    {
+        var body = $"""
+            {Badge(Messages.Email_BadgeInvoiceAdjustment, Warning, SymbolAlert)}
+            {Heading(Messages.Email_InvoiceAdjustmentHeading)}
+            {Paragraph(string.Format(Messages.Email_InvoiceAdjustmentBody, Enc(orderCode)))}
+            {DetailCard(
+                DetailRow(Messages.Email_OrderCodeLabel, Enc(orderCode), code: true),
+                DetailRow(Messages.Email_InvoiceNumberLabel, Enc(invoiceNumber), code: true),
+                DetailRow(Messages.Email_RefundAmountLabel, Money(refundAmount), isLast: true)
+            )}
+            {MutedParagraph(Messages.Email_InvoiceAdjustmentNote)}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_InvoiceAdjustmentPreheader, orderCode),
+            body
+        );
+    }
+
+    public static string InvoiceRequestProcessed(
+        BrandOptions brand,
+        string customerName,
+        string orderCode,
+        InvoiceRequestStatus status,
+        string? invoiceNumber,
+        string? rejectReason
+    )
+    {
+        var issued = status == InvoiceRequestStatus.Issued;
+        var rows = new List<string>
+        {
+            DetailRow(
+                Messages.Email_OrderCodeLabel,
+                Enc(orderCode),
+                isLast: !issued && string.IsNullOrWhiteSpace(rejectReason),
+                code: true
+            ),
+        };
+        if (issued)
+            rows.Add(DetailRow(Messages.Email_InvoiceNumberLabel, Enc(invoiceNumber), isLast: true, code: true));
+        else if (!string.IsNullOrWhiteSpace(rejectReason))
+            rows.Add(DetailRow(Messages.Email_InvoiceRejectReasonLabel, Enc(rejectReason), isLast: true));
+
+        var body = $"""
+            {Badge(
+                issued ? Messages.Email_BadgeInvoiceIssued : Messages.Email_BadgeInvoiceRejected,
+                issued ? Success : Danger,
+                issued ? SymbolCheck : SymbolCross
+            )}
+            {Heading(issued ? Messages.Email_InvoiceIssuedHeading : Messages.Email_InvoiceRejectedHeading)}
+            {Paragraph(
+                string.Format(
+                    issued ? Messages.Email_InvoiceIssuedBody : Messages.Email_InvoiceRejectedBody,
+                    Enc(customerName),
+                    Enc(orderCode)
+                )
+            )}
+            {DetailCard(rows.ToArray())}
+            {MutedParagraph(issued ? Messages.Email_InvoiceIssuedNote : Messages.Email_InvoiceRejectedNote)}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(
+                issued ? Messages.Email_InvoiceIssuedPreheader : Messages.Email_InvoiceRejectedPreheader,
+                orderCode
+            ),
+            body
+        );
+    }
+
     public static string OrderCancelled(
         BrandOptions brand,
         string customerName,

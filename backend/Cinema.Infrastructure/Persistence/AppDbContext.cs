@@ -78,6 +78,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<ReconciliationSession> ReconciliationSessions => Set<ReconciliationSession>();
     public DbSet<ReconciliationItem> ReconciliationItems => Set<ReconciliationItem>();
     public DbSet<SeatHoldEvent> SeatHoldEvents => Set<SeatHoldEvent>();
+    public DbSet<InvoiceProfile> InvoiceProfiles => Set<InvoiceProfile>();
+    public DbSet<InvoiceRequest> InvoiceRequests => Set<InvoiceRequest>();
     public DbSet<CounterShift> CounterShifts => Set<CounterShift>();
     public DbSet<DailyClosing> DailyClosings => Set<DailyClosing>();
     public DbSet<LedgerAdjustment> LedgerAdjustments => Set<LedgerAdjustment>();

@@ -44,6 +44,11 @@ public static class FieldLengths
     public const int DailyClosingNote = 1000;
     public const int LedgerAdjustmentReason = 500;
     public const int LedgerAdjustmentSourceKey = 100;
+    public const int TaxCode = 14;
+    public const int InvoiceCompanyName = 255;
+    public const int InvoiceAddress = 500;
+    public const int InvoiceNumber = 50;
+    public const int InvoiceRejectReason = 500;
 
     public const int FileName = 255;
     public const int ErrorMessage = 2000;

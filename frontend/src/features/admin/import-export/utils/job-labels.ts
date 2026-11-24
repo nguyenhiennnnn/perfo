@@ -11,13 +11,17 @@ const MODULE_LABELS: Record<string, string> = {
   revenue: "Báo cáo doanh thu",
   "top-movies": "Báo cáo top phim",
   "employee-performance": "Báo cáo hiệu suất nhân viên",
+  "sales-stats": "Số liệu tổng hợp bán hàng",
 };
 
 export const getJobModuleLabel = (module: string) =>
   MODULE_LABELS[module] ?? module;
 
-export const getJobTypeLabel = (type: string) =>
-  type === ImportExportJobType.Import ? "Nhập" : "Xuất";
+export const getJobTypeLabel = (type: string) => {
+  if (type === ImportExportJobType.Import) return "Nhập";
+  if (type === ImportExportJobType.Rebuild) return "Dựng lại";
+  return "Xuất";
+};
 
 export const getJobTitle = (job: Pick<ImportExportJobDto, "type" | "module">) =>
   `${getJobTypeLabel(job.type)} ${getJobModuleLabel(job.module).toLowerCase()}`;

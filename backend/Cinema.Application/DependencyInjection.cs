@@ -24,6 +24,7 @@ using Cinema.Application.Services.Promotions;
 using Cinema.Application.Services.Reports;
 using Cinema.Application.Services.Reviews;
 using Cinema.Application.Services.Rooms;
+using Cinema.Application.Services.SalesStats;
 using Cinema.Application.Services.Settings;
 using Cinema.Application.Services.Showtimes;
 using Cinema.Application.Services.Users;

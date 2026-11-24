@@ -1,6 +1,7 @@
 using System.Globalization;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Services.ImportExport;
+using Cinema.Application.Services.SalesStats;
 using Hangfire;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

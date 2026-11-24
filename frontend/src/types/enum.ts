@@ -189,6 +189,7 @@ export type DayOfWeek = (typeof DayOfWeek)[keyof typeof DayOfWeek];
 export const ImportExportJobType = {
   Import: "Import",
   Export: "Export",
+  Rebuild: "Rebuild",
 } as const;
 export type ImportExportJobType =
   (typeof ImportExportJobType)[keyof typeof ImportExportJobType];

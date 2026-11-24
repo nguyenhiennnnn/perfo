@@ -23,7 +23,8 @@ public interface IOrderHoldService
         string? customerPhone,
         CancellationToken cancellationToken,
         IReadOnlyList<SeatTicketSelectionRequest>? ticketSelections = null,
-        bool acceptPriceChange = false
+        bool acceptPriceChange = false,
+        int? counterShiftId = null
     );
     Task<Order> CreateComboHoldOrderAsync(
         List<ComboSelectionRequest> comboSelections,
@@ -33,7 +34,8 @@ public interface IOrderHoldService
         int? createdByEmployeeId,
         string customerName,
         string? customerPhone,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken,
+        int? counterShiftId = null
     );
     Task EnsureWithinBookingLimitsAsync(
         int seatCount,

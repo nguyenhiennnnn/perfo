@@ -1,5 +1,6 @@
 using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Services.CounterShifts;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
@@ -22,6 +23,10 @@ public class CounterOrderService(
         CancellationToken cancellationToken
     )
     {
+        var counterShiftId = await db.RequireOpenCounterShiftIdByEmployeeAsync(
+            employeeId,
+            cancellationToken
+        );
         await holdService.EnsureWithinBookingLimitsAsync(
             request.SeatIds.Count,
             request.Combos,
@@ -53,7 +58,8 @@ public class CounterOrderService(
             customerPhone: customerPhone,
             cancellationToken,
             ticketSelections: request.Tickets,
-            acceptPriceChange: request.AcceptPriceChange
+            acceptPriceChange: request.AcceptPriceChange,
+            counterShiftId: counterShiftId
         );
 
         return CounterOrderResponse.From(order);
@@ -66,6 +72,10 @@ public class CounterOrderService(
         CancellationToken cancellationToken
     )
     {
+        var counterShiftId = await db.RequireOpenCounterShiftIdByEmployeeAsync(
+            employeeId,
+            cancellationToken
+        );
         var (customerName, customerPhone) = await ResolveCustomerAsync(
             request.UserId,
             request.CustomerName,
@@ -81,7 +91,8 @@ public class CounterOrderService(
             createdByEmployeeId: employeeId,
             customerName: customerName,
             customerPhone: customerPhone,
-            cancellationToken
+            cancellationToken,
+            counterShiftId: counterShiftId
         );
 
         return CounterOrderResponse.From(order);

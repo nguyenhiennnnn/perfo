@@ -2,6 +2,7 @@ using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
+using Cinema.Application.Services.CounterShifts;
 using Cinema.Application.Services.Payments;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
@@ -33,6 +34,10 @@ public class SupplementOrderService(
         CancellationToken cancellationToken
     )
     {
+        var counterShiftId = await db.RequireOpenCounterShiftIdByEmployeeAsync(
+            employeeId,
+            cancellationToken
+        );
         var originalOrderId =
             await db
                 .OrderLines.AsNoTracking()
@@ -163,6 +168,7 @@ public class SupplementOrderService(
                     CreatedAt = now,
                     ExpiresAt = now.AddMinutes(holdSettings.HoldDurationMinutes),
                     CreatedByEmployeeId = employeeId,
+                    CounterShiftId = counterShiftId,
                     OriginalOrderId = originalOrderId,
                 };
                 order.Lines.Add(fee);

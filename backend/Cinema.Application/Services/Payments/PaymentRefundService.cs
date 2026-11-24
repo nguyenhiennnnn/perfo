@@ -1,6 +1,7 @@
 using Cinema.Application.Events;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Services.Audit;
+using Cinema.Application.Services.CounterShifts;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
@@ -106,6 +107,10 @@ public class PaymentRefundService(
 
         var now = DateTime.UtcNow;
         var isPending = !completedManually && (manualCash || charge.Method.IsGatewayMethod());
+        int? counterShiftId =
+            !isPending && charge.Method == PaymentMethod.Cash && performedByUserId is { } performer
+                ? await db.FindOpenCounterShiftIdByUserAsync(performer, cancellationToken)
+                : null;
         var refund = new PaymentTransaction
         {
             OrderId = charge.OrderId,
@@ -117,6 +122,7 @@ public class PaymentRefundService(
             PerformedByUserId = performedByUserId,
             Note = Truncate(note),
             NeedsManualRefund = manualCash,
+            CounterShiftId = counterShiftId,
             Status = isPending ? PaymentStatus.Pending : PaymentStatus.Success,
             CreatedAt = now,
             CompletedAt = isPending ? null : now,
@@ -192,6 +198,19 @@ public class PaymentRefundService(
                 if (refund.Status != PaymentStatus.Pending)
                     throw new BusinessRuleException(Messages.Refund_CashNotConfirmable);
 
+                var counterShiftId = await db.FindOpenCounterShiftIdByUserAsync(
+                    confirmedByUserId,
+                    cancellationToken
+                );
+                if (
+                    counterShiftId is null
+                    && await db.Employees.AnyAsync(
+                        e => e.UserId == confirmedByUserId,
+                        cancellationToken
+                    )
+                )
+                    throw new BusinessRuleException(Messages.Rule_CounterShiftRequired);
+
                 var completedAt = DateTime.UtcNow;
                 var updated = await db
                     .PaymentTransactions.Where(t =>
@@ -203,6 +222,7 @@ public class PaymentRefundService(
                             s.SetProperty(t => t.Status, PaymentStatus.Success)
                                 .SetProperty(t => t.CompletedAt, (DateTime?)completedAt)
                                 .SetProperty(t => t.PerformedByUserId, (int?)confirmedByUserId)
+                                .SetProperty(t => t.CounterShiftId, counterShiftId)
                                 .SetProperty(t => t.NeedsManualRefund, false),
                         cancellationToken
                     );
@@ -215,6 +235,7 @@ public class PaymentRefundService(
                 refund.Status = PaymentStatus.Success;
                 refund.CompletedAt = completedAt;
                 refund.PerformedByUserId = confirmedByUserId;
+                refund.CounterShiftId = counterShiftId;
                 refund.NeedsManualRefund = false;
 
                 auditLogger.Record(

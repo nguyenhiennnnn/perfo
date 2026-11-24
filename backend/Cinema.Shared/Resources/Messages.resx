@@ -3796,4 +3796,37 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Validation_Reconciliation_ResolutionInvalid" xml:space="preserve">
     <value>Trạng thái xử lý không hợp lệ.</value>
   </data>
+  <data name="Conflict_CounterShiftAlreadyClosed" xml:space="preserve">
+    <value>Ca quầy này đã được đóng.</value>
+  </data>
+  <data name="Conflict_CounterShiftAlreadyOpen" xml:space="preserve">
+    <value>Bạn đang có một ca quầy chưa đóng. Hãy đóng ca hiện tại trước khi mở ca mới.</value>
+  </data>
+  <data name="Forbidden_NotCounterShiftOwner" xml:space="preserve">
+    <value>Bạn chỉ được xem và đóng ca quầy của chính mình.</value>
+  </data>
+  <data name="NotFound_CounterShift" xml:space="preserve">
+    <value>Không tìm thấy ca quầy.</value>
+  </data>
+  <data name="Rule_NoEmployeeProfileForCounterShift" xml:space="preserve">
+    <value>Tài khoản không có hồ sơ nhân viên — không thể mở ca quầy.</value>
+  </data>
+  <data name="Success_CounterShiftClosed" xml:space="preserve">
+    <value>Đã đóng ca quầy.</value>
+  </data>
+  <data name="Success_CounterShiftOpened" xml:space="preserve">
+    <value>Đã mở ca quầy.</value>
+  </data>
+  <data name="Validation_CounterShift_CountedCashRange" xml:space="preserve">
+    <value>Số tiền thực đếm không được âm và không vượt quá giới hạn cho phép.</value>
+  </data>
+  <data name="Validation_CounterShift_NoteMaxLength" xml:space="preserve">
+    <value>Ghi chú ca quầy không được vượt quá 500 ký tự.</value>
+  </data>
+  <data name="Validation_CounterShift_OpeningCashRange" xml:space="preserve">
+    <value>Tiền đầu ca không được âm và không vượt quá giới hạn cho phép.</value>
+  </data>
+  <data name="Rule_CounterShiftRequired" xml:space="preserve">
+    <value>Bạn cần mở ca quầy trước khi bán hàng, thu tiền hoặc xác nhận hoàn tiền mặt.</value>
+  </data>
 </root>

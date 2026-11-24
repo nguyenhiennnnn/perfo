@@ -20,11 +20,13 @@ public class PaymentTransaction
     public decimal? AmountReceived { get; set; }
     public decimal? ChangeGiven { get; set; }
     public int? OriginalTransactionId { get; set; }
+    public int? CounterShiftId { get; set; }
     public bool NeedsManualRefund { get; set; }
     public string? Note { get; set; }
 
     public Order Order { get; set; } = null!;
     public User? PerformedByUser { get; set; }
+    public CounterShift? CounterShift { get; set; }
     public PaymentTransaction? OriginalTransaction { get; set; }
     public ICollection<PaymentTransaction> Refunds { get; set; } = [];
 }

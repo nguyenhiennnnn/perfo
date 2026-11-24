@@ -40,6 +40,7 @@ public static class FieldLengths
     public const int RoomClosureReason = 500;
     public const int SeatBlockReason = 500;
     public const int ShowtimeRoomChangeNote = 500;
+    public const int CounterShiftNote = 500;
 
     public const int FileName = 255;
     public const int ErrorMessage = 2000;

@@ -21,4 +21,5 @@ public static class AuditEntityTypes
     public const string PaymentTransaction = "PaymentTransaction";
     public const string RoomChangeRefundDue = "RoomChangeRefundDue";
     public const string ReconciliationItem = "ReconciliationItem";
+    public const string CounterShift = "CounterShift";
 }

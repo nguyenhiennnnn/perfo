@@ -10,6 +10,7 @@ using Cinema.Application.Services.Audit;
 using Cinema.Application.Services.Auth;
 using Cinema.Application.Services.Catalog;
 using Cinema.Application.Services.Combos;
+using Cinema.Application.Services.CounterShifts;
 using Cinema.Application.Services.Inventory;
 using Cinema.Application.Services.Dashboard;
 using Cinema.Application.Services.Employees;
@@ -148,6 +149,7 @@ public static class DependencyInjection
         services.AddScoped<IPricingRuleService, PricingRuleService>();
         services.AddScoped<ISpecialDayService, SpecialDayService>();
         services.AddScoped<IRoomClosureService, RoomClosureService>();
+        services.AddScoped<ICounterShiftService, CounterShiftService>();
         services.AddScoped<ISeatBlockService, SeatBlockService>();
         services.AddScoped<IPricingService, PricingService>();
         services.AddScoped<IPromotionService, PromotionService>();

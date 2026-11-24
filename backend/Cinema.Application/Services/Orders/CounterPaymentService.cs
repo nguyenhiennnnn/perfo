@@ -1,5 +1,6 @@
 using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Services.CounterShifts;
 using Cinema.Application.Services.Payments;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
@@ -34,6 +35,11 @@ public class CounterPaymentService(
                     ["paymentMethod"] = [Messages.Validation_CounterPaymentMethod_Invalid],
                 }
             );
+
+        var counterShiftId = await db.RequireOpenCounterShiftIdByUserAsync(
+            performedByUserId,
+            cancellationToken
+        );
 
         PaymentTransaction charge;
         string orderCode;
@@ -101,6 +107,7 @@ public class CounterPaymentService(
                 CreatedAt = now,
                 CompletedAt = now,
                 PerformedByUserId = performedByUserId,
+                CounterShiftId = counterShiftId,
                 AmountReceived = received,
                 ChangeGiven = received is null ? null : change,
             };

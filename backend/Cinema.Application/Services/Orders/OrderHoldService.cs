@@ -80,7 +80,8 @@ public class OrderHoldService(
         string? customerPhone,
         CancellationToken cancellationToken,
         IReadOnlyList<SeatTicketSelectionRequest>? ticketSelections = null,
-        bool acceptPriceChange = false
+        bool acceptPriceChange = false,
+        int? counterShiftId = null
     )
     {
         var showtime =
@@ -245,6 +246,7 @@ public class OrderHoldService(
             CreatedAt = now,
             ExpiresAt = holdUntil,
             CreatedByEmployeeId = createdByEmployeeId,
+            CounterShiftId = counterShiftId,
         };
         foreach (var line in lines)
             order.Lines.Add(line);
@@ -296,7 +298,8 @@ public class OrderHoldService(
         int? createdByEmployeeId,
         string customerName,
         string? customerPhone,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken,
+        int? counterShiftId = null
     )
     {
         if (comboSelections.Count == 0)
@@ -354,6 +357,7 @@ public class OrderHoldService(
             CreatedAt = now,
             ExpiresAt = holdUntil,
             CreatedByEmployeeId = createdByEmployeeId,
+            CounterShiftId = counterShiftId,
             TotalAmount = totalAmount,
             DiscountAmount = 0m,
             FinalAmount = totalAmount,

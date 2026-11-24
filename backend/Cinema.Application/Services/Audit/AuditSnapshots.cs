@@ -297,6 +297,22 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject CounterShiftState(CounterShift s) =>
+        AuditJson.ToObject(
+            new
+            {
+                s.EmployeeId,
+                s.Status,
+                s.OpenedAt,
+                s.OpeningCash,
+                s.ClosedAt,
+                s.CountedCash,
+                s.ExpectedCash,
+                s.Variance,
+                s.Note,
+            }
+        );
+
     public static JsonObject SeatBlockState(SeatBlock b) =>
         AuditJson.ToObject(
             new

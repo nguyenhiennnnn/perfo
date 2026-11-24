@@ -9,4 +9,7 @@ public static class AuditActions
     public const string ChangeRoom = "ChangeRoom";
     public const string ManualRefund = "ManualRefund";
     public const string CardNotPresented = "CardNotPresented";
+    public const string OpenShift = "OpenShift";
+    public const string CloseShift = "CloseShift";
+    public const string ShiftVariance = "ShiftVariance";
 }

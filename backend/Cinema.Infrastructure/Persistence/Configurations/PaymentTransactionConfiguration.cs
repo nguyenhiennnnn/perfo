@@ -103,6 +103,16 @@ public class PaymentTransactionConfiguration : IEntityTypeConfiguration<PaymentT
             .HasDatabaseName("IX_PaymentTransactions_Original");
 
         builder
+            .HasOne(x => x.CounterShift)
+            .WithMany()
+            .HasForeignKey(x => x.CounterShiftId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasIndex(x => x.CounterShiftId)
+            .HasFilter("\"CounterShiftId\" IS NOT NULL")
+            .HasDatabaseName("IX_PaymentTransactions_CounterShift");
+
+        builder
             .HasIndex(x => x.TransactionCode)
             .IsUnique()
             .HasDatabaseName("UX_PaymentTransactions_TransactionCode");

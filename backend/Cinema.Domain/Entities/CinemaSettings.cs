@@ -65,6 +65,7 @@ public class CinemaSettings
     public const decimal DefaultDynamicPricingMaxIncreasePercent = 30m;
     public const decimal DefaultDynamicPricingMaxDecreasePercent = 30m;
     public const decimal DefaultMinTicketPrice = 45000m;
+    public const int DefaultSalesPaceCustomMarkMinutes = 60;
 
     public int SchedulerStepMinutes { get; set; } = DefaultSchedulerStepMinutes;
 
@@ -88,4 +89,6 @@ public class CinemaSettings
         DefaultDynamicPricingMaxDecreasePercent;
 
     public decimal MinTicketPrice { get; set; } = DefaultMinTicketPrice;
+
+    public int SalesPaceCustomMarkMinutes { get; set; } = DefaultSalesPaceCustomMarkMinutes;
 }

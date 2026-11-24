@@ -108,6 +108,8 @@ public class SettingsService(
             settings.DynamicPricingMaxDecreasePercent = maxDecreasePercent;
         if (request.MinTicketPrice is { } minTicketPrice)
             settings.MinTicketPrice = minTicketPrice;
+        if (request.SalesPaceCustomMarkMinutes is { } salesPaceCustomMarkMinutes)
+            settings.SalesPaceCustomMarkMinutes = salesPaceCustomMarkMinutes;
         if (settings.SchedulerHeatSalesWeight + settings.SchedulerHeatRatingWeight <= 0)
             throw new BusinessRuleException(Messages.Validation_SchedulerHeatWeights_SumPositive);
         var passwordChanged = false;
@@ -138,6 +140,7 @@ public class SettingsService(
             DynamicPricingMaxIncreasePercent = settings.DynamicPricingMaxIncreasePercent,
             DynamicPricingMaxDecreasePercent = settings.DynamicPricingMaxDecreasePercent,
             MinTicketPrice = settings.MinTicketPrice,
+            SalesPaceCustomMarkMinutes = settings.SalesPaceCustomMarkMinutes,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

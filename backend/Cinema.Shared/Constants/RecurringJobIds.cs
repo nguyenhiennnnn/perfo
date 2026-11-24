@@ -9,4 +9,5 @@ public class RecurringJobIds
     public const string CleanupImportSessions = "cleanup-import-sessions";
     public const string ProcessOutbox = "process-outbox";
     public const string LowStockAlert = "low-stock-alert";
+    public const string RefreshSalesStats = "refresh-sales-stats";
 }

@@ -97,6 +97,12 @@ public static class BackgroundJobExtensions
             options.ProcessOutboxCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<SalesStatsRefreshJob>(
+            RecurringJobIds.RefreshSalesStats,
+            j => j.RunAsync(CancellationToken.None),
+            options.SalesStatsRefreshCron,
+            jobOptions
+        );
 
         return app;
     }

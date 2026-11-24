@@ -68,6 +68,9 @@ public interface IAppDbContext
     DbSet<UserVerificationToken> UserVerificationTokens { get; }
     DbSet<ImportExportJob> ImportExportJobs { get; }
     DbSet<AuditLog> AuditLogs { get; }
+    DbSet<ShowtimeDailyStat> ShowtimeDailyStats { get; }
+    DbSet<PaymentDailyStat> PaymentDailyStats { get; }
+    DbSet<ShowtimeSalesPace> ShowtimeSalesPaces { get; }
 }
 
 public static class AppDbContextExtensions

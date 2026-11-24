@@ -4,4 +4,5 @@ public enum ImportExportJobType
 {
     Import,
     Export,
+    Rebuild,
 }

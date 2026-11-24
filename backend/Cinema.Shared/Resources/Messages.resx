@@ -3507,4 +3507,19 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_SeatsUnblocked" xml:space="preserve">
     <value>Đã mở khóa ghế.</value>
   </data>
+  <data name="Rule_SalesStatsRebuildRangeInvalid" xml:space="preserve">
+    <value>Khoảng ngày không hợp lệ: ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.</value>
+  </data>
+  <data name="Rule_SalesStatsRebuildRangeTooLong" xml:space="preserve">
+    <value>Mỗi lần chỉ được dựng lại tối đa {0} ngày.</value>
+  </data>
+  <data name="Rule_SalesStatsRebuildAlreadyRunning" xml:space="preserve">
+    <value>Đang có một tác vụ dựng lại số liệu tổng hợp chạy hoặc chờ chạy. Vui lòng đợi tác vụ đó hoàn tất.</value>
+  </data>
+  <data name="Validation_SalesStatsRebuild_FromDate_Required" xml:space="preserve">
+    <value>Vui lòng chọn ngày bắt đầu.</value>
+  </data>
+  <data name="Validation_SalesStatsRebuild_ToDate_Required" xml:space="preserve">
+    <value>Vui lòng chọn ngày kết thúc.</value>
+  </data>
 </root>

@@ -14,7 +14,7 @@ public class ImportExportJobConfiguration : IEntityTypeConfiguration<ImportExpor
             "ImportExportJobs",
             t =>
             {
-                t.HasCheckConstraint("CK_ImportExportJobs_Type", "\"Type\" IN ('Import','Export')");
+                t.HasCheckConstraint("CK_ImportExportJobs_Type", "\"Type\" IN ('Import','Export','Rebuild')");
                 t.HasCheckConstraint(
                     "CK_ImportExportJobs_Status",
                     "\"Status\" IN ('Queued','Running','Completed','Failed')"

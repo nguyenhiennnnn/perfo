@@ -119,6 +119,7 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
             100
         );
         WholeDecimalRange(x => x.MinTicketPrice, "minTicketPrice", 0, 10_000_000);
+        IntRange(x => x.SalesPaceCustomMarkMinutes, "salesPaceCustomMarkMinutes", 0, 10080);
 
         RuleFor(x => x)
             .Must(x => x.SchedulerHeatSalesWeight!.Value + x.SchedulerHeatRatingWeight!.Value > 0)

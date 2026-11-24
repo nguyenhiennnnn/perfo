@@ -166,6 +166,13 @@ public static class DependencyInjection
         services.AddScoped<IUnsubscribeTokenService, UnsubscribeTokenService>();
         services.AddScoped<ICommunicationPreferenceService, CommunicationPreferenceService>();
         services.AddScoped<IReportService, ReportService>();
+        services.AddScoped<ISalesStatsService, SalesStatsService>();
+        services.AddScoped<ISalesStatsRebuildService, SalesStatsRebuildService>();
+        services.AddBackgroundEventHandler<OrderConfirmed, SalesStatsOrderChangedHandler>();
+        services.AddBackgroundEventHandler<OrderCancelled, SalesStatsOrderChangedHandler>();
+        services.AddBackgroundEventHandler<OrderRefunded, SalesStatsOrderChangedHandler>();
+        services.AddBackgroundEventHandler<ShowtimeEnded, SalesStatsShowtimeChangedHandler>();
+        services.AddBackgroundEventHandler<ShowtimeRoomChanged, SalesStatsShowtimeChangedHandler>();
         services.AddScoped<IReportExportService, ReportExportService>();
         services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<IEmployeeService, EmployeeService>();

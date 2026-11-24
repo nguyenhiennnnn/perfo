@@ -95,5 +95,8 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
             .Property(x => x.MinTicketPrice)
             .HasColumnType("decimal(18,2)")
             .HasDefaultValue(CinemaSettings.DefaultMinTicketPrice);
+        builder
+            .Property(x => x.SalesPaceCustomMarkMinutes)
+            .HasDefaultValue(CinemaSettings.DefaultSalesPaceCustomMarkMinutes);
     }
 }

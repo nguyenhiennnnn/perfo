@@ -60,6 +60,8 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public decimal DynamicPricingMaxDecreasePercent { get; init; }
 
     public decimal MinTicketPrice { get; init; }
+
+    public int SalesPaceCustomMarkMinutes { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -94,5 +96,6 @@ public record UpdateSettingsRequest(
     decimal? TicketPriceRoundingStep = null,
     decimal? DynamicPricingMaxIncreasePercent = null,
     decimal? DynamicPricingMaxDecreasePercent = null,
-    decimal? MinTicketPrice = null
+    decimal? MinTicketPrice = null,
+    int? SalesPaceCustomMarkMinutes = null
 );

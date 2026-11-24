@@ -72,6 +72,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<UserVerificationToken> UserVerificationTokens => Set<UserVerificationToken>();
     public DbSet<ImportExportJob> ImportExportJobs => Set<ImportExportJob>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+    public DbSet<ShowtimeDailyStat> ShowtimeDailyStats => Set<ShowtimeDailyStat>();
+    public DbSet<PaymentDailyStat> PaymentDailyStats => Set<PaymentDailyStat>();
+    public DbSet<ShowtimeSalesPace> ShowtimeSalesPaces => Set<ShowtimeSalesPace>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {

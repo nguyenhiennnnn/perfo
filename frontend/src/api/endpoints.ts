@@ -233,6 +233,9 @@ export const ENDPOINTS = {
       roomChangePreview: (id: number) =>
         `/admin/showtimes/${id}/room-change/preview`,
       roomChange: (id: number) => `/admin/showtimes/${id}/room-change`,
+      seatBlocks: (id: number) => `/admin/showtimes/${id}/seat-blocks`,
+      seatBlocksUnblock: (id: number) =>
+        `/admin/showtimes/${id}/seat-blocks/unblock`,
       bulk: "/admin/showtimes/bulk",
       autoSchedulePreview: "/admin/showtimes/auto-schedule/preview",
       autoScheduleApply: "/admin/showtimes/auto-schedule/apply",

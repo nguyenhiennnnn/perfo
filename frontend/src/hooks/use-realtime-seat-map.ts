@@ -16,6 +16,7 @@ interface UseRealtimeSeatMapParams {
   ownOrderId?: number | null;
   onHoldExpired?: (payload: HoldExpiredPayload) => void;
   onSeatsBlocked?: (seatIds: number[]) => void;
+  onSeatsReleased?: (seatIds: number[]) => void;
 }
 
 export function useRealtimeSeatMap({
@@ -24,6 +25,7 @@ export function useRealtimeSeatMap({
   ownOrderId,
   onHoldExpired,
   onSeatsBlocked,
+  onSeatsReleased,
 }: UseRealtimeSeatMapParams) {
   const [statusOverrides, setStatusOverrides] = useState<
     Map<number, ShowtimeSeatStatus>
@@ -49,8 +51,10 @@ export function useRealtimeSeatMap({
       applyStatus(payload.seatIds, ShowtimeSeatStatus.Held),
     onSeatBooked: (payload: SeatBookedPayload) =>
       applyStatus(payload.seatIds, ShowtimeSeatStatus.Booked),
-    onSeatReleased: (payload: SeatReleasedPayload) =>
-      applyStatus(payload.seatIds, ShowtimeSeatStatus.Available),
+    onSeatReleased: (payload: SeatReleasedPayload) => {
+      applyStatus(payload.seatIds, ShowtimeSeatStatus.Available);
+      onSeatsReleased?.(payload.seatIds);
+    },
     onSeatBlocked: (payload: SeatBlockedPayload) => {
       applyStatus(payload.seatIds, ShowtimeSeatStatus.Blocked);
       onSeatsBlocked?.(payload.seatIds);

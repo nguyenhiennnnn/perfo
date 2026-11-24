@@ -29,6 +29,9 @@ interface SelectableSeatMapProps {
   selectedIds: Set<number>;
   onToggle: (seat: ShowtimeSeatItemDto) => void;
   highlightedIds?: Set<number>;
+  issueIds?: Set<number>;
+  selectableIds?: Set<number>;
+  getSeatNote?: (showtimeSeatId: number, status: ShowtimeSeatStatus) => string | undefined;
   fitWidth?: boolean;
   className?: string;
 }
@@ -64,6 +67,9 @@ export const SelectableSeatMap = ({
   selectedIds,
   onToggle,
   highlightedIds,
+  issueIds,
+  selectableIds,
+  getSeatNote,
   fitWidth,
   className,
 }: SelectableSeatMapProps) => {
@@ -124,7 +130,14 @@ export const SelectableSeatMap = ({
               ariaLabel={`Ghế ${code}, ${STATE_TEXT[state]}`}
               kind={resolveSeatVisualKind(cell.seatTypeName, cell.isCouple)}
               state={state}
-              mark={highlightedIds?.has(cell.showtimeSeatId) ? "suggested" : undefined}
+              mark={
+                issueIds?.has(cell.showtimeSeatId)
+                  ? "issue"
+                  : highlightedIds?.has(cell.showtimeSeatId)
+                    ? "suggested"
+                    : undefined
+              }
+              selectable={selectableIds?.has(cell.showtimeSeatId)}
               onClick={() =>
                 onToggle({
                   showtimeSeatId: cell.showtimeSeatId!,
@@ -138,7 +151,12 @@ export const SelectableSeatMap = ({
                   price: cell.price ?? 0,
                 })
               }
-              title={`${code}${cell.seatTypeName ? `, ${seatTypeLabel(cell.seatTypeName, cell.isCouple)}` : ""}${cell.price != null ? `, ${formatCurrency(cell.price)}` : ""}`}
+              title={[
+                `${code}${cell.seatTypeName ? `, ${seatTypeLabel(cell.seatTypeName, cell.isCouple)}` : ""}${cell.price != null ? `, ${formatCurrency(cell.price)}` : ""}`,
+                getSeatNote?.(cell.showtimeSeatId, status),
+              ]
+                .filter(Boolean)
+                .join(". ")}
             />
           );
         }}

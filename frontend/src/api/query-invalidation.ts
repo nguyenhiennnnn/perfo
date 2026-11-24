@@ -29,6 +29,11 @@ export const invalidations = {
     k.movies.all(),
     ...dashboard(),
   ],
+  seatBlocksChanged: (): KeyList => [
+    ...showtimeViews(),
+    k.adminAuditLogs.all(),
+    ...dashboard(),
+  ],
   showtimeRoomChanged: (): KeyList => [
     ...invalidations.showtimeChanged(),
     ...orderViews(),

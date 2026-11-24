@@ -1,5 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { MoreHorizontal, Pencil, XCircle } from "lucide-react";
+import { Armchair, MoreHorizontal, Pencil, XCircle } from "lucide-react";
 
 import { ShowtimeStatusBadge } from "@/components/common/status-badge";
 import { Button } from "@/components/ui/button";
@@ -15,11 +15,13 @@ import { formatCurrency, formatDate, formatTime } from "@/lib/formatters";
 import { ShowtimeStatus } from "@/types/enum";
 
 import type { AdminShowtimeDto } from "../types";
+import { canManageShowtimeSeats } from "../utils/seat-blocks";
 import { STATUS_LABEL } from "@/config/default-constants";
 
 interface ShowtimeColumnsOptions {
   onEdit?: (showtime: AdminShowtimeDto) => void;
   onDelete?: (showtime: AdminShowtimeDto) => void;
+  onManageSeats?: (showtime: AdminShowtimeDto) => void;
   canManage?: boolean;
 }
 
@@ -28,6 +30,7 @@ const columnHelper = createColumnHelper<DataTableFeatures, AdminShowtimeDto>();
 export const createShowtimeColumns = ({
   onEdit,
   onDelete,
+  onManageSeats,
   canManage = true,
 }: ShowtimeColumnsOptions) =>
   columnHelper.columns([
@@ -103,6 +106,11 @@ export const createShowtimeColumns = ({
                   <DropdownMenuItem onClick={() => onEdit?.(row.original)}>
                     <Pencil /> Chỉnh sửa
                   </DropdownMenuItem>
+                  {onManageSeats && canManageShowtimeSeats(row.original) && (
+                    <DropdownMenuItem onClick={() => onManageSeats(row.original)}>
+                      <Armchair /> Quản lý ghế
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem
                     variant="destructive"
                     onClick={() => onDelete?.(row.original)}

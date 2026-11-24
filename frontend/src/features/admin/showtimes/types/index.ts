@@ -262,3 +262,41 @@ export interface ShowtimeRoomChangeResponse {
   refundDueCount: number;
   refundDueTotal: number;
 }
+
+
+export const SeatBlockType = {
+  Maintenance: "Maintenance",
+  Broken: "Broken",
+  RoomRental: "RoomRental",
+  WaitlistReserve: "WaitlistReserve",
+} as const;
+export type SeatBlockType = (typeof SeatBlockType)[keyof typeof SeatBlockType];
+
+export interface SeatBlockDto {
+  seatBlockId: number;
+  showtimeId: number;
+  showtimeSeatId: number;
+  seatRow: string;
+  seatNumber: number;
+  type: string;
+  reason: string;
+  expiresAt: string | null;
+  createdByUserId: number | null;
+  createdAt: string;
+}
+
+export interface BlockSeatsRequest {
+  showtimeSeatIds: number[];
+  type: string;
+  reason: string;
+  expiresAt?: string | null;
+}
+
+export interface UnblockSeatsRequest {
+  showtimeSeatIds: number[];
+}
+
+export interface UnblockSeatsResponse {
+  showtimeId: number;
+  showtimeSeatIds: number[];
+}

@@ -21,6 +21,7 @@ import type { RowSelectionState } from "@tanstack/react-table";
 
 import { useAdminShowtimes, useAdminBulkDeleteShowtimes } from "../hooks/use-admin-showtimes";
 import { useShowtimeCancelFlow } from "../hooks/use-showtime-cancel-flow";
+import { useShowtimeSeatManagerFlow } from "../hooks/use-showtime-seat-manager-flow";
 import type { AdminShowtimeDto, ShowtimeCalendarItemDto } from "../types";
 import { createShowtimeColumns } from "../components/showtime-columns";
 import { createSelectionColumn } from "@/components/common/data-table/data-table-selection-column";
@@ -56,6 +57,8 @@ const AdminShowtimesPage = () => {
       Object.fromEntries(Object.entries(prev).filter(([key]) => key !== String(showtimeId))),
     ),
   );
+
+  const seatManagerFlow = useShowtimeSeatManagerFlow();
 
   const handleCreate = () => {
     openDialog({
@@ -148,6 +151,7 @@ const AdminShowtimesPage = () => {
     ...createShowtimeColumns({
       onEdit: handleEdit,
       onDelete: cancelFlow.start,
+      onManageSeats: seatManagerFlow.start,
       canManage,
     }),
   ];

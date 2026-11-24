@@ -10,6 +10,7 @@ interface SeatButtonProps {
   mark?: SeatMark;
   onClick?: () => void;
   disabled?: boolean;
+  selectable?: boolean;
   title?: string;
   className?: string;
   editable?: boolean;
@@ -26,6 +27,7 @@ export const SeatButton = ({
   mark,
   onClick,
   disabled,
+  selectable = false,
   title,
   className,
   editable = false,
@@ -38,7 +40,8 @@ export const SeatButton = ({
     return <div className={cn("h-[min(2.25rem,var(--fit,2.25rem))] w-full", className)} aria-hidden />;
   }
 
-  const interactive = editable || state === "available" || state === "selected";
+  const interactive =
+    editable || selectable || state === "available" || state === "selected";
   const showKindIcon =
     kind !== "standard" && (state === "available" || state === "selected" || state === "held");
 

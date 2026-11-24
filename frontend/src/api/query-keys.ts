@@ -73,6 +73,8 @@ export const queryKeys = {
     calendars: () => ["admin", "showtimes", "calendar"] as const,
     calendar: (params: object) =>
       ["admin", "showtimes", "calendar", params] as const,
+    seatBlocks: (showtimeId: number) =>
+      ["admin", "showtimes", "seat-blocks", showtimeId] as const,
   },
 
   adminOrders: {

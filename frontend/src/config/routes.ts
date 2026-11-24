@@ -56,6 +56,7 @@ export const ROUTES = {
     inventoryLedgerByItem: (inventoryItemId: number | string) =>
       `/admin/inventory/ledger?itemId=${inventoryItemId}`,
     inventoryValuation: "/admin/inventory/valuation",
+    comboPickup: "/admin/combo-pickups",
     unclaimedComboOrders: "/admin/combo-pickups/unclaimed",
     orders: "/admin/orders",
     cashRefunds: "/admin/cash-refunds",

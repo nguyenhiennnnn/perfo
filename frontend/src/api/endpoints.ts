@@ -144,6 +144,8 @@ export const ENDPOINTS = {
       valuation: "/admin/inventory/valuation",
     },
     comboPickups: {
+      root: "/admin/combo-pickups",
+      lookup: "/admin/combo-pickups/lookup",
       unclaimed: "/admin/combo-pickups/unclaimed",
     },
     employees: {

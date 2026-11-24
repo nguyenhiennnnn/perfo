@@ -1,5 +1,7 @@
-import { CheckCircle2, PlusCircle } from "lucide-react";
+import { CheckCircle2, PackageCheck, PlusCircle } from "lucide-react";
+import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/config/routes";
 import { formatCurrency } from "@/lib/formatters";
 import type { CounterComboLine } from "../hooks/use-counter-combo-sale";
 import {
@@ -27,7 +29,10 @@ export const CounterComboReceipt = ({
   receipt,
   onNewSale,
 }: CounterComboReceiptProps) => {
+  const navigate = useNavigate();
   const isCash = receipt.paymentMethod === CounterPaymentMethod.Cash;
+  const goToPickup = () =>
+    navigate(`${ROUTES.admin.comboPickup}?code=${encodeURIComponent(receipt.orderCode)}`);
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center gap-6 py-6 text-center">
@@ -75,10 +80,16 @@ export const CounterComboReceipt = ({
         </div>
       </div>
 
-      <Button onClick={onNewSale}>
-        <PlusCircle className="size-4" />
-        <span>Bán đơn mới</span>
-      </Button>
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <Button variant="outline" onClick={goToPickup}>
+          <PackageCheck className="size-4" />
+          <span>Giao combo ngay</span>
+        </Button>
+        <Button onClick={onNewSale}>
+          <PlusCircle className="size-4" />
+          <span>Bán đơn mới</span>
+        </Button>
+      </div>
     </div>
   );
 };

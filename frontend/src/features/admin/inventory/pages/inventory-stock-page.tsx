@@ -8,6 +8,8 @@ import { DEFAULT_PAGE } from "@/config/default-constants";
 import { ROUTES } from "@/config/routes";
 import { useAdminInventoryItemParams } from "@/hooks/use-query-params";
 import { useTablePagination } from "@/hooks/use-table-pagination";
+import { useAuthStore } from "@/stores/auth-store";
+import { Role } from "@/types/enum";
 
 import { LowStockAlerts } from "../components/low-stock-alerts";
 import { createStockLevelColumns } from "../components/stock-level-columns";
@@ -17,6 +19,7 @@ const LOW_STOCK_OPTIONS = [{ value: "true", label: "Sắp hết hoặc hết hà
 
 const AdminInventoryStockPage = () => {
   const navigate = useNavigate();
+  const isAdmin = useAuthStore((state) => state.user?.role === Role.Admin);
   const [params, setParams] = useAdminInventoryItemParams();
   const { pagination, onPaginationChange } = useTablePagination(params, setParams);
 
@@ -27,8 +30,10 @@ const AdminInventoryStockPage = () => {
     lowStockOnly: params.lowStock === "true" ? true : undefined,
   });
 
-  const columns = createStockLevelColumns((level) =>
-    navigate(ROUTES.admin.inventoryLedgerByItem(level.inventoryItemId)),
+  const columns = createStockLevelColumns(
+    isAdmin
+      ? (level) => navigate(ROUTES.admin.inventoryLedgerByItem(level.inventoryItemId))
+      : undefined,
   );
 
   return (

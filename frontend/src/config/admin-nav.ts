@@ -15,6 +15,7 @@ import {
   BookOpen,
   Coins,
   PackageX,
+  PackageCheck,
   Ticket,
   Banknote,
   Tags,
@@ -75,6 +76,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         icon: ScanLine,
         roles: [Role.Admin, Role.Employee],
       },
+      {
+        to: ROUTES.admin.comboPickup,
+        label: "Nhận combo",
+        icon: PackageCheck,
+        roles: [Role.Admin, Role.Employee],
+      },
     ],
   },
   {
@@ -108,7 +115,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         to: ROUTES.admin.inventory,
         label: "Tồn kho",
         icon: Warehouse,
-        roles: [Role.Admin],
+        roles: [Role.Admin, Role.Employee],
       },
       {
         to: ROUTES.admin.inventoryItems,

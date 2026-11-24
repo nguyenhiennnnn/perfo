@@ -159,6 +159,7 @@ export const queryKeys = {
   adminComboPickups: {
     all: () => ["admin", "combo-pickups"] as const,
     unclaimed: (params?: object) => ["admin", "combo-pickups", "unclaimed", params] as const,
+    lookup: (code: string) => ["admin", "combo-pickups", "lookup", code] as const,
   },
 
   adminReviews: {

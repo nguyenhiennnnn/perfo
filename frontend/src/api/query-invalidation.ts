@@ -39,6 +39,7 @@ export const invalidations = {
     ...dashboard(),
     k.adminInventory.all(),
     k.adminComboPickups.all(),
+    k.combos.all(),
   ],
 
   orderPromotionChanged: (): KeyList => [...orderViews(), k.promotions.mine()],

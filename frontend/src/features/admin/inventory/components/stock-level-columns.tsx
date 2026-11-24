@@ -11,7 +11,7 @@ import { StockStatusBadge } from "./stock-status-badge";
 
 const columnHelper = createColumnHelper<DataTableFeatures, StockLevelDto>();
 
-export const createStockLevelColumns = (onViewLedger: (level: StockLevelDto) => void) =>
+export const createStockLevelColumns = (onViewLedger?: (level: StockLevelDto) => void) =>
   columnHelper.columns([
     columnHelper.accessor("code", {
       header: ({ column }) => <DataTableColumnHeader column={column} title="Mã" />,
@@ -65,16 +65,20 @@ export const createStockLevelColumns = (onViewLedger: (level: StockLevelDto) => 
         />
       ),
     }),
-    columnHelper.display({
-      id: "actions",
-      header: () => <div className="text-right">Hành động</div>,
-      cell: ({ row }) => (
-        <div className="flex justify-end">
-          <Button variant="ghost" size="sm" onClick={() => onViewLedger(row.original)}>
-            Xem sổ cái
-          </Button>
-        </div>
-      ),
-      enableHiding: false,
-    }),
+    ...(onViewLedger
+      ? [
+          columnHelper.display({
+            id: "actions",
+            header: () => <div className="text-right">Hành động</div>,
+            cell: ({ row }) => (
+              <div className="flex justify-end">
+                <Button variant="ghost" size="sm" onClick={() => onViewLedger(row.original)}>
+                  Xem sổ cái
+                </Button>
+              </div>
+            ),
+            enableHiding: false,
+          }),
+        ]
+      : []),
   ]);

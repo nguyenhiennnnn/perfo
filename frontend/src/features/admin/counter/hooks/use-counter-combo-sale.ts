@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "@/components/ui/toast";
 import { COUNTER_WALK_IN_NAME } from "@/config/default-constants";
 import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
+import { HTTP_STATUS } from "@/config/http-status";
+import { extractApiError } from "@/lib/error";
 import { formatCurrency } from "@/lib/formatters";
 import { CancelReason } from "@/types/enum";
 import { ordersAdminApi } from "@/features/admin/orders/api/orders-admin-api";
@@ -139,8 +141,10 @@ export function useCounterComboSale() {
       setOrder(res.data);
       setOrderLines(draftLines);
       setStep("payment");
-    } catch {
-      return;
+    } catch (error) {
+      if (extractApiError(error).statusCode === HTTP_STATUS.conflict) {
+        void activeCombos.refetch();
+      }
     }
   };
 

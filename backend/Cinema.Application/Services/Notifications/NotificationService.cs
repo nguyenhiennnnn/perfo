@@ -1,8 +1,10 @@
+using System.Globalization;
 using Cinema.Application.BackgroundJobs;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Hangfire;
 using Microsoft.Extensions.Options;
@@ -229,6 +231,17 @@ public class NotificationService(
             toEmail,
             string.Format(Messages.Email_UnclosedShiftSubject, _brand.Name, shifts.Count),
             EmailTemplates.UnclosedShiftAlert(_brand, shifts)
+        );
+
+    public void SendDailyClosingReport(string toEmail, DailyClosingEmailData report) =>
+        Enqueue(
+            toEmail,
+            string.Format(
+                Messages.Email_DailyClosingSubject,
+                _brand.Name,
+                report.BusinessDate.ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture)
+            ),
+            EmailTemplates.DailyClosingReport(_brand, report)
         );
 
     private void Enqueue(string toEmail, string subject, string html) =>

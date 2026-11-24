@@ -108,6 +108,12 @@ export const ENDPOINTS = {
       bulkStatus: "/admin/users/bulk/status",
       role: (id: number) => `/admin/users/${id}/role`,
     },
+    counterShifts: {
+      root: "/admin/counter-shifts",
+      current: "/admin/counter-shifts/current",
+      open: "/admin/counter-shifts/open",
+      close: (id: number) => `/admin/counter-shifts/${id}/close`,
+    },
     importExport: {
       jobs: "/admin/import-export/jobs",
       jobById: (id: string) => `/admin/import-export/jobs/${id}`,

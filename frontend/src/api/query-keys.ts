@@ -77,6 +77,11 @@ export const queryKeys = {
       ["admin", "showtimes", "seat-blocks", showtimeId] as const,
   },
 
+  adminCounterShifts: {
+    all: () => ["admin", "counter-shifts"] as const,
+    current: () => ["admin", "counter-shifts", "current"] as const,
+  },
+
   adminOrders: {
     all: () => ["admin", "orders"] as const,
     list: (params: object) => ["admin", "orders", "list", params] as const,

@@ -14,6 +14,7 @@ public class DailyClosing
     public string? Note { get; set; }
     public int? ClosedByUserId { get; set; }
     public DateTime? ClosedAt { get; set; }
+    public DateTime? ReportEmailedAt { get; set; }
     public uint RowVersion { get; set; }
 
     public User? ClosedByUser { get; set; }

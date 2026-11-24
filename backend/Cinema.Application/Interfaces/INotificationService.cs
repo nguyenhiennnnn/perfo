@@ -26,6 +26,28 @@ public sealed record UnclosedShiftEmailLine(
     decimal OpeningCash
 );
 
+public sealed record DailyClosingEmailData(
+    DateOnly BusinessDate,
+    string ClosedByName,
+    DateTime ClosedAtUtc,
+    string? Note,
+    decimal TicketRevenue,
+    decimal ComboRevenue,
+    decimal TotalRevenue,
+    decimal GiftCardSold,
+    decimal GiftCardUsed,
+    decimal TotalDiscount,
+    decimal TicketRefundAmount,
+    int CancelledOrders,
+    int AdjustmentCount,
+    decimal AdjustmentRevenue,
+    decimal ExpectedCash,
+    decimal CountedCash,
+    decimal Variance,
+    int PendingOrders,
+    int ProblemOrders
+);
+
 public interface INotificationService
 {
     void SendVerificationLink(
@@ -104,4 +126,6 @@ public interface INotificationService
     void SendLowStockAlert(string toEmail, IReadOnlyList<LowStockEmailLine> items);
 
     void SendUnclosedShiftAlert(string toEmail, IReadOnlyList<UnclosedShiftEmailLine> shifts);
+
+    void SendDailyClosingReport(string toEmail, DailyClosingEmailData report);
 }

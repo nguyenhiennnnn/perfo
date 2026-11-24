@@ -92,3 +92,59 @@ public record DailyClosingListItemDto(
 );
 
 public record DailyClosingDto(DailyClosingListItemDto Closing, JsonElement Snapshot);
+
+public enum DailyClosingReportMode
+{
+    OriginalDate,
+    PostingDate,
+}
+
+public record DailyClosingAdjustmentDto(
+    int LedgerAdjustmentId,
+    DateOnly PostingDate,
+    DateOnly OriginalDate,
+    string Type,
+    decimal TicketRevenueDelta,
+    decimal ComboRevenueDelta,
+    decimal GiftCardSoldDelta,
+    decimal DiscountDelta,
+    decimal RefundAmountDelta,
+    int CancelledOrdersDelta,
+    string Reason,
+    int? OrderId,
+    int? PaymentTransactionId,
+    DateTime CreatedAt
+);
+
+public record DailyClosingAdjustmentTotalsDto(
+    int Count,
+    decimal TicketRevenue,
+    decimal ComboRevenue,
+    decimal GiftCardSold,
+    decimal Discount,
+    decimal RefundAmount,
+    int CancelledOrders
+);
+
+public record DailyClosingFiguresDto(
+    decimal TicketRevenue,
+    decimal ComboRevenue,
+    decimal TotalRevenue,
+    decimal GiftCardSold,
+    decimal GiftCardUsed,
+    decimal TotalDiscount,
+    decimal TicketRefundAmount,
+    int CancelledOrders
+);
+
+public record DailyClosingReportDto(
+    string Mode,
+    DateOnly BusinessDate,
+    bool IsClosed,
+    DailyClosingListItemDto? Closing,
+    DailyClosingSnapshot Snapshot,
+    DailyClosingFiguresDto Base,
+    IReadOnlyList<DailyClosingAdjustmentDto> Adjustments,
+    DailyClosingAdjustmentTotalsDto AdjustmentTotals,
+    DailyClosingFiguresDto Adjusted
+);

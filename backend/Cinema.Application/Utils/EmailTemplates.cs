@@ -812,6 +812,89 @@ public static class EmailTemplates
         );
     }
 
+    public static string DailyClosingReport(BrandOptions brand, DailyClosingEmailData report)
+    {
+        var date = report.BusinessDate.ToString(
+            DateTimePatterns.Date,
+            CultureInfo.InvariantCulture
+        );
+        var closedAt = BusinessTime
+            .ToLocal(report.ClosedAtUtc)
+            .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture);
+        var varianceTone = report.Variance == 0m ? Success : Warning;
+        var varianceSymbol = report.Variance == 0m ? SymbolCheck : SymbolAlert;
+
+        var rows = new[]
+        {
+            DetailRow(Messages.Email_DailyClosingRowTicket, Enc(Money(report.TicketRevenue))),
+            DetailRow(Messages.Email_DailyClosingRowCombo, Enc(Money(report.ComboRevenue))),
+            DetailRow(
+                Messages.Email_DailyClosingRowGiftCardSold,
+                Enc(Money(report.GiftCardSold))
+            ),
+            DetailRow(
+                Messages.Email_DailyClosingRowGiftCardUsed,
+                Enc(Money(report.GiftCardUsed))
+            ),
+            DetailRow(Messages.Email_DailyClosingRowDiscount, Enc(Money(report.TotalDiscount))),
+            DetailRow(
+                Messages.Email_DailyClosingRowRefund,
+                Enc(Money(report.TicketRefundAmount))
+            ),
+            DetailRow(
+                Messages.Email_DailyClosingRowCancelled,
+                Enc(report.CancelledOrders.ToString(CultureInfo.InvariantCulture))
+            ),
+            DetailRow(
+                Messages.Email_DailyClosingRowAdjustments,
+                Enc(
+                    string.Format(
+                        Messages.Email_DailyClosingRowAdjustmentsValue,
+                        report.AdjustmentCount,
+                        Money(report.AdjustmentRevenue)
+                    )
+                )
+            ),
+            DetailRow(
+                Messages.Email_DailyClosingRowOrders,
+                Enc(
+                    string.Format(
+                        Messages.Email_DailyClosingRowOrdersValue,
+                        report.PendingOrders,
+                        report.ProblemOrders
+                    )
+                )
+            ),
+            DetailRow(Messages.Email_DailyClosingRowExpectedCash, Enc(Money(report.ExpectedCash))),
+            DetailRow(Messages.Email_DailyClosingRowCountedCash, Enc(Money(report.CountedCash))),
+            DetailRow(Messages.Email_DailyClosingRowVariance, Enc(Money(report.Variance))),
+            DetailRowTotal(Messages.Email_DailyClosingRowTotal, report.TotalRevenue),
+        };
+
+        var note = string.IsNullOrWhiteSpace(report.Note)
+            ? string.Empty
+            : Callout(
+                string.Format(Messages.Email_DailyClosingNoteLine, Enc(report.Note)),
+                Neutral,
+                SymbolAlert
+            );
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeDailyClosing, varianceTone, varianceSymbol)}
+            {Heading(Enc(string.Format(Messages.Email_DailyClosingHeading, date)))}
+            {Paragraph(Enc(string.Format(Messages.Email_DailyClosingIntro, date, report.ClosedByName, closedAt)))}
+            {DetailCard(rows)}
+            {note}
+            {MutedParagraph(Messages.Email_DailyClosingFooter)}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_DailyClosingPreheader, date, Money(report.TotalRevenue)),
+            body
+        );
+    }
+
     private static string FormatQuantity(decimal quantity) =>
         quantity.ToString("0.###", CultureInfo.InvariantCulture);
 }

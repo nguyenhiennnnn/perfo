@@ -13,6 +13,11 @@ public interface ICounterShiftService
         CancellationToken cancellationToken
     );
 
+    Task<CounterShiftDto?> GetCurrentAsync(
+        CounterShiftActor actor,
+        CancellationToken cancellationToken
+    );
+
     Task<CounterShiftDto> GetByIdAsync(
         CounterShiftActor actor,
         int id,

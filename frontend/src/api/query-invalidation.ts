@@ -61,6 +61,8 @@ export const invalidations = {
     k.combos.all(),
   ],
 
+  counterShiftChanged: (): KeyList => [k.adminCounterShifts.all(), k.adminAuditLogs.all()],
+
   orderPromotionChanged: (): KeyList => [...orderViews(), k.promotions.mine()],
 
   promotionChanged: (): KeyList => [

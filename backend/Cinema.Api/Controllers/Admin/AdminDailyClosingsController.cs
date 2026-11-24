@@ -13,6 +13,7 @@ namespace Cinema.Api.Controllers.Admin;
 [Authorize(Policy = Policies.AdminOnly)]
 public class AdminDailyClosingsController(
     IDailyClosingReportService reportService,
+    IDailyClosingLedgerReportService ledgerReportService,
     IDailyClosingService closingService
 ) : AppControllerBase
 {
@@ -33,6 +34,13 @@ public class AdminDailyClosingsController(
     [HttpGet("{date}")]
     public async Task<IActionResult> GetByDate(DateOnly date, CancellationToken cancellationToken) =>
         Ok(await closingService.GetByDateAsync(date, cancellationToken));
+
+    [HttpGet("{date}/report")]
+    public async Task<IActionResult> GetReport(
+        DateOnly date,
+        [FromQuery] DailyClosingReportMode mode = DailyClosingReportMode.OriginalDate,
+        CancellationToken cancellationToken = default
+    ) => Ok(await ledgerReportService.GetAsync(date, mode, cancellationToken));
 
     [HttpPost("{date}/close")]
     [SuccessMessage(nameof(Messages.Success_DailyClosingClosed))]

@@ -155,6 +155,8 @@ public static class DependencyInjection
         services.AddScoped<IUnclosedShiftAlertService, UnclosedShiftAlertService>();
         services.AddScoped<IDailyClosingReportService, DailyClosingReportService>();
         services.AddScoped<IDailyClosingService, DailyClosingService>();
+        services.AddScoped<IDailyClosingLedgerReportService, DailyClosingLedgerReportService>();
+        services.AddBackgroundEventHandler<DailyClosed, DailyClosingReportEmailHandler>();
         services.AddScoped<ILedgerAdjustmentWriter, LedgerAdjustmentWriter>();
         services.AddScoped<ILedgerAdjustmentService, LedgerAdjustmentService>();
         services.AddBackgroundEventHandler<OrderRefunded, LedgerAdjustmentEventHandler>();

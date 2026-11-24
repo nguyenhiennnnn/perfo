@@ -2,6 +2,7 @@ using System.Text.Json;
 using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.DailyClosings;
+using Cinema.Application.Events;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Services.Audit;
 using Cinema.Application.Utils;
@@ -18,7 +19,8 @@ public class DailyClosingService(
     IAppDbContext db,
     IAppCache cache,
     IAuditLogger auditLogger,
-    IDailyClosingReportService reportService
+    IDailyClosingReportService reportService,
+    IBusinessEventDispatcher eventDispatcher
 ) : IDailyClosingService
 {
     public async Task<OffsetPageResult<DailyClosingListItemDto>> GetClosingsAsync(
@@ -143,6 +145,10 @@ public class DailyClosingService(
                 )
             );
             await db.SaveChangesAsync(cancellationToken);
+            await eventDispatcher.PublishAsync(
+                new DailyClosed(closing.DailyClosingId, businessDate, closedAt),
+                cancellationToken
+            );
             await transaction.CommitAsync(cancellationToken);
         }
         catch (DbUpdateException)
@@ -192,7 +198,7 @@ public class DailyClosingService(
         return true;
     }
 
-    private static DailyClosingListItemDto ToItem(DailyClosing c, string closedByName) =>
+    internal static DailyClosingListItemDto ToItem(DailyClosing c, string closedByName) =>
         new(
             c.DailyClosingId,
             c.BusinessDate,

@@ -3925,4 +3925,70 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Validation_LedgerAdjustment_NothingToAdjust" xml:space="preserve">
     <value>Cần điều chỉnh ít nhất một chỉ tiêu khác 0.</value>
   </data>
+  <data name="Email_DailyClosingSubject" xml:space="preserve">
+    <value>[{0}] Báo cáo chốt ngày {1}</value>
+  </data>
+  <data name="Email_DailyClosingPreheader" xml:space="preserve">
+    <value>Báo cáo chốt ngày {0}: tổng doanh thu {1}.</value>
+  </data>
+  <data name="Email_BadgeDailyClosing" xml:space="preserve">
+    <value>Đã chốt ngày</value>
+  </data>
+  <data name="Email_DailyClosingHeading" xml:space="preserve">
+    <value>Báo cáo chốt ngày {0}</value>
+  </data>
+  <data name="Email_DailyClosingIntro" xml:space="preserve">
+    <value>Ngày kinh doanh {0} đã được {1} chốt lúc {2}. Số liệu theo ngày ghi sổ, đã gồm các bút toán điều chỉnh ghi sổ trong ngày.</value>
+  </data>
+  <data name="Email_DailyClosingRowTicket" xml:space="preserve">
+    <value>Doanh thu vé</value>
+  </data>
+  <data name="Email_DailyClosingRowCombo" xml:space="preserve">
+    <value>Doanh thu combo</value>
+  </data>
+  <data name="Email_DailyClosingRowGiftCardSold" xml:space="preserve">
+    <value>Thẻ quà tặng bán ra</value>
+  </data>
+  <data name="Email_DailyClosingRowGiftCardUsed" xml:space="preserve">
+    <value>Thẻ quà tặng đã dùng</value>
+  </data>
+  <data name="Email_DailyClosingRowDiscount" xml:space="preserve">
+    <value>Tiền giảm giá</value>
+  </data>
+  <data name="Email_DailyClosingRowRefund" xml:space="preserve">
+    <value>Hoàn tiền vé</value>
+  </data>
+  <data name="Email_DailyClosingRowCancelled" xml:space="preserve">
+    <value>Đơn hủy</value>
+  </data>
+  <data name="Email_DailyClosingRowAdjustments" xml:space="preserve">
+    <value>Bút toán điều chỉnh trong ngày</value>
+  </data>
+  <data name="Email_DailyClosingRowAdjustmentsValue" xml:space="preserve">
+    <value>{0} bút toán, doanh thu {1}</value>
+  </data>
+  <data name="Email_DailyClosingRowOrders" xml:space="preserve">
+    <value>Đơn đang chờ / lỗi</value>
+  </data>
+  <data name="Email_DailyClosingRowOrdersValue" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="Email_DailyClosingRowExpectedCash" xml:space="preserve">
+    <value>Tiền mặt phải có theo sổ sách</value>
+  </data>
+  <data name="Email_DailyClosingRowCountedCash" xml:space="preserve">
+    <value>Tiền mặt thực đếm</value>
+  </data>
+  <data name="Email_DailyClosingRowVariance" xml:space="preserve">
+    <value>Chênh lệch tiền mặt</value>
+  </data>
+  <data name="Email_DailyClosingRowTotal" xml:space="preserve">
+    <value>Tổng doanh thu</value>
+  </data>
+  <data name="Email_DailyClosingNoteLine" xml:space="preserve">
+    <value>Ghi chú khi chốt: {0}</value>
+  </data>
+  <data name="Email_DailyClosingFooter" xml:space="preserve">
+    <value>Xem chi tiết theo ngày gốc và ngày ghi sổ trong trang báo cáo chốt của quản trị. Mỗi ngày chỉ gửi một email chốt.</value>
+  </data>
 </root>

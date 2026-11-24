@@ -11,10 +11,17 @@ import { CounterCheckoutStep } from "../components/counter-checkout-step";
 import { CounterTicketResult } from "../components/counter-ticket-result";
 import { CounterComboSale } from "../components/counter-combo-sale";
 import { CounterCancelTab } from "../components/counter-cancel-tab";
+import { CounterShiftBar } from "../components/counter-shift-bar";
+import { CounterShiftGate } from "../components/counter-shift-gate";
+import type { CounterShift } from "../types/counter-shift";
 
 type CounterTab = "tickets" | "combo" | "cancel";
 
-const AdminCounterPage = () => {
+interface CounterSalesProps {
+  shift: CounterShift;
+}
+
+const CounterSales = ({ shift }: CounterSalesProps) => {
   const [tab, setTab] = useState<CounterTab>("tickets");
   const flow = useCounterFlow();
   const comboSale = useCounterComboSale();
@@ -25,6 +32,7 @@ const AdminCounterPage = () => {
 
   const showTicketReset = tab === "tickets" && flow.step !== "showtime";
   const showComboReset = tab === "combo" && comboSale.isDirty;
+  const shiftCloseLocked = ticketLocked || comboLocked;
 
   return (
     <div className="flex flex-col gap-6">
@@ -47,6 +55,8 @@ const AdminCounterPage = () => {
           ) : undefined
         }
       />
+
+      <CounterShiftBar shift={shift} closeDisabled={shiftCloseLocked} />
 
       <Tabs value={tab} onValueChange={(value) => setTab(value as CounterTab)}>
         <TabsList>
@@ -95,5 +105,9 @@ const AdminCounterPage = () => {
     </div>
   );
 };
+
+const AdminCounterPage = () => (
+  <CounterShiftGate>{(shift) => <CounterSales shift={shift} />}</CounterShiftGate>
+);
 
 export default AdminCounterPage;

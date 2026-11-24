@@ -30,6 +30,10 @@ public class AdminCounterShiftsController(ICounterShiftService counterShiftServi
     public async Task<IActionResult> GetOpen(CancellationToken cancellationToken) =>
         Ok(await counterShiftService.GetOpenShiftsAsync(cancellationToken));
 
+    [HttpGet("current")]
+    public async Task<IActionResult> GetCurrent(CancellationToken cancellationToken) =>
+        Ok(await counterShiftService.GetCurrentAsync(Actor, cancellationToken));
+
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken) =>
         Ok(await counterShiftService.GetByIdAsync(Actor, id, cancellationToken));

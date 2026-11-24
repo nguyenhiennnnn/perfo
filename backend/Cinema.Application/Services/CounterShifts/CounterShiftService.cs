@@ -104,6 +104,20 @@ public class CounterShiftService(IAppDbContext db, IAuditLogger auditLogger, IAp
         return OffsetPageResult<CounterShiftDto>.Create(items, page, pageSize, total);
     }
 
+    public async Task<CounterShiftDto?> GetCurrentAsync(
+        CounterShiftActor actor,
+        CancellationToken cancellationToken
+    )
+    {
+        var row = await db
+            .CounterShifts.AsNoTracking()
+            .Where(s => s.Status == CounterShiftStatus.Open && s.Employee.UserId == actor.UserId)
+            .Select(s => new { Shift = s, EmployeeName = s.Employee.User.FullName })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return row is null ? null : ToDto(row.Shift, row.EmployeeName);
+    }
+
     public async Task<CounterShiftDto> GetByIdAsync(
         CounterShiftActor actor,
         int id,

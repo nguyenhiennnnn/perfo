@@ -38,6 +38,7 @@ public class DailyClosingConfiguration : IEntityTypeConfiguration<DailyClosing>
         builder.Property(x => x.Variance).HasColumnType("decimal(18,2)");
         builder.Property(x => x.Note).HasMaxLength(FieldLengths.DailyClosingNote);
         builder.Property(x => x.ClosedAt).HasColumnType("timestamp without time zone");
+        builder.Property(x => x.ReportEmailedAt).HasColumnType("timestamp without time zone");
         builder.Property(x => x.RowVersion).IsRowVersion();
 
         builder

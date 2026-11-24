@@ -18,6 +18,9 @@ public sealed record OrderRefunded(
     DateTime OccurredAt
 ) : IBusinessEvent;
 
+public sealed record DailyClosed(int DailyClosingId, DateOnly BusinessDate, DateTime OccurredAt)
+    : IBusinessEvent;
+
 public sealed record ShowtimeEnded(int ShowtimeId, DateTime OccurredAt) : IBusinessEvent;
 
 public sealed record ShowtimeRoomChanged(

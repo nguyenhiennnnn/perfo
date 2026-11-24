@@ -405,6 +405,11 @@ const adminReconciliationParsers = {
   gateway: parseAsString,
   fromDate: parseAsString,
   toDate: parseAsString,
+  tab: parseAsStringLiteral(["sessions", "items"] as const).withDefault("sessions"),
+  result: parseAsString,
+  resolution: parseAsString,
+  assignee: parseAsInteger,
+  sessionId: parseAsInteger,
 };
 
 export const useAdminReconciliationParams = (

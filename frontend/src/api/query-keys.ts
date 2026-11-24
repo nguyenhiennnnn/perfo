@@ -219,6 +219,7 @@ export const queryKeys = {
     all: () => ["admin", "reconciliation"] as const,
     sessions: (params: object) => ["admin", "reconciliation", "sessions", params] as const,
     session: (id: number) => ["admin", "reconciliation", "session", id] as const,
+    items: (params: object) => ["admin", "reconciliation", "items", params] as const,
   },
 
   adminReports: {

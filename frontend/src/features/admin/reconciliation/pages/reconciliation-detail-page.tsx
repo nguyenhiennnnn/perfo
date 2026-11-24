@@ -9,6 +9,7 @@ import { QueryState } from "@/components/common/query-state";
 import { ROUTES } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import { formatCurrency, formatDate, formatDateTime, formatNumber } from "@/lib/formatters";
+import { ReconciliationItemsTable } from "../components/reconciliation-items-table";
 import { useReconciliationSession } from "../hooks/use-reconciliation";
 import { RESULT_STATS, SESSION_STATUS, getGatewayLabel } from "../utils/reconciliation-labels";
 
@@ -106,6 +107,15 @@ const AdminReconciliationDetailPage = () => {
                 <Metric value={formatNumber(s.openItemCount)} label="Đang mở" />
                 <Metric value={formatNumber(s.resolvedItemCount)} label="Đã xử lý" />
                 <Metric value={formatNumber(s.ignoredItemCount)} label="Đã bỏ qua" />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Dòng bất thường</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ReconciliationItemsTable fixedSessionId={s.sessionId} />
               </CardContent>
             </Card>
           </div>

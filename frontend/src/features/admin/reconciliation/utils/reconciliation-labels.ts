@@ -53,3 +53,26 @@ export const createStatementImportConfig = (gateway: string): ImportWizardConfig
     { key: "Thời gian", header: "Thời gian" },
   ],
 });
+
+export const ITEM_RESULT_OPTIONS: EnumOption[] = [
+  { value: "MissingInSystem", label: "Có ở cổng, không có ở hệ thống" },
+  { value: "MissingAtGateway", label: "Có ở hệ thống, không có ở cổng" },
+  { value: "AmountMismatch", label: "Lệch số tiền" },
+  { value: "StatusMismatch", label: "Lệch trạng thái" },
+  { value: "PaidAtGatewayOrderUnconfirmed", label: "Cổng đã thu, đơn chưa xác nhận" },
+];
+
+export const getItemResultLabel = (result: string) =>
+  ITEM_RESULT_OPTIONS.find((o) => o.value === result)?.label ?? result;
+
+export const RESOLUTION_OPTIONS: EnumOption[] = [
+  { value: "Open", label: "Đang mở" },
+  { value: "Resolved", label: "Đã xử lý" },
+  { value: "Ignored", label: "Bỏ qua" },
+];
+
+export const RESOLUTION_BADGE: Record<string, { label: string; variant: "warning" | "success" | "outline" }> = {
+  Open: { label: "Đang mở", variant: "warning" },
+  Resolved: { label: "Đã xử lý", variant: "success" },
+  Ignored: { label: "Bỏ qua", variant: "outline" },
+};

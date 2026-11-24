@@ -79,6 +79,8 @@ export const ENDPOINTS = {
     reconciliation: {
       sessions: "/admin/reconciliation/sessions",
       sessionById: (id: number) => `/admin/reconciliation/sessions/${id}`,
+      items: "/admin/reconciliation/items",
+      itemById: (id: number) => `/admin/reconciliation/items/${id}`,
       stripe: "/admin/reconciliation/stripe",
       import: "/admin/reconciliation/import",
     },

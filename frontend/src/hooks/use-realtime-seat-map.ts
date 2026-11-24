@@ -3,6 +3,7 @@ import { useShowtimeHub } from "./use-showtime-hub";
 import { ShowtimeSeatStatus } from "@/types/enum";
 import type {
   HoldExpiredPayload,
+  SeatBlockedPayload,
   SeatBookedPayload,
   SeatHeldPayload,
   SeatReleasedPayload,
@@ -14,6 +15,7 @@ interface UseRealtimeSeatMapParams {
   initialSeats: ShowtimeSeatItemDto[] | undefined;
   ownOrderId?: number | null;
   onHoldExpired?: (payload: HoldExpiredPayload) => void;
+  onSeatsBlocked?: (seatIds: number[]) => void;
 }
 
 export function useRealtimeSeatMap({
@@ -21,6 +23,7 @@ export function useRealtimeSeatMap({
   initialSeats,
   ownOrderId,
   onHoldExpired,
+  onSeatsBlocked,
 }: UseRealtimeSeatMapParams) {
   const [statusOverrides, setStatusOverrides] = useState<
     Map<number, ShowtimeSeatStatus>
@@ -48,6 +51,10 @@ export function useRealtimeSeatMap({
       applyStatus(payload.seatIds, ShowtimeSeatStatus.Booked),
     onSeatReleased: (payload: SeatReleasedPayload) =>
       applyStatus(payload.seatIds, ShowtimeSeatStatus.Available),
+    onSeatBlocked: (payload: SeatBlockedPayload) => {
+      applyStatus(payload.seatIds, ShowtimeSeatStatus.Blocked);
+      onSeatsBlocked?.(payload.seatIds);
+    },
     onHoldExpired: (payload: HoldExpiredPayload) => {
       applyStatus(payload.seatIds, ShowtimeSeatStatus.Available);
       if (ownOrderId && payload.bookingId === ownOrderId) {

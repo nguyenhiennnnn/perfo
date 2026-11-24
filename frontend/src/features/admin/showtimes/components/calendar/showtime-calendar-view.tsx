@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { endOfWeek, startOfWeek } from "date-fns";
-import { CalendarX, TriangleAlert } from "lucide-react";
+import { CalendarX, TriangleAlert, Wrench } from "lucide-react";
 
 import { DateFilterPicker } from "@/components/common/filter/date-filter-picker";
 import { EnumSelectFilter } from "@/components/common/filter/enum-select-filter";
@@ -20,10 +20,15 @@ import { Role } from "@/types/enum";
 import { useAdminRooms } from "@/features/admin/rooms/hooks/use-admin-rooms";
 
 import { useAdminShowtimesCalendar } from "@/features/admin/showtimes/hooks/use-admin-showtimes";
-import type { ShowtimeCalendarItemDto } from "@/features/admin/showtimes/types";
+import type {
+  ShowtimeCalendarDayDto,
+  ShowtimeCalendarItemDto,
+} from "@/features/admin/showtimes/types";
 import {
   buildDayLayout,
+  listClosureDays,
   parseCalendarDay,
+  placeClosuresForDay,
 } from "@/features/admin/showtimes/utils/calendar-layout";
 import { ShowtimeCalendarDay } from "./showtime-calendar-day";
 import { ShowtimeCalendarLegend } from "./showtime-calendar-legend";
@@ -68,10 +73,33 @@ export const ShowtimeCalendarView = ({
   const calendar = useAdminShowtimesCalendar(queryParams);
   const hasActiveFilters = params.roomId != null || params.status != null;
 
-  const days = useMemo(() => calendar.data?.days ?? [], [calendar.data]);
+  const closures = useMemo(() => {
+    const all = calendar.data?.closures ?? [];
+    return params.roomId != null
+      ? all.filter((c) => c.roomId === params.roomId)
+      : all;
+  }, [calendar.data, params.roomId]);
+
+  const days = useMemo(() => {
+    const byDate = new Map<string, ShowtimeCalendarDayDto>(
+      (calendar.data?.days ?? []).map((d) => [d.date, d]),
+    );
+    for (const date of listClosureDays(closures, params.from ?? "", params.to ?? "")) {
+      if (!byDate.has(date)) byDate.set(date, { date, showtimes: [] });
+    }
+    const toTime = (value: string) => parseCalendarDay(value)?.getTime() ?? 0;
+    return [...byDate.values()].sort((a, b) => toTime(a.date) - toTime(b.date));
+  }, [calendar.data, closures, params.from, params.to]);
+
   const layouts = useMemo(
-    () => new Map(days.map((d) => [d.date, buildDayLayout(d.showtimes)])),
-    [days],
+    () =>
+      new Map(
+        days.map((d) => [
+          d.date,
+          buildDayLayout(d.showtimes, placeClosuresForDay(closures, d.date)),
+        ]),
+      ),
+    [days, closures],
   );
   const currentDay = days.find((d) => d.date === activeDay) ?? days[0];
 
@@ -155,6 +183,7 @@ export const ShowtimeCalendarView = ({
             {days.map((day) => {
               const parsed = parseCalendarDay(day.date);
               const conflicts = layouts.get(day.date)?.conflictCount ?? 0;
+              const closureCount = layouts.get(day.date)?.closureCount ?? 0;
               return (
                 <TabsTrigger
                   key={day.date}
@@ -169,6 +198,13 @@ export const ShowtimeCalendarView = ({
                   </span>
                   <span className="flex items-center gap-1 text-xs font-normal">
                     {day.showtimes.length} suất
+                    {closureCount > 0 && (
+                      <Wrench
+                        className="size-3"
+                        role="img"
+                        aria-label={`${closureCount} đợt bảo trì`}
+                      />
+                    )}
                     {conflicts > 0 && (
                       <TriangleAlert
                         className="size-3"
@@ -186,7 +222,10 @@ export const ShowtimeCalendarView = ({
             <TabsContent key={day.date} value={day.date}>
               <ShowtimeCalendarDay
                 day={day}
-                layout={layouts.get(day.date) ?? buildDayLayout(day.showtimes)}
+                layout={
+                  layouts.get(day.date) ??
+                  buildDayLayout(day.showtimes, placeClosuresForDay(closures, day.date))
+                }
                 onSelectShowtime={onSelectShowtime}
               />
             </TabsContent>

@@ -11,6 +11,7 @@ export const STATUS_LEGEND_ITEMS: SeatLegendItem[] = [
   { label: "Đang chọn", state: "selected", type: "standard", group: "status" },
   { label: "Đang giữ", state: "held", type: "standard", group: "status" },
   { label: "Đã bán", state: "booked", type: "standard", group: "status" },
+  { label: "Ghế khóa", state: "blocked", type: "standard", group: "status" },
 ];
 
 export const EDITOR_LEGEND_ITEMS: SeatLegendItem[] = [

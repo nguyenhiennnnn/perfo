@@ -7,6 +7,7 @@ export const SignalREvents = {
   SeatHeld: "seat.held",
   SeatBooked: "seat.booked",
   SeatReleased: "seat.released",
+  SeatBlocked: "seat.blocked",
   HoldExpired: "hold.expired",
   ImportExportJobProgress: "import-export-job.progress",
   ImportExportJobCompleted: "import-export-job.completed",
@@ -29,6 +30,11 @@ export interface SeatBookedPayload {
 }
 
 export interface SeatReleasedPayload {
+  showtimeId: number;
+  seatIds: number[];
+}
+
+export interface SeatBlockedPayload {
   showtimeId: number;
   seatIds: number[];
 }

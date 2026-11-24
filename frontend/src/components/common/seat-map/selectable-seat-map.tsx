@@ -38,6 +38,7 @@ const STATE_TEXT: Record<SeatCellState, string> = {
   selected: "đang chọn",
   held: "đang giữ",
   booked: "đã bán",
+  blocked: "đang khóa",
   inactive: "đã tắt",
   aisle: "lối đi",
 };

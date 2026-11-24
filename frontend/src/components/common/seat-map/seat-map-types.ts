@@ -5,6 +5,7 @@ export type SeatCellState =
   | "selected"
   | "held"
   | "booked"
+  | "blocked"
   | "inactive"
   | "aisle";
 

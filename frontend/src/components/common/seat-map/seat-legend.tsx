@@ -1,3 +1,4 @@
+import { Ban } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SeatKindIcon } from "./seat-kind-icon";
 import type { SeatCellState, SeatVisualKind } from "./seat-map-types";
@@ -31,7 +32,9 @@ export const SeatLegend = ({ items, className }: { items: SeatLegendItem[]; clas
             aria-hidden
           >
             <span className="seat__head" />
-            <span className="seat__label">{item.state === "inactive" ? "1" : null}</span>
+            <span className="seat__label">
+              {item.state === "inactive" ? "1" : item.state === "blocked" ? <Ban className="size-3 stroke-[2.5]" /> : null}
+            </span>
           </span>
           <span className="flex flex-col leading-tight">
             <span className="flex items-center gap-1 whitespace-nowrap text-sm text-foreground/90">

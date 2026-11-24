@@ -1,4 +1,4 @@
-import { TriangleAlert } from "lucide-react";
+import { TriangleAlert, Wrench } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ShowtimeStatus } from "@/types/enum";
@@ -50,6 +50,12 @@ export const ShowtimeCalendarLegend = ({
           <TriangleAlert className="size-3" aria-hidden />
         </span>
         Trùng giờ
+      </li>
+      <li className="flex items-center gap-1.5">
+        <span className="closure-hatch flex h-5 w-8 items-center justify-center">
+          <Wrench className="size-3" aria-hidden />
+        </span>
+        Phòng bảo trì
       </li>
       <li className="flex items-center gap-1.5">
         <span className="h-5 w-8 border border-dashed border-border bg-foreground/5" />

@@ -6,6 +6,7 @@ export function toCellState(status: ShowtimeSeatStatus, isSelected: boolean): Se
   if (isSelected) return "selected";
   if (status === ShowtimeSeatStatus.Booked) return "booked";
   if (status === ShowtimeSeatStatus.Held) return "held";
+  if (status === ShowtimeSeatStatus.Blocked) return "blocked";
   return "available";
 }
 
@@ -104,4 +105,17 @@ export function toggleSeatSelection(
   const remove = next.has(showtimeSeatId);
   group.forEach((id) => (remove ? next.delete(id) : next.add(id)));
   return next;
+}
+
+export function removeSeatsFromSelection(
+  selected: Set<number>,
+  seats: Pick<ShowtimeSeatItemDto, "showtimeSeatId" | "coupleId">[],
+  seatIds: number[],
+): { next: Set<number>; removedCount: number } {
+  const next = new Set(selected);
+  for (const id of seatIds) {
+    if (!next.has(id)) continue;
+    getSeatGroupIds(seats, id).forEach((groupId) => next.delete(groupId));
+  }
+  return { next, removedCount: selected.size - next.size };
 }

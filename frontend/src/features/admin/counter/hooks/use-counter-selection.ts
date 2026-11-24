@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
 import { getBusinessToday } from "@/lib/business-time";
 import { ShowtimeSeatStatus } from "@/types/enum";
-import { toggleSeatSelection } from "@/components/common/seat-map/seat-map-utils";
+import {
+  removeSeatsFromSelection,
+  toggleSeatSelection,
+} from "@/components/common/seat-map/seat-map-utils";
 import { useShowtimeSeats } from "@/features/client/showtimes/hooks/use-showtimes";
 import type { CounterHoldRequest } from "../types";
 
@@ -51,6 +54,16 @@ export function useCounterSelection() {
     );
   };
 
+  const removeSeats = (seatIds: number[]) => {
+    const { next, removedCount } = removeSeatsFromSelection(
+      selectedSeatIds,
+      showtimeSeats.data?.seats ?? [],
+      seatIds,
+    );
+    if (removedCount > 0) setSelectedSeatIds(next);
+    return removedCount;
+  };
+
   const setComboQuantity = (comboId: number, quantity: number) => {
     setComboQuantities((prev) => ({ ...prev, [comboId]: quantity }));
   };
@@ -93,6 +106,7 @@ export function useCounterSelection() {
     selectedSeatIds,
     selectedSeatsInfo,
     toggleSeat,
+    removeSeats,
     comboQuantities,
     setComboQuantity,
     combosPayload,

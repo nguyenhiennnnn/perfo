@@ -24,6 +24,7 @@ export const ShowtimeSeatStatus = {
   Available: "Available",
   Held: "Held",
   Booked: "Booked",
+  Blocked: "Blocked",
 } as const;
 export type ShowtimeSeatStatus =
   (typeof ShowtimeSeatStatus)[keyof typeof ShowtimeSeatStatus];

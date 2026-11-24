@@ -1,3 +1,4 @@
+import { Ban } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SeatKindIcon } from "./seat-kind-icon";
 import type { SeatCellState, SeatMark, SeatVisualKind } from "./seat-map-types";
@@ -70,7 +71,13 @@ export const SeatButton = ({
           <SeatKindIcon kind={kind} className="stroke-[3]" />
         </span>
       )}
-      <span className="seat__label">{state === "booked" ? "" : label}</span>
+      {state === "blocked" ? (
+        <span className="seat__label" aria-hidden>
+          <Ban className="size-[1.1em] stroke-[2.5]" />
+        </span>
+      ) : (
+        <span className="seat__label">{state === "booked" ? "" : label}</span>
+      )}
     </button>
   );
 };

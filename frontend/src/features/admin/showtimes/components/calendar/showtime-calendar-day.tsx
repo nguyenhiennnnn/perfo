@@ -1,4 +1,4 @@
-import { CalendarX, TriangleAlert } from "lucide-react";
+import { CalendarX, TriangleAlert, Wrench } from "lucide-react";
 
 import { EmptyState } from "@/components/common/empty-state";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,7 @@ import {
   type DayLayout,
 } from "@/features/admin/showtimes/utils/calendar-layout";
 import { ShowtimeCalendarAgenda } from "./showtime-calendar-agenda";
+import { ShowtimeCalendarClosure } from "./showtime-calendar-closure";
 import { LANE_HEIGHT, ShowtimeCalendarItem } from "./showtime-calendar-item";
 
 import { NOW_TICK_INTERVAL_MS } from "@/config/default-constants";
@@ -75,10 +76,16 @@ export const ShowtimeCalendarDay = ({
         <span>
           <span className="t-code text-foreground">{layout.activeShowtimes}</span>{" "}
           suất chiếu trong{" "}
-          <span className="t-code text-foreground">{layout.rooms.length}</span>{" "}
+          <span className="t-code text-foreground">{layout.showtimeRoomCount}</span>{" "}
           phòng, lấp đầy{" "}
           <span className="t-code text-foreground">{fillPercent}%</span> ghế
         </span>
+        {layout.closureCount > 0 && (
+          <Badge variant="warning">
+            <Wrench data-icon="inline-start" />
+            {layout.closureCount} đợt bảo trì
+          </Badge>
+        )}
         {layout.cancelledShowtimes > 0 && (
           <Badge variant="destructive">
             {layout.cancelledShowtimes} suất đã hủy
@@ -136,7 +143,7 @@ export const ShowtimeCalendarDay = ({
                 <div
                   key={room.roomId}
                   role="group"
-                  aria-label={`${room.roomName}, ${room.items.length} suất chiếu`}
+                  aria-label={`${room.roomName}, ${room.items.length} suất chiếu${room.closures.length > 0 ? `, ${room.closures.length} đợt bảo trì` : ""}`}
                   className="flex border-b border-border last:border-b-0"
                 >
                   <div
@@ -155,6 +162,12 @@ export const ShowtimeCalendarDay = ({
                       <Badge variant="warning" className="w-fit">
                         <TriangleAlert data-icon="inline-start" />
                         Trùng giờ
+                      </Badge>
+                    )}
+                    {room.closures.length > 0 && (
+                      <Badge variant="warning" className="w-fit">
+                        <Wrench data-icon="inline-start" />
+                        Bảo trì
                       </Badge>
                     )}
                   </div>
@@ -193,6 +206,17 @@ export const ShowtimeCalendarDay = ({
                         </span>
                       );
                     })}
+
+                    {room.closures.map((placed) => (
+                      <ShowtimeCalendarClosure
+                        key={`${placed.closure.roomClosureId}-${placed.startMin}`}
+                        placed={placed}
+                        windowStart={windowStart}
+                        windowSpan={windowSpan}
+                        rowHeight={rowHeight}
+                        interactive={Boolean(onSelectShowtime)}
+                      />
+                    ))}
 
                     {room.items.map((placed) => (
                       <ShowtimeCalendarItem

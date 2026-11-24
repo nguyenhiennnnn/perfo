@@ -126,10 +126,20 @@ export interface ShowtimeCalendarDayDto {
   showtimes: ShowtimeCalendarItemDto[];
 }
 
+export interface ShowtimeCalendarClosureDto {
+  roomClosureId: number;
+  roomId: number;
+  roomName: string;
+  startTime: string;
+  endTime: string;
+  reason: string;
+}
+
 export interface ShowtimeCalendarResponseDto {
   from: string;
   to: string;
   days: ShowtimeCalendarDayDto[];
+  closures?: ShowtimeCalendarClosureDto[];
 }
 
 export interface AutoScheduleMovieRequest {

@@ -1,6 +1,8 @@
-import { TriangleAlert } from "lucide-react";
+import { TriangleAlert, Wrench } from "lucide-react";
+import { Link } from "react-router";
 
 import { Badge } from "@/components/ui/badge";
+import { ROUTES } from "@/config/routes";
 import { formatShowtimeTime } from "@/lib/cinema-format";
 import { cn } from "@/lib/utils";
 import type { ShowtimeCalendarItemDto } from "@/features/admin/showtimes/types";
@@ -10,6 +12,7 @@ import {
   getFillPercent,
   type DayLayout,
   type FreeGap,
+  type PlacedClosure,
   type PlacedShowtime,
   type RoomLayout,
 } from "@/features/admin/showtimes/utils/calendar-layout";
@@ -21,10 +24,12 @@ import {
   SeatCount,
   SeatFillBar,
 } from "./showtime-calendar-shared";
+import { CLOSURE_ROW_CLASS, describeClosure } from "./showtime-calendar-closure";
 
 type AgendaEntry =
   | { kind: "show"; startMin: number; placed: PlacedShowtime }
-  | { kind: "gap"; startMin: number; gap: FreeGap };
+  | { kind: "gap"; startMin: number; gap: FreeGap }
+  | { kind: "closure"; startMin: number; placed: PlacedClosure };
 
 const buildEntries = (room: RoomLayout): AgendaEntry[] =>
   [
@@ -34,7 +39,50 @@ const buildEntries = (room: RoomLayout): AgendaEntry[] =>
     ...room.gaps.map(
       (gap): AgendaEntry => ({ kind: "gap", startMin: gap.startMin, gap }),
     ),
+    ...room.closures.map(
+      (placed): AgendaEntry => ({ kind: "closure", startMin: placed.startMin, placed }),
+    ),
   ].sort((a, b) => a.startMin - b.startMin);
+
+interface AgendaClosureProps {
+  placed: PlacedClosure;
+  interactive: boolean;
+}
+
+const AgendaClosure = ({ placed, interactive }: AgendaClosureProps) => {
+  const { closure, startMin, endMin, continuesBefore, continuesAfter } = placed;
+  const content = (
+    <>
+      <Wrench className="size-4 shrink-0" aria-hidden />
+      <span className="flex min-w-0 flex-col gap-0.5">
+        <span className="font-medium">Bảo trì · {closure.reason}</span>
+        <span className="t-code">
+          {formatMinutes(startMin)} ~ {formatMinutes(endMin)}
+          {continuesBefore && " · kéo dài từ hôm trước"}
+          {continuesAfter && " · kéo dài sang hôm sau"}
+        </span>
+      </span>
+    </>
+  );
+
+  return interactive ? (
+    <Link
+      to={ROUTES.admin.roomClosureDetail(closure.roomClosureId)}
+      aria-label={describeClosure(placed)}
+      className={cn(CLOSURE_ROW_CLASS, "cut-sm hover:bg-warning/25")}
+    >
+      {content}
+    </Link>
+  ) : (
+    <div
+      role="group"
+      aria-label={describeClosure(placed)}
+      className={cn(CLOSURE_ROW_CLASS, "cut-sm")}
+    >
+      {content}
+    </div>
+  );
+};
 
 interface AgendaShowtimeProps {
   placed: PlacedShowtime;
@@ -129,7 +177,7 @@ export const ShowtimeCalendarAgenda = ({
     {layout.rooms.map((room) => (
       <section
         key={room.roomId}
-        aria-label={`${room.roomName}, ${room.items.length} suất chiếu`}
+        aria-label={`${room.roomName}, ${room.items.length} suất chiếu${room.closures.length > 0 ? `, ${room.closures.length} đợt bảo trì` : ""}`}
         className="flex flex-col gap-2"
       >
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
@@ -153,6 +201,13 @@ export const ShowtimeCalendarAgenda = ({
                 <AgendaShowtime
                   placed={entry.placed}
                   onSelect={onSelectShowtime}
+                />
+              </li>
+            ) : entry.kind === "closure" ? (
+              <li key={`closure-${entry.placed.closure.roomClosureId}-${entry.startMin}`}>
+                <AgendaClosure
+                  placed={entry.placed}
+                  interactive={Boolean(onSelectShowtime)}
                 />
               </li>
             ) : (

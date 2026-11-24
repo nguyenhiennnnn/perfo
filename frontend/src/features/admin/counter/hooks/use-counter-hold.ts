@@ -12,6 +12,7 @@ interface UseCounterHoldFlowParams {
   showtimeId: number | null;
   initialSeats: ShowtimeSeatItemDto[] | undefined;
   onHoldExpired: () => void;
+  onSeatsBlocked: (seatIds: number[]) => void;
   leave: CounterLeaveCancel;
 }
 
@@ -19,6 +20,7 @@ export function useCounterHoldFlow({
   showtimeId,
   initialSeats,
   onHoldExpired,
+  onSeatsBlocked,
   leave,
 }: UseCounterHoldFlowParams) {
   const [order, setOrder] = useState<CounterOrderResponse | null>(null);
@@ -34,6 +36,7 @@ export function useCounterHoldFlow({
       toast.add({ title: "Thời gian giữ ghế đã hết hạn.", type: "warning" });
       onHoldExpired();
     },
+    onSeatsBlocked,
   });
 
   const cancelHold = async (

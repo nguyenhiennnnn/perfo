@@ -6,6 +6,7 @@ import {
   type SeatHeldPayload,
   type SeatBookedPayload,
   type SeatReleasedPayload,
+  type SeatBlockedPayload,
   type HoldExpiredPayload,
 } from "@/lib/signalr";
 import { ENV } from "@/config/env";
@@ -14,6 +15,7 @@ export interface ShowtimeHubCallbacks {
   onSeatHeld?: (payload: SeatHeldPayload) => void;
   onSeatBooked?: (payload: SeatBookedPayload) => void;
   onSeatReleased?: (payload: SeatReleasedPayload) => void;
+  onSeatBlocked?: (payload: SeatBlockedPayload) => void;
   onHoldExpired?: (payload: HoldExpiredPayload) => void;
 }
 
@@ -25,6 +27,7 @@ export function useShowtimeHub(
     onSeatHeld,
     onSeatBooked,
     onSeatReleased,
+    onSeatBlocked,
     onHoldExpired,
   } = params;
   const connectionRef = useRef<HubConnection | null>(null);
@@ -32,14 +35,16 @@ export function useShowtimeHub(
   const onSeatHeldRef = useRef(onSeatHeld);
   const onSeatBookedRef = useRef(onSeatBooked);
   const onSeatReleasedRef = useRef(onSeatReleased);
+  const onSeatBlockedRef = useRef(onSeatBlocked);
   const onHoldExpiredRef = useRef(onHoldExpired);
 
   useEffect(() => {
     onSeatHeldRef.current = onSeatHeld;
     onSeatBookedRef.current = onSeatBooked;
     onSeatReleasedRef.current = onSeatReleased;
+    onSeatBlockedRef.current = onSeatBlocked;
     onHoldExpiredRef.current = onHoldExpired;
-  }, [onSeatHeld, onSeatBooked, onSeatReleased, onHoldExpired]);
+  }, [onSeatHeld, onSeatBooked, onSeatReleased, onSeatBlocked, onHoldExpired]);
 
   useEffect(() => {
     if (!showtimeId) return;
@@ -54,6 +59,9 @@ export function useShowtimeHub(
     );
     connection.on(SignalREvents.SeatReleased, (payload: SeatReleasedPayload) =>
       onSeatReleasedRef.current?.(payload),
+    );
+    connection.on(SignalREvents.SeatBlocked, (payload: SeatBlockedPayload) =>
+      onSeatBlockedRef.current?.(payload),
     );
     connection.on(SignalREvents.HoldExpired, (payload: HoldExpiredPayload) =>
       onHoldExpiredRef.current?.(payload),

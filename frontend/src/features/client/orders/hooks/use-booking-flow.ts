@@ -16,6 +16,7 @@ import {
 } from "@/types/enum";
 import {
   findLoneSeats,
+  removeSeatsFromSelection,
   toggleSeatSelection,
 } from "@/components/common/seat-map/seat-map-utils";
 import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings";
@@ -192,6 +193,20 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
         type: "warning",
       });
       if (!isResumeMode) resetToSelection();
+    },
+    onSeatsBlocked: (seatIds) => {
+      if (step !== "select") return;
+      const { next, removedCount } = removeSeatsFromSelection(
+        selectedSeatIds,
+        showtimeSeats.data?.seats ?? [],
+        seatIds,
+      );
+      if (removedCount === 0) return;
+      setSelectedSeatIds(next);
+      toast.add({
+        title: "Một số ghế bạn đã chọn vừa bị rạp khóa, vui lòng chọn ghế khác.",
+        type: "warning",
+      });
     },
   });
 

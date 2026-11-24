@@ -1,4 +1,5 @@
 import { useEffect, useReducer } from "react";
+import { toast } from "@/components/ui/toast";
 import { CancelReason } from "@/types/enum";
 import {
   counterFlowReducer,
@@ -38,6 +39,14 @@ export function useCounterFlow() {
     initialSeats: selection.showtimeSeats.data?.seats,
     onHoldExpired: () => {
       if (step !== "done") resetLocalFlow();
+    },
+    onSeatsBlocked: (seatIds) => {
+      if (step !== "seats") return;
+      if (selection.removeSeats(seatIds) === 0) return;
+      toast.add({
+        title: "Một số ghế đã chọn vừa bị khóa, vui lòng chọn ghế khác.",
+        type: "warning",
+      });
     },
     leave,
   });

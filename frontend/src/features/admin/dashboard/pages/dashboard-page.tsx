@@ -6,6 +6,8 @@ import { RevenueTrendChart } from "../components/revenue-trend-chart";
 import { TopMoviesCard } from "../components/top-movies-card";
 import { TodayShowtimesCard } from "../components/today-showtimes-card";
 import { DashboardDaysFilter } from "../components/dashboard-days-filter";
+import { OccupancySection } from "../components/occupancy-section";
+import { SeatHeatmapSection } from "../components/seat-heatmap-section";
 
 const AdminDashboardPage = () => {
   const [days, setDays] = useState(14);
@@ -27,6 +29,10 @@ const AdminDashboardPage = () => {
         <RevenueTrendChart query={insights} />
         <TopMoviesCard query={insights} />
       </div>
+
+      <OccupancySection />
+
+      <SeatHeatmapSection />
 
       <TodayShowtimesCard query={insights} />
     </div>

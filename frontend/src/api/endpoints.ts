@@ -71,6 +71,8 @@ export const ENDPOINTS = {
     dashboard: {
       summary: "/admin/dashboard/summary",
       insights: "/admin/dashboard/insights",
+      occupancy: "/admin/dashboard/occupancy",
+      seatHeatmap: "/admin/dashboard/seat-heatmap",
     },
     reports: {
       revenue: "/admin/reports/revenue",

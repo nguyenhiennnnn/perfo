@@ -1,11 +1,12 @@
 import {
   debounce,
+  parseAsArrayOf,
   parseAsInteger,
   parseAsString,
   parseAsStringLiteral,
   useQueryStates,
 } from "nuqs";
-import type { MovieStatus } from "@/types/enum";
+import type { MovieStatus, OccupancyGroupBy, ShowtimeKind } from "@/types/enum";
 import {
   DEFAULT_MOVIES_PAGE_LIMIT,
   DEFAULT_PAGE,
@@ -329,3 +330,47 @@ const scheduleParsers = {
 export const useScheduleParams = (
   options?: Parameters<typeof useQueryStates<typeof scheduleParsers>>[1],
 ) => useQueryStates(scheduleParsers, options);
+
+const occupancyGroups = [
+  "Room",
+  "TimeSlot",
+  "Movie",
+  "Weekday",
+] as const satisfies OccupancyGroupBy[];
+
+const occupancyKinds = [
+  "Regular",
+  "Private",
+  "Event",
+] as const satisfies ShowtimeKind[];
+
+export const DEFAULT_OCCUPANCY_GROUP: OccupancyGroupBy = "Room";
+export const DEFAULT_OCCUPANCY_KINDS: ShowtimeKind[] = ["Regular"];
+
+const adminDashboardOccupancyParsers = {
+  from: parseAsString,
+  to: parseAsString,
+  groupBy: parseAsStringLiteral(occupancyGroups).withDefault(DEFAULT_OCCUPANCY_GROUP),
+  kind: parseAsArrayOf(parseAsStringLiteral(occupancyKinds)).withDefault(DEFAULT_OCCUPANCY_KINDS),
+};
+
+export const useAdminDashboardOccupancyParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminDashboardOccupancyParsers>>[1],
+) => useQueryStates(adminDashboardOccupancyParsers, options);
+
+const seatHeatmapModes = ["sold", "abandoned"] as const;
+
+export type SeatHeatmapMode = (typeof seatHeatmapModes)[number];
+
+const adminDashboardSeatHeatmapParsers = {
+  heatRoom: parseAsInteger,
+  heatFrom: parseAsString,
+  heatTo: parseAsString,
+  heatMovie: parseAsInteger,
+  heatGenre: parseAsInteger,
+  heatMode: parseAsStringLiteral(seatHeatmapModes).withDefault("sold"),
+};
+
+export const useAdminDashboardSeatHeatmapParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminDashboardSeatHeatmapParsers>>[1],
+) => useQueryStates(adminDashboardSeatHeatmapParsers, options);

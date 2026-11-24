@@ -212,3 +212,19 @@ export const ImportExportModule = {
 } as const;
 export type ImportExportModule =
   (typeof ImportExportModule)[keyof typeof ImportExportModule];
+
+export const OccupancyGroupBy = {
+  Room: "Room",
+  TimeSlot: "TimeSlot",
+  Movie: "Movie",
+  Weekday: "Weekday",
+} as const;
+export type OccupancyGroupBy =
+  (typeof OccupancyGroupBy)[keyof typeof OccupancyGroupBy];
+
+export const ShowtimeKind = {
+  Regular: "Regular",
+  Private: "Private",
+  Event: "Event",
+} as const;
+export type ShowtimeKind = (typeof ShowtimeKind)[keyof typeof ShowtimeKind];

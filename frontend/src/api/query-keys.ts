@@ -199,6 +199,10 @@ export const queryKeys = {
     summary: () => ["admin", "dashboard", "summary"] as const,
     insights: (params: object) =>
       ["admin", "dashboard", "insights", params] as const,
+    occupancy: (params: object) =>
+      ["admin", "dashboard", "occupancy", params] as const,
+    seatHeatmap: (params: object) =>
+      ["admin", "dashboard", "seat-heatmap", params] as const,
   },
 
   adminReports: {

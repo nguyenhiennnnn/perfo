@@ -1,6 +1,6 @@
 # Bộ prompt triển khai nâng cấp business Perfo Cinema
 
-Nguồn nghiệp vụ: `NANG_CAP_BUSINESS_PERFO.md` (23 hạng mục). Mỗi hạng mục được chia thành các task vừa, mỗi task có một prompt độc lập để giao cho AI code.
+Nguồn nghiệp vụ: `NANG_CAP_BUSINESS_PERFO.md` (23 hạng mục). Mỗi hạng mục được chia thành các task nhỏ, mỗi task có một prompt độc lập để giao cho AI code (hạng mục 7 trở đi chia nhỏ hơn để vừa một phiên claude.ai).
 
 ## Cách dùng
 
@@ -9,6 +9,8 @@ Nguồn nghiệp vụ: `NANG_CAP_BUSINESS_PERFO.md` (23 hạng mục). Mỗi h�
 3. Làm tuần tự theo thứ tự trong tài liệu. Task chỉ phụ thuộc task có số nhỏ hơn (cột "Phụ thuộc" ghi rõ).
 4. Sau mỗi task, tự kiểm tra thủ công theo dòng "Tiêu chí hoàn thành" của task đó.
 5. Từ T1.1 đến T1.8 hệ thống có thể tạm chưa chạy trọn vẹn vì đang thay mô hình đơn hàng; chạy kiểm tra thủ công sau T1.10.
+6. Từ hạng mục 7, mỗi task cũ đã được tách thành các task con nhỏ hơn (T7.1a, T7.1b, ...) để vừa một phiên làm việc. Làm tuần tự theo chữ cái a → b → c. Khi task cũ hơn nhắc "T21.1", "T19.3"... thì hiểu là cả nhóm task con (hoặc task con có chữ cái được ghi ở task mới). Mỗi task ghi sẵn số dòng cần đọc ở dòng "Đọc dòng ..."; bản đồ dòng nằm ở mục A2.
+7. T6.1 đã làm xong, không giao lại.
 
 ---
 
@@ -17,7 +19,7 @@ Nguồn nghiệp vụ: `NANG_CAP_BUSINESS_PERFO.md` (23 hạng mục). Mỗi h�
 ```text
 QUY TẮC CHUNG CHO MỌI TASK
 
-- Nguồn nghiệp vụ là NANG_CAP_BUSINESS_PERFO.md. Đọc phần 3 (quy ước chung) và hạng mục của task trước khi code. Nếu prompt lệch tài liệu thì theo tài liệu và nêu chỗ lệch ở cuối câu trả lời.
+- Nguồn nghiệp vụ là docs/NANG_CAP_BUSINESS_PERFO.md. Chỉ đọc đúng các dòng mà task ghi ở "Đọc" (bản đồ dòng ở mục A2 của prompt này; không cần mở lại). Nếu prompt lệch tài liệu thì theo tài liệu và nêu chỗ lệch ở cuối câu trả lời.
 - Chỉ làm đúng phạm vi task. Không làm trước phần của task sau; chỉ chừa điểm mở rộng tối thiểu khi prompt nêu rõ.
 - Không build, không chạy lệnh, không viết comment trong code, xóa code thừa.
 - Không làm và không sửa phần testing: không viết test mới (backend lẫn frontend, gồm unit, integration, e2e, loadtest), không sửa, không xóa project hay file test hiện có (thư mục tests, e2e, loadtest và các file test khác), kể cả khi test cũ không còn khớp với code mới. Chỉ nêu ở cuối câu trả lời những test có thể bị ảnh hưởng.
@@ -32,7 +34,48 @@ QUY TẮC CHUNG CHO MỌI TASK
 - Frontend: React 19 + TypeScript, theo skill cinema-design-system (semantic token, cn, component ở @/components/ui, PageHeader, data-table, useDialogStore / useAlertDialogStore / useSheetStore, TanStack Query, formatter tiền và ngày ở @/lib/formatters). Giao diện tiếng Việt, responsive (màn hình khách và quầy dùng được trên điện thoại), có skeleton và empty state, không hard-code màu.
 - Thay đổi schema: cập nhật entity và cấu hình EF; không chạy lệnh. Không chuyển đổi dữ liệu cũ.
 - Đầu ra: chỉ xuất các file mới hoặc thay đổi .zip theo cấu trúc thư mục project. Cuối câu trả lời liệt kê ngắn việc thủ công (package, lệnh migration, appsettings, seed), có thể điều chỉnh project gốc nếu thấy vướng khi thực hiện, không cần tạo các file migration hay các file có thể tự generate.
+
+TIẾT KIỆM TOKEN
+- CLAUDE.md đã có quy ước; không đọc lại docs/PROMPT_TRIEN_KHAI_NANG_CAP_PERFO.md. Chỉ đọc đúng dòng của docs/NANG_CAP_BUSINESS_PERFO.md mà task ghi ("Đọc").
+- Grep/Glob rồi đọc đúng file cần. Không đọc: Migrations, bin, obj, node_modules, tests, e2e, loadtest, các Messages.resx ngoài việc thêm key ở cuối file (dùng grep -n để xác nhận key chưa có).
+- Sửa file bằng chỉnh sửa cục bộ; không viết lại cả file. Không in lại code đã đọc.
+- T6.1 đã xong, tái sử dụng, không viết lại: bảng ShowtimeDailyStat (ShowtimeId, BusinessDate, Kind, SellableSeats, TicketsSold, GrossTicketRevenue, DiscountAmount, RefundAmount, ComboRevenue, CancelledOrders), PaymentDailyStat (BusinessDate, Channel, Method, TransactionCount, CollectedAmount, RefundedAmount, GatewayFee), ShowtimeSalesPace; Services/SalesStats/SalesStatsService.cs; Utils/BusinessDay.cs (ngày kinh doanh).
+- Lưu ý: Showtime chưa có trường loại suất; ShowtimeDailyStat.Kind hiện luôn là Regular. Vẫn lọc theo Kind để T19/T23 sau này đúng.
+- Câu trả lời cuối tối đa 15 dòng: file đã đổi (chỉ tên), việc thủ công, chỗ lệch tài liệu, test có thể bị ảnh hưởng. Không tóm tắt lại code.
 ```
+
+## A2. Bản đồ dòng của docs/NANG_CAP_BUSINESS_PERFO.md
+
+Tài liệu nghiệp vụ đánh số hạng mục và mục khác với cách các prompt gọi (H1.1, mục 3.x ở T1 đến T6 là cách gọi cũ). Dùng bảng này để đọc đúng dòng, không cần đọc cả file. Với T1 đến T6, "H{n}.x" nghĩa là hạng mục n ở bảng dưới; "mục 3.x" nghĩa là đoạn liên quan trong dòng 36-80.
+
+| Hạng mục (theo prompt) | Dòng cần đọc |
+|---|---|
+| Quy ước chung | 36-80 (giá 38-48, ghi nhận doanh thu 49-56, khóa giá và giữ chỗ 57-61, sự kiện 62-70, nhật ký 71-74, bộ nhớ đệm 75-80); thay đổi cốt lõi 20-35 |
+| 1. Nền tảng đơn hàng | 81-128 |
+| 2. Loại vé và quy tắc giá | 129-167 |
+| 3. Khuyến mãi | 168-211 |
+| 4. Kho bắp nước | 212-243 |
+| 5. Đóng phòng, khóa ghế | 586-599 |
+| 6. Báo cáo, đối soát cổng | 244-302 |
+| 7. Nhà phát hành và hợp đồng | 561-573 |
+| 8. Chốt ngày và ca quầy | 634-644 |
+| 9. Hóa đơn VAT | 600-611 |
+| 10. Thẻ quà tặng | 344-381 |
+| 11. Đổi suất chiếu | 452-467 |
+| 12. Combo đặt trước, nhắc lịch | 485-495 |
+| 13. Loyalty | 303-343 |
+| 14. Hỗ trợ khách hàng | 612-633 |
+| 15. Gợi ý phim | 417-445 |
+| 16. Đánh giá, khảo sát | 548-560 |
+| 17. Danh sách chờ, báo mở bán | 468-484 |
+| 18. Chống giữ ghế ảo | 574-585 |
+| 19. Thuê phòng, bán sỉ | 382-416 |
+| 20. Gói sản phẩm | 496-507 |
+| 21. Gói thành viên | 508-520 |
+| 22. Phân khúc, chiến dịch | 521-547 |
+| 23. Suất sự kiện | 645-657 |
+
+Nếu số dòng lệch do tài liệu được sửa, tìm lại bằng grep tiêu đề hạng mục rồi đọc đúng đoạn đó.
 
 ---
 
@@ -46,24 +89,24 @@ QUY TẮC CHUNG CHO MỌI TASK
 | 4 | Kho bắp nước và bán combo tại quầy | T4.1 – T4.5 | 5 |
 | 5 | Đóng phòng, khóa ghế, xử lý suất bị ảnh hưởng | T5.1 – T5.4 | 4 |
 | 6 | Báo cáo, phân tích lấp đầy, tài chính, đối soát cổng | T6.1 – T6.7 | 7 |
-| 7 | Nhà phát hành và hợp đồng phim | T7.1 – T7.3 | 3 |
-| 8 | Chốt doanh thu cuối ngày và chốt ca quầy | T8.1 – T8.3 | 3 |
-| 9 | Hóa đơn VAT theo yêu cầu | T9.1 – T9.2 | 2 |
-| 10 | Thẻ quà tặng | T10.1 – T10.5 | 5 |
-| 11 | Đổi suất chiếu | T11.1 – T11.3 | 3 |
-| 12 | Combo đặt trước và nhắc lịch chiếu | T12.1 – T12.3 | 3 |
-| 13 | Loyalty mạnh hơn | T13.1 – T13.6 | 6 |
-| 14 | Hỗ trợ khách hàng và hoàn tiền ngoại lệ | T14.1 – T14.3 | 3 |
-| 15 | Gợi ý phim cá nhân hóa | T15.1 – T15.3 | 3 |
-| 16 | Đánh giá xác thực và khảo sát | T16.1 – T16.2 | 2 |
-| 17 | Danh sách chờ và báo khi mở bán | T17.1 – T17.3 | 3 |
-| 18 | Chống giữ ghế ảo và hạn chế lạm dụng | T18.1 – T18.2 | 2 |
-| 19 | Thuê phòng và bán sỉ | T19.1 – T19.5 | 5 |
-| 20 | Gói sản phẩm | T20.1 – T20.3 | 3 |
-| 21 | Gói thành viên trả phí | T21.1 – T21.5 | 5 |
-| 22 | Phân khúc khách hàng và chiến dịch | T22.1 – T22.4 | 4 |
-| 23 | Suất chiếu sự kiện | T23.1 – T23.3 | 3 |
-| | **Tổng** | | **95** |
+| 7 | Nhà phát hành và hợp đồng phim | T7.1a – T7.3c | 9 |
+| 8 | Chốt doanh thu cuối ngày và chốt ca quầy | T8.1a – T8.3c | 10 |
+| 9 | Hóa đơn VAT theo yêu cầu | T9.1a – T9.2b | 6 |
+| 10 | Thẻ quà tặng | T10.1a – T10.5b | 12 |
+| 11 | Đổi suất chiếu | T11.1a – T11.3b | 7 |
+| 12 | Combo đặt trước và nhắc lịch chiếu | T12.1a – T12.3b | 7 |
+| 13 | Loyalty mạnh hơn | T13.1a – T13.6b | 14 |
+| 14 | Hỗ trợ khách hàng và hoàn tiền ngoại lệ | T14.1a – T14.3c | 8 |
+| 15 | Gợi ý phim cá nhân hóa | T15.1a – T15.3 | 6 |
+| 16 | Đánh giá xác thực và khảo sát | T16.1a – T16.2b | 5 |
+| 17 | Danh sách chờ và báo khi mở bán | T17.1a – T17.3b | 7 |
+| 18 | Chống giữ ghế ảo và hạn chế lạm dụng | T18.1a – T18.2 | 4 |
+| 19 | Thuê phòng và bán sỉ | T19.1a – T19.5b | 13 |
+| 20 | Gói sản phẩm | T20.1a – T20.3b | 7 |
+| 21 | Gói thành viên trả phí | T21.1a – T21.5b | 12 |
+| 22 | Phân khúc khách hàng và chiến dịch | T22.1a – T22.4b | 8 |
+| 23 | Suất chiếu sự kiện | T23.1a – T23.3b | 8 |
+| | **Tổng** | | **180** |
 
 ---
 
@@ -761,51 +804,144 @@ Tiêu chí hoàn thành: quản trị tải file sao kê, thấy kết quả ph�
 
 ---
 
-### T7.1 — Nhà phát hành và hợp đồng phim
+### T7.1a — Nhà phát hành
 
-**Phụ thuộc:** T6.4.
+**Phụ thuộc:** T1.4.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H7.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 561-573.
 
-- Entity Distributor: tên, liên hệ, mã số thuế. Mỗi phim gắn một nhà phát hành.
-- Entity FilmContract: phim, ngày khởi chiếu tại rạp, các tuần chiếu (mỗi tuần đủ 7 ngày tính từ ngày khởi chiếu) và tỷ lệ chia theo từng tuần, cách tính trước hoặc sau thuế, mức bảo đảm tối thiểu, thời gian hiệu lực, mức phí cố định cho suất riêng (tùy chọn).
-- API admin CRUD cho cả hai, validate tuần liên tục và không chồng, ghi nhật ký.
-- Phim chưa có hợp đồng trả trạng thái "chưa có hợp đồng", không coi tỷ lệ bằng 0.
+- Entity Distributor: tên, liên hệ, mã số thuế, trạng thái. Mỗi phim gắn một nhà phát hành (khóa ngoại nullable trên phim, cấu hình EF).
+- API admin CRUD nhà phát hành (xóa mềm, không xóa khi còn phim gắn) và API gắn hoặc đổi nhà phát hành cho phim. Ghi nhật ký qua T1.4.
+- Chưa làm hợp đồng.
 
-Tiêu chí hoàn thành: một phim khai được hợp đồng với tỷ lệ khác nhau theo ba tuần; phim chưa có hợp đồng nhận diện được.
+Tiêu chí hoàn thành: tạo nhà phát hành, gắn vào phim, đổi nhà phát hành có dòng nhật ký.
 ```
 
 ---
 
-### T7.2 — Đối soát nhà phát hành
+### T7.1b — Hợp đồng phim
 
-**Phụ thuộc:** T7.1, T6.1.
+**Phụ thuộc:** T7.1a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.3, 3.4 và H7.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 561-573.
 
-- Doanh thu vé để chia = tổng "giá thực trả của dòng" của vé thuộc suất thường trong tuần chiếu, sau khi trừ hoàn tiền. Suất riêng không tính (trừ khi hợp đồng có phí cố định); suất sự kiện tính như suất thường; chừa điểm cộng giá trị quy đổi vé miễn phí từ gói thành viên (T21.3).
-- Đối soát theo kỳ (tuần hoặc tháng, cấu hình): với mỗi phim tính doanh thu từng tuần chiếu nhân tỷ lệ, so với mức bảo đảm tối thiểu và lấy giá trị lớn hơn; tính theo trước hoặc sau thuế theo hợp đồng.
-- Trạng thái bảng đối soát: nháp, đã gửi, đã chốt, đã thanh toán, ghi ngày thanh toán. Đối soát đã chốt không tự đổi khi có hoàn tiền muộn; chênh lệch phát sinh chuyển sang kỳ kế tiếp dưới dạng điều chỉnh.
-- Xuất PDF và Excel để gửi nhà phát hành.
+- Entity FilmContract: phim, ngày khởi chiếu tại rạp, các tuần chiếu (mỗi tuần đủ 7 ngày tính từ ngày khởi chiếu) kèm tỷ lệ chia từng tuần, cách tính (trước hoặc sau thuế), mức bảo đảm tối thiểu (nullable), thời gian hiệu lực, mức phí cố định cho suất riêng (nullable).
+- Validate: tuần liên tục và không chồng, tỷ lệ từ 0 đến 100, một phim không có hai hợp đồng hiệu lực chồng nhau.
+- API admin CRUD, ghi nhật ký.
+- Service trả "hợp đồng hiệu lực của phim tại ngày D" và "ngày D thuộc tuần chiếu thứ mấy" cho T7.2a dùng.
+- Phim chưa có hợp đồng trả trạng thái "chưa có hợp đồng", không coi tỷ lệ bằng 0; API liệt kê phim chưa có hợp đồng.
 
-Tiêu chí hoàn thành: tính ra số phải trả khớp tay với ba tuần có tỷ lệ khác nhau; có mức bảo đảm thì lấy mức lớn hơn; hoàn muộn đi vào kỳ sau.
+Tiêu chí hoàn thành: khai được hợp đồng với tỷ lệ khác nhau ba tuần; hợp đồng chồng thời gian bị chặn; phim chưa có hợp đồng nhận diện được.
 ```
 
 ---
 
-### T7.3 — Frontend nhà phát hành và lợi nhuận theo phim
+### T7.2a — Doanh thu vé để chia theo tuần chiếu
 
-**Phụ thuộc:** T7.2.
+**Phụ thuộc:** T7.1b, T6.1.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H7 và H6.4.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 561-573 và 49-56.
 
-- Trang admin: nhà phát hành, hợp đồng phim (form tuần chiếu và tỷ lệ), danh sách đối soát với đổi trạng thái, xem chi tiết và tải PDF, Excel, danh sách phim chưa có hợp đồng, lịch thanh toán.
-- Hiển thị khối lợi nhuận theo phim trong báo cáo tài chính (doanh thu vé trừ phần chia nhà phát hành); phim chưa có hợp đồng hiện "chưa có hợp đồng".
+- Service nhận (phim, khoảng ngày) và trả doanh thu vé để chia theo từng tuần chiếu của hợp đồng: số vé, doanh thu gộp, giảm giá, hoàn tiền, doanh thu thực.
+- Nguồn là ShowtimeDailyStat của T6.1 (gộp trừ giảm giá trừ hoàn), không quét OrderLine. Lọc theo Kind: Regular và Event tính; Private không tính, trừ khi hợp đồng có phí cố định (khi đó dùng phí cố định thay vì chia). Chừa điểm cộng giá trị quy đổi vé miễn phí của gói thành viên (T21.3b).
+- Ngày thuộc tuần nào theo ngày kinh doanh của suất (Utils/BusinessDay.cs), không theo ngày bán.
+- Cách tính trước thuế cần tách thuế (T9.1a); nếu T9.1a chưa làm thì coi thuế suất bằng 0 và chừa điểm nối.
 
-Tiêu chí hoàn thành: quản trị tạo hợp đồng, chạy đối soát kỳ, xuất file; báo cáo lợi nhuận theo phim hiện đúng.
+Tiêu chí hoàn thành: số liệu khớp bảng tổng hợp; suất qua nửa đêm vào đúng tuần; suất Private bị loại.
+```
+
+---
+
+### T7.2b — Tính đối soát theo kỳ
+
+**Phụ thuộc:** T7.2a.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 561-573.
+
+- Entity DistributorSettlement (nhà phát hành, kỳ từ-đến, trạng thái, tổng phải trả, thời điểm tạo) và dòng theo phim và tuần chiếu (doanh thu, tỷ lệ, phần chia, mức bảo đảm tối thiểu, số phải trả).
+- Kỳ tuần hoặc tháng lấy từ cài đặt rạp. Với mỗi phim: số phải trả = lớn hơn giữa (doanh thu từng tuần × tỷ lệ tuần đó, cộng lại) và mức bảo đảm tối thiểu; trước hoặc sau thuế theo hợp đồng.
+- API tạo đối soát nháp cho một kỳ (tính lại được khi còn nháp), danh sách, xem chi tiết.
+- Phim chưa có hợp đồng nằm trong danh sách cảnh báo của đối soát, không có dòng chia.
+
+Tiêu chí hoàn thành: ba tuần có tỷ lệ khác nhau cho số phải trả khớp tính tay; có mức bảo đảm thì lấy mức lớn hơn.
+```
+
+---
+
+### T7.2c — Trạng thái, chốt kỳ và điều chỉnh kỳ sau
+
+**Phụ thuộc:** T7.2b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 561-573.
+
+- Trạng thái: nháp, đã gửi, đã chốt, đã thanh toán (ghi ngày thanh toán). Chỉ đi tới theo thứ tự, nháp và đã gửi được quay lại nháp bởi quản trị. Ghi nhật ký mỗi lần đổi.
+- Đối soát đã chốt không tự đổi khi có hoàn tiền muộn: phần chênh lệch giữa số đã chốt và số tính lại được ghi thành dòng điều chỉnh (entity riêng, trỏ về kỳ gốc) vào đối soát kỳ kế tiếp.
+- Chặn tạo hai đối soát chồng kỳ cho cùng nhà phát hành.
+
+Tiêu chí hoàn thành: hoàn tiền muộn đi vào kỳ sau dưới dạng điều chỉnh; kỳ đã chốt không đổi số.
+```
+
+---
+
+### T7.2d — Xuất PDF và Excel đối soát
+
+**Phụ thuộc:** T7.2c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 561-573.
+
+- Xuất PDF và Excel bảng đối soát bằng hạ tầng hiện có: thông tin nhà phát hành, kỳ, từng phim và tuần chiếu, điều chỉnh, tổng phải trả, trạng thái.
+- API tải file; chỉ đối soát từ trạng thái đã gửi trở đi mới xuất bản chính thức.
+
+Tiêu chí hoàn thành: file xuất khớp số trên API chi tiết.
+```
+
+---
+
+### T7.3a — Frontend nhà phát hành và hợp đồng
+
+**Phụ thuộc:** T7.1b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 561-573.
+
+Trang admin: danh sách và form nhà phát hành; danh sách và form hợp đồng phim (thêm bớt tuần chiếu, tỷ lệ từng tuần, kiểm tra tuần liên tục ở form); danh sách phim chưa có hợp đồng; chọn nhà phát hành ở form phim.
+
+Tiêu chí hoàn thành: quản trị tạo nhà phát hành, khai hợp đồng nhiều tuần, thấy được phim chưa có hợp đồng.
+```
+
+---
+
+### T7.3b — Frontend đối soát nhà phát hành
+
+**Phụ thuộc:** T7.2d.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 561-573.
+
+Trang admin: danh sách đối soát, tạo đối soát theo kỳ, chi tiết theo phim và tuần chiếu kèm dòng điều chỉnh, đổi trạng thái và ghi ngày thanh toán, tải PDF và Excel, lịch thanh toán sắp tới.
+
+Tiêu chí hoàn thành: quản trị chạy đối soát một kỳ, chuyển trạng thái, tải file.
+```
+
+---
+
+### T7.3c — Khối lợi nhuận theo phim trong báo cáo tài chính
+
+**Phụ thuộc:** T7.2b, T6.4.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 561-573.
+
+- Backend: đăng ký khối "lợi nhuận theo phim" vào khung báo cáo của T6.4: doanh thu vé trừ phần chia nhà phát hành của kỳ; phim chưa có hợp đồng trả "chưa có hợp đồng". Có trong xuất Excel và PDF của báo cáo.
+- Frontend: hiển thị khối này trong trang báo cáo tài chính.
+
+Tiêu chí hoàn thành: báo cáo lợi nhuận theo phim khớp đối soát; phim chưa có hợp đồng hiện đúng nhãn.
 ```
 
 ---
@@ -814,53 +950,154 @@ Tiêu chí hoàn thành: quản trị tạo hợp đồng, chạy đối soát k
 
 ---
 
-### T8.1 — Ca quầy (backend)
+### T8.1a — Ca quầy: mở và đóng ca
 
-**Phụ thuộc:** T1.8, T6.1.
+**Phụ thuộc:** T1.8.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H8.1 và 3.11.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 634-644 (phần ca quầy theo prompt này).
 
-- Entity CounterShift: nhân viên, thời điểm mở, tiền đầu ca, thời điểm đóng, số tiền thực đếm, số phải có, chênh lệch, ghi chú.
-- Mở ca và đóng ca; số phải có = tiền đầu ca + thu tiền mặt − hoàn tiền mặt − tiền thối. Mọi đơn quầy gắn vào ca đang mở của nhân viên.
-- Chặn bán tại quầy khi chưa mở ca. Mỗi nhân viên chỉ một ca mở. Nhân viên chỉ xem và đóng ca của mình; quản trị xem và đóng mọi ca.
-- Tác vụ nền cảnh báo quản trị khi cuối ngày còn ca chưa đóng.
-- Ghi nhật ký mở, đóng và chênh lệch.
+- Entity CounterShift: nhân viên, thời điểm mở, tiền đầu ca, thời điểm đóng, số thực đếm, số phải có, chênh lệch, ghi chú, trạng thái.
+- API mở ca (mỗi nhân viên một ca mở, nhập tiền đầu ca) và đóng ca (nhập số thực đếm; hệ thống ghi số phải có và chênh lệch). Số phải có = tiền đầu ca + thu tiền mặt − hoàn tiền mặt − tiền thối, tính từ sổ giao dịch của các đơn thuộc ca.
+- Nhân viên chỉ xem và đóng ca của mình; quản trị xem và đóng mọi ca. Ghi nhật ký mở, đóng và chênh lệch.
 
-Tiêu chí hoàn thành: không bán được khi chưa mở ca; đóng ca ghi đúng chênh lệch; ca quên đóng được cảnh báo.
+Tiêu chí hoàn thành: đóng ca ghi đúng chênh lệch; một nhân viên không mở được hai ca.
 ```
 
 ---
 
-### T8.2 — Chốt ngày và bút toán điều chỉnh
+### T8.1b — Gắn đơn quầy vào ca và chặn bán khi chưa mở ca
 
-**Phụ thuộc:** T8.1.
+**Phụ thuộc:** T8.1a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.4 (phần sau chốt ngày) và H8.2.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 634-644.
 
-- Báo cáo chốt ngày gồm: doanh thu vé, combo, thẻ quà bán và thẻ quà đã dùng, tiền giảm giá, hoàn tiền, thu theo từng phương thức, số đơn chờ hoặc lỗi. Các dòng thẻ quà, gói, thuê phòng xuất hiện khi hạng mục tương ứng đã có (đăng ký qua khung khối báo cáo).
-- Tiền mặt tại quầy tổng hợp từ các ca; quản trị nhập tổng tiền thực đếm cả ngày, hệ thống ghi chênh lệch và ghi chú.
-- Chốt ngày khóa số liệu. Chỉ chốt khi mọi ca đã đóng và không còn đơn lỗi, trừ khi cài đặt cho phép bỏ qua có ghi chú.
-- Entity bút toán điều chỉnh: ghi vào ngày kinh doanh đang mở, tham chiếu ngày gốc, lý do, người tạo. Hoàn tiền, đổi suất, hủy phát sinh sau chốt tự tạo bút toán. Báo cáo cho xem "theo ngày gốc" và "theo ngày ghi sổ", thể hiện rõ phần điều chỉnh.
-- Báo cáo chốt gửi email quản trị và lưu để tra cứu theo ngày. Ghi nhật ký chốt và bút toán.
+- Mọi đơn quầy (vé, combo riêng, đơn bổ sung bán tại quầy) gắn vào ca đang mở của nhân viên thao tác; giao dịch tiền mặt tính theo ca.
+- Chặn tạo đơn quầy và thu tiền khi nhân viên chưa có ca mở (lỗi trong Messages.resx).
+- Quầy xác nhận đã hoàn tiền mặt (đơn cần hoàn của T1.7) ghi vào ca đang mở của người xác nhận.
 
-Tiêu chí hoàn thành: ngày đã chốt không sửa được số trực tiếp; hoàn tiền muộn đi vào bút toán của ngày đang mở.
+Tiêu chí hoàn thành: không bán được khi chưa mở ca; đơn và tiền hoàn đi vào đúng ca.
 ```
 
 ---
 
-### T8.3 — Frontend ca quầy và chốt ngày
+### T8.1c — Cảnh báo ca chưa đóng
 
-**Phụ thuộc:** T8.2.
+**Phụ thuộc:** T8.1a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H8.1 và H8.2.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 634-644.
 
-- Quầy: màn mở ca (nhập tiền đầu ca), đóng ca (nhập thực đếm, xem chênh lệch, ghi chú), chặn vào màn bán khi chưa mở ca kèm hướng dẫn.
-- Admin: danh sách ca, trang chốt ngày (báo cáo chốt, xác nhận tiền thực đếm, cảnh báo điều kiện chưa đủ, nút chốt), danh sách bút toán điều chỉnh, báo cáo theo ngày gốc và ngày ghi sổ, lịch sử báo cáo chốt.
+- Tác vụ nền cuối ngày kinh doanh (Utils/BusinessDay.cs) quét ca còn mở, cảnh báo quản trị bằng kênh thông báo hiện có, không gửi lặp.
+- API danh sách ca còn mở; quản trị đóng thay ca kèm ghi chú, có nhật ký.
 
-Tiêu chí hoàn thành: nhân viên mở và đóng ca, quản trị chốt ngày và xem bút toán điều chỉnh.
+Tiêu chí hoàn thành: ca quên đóng được cảnh báo đúng một lần; quản trị đóng thay được.
+```
+
+---
+
+### T8.2a — Báo cáo chốt ngày (dựng số liệu)
+
+**Phụ thuộc:** T8.1b, T6.1.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 634-644 và 49-56.
+
+- Entity DailyClosing: ngày kinh doanh, trạng thái, ảnh chụp số liệu (JSON), tiền mặt theo sổ, số thực đếm, chênh lệch, ghi chú, người chốt, thời điểm chốt.
+- Service dựng số liệu một ngày từ ShowtimeDailyStat, PaymentDailyStat và các ca: doanh thu vé, combo, thẻ quà bán và thẻ quà đã dùng, giảm giá, hoàn tiền, thu theo từng phương thức, số đơn chờ hoặc lỗi. Các dòng thẻ quà, gói, thuê phòng, thuế đăng ký qua khung khối báo cáo của T6.4; chưa có thì bỏ qua.
+- API xem báo cáo nháp của một ngày chưa chốt.
+
+Tiêu chí hoàn thành: số liệu ngày khớp báo cáo doanh thu của T6.4 cùng ngày.
+```
+
+---
+
+### T8.2b — Chốt ngày
+
+**Phụ thuộc:** T8.2a, T8.1c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 634-644.
+
+- Quản trị nhập tổng tiền thực đếm cả ngày; tiền mặt theo sổ là tổng các ca; hệ thống ghi chênh lệch và ghi chú.
+- Điều kiện chốt: mọi ca đã đóng và không còn đơn lỗi, trừ khi cài đặt cho phép bỏ qua kèm ghi chú.
+- Sau chốt: khóa ảnh chụp số liệu, không API nào sửa trực tiếp; lưu để tra cứu theo ngày. Ghi nhật ký.
+
+Tiêu chí hoàn thành: ngày đã chốt không sửa trực tiếp được; chốt khi còn ca mở bị chặn.
+```
+
+---
+
+### T8.2c — Bút toán điều chỉnh
+
+**Phụ thuộc:** T8.2b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 634-644.
+
+- Entity LedgerAdjustment: ngày ghi sổ (ngày kinh doanh đang mở), ngày gốc, loại, số tiền theo từng chỉ tiêu, lý do, người tạo, tham chiếu đơn hoặc giao dịch.
+- Handler nền cho OrderRefunded và OrderCancelled: nếu ngày gốc đã chốt thì tự tạo bút toán; idempotent. Chừa điểm gọi cho đổi suất (T11.2c).
+- API admin tạo bút toán thủ công kèm lý do, có nhật ký.
+
+Tiêu chí hoàn thành: hoàn tiền muộn tạo bút toán vào ngày đang mở; số của ngày đã chốt không đổi.
+```
+
+---
+
+### T8.2d — Báo cáo theo ngày gốc và ngày ghi sổ, email chốt
+
+**Phụ thuộc:** T8.2c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 634-644.
+
+- Báo cáo chốt có hai chế độ "theo ngày gốc" và "theo ngày ghi sổ", thể hiện rõ phần điều chỉnh.
+- Khi chốt, handler nền gửi báo cáo chốt qua email cho quản trị (nội dung ở Messages.resx), idempotent; lưu để tra cứu theo ngày.
+
+Tiêu chí hoàn thành: hai chế độ cho số khác nhau đúng bằng phần điều chỉnh; email chốt chỉ gửi một lần.
+```
+
+---
+
+### T8.3a — Frontend quầy: mở và đóng ca
+
+**Phụ thuộc:** T8.1b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 634-644.
+
+Quầy: màn mở ca (nhập tiền đầu ca), đóng ca (nhập thực đếm, xem chênh lệch, ghi chú), chặn vào màn bán khi chưa mở ca kèm hướng dẫn mở ca.
+
+Tiêu chí hoàn thành: nhân viên mở và đóng ca; chưa mở ca thì không vào được màn bán.
+```
+
+---
+
+### T8.3b — Frontend admin: ca và chốt ngày
+
+**Phụ thuộc:** T8.2b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 634-644.
+
+Admin: danh sách ca (lọc theo ngày, nhân viên), đóng thay ca; trang chốt ngày (báo cáo nháp, nhập tiền thực đếm, cảnh báo điều kiện chưa đủ, nút chốt).
+
+Tiêu chí hoàn thành: quản trị chốt được một ngày; điều kiện chưa đủ hiện cảnh báo rõ.
+```
+
+---
+
+### T8.3c — Frontend admin: bút toán và báo cáo chốt
+
+**Phụ thuộc:** T8.2d.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 634-644.
+
+Admin: danh sách và form bút toán điều chỉnh, báo cáo chốt theo ngày gốc và ngày ghi sổ, lịch sử báo cáo chốt theo ngày.
+
+Tiêu chí hoàn thành: quản trị tạo bút toán, đổi chế độ xem, tra cứu báo cáo chốt cũ.
 ```
 
 ---
@@ -869,37 +1106,94 @@ Tiêu chí hoàn thành: nhân viên mở và đóng ca, quản trị chốt ng�
 
 ---
 
-### T9.1 — Hóa đơn VAT (backend)
+### T9.1a — Thuế suất và tách giá trước thuế
 
 **Phụ thuộc:** T1.8.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H9 và 3.4.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 600-611.
 
-- Cài đặt thuế suất theo loại dòng hàng (vé, combo, thẻ quà tặng, gói thành viên) và thời hạn yêu cầu hóa đơn. Giá hiển thị đã gồm VAT; tách giá trước thuế và tiền thuế theo từng dòng cho hóa đơn và báo cáo. Thuế thẻ quà tính vào lúc thẻ được dùng.
-- Entity InvoiceProfile (mã số thuế, tên đơn vị, địa chỉ, email nhận; lưu dùng lại) và InvoiceRequest (đơn, hồ sơ, trạng thái chờ xuất, đã xuất, từ chối kèm lý do, số hóa đơn, tệp đính kèm, người xuất, thời điểm).
-- Khách yêu cầu hóa đơn cho đơn đã thanh toán trong thời hạn cấu hình; quầy nhập cho khách vãng lai. Quản trị cập nhật số hóa đơn và tải tệp bằng hạ tầng file hiện có; khách tải hóa đơn từ lịch sử đơn. Không tích hợp nhà cung cấp hóa đơn điện tử.
-- Đơn đã xuất hóa đơn mà bị hoàn tiền: đánh dấu "cần điều chỉnh hóa đơn" và nhắc quản trị.
-- Báo cáo thuế: doanh thu trước thuế, thuế phải nộp theo kỳ và theo loại dòng hàng (đăng ký vào khung khối báo cáo).
-- Email thông báo trạng thái, ghi nhật ký xuất hóa đơn.
+- Cài đặt thuế suất theo loại dòng hàng (vé, combo, thẻ quà tặng, gói thành viên) và thời hạn yêu cầu hóa đơn (số ngày).
+- Service tách giá đã gồm VAT thành giá trước thuế và tiền thuế theo từng dòng dựa trên giá thực trả của dòng, làm tròn đến đồng, tổng hai phần luôn bằng giá thực trả. Thuế thẻ quà tính vào lúc thẻ được dùng (chừa điểm nối T10.2b).
+- Chưa tạo hóa đơn.
 
-Tiêu chí hoàn thành: tách đúng giá trước thuế và thuế theo từng loại dòng; đơn hoàn sau hóa đơn bị đánh dấu.
+Tiêu chí hoàn thành: trước thuế + thuế = giá thực trả của dòng ở mọi trường hợp làm tròn.
 ```
 
 ---
 
-### T9.2 — Frontend hóa đơn VAT
+### T9.1b — Hồ sơ và yêu cầu hóa đơn
 
-**Phụ thuộc:** T9.1.
+**Phụ thuộc:** T9.1a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H9.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 600-611.
+
+- Entity InvoiceProfile (khách, mã số thuế, tên đơn vị, địa chỉ, email nhận) và InvoiceRequest (đơn, hồ sơ, trạng thái chờ xuất, đã xuất, từ chối, lý do, số hóa đơn, tệp, người xuất, thời điểm).
+- API khách: CRUD hồ sơ, gửi yêu cầu cho đơn đã thanh toán trong thời hạn; mỗi đơn một yêu cầu đang hiệu lực.
+- API quầy: nhập yêu cầu cho khách vãng lai bằng thông tin nhập tay.
+
+Tiêu chí hoàn thành: chỉ đơn đã thanh toán và còn trong hạn mới yêu cầu được; hồ sơ dùng lại được.
+```
+
+---
+
+### T9.1c — Xử lý yêu cầu hóa đơn, tệp và email
+
+**Phụ thuộc:** T9.1b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 600-611.
+
+- API admin: danh sách theo trạng thái, cập nhật số hóa đơn và tải tệp bằng hạ tầng file hiện có, từ chối kèm lý do. Ghi nhật ký.
+- API khách tải hóa đơn từ lịch sử đơn.
+- Email thông báo khi đổi trạng thái (Messages.resx). Không tích hợp nhà cung cấp hóa đơn điện tử.
+
+Tiêu chí hoàn thành: admin cập nhật số hóa đơn thì khách tải được và nhận email.
+```
+
+---
+
+### T9.1d — Điều chỉnh hóa đơn khi hoàn tiền và báo cáo thuế
+
+**Phụ thuộc:** T9.1c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 600-611.
+
+- Handler nền cho OrderRefunded: đơn đã xuất hóa đơn thì đánh dấu "cần điều chỉnh hóa đơn" và nhắc quản trị; API danh sách và đánh dấu đã xử lý.
+- Khối báo cáo thuế đăng ký vào khung báo cáo T6.4: doanh thu trước thuế, thuế phải nộp theo kỳ và theo loại dòng hàng; có trong xuất Excel và PDF.
+
+Tiêu chí hoàn thành: đơn hoàn sau khi xuất hóa đơn bị đánh dấu; báo cáo thuế khớp tổng thuế các dòng.
+```
+
+---
+
+### T9.2a — Frontend khách và quầy: hóa đơn VAT
+
+**Phụ thuộc:** T9.1c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 600-611.
 
 - Khách: form yêu cầu hóa đơn trên chi tiết đơn, quản lý hồ sơ xuất hóa đơn, theo dõi trạng thái, tải hóa đơn.
 - Quầy: nhập yêu cầu cho khách vãng lai.
-- Admin: danh sách yêu cầu theo trạng thái, cập nhật số hóa đơn và tệp, từ chối kèm lý do, danh sách đơn cần điều chỉnh hóa đơn, báo cáo thuế.
 
 Tiêu chí hoàn thành: khách gửi yêu cầu và tải được hóa đơn sau khi quản trị cập nhật.
+```
+
+---
+
+### T9.2b — Frontend admin: hóa đơn VAT
+
+**Phụ thuộc:** T9.1d.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 600-611.
+
+Admin: danh sách yêu cầu theo trạng thái, cập nhật số hóa đơn và tải tệp, từ chối kèm lý do, danh sách đơn cần điều chỉnh hóa đơn, trang báo cáo thuế.
+
+Tiêu chí hoàn thành: quản trị xử lý yêu cầu từ chờ xuất đến đã xuất và xem báo cáo thuế.
 ```
 
 ---
@@ -908,88 +1202,186 @@ Tiêu chí hoàn thành: khách gửi yêu cầu và tải được hóa đơn s
 
 ---
 
-### T10.1 — Dữ liệu thẻ, mua thẻ và phát hành
+### T10.1a — Dữ liệu thẻ quà tặng
 
-**Phụ thuộc:** T1.6.
+**Phụ thuộc:** T1.1, T1.4.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.2 (ngoại lệ), 3.4, H10.1 và H10.2.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 344-352.
 
-- Entity GiftCard: mã thẻ ngẫu nhiên mật mã đủ dài khó đoán, loại (quà tặng, tín dụng đổi suất), mệnh giá, số dư, người mua, email và tên người nhận, lời nhắn, thời điểm gửi, hạn dùng, trạng thái (chờ gửi, đã gửi, đang dùng, đã dùng hết, hết hạn, đã hủy). Entity GiftCardLedger ghi phát hành, giữ chỗ, sử dụng, hoàn lại, hết hạn, hủy.
-- Cài đặt: mệnh giá có sẵn, mệnh giá tối thiểu và tối đa, thời hạn thẻ.
-- Mua thẻ qua Order loại thẻ quà: người mua có tài khoản, chọn mệnh giá có sẵn hoặc tự nhập trong khoảng, nhập thông tin người nhận và lời nhắn, gửi ngay hoặc hẹn giờ. Không dùng thẻ để mua thẻ; không ưu đãi hạng, không mã khuyến mãi, không tích điểm.
-- Khi đơn xác nhận, handler trong giao dịch phát hành thẻ. Email gửi người nhận (lời nhắn, mã, hướng dẫn) qua tác vụ nền hẹn giờ; người mua nhận email xác nhận. API gửi lại email cho quản trị.
+- Entity GiftCard: mã thẻ (sinh bằng bộ sinh số ngẫu nhiên mật mã, đủ dài, khó đoán), loại (quà tặng, tín dụng đổi suất), mệnh giá, số dư, người mua, email và tên người nhận, lời nhắn, thời điểm gửi, hạn dùng, trạng thái (chờ gửi, đã gửi, đang dùng, đã dùng hết, hết hạn, đã hủy), concurrency token.
+- Entity GiftCardLedger: phát hành, giữ chỗ, sử dụng, hoàn lại, hết hạn, hủy; tham chiếu đơn; số dư luôn bằng tổng sổ.
+- Cài đặt rạp: các mệnh giá có sẵn, mệnh giá tối thiểu và tối đa, thời hạn thẻ.
+- Service sinh mã và tra cứu theo mã. Chưa mua, chưa dùng.
 
-Tiêu chí hoàn thành: mua thẻ xong thì thẻ được phát hành đúng mệnh giá; gửi hẹn giờ đúng lúc; mã thẻ không đoán được.
+Tiêu chí hoàn thành: sinh được thẻ với mã không đoán được; số dư khớp tổng sổ.
 ```
 
 ---
 
-### T10.2 — Dùng thẻ để thanh toán, hoàn về thẻ, an toàn
+### T10.1b — Mua thẻ và phát hành
 
-**Phụ thuộc:** T10.1, T1.7.
+**Phụ thuộc:** T10.1a, T1.6.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.1, 3.5, 3.6, H10.3 và H10.4.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 353-358.
 
-- IResourceHold cho thẻ: khi khách áp thẻ vào đơn chờ, giữ chỗ số dư bằng UPDATE có điều kiện; chỉ trừ thật khi đơn xác nhận; nhả khi hết hạn hoặc gỡ thẻ. Một thẻ không bị hai đơn cùng tiêu.
-- API áp và gỡ thẻ; thẻ trả một phần hoặc toàn bộ, ghi giao dịch thu phương thức thẻ quà. Thẻ đủ trả hết thì xác nhận ngay không qua cổng; chưa đủ thì phần còn lại trả bằng phương thức khác. Dùng được cho vé, combo, gói sản phẩm, gói thành viên, thuê phòng; không dùng để mua thẻ quà.
-- Hoàn tiền về lại thẻ theo 3.6 (mở rộng T1.7); thẻ đã hết hạn khi nhận hoàn được gia hạn tối thiểu số ngày cấu hình. Điểm vẫn tích trên phần khách thực trả kể cả bằng thẻ.
-- Giới hạn số lần thử kiểm tra số dư và áp mã, khóa tạm khi nhập sai quá ngưỡng (cấu hình).
-- Quản trị hủy thẻ, thẻ đã dùng một phần thì chọn cách xử lý số dư kèm lý do, ghi nhật ký.
-- Tác vụ nền cho thẻ hết hạn, ghi sổ thẻ.
+- API mua thẻ tạo Order loại thẻ quà: người mua có tài khoản, mệnh giá có sẵn hoặc tự nhập trong khoảng cho phép, thông tin người nhận, lời nhắn, gửi ngay hoặc hẹn ngày giờ.
+- Đơn thẻ quà không hưởng ưu đãi hạng, không dùng mã khuyến mãi, không tích điểm.
+- Handler trong giao dịch khi OrderConfirmed: phát hành thẻ và ghi sổ; idempotent.
+
+Tiêu chí hoàn thành: đơn mua thẻ xác nhận thì thẻ được phát hành đúng mệnh giá, xác nhận hai lần không phát hai thẻ.
+```
+
+---
+
+### T10.1c — Gửi email thẻ
+
+**Phụ thuộc:** T10.1b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 353-358.
+
+- Tác vụ nền gửi email cho người nhận khi đến thời điểm gửi (lời nhắn, mã thẻ, hướng dẫn dùng); chuyển chờ gửi sang đã gửi; idempotent, có thử lại. Người mua nhận email xác nhận.
+- API admin gửi lại email. Nội dung ở Messages.resx.
+
+Tiêu chí hoàn thành: thẻ hẹn giờ được gửi đúng lúc, đúng một lần.
+```
+
+---
+
+### T10.2a — Áp thẻ vào đơn và giữ chỗ số dư
+
+**Phụ thuộc:** T10.1a, T1.2, T1.6.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 359-365 và 57-61.
+
+- IResourceHold cho thẻ: giữ chỗ số dư bằng UPDATE có điều kiện; chỉ trừ thật khi đơn xác nhận (handler trong giao dịch, ghi sổ thẻ và giao dịch thu phương thức thẻ quà); nhả khi hết hạn hoặc gỡ thẻ. Một thẻ không bị hai đơn cùng tiêu quá số dư.
+- API áp và gỡ thẻ trên đơn chờ. Thẻ trả một phần hoặc toàn bộ; đủ trả hết thì xác nhận ngay không qua cổng; chưa đủ thì phần còn lại trả bằng phương thức khác.
+- Dùng được cho vé, combo, gói sản phẩm, gói thành viên, thuê phòng; không dùng để mua thẻ quà. Thẻ loại tín dụng đổi suất chỉ dùng cho đúng tài khoản được cấp (T11.2b cấp).
 - Quầy nhận thẻ bằng cách nhập mã.
-- Loại thẻ tín dụng đổi suất dùng được như thẻ thường nhưng chỉ cho đúng tài khoản (T11 sẽ cấp).
-- Ghi nhận doanh thu khi thẻ được dùng (3.4).
 
-Tiêu chí hoàn thành: thẻ trả một phần cộng cổng xác nhận đúng; hai đơn không tiêu cùng số dư; nhập sai nhiều lần bị khóa tạm; hoàn đơn đưa tiền về thẻ.
+Tiêu chí hoàn thành: thẻ trả một phần cộng cổng xác nhận đúng; hai đơn không tiêu cùng một số dư.
 ```
 
 ---
 
-### T10.3 — Quà doanh nghiệp (mua nhiều thẻ)
+### T10.2b — Hoàn về thẻ, hết hạn và ghi nhận doanh thu
 
-**Phụ thuộc:** T10.1.
+**Phụ thuộc:** T10.2a, T1.7.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H10.5.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 359-365 và 49-56.
 
-- Doanh nghiệp tải lên file danh sách người nhận (tên, email, mệnh giá, lời nhắn) bằng hạ tầng nhập file hiện có, chạy nền.
-- Kiểm tra danh sách: email hợp lệ, mệnh giá trong khoảng, không trùng; trả báo cáo lỗi theo dòng, cho tải file mẫu.
-- Tạo một đơn tổng cho cả danh sách, thanh toán như đơn thường. Khi đơn xác nhận thì phát hành từng thẻ và gửi từng thẻ cho người nhận.
+- Mở rộng hoàn tiền của T1.7: phần đã trả bằng thẻ hoàn về lại thẻ (ghi sổ thẻ và giao dịch hoàn); thẻ đã hết hạn khi nhận hoàn được gia hạn tối thiểu số ngày cấu hình.
+- Tác vụ nền cho thẻ hết hạn, ghi sổ hết hạn, idempotent.
+- Bán thẻ là khoản phải trả, chỉ thành doanh thu khi thẻ được dùng: ghi nhận dữ liệu này để báo cáo (T10.5b), chốt ngày (T8.2a) và thuế (T9.1a) dùng. Điểm vẫn tích trên phần khách thực trả kể cả trả bằng thẻ.
 
-Tiêu chí hoàn thành: file hợp lệ tạo một đơn tổng và phát hành đủ thẻ; dòng lỗi được báo rõ.
+Tiêu chí hoàn thành: hoàn đơn đưa tiền về thẻ; thẻ hết hạn chuyển trạng thái đúng; doanh thu chỉ phát sinh khi dùng thẻ.
 ```
 
 ---
 
-### T10.4 — Frontend khách và quầy: thẻ quà tặng
+### T10.2c — Chống dò mã, khóa tạm và hủy thẻ
 
-**Phụ thuộc:** T10.2.
+**Phụ thuộc:** T10.2a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H10.6.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 366-370.
 
-- Khách: trang mua thẻ quà (chọn mệnh giá, nhập người nhận, lời nhắn, hẹn giờ gửi), danh sách thẻ đã mua và trạng thái gửi, ô nhập thẻ ở bước thanh toán hiển thị số dư và số tiền trừ, danh sách thẻ tín dụng đang có, thông báo khi bị khóa tạm.
+- Giới hạn số lần thử kiểm tra số dư và áp mã theo tài khoản và địa chỉ mạng; nhập sai quá ngưỡng thì khóa tạm (ngưỡng và thời gian khóa cấu hình).
+- API admin hủy thẻ (ví dụ phát hành nhầm): thẻ đã dùng một phần thì chọn cách xử lý số dư kèm lý do. Ghi nhật ký.
+
+Tiêu chí hoàn thành: nhập sai nhiều lần bị khóa tạm; hủy thẻ có dòng nhật ký và dòng sổ thẻ.
+```
+
+---
+
+### T10.3a — Quà doanh nghiệp: nhập và kiểm tra danh sách
+
+**Phụ thuộc:** T10.1b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 371-374.
+
+- Tải lên file danh sách người nhận (tên, email, mệnh giá, lời nhắn) bằng hạ tầng nhập file hiện có, chạy nền.
+- Kiểm tra: email hợp lệ, mệnh giá trong khoảng, không trùng; báo cáo lỗi theo dòng; API tải file mẫu. Chưa tạo đơn.
+
+Tiêu chí hoàn thành: file có dòng lỗi trả báo cáo lỗi rõ theo dòng.
+```
+
+---
+
+### T10.3b — Đơn tổng và phát hành hàng loạt
+
+**Phụ thuộc:** T10.3a, T10.1c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 371-374.
+
+- Từ danh sách hợp lệ tạo một Order tổng, mỗi người nhận một dòng thẻ; thanh toán như đơn thường.
+- Khi đơn xác nhận phát hành từng thẻ và gửi từng thẻ cho người nhận (dùng lại T10.1b, T10.1c), idempotent.
+
+Tiêu chí hoàn thành: file hợp lệ tạo một đơn tổng và phát hành đủ thẻ.
+```
+
+---
+
+### T10.4a — Frontend khách: mua thẻ và thẻ đã mua
+
+**Phụ thuộc:** T10.1c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 375-381.
+
+Khách: trang mua thẻ quà (chọn mệnh giá, thông tin người nhận, lời nhắn, hẹn giờ gửi), danh sách thẻ đã mua và trạng thái gửi.
+
+Tiêu chí hoàn thành: khách mua thẻ và theo dõi trạng thái gửi.
+```
+
+---
+
+### T10.4b — Frontend khách và quầy: dùng thẻ, quà doanh nghiệp
+
+**Phụ thuộc:** T10.2c, T10.3b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 359-365 và 375-381.
+
+- Khách: ô nhập thẻ ở bước thanh toán (số dư, số tiền trừ, phần còn lại), danh sách thẻ tín dụng đang có, thông báo khi bị khóa tạm; trang tải lên danh sách quà doanh nghiệp.
 - Quầy: nhập mã thẻ khi thanh toán.
-- Trang tải lên danh sách quà doanh nghiệp cho khách doanh nghiệp.
 
-Tiêu chí hoàn thành: khách mua thẻ, dùng thẻ trả một phần và thanh toán phần còn lại.
+Tiêu chí hoàn thành: khách dùng thẻ trả một phần rồi thanh toán phần còn lại.
 ```
 
 ---
 
-### T10.5 — Frontend admin và khoản phải trả thẻ quà
+### T10.5a — Frontend admin: quản lý thẻ
 
-**Phụ thuộc:** T10.2, T6.4.
+**Phụ thuộc:** T10.2c.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H10.6 và H6.4.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 375-381.
 
-- Trang admin: danh sách thẻ, tra cứu theo mã hoặc email, lịch sử sử dụng của thẻ, hủy thẻ kèm lý do, gửi lại email.
-- Báo cáo khoản phải trả thẻ quà tặng và thẻ tín dụng (tổng đã bán chưa dùng, gồm cả số dư hết hạn) và gắn vào khung khối của báo cáo tài chính; số liệu khớp tổng số dư.
+Admin: danh sách thẻ, tra cứu theo mã hoặc email, lịch sử sử dụng của thẻ, hủy thẻ kèm lý do, gửi lại email.
 
-Tiêu chí hoàn thành: quản trị tra cứu và hủy thẻ; khoản phải trả khớp tổng số dư.
+Tiêu chí hoàn thành: quản trị tra cứu, hủy thẻ và gửi lại email.
+```
+
+---
+
+### T10.5b — Báo cáo khoản phải trả thẻ quà
+
+**Phụ thuộc:** T10.2b, T6.4.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 375-381 và 49-56.
+
+- Backend: đăng ký khối "khoản phải trả thẻ quà tặng" vào khung báo cáo T6.4 (đã bán chưa dùng, gồm số dư hết hạn, theo loại quà tặng và tín dụng đổi suất); có trong xuất Excel và PDF.
+- Frontend: hiển thị khối trong báo cáo tài chính.
+
+Tiêu chí hoàn thành: khoản phải trả khớp tổng số dư các thẻ.
 ```
 
 ---
@@ -998,108 +1390,217 @@ Tiêu chí hoàn thành: quản trị tra cứu và hủy thẻ; khoản phải 
 
 ---
 
-### T11.1 — Điều kiện và tính chênh lệch đổi suất (xem trước)
+### T11.1a — Cài đặt, lịch sử đổi và kiểm tra điều kiện
 
-**Phụ thuộc:** T10.2, T2.3.
+**Phụ thuộc:** T2.3, T1.8.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.3 và H11.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 452-467.
 
-API xem trước đổi suất (chưa thay đổi dữ liệu):
-- Điều kiện: đơn đã xác nhận; suất mới cùng phim, là suất thường hoặc sự kiện còn mở bán, không đổi sang hoặc từ suất riêng; trước hạn đổi (số giờ trước giờ chiếu cấu hình); số lần đổi của đơn chưa vượt cấu hình (mặc định một); vé đã check-in không được đổi; đổi theo từng vé hoặc cả đơn, số ghế đổi không vượt số vé; đơn tiền mặt chỉ đổi tại quầy.
-- Tính giá mới bằng IPricingService với loại vé giữ nguyên và kiểm tra lại điều kiện loại vé, so với giá thực trả của dòng vé cũ: đắt hơn thì số cần thu thêm, rẻ hơn thì số tín dụng được cấp.
-- Trả lỗi có lý do rõ ràng khi không đủ điều kiện.
-- Cài đặt: hạn đổi, số lần đổi tối đa, hạn thẻ tín dụng đổi suất.
+- Cài đặt rạp: hạn đổi (giờ trước giờ chiếu), số lần đổi tối đa mỗi đơn (mặc định 1), hạn thẻ tín dụng đổi suất (ngày).
+- Entity OrderExchange: đơn, vé cũ và vé mới, suất cũ và mới, chênh lệch, thời điểm, người thực hiện.
+- Service kiểm tra điều kiện: đơn đã xác nhận; suất mới cùng phim, là suất thường hoặc sự kiện còn mở bán, không đổi sang hoặc từ suất riêng; còn trước hạn đổi; chưa vượt số lần đổi; vé đã check-in không được đổi; đổi từng vé hoặc cả đơn; đơn tiền mặt chỉ đổi tại quầy. Trả lỗi có lý do rõ ràng.
 
-Tiêu chí hoàn thành: xem trước trả đúng chênh lệch và chặn đúng các trường hợp không đủ điều kiện.
+Tiêu chí hoàn thành: mỗi điều kiện không đạt trả đúng lý do.
 ```
 
 ---
 
-### T11.2 — Thực thi đổi suất
+### T11.1b — API xem trước chênh lệch
 
-**Phụ thuộc:** T11.1.
+**Phụ thuộc:** T11.1a, T2.2.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.4, 3.5 và H11.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 452-467 và 38-48.
 
-- Giữ ghế mới (nguyên tử). Suất đắt hơn: tạo khoản thu thêm qua đơn bổ sung hoặc giao dịch thu thông thường trên đơn, đơn chỉ hoàn tất đổi khi đủ tiền. Suất rẻ hơn: cấp thẻ tín dụng đổi suất (T10) gắn tài khoản khách, có hạn cấu hình, không hoàn về cổng; đơn tiền mặt của khách vãng lai tại quầy hoàn chênh lệch bằng tiền mặt và ghi giao dịch hoàn.
-- Khi hoàn tất: nhả ghế cũ, vô hiệu vé và QR cũ, phát vé và QR mới, email xác nhận, ghi lịch sử từng lần đổi trên đơn.
+- API xem trước đổi suất (không đổi dữ liệu): liệt kê suất đổi được cùng phim, với từng suất tính giá mới bằng IPricingService giữ nguyên loại vé và kiểm tra lại điều kiện loại vé.
+- So với giá thực trả của dòng vé cũ: đắt hơn thì số cần thu thêm, rẻ hơn thì số tín dụng được cấp.
+
+Tiêu chí hoàn thành: xem trước trả đúng chênh lệch hai chiều và chặn đúng các suất không hợp lệ.
+```
+
+---
+
+### T11.2a — Giữ ghế mới và thu thêm
+
+**Phụ thuộc:** T11.1b, T1.6, T1.2.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 452-467 và 57-61.
+
+- API bắt đầu đổi: giữ ghế mới nguyên tử kèm hạn, khóa giá mới.
+- Suất đắt hơn: tạo khoản thu thêm qua đơn bổ sung hoặc giao dịch thu thông thường trên đơn; đổi chỉ hoàn tất khi đủ tiền. Hết hạn thì nhả ghế mới, vé cũ còn nguyên.
+
+Tiêu chí hoàn thành: đổi sang suất đắt hơn thu đúng chênh lệch; hết hạn không làm mất vé cũ.
+```
+
+---
+
+### T11.2b — Suất rẻ hơn: tín dụng đổi suất hoặc hoàn tiền mặt
+
+**Phụ thuộc:** T11.2a, T10.2b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 452-467.
+
+- Suất rẻ hơn: cấp thẻ tín dụng đổi suất (GiftCard loại tín dụng, T10.1a) gắn tài khoản khách, hạn theo cấu hình, không hoàn về cổng thanh toán.
+- Đơn tiền mặt của khách vãng lai tại quầy: hoàn chênh lệch bằng tiền mặt, ghi giao dịch hoàn vào ca đang mở (T8.1b).
+
+Tiêu chí hoàn thành: đổi sang suất rẻ hơn cấp đúng tín dụng; khách vãng lai nhận hoàn tiền mặt đúng.
+```
+
+---
+
+### T11.2c — Hoàn tất đổi suất
+
+**Phụ thuộc:** T11.2a, T11.2b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 452-467 và 49-56.
+
+- Khi đủ điều kiện hoàn tất, trong một giao dịch: nhả ghế cũ, vô hiệu vé và QR cũ, phát vé và QR mới (giữ loại vé, giá đã khóa), ghi OrderExchange, tăng số lần đổi, gửi email xác nhận.
 - Mã khuyến mãi đã dùng, điểm đã tích, số tiền giảm của vé cũ giữ nguyên; combo không bị ảnh hưởng.
-- Doanh thu vé chuyển từ ngày chiếu cũ sang ngày chiếu mới, qua bút toán điều chỉnh nếu ngày cũ đã chốt (T8.2).
-- Đổi suất không tính là hủy và không tạo hoàn tiền ra ngoài. Cập nhật bảng tổng hợp.
+- Không phát OrderCancelled và không tạo hoàn tiền ra ngoài. Cập nhật bảng tổng hợp T6.1 (doanh thu vé chuyển sang ngày chiếu mới); ngày cũ đã chốt thì tạo bút toán điều chỉnh (T8.2c).
 - Quầy thực hiện đổi suất giúp khách.
 
-Tiêu chí hoàn thành: đổi sang suất đắt hơn thu đúng chênh lệch; rẻ hơn cấp đúng tín dụng; vé và QR cũ không còn quét được.
+Tiêu chí hoàn thành: vé và QR cũ không còn quét được; báo cáo hủy không đếm đổi suất.
 ```
 
 ---
 
-### T11.3 — Frontend và báo cáo đổi suất
+### T11.3a — Frontend khách và quầy: đổi suất
 
-**Phụ thuộc:** T11.2.
+**Phụ thuộc:** T11.2c.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H11.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 452-467.
 
 - Khách: nút đổi suất trên chi tiết đơn, chọn suất mới cùng phim, xem trước chênh lệch, thanh toán thêm hoặc nhận tín dụng, xem lịch sử đổi.
-- Quầy: đổi suất giúp khách trực tiếp.
-- Báo cáo admin: số lần đổi, tỷ lệ đổi so với hủy, chênh lệch thu thêm và tín dụng đã cấp, phim và khung giờ hay bị đổi (đăng ký vào khung báo cáo).
+- Quầy: đổi suất giúp khách.
 
-Tiêu chí hoàn thành: khách đổi suất trọn luồng; báo cáo hủy không đếm đổi suất.
+Tiêu chí hoàn thành: khách đổi suất trọn luồng cả hai chiều giá.
 ```
 
 ---
 
-# HẠNG MỤC 12. Bán thêm combo sau khi đặt vé và nhắc lịch chiếu
+### T11.3b — Báo cáo đổi suất
+
+**Phụ thuộc:** T11.2c, T6.4.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 452-467.
+
+- Backend: đăng ký khối báo cáo đổi suất vào khung T6.4: số lần đổi, tỷ lệ đổi so với hủy, chênh lệch thu thêm, tín dụng đã cấp, phim và khung giờ hay bị đổi.
+- Frontend: hiển thị khối trong trang báo cáo.
+
+Tiêu chí hoàn thành: số liệu khớp OrderExchange; báo cáo hủy không đếm đổi suất.
+```
 
 ---
 
-### T12.1 — Đơn bổ sung combo đặt trước
+# HẠNG MỤC 12. Combo đặt trước và nhắc lịch chiếu
+
+---
+
+### T12.1a — Đơn bổ sung combo
 
 **Phụ thuộc:** T4.2, T1.7.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.6 và H12.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 485-495.
 
-- Tạo đơn bổ sung (loại đơn bổ sung, trỏ về đơn gốc) chỉ gồm combo, thanh toán riêng, giữ chỗ kho như đơn thường; vé và ghế của đơn gốc không bị ảnh hưởng.
+- Tạo đơn bổ sung (loại đơn bổ sung, trỏ về đơn gốc đã xác nhận, trước giờ chiếu) chỉ gồm combo, thanh toán riêng, giữ chỗ kho như đơn thường (T4.2). Vé và ghế của đơn gốc không bị ảnh hưởng.
 - Giá ưu đãi cho combo đặt trước (cấu hình), còn hiệu lực đến trước giờ chiếu.
-- Gợi ý combo theo số vé (hai vé gợi ý combo đôi) và lịch sử mua của khách.
-- Đơn bổ sung không bị hủy theo đơn gốc, nhưng khi đơn gốc hủy hoặc đổi suất thì khách được nhắc xử lý (hủy và hoàn nếu chưa nhận, hoặc giữ nhận vào suất mới). Khi rạp hủy suất hoặc đóng phòng thì đơn bổ sung bị hủy và hoàn cùng đơn gốc (mở rộng T1.7 và T5.2).
-- Combo đặt trước nhận tại quầy bằng QR.
+- Nhận combo tại quầy bằng QR của đơn bổ sung (dùng luồng nhận combo T4.3).
 
-Tiêu chí hoàn thành: đơn bổ sung thanh toán độc lập và nhận được bằng QR; hủy suất hoàn cả hai đơn.
+Tiêu chí hoàn thành: đơn bổ sung thanh toán độc lập và nhận được bằng QR.
 ```
 
 ---
 
-### T12.2 — Nhắc lịch chiếu và email gợi ý combo
+### T12.1b — Gợi ý combo
 
-**Phụ thuộc:** T12.1, T1.5.
+**Phụ thuộc:** T12.1a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.10 và H12.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 485-495.
 
-- Tác vụ nền gửi nhắc lịch trước giờ chiếu theo số giờ cấu hình: mã QR, địa chỉ rạp, phòng, giờ mở check-in, hướng dẫn nhận combo. Chỉ gửi cho khách chưa tắt nhắc lịch; idempotent, mỗi vé chỉ nhắc một lần.
+API gợi ý combo cho một đơn: theo số vé (hai vé gợi ý combo đôi, ánh xạ số vé sang combo cấu hình được) và lịch sử mua combo của khách; chỉ gợi ý combo còn hàng; kèm giá đặt trước.
+
+Tiêu chí hoàn thành: đơn hai vé nhận gợi ý combo đôi; combo hết hàng không được gợi ý.
+```
+
+---
+
+### T12.1c — Liên kết đơn bổ sung với đơn gốc
+
+**Phụ thuộc:** T12.1a, T5.2.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 485-495.
+
+- Đơn gốc bị hủy hoặc đổi suất: không tự hủy đơn bổ sung, nhắc khách xử lý (hủy và hoàn nếu chưa nhận, hoặc giữ nhận vào suất mới). Handler nền cho OrderCancelled; chừa điểm gọi từ T11.2c.
+- Rạp hủy suất hoặc đóng phòng: đơn bổ sung bị hủy và hoàn cùng đơn gốc (mở rộng T1.7 và T5.2).
+
+Tiêu chí hoàn thành: hủy suất hoàn cả hai đơn; khách hủy đơn gốc nhận nhắc về đơn bổ sung.
+```
+
+---
+
+### T12.2a — Nhắc lịch chiếu
+
+**Phụ thuộc:** T12.1a, T1.5.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 485-495.
+
+- Tác vụ nền gửi nhắc trước giờ chiếu theo số giờ cấu hình: mã QR, địa chỉ rạp, phòng, giờ mở check-in, hướng dẫn nhận combo. Chỉ gửi khách chưa tắt nhắc lịch (helper T1.5); idempotent, mỗi vé nhắc một lần.
 - Suất bị đổi hoặc hủy thì hủy nhắc cũ.
-- Email sau khi đặt vé gợi ý thêm combo đặt trước kèm liên kết.
 
-Tiêu chí hoàn thành: nhắc gửi đúng giờ, không gửi cho suất đã đổi hoặc hủy, không gửi cho khách đã tắt.
+Tiêu chí hoàn thành: nhắc đúng giờ, không gửi cho suất đã đổi hoặc hủy, không gửi cho khách đã tắt.
 ```
 
 ---
 
-### T12.3 — Frontend và báo cáo combo đặt trước
+### T12.2b — Email gợi ý combo sau đặt vé
 
-**Phụ thuộc:** T12.1.
+**Phụ thuộc:** T12.1b.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H12.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 485-495.
 
-- Khách: khối gợi ý combo trên trang xác nhận đặt vé và chi tiết đơn, thanh toán đơn bổ sung, thông báo nhắc xử lý đơn bổ sung khi đơn gốc hủy hoặc đổi.
-- Báo cáo admin: tỷ lệ khách mua thêm combo sau khi đặt vé, doanh thu combo đặt trước, so sánh với combo mua tại quầy, tỷ lệ combo đặt trước đã nhận.
+Email xác nhận đặt vé có khối gợi ý combo đặt trước kèm liên kết tới trang mua; xử lý qua handler nền của OrderConfirmed, không làm chậm xác nhận đơn.
 
-Tiêu chí hoàn thành: khách mua thêm combo từ trang xác nhận; báo cáo hiển thị đủ các chỉ số.
+Tiêu chí hoàn thành: email xác nhận có gợi ý combo đúng đơn.
+```
+
+---
+
+### T12.3a — Frontend khách: combo đặt trước
+
+**Phụ thuộc:** T12.1c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 485-495.
+
+Khách: khối gợi ý combo ở trang xác nhận đặt vé và chi tiết đơn, thanh toán đơn bổ sung, thông báo nhắc xử lý đơn bổ sung khi đơn gốc hủy hoặc đổi suất.
+
+Tiêu chí hoàn thành: khách mua thêm combo từ trang xác nhận.
+```
+
+---
+
+### T12.3b — Báo cáo combo đặt trước
+
+**Phụ thuộc:** T12.1a, T6.4.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 485-495.
+
+- Backend: khối báo cáo vào khung T6.4: tỷ lệ khách mua thêm combo sau đặt vé, doanh thu combo đặt trước, so sánh với combo mua tại quầy, tỷ lệ combo đặt trước đã nhận.
+- Frontend: hiển thị khối trong trang báo cáo.
+
+Tiêu chí hoàn thành: báo cáo hiển thị đủ bốn chỉ số.
 ```
 
 ---
@@ -1108,153 +1609,328 @@ Tiêu chí hoàn thành: khách mua thêm combo từ trang xác nhận; báo cá
 
 ---
 
-### T13.1 — Sổ cái điểm theo lô, hai loại điểm
+### T13.1a — Mô hình điểm: hai loại và lô điểm
 
-**Phụ thuộc:** T1.6, T3.1.
+**Phụ thuộc:** T1.6.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H13.1 và H13.2.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 303-318.
 
-- Tách điểm xếp hạng (cửa sổ cấu hình hiện có, quyết định hạng, đổi quà không làm giảm) và số dư điểm đổi quà (có hạn dùng riêng cấu hình).
-- Mở rộng dòng điểm hiện có thành lô: ngày nhận, hạn dùng, số điểm còn lại. Loại biến động: tích từ đơn, thưởng, đổi quà, hết hạn, thu hồi khi hủy hoặc hoàn, điều chỉnh của quản trị. Đổi quà tiêu hao lô cũ nhất trước.
-- Tích điểm trên số tiền khách thực trả của đơn vé và combo; đơn thẻ quà, gói thành viên, thuê phòng không tích.
-- Thu hồi theo tỷ lệ phần hoàn khi hủy; nếu đã tiêu mất thì số dư có thể âm và trừ vào lần tích tiếp theo.
-- Tác vụ nền xử lý điểm hết hạn và gửi nhắc khách có điểm sắp hết hạn.
-- API điều chỉnh điểm của quản trị có ghi nhật ký.
+- Tách điểm xếp hạng (cửa sổ cấu hình hiện có, quyết định hạng, đổi quà không làm giảm) và số dư điểm đổi quà (hạn dùng riêng, cấu hình).
+- Mở rộng dòng điểm hiện có thành lô: ngày nhận, hạn dùng, số điểm còn lại. Loại biến động: tích từ đơn, thưởng, đổi quà, hết hạn, thu hồi khi hủy hoặc hoàn, điều chỉnh của quản trị.
+- Service đọc số dư, hạng; hàm trừ điểm tiêu hao lô cũ nhất trước (chưa có API đổi quà).
 
-Tiêu chí hoàn thành: điểm hết hạn đúng thứ tự lô cũ trước; hủy đơn thu hồi điểm, số dư âm được trừ ở lần tích sau; đổi quà không đổi hạng.
+Tiêu chí hoàn thành: trừ điểm lấy đúng thứ tự lô cũ trước; đổi quà không làm đổi hạng.
 ```
 
 ---
 
-### T13.2 — Danh mục quà và đổi điểm
+### T13.1b — Tích và thu hồi điểm theo đơn
 
-**Phụ thuộc:** T13.1, T3.3.
+**Phụ thuộc:** T13.1a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H13.3.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 303-318.
 
-- Entity quà: tên, số điểm cần, loại (vé miễn phí, combo miễn phí, mã giảm giá), số lượng còn, thời gian hiệu lực. API admin CRUD.
-- API khách đổi quà: trừ điểm nguyên tử từ lô cũ nhất, trừ số lượng còn, rồi cấp mã khuyến mãi cá nhân dùng một lần gắn tài khoản, có hạn dùng. Mã hết hạn không dùng thì không hoàn điểm; trả thông tin này khi đổi.
-- Ghi nhật ký tạo và sửa quà.
+- Tích điểm trên số tiền khách thực trả của đơn vé và combo (handler trong giao dịch khi OrderConfirmed); đơn thẻ quà, gói thành viên, thuê phòng không tích.
+- Thu hồi theo tỷ lệ phần hoàn khi hủy hoặc hoàn (handler cho OrderRefunded, OrderCancelled); nếu đã tiêu mất thì số dư có thể âm và trừ vào lần tích tiếp theo. Idempotent.
 
-Tiêu chí hoàn thành: đổi quà trừ đúng điểm và cấp đúng mã cá nhân; hết số lượng thì không đổi được.
+Tiêu chí hoàn thành: hủy đơn thu hồi điểm đúng tỷ lệ; số dư âm được trừ ở lần tích sau.
 ```
 
 ---
 
-### T13.3 — Thử thách theo tháng
+### T13.1c — Hết hạn điểm và nhắc
 
-**Phụ thuộc:** T13.1, T1.3.
+**Phụ thuộc:** T13.1a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.1 (định nghĩa Đã xem) và H13.4.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 303-318 và 62-70.
 
-- Entity thử thách: tên, kỳ áp dụng, điều kiện (ví dụ xem 3 phim khác nhau trong tháng), phần thưởng (điểm hoặc mã quà). API admin CRUD. Tiến độ của khách.
+- Tác vụ nền xử lý điểm hết hạn theo lô, idempotent.
+- Nhắc khách có điểm sắp hết hạn (khoảng ngày cấu hình), chỉ gửi theo tùy chọn thông báo của khách (helper T1.5), mỗi lô nhắc một lần.
+
+Tiêu chí hoàn thành: điểm hết hạn đúng lô; nhắc không gửi lặp.
+```
+
+---
+
+### T13.1d — Điều chỉnh điểm của quản trị
+
+**Phụ thuộc:** T13.1a, T1.4.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 303-318 và 71-74.
+
+API admin tra cứu khách và điều chỉnh điểm cộng hoặc trừ, bắt buộc lý do, tạo dòng lô loại điều chỉnh, ghi nhật ký. API báo cáo điểm đã phát, đã đổi, đã hết hạn theo kỳ (khối báo cáo của khung T6.4).
+
+Tiêu chí hoàn thành: điều chỉnh có dòng lô và dòng nhật ký; báo cáo điểm khớp sổ.
+```
+
+---
+
+### T13.2a — Danh mục quà
+
+**Phụ thuộc:** T13.1a, T3.1.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 319-323.
+
+Entity quà: tên, số điểm cần, loại (vé miễn phí, combo miễn phí, mã giảm giá), số lượng còn, thời gian hiệu lực, hạn dùng của mã được cấp. API admin CRUD, ghi nhật ký tạo và sửa; API khách xem danh mục đang đổi được.
+
+Tiêu chí hoàn thành: CRUD đầy đủ; khách chỉ thấy quà còn hiệu lực và còn số lượng.
+```
+
+---
+
+### T13.2b — API đổi quà
+
+**Phụ thuộc:** T13.2a, T3.3.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 319-323.
+
+API khách đổi quà: trừ điểm nguyên tử từ lô cũ nhất, trừ số lượng quà, rồi cấp mã khuyến mãi cá nhân dùng một lần gắn tài khoản có hạn dùng (T3.1). Mã hết hạn không dùng thì không hoàn điểm; trả thông tin này khi đổi. Trong một giao dịch, lỗi thì hoàn tác cả ba.
+
+Tiêu chí hoàn thành: đổi quà trừ đúng điểm và cấp đúng mã; hết số lượng hoặc thiếu điểm thì không đổi được.
+```
+
+---
+
+### T13.3a — Thử thách: dữ liệu và CRUD
+
+**Phụ thuộc:** T13.1a.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 324-330.
+
+Entity thử thách: tên, kỳ áp dụng, điều kiện (ví dụ xem 3 phim khác nhau trong tháng), phần thưởng (điểm hoặc quà); entity tiến độ của khách. API admin CRUD, API khách xem thử thách và tiến độ.
+
+Tiêu chí hoàn thành: tạo được thử thách; khách xem được tiến độ.
+```
+
+---
+
+### T13.3b — Cập nhật tiến độ và trao thưởng
+
+**Phụ thuộc:** T13.3a, T1.3.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 324-330.
+
 - Handler nền cho TicketCheckedIn cập nhật tiến độ; chỉ tính vé đã check-in, không tính suất riêng; idempotent.
 - Hoàn thành thì cấp thưởng tự động và gửi thông báo; mỗi khách chỉ nhận một lần cho mỗi thử thách.
 
-Tiêu chí hoàn thành: đặt vé nhưng không đến xem không tính vào tiến độ; thưởng cấp đúng một lần.
+Tiêu chí hoàn thành: đặt vé nhưng không đến xem không tính tiến độ; thưởng cấp đúng một lần.
 ```
 
 ---
 
-### T13.4 — Giới thiệu bạn bè
+### T13.4a — Quan hệ giới thiệu
 
-**Phụ thuộc:** T13.1, T1.5, T3.1.
+**Phụ thuộc:** T1.5, T13.1a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H13.5.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 331-336.
 
-- Người mới nhập mã giới thiệu khi đăng ký; lưu quan hệ giới thiệu.
-- Thưởng cho cả hai bên khi đơn đầu tiên của người được giới thiệu được xác nhận (handler nền cho OrderConfirmed, idempotent), không phải lúc đăng ký.
-- Chống lạm dụng: mỗi người chỉ được giới thiệu một lần, không tự giới thiệu, trùng số điện thoại hoặc email với tài khoản đã có không được tính, trần thưởng giới thiệu mỗi tháng cho mỗi người (cấu hình); chừa điểm gọi kiểm tra thiết bị của T18.1.
-- API danh sách người đã giới thiệu.
+- Người mới nhập mã giới thiệu khi đăng ký; lưu quan hệ (người giới thiệu, người được giới thiệu). Mỗi người chỉ được giới thiệu một lần, không tự giới thiệu.
+- API danh sách người đã giới thiệu và trạng thái nhận thưởng. Chưa trao thưởng.
 
-Tiêu chí hoàn thành: thưởng chỉ cấp một lần sau đơn đầu xác nhận; tự giới thiệu và trùng thông tin bị chặn.
+Tiêu chí hoàn thành: mã đúng tạo quan hệ; tự giới thiệu và giới thiệu lần hai bị chặn.
 ```
 
 ---
 
-### T13.5 — Frontend khách: điểm, quà, thử thách, giới thiệu
+### T13.4b — Thưởng giới thiệu và chống lạm dụng
 
-**Phụ thuộc:** T13.2, T13.3, T13.4.
+**Phụ thuộc:** T13.4a, T13.1b.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H13.6.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 331-336.
 
-Trang khách: số dư điểm và hạng, lịch sử điểm theo lô, điểm sắp hết hạn, danh mục quà và đổi quà (nói rõ mã hết hạn không hoàn điểm), thử thách và tiến độ, mã giới thiệu có nút sao chép và danh sách người đã giới thiệu. Ô nhập mã giới thiệu ở form đăng ký.
+- Handler nền cho OrderConfirmed: thưởng cả hai bên khi đơn đầu tiên của người được giới thiệu được xác nhận, không phải lúc đăng ký; idempotent.
+- Chống lạm dụng: trùng số điện thoại hoặc email với tài khoản đã có không được tính; trần thưởng giới thiệu mỗi tháng cho mỗi người (cấu hình); chừa điểm gọi kiểm tra thiết bị của T18.1c.
 
-Tiêu chí hoàn thành: khách đổi quà, theo dõi thử thách, chia sẻ mã giới thiệu.
+Tiêu chí hoàn thành: thưởng chỉ cấp một lần sau đơn đầu xác nhận; trùng thông tin bị chặn.
 ```
 
 ---
 
-### T13.6 — Frontend admin và báo cáo loyalty
+### T13.5a — Frontend khách: điểm và quà
 
-**Phụ thuộc:** T13.2, T13.3.
+**Phụ thuộc:** T13.2b.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H13.6.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 337-343.
 
-Trang admin: quản lý quà, quản lý thử thách, tra cứu khách và điều chỉnh điểm (nhập lý do, có nhật ký), báo cáo điểm đã phát, đã đổi, đã hết hạn theo kỳ (đăng ký vào khung báo cáo).
+Khách: số dư điểm và hạng, lịch sử điểm theo lô, điểm sắp hết hạn, danh mục quà và đổi quà (nói rõ mã hết hạn không hoàn điểm).
 
-Tiêu chí hoàn thành: quản trị tạo quà và thử thách, điều chỉnh điểm có nhật ký, xem báo cáo điểm.
+Tiêu chí hoàn thành: khách xem điểm theo lô và đổi quà thành công.
 ```
 
 ---
 
-# HẠNG MỤC 14. Hỗ trợ khách hàng và hoàn tiền ngoại lệ có duyệt
+### T13.5b — Frontend khách: thử thách và giới thiệu
+
+**Phụ thuộc:** T13.3b, T13.4b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 337-343.
+
+Khách: trang thử thách và tiến độ; mã giới thiệu có nút sao chép và danh sách người đã giới thiệu; ô nhập mã giới thiệu ở form đăng ký.
+
+Tiêu chí hoàn thành: khách theo dõi thử thách, chia sẻ mã và đăng ký bằng mã.
+```
 
 ---
 
-### T14.1 — Yêu cầu hỗ trợ (backend)
+### T13.6a — Frontend admin: quà và thử thách
 
-**Phụ thuộc:** T1.8, T6.5, T3.1.
+**Phụ thuộc:** T13.2a, T13.3a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H14.1.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 337-343.
 
-- Entity yêu cầu hỗ trợ gắn một đơn: loại (không nhận email vé, bị trừ tiền nhưng đơn chưa xác nhận, muốn hoàn ngoài chính sách, góp ý suất chiếu...), trạng thái (mới, đang xử lý, chờ khách phản hồi, đã giải quyết), người phụ trách, hạn xử lý, lịch sử trao đổi. Khách xem tiến độ và trả lời trên yêu cầu; nhân viên và quản trị xử lý.
-- Tự tạo yêu cầu khi đối soát (T6.5) phát hiện giao dịch đã thu mà đơn chưa xác nhận, và khi thu thừa không tự hoàn được (T1.2).
-- Trong yêu cầu, nhân viên cấp mã quà xin lỗi (mã khuyến mãi cá nhân) hoặc gửi lại email vé.
-- Email thông báo khi có cập nhật.
+Admin: danh sách và form quản lý quà, danh sách và form quản lý thử thách.
+
+Tiêu chí hoàn thành: quản trị tạo quà và thử thách.
+```
+
+---
+
+### T13.6b — Frontend admin: điều chỉnh điểm và báo cáo
+
+**Phụ thuộc:** T13.1d.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 337-343.
+
+Admin: tra cứu khách và điều chỉnh điểm (nhập lý do), báo cáo điểm đã phát, đã đổi, đã hết hạn theo kỳ.
+
+Tiêu chí hoàn thành: điều chỉnh điểm có nhật ký; báo cáo điểm hiển thị đúng.
+```
+
+---
+
+# HẠNG MỤC 14. Hỗ trợ khách hàng và hoàn tiền ngoại lệ
+
+---
+
+### T14.1a — Yêu cầu hỗ trợ: dữ liệu và API khách
+
+**Phụ thuộc:** T1.8.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 612-621.
+
+- Entity yêu cầu hỗ trợ gắn một đơn: loại (không nhận email vé, bị trừ tiền nhưng đơn chưa xác nhận, muốn hoàn ngoài chính sách, góp ý suất chiếu...), trạng thái (mới, đang xử lý, chờ khách phản hồi, đã giải quyết), người phụ trách, hạn xử lý; entity tin nhắn trao đổi.
+- API khách: tạo yêu cầu từ một đơn của mình, xem danh sách và tiến độ, trả lời.
 - Cài đặt hạn xử lý mặc định.
 
-Tiêu chí hoàn thành: giao dịch bị trừ tiền nhưng đơn chưa xác nhận tự sinh yêu cầu; khách theo dõi và trả lời được.
+Tiêu chí hoàn thành: khách tạo và trả lời yêu cầu; không xem được yêu cầu của người khác.
 ```
 
 ---
 
-### T14.2 — Hoàn tiền ngoại lệ có duyệt
+### T14.1b — Xử lý yêu cầu (nhân viên và quản trị)
 
-**Phụ thuộc:** T14.1, T1.7.
+**Phụ thuộc:** T14.1a, T3.1.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.6, 3.11 và H14.2.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 612-621.
 
-- Entity đề xuất hoàn ngoại lệ: đơn, hoàn từng vé hoặc một phần số tiền, lý do, số tiền, người đề xuất, trạng thái, người duyệt.
-- Nhân viên quầy và quản trị được đề xuất; vượt ngưỡng cấu hình thì cần quản trị duyệt, dưới ngưỡng quản trị duyệt nhanh; người đề xuất không tự duyệt đề xuất của mình.
-- Khi duyệt, hoàn qua sổ giao dịch theo 3.6. Hoàn ngoại lệ không tự thay đổi vé; nếu hoàn kèm hủy vé thì quản trị chọn hủy vé trong cùng thao tác để nhả ghế.
-- Ghi nhật ký đề xuất, duyệt và lý do. Combo đã nhận được phép hoàn ở luồng này.
+- API nhân viên và quản trị: danh sách theo trạng thái và người phụ trách, gán người phụ trách, đổi trạng thái, trả lời khách.
+- Trong yêu cầu: cấp mã quà xin lỗi (mã khuyến mãi cá nhân, T3.1) và gửi lại email vé.
+- Email thông báo khách khi có cập nhật (Messages.resx).
 
-Tiêu chí hoàn thành: hoàn vượt ngưỡng không thực hiện được khi chưa duyệt; không tự duyệt đề xuất của mình.
+Tiêu chí hoàn thành: xử lý trọn một yêu cầu, khách nhận email mỗi lần cập nhật.
 ```
 
 ---
 
-### T14.3 — Frontend và báo cáo hỗ trợ
+### T14.1c — Tự tạo yêu cầu từ đối soát và thu thừa
 
-**Phụ thuộc:** T14.2.
+**Phụ thuộc:** T14.1a, T6.5.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H14.3.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 612-621.
 
-- Khách: tạo yêu cầu từ chi tiết đơn, danh sách yêu cầu, trang theo dõi và trả lời.
-- Nhân viên và quản trị: bảng yêu cầu theo trạng thái, gán người phụ trách, trao đổi, cấp mã quà xin lỗi, gửi lại email vé, đề xuất và duyệt hoàn ngoại lệ.
-- Báo cáo: số yêu cầu theo loại, thời gian xử lý trung bình, tỷ lệ giải quyết trong hạn, tổng tiền hoàn ngoại lệ theo lý do và theo người đề xuất.
+Tự tạo yêu cầu hỗ trợ (idempotent theo giao dịch) khi đối soát cổng (T6.5) phát hiện giao dịch đã thu mà đơn chưa xác nhận, và khi thu thừa không tự hoàn được (T1.2). Gắn đúng đơn và khách.
+
+Tiêu chí hoàn thành: giao dịch bị trừ tiền nhưng đơn chưa xác nhận tự sinh đúng một yêu cầu.
+```
+
+---
+
+### T14.2a — Đề xuất hoàn ngoại lệ và quy tắc duyệt
+
+**Phụ thuộc:** T14.1a, T1.4.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 622-627.
+
+- Entity đề xuất hoàn ngoại lệ: đơn, hoàn từng vé hoặc một phần số tiền, lý do, số tiền, người đề xuất, trạng thái, người duyệt, thời điểm.
+- Nhân viên quầy và quản trị được đề xuất. Vượt ngưỡng cấu hình thì cần quản trị duyệt, dưới ngưỡng quản trị duyệt nhanh. Người đề xuất không tự duyệt đề xuất của mình. Ghi nhật ký đề xuất, duyệt và lý do.
+
+Tiêu chí hoàn thành: không tự duyệt được đề xuất của chính mình; ngưỡng áp đúng.
+```
+
+---
+
+### T14.2b — Thực thi hoàn ngoại lệ
+
+**Phụ thuộc:** T14.2a, T1.7.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 622-627.
+
+- Khi duyệt, hoàn qua sổ giao dịch (T1.7), không vượt số đã thu. Combo đã nhận được phép hoàn ở luồng này.
+- Hoàn ngoại lệ không tự thay đổi vé; nếu hoàn kèm hủy vé thì quản trị chọn hủy vé trong cùng thao tác để nhả ghế. Phát OrderRefunded.
+
+Tiêu chí hoàn thành: hoàn vượt ngưỡng không thực hiện được khi chưa duyệt; hoàn kèm hủy vé nhả ghế.
+```
+
+---
+
+### T14.3a — Frontend khách: hỗ trợ
+
+**Phụ thuộc:** T14.1b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 612-621.
+
+Khách: tạo yêu cầu từ chi tiết đơn, danh sách yêu cầu, trang theo dõi và trả lời.
+
+Tiêu chí hoàn thành: khách tạo yêu cầu và trao đổi với nhân viên.
+```
+
+---
+
+### T14.3b — Frontend nhân viên và quản trị: xử lý và hoàn ngoại lệ
+
+**Phụ thuộc:** T14.1b, T14.2b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 612-627.
+
+Nhân viên và quản trị: bảng yêu cầu theo trạng thái, gán người phụ trách, trao đổi, cấp mã quà xin lỗi, gửi lại email vé, đề xuất hoàn ngoại lệ, danh sách chờ duyệt và nút duyệt (chỉ quản trị).
 
 Tiêu chí hoàn thành: xử lý trọn một yêu cầu từ khách gửi đến hoàn ngoại lệ có duyệt.
+```
+
+---
+
+### T14.3c — Báo cáo hỗ trợ
+
+**Phụ thuộc:** T14.2b, T6.4.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 628-633.
+
+- Backend: khối báo cáo vào khung T6.4: số yêu cầu theo loại, thời gian xử lý trung bình, tỷ lệ giải quyết trong hạn, tổng tiền hoàn ngoại lệ theo lý do và theo người đề xuất.
+- Frontend: hiển thị khối trong trang báo cáo.
+
+Tiêu chí hoàn thành: số liệu khớp dữ liệu yêu cầu và đề xuất hoàn.
 ```
 
 ---
@@ -1263,48 +1939,88 @@ Tiêu chí hoàn thành: xử lý trọn một yêu cầu từ khách gửi đ�
 
 ---
 
-### T15.1 — Bộ gợi ý phim (backend)
+### T15.1a — Tín hiệu sở thích của khách
 
 **Phụ thuộc:** T1.8, T1.5.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.1, 3.10 và H15.1.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 417-433.
 
-- Tính điểm phù hợp giữa khách và từng phim đang chiếu từ: sở thích theo lịch sử đã xem (vé đã check-in) và đánh giá đã viết (thể loại, diễn viên, đạo diễn; phim xem gần đây và chấm cao có trọng số lớn hơn; vé đã mua chưa quét có trọng số thấp hơn); tương đồng giữa phim theo hành vi (người xem A thường xem B); độ phổ biến và đánh giá chung cho khách mới; thói quen đặt vé (khung giờ, định dạng phòng, mức giá) để xếp suất.
+- Tác vụ nền (dùng sự kiện TicketCheckedIn và đánh giá mới) cập nhật hồ sơ sở thích mỗi khách: thể loại, diễn viên, đạo diễn từ vé đã check-in và đánh giá đã viết; phim xem gần đây và chấm cao có trọng số lớn hơn; vé đã mua chưa quét có trọng số thấp hơn.
+- Hồ sơ thói quen đặt vé: khung giờ, định dạng phòng, mức giá thường chọn.
+- Khách tắt cá nhân hóa (T1.5) thì không cập nhật hồ sơ.
+
+Tiêu chí hoàn thành: hồ sơ cập nhật sau check-in; khách tắt cá nhân hóa không có hồ sơ.
+```
+
+---
+
+### T15.1b — Tương đồng giữa phim và độ phổ biến
+
+**Phụ thuộc:** T15.1a.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 417-433.
+
+Tác vụ nền tính: mức tương đồng giữa các phim theo hành vi (người xem A thường xem B, dựa trên vé đã check-in) và điểm phổ biến chung kèm đánh giá chung (dùng cho khách mới). Lưu bảng kết quả để API đọc nhanh.
+
+Tiêu chí hoàn thành: bảng tương đồng và phổ biến cập nhật định kỳ; chạy lặp không sinh trùng.
+```
+
+---
+
+### T15.1c — Chấm điểm, loại trừ và API "Dành cho bạn"
+
+**Phụ thuộc:** T15.1b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 417-433.
+
+- Tính điểm phù hợp khách với từng phim từ hồ sơ sở thích, tương đồng, phổ biến; xếp suất theo thói quen đặt vé.
 - Loại trừ: phim khách đã mua vé hoặc đã xem; chỉ phim đang chiếu còn suất thường trong những ngày tới; ưu tiên suất còn ghế; không gợi ý suất riêng; không gợi ý suất sự kiện cho khách chưa đủ điều kiện mua.
-- Mỗi gợi ý kèm lý do ngắn.
-- Tác vụ nền cập nhật dữ liệu gợi ý (dùng sự kiện TicketCheckedIn và đánh giá mới).
-- API "Dành cho bạn"; khách tắt cá nhân hóa thì chỉ trả danh sách phổ biến chung.
+- Mỗi gợi ý kèm lý do ngắn. API "Dành cho bạn"; khách tắt cá nhân hóa thì chỉ trả danh sách phổ biến chung.
 
 Tiêu chí hoàn thành: khách mới thấy danh sách phổ biến; khách có lịch sử thấy phim cùng thể loại hoặc đạo diễn kèm lý do; phim đã xem không xuất hiện.
 ```
 
 ---
 
-### T15.2 — Công cụ trợ lý AI và email giới thiệu phim
+### T15.2a — Công cụ gợi ý cho trợ lý AI
 
-**Phụ thuộc:** T15.1.
+**Phụ thuộc:** T15.1c.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.10 và H15.2.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 434-445.
 
-- Thêm công cụ gợi ý phim cho trợ lý AI: khi khách hỏi "tối nay xem gì", trợ lý gọi công cụ, diễn đạt lại kết quả kèm suất chiếu cụ thể; công cụ chỉ thấy suất thường và sự kiện công khai.
-- Email giới thiệu phim mới phù hợp qua tác vụ nền, chỉ gửi khách đã bật tiếp thị, có liên kết hủy đăng ký, không gửi lặp cùng phim.
+Thêm công cụ gợi ý phim cho trợ lý AI: khi khách hỏi "tối nay xem gì", trợ lý gọi công cụ, diễn đạt lại kết quả kèm suất chiếu cụ thể. Công cụ chỉ thấy suất thường và sự kiện công khai, tôn trọng cờ tắt cá nhân hóa.
 
-Tiêu chí hoàn thành: trợ lý gợi ý đúng kèm suất; khách chưa bật tiếp thị không nhận email.
+Tiêu chí hoàn thành: trợ lý gợi ý đúng kèm suất; khách tắt cá nhân hóa chỉ nhận danh sách chung.
+```
+
+---
+
+### T15.2b — Email giới thiệu phim mới
+
+**Phụ thuộc:** T15.1c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 434-445.
+
+Tác vụ nền gửi email giới thiệu phim mới phù hợp: chỉ cho khách đã bật tiếp thị và bật gợi ý (helper T1.5), có liên kết hủy đăng ký, không gửi lặp cùng phim cho cùng khách, idempotent.
+
+Tiêu chí hoàn thành: khách chưa bật tiếp thị không nhận email; mỗi phim chỉ gửi một lần cho mỗi khách.
 ```
 
 ---
 
 ### T15.3 — Frontend "Dành cho bạn"
 
-**Phụ thuộc:** T15.1.
+**Phụ thuộc:** T15.1c.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H15.2 và H15.3.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 434-445.
 
-- Mục "Dành cho bạn" ở trang chủ và trang phim, hiển thị lý do gợi ý, dùng MovieCard hiện có.
-- Trang cá nhân có công tắc tắt gợi ý cá nhân hóa; khi tắt chỉ hiện danh sách phổ biến chung.
+Mục "Dành cho bạn" ở trang chủ và trang phim, hiển thị lý do gợi ý, dùng MovieCard hiện có; công tắc tắt gợi ý cá nhân hóa ở trang cá nhân (khi tắt chỉ hiện danh sách phổ biến chung).
 
 Tiêu chí hoàn thành: tắt cá nhân hóa thì không còn mục "Dành cho bạn" cá nhân.
 ```
@@ -1315,35 +2031,76 @@ Tiêu chí hoàn thành: tắt cá nhân hóa thì không còn mục "Dành cho 
 
 ---
 
-### T16.1 — Mời đánh giá, thưởng điểm, khảo sát, chất lượng phòng (backend)
+### T16.1a — Mời đánh giá và thưởng điểm
 
-**Phụ thuộc:** T1.3, T13.1, T1.5.
+**Phụ thuộc:** T1.3, T13.1b, T1.5.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.10 và H16.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 548-560.
 
-- Giữ nguyên quy tắc đánh giá hiện có (chỉ khi có vé đã check-in, mỗi khách một đánh giá cho mỗi phim). Đánh giá gắn nhãn "đã xem" và tính vào điểm trung bình.
-- Tác vụ nền gửi email mời đánh giá sau suất một đến ba giờ (cấu hình), chỉ cho khách chưa tắt; idempotent. Đánh giá hợp lệ được thưởng điểm nhỏ, mỗi phim chỉ thưởng một lần.
-- Entity khảo sát nhanh: chấm một đến năm cho phòng, âm thanh, hình ảnh, vệ sinh, dịch vụ quầy; gắn với đơn và suất đã xem, mỗi suất một lần. API gửi và đọc.
-- Báo cáo chất lượng theo phòng và theo thời gian; điểm một phòng thấp liên tục (ngưỡng cấu hình) thì cảnh báo quản trị.
-- Đánh giá xác thực là tín hiệu cho gợi ý phim (T15.1) và độ nóng phim ở xếp lịch.
+- Giữ nguyên quy tắc đánh giá hiện có (chỉ khi có vé đã check-in, mỗi khách một đánh giá mỗi phim). Đánh giá gắn nhãn "đã xem" và tính vào điểm trung bình phim.
+- Tác vụ nền gửi email mời đánh giá sau suất một đến ba giờ (cấu hình), chỉ cho khách chưa tắt nhắc và mời đánh giá (helper T1.5); idempotent.
+- Đánh giá hợp lệ được thưởng điểm nhỏ (qua sổ điểm T13.1a), mỗi phim thưởng một lần.
+- Đánh giá xác thực là tín hiệu cho T15.1a và độ nóng phim.
 
-Tiêu chí hoàn thành: mời đánh giá gửi đúng thời điểm; thưởng điểm một lần mỗi phim; cảnh báo phòng xuất hiện khi điểm thấp liên tục.
+Tiêu chí hoàn thành: mời đánh giá gửi đúng thời điểm, một lần; thưởng điểm một lần mỗi phim.
 ```
 
 ---
 
-### T16.2 — Frontend đánh giá, khảo sát, báo cáo chất lượng
+### T16.1b — Khảo sát nhanh trải nghiệm
 
-**Phụ thuộc:** T16.1.
+**Phụ thuộc:** T1.3.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H16.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 548-560.
 
-- Khách: hiển thị nhãn "đã xem" trên đánh giá, trang đánh giá mở từ email mời, form khảo sát nhanh sau suất.
-- Admin: báo cáo chất lượng theo phòng và theo thời gian, hiển thị cảnh báo phòng điểm thấp.
+Entity khảo sát: chấm một đến năm cho phòng, âm thanh, hình ảnh, vệ sinh, dịch vụ quầy; gắn với đơn và suất đã xem, mỗi suất một lần, chỉ khách có vé đã check-in. API gửi khảo sát và đọc lại khảo sát của mình.
 
-Tiêu chí hoàn thành: khách gửi đánh giá và khảo sát từ liên kết email; quản trị thấy cảnh báo chất lượng phòng.
+Tiêu chí hoàn thành: một suất chỉ gửi được một khảo sát; khách không có vé đã check-in bị chặn.
+```
+
+---
+
+### T16.1c — Báo cáo chất lượng phòng và cảnh báo
+
+**Phụ thuộc:** T16.1b, T6.4.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 548-560.
+
+- API báo cáo chất lượng theo phòng, theo tiêu chí và theo thời gian (khối báo cáo vào khung T6.4).
+- Tác vụ nền cảnh báo quản trị khi điểm một phòng thấp liên tục (ngưỡng và số ngày cấu hình), không cảnh báo lặp.
+
+Tiêu chí hoàn thành: cảnh báo xuất hiện khi phòng điểm thấp liên tục, đúng một lần cho mỗi đợt.
+```
+
+---
+
+### T16.2a — Frontend khách: đánh giá và khảo sát
+
+**Phụ thuộc:** T16.1b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 548-560.
+
+Khách: nhãn "đã xem" trên đánh giá, trang đánh giá mở từ liên kết email mời, form khảo sát nhanh sau suất.
+
+Tiêu chí hoàn thành: khách gửi đánh giá và khảo sát từ liên kết email.
+```
+
+---
+
+### T16.2b — Frontend admin: chất lượng phòng
+
+**Phụ thuộc:** T16.1c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 548-560.
+
+Admin: báo cáo chất lượng theo phòng và theo thời gian, hiển thị cảnh báo phòng điểm thấp.
+
+Tiêu chí hoàn thành: quản trị thấy cảnh báo chất lượng phòng.
 ```
 
 ---
@@ -1352,50 +2109,105 @@ Tiêu chí hoàn thành: khách gửi đánh giá và khảo sát từ liên k�
 
 ---
 
-### T17.1 — Danh sách chờ cho suất hết ghế (backend)
+### T17.1a — Đăng ký chờ cho suất hết ghế
 
-**Phụ thuộc:** T5.3, T1.6, T1.3.
+**Phụ thuộc:** T1.6.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H17.1 và H5 (khóa ghế).
+Áp dụng QUY TẮC CHUNG. Đọc dòng 468-477.
 
-- Entity đăng ký chờ: suất, khách, số ghế cần, yêu cầu ghế liền kề, thứ tự, trạng thái. Mỗi khách chỉ chờ một lần cho mỗi suất, rút đăng ký bất kỳ lúc nào. Tự đóng khi suất bắt đầu hoặc bị hủy.
-- Khi ghế được nhả (hết hạn giữ, đơn hủy), handler nền kiểm tra có đủ tổ hợp ghế hợp lệ theo quy tắc chống để trống ghế lẻ hay không; nếu có, chọn khách đứng đầu phù hợp và thông báo.
-- Khách đó được ưu tiên giữ ghế trong thời gian cấu hình: các ghế được khóa dành riêng bằng SeatBlock loại người chờ (T5.3) có hạn, người khác không giữ được; hết thời gian thì mở cho người kế tiếp rồi cho khách bình thường.
-- API đăng ký, rút, xem trạng thái.
+- Entity đăng ký chờ: suất, khách, số ghế cần, yêu cầu ghế liền kề, thứ tự, trạng thái (đang chờ, đã thông báo, đã giữ, đã rút, đã đóng).
+- Mỗi khách một lần chờ cho mỗi suất; rút đăng ký bất kỳ lúc nào; tự đóng khi suất bắt đầu hoặc bị hủy (tác vụ nền, idempotent).
+- API đăng ký, rút, xem trạng thái. Chỉ cho đăng ký khi suất thật sự không còn tổ hợp ghế phù hợp.
 
-Tiêu chí hoàn thành: người đứng đầu được thông báo và có ghế dành riêng; hết thời gian ưu tiên thì chuyển người kế; ghế dành riêng không bị người khác giữ.
+Tiêu chí hoàn thành: đăng ký trùng bị chặn; suất bắt đầu thì danh sách chờ đóng.
 ```
 
 ---
 
-### T17.2 — Báo khi mở bán và quan tâm phim
+### T17.1b — Phát hiện ghế được nhả và thông báo
+
+**Phụ thuộc:** T17.1a, T1.3.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 468-477.
+
+- Handler nền khi ghế được nhả (hết hạn giữ, đơn hủy): kiểm tra có đủ tổ hợp ghế hợp lệ cho người chờ theo quy tắc chống để trống ghế lẻ hiện có hay không; có thì chọn khách đứng đầu phù hợp (đúng số ghế, liền kề nếu yêu cầu) và gửi thông báo.
+- Idempotent: một lần nhả không thông báo hai lần cho cùng khách.
+
+Tiêu chí hoàn thành: nhả ghế đủ tổ hợp thì người đứng đầu nhận thông báo đúng một lần.
+```
+
+---
+
+### T17.1c — Ưu tiên giữ ghế cho người chờ
+
+**Phụ thuộc:** T17.1b, T5.3.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 468-477.
+
+- Khi thông báo, khóa các ghế dành riêng bằng SeatBlock loại người chờ (T5.3) có hạn theo cấu hình (ví dụ mười phút); người khác không giữ được các ghế này.
+- Khách giữ ghế trong thời gian ưu tiên thì gỡ khóa và chuyển sang luồng giữ ghế thường. Hết thời gian: gỡ khóa, mở cho người kế tiếp, sau cùng mở cho khách bình thường. Tác vụ nền xử lý hết hạn, idempotent.
+
+Tiêu chí hoàn thành: ghế dành riêng không bị người khác giữ; hết thời gian thì chuyển người kế.
+```
+
+---
+
+### T17.2a — Quan tâm phim sắp chiếu
 
 **Phụ thuộc:** T1.3.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H17.2 và 3.10.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 478-484.
 
-- Entity quan tâm phim: khách đánh dấu quan tâm một phim sắp chiếu, bỏ quan tâm được.
-- Khi phim có suất chiếu đầu tiên mở bán, gửi thông báo cho người quan tâm (thông báo theo yêu cầu của khách, không cần bật tiếp thị), idempotent.
-- API quản trị xem số người quan tâm theo từng phim; chừa API danh sách người quan tâm cho mở bán sớm (T23.1).
+Entity quan tâm phim: khách đánh dấu quan tâm một phim sắp chiếu, bỏ quan tâm được, mỗi khách một dòng cho mỗi phim. API khách đánh dấu, bỏ, xem danh sách. API admin xem số người quan tâm theo từng phim; chừa API danh sách người quan tâm cho mở bán sớm (T23.1c).
+
+Tiêu chí hoàn thành: đánh dấu và bỏ quan tâm đúng; admin thấy số người quan tâm.
+```
+
+---
+
+### T17.2b — Thông báo khi mở bán
+
+**Phụ thuộc:** T17.2a.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 478-484.
+
+Khi phim có suất chiếu đầu tiên mở bán, handler nền gửi thông báo cho người quan tâm (thông báo theo yêu cầu của khách, không cần bật tiếp thị); idempotent, mỗi người một lần cho mỗi phim.
 
 Tiêu chí hoàn thành: suất đầu tiên mở bán thì người quan tâm nhận thông báo đúng một lần.
 ```
 
 ---
 
-### T17.3 — Frontend và báo cáo danh sách chờ
+### T17.3a — Frontend khách: chờ và quan tâm
 
-**Phụ thuộc:** T17.1, T17.2.
+**Phụ thuộc:** T17.1c, T17.2b.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H17.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 468-484.
 
-- Khách: nút "Đăng ký chờ" ở suất hết ghế (chọn số ghế, ghế liền kề), trạng thái chờ, thông báo có ghế với đồng hồ đếm ngược ưu tiên và nút giữ ghế, nút rút đăng ký; nút "Quan tâm" ở phim sắp chiếu.
-- Admin: báo cáo số lượt chờ theo suất, tỷ lệ người chờ được ghế rồi mua, số người quan tâm theo phim.
+Khách: nút "Đăng ký chờ" ở suất hết ghế (chọn số ghế, ghế liền kề), trạng thái chờ, thông báo có ghế kèm đồng hồ đếm ngược ưu tiên và nút giữ ghế, nút rút đăng ký; nút "Quan tâm" ở phim sắp chiếu.
 
 Tiêu chí hoàn thành: khách đăng ký chờ, nhận thông báo và giữ được ghế trong thời gian ưu tiên.
+```
+
+---
+
+### T17.3b — Báo cáo danh sách chờ và quan tâm
+
+**Phụ thuộc:** T17.1c, T17.2a, T6.4.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 468-484.
+
+- Backend: khối báo cáo vào khung T6.4: số lượt chờ theo suất, tỷ lệ người chờ được ghế rồi mua, số người quan tâm theo phim.
+- Frontend: hiển thị khối trong trang báo cáo và số người quan tâm ở trang quản lý phim.
+
+Tiêu chí hoàn thành: báo cáo khớp dữ liệu đăng ký chờ và quan tâm.
 ```
 
 ---
@@ -1404,33 +2216,60 @@ Tiêu chí hoàn thành: khách đăng ký chờ, nhận thông báo và giữ �
 
 ---
 
-### T18.1 — Hạn chế và giới hạn (backend)
+### T18.1a — Đếm đơn hết hạn và giới hạn giữ ghế
 
-**Phụ thuộc:** T1.6, T3.3, T13.4.
+**Phụ thuộc:** T1.6.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H18 và 3.1 (khách vãng lai).
+Áp dụng QUY TẮC CHUNG. Đọc dòng 574-585.
 
-- Đếm số đơn hết hạn liên tiếp của từng khách; vượt ngưỡng cấu hình thì rút ngắn thời gian giữ ghế hoặc giới hạn số đơn chờ cùng lúc trong khoảng thời gian cấu hình.
-- Giới hạn số ghế giữ đồng thời và số đơn chờ của mỗi tài khoản. Biểu mẫu công khai không cần tài khoản (yêu cầu thuê phòng, liên hệ) giới hạn tần suất theo địa chỉ mạng và thiết bị.
-- Dấu hiệu bất thường (nhiều lần giữ rồi bỏ trong thời gian ngắn, nhiều lần thanh toán thất bại) thì yêu cầu xác minh bổ sung trước khi tiếp tục.
-- Chống lạm dụng ưu đãi: nhiều tài khoản chung số điện thoại hoặc thiết bị không cùng hưởng ưu đãi khách mới hoặc thưởng giới thiệu (nối vào T3.1 và T13.4).
-- Entity hạn chế khách: lý do, thời hạn, trạng thái. API admin xem danh sách và gỡ hạn chế; ghi nhật ký. Khách bị hạn chế nhận lỗi nêu rõ lý do và thời hạn.
+- Đếm số đơn hết hạn liên tiếp của từng khách (reset khi có đơn xác nhận); vượt ngưỡng cấu hình thì rút ngắn thời gian giữ ghế hoặc giới hạn số đơn chờ cùng lúc trong khoảng thời gian cấu hình.
+- Giới hạn số ghế giữ đồng thời và số đơn chờ của mỗi tài khoản (cấu hình). Lỗi nêu rõ lý do và thời hạn (Messages.resx).
 
-Tiêu chí hoàn thành: bỏ liên tiếp quá ngưỡng bị rút ngắn thời gian giữ; quản trị gỡ được hạn chế; hai tài khoản chung số điện thoại không cùng nhận thưởng giới thiệu.
+Tiêu chí hoàn thành: bỏ liên tiếp quá ngưỡng thì thời gian giữ ghế bị rút ngắn; vượt giới hạn đồng thời bị chặn.
+```
+
+---
+
+### T18.1b — Giới hạn tần suất công khai và xác minh bổ sung
+
+**Phụ thuộc:** T18.1a.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 574-585.
+
+- Dịch vụ giới hạn tần suất theo địa chỉ mạng và thiết bị cho biểu mẫu công khai không cần tài khoản (yêu cầu thuê phòng, liên hệ); dùng lại ở T19.1a.
+- Dấu hiệu bất thường (nhiều lần giữ rồi bỏ trong thời gian ngắn, nhiều lần thanh toán thất bại) thì yêu cầu xác minh bổ sung trước khi tiếp tục; API xác minh và cờ trạng thái.
+
+Tiêu chí hoàn thành: gửi dồn dập bị chặn; hành vi bất thường kích hoạt yêu cầu xác minh.
+```
+
+---
+
+### T18.1c — Hạn chế khách và chống lạm dụng ưu đãi
+
+**Phụ thuộc:** T18.1b, T3.3, T13.4b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 574-585.
+
+- Entity hạn chế khách: lý do, thời hạn, trạng thái. API admin xem danh sách, gỡ hạn chế; ghi nhật ký mọi hạn chế. Khách bị hạn chế nhận lỗi nêu rõ lý do và thời hạn.
+- Chống lạm dụng ưu đãi: nhiều tài khoản chung số điện thoại hoặc thiết bị không cùng hưởng ưu đãi khách mới (T3.1) hoặc thưởng giới thiệu (T13.4b).
+
+Tiêu chí hoàn thành: quản trị gỡ được hạn chế; hai tài khoản chung số điện thoại không cùng nhận thưởng giới thiệu.
 ```
 
 ---
 
 ### T18.2 — Frontend hạn chế khách
 
-**Phụ thuộc:** T18.1.
+**Phụ thuộc:** T18.1c.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H18.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 574-585.
 
-- Admin: danh sách khách đang bị hạn chế với lý do và thời hạn, nút gỡ hạn chế kèm xác nhận.
-- Khách: banner hoặc hộp thoại nêu rõ lý do và thời hạn khi bị hạn chế, bước xác minh bổ sung khi hệ thống yêu cầu.
+- Admin: danh sách khách đang bị hạn chế (lý do, thời hạn), nút gỡ hạn chế kèm xác nhận.
+- Khách: banner hoặc hộp thoại nêu lý do và thời hạn khi bị hạn chế, bước xác minh bổ sung khi hệ thống yêu cầu.
 
 Tiêu chí hoàn thành: quản trị gỡ hạn chế; khách thấy thông báo hạn chế rõ ràng.
 ```
@@ -1441,81 +2280,195 @@ Tiêu chí hoàn thành: quản trị gỡ hạn chế; khách thấy thông bá
 
 ---
 
-### T19.1 — Yêu cầu thuê phòng và trang theo dõi công khai (backend)
+### T19.1a — Yêu cầu thuê phòng (dữ liệu và endpoint công khai)
 
-**Phụ thuộc:** T1.1, T18.1.
+**Phụ thuộc:** T1.1, T18.1b.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.1 (khách vãng lai) và H19.1.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 382-390.
 
 - Entity yêu cầu thuê phòng: họ tên, đơn vị, loại đối tượng (doanh nghiệp, trường học, nhóm bạn), liên hệ, ngày giờ mong muốn, khoảng dự phòng, số người, phim mong muốn hoặc tự mang nội dung, định dạng phòng, combo, yêu cầu khác, trạng thái (mới, đang xử lý, đã báo giá, khách chấp nhận, khách từ chối, đã đặt cọc, đã thanh toán đủ, hoàn tất, hủy, hết hạn báo giá).
-- Endpoint công khai gửi yêu cầu không cần tài khoản, có giới hạn tần suất theo địa chỉ mạng và thiết bị (T18.1).
-- Đường dẫn theo dõi riêng gửi qua email: token khó đoán, có hạn, giới hạn số lần thử.
-- API admin danh sách theo trạng thái và đổi trạng thái; ghi nhật ký.
+- Endpoint công khai gửi yêu cầu không cần tài khoản, giới hạn tần suất theo địa chỉ mạng và thiết bị (T18.1b).
 
-Tiêu chí hoàn thành: khách không tài khoản gửi được yêu cầu và vào được trang theo dõi qua link riêng; gửi dồn dập bị chặn.
+Tiêu chí hoàn thành: khách không tài khoản gửi được yêu cầu; gửi dồn dập bị chặn.
 ```
 
 ---
 
-### T19.2 — Báo giá thuê phòng
+### T19.1b — Trang theo dõi qua liên kết riêng và API admin
 
-**Phụ thuộc:** T19.1.
+**Phụ thuộc:** T19.1a, T1.4.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.2 (ngoại lệ) và H19.2.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 382-390.
 
-- Bảng giá thuê theo phòng, khung giờ, thời lượng (admin CRUD, cache); báo giá = giá thuê + phí theo đầu người nếu có + gói combo + khoản phụ − chiết khấu của quản trị.
-- Báo giá có hạn hiệu lực, ghi rõ tiền đặt cọc (phần trăm cấu hình), hạn thanh toán nốt, chính sách hủy. Mỗi lần sửa tạo phiên bản mới giữ lịch sử, ghi nhật ký.
-- Xuất báo giá PDF và gửi email cho khách.
-- Khách xem và bấm chấp nhận hoặc từ chối trên trang theo dõi; quá hạn thì chuyển hết hạn báo giá (tác vụ nền).
+- Đường dẫn theo dõi riêng gửi qua email: token khó đoán, có hạn, giới hạn số lần thử; API công khai xem trạng thái theo token.
+- API admin: danh sách theo trạng thái, xem chi tiết, đổi trạng thái hợp lệ; ghi nhật ký. Email xác nhận đã nhận yêu cầu.
 
-Tiêu chí hoàn thành: soạn, gửi và PDF báo giá được; khách chấp nhận hoặc từ chối qua link; quá hạn tự chuyển trạng thái.
+Tiêu chí hoàn thành: khách vào được trang theo dõi qua link riêng; token sai nhiều lần bị khóa.
 ```
 
 ---
 
-### T19.3 — Suất riêng, thanh toán nhiều đợt và hủy
+### T19.2a — Bảng giá thuê và tính báo giá
 
-**Phụ thuộc:** T19.2, T5.1, T5.3, T10.2.
+**Phụ thuộc:** T19.1b.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.4 và H19.3, H19.4.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 391-397 và 38-48 (ngoại lệ: thuê phòng không dùng bộ tính giá vé).
 
-- Khi khách chấp nhận và đặt cọc, tạo suất chiếu riêng trong phòng đã chốt: kiểm tra xung đột với suất khác, thời gian đệm và khoảng đóng phòng (T5.1). Suất riêng cho phép gắn nội dung khách mang, không bắt buộc có phim trong danh mục. Khóa toàn bộ ghế cho đơn thuê phòng bằng SeatBlock (T5.3).
-- Suất riêng không hiện trong lịch chiếu công khai, trợ lý AI, gợi ý phim, thống kê lấp đầy, độ nóng; có tính vào doanh thu và có báo cáo riêng. Không áp quy tắc giá, ưu đãi hạng, khuyến mãi, tích điểm.
-- Thanh toán nhiều đợt: cọc rồi thanh toán nốt trước hạn; quản trị ghi nhận chuyển khoản, khách trả qua cổng hoặc thẻ quà. Tiền cọc ghi nhận doanh thu vào ngày sự kiện diễn ra.
-- Chính sách hủy riêng theo mốc thời gian cấu hình: hủy sớm hoàn toàn bộ hoặc một phần cọc, hủy muộn mất cọc. Quá hạn thanh toán nốt thì hủy yêu cầu, xử lý cọc theo chính sách hủy muộn và giải phóng suất. Rạp hủy vì sự cố thì hoàn đầy đủ.
+- Entity bảng giá thuê theo phòng, khung giờ, thời lượng; API admin CRUD, cache, nhật ký.
+- Service tính báo giá = giá thuê + phí theo đầu người nếu có + gói combo + khoản phụ − chiết khấu của quản trị. Mỗi khoản là một dòng báo giá.
 
-Tiêu chí hoàn thành: từ yêu cầu đi trọn đến suất riêng đã đặt cọc, suất không lộ công khai và ghế khóa kín; xung đột phòng bị chặn; quá hạn thanh toán nốt thì suất được giải phóng.
+Tiêu chí hoàn thành: báo giá cộng đúng các khoản và chiết khấu; sửa bảng giá làm mới cache ngay.
 ```
 
 ---
 
-### T19.4 — Frontend khách: biểu mẫu và theo dõi thuê phòng
+### T19.2b — Phiên bản báo giá, PDF và email
 
-**Phụ thuộc:** T19.2.
+**Phụ thuộc:** T19.2a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H19.5.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 391-397.
 
-- Trang công khai biểu mẫu gửi yêu cầu thuê phòng (không cần đăng nhập), xử lý lỗi giới hạn tần suất.
-- Trang theo dõi yêu cầu qua link riêng: trạng thái, xem báo giá các phiên bản, tải PDF, chấp nhận hoặc từ chối, thanh toán cọc và thanh toán nốt.
+- Entity báo giá: yêu cầu, phiên bản, các dòng, hạn hiệu lực, tiền đặt cọc (phần trăm cấu hình), hạn thanh toán nốt, chính sách hủy theo mốc. Mỗi lần sửa tạo phiên bản mới, giữ lịch sử; ghi nhật ký.
+- Xuất PDF báo giá và gửi email cho khách kèm liên kết trang theo dõi.
 
-Tiêu chí hoàn thành: khách gửi yêu cầu, xem báo giá và chấp nhận trên điện thoại.
+Tiêu chí hoàn thành: soạn, sửa tạo phiên bản mới, xuất PDF và gửi email được.
 ```
 
 ---
 
-### T19.5 — Frontend admin và báo cáo thuê phòng
+### T19.2c — Khách chấp nhận hoặc từ chối, hết hạn báo giá
 
-**Phụ thuộc:** T19.3.
+**Phụ thuộc:** T19.2b.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H19.5.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 391-397.
 
-- Bảng theo dõi yêu cầu theo trạng thái (dạng bảng hoặc cột kanban), màn soạn báo giá với bảng giá thuê, lịch phòng hiển thị các suất riêng, ghi nhận thanh toán chuyển khoản, quản lý bảng giá thuê.
-- Báo cáo số yêu cầu, tỷ lệ chốt, doanh thu thuê phòng.
+- API công khai theo token: xem các phiên bản báo giá, tải PDF, chấp nhận hoặc từ chối phiên bản mới nhất còn hiệu lực.
+- Tác vụ nền chuyển quá hạn sang "hết hạn báo giá", idempotent.
+
+Tiêu chí hoàn thành: chấp nhận hoặc từ chối đổi đúng trạng thái; quá hạn tự chuyển trạng thái.
+```
+
+---
+
+### T19.3a — Suất riêng, loại suất và khóa ghế
+
+**Phụ thuộc:** T19.2c, T5.1, T5.3.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 398-403.
+
+- Showtime chưa có trường loại suất: thêm nếu chưa có (Regular, Private, Event; dùng chung với T23.1a), nối vào ShowtimeDailyStat.Kind của T6.1.
+- Khi khách chấp nhận và có cọc, tạo suất riêng trong phòng đã chốt: kiểm tra xung đột với suất khác, thời gian đệm và khoảng đóng phòng (T5.1). Cho gắn nội dung khách mang, không bắt buộc có phim trong danh mục.
+- Khóa toàn bộ ghế của suất bằng SeatBlock loại thuê phòng (T5.3).
+
+Tiêu chí hoàn thành: xung đột phòng bị chặn; suất riêng khóa kín mọi ghế.
+```
+
+---
+
+### T19.3b — Ẩn suất riêng khỏi các luồng công khai và thống kê
+
+**Phụ thuộc:** T19.3a.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 398-403.
+
+- Suất riêng không hiện ở lịch chiếu công khai, trợ lý AI, gợi ý phim; không áp quy tắc giá, ưu đãi hạng, khuyến mãi, tích điểm.
+- Loại khỏi thống kê lấp đầy, gợi ý lịch chiếu, độ nóng phim (lọc theo Kind của T6.1); vẫn tính vào doanh thu; thêm báo cáo riêng cho thuê phòng (khối vào khung T6.4).
+- Rà các điểm lọc đã có (T6.2, T6.3, T15.1c) bảo đảm lọc đúng.
+
+Tiêu chí hoàn thành: suất riêng không lộ ở bất kỳ API công khai nào và không làm lệch thống kê lấp đầy.
+```
+
+---
+
+### T19.3c — Thanh toán nhiều đợt và ghi nhận doanh thu
+
+**Phụ thuộc:** T19.3a, T10.2a.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 404-409 và 49-56.
+
+- Tạo Order loại thuê phòng cho đợt cọc và đợt thanh toán nốt; quản trị ghi nhận chuyển khoản, khách trả qua cổng hoặc thẻ quà.
+- Tiền cọc là khoản nhận trước, chuyển thành doanh thu vào ngày sự kiện diễn ra (xử lý bằng tác vụ nền theo ngày kinh doanh, idempotent; ghi nhận vào bảng tổng hợp T6.1 và bút toán nếu ngày đã chốt).
+- Cập nhật trạng thái yêu cầu theo từng đợt thanh toán.
+
+Tiêu chí hoàn thành: cọc rồi trả nốt chuyển đúng trạng thái; doanh thu chỉ ghi vào ngày sự kiện.
+```
+
+---
+
+### T19.3d — Chính sách hủy và quá hạn thanh toán
+
+**Phụ thuộc:** T19.3c, T1.7.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 404-409.
+
+- Chính sách hủy riêng theo mốc thời gian cấu hình: hủy sớm hoàn toàn bộ hoặc một phần cọc, hủy muộn mất cọc; hoàn qua sổ giao dịch (T1.7). Rạp hủy vì sự cố thì hoàn đầy đủ.
+- Tác vụ nền: quá hạn thanh toán nốt thì hủy yêu cầu, xử lý cọc theo chính sách hủy muộn, xóa suất riêng và gỡ SeatBlock để giải phóng phòng. Idempotent.
+- Ghi nhật ký.
+
+Tiêu chí hoàn thành: quá hạn thanh toán nốt thì suất được giải phóng; hủy sớm hoàn đúng tỷ lệ.
+```
+
+---
+
+### T19.4a — Frontend khách: biểu mẫu yêu cầu thuê phòng
+
+**Phụ thuộc:** T19.1b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 410-416.
+
+Trang công khai biểu mẫu gửi yêu cầu thuê phòng (không cần đăng nhập), xử lý lỗi giới hạn tần suất, trang xác nhận đã gửi.
+
+Tiêu chí hoàn thành: khách gửi yêu cầu trên điện thoại.
+```
+
+---
+
+### T19.4b — Frontend khách: theo dõi, báo giá và thanh toán
+
+**Phụ thuộc:** T19.2c, T19.3c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 410-416.
+
+Trang theo dõi qua liên kết riêng: trạng thái, các phiên bản báo giá, tải PDF, chấp nhận hoặc từ chối, thanh toán cọc và thanh toán nốt.
+
+Tiêu chí hoàn thành: khách xem báo giá, chấp nhận và thanh toán cọc trên điện thoại.
+```
+
+---
+
+### T19.5a — Frontend admin: yêu cầu và báo giá
+
+**Phụ thuộc:** T19.2c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 410-416.
+
+Admin: bảng theo dõi yêu cầu theo trạng thái (bảng hoặc cột kanban), chi tiết yêu cầu, màn soạn báo giá và phiên bản, quản lý bảng giá thuê.
+
+Tiêu chí hoàn thành: quản trị soạn và gửi báo giá từ một yêu cầu mới.
+```
+
+---
+
+### T19.5b — Frontend admin: lịch phòng, thanh toán và báo cáo
+
+**Phụ thuộc:** T19.3d, T19.3b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 410-416.
+
+Admin: lịch phòng hiển thị các suất riêng, ghi nhận thanh toán chuyển khoản, hủy yêu cầu theo chính sách, báo cáo số yêu cầu, tỷ lệ chốt và doanh thu thuê phòng.
 
 Tiêu chí hoàn thành: quản trị xử lý trọn một yêu cầu từ mới đến hoàn tất.
 ```
@@ -1526,52 +2479,105 @@ Tiêu chí hoàn thành: quản trị xử lý trọn một yêu cầu từ mớ
 
 ---
 
-### T20.1 — Dữ liệu và CRUD gói sản phẩm
+### T20.1a — Dữ liệu và CRUD gói sản phẩm
 
-**Phụ thuộc:** T2.2, T3.2, T4.2.
+**Phụ thuộc:** T2.2, T1.4.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H20.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 496-507.
 
-- Entity gói: thành phần (số vé theo từng loại vé, các combo), giá gói thấp hơn tổng giá lẻ, điều kiện (suất, phim, ngày, khung giờ, loại ghế được phép), hạn mức số gói mỗi ngày, thời gian hiệu lực, cờ không dùng chung với mã khuyến mãi.
-- API admin CRUD, validate giá gói thấp hơn tổng lẻ, ghi nhật ký, cache.
-- IResourceHold cho hạn mức số gói mỗi ngày: giữ chỗ khi giữ ghế, nhả cùng ghế, chốt khi xác nhận.
-- API khách danh sách gói áp dụng được cho một suất kèm mức tiết kiệm so với mua lẻ.
+- Entity gói: thành phần (số vé theo từng loại vé, các combo), giá gói, điều kiện (suất, phim, ngày, khung giờ, loại ghế được phép), hạn mức số gói mỗi ngày, thời gian hiệu lực, cờ không dùng chung với mã khuyến mãi.
+- API admin CRUD, validate giá gói thấp hơn tổng giá lẻ tính bằng IPricingService, ghi nhật ký, cache.
 
-Tiêu chí hoàn thành: hết hạn mức ngày thì gói ngừng bán; hạn mức không bị vượt khi nhiều khách cùng giữ.
+Tiêu chí hoàn thành: tạo gói hợp lệ; giá gói không thấp hơn tổng lẻ bị chặn.
 ```
 
 ---
 
-### T20.2 — Mua gói, tách giá về dòng hàng, hoàn từng thành phần
+### T20.1b — Hạn mức gói và API gói áp dụng
 
-**Phụ thuộc:** T20.1, T1.7.
+**Phụ thuộc:** T20.1a, T4.2.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.2 (bước 3), 3.3 và H20.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 496-507 và 57-61.
+
+- IResourceHold cho hạn mức số gói mỗi ngày: giữ chỗ khi giữ ghế, nhả cùng ghế, chốt khi xác nhận (UPDATE có điều kiện).
+- API khách danh sách gói áp dụng được cho một suất kèm mức tiết kiệm so với mua lẻ; gói hết hạn mức ngày hoặc thiếu kho combo tự ẩn.
+
+Tiêu chí hoàn thành: hết hạn mức ngày thì gói ngừng bán; hạn mức không vượt khi nhiều khách cùng giữ.
+```
+
+---
+
+### T20.2a — Mua gói và tách giá về dòng hàng
+
+**Phụ thuộc:** T20.1b, T3.2.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 496-507 và 38-48.
 
 - Khách mua gói: chọn ghế như đặt vé thường; hệ thống tách giá gói về từng dòng hàng theo tỷ lệ giá lẻ niêm yết tại thời điểm mua (dùng DiscountAllocator, dòng cuối nhận phần dư), ghi OrderPriceAdjustment loại giá gói.
-- Ưu đãi hạng và mã khuyến mãi áp trên giá đã tách; cờ không dùng chung của gói chặn mã nếu quản trị chọn.
-- Hoàn một thành phần của gói tính theo giá đã tách, khách chỉ được hoàn phần tương ứng. Trừ kho combo và chia nhà phát hành dùng giá đã tách.
-- Báo cáo: số gói bán, doanh thu gói, so sánh với trường hợp mua lẻ, tỷ lệ chuyển đổi (đăng ký vào khung báo cáo).
+- Trừ kho combo và chia nhà phát hành dùng giá đã tách.
 
-Tiêu chí hoàn thành: tổng các dòng đã tách bằng đúng giá gói; hoàn một vé của gói hoàn đúng giá đã tách.
+Tiêu chí hoàn thành: tổng các dòng đã tách bằng đúng giá gói đến đồng.
 ```
 
 ---
 
-### T20.3 — Frontend gói sản phẩm
+### T20.2b — Chồng ưu đãi và hoàn từng thành phần
 
-**Phụ thuộc:** T20.2.
+**Phụ thuộc:** T20.2a, T1.7.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H20.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 496-507.
+
+- Ưu đãi hạng và mã khuyến mãi áp trên giá đã tách; cờ không dùng chung của gói chặn mã khi quản trị chọn.
+- Hoàn một thành phần của gói tính theo giá đã tách; khách chỉ được hoàn phần tương ứng (dùng dịch vụ hoàn từng phần của T1.7).
+
+Tiêu chí hoàn thành: hoàn một vé của gói hoàn đúng giá đã tách; gói có cờ không dùng chung từ chối mã.
+```
+
+---
+
+### T20.2c — Báo cáo gói sản phẩm
+
+**Phụ thuộc:** T20.2b, T6.4.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 496-507.
+
+Khối báo cáo vào khung T6.4: số gói bán, doanh thu gói, so sánh với trường hợp khách mua lẻ, tỷ lệ chuyển đổi (xem gói rồi mua).
+
+Tiêu chí hoàn thành: số liệu khớp các dòng đã tách.
+```
+
+---
+
+### T20.3a — Frontend khách và quầy: gói sản phẩm
+
+**Phụ thuộc:** T20.2b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 496-507.
 
 - Khách: hiển thị gói và mức tiết kiệm ở trang chọn suất, chọn gói rồi chọn ghế theo số vé của gói, chi tiết đơn thể hiện từng thành phần với giá đã tách.
 - Quầy: bán gói.
-- Admin: quản lý gói (form thành phần, giá, điều kiện, hạn mức), báo cáo gói.
 
-Tiêu chí hoàn thành: khách mua gói trọn luồng; admin tạo gói và xem báo cáo.
+Tiêu chí hoàn thành: khách mua gói trọn luồng.
+```
+
+---
+
+### T20.3b — Frontend admin: gói sản phẩm
+
+**Phụ thuộc:** T20.2c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 496-507.
+
+Admin: danh sách và form gói (thành phần, giá, điều kiện, hạn mức), trang báo cáo gói.
+
+Tiêu chí hoàn thành: quản trị tạo gói và xem báo cáo.
 ```
 
 ---
@@ -1580,82 +2586,176 @@ Tiêu chí hoàn thành: khách mua gói trọn luồng; admin tạo gói và xe
 
 ---
 
-### T21.1 — Gói thành viên, mua gói và quyền lợi trong bộ tính giá
+### T21.1a — Gói thành viên và mua gói
 
-**Phụ thuộc:** T3.2, T13.1, T1.6.
+**Phụ thuộc:** T1.6, T1.4.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.2 (bước 5 và ngoại lệ) và H21.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 508-520.
 
 - Entity gói thành viên (theo tháng hoặc quý): giá, thời hạn, quyền lợi (giảm phần trăm cho vé, số vé miễn phí mỗi tháng, giảm giá combo, quyền đặt sớm cho suất đặc biệt), cờ dùng chung với mã. API admin CRUD, ghi nhật ký.
-- Khách mua gói như một đơn thường (không ưu đãi hạng, không mã, không tích điểm); entity đăng ký của khách có hiệu lực từ đến. Hết hạn thì nhắc gia hạn bằng email; gia hạn do khách chủ động thanh toán, không tự trừ tiền.
-- Điền chỗ trống ở bộ tính giá: quyền lợi gói áp sau ưu đãi hạng và trước mã khuyến mãi; quy tắc chồng ưu đãi quyết định gói có dùng chung với mã không. Phân bổ về dòng hàng qua DiscountAllocator.
+- Khách mua gói như một đơn thường (không ưu đãi hạng, không mã, không tích điểm). Khi OrderConfirmed tạo đăng ký của khách có hiệu lực từ đến; mua khi còn hiệu lực thì nối tiếp.
 
-Tiêu chí hoàn thành: quyền lợi giảm giá áp đúng thứ tự; hết hạn gói thì mất quyền lợi.
+Tiêu chí hoàn thành: mua gói xong khách có đăng ký đúng thời hạn; mua chồng nối tiếp đúng.
 ```
 
 ---
 
-### T21.2 — Vé miễn phí của gói thành viên
+### T21.1b — Nhắc hết hạn và gia hạn
 
-**Phụ thuộc:** T21.1.
+**Phụ thuộc:** T21.1a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.5 và H21.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 508-520.
 
-- Sổ vé miễn phí riêng: cấp theo tháng, không cộng dồn sang tháng sau, ghi rõ vé nào dùng vào đơn nào.
+- Tác vụ nền nhắc khách sắp hết hạn bằng email (số ngày cấu hình), idempotent. Gia hạn do khách chủ động thanh toán, không tự trừ tiền.
+- Hết hạn thì đăng ký chuyển trạng thái hết hiệu lực (nền, idempotent).
+
+Tiêu chí hoàn thành: nhắc gửi một lần; hết hạn thì mất quyền lợi.
+```
+
+---
+
+### T21.1c — Quyền lợi trong bộ tính giá
+
+**Phụ thuộc:** T21.1a, T3.2.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 508-520 và 38-48.
+
+Điền chỗ trống quyền lợi gói ở bộ tính giá cấp đơn (T3.2): áp sau ưu đãi hạng và trước mã khuyến mãi; quy tắc chồng ưu đãi quyết định gói có dùng chung với mã không; giảm vé và giảm combo theo phần trăm của gói. Phân bổ về dòng hàng qua DiscountAllocator, ghi OrderPriceAdjustment loại quyền lợi gói.
+
+Tiêu chí hoàn thành: quyền lợi áp đúng thứ tự; hết hạn gói thì không còn giảm.
+```
+
+---
+
+### T21.2a — Sổ vé miễn phí
+
+**Phụ thuộc:** T21.1a.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 508-520.
+
+Sổ vé miễn phí riêng: cấp theo tháng hiệu lực, không cộng dồn sang tháng sau, mỗi dòng ghi rõ vé nào dùng vào đơn nào. Tác vụ nền cấp vé đầu mỗi tháng của đăng ký (idempotent). API xem số vé còn lại.
+
+Tiêu chí hoàn thành: vé miễn phí tháng này không sang tháng sau; chạy cấp lặp không cấp trùng.
+```
+
+---
+
+### T21.2b — Dùng vé miễn phí vào đơn
+
+**Phụ thuộc:** T21.2a, T21.1c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 508-520 và 57-61.
+
 - IResourceHold cho vé miễn phí: giữ chỗ khi khách dùng cho đơn chờ, nhả khi hết hạn hoặc gỡ, chốt khi xác nhận.
-- Giới hạn số vé miễn phí trên mỗi suất (cấu hình) để tránh chia sẻ tài khoản. Không dùng cho suất sự kiện trừ khi sự kiện cho phép.
-- API xem số vé miễn phí còn lại và áp vào đơn.
+- API áp vé miễn phí vào đơn (giá dòng vé về 0 qua OrderPriceAdjustment, ghi giá trị quy đổi cho T21.3b).
+- Giới hạn số vé miễn phí trên mỗi suất (cấu hình); không dùng cho suất sự kiện trừ khi sự kiện cho phép.
 
-Tiêu chí hoàn thành: vé miễn phí tháng này không sang tháng sau; bị chặn khi quá giới hạn mỗi suất.
+Tiêu chí hoàn thành: bị chặn khi quá giới hạn mỗi suất; hai đơn không cùng dùng một vé.
 ```
 
 ---
 
-### T21.3 — Ghi nhận doanh thu, quy đổi vé miễn phí, hủy và hoàn
+### T21.3a — Ghi nhận doanh thu gói theo tháng
 
-**Phụ thuộc:** T21.2, T7.2, T6.1.
+**Phụ thuộc:** T21.1a, T6.1.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.4, H21 và mục 7 (quyết định số 5).
+Áp dụng QUY TẮC CHUNG. Đọc dòng 508-520 và 49-56.
 
-- Doanh thu gói ghi nhận chia đều theo từng tháng hiệu lực (bút toán ghi nhận hằng tháng, báo cáo phân biệt doanh thu đã ghi nhận và chưa ghi nhận).
-- Mỗi gói khai báo giá trị quy đổi của một vé miễn phí; khi vé miễn phí được dùng, chuyển phần giá trị quy đổi từ doanh thu gói sang doanh thu vé của suất (ghi theo ngày chiếu) và để dòng vé tham gia chia nhà phát hành (cộng vào doanh thu vé để chia ở T7.2). Phần còn lại giữ là doanh thu gói.
-- Hủy và hoàn: mặc định không hoàn gói đã bắt đầu hiệu lực, trừ lỗi hệ thống hoặc quản trị cho ngoại lệ; chính sách cấu hình.
-- Cập nhật bảng tổng hợp và báo cáo chốt ngày.
+Doanh thu gói ghi nhận chia đều theo từng tháng hiệu lực: tác vụ nền tạo bút toán ghi nhận hằng tháng (idempotent); báo cáo phân biệt doanh thu đã ghi nhận và chưa ghi nhận; cập nhật báo cáo chốt ngày (T8.2a).
 
-Tiêu chí hoàn thành: doanh thu gói chia đều theo tháng; vé miễn phí chuyển đúng giá trị quy đổi sang doanh thu vé và vào đối soát nhà phát hành.
+Tiêu chí hoàn thành: tổng các tháng bằng giá gói; mỗi tháng ghi nhận đúng một lần.
 ```
 
 ---
 
-### T21.4 — Frontend khách: gói thành viên
+### T21.3b — Quy đổi vé miễn phí sang doanh thu vé
 
-**Phụ thuộc:** T21.2.
+**Phụ thuộc:** T21.2b, T21.3a, T7.2a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H21.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 508-520 và 49-56.
 
-- Trang danh sách gói thành viên và mua gói; trang gói của tôi: thời hạn, quyền lợi, số vé miễn phí còn lại, nút gia hạn, nhắc sắp hết hạn.
-- Bước chọn ghế và thanh toán: áp quyền lợi gói, chọn dùng vé miễn phí, hiển thị rõ khoản giảm từ gói.
+- Mỗi gói khai báo giá trị quy đổi của một vé miễn phí. Khi vé miễn phí được dùng (xác nhận đơn), chuyển phần giá trị quy đổi từ doanh thu gói sang doanh thu vé của suất (ghi theo ngày chiếu), phần còn lại giữ là doanh thu gói.
+- Nối vào T7.2a: giá trị quy đổi cộng vào doanh thu vé để chia nhà phát hành. Cập nhật bảng tổng hợp T6.1.
 
-Tiêu chí hoàn thành: khách mua gói, dùng vé miễn phí và thấy quyền lợi áp trong đơn.
+Tiêu chí hoàn thành: giá trị quy đổi xuất hiện ở doanh thu vé và đối soát nhà phát hành, không tính hai lần.
 ```
 
 ---
 
-### T21.5 — Frontend admin và báo cáo gói thành viên
+### T21.3c — Hủy và hoàn gói thành viên
 
-**Phụ thuộc:** T21.3.
+**Phụ thuộc:** T21.3a, T1.7.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H21.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 508-520.
 
-- Admin: quản lý gói thành viên (form quyền lợi, giá trị quy đổi vé miễn phí, chính sách hoàn), danh sách hội viên, hoàn ngoại lệ gói.
-- Báo cáo: số hội viên đang hoạt động, tỷ lệ gia hạn, giá trị quyền lợi đã dùng so với tiền gói, lợi nhuận so với bán vé lẻ, doanh thu gói đã ghi nhận và chưa ghi nhận (đăng ký vào khung báo cáo).
+Mặc định không hoàn gói đã bắt đầu hiệu lực, trừ lỗi hệ thống hoặc quản trị cho ngoại lệ; chính sách cấu hình. Hủy gói chưa hiệu lực hoàn đủ. Hoàn thì dừng ghi nhận doanh thu các tháng còn lại và thu hồi vé miễn phí chưa dùng.
 
-Tiêu chí hoàn thành: quản trị tạo gói và xem đủ chỉ số báo cáo.
+Tiêu chí hoàn thành: hoàn gói dừng đúng các tháng chưa ghi nhận.
+```
+
+---
+
+### T21.4a — Frontend khách: mua gói và gói của tôi
+
+**Phụ thuộc:** T21.1b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 508-520.
+
+Khách: danh sách gói thành viên và mua gói; trang gói của tôi (thời hạn, quyền lợi, số vé miễn phí còn lại, nút gia hạn, nhắc sắp hết hạn).
+
+Tiêu chí hoàn thành: khách mua gói và xem quyền lợi còn lại.
+```
+
+---
+
+### T21.4b — Frontend khách: áp quyền lợi khi đặt vé
+
+**Phụ thuộc:** T21.2b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 508-520.
+
+Bước chọn ghế và thanh toán: hiển thị khoản giảm từ gói, chọn dùng vé miễn phí, thông báo khi bị chặn vì quá giới hạn mỗi suất.
+
+Tiêu chí hoàn thành: khách dùng vé miễn phí và thấy quyền lợi áp trong đơn.
+```
+
+---
+
+### T21.5a — Frontend admin: quản lý gói và hội viên
+
+**Phụ thuộc:** T21.3c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 508-520.
+
+Admin: form gói (quyền lợi, giá trị quy đổi vé miễn phí, chính sách hoàn), danh sách hội viên, hoàn ngoại lệ gói.
+
+Tiêu chí hoàn thành: quản trị tạo gói và xử lý hoàn ngoại lệ.
+```
+
+---
+
+### T21.5b — Báo cáo gói thành viên
+
+**Phụ thuộc:** T21.3b, T6.4.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 508-520.
+
+- Backend: khối báo cáo vào khung T6.4: số hội viên đang hoạt động, tỷ lệ gia hạn, giá trị quyền lợi đã dùng so với tiền gói, lợi nhuận so với bán vé lẻ, doanh thu gói đã ghi nhận và chưa ghi nhận.
+- Frontend: hiển thị khối trong trang báo cáo.
+
+Tiêu chí hoàn thành: báo cáo đủ chỉ số và khớp bút toán ghi nhận.
 ```
 
 ---
@@ -1664,63 +2764,116 @@ Tiêu chí hoàn thành: quản trị tạo gói và xem đủ chỉ số báo c
 
 ---
 
-### T22.1 — Phân khúc khách hàng
+### T22.1a — Phân khúc tự động
 
-**Phụ thuộc:** T13.1, T1.5.
+**Phụ thuộc:** T13.1a, T1.5.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.10 và H22.1.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 521-535.
 
-- Phân nhóm khách tự động bằng tác vụ nền định kỳ: hoạt động (khách mới, thường xuyên, lâu chưa quay lại theo số ngày cấu hình); giá trị (chi tiêu cao, tần suất cao chấm theo gần đây, tần suất, chi tiêu, giá trị vòng đời ước tính); sở thích (thể loại, định dạng phòng); tình trạng điểm (sắp hết hạn, sắp lên hạng).
-- Phân khúc tùy chỉnh do quản trị tạo bằng điều kiện kết hợp. Mỗi phân khúc trả số khách và số khách đủ điều kiện nhận thông tin.
-- API admin CRUD phân khúc, xem danh sách khách trong phân khúc (che dữ liệu cá nhân khi không cần).
+Tác vụ nền định kỳ tính chỉ số và phân nhóm khách: hoạt động (khách mới, thường xuyên, lâu chưa quay lại theo số ngày cấu hình), giá trị (chi tiêu cao, tần suất cao chấm theo gần đây, tần suất, chi tiêu; giá trị vòng đời ước tính), sở thích (thể loại, định dạng phòng), tình trạng điểm (sắp hết hạn, sắp lên hạng). Lưu kết quả để đọc nhanh; idempotent.
 
-Tiêu chí hoàn thành: phân khúc cập nhật định kỳ; số khách đủ điều kiện nhận thông tin đúng.
+Tiêu chí hoàn thành: phân nhóm cập nhật định kỳ và khớp dữ liệu mẫu.
 ```
 
 ---
 
-### T22.2 — Chiến dịch và đo kết quả
+### T22.1b — Phân khúc tùy chỉnh và API
 
-**Phụ thuộc:** T22.1, T3.1.
+**Phụ thuộc:** T22.1a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.10 và H22.2.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 521-535.
 
-- Entity chiến dịch: phân khúc, nội dung email hoặc thông báo, mã khuyến mãi cá nhân kèm theo (mỗi khách một mã), thời điểm hẹn gửi, trạng thái.
-- Chỉ gửi khách đã bật tiếp thị; mỗi email có liên kết hủy đăng ký; thông báo trong ứng dụng không cần email. Mỗi khách nhận tối đa một chiến dịch trong khoảng thời gian cấu hình. Gửi thử cho quản trị trước khi gửi thật.
-- Gửi bằng tác vụ nền, idempotent, có thử lại.
-- Đo kết quả: số email gửi, số khách mở (theo dõi mở email), số khách dùng mã, doanh thu phát sinh từ chiến dịch.
+Entity phân khúc tùy chỉnh bằng điều kiện kết hợp (và, hoặc) trên các chỉ số của T22.1a. API admin CRUD, xem số khách và số khách đủ điều kiện nhận thông tin (đã bật tiếp thị), xem danh sách khách trong phân khúc (che dữ liệu cá nhân khi không cần).
 
-Tiêu chí hoàn thành: chiến dịch chỉ đến khách đã đồng ý; mỗi khách một mã riêng; kết quả ghi đúng số dùng mã và doanh thu.
+Tiêu chí hoàn thành: số khách đủ điều kiện nhận thông tin đúng; danh sách khách che dữ liệu cá nhân mặc định.
+```
+
+---
+
+### T22.2a — Chiến dịch: dữ liệu, điều kiện gửi và gửi thử
+
+**Phụ thuộc:** T22.1b, T3.1.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 536-541.
+
+- Entity chiến dịch: phân khúc, nội dung email hoặc thông báo, mã khuyến mãi cá nhân kèm theo (mỗi khách một mã), thời điểm hẹn gửi, trạng thái. API admin CRUD.
+- Chỉ gửi khách đã bật tiếp thị; mỗi email có liên kết hủy đăng ký; thông báo trong ứng dụng không cần email. Mỗi khách nhận tối đa một chiến dịch trong khoảng thời gian cấu hình.
+- API gửi thử cho quản trị trước khi gửi thật.
+
+Tiêu chí hoàn thành: gửi thử đến đúng quản trị; danh sách người nhận loại khách chưa đồng ý.
+```
+
+---
+
+### T22.2b — Gửi chiến dịch bằng tác vụ nền
+
+**Phụ thuộc:** T22.2a.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 536-541.
+
+Tác vụ nền gửi chiến dịch đến giờ hẹn: tạo mã cá nhân cho từng khách nhận, gửi email hoặc thông báo, idempotent theo (chiến dịch, khách), có thử lại, ghi trạng thái từng người nhận.
+
+Tiêu chí hoàn thành: chiến dịch chỉ đến khách đã đồng ý; mỗi khách một mã riêng; chạy lặp không gửi trùng.
+```
+
+---
+
+### T22.2c — Đo kết quả chiến dịch
+
+**Phụ thuộc:** T22.2b.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 536-541.
+
+Đo: số email gửi, số khách mở (theo dõi mở email bằng điểm ảnh theo dõi, tôn trọng quyền riêng tư), số khách dùng mã, doanh thu phát sinh từ các đơn dùng mã của chiến dịch. API kết quả theo chiến dịch.
+
+Tiêu chí hoàn thành: số dùng mã và doanh thu khớp đơn thật.
 ```
 
 ---
 
 ### T22.3 — Báo cáo giữ chân khách
 
-**Phụ thuộc:** T22.1.
+**Phụ thuộc:** T22.1a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H22.3.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 542-547.
 
-API báo cáo giữ chân theo nhóm khách đăng ký cùng tháng: tỷ lệ phần trăm quay lại đặt vé ở tháng thứ nhất, thứ hai, thứ ba. Đọc từ dữ liệu đã tổng hợp hoặc bảng tổng hợp mới cập nhật theo ngày, không quét bảng giao dịch trực tiếp.
+API báo cáo giữ chân theo nhóm khách đăng ký cùng tháng: tỷ lệ phần trăm quay lại đặt vé ở tháng thứ nhất, thứ hai, thứ ba. Đọc từ bảng tổng hợp cập nhật theo ngày, không quét bảng giao dịch trực tiếp.
 
-Tiêu chí hoàn thành: số liệu giữ chân đúng với dữ liệu mẫu; tải nhanh.
+Tiêu chí hoàn thành: số liệu đúng với dữ liệu mẫu và tải nhanh.
 ```
 
 ---
 
-### T22.4 — Frontend phân khúc, chiến dịch, giữ chân
+### T22.4a — Frontend admin: phân khúc và giữ chân
 
-**Phụ thuộc:** T22.2, T22.3.
+**Phụ thuộc:** T22.1b, T22.3.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H22.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 521-535 và 542-547.
 
-Trang admin: danh sách phân khúc với số khách và số khách đủ điều kiện nhận thông tin, form tạo phân khúc tùy chỉnh bằng điều kiện kết hợp, soạn chiến dịch (chọn phân khúc, nội dung, kèm mã cá nhân, hẹn giờ, gửi thử), danh sách chiến dịch và kết quả, bảng giữ chân theo nhóm tháng đăng ký.
+Admin: danh sách phân khúc với số khách và số khách đủ điều kiện nhận thông tin, form tạo phân khúc tùy chỉnh bằng điều kiện kết hợp, bảng giữ chân theo nhóm tháng đăng ký.
 
-Tiêu chí hoàn thành: quản trị tạo phân khúc, gửi thử và hẹn chiến dịch, xem kết quả.
+Tiêu chí hoàn thành: quản trị tạo phân khúc tùy chỉnh và xem bảng giữ chân.
+```
+
+---
+
+### T22.4b — Frontend admin: chiến dịch
+
+**Phụ thuộc:** T22.2c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 536-541.
+
+Admin: soạn chiến dịch (chọn phân khúc, nội dung, kèm mã cá nhân, hẹn giờ, gửi thử), danh sách chiến dịch và trạng thái, trang kết quả.
+
+Tiêu chí hoàn thành: quản trị tạo, gửi thử, hẹn giờ và xem kết quả chiến dịch.
 ```
 
 ---
@@ -1729,66 +2882,135 @@ Tiêu chí hoàn thành: quản trị tạo phân khúc, gửi thử và hẹn c
 
 ---
 
-### T23.1 — Suất sự kiện: loại suất, hạn mức, mở bán sớm, giá riêng
+### T23.1a — Loại suất sự kiện, phụ thu và giá riêng
 
-**Phụ thuộc:** T2.2, T3.1, T4.2, T17.2 (mở bán sớm theo hội viên gói cần T21.1).
+**Phụ thuộc:** T2.2.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H23 và H2.2 (suất sự kiện).
+Áp dụng QUY TẮC CHUNG. Đọc dòng 645-657.
 
-- Gắn loại "sự kiện" cho suất; có thể có phụ thu cố định hoặc quy tắc giá riêng (nối vào IPricingService: suất sự kiện chỉ áp quy tắc riêng này).
-- Hạn mức vé theo loại (ví dụ số vé dành cho hội viên) và hạn mức số vé mỗi khách, kiểm tra nguyên tử khi giữ ghế.
-- Mở bán sớm cho nhóm được chọn: hạng thành viên, hội viên gói trả phí (chỉ bật khi đã có T21.1), khách đã bấm quan tâm phim (T17.2). Đến giờ mở bán chung mới mở cho mọi khách; hiển thị đúng ở lịch chiếu, sơ đồ ghế và API giữ ghế.
-- Cờ không áp dụng một số khuyến mãi cho suất sự kiện (điều kiện loại suất ở T3.1). Vé miễn phí của gói chỉ dùng nếu sự kiện cho phép.
-- Loại suất sự kiện khỏi gợi ý lịch chiếu và độ nóng (H6.3), vẫn tính doanh thu và đối soát nhà phát hành.
+- Gắn loại "sự kiện" cho suất (trường loại suất Regular, Private, Event trên Showtime; thêm nếu T19.3a chưa thêm), nối vào ShowtimeDailyStat.Kind của T6.1.
+- Phụ thuộc cố định hoặc quy tắc giá riêng cho suất sự kiện; nối vào IPricingService: suất sự kiện chỉ áp quy tắc riêng này (chỗ chừa của T2.2).
 
-Tiêu chí hoàn thành: mở bán sớm chỉ đúng nhóm được chọn; hạn mức mỗi khách bị chặn khi vượt.
+Tiêu chí hoàn thành: suất sự kiện có giá đúng phụ thu; không áp quy tắc giá thường.
 ```
 
 ---
 
-### T23.2 — Quà tặng kèm vé
+### T23.1b — Hạn mức vé của suất sự kiện
 
-**Phụ thuộc:** T23.1, T4.1.
+**Phụ thuộc:** T23.1a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc 3.5 và H23.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 645-657 và 57-61.
+
+Hạn mức vé theo loại (ví dụ số vé dành cho hội viên) và hạn mức số vé mỗi khách; kiểm tra nguyên tử khi giữ ghế (IResourceHold hoặc UPDATE có điều kiện), nhả khi hết hạn, hủy.
+
+Tiêu chí hoàn thành: hạn mức không bị vượt khi nhiều khách cùng giữ; vượt hạn mức mỗi khách bị chặn.
+```
+
+---
+
+### T23.1c — Mở bán sớm
+
+**Phụ thuộc:** T23.1a, T17.2a.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 645-657.
+
+- Mở bán sớm cho nhóm được chọn: hạng thành viên, hội viên gói trả phí (chỉ bật khi đã có T21.1a), khách đã bấm quan tâm phim (T17.2a). Đến giờ mở bán chung mới mở cho mọi khách.
+- Hiển thị đúng ở lịch chiếu, sơ đồ ghế và API giữ ghế (chặn giữ ghế ngoài nhóm trước giờ mở bán chung).
+
+Tiêu chí hoàn thành: mở bán sớm chỉ đúng nhóm được chọn; đến giờ chung mở cho mọi khách.
+```
+
+---
+
+### T23.1d — Cờ khuyến mãi và loại khỏi gợi ý, độ nóng
+
+**Phụ thuộc:** T23.1a, T3.1.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 645-657.
+
+- Cờ không áp dụng một số khuyến mãi cho suất sự kiện (điều kiện loại suất ở T3.1). Vé miễn phí của gói chỉ dùng nếu sự kiện cho phép (T21.2b).
+- Loại suất sự kiện khỏi gợi ý lịch chiếu và độ nóng phim (T6.3); vẫn tính doanh thu và đối soát nhà phát hành.
+
+Tiêu chí hoàn thành: mã bị loại không áp được cho suất sự kiện; gợi ý lịch chiếu không tính suất sự kiện.
+```
+
+---
+
+### T23.2a — Quà tặng kèm vé: khai báo và giữ chỗ
+
+**Phụ thuộc:** T23.1b, T4.1.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 645-657 và 57-61.
 
 - Khai báo quà tặng kèm của suất sự kiện (poster, ly, móc khóa) với số lượng, dùng lại cơ chế kho ở T4.1.
-- IResourceHold cho quà: giữ chỗ theo vé khi giữ ghế, chốt khi xác nhận, nhả khi hết hạn. Vé hủy thì quà chưa trao được hoàn lại.
-- Quầy đánh dấu đã trao quà cho khách (quét QR vé), lưu nhân viên và thời điểm.
-- Cảnh báo sắp hết quà qua cơ chế cảnh báo kho.
+- IResourceHold cho quà: giữ chỗ theo vé khi giữ ghế, chốt khi xác nhận, nhả khi hết hạn; vé hủy thì quà chưa trao được hoàn lại.
 
 Tiêu chí hoàn thành: quà không phát vượt số lượng; hủy vé hoàn quà chưa trao.
 ```
 
 ---
 
-### T23.3 — Frontend và báo cáo suất sự kiện
+### T23.2b — Trao quà tại quầy và cảnh báo sắp hết
 
-**Phụ thuộc:** T23.2.
+**Phụ thuộc:** T23.2a.
 
 ```text
-Áp dụng QUY TẮC CHUNG. Đọc H23.
+Áp dụng QUY TẮC CHUNG. Đọc dòng 645-657.
 
-- Admin: tạo suất sự kiện (phụ thu, hạn mức, nhóm mở bán sớm và giờ mở bán chung, quà tặng kèm), báo cáo riêng từng sự kiện (số vé, doanh thu, lấp đầy, số quà đã trao).
-- Khách: hiển thị nhãn sự kiện, điều kiện, đếm ngược mở bán chung, thông báo khi chưa đủ điều kiện mua.
-- Quầy: màn trao quà.
+API quầy đánh dấu đã trao quà bằng quét QR vé (lưu nhân viên và thời điểm, chống trao hai lần); cảnh báo sắp hết quà qua cơ chế cảnh báo kho (T4.3).
 
-Tiêu chí hoàn thành: báo cáo sự kiện đủ bốn chỉ số; khách ngoài nhóm không mua được trước giờ mở bán chung.
+Tiêu chí hoàn thành: quét lần hai không trao thêm; quà chạm ngưỡng gửi đúng một cảnh báo.
+```
+
+---
+
+### T23.3a — Frontend admin: suất sự kiện và báo cáo
+
+**Phụ thuộc:** T23.2b, T6.4.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 645-657.
+
+- Admin: tạo suất sự kiện (phụ thu, hạn mức, nhóm mở bán sớm, giờ mở bán chung, quà tặng kèm).
+- Báo cáo riêng từng sự kiện (backend khối vào khung T6.4 và hiển thị): số vé, doanh thu, lấp đầy, số quà đã trao.
+
+Tiêu chí hoàn thành: báo cáo sự kiện đủ bốn chỉ số.
+```
+
+---
+
+### T23.3b — Frontend khách và quầy: suất sự kiện
+
+**Phụ thuộc:** T23.2b, T23.1c.
+
+```text
+Áp dụng QUY TẮC CHUNG. Đọc dòng 645-657.
+
+- Khách: nhãn sự kiện, điều kiện, đếm ngược mở bán chung, thông báo khi chưa đủ điều kiện mua.
+- Quầy: màn trao quà (quét QR vé).
+
+Tiêu chí hoàn thành: khách ngoài nhóm không mua được trước giờ mở bán chung; quầy trao quà được.
 ```
 
 ---
 
 ## D. Thứ tự làm đề nghị
 
-1. T1.1 → T1.11 (hoàn thành xong mới sang bước sau).
+1. T1.1 → T1.11 (hoàn thành xong mới sang bước sau). T6.1 đã xong.
 2. T2.1 → T2.5, T3.1 → T3.5, T4.1 → T4.5, T5.1 → T5.4.
 3. T6.1 → T6.7 (mốc có giá trị kinh doanh rõ nhất).
-4. T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23 theo thứ tự lộ trình ở phần 5 của tài liệu; từ T7 trở đi có thể đổi thứ tự miễn phụ thuộc đã xong.
+4. T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23 theo thứ tự lộ trình ở phần 5 của tài liệu; từ T7 trở đi có thể đổi thứ tự miễn phụ thuộc đã xong. Trong một hạng mục, làm các task con theo thứ tự chữ cái và mỗi task con là một phiên riêng.
 
 ## E. Điểm cần bạn xác nhận trước khi giao
 
 - Mục 7 của tài liệu liệt kê 14 quyết định đã tự chọn; các prompt đã bám theo đúng các quyết định đó.
 - T2.2: cách kết hợp nhiều quy tắc giá (cộng dồn hay ưu tiên cao nhất) để AI tự chọn và báo lại; nên chốt trước nếu muốn cố định.
 - T21.3 và T7.2: giá trị quy đổi vé miễn phí cần đối chiếu với hợp đồng thực tế với nhà phát hành.
+- Từ hạng mục 7, phụ thuộc ghi chính xác đến task con. T7.2a, T19.3a, T23.1a cùng dùng trường loại suất của Showtime (Regular, Private, Event); task nào làm trước thì thêm trường, các task sau dùng lại.
+- Tài liệu nghiệp vụ không có phần ca quầy (CounterShift) và không đánh số H*/mục 3.x như prompt T1 đến T6 gọi; mục A2 là bảng đối chiếu dòng.

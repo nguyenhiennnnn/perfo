@@ -66,6 +66,10 @@ public class CinemaSettings
     public const decimal DefaultDynamicPricingMaxDecreasePercent = 30m;
     public const decimal DefaultMinTicketPrice = 45000m;
     public const int DefaultSalesPaceCustomMarkMinutes = 60;
+    public const int DefaultSuggestionHighOccupancyPercent = 80;
+    public const int DefaultSuggestionLowOccupancyPercent = 35;
+    public const int DefaultSuggestionMinShowtimes = 5;
+    public const int DefaultSuggestionLookbackDays = 14;
 
     public int SchedulerStepMinutes { get; set; } = DefaultSchedulerStepMinutes;
 
@@ -91,4 +95,13 @@ public class CinemaSettings
     public decimal MinTicketPrice { get; set; } = DefaultMinTicketPrice;
 
     public int SalesPaceCustomMarkMinutes { get; set; } = DefaultSalesPaceCustomMarkMinutes;
+
+    public int SuggestionHighOccupancyPercent { get; set; } =
+        DefaultSuggestionHighOccupancyPercent;
+
+    public int SuggestionLowOccupancyPercent { get; set; } = DefaultSuggestionLowOccupancyPercent;
+
+    public int SuggestionMinShowtimes { get; set; } = DefaultSuggestionMinShowtimes;
+
+    public int SuggestionLookbackDays { get; set; } = DefaultSuggestionLookbackDays;
 }

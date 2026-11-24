@@ -62,6 +62,13 @@ const settingsFormSchema = z.object({
   schedulerHeatSalesWeight: z.coerce.number().min(0, VALIDATION_MESSAGES.min(0)).max(SETTINGS_FIELD_MAX.schedulerHeatSalesWeight, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.schedulerHeatSalesWeight)),
   schedulerHeatRatingWeight: z.coerce.number().min(0, VALIDATION_MESSAGES.min(0)).max(SETTINGS_FIELD_MAX.schedulerHeatRatingWeight, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.schedulerHeatRatingWeight)),
   schedulerMaxRating: z.coerce.number().min(1, VALIDATION_MESSAGES.min(1)).max(SETTINGS_FIELD_MAX.schedulerMaxRating, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.schedulerMaxRating)),
+  suggestionHighOccupancyPercent: z.coerce.number().min(0, VALIDATION_MESSAGES.min(0)).max(SETTINGS_FIELD_MAX.suggestionOccupancyPercent, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.suggestionOccupancyPercent)),
+  suggestionLowOccupancyPercent: z.coerce.number().min(0, VALIDATION_MESSAGES.min(0)).max(SETTINGS_FIELD_MAX.suggestionOccupancyPercent, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.suggestionOccupancyPercent)),
+  suggestionMinShowtimes: z.coerce.number().min(1, VALIDATION_MESSAGES.min(1)).max(SETTINGS_FIELD_MAX.suggestionMinShowtimes, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.suggestionMinShowtimes)),
+  suggestionLookbackDays: z.coerce.number().min(1, VALIDATION_MESSAGES.min(1)).max(SETTINGS_FIELD_MAX.suggestionLookbackDays, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.suggestionLookbackDays)),
+}).refine((v) => v.suggestionHighOccupancyPercent > v.suggestionLowOccupancyPercent, {
+  path: ["suggestionHighOccupancyPercent"],
+  message: "Ngưỡng lấp đầy cao phải lớn hơn ngưỡng lấp đầy thấp.",
 });
 
 type SettingsFormValues = z.infer<typeof settingsFormSchema>;
@@ -139,6 +146,10 @@ const AdminSettingsPage = () => {
       schedulerHeatSalesWeight: 0.7,
       schedulerHeatRatingWeight: 0.3,
       schedulerMaxRating: 5,
+      suggestionHighOccupancyPercent: 80,
+      suggestionLowOccupancyPercent: 35,
+      suggestionMinShowtimes: 5,
+      suggestionLookbackDays: 14,
     },
   });
 
@@ -173,6 +184,10 @@ const AdminSettingsPage = () => {
         schedulerHeatSalesWeight: settings.data.schedulerHeatSalesWeight,
         schedulerHeatRatingWeight: settings.data.schedulerHeatRatingWeight,
         schedulerMaxRating: settings.data.schedulerMaxRating,
+        suggestionHighOccupancyPercent: settings.data.suggestionHighOccupancyPercent,
+        suggestionLowOccupancyPercent: settings.data.suggestionLowOccupancyPercent,
+        suggestionMinShowtimes: settings.data.suggestionMinShowtimes,
+        suggestionLookbackDays: settings.data.suggestionLookbackDays,
       });
     }
   }, [settings.data, form]);
@@ -206,6 +221,10 @@ const AdminSettingsPage = () => {
         schedulerHeatSalesWeight: values.schedulerHeatSalesWeight,
         schedulerHeatRatingWeight: values.schedulerHeatRatingWeight,
         schedulerMaxRating: values.schedulerMaxRating,
+        suggestionHighOccupancyPercent: values.suggestionHighOccupancyPercent,
+        suggestionLowOccupancyPercent: values.suggestionLowOccupancyPercent,
+        suggestionMinShowtimes: values.suggestionMinShowtimes,
+        suggestionLookbackDays: values.suggestionLookbackDays,
       },
       { onError: applyServerErrors },
     );
@@ -388,6 +407,41 @@ const AdminSettingsPage = () => {
                 step={0.05}
                 min={0}
                 max={SETTINGS_FIELD_MAX.schedulerHeatRatingWeight}
+              />
+            </SettingsSection>
+
+            <SettingsSection title="Gợi ý lịch chiếu" disabled={updateSettings.isPending}>
+              <FormInputField
+                name="suggestionHighOccupancyPercent"
+                control={form.control}
+                label="Ngưỡng lấp đầy cao (%)"
+                type="number"
+                min={0}
+                max={SETTINGS_FIELD_MAX.suggestionOccupancyPercent}
+              />
+              <FormInputField
+                name="suggestionLowOccupancyPercent"
+                control={form.control}
+                label="Ngưỡng lấp đầy thấp (%)"
+                type="number"
+                min={0}
+                max={SETTINGS_FIELD_MAX.suggestionOccupancyPercent}
+              />
+              <FormInputField
+                name="suggestionMinShowtimes"
+                control={form.control}
+                label="Số suất tối thiểu để kết luận"
+                type="number"
+                min={1}
+                max={SETTINGS_FIELD_MAX.suggestionMinShowtimes}
+              />
+              <FormInputField
+                name="suggestionLookbackDays"
+                control={form.control}
+                label="Số ngày nhìn lại"
+                type="number"
+                min={1}
+                max={SETTINGS_FIELD_MAX.suggestionLookbackDays}
               />
             </SettingsSection>
 

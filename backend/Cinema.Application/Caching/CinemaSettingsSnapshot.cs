@@ -35,7 +35,11 @@ public sealed record CinemaSettingsSnapshot(
     decimal DynamicPricingMaxIncreasePercent,
     decimal DynamicPricingMaxDecreasePercent,
     decimal MinTicketPrice,
-    int SalesPaceCustomMarkMinutes
+    int SalesPaceCustomMarkMinutes,
+    int SuggestionHighOccupancyPercent,
+    int SuggestionLowOccupancyPercent,
+    int SuggestionMinShowtimes,
+    int SuggestionLookbackDays
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -71,6 +75,10 @@ public sealed record CinemaSettingsSnapshot(
             s.DynamicPricingMaxIncreasePercent,
             s.DynamicPricingMaxDecreasePercent,
             s.MinTicketPrice,
-            s.SalesPaceCustomMarkMinutes
+            s.SalesPaceCustomMarkMinutes,
+            s.SuggestionHighOccupancyPercent,
+            s.SuggestionLowOccupancyPercent,
+            s.SuggestionMinShowtimes,
+            s.SuggestionLookbackDays
         );
 }

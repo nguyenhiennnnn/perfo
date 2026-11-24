@@ -3,6 +3,7 @@ using Cinema.Domain.Enums;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace Cinema.Infrastructure.Persistence.Seed.Orders;
 
@@ -228,7 +229,21 @@ internal sealed class OrderSeedContext
             );
 
         Db.Orders.Add(order);
-        await Db.SaveChangesAsync(_token);
+        try
+        {
+            await Db.SaveChangesAsync(_token);
+        }
+        catch (DbUpdateException ex)
+            when (ex.InnerException is PostgresException { SqlState: "23505" } pgEx
+                  && pgEx.ConstraintName == "IX_Orders_OrderCode")
+        {
+            Db.ChangeTracker.Clear();
+            Logger.LogWarning(
+                "Order {OrderCode} already exists in the database – skipping (duplicate key).",
+                order.OrderCode
+            );
+            return;
+        }
 
         if (heldTickets is { Count: > 0 })
         {

@@ -110,8 +110,20 @@ public class SettingsService(
             settings.MinTicketPrice = minTicketPrice;
         if (request.SalesPaceCustomMarkMinutes is { } salesPaceCustomMarkMinutes)
             settings.SalesPaceCustomMarkMinutes = salesPaceCustomMarkMinutes;
+        if (request.SuggestionHighOccupancyPercent is { } suggestionHigh)
+            settings.SuggestionHighOccupancyPercent = suggestionHigh;
+        if (request.SuggestionLowOccupancyPercent is { } suggestionLow)
+            settings.SuggestionLowOccupancyPercent = suggestionLow;
+        if (request.SuggestionMinShowtimes is { } suggestionMin)
+            settings.SuggestionMinShowtimes = suggestionMin;
+        if (request.SuggestionLookbackDays is { } suggestionLookback)
+            settings.SuggestionLookbackDays = suggestionLookback;
         if (settings.SchedulerHeatSalesWeight + settings.SchedulerHeatRatingWeight <= 0)
             throw new BusinessRuleException(Messages.Validation_SchedulerHeatWeights_SumPositive);
+        if (settings.SuggestionHighOccupancyPercent <= settings.SuggestionLowOccupancyPercent)
+            throw new BusinessRuleException(
+                Messages.Validation_SuggestionOccupancy_HighGreaterThanLow
+            );
         var passwordChanged = false;
         if (request.DefaultEmployeePassword is { } defaultEmployeePassword)
         {
@@ -141,6 +153,10 @@ public class SettingsService(
             DynamicPricingMaxDecreasePercent = settings.DynamicPricingMaxDecreasePercent,
             MinTicketPrice = settings.MinTicketPrice,
             SalesPaceCustomMarkMinutes = settings.SalesPaceCustomMarkMinutes,
+            SuggestionHighOccupancyPercent = settings.SuggestionHighOccupancyPercent,
+            SuggestionLowOccupancyPercent = settings.SuggestionLowOccupancyPercent,
+            SuggestionMinShowtimes = settings.SuggestionMinShowtimes,
+            SuggestionLookbackDays = settings.SuggestionLookbackDays,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

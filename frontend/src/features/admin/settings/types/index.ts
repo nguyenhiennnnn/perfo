@@ -27,6 +27,10 @@ export interface CinemaSettingsDto {
   schedulerHeatSalesWeight: number;
   schedulerHeatRatingWeight: number;
   schedulerMaxRating: number;
+  suggestionHighOccupancyPercent: number;
+  suggestionLowOccupancyPercent: number;
+  suggestionMinShowtimes: number;
+  suggestionLookbackDays: number;
   timeZoneId?: string;
   locale?: string;
   currencyCode?: string;
@@ -64,6 +68,10 @@ export interface UpdateSettingsRequest {
   schedulerHeatSalesWeight?: number;
   schedulerHeatRatingWeight?: number;
   schedulerMaxRating?: number;
+  suggestionHighOccupancyPercent?: number;
+  suggestionLowOccupancyPercent?: number;
+  suggestionMinShowtimes?: number;
+  suggestionLookbackDays?: number;
 }
 
 export type SettingsDto = CinemaSettingsDto;

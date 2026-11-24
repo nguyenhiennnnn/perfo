@@ -129,6 +129,10 @@ public class ShowtimeAutoScheduleService(
         );
 
         var since = DateTime.UtcNow.AddDays(-scheduler.HeatLookbackDays);
+        var regularShowtimeIds = db
+            .Showtimes.Where(s => movieIds.Contains(s.MovieId))
+            .WhereRegularKind(db)
+            .Select(s => s.ShowtimeId);
         var tickets = await db
             .OrderLines.Where(l =>
                 l.LineType == OrderLineType.Ticket
@@ -136,6 +140,7 @@ public class ShowtimeAutoScheduleService(
                 && l.Order.Status == OrderStatus.Confirmed
                 && l.Order.CreatedAt >= since
                 && movieIds.Contains(l.Showtime.MovieId)
+                && regularShowtimeIds.Contains(l.ShowtimeId!.Value)
             )
             .GroupBy(l => l.Showtime!.MovieId)
             .Select(g => new { MovieId = g.Key, Count = g.Sum(l => l.Quantity) })

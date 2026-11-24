@@ -98,5 +98,17 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.SalesPaceCustomMarkMinutes)
             .HasDefaultValue(CinemaSettings.DefaultSalesPaceCustomMarkMinutes);
+        builder
+            .Property(x => x.SuggestionHighOccupancyPercent)
+            .HasDefaultValue(CinemaSettings.DefaultSuggestionHighOccupancyPercent);
+        builder
+            .Property(x => x.SuggestionLowOccupancyPercent)
+            .HasDefaultValue(CinemaSettings.DefaultSuggestionLowOccupancyPercent);
+        builder
+            .Property(x => x.SuggestionMinShowtimes)
+            .HasDefaultValue(CinemaSettings.DefaultSuggestionMinShowtimes);
+        builder
+            .Property(x => x.SuggestionLookbackDays)
+            .HasDefaultValue(CinemaSettings.DefaultSuggestionLookbackDays);
     }
 }

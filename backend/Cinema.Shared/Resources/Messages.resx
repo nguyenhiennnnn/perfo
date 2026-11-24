@@ -3528,4 +3528,64 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_OccupancyRangeTooLong" xml:space="preserve">
     <value>Mỗi lần chỉ xem được tối đa {0} ngày.</value>
   </data>
+  <data name="Validation_SuggestionOccupancy_HighGreaterThanLow" xml:space="preserve">
+    <value>Ngưỡng lấp đầy cao phải lớn hơn ngưỡng lấp đầy thấp.</value>
+  </data>
+  <data name="Schedule_Slot_Morning" xml:space="preserve">
+    <value>buổi sáng (trước 12:00)</value>
+  </data>
+  <data name="Schedule_Slot_Afternoon" xml:space="preserve">
+    <value>buổi chiều (12:00–18:00)</value>
+  </data>
+  <data name="Schedule_Slot_Evening" xml:space="preserve">
+    <value>buổi tối (18:00–22:00)</value>
+  </data>
+  <data name="Schedule_Slot_Late" xml:space="preserve">
+    <value>đêm muộn (sau 22:00)</value>
+  </data>
+  <data name="Schedule_AddShowtimes_NoSlot" xml:space="preserve">
+    <value>Phim "{0}" lấp đầy {1}% trên {2} suất trong {3} ngày qua (ngưỡng cao {4}%), nên tăng suất nhưng hiện chưa có phòng và khung giờ trống phù hợp.</value>
+  </data>
+  <data name="Schedule_AddShowtimes_EmptySlot" xml:space="preserve">
+    <value>Phim "{0}" lấp đầy {1}% trên {2} suất trong {3} ngày qua (ngưỡng cao {4}%). {5} {6} chưa có suất nào, nên thêm suất vào đây.</value>
+  </data>
+  <data name="Schedule_AddShowtimes_LowSlot" xml:space="preserve">
+    <value>Phim "{0}" lấp đầy {1}% trên {2} suất trong {3} ngày qua (ngưỡng cao {4}%). {5} {6} chỉ lấp đầy {7}% trên {8} suất (ngưỡng thấp {9}%), còn chỗ để thêm suất.</value>
+  </data>
+  <data name="Schedule_AddShowtimes_FewSlot" xml:space="preserve">
+    <value>Phim "{0}" lấp đầy {1}% trên {2} suất trong {3} ngày qua (ngưỡng cao {4}%). {5} {6} mới có {7} suất, ít hơn mức tối thiểu {8} suất, còn chỗ để thêm suất.</value>
+  </data>
+  <data name="Schedule_ReduceShowtimes" xml:space="preserve">
+    <value>Phim "{0}" chỉ lấp đầy {1}% trên {2} suất trong {3} ngày qua (ngưỡng thấp {4}%), nên giảm bớt suất.</value>
+  </data>
+  <data name="Schedule_MoveToSmallerRoom" xml:space="preserve">
+    <value>Phim "{0}" chỉ lấp đầy {1}% trên {2} suất, trung bình {3} vé mỗi suất. Có thể chuyển từ {4} ({5} ghế) sang {6} ({7} ghế) mà vẫn đủ chỗ.</value>
+  </data>
+  <data name="Schedule_MoveToBusierSlot" xml:space="preserve">
+    <value>Phim "{0}" chỉ lấp đầy {1}% trên {2} suất. {3} {4} đang lấp đầy {5}% trên {6} suất, nên cân nhắc chuyển suất sang đó.</value>
+  </data>
+  <data name="Schedule_FillEmptySlot_Empty" xml:space="preserve">
+    <value>{0} {1} chưa có suất nào trong {2} ngày qua. Phim "{3}" đang lấp đầy {4}% trên {5} suất (ngưỡng cao {6}%), phù hợp để chiếu vào đây.</value>
+  </data>
+  <data name="Schedule_FillEmptySlot_Low" xml:space="preserve">
+    <value>{0} {1} chỉ lấp đầy {2}% trên {3} suất trong {4} ngày qua (ngưỡng thấp {5}%). Phim "{6}" đang lấp đầy {7}% trên {8} suất (ngưỡng cao {9}%), phù hợp để chiếu vào đây.</value>
+  </data>
+  <data name="Invalid_SuggestionIdsRequired" xml:space="preserve">
+    <value>Vui lòng chọn ít nhất một gợi ý.</value>
+  </data>
+  <data name="Invalid_SuggestionIdsTooMany" xml:space="preserve">
+    <value>Mỗi lần chỉ áp dụng tối đa {0} gợi ý.</value>
+  </data>
+  <data name="Invalid_SuggestionIdsNotFound" xml:space="preserve">
+    <value>Các gợi ý sau không còn hợp lệ: {0}. Vui lòng tải lại danh sách gợi ý.</value>
+  </data>
+  <data name="Schedule_Apply_NotApplicable_Reduce" xml:space="preserve">
+    <value>Gợi ý giảm hoặc chuyển suất không thể đưa vào xếp lịch tự động, vì xếp lịch chỉ thêm suất mới. Hãy điều chỉnh suất hiện có ở màn hình suất chiếu.</value>
+  </data>
+  <data name="Schedule_Apply_NotApplicable_NoRoom" xml:space="preserve">
+    <value>Gợi ý này chưa có phòng và khung giờ trống phù hợp nên không thể đưa vào xếp lịch tự động.</value>
+  </data>
+  <data name="Invalid_ReportBlockNotFound" xml:space="preserve">
+    <value>Không có khối báo cáo nào có khóa: {0}.</value>
+  </data>
 </root>

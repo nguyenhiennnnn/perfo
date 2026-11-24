@@ -42,7 +42,7 @@ public class ScheduleAnalyticsService(IAppDbContext db) : IScheduleAnalyticsServ
         DateOnly effectiveTo =
             to ?? BusinessDay.Of(DateTime.UtcNow, settings.OpeningTime, settings.ClosingTime);
         DateOnly effectiveFrom =
-            from ?? effectiveTo.AddDays(-(Math.Max(1, settings.SchedulerHeatLookbackDays) - 1));
+            from ?? effectiveTo.AddDays(-(Math.Max(1, settings.SuggestionLookbackDays) - 1));
 
         if (effectiveFrom > effectiveTo)
             throw new BusinessRuleException(Messages.Rule_OccupancyRangeInvalid);

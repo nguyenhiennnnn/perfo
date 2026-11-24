@@ -14,7 +14,11 @@ public class AdminDashboardController(
     IDashboardService dashboardService,
     IOccupancyAnalyticsService occupancyService,
     IComboAnalyticsService comboService,
-    ICancellationAnalyticsService cancellationService
+    ICancellationAnalyticsService cancellationService,
+    ISeatHeatmapService seatHeatmapService,
+    IScheduleAnalyticsService scheduleService,
+    IScheduleSuggestionService suggestionService,
+    IScheduleSuggestionApplyService suggestionApplyService
 ) : ControllerBase
 {
     [HttpGet("summary")]
@@ -67,6 +71,55 @@ public class AdminDashboardController(
     )
     {
         var result = await cancellationService.GetAsync(from, to, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("seat-heatmap")]
+    public async Task<IActionResult> GetSeatHeatmap(
+        [FromQuery] int roomId,
+        [FromQuery] DateOnly from,
+        [FromQuery] DateOnly to,
+        [FromQuery] int? movieId,
+        [FromQuery] int? genreId,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await seatHeatmapService.GetAsync(
+            roomId,
+            from,
+            to,
+            movieId,
+            genreId,
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpGet("schedule-report")]
+    public async Task<IActionResult> GetScheduleReport(
+        [FromQuery] DateOnly? from,
+        [FromQuery] DateOnly? to,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await scheduleService.GetReportAsync(from, to, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("schedule-suggestions")]
+    public async Task<IActionResult> GetScheduleSuggestions(CancellationToken cancellationToken)
+    {
+        var result = await suggestionService.GetAsync(cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpPost("schedule-suggestions/apply")]
+    public async Task<IActionResult> ApplyScheduleSuggestions(
+        [FromBody] ApplyScheduleSuggestionsRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await suggestionApplyService.PreviewAsync(request, cancellationToken);
         return Ok(result);
     }
 }

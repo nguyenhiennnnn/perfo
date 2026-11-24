@@ -157,6 +157,9 @@ export const SETTINGS_FIELD_MAX = {
   schedulerHeatSalesWeight: 10,
   schedulerHeatRatingWeight: 10,
   schedulerMaxRating: 10,
+  suggestionOccupancyPercent: 100,
+  suggestionMinShowtimes: 1000,
+  suggestionLookbackDays: 365,
 } as const;
 
 export const SKELETON_LIST_COUNT = 3;

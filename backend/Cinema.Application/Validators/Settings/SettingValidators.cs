@@ -120,6 +120,19 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         );
         WholeDecimalRange(x => x.MinTicketPrice, "minTicketPrice", 0, 10_000_000);
         IntRange(x => x.SalesPaceCustomMarkMinutes, "salesPaceCustomMarkMinutes", 0, 10080);
+        IntRange(x => x.SuggestionHighOccupancyPercent, "suggestionHighOccupancyPercent", 0, 100);
+        IntRange(x => x.SuggestionLowOccupancyPercent, "suggestionLowOccupancyPercent", 0, 100);
+        IntRange(x => x.SuggestionMinShowtimes, "suggestionMinShowtimes", 1, 1000);
+        IntRange(x => x.SuggestionLookbackDays, "suggestionLookbackDays", 1, 365);
+
+        RuleFor(x => x)
+            .Must(x => x.SuggestionHighOccupancyPercent!.Value > x.SuggestionLowOccupancyPercent!.Value)
+            .When(x =>
+                x.SuggestionHighOccupancyPercent is not null
+                && x.SuggestionLowOccupancyPercent is not null
+            )
+            .WithName("suggestionHighOccupancyPercent")
+            .WithMessage(Messages.Validation_SuggestionOccupancy_HighGreaterThanLow);
 
         RuleFor(x => x)
             .Must(x => x.SchedulerHeatSalesWeight!.Value + x.SchedulerHeatRatingWeight!.Value > 0)

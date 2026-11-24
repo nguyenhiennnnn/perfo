@@ -71,6 +71,8 @@ public interface IAppDbContext
     DbSet<ShowtimeDailyStat> ShowtimeDailyStats { get; }
     DbSet<PaymentDailyStat> PaymentDailyStats { get; }
     DbSet<ShowtimeSalesPace> ShowtimeSalesPaces { get; }
+    DbSet<ReconciliationSession> ReconciliationSessions { get; }
+    DbSet<ReconciliationItem> ReconciliationItems { get; }
     DbSet<SeatHoldEvent> SeatHoldEvents { get; }
 }
 

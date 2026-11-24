@@ -75,6 +75,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<ShowtimeDailyStat> ShowtimeDailyStats => Set<ShowtimeDailyStat>();
     public DbSet<PaymentDailyStat> PaymentDailyStats => Set<PaymentDailyStat>();
     public DbSet<ShowtimeSalesPace> ShowtimeSalesPaces => Set<ShowtimeSalesPace>();
+    public DbSet<ReconciliationSession> ReconciliationSessions => Set<ReconciliationSession>();
+    public DbSet<ReconciliationItem> ReconciliationItems => Set<ReconciliationItem>();
     public DbSet<SeatHoldEvent> SeatHoldEvents => Set<SeatHoldEvent>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

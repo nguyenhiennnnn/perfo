@@ -3697,4 +3697,76 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Export_InvalidFinanceFormat" xml:space="preserve">
     <value>Báo cáo tài chính chỉ xuất được định dạng xlsx hoặc pdf.</value>
   </data>
+  <data name="Invalid_Reconciliation_Period" xml:space="preserve">
+    <value>Khoảng ngày đối soát không hợp lệ.</value>
+  </data>
+  <data name="Invalid_Reconciliation_FileHash" xml:space="preserve">
+    <value>Thiếu mã băm của file sao kê.</value>
+  </data>
+  <data name="Invalid_Reconciliation_Line" xml:space="preserve">
+    <value>Dòng sao kê không hợp lệ (mã giao dịch trống hoặc quá dài, số tiền hoặc phí âm).</value>
+  </data>
+  <data name="Import_SheetReconciliation" xml:space="preserve">
+    <value>Sao kê</value>
+  </data>
+  <data name="Import_Reconciliation_Code_Desc" xml:space="preserve">
+    <value>Mã giao dịch của cổng thanh toán, khớp với mã giao dịch hoặc mã giao dịch cổng trong hệ thống.</value>
+  </data>
+  <data name="Import_Reconciliation_Code_Format" xml:space="preserve">
+    <value>Văn bản, tối đa 150 ký tự, không trùng trong file</value>
+  </data>
+  <data name="Import_Reconciliation_Amount_Desc" xml:space="preserve">
+    <value>Số tiền giao dịch (VND).</value>
+  </data>
+  <data name="Import_Reconciliation_Amount_Format" xml:space="preserve">
+    <value>Số không âm, ví dụ 150000 hoặc 150.000</value>
+  </data>
+  <data name="Import_Reconciliation_Fee_Desc" xml:space="preserve">
+    <value>Phí cổng thanh toán của giao dịch; để trống nếu file không có phí.</value>
+  </data>
+  <data name="Import_Reconciliation_Fee_Format" xml:space="preserve">
+    <value>Số không âm, ví dụ 2250</value>
+  </data>
+  <data name="Import_Reconciliation_Status_Desc" xml:space="preserve">
+    <value>Trạng thái giao dịch theo cổng; trạng thái thành công được nhận diện theo từng cổng.</value>
+  </data>
+  <data name="Import_Reconciliation_Status_Format" xml:space="preserve">
+    <value>VNPay: 00 hoặc Thành công. MoMo: 0 hoặc Thành công</value>
+  </data>
+  <data name="Import_Reconciliation_Time_Desc" xml:space="preserve">
+    <value>Thời điểm giao dịch theo giờ Việt Nam.</value>
+  </data>
+  <data name="Import_Reconciliation_Time_Format" xml:space="preserve">
+    <value>dd/MM/yyyy HH:mm:ss (VNPay cũng nhận yyyyMMddHHmmss)</value>
+  </data>
+  <data name="Import_Reconciliation_Note" xml:space="preserve">
+    <value>Nhập lại cùng một file cho cùng một cổng sẽ làm mới phiên đối soát cũ, không tạo phiên mới.</value>
+  </data>
+  <data name="Invalid_Reconciliation_CodeTooLong" xml:space="preserve">
+    <value>Mã giao dịch tối đa {0} ký tự.</value>
+  </data>
+  <data name="Invalid_Reconciliation_DuplicateInFile" xml:space="preserve">
+    <value>Mã giao dịch trùng với dòng {0} trong file.</value>
+  </data>
+  <data name="Invalid_Reconciliation_Amount" xml:space="preserve">
+    <value>Giá trị phải là số không âm.</value>
+  </data>
+  <data name="Invalid_Reconciliation_Time" xml:space="preserve">
+    <value>Thời gian không đúng định dạng, ví dụ 24/11/2026 18:30:15.</value>
+  </data>
+  <data name="Invalid_Reconciliation_GatewayRequired" xml:space="preserve">
+    <value>Phải chọn cổng thanh toán (gateway).</value>
+  </data>
+  <data name="Invalid_Reconciliation_GatewayUnsupported" xml:space="preserve">
+    <value>Cổng thanh toán này chưa hỗ trợ nhập file sao kê (chỉ VNPay và MoMo).</value>
+  </data>
+  <data name="Rule_ReconciliationStripeRangeInvalid" xml:space="preserve">
+    <value>Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.</value>
+  </data>
+  <data name="Rule_ReconciliationStripeRangeTooLong" xml:space="preserve">
+    <value>Mỗi lần chỉ đối soát Stripe tối đa {0} ngày.</value>
+  </data>
+  <data name="Rule_ReconciliationStripeAlreadyRunning" xml:space="preserve">
+    <value>Đang có một lần đối soát Stripe chạy, vui lòng chờ hoàn tất.</value>
+  </data>
 </root>

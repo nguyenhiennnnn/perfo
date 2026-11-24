@@ -50,4 +50,18 @@ public interface IPaymentGateway
         RefundRequest request,
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>
+    /// Liệt kê giao dịch của cổng trong [fromUtc, toUtc) để đối soát. Cổng không hỗ trợ thì ném NotSupportedException.
+    /// onProgress nhận tỷ lệ hoàn thành 0..1 sau mỗi trang.
+    /// </summary>
+    Task<IReadOnlyList<GatewayStatementLine>> ListStatementLinesAsync(
+        DateTime fromUtc,
+        DateTime toUtc,
+        Func<double, CancellationToken, Task>? onProgress,
+        CancellationToken cancellationToken = default
+    ) =>
+        Task.FromException<IReadOnlyList<GatewayStatementLine>>(
+            new NotSupportedException($"Cổng {MethodName} không hỗ trợ liệt kê giao dịch.")
+        );
 }

@@ -280,4 +280,100 @@ public class StripeGateway(IOptions<StripeOptions> options, ILogger<StripeGatewa
             );
         }
     }
+
+    private static readonly HashSet<string> ZeroDecimalCurrencies =
+    [
+        "bif", "clp", "djf", "gnf", "jpy", "kmf", "krw", "mga", "pyg", "rwf", "ugx", "vnd", "vuv", "xaf", "xof", "xpf",
+    ];
+
+    private static decimal ToMajorUnits(long amount, string? currency) =>
+        currency is not null && ZeroDecimalCurrencies.Contains(currency.ToLowerInvariant())
+            ? amount
+            : amount / 100m;
+
+    public async Task<IReadOnlyList<GatewayStatementLine>> ListStatementLinesAsync(
+        DateTime fromUtc,
+        DateTime toUtc,
+        Func<double, CancellationToken, Task>? onProgress,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (string.IsNullOrWhiteSpace(_options.SecretKey))
+            throw new BusinessRuleException(Messages.Rule_StripeSecretKeyMissing);
+
+        var span = Math.Max(1d, (toUtc - fromUtc).TotalSeconds);
+        double Fraction(DateTime oldestSeen) =>
+            Math.Clamp((toUtc - oldestSeen).TotalSeconds / span, 0d, 1d);
+
+        var lines = new List<GatewayStatementLine>();
+        var range = new DateRangeOptions { GreaterThanOrEqual = fromUtc, LessThan = toUtc };
+
+        var intentService = new PaymentIntentService(_client);
+        var intentOptions = new PaymentIntentListOptions
+        {
+            Created = range,
+            Limit = 100,
+            Expand = ["data.latest_charge.balance_transaction"],
+        };
+        StripeList<PaymentIntent> intents;
+        do
+        {
+            intents = await intentService.ListAsync(
+                intentOptions,
+                cancellationToken: cancellationToken
+            );
+            foreach (var pi in intents.Data.Where(p => p.Status == "succeeded"))
+            {
+                var balance = pi.LatestCharge?.BalanceTransaction;
+                lines.Add(
+                    new GatewayStatementLine(
+                        pi.Id,
+                        ToMajorUnits(pi.Amount, pi.Currency),
+                        balance is null ? 0m : ToMajorUnits(balance.Fee, balance.Currency),
+                        pi.Status,
+                        true,
+                        pi.Created
+                    )
+                );
+            }
+
+            if (intents.Data.Count > 0)
+            {
+                intentOptions.StartingAfter = intents.Data[^1].Id;
+                if (onProgress is not null)
+                    await onProgress(0.5 * Fraction(intents.Data[^1].Created), cancellationToken);
+            }
+        } while (intents.HasMore && intents.Data.Count > 0);
+
+        var refundService = new RefundService(_client);
+        var refundOptions = new RefundListOptions { Created = range, Limit = 100 };
+        StripeList<Refund> refunds;
+        do
+        {
+            refunds = await refundService.ListAsync(
+                refundOptions,
+                cancellationToken: cancellationToken
+            );
+            foreach (var refund in refunds.Data)
+                lines.Add(
+                    new GatewayStatementLine(
+                        refund.Id,
+                        ToMajorUnits(refund.Amount, refund.Currency),
+                        0m,
+                        refund.Status,
+                        refund.Status is "succeeded" or "pending",
+                        refund.Created
+                    )
+                );
+
+            if (refunds.Data.Count > 0)
+            {
+                refundOptions.StartingAfter = refunds.Data[^1].Id;
+                if (onProgress is not null)
+                    await onProgress(0.5 + 0.5 * Fraction(refunds.Data[^1].Created), cancellationToken);
+            }
+        } while (refunds.HasMore && refunds.Data.Count > 0);
+
+        return lines;
+    }
 }

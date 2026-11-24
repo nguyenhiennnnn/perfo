@@ -15,6 +15,8 @@ public class ImportExportModules
     public const string EmployeePerformanceReport = "employee-performance";
     public const string FinanceReport = "finance";
     public const string SalesStatsRebuild = "sales-stats";
+    public const string Reconciliation = "reconciliation";
+    public const string ReconciliationStripe = "reconciliation-stripe";
 
     private static readonly HashSet<string> SensitiveModules =
     [
@@ -22,6 +24,8 @@ public class ImportExportModules
         Orders,
         Payments,
         PromotionRedemptions,
+        Reconciliation,
+        ReconciliationStripe,
     ];
 
     private static readonly HashSet<string> PersonalDataModules =

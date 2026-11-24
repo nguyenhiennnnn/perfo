@@ -44,7 +44,7 @@ public abstract class ImportProcessorBase<TRow>(IImportFileReader fileReader)
         CancellationToken cancellationToken
     );
 
-    public async Task<ImportParseResult<TRow>> ParseAsync(
+    public virtual async Task<ImportParseResult<TRow>> ParseAsync(
         Stream content,
         ImportFileFormat format,
         CancellationToken cancellationToken

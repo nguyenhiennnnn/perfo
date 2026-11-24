@@ -1,6 +1,7 @@
 using Cinema.Api.Extensions;
 using Cinema.Application.DTOs.Import;
 using Cinema.Application.DTOs.ImportExport;
+using Cinema.Application.DTOs.Reconciliation;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
@@ -18,9 +19,41 @@ namespace Cinema.Api.Controllers.Admin;
 [Authorize]
 public class AdminReconciliationController(
     IReconciliationImportServiceFactory importFactory,
-    IReconciliationStripeService stripeService
+    IReconciliationStripeService stripeService,
+    IReconciliationAdminService adminService
 ) : AppControllerBase
 {
+    [HttpGet("sessions")]
+    [Authorize(Policy = Policies.AdminOnly)]
+    public async Task<IActionResult> GetSessions(
+        [FromQuery] ReconciliationSessionListFilter filter,
+        [FromQuery] int page = Pagination.DefaultPage,
+        [FromQuery] int pageSize = Pagination.DefaultPageSize,
+        CancellationToken cancellationToken = default
+    ) => Ok(await adminService.GetSessionsAsync(filter, page, pageSize, cancellationToken));
+
+    [HttpGet("sessions/{id:int}")]
+    [Authorize(Policy = Policies.AdminOnly)]
+    public async Task<IActionResult> GetSession(int id, CancellationToken cancellationToken) =>
+        Ok(await adminService.GetSessionAsync(id, cancellationToken));
+
+    [HttpGet("items")]
+    [Authorize(Policy = Policies.AdminOnly)]
+    public async Task<IActionResult> GetItems(
+        [FromQuery] ReconciliationItemListFilter filter,
+        [FromQuery] int page = Pagination.DefaultPage,
+        [FromQuery] int pageSize = Pagination.DefaultPageSize,
+        CancellationToken cancellationToken = default
+    ) => Ok(await adminService.GetItemsAsync(filter, page, pageSize, cancellationToken));
+
+    [HttpPatch("items/{id:int}")]
+    [Authorize(Policy = Policies.AdminOnly)]
+    public async Task<IActionResult> UpdateItem(
+        int id,
+        [FromBody] UpdateReconciliationItemRequest request,
+        CancellationToken cancellationToken
+    ) => Ok(await adminService.UpdateItemAsync(id, request, CurrentUserId, cancellationToken));
+
     [HttpPost("stripe")]
     [Authorize(Policy = Policies.AdminOnly)]
     public async Task<IActionResult> ReconcileStripe(

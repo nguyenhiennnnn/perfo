@@ -177,6 +177,7 @@ public static class DependencyInjection
         services.AddScoped<ISalesStatsService, SalesStatsService>();
         services.AddScoped<ISalesStatsRebuildService, SalesStatsRebuildService>();
         services.AddScoped<IReconciliationService, ReconciliationService>();
+        services.AddScoped<IReconciliationAdminService, ReconciliationAdminService>();
         services.AddScoped<IReconciliationAnomalyHook, NullReconciliationAnomalyHook>();
         services.AddScoped<IReconciliationImportServiceFactory, ReconciliationImportServiceFactory>();
         services.AddScoped<IImportApplyModule, ReconciliationImportApplyModule>();

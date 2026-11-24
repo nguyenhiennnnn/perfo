@@ -186,6 +186,44 @@ export const useAdminCashRefundParams = (
   options?: Parameters<typeof useQueryStates<typeof adminCashRefundParsers>>[1],
 ) => useQueryStates(adminCashRefundParsers, options);
 
+const adminInventoryItemParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  isActive: parseAsString,
+  lowStock: parseAsString,
+};
+
+export const useAdminInventoryItemParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminInventoryItemParsers>>[1],
+) => useQueryStates(adminInventoryItemParsers, options);
+
+const adminStockSheetParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  fromDate: parseAsString,
+  toDate: parseAsString,
+  itemId: parseAsInteger,
+  reason: parseAsString,
+};
+
+export const useAdminStockSheetParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminStockSheetParsers>>[1],
+) => useQueryStates(adminStockSheetParsers, options);
+
+const adminInventoryLedgerParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  itemId: parseAsInteger,
+  fromDate: parseAsString,
+  toDate: parseAsString,
+};
+
+export const useAdminInventoryLedgerParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminInventoryLedgerParsers>>[1],
+) => useQueryStates(adminInventoryLedgerParsers, options);
+
 const adminSpecialDayParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),

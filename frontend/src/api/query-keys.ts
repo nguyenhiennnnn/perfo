@@ -138,6 +138,29 @@ export const queryKeys = {
     list: (params?: object) => ["admin", "combos", "list", params] as const,
   },
 
+  adminInventory: {
+    all: () => ["admin", "inventory"] as const,
+    items: (params?: object) => ["admin", "inventory", "items", params] as const,
+    itemOptions: () => ["admin", "inventory", "item-options"] as const,
+    recipes: (params?: object) => ["admin", "inventory", "recipes", params] as const,
+    recipe: (comboId: number) => ["admin", "inventory", "recipe", comboId] as const,
+    receipts: (params?: object) => ["admin", "inventory", "receipts", params] as const,
+    receipt: (id: number) => ["admin", "inventory", "receipt", id] as const,
+    stocktakes: (params?: object) => ["admin", "inventory", "stocktakes", params] as const,
+    stocktake: (id: number) => ["admin", "inventory", "stocktake", id] as const,
+    waste: (params?: object) => ["admin", "inventory", "waste", params] as const,
+    wasteSheet: (id: number) => ["admin", "inventory", "waste-sheet", id] as const,
+    stock: (params?: object) => ["admin", "inventory", "stock", params] as const,
+    alerts: () => ["admin", "inventory", "alerts"] as const,
+    ledger: (params?: object) => ["admin", "inventory", "ledger", params] as const,
+    valuation: () => ["admin", "inventory", "valuation"] as const,
+  },
+
+  adminComboPickups: {
+    all: () => ["admin", "combo-pickups"] as const,
+    unclaimed: (params?: object) => ["admin", "combo-pickups", "unclaimed", params] as const,
+  },
+
   adminReviews: {
     all: () => ["admin", "reviews"] as const,
     list: (params: object) => ["admin", "reviews", "list", params] as const,

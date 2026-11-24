@@ -25,6 +25,15 @@ const AdminRoomsPage = lazyRoute(() => import("@/features/admin/rooms/pages/room
 const AdminEmployeesPage = lazyRoute(() => import("@/features/admin/employees/pages/employees-page"));
 const AdminRoomSeatsPage = lazyRoute(() => import("@/features/admin/rooms/pages/room-seats-page"));
 const AdminCombosPage = lazyRoute(() => import("@/features/admin/combos/pages/combos-page"));
+const AdminInventoryStockPage = lazyRoute(() => import("@/features/admin/inventory/pages/inventory-stock-page"));
+const AdminInventoryItemsPage = lazyRoute(() => import("@/features/admin/inventory/pages/inventory-items-page"));
+const AdminComboRecipesPage = lazyRoute(() => import("@/features/admin/inventory/pages/combo-recipes-page"));
+const AdminStockReceiptsPage = lazyRoute(() => import("@/features/admin/inventory/pages/stock-receipts-page"));
+const AdminStocktakesPage = lazyRoute(() => import("@/features/admin/inventory/pages/stocktakes-page"));
+const AdminWasteSheetsPage = lazyRoute(() => import("@/features/admin/inventory/pages/waste-sheets-page"));
+const AdminInventoryLedgerPage = lazyRoute(() => import("@/features/admin/inventory/pages/inventory-ledger-page"));
+const AdminInventoryValuationPage = lazyRoute(() => import("@/features/admin/inventory/pages/inventory-valuation-page"));
+const AdminUnclaimedComboOrdersPage = lazyRoute(() => import("@/features/admin/inventory/pages/unclaimed-combo-orders-page"));
 const AdminReviewsPage = lazyRoute(() => import("@/features/admin/reviews/pages/reviews-page"));
 const AdminImportExportHistoryPage = lazyRoute(() => import("@/features/admin/import-export/pages/import-export-history-page"));
 const AdminSettingsPage = lazyRoute(() => import("@/features/admin/settings/pages/settings-page"));
@@ -95,6 +104,15 @@ export const adminRoutes: RouteObject[] = [
           { path: "rooms", lazy: AdminRoomsPage },
           { path: "rooms/:id/seats", lazy: AdminRoomSeatsPage },
           { path: "combos", lazy: AdminCombosPage },
+          { path: "inventory", lazy: AdminInventoryStockPage },
+          { path: "inventory/items", lazy: AdminInventoryItemsPage },
+          { path: "inventory/recipes", lazy: AdminComboRecipesPage },
+          { path: "inventory/receipts", lazy: AdminStockReceiptsPage },
+          { path: "inventory/stocktakes", lazy: AdminStocktakesPage },
+          { path: "inventory/waste", lazy: AdminWasteSheetsPage },
+          { path: "inventory/ledger", lazy: AdminInventoryLedgerPage },
+          { path: "inventory/valuation", lazy: AdminInventoryValuationPage },
+          { path: "combo-pickups/unclaimed", lazy: AdminUnclaimedComboOrdersPage },
           { path: "promotions", lazy: AdminPromotionsPage },
           { path: "promotions/reports", lazy: AdminPromotionReportsPage },
           { path: "promotions/:id/report", lazy: AdminPromotionReportDetailPage },

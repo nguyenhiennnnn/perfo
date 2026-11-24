@@ -37,6 +37,8 @@ export const invalidations = {
     ...showtimeViews(),
     k.users.me(),
     ...dashboard(),
+    k.adminInventory.all(),
+    k.adminComboPickups.all(),
   ],
 
   orderPromotionChanged: (): KeyList => [...orderViews(), k.promotions.mine()],
@@ -48,6 +50,13 @@ export const invalidations = {
   ],
 
   comboChanged: (): KeyList => [k.adminCombos.all(), k.combos.all()],
+
+  inventoryChanged: (): KeyList => [
+    k.adminInventory.all(),
+    k.adminCombos.all(),
+    k.combos.all(),
+    k.adminAuditLogs.all(),
+  ],
 
   ticketTypeChanged: (): KeyList => [
     k.adminTicketTypes.all(),

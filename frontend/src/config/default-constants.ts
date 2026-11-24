@@ -160,6 +160,11 @@ export const SETTINGS_FIELD_MAX = {
   suggestionOccupancyPercent: 100,
   suggestionMinShowtimes: 1000,
   suggestionLookbackDays: 365,
+  ticketPriceRoundingStep: 100_000,
+  dynamicPricingMaxIncreasePercent: 300,
+  dynamicPricingMaxDecreasePercent: 100,
+  minTicketPrice: 10_000_000,
+  salesPaceCustomMarkMinutes: 10_080,
 } as const;
 
 export const SKELETON_LIST_COUNT = 3;

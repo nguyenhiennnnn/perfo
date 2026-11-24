@@ -66,6 +66,11 @@ const settingsFormSchema = z.object({
   suggestionLowOccupancyPercent: z.coerce.number().min(0, VALIDATION_MESSAGES.min(0)).max(SETTINGS_FIELD_MAX.suggestionOccupancyPercent, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.suggestionOccupancyPercent)),
   suggestionMinShowtimes: z.coerce.number().min(1, VALIDATION_MESSAGES.min(1)).max(SETTINGS_FIELD_MAX.suggestionMinShowtimes, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.suggestionMinShowtimes)),
   suggestionLookbackDays: z.coerce.number().min(1, VALIDATION_MESSAGES.min(1)).max(SETTINGS_FIELD_MAX.suggestionLookbackDays, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.suggestionLookbackDays)),
+  ticketPriceRoundingStep: z.coerce.number().min(1, VALIDATION_MESSAGES.min(1)).max(SETTINGS_FIELD_MAX.ticketPriceRoundingStep, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.ticketPriceRoundingStep)),
+  dynamicPricingMaxIncreasePercent: z.coerce.number().min(0, VALIDATION_MESSAGES.min(0)).max(SETTINGS_FIELD_MAX.dynamicPricingMaxIncreasePercent, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.dynamicPricingMaxIncreasePercent)),
+  dynamicPricingMaxDecreasePercent: z.coerce.number().min(0, VALIDATION_MESSAGES.min(0)).max(SETTINGS_FIELD_MAX.dynamicPricingMaxDecreasePercent, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.dynamicPricingMaxDecreasePercent)),
+  minTicketPrice: z.coerce.number().min(0, VALIDATION_MESSAGES.min(0)).max(SETTINGS_FIELD_MAX.minTicketPrice, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.minTicketPrice)),
+  salesPaceCustomMarkMinutes: z.coerce.number().min(0, VALIDATION_MESSAGES.min(0)).max(SETTINGS_FIELD_MAX.salesPaceCustomMarkMinutes, VALIDATION_MESSAGES.max(SETTINGS_FIELD_MAX.salesPaceCustomMarkMinutes)),
 }).refine((v) => v.suggestionHighOccupancyPercent > v.suggestionLowOccupancyPercent, {
   path: ["suggestionHighOccupancyPercent"],
   message: "Ngưỡng lấp đầy cao phải lớn hơn ngưỡng lấp đầy thấp.",
@@ -150,6 +155,11 @@ const AdminSettingsPage = () => {
       suggestionLowOccupancyPercent: 35,
       suggestionMinShowtimes: 5,
       suggestionLookbackDays: 14,
+      ticketPriceRoundingStep: 1000,
+      dynamicPricingMaxIncreasePercent: 30,
+      dynamicPricingMaxDecreasePercent: 30,
+      minTicketPrice: 45000,
+      salesPaceCustomMarkMinutes: 60,
     },
   });
 
@@ -188,6 +198,11 @@ const AdminSettingsPage = () => {
         suggestionLowOccupancyPercent: settings.data.suggestionLowOccupancyPercent,
         suggestionMinShowtimes: settings.data.suggestionMinShowtimes,
         suggestionLookbackDays: settings.data.suggestionLookbackDays,
+        ticketPriceRoundingStep: settings.data.ticketPriceRoundingStep,
+        dynamicPricingMaxIncreasePercent: settings.data.dynamicPricingMaxIncreasePercent,
+        dynamicPricingMaxDecreasePercent: settings.data.dynamicPricingMaxDecreasePercent,
+        minTicketPrice: settings.data.minTicketPrice,
+        salesPaceCustomMarkMinutes: settings.data.salesPaceCustomMarkMinutes,
       });
     }
   }, [settings.data, form]);
@@ -225,6 +240,11 @@ const AdminSettingsPage = () => {
         suggestionLowOccupancyPercent: values.suggestionLowOccupancyPercent,
         suggestionMinShowtimes: values.suggestionMinShowtimes,
         suggestionLookbackDays: values.suggestionLookbackDays,
+        ticketPriceRoundingStep: values.ticketPriceRoundingStep,
+        dynamicPricingMaxIncreasePercent: values.dynamicPricingMaxIncreasePercent,
+        dynamicPricingMaxDecreasePercent: values.dynamicPricingMaxDecreasePercent,
+        minTicketPrice: values.minTicketPrice,
+        salesPaceCustomMarkMinutes: values.salesPaceCustomMarkMinutes,
       },
       { onError: applyServerErrors },
     );
@@ -442,6 +462,49 @@ const AdminSettingsPage = () => {
                 type="number"
                 min={1}
                 max={SETTINGS_FIELD_MAX.suggestionLookbackDays}
+              />
+            </SettingsSection>
+
+            <SettingsSection title="Giá vé động" disabled={updateSettings.isPending}>
+              <FormInputField
+                name="ticketPriceRoundingStep"
+                control={form.control}
+                label="Bước làm tròn giá vé"
+                type="number"
+                min={1}
+                max={SETTINGS_FIELD_MAX.ticketPriceRoundingStep}
+              />
+              <FormInputField
+                name="minTicketPrice"
+                control={form.control}
+                label="Giá tối thiểu một vé"
+                type="number"
+                min={0}
+                max={SETTINGS_FIELD_MAX.minTicketPrice}
+              />
+              <FormInputField
+                name="dynamicPricingMaxIncreasePercent"
+                control={form.control}
+                label="Trần tăng giá (%)"
+                type="number"
+                min={0}
+                max={SETTINGS_FIELD_MAX.dynamicPricingMaxIncreasePercent}
+              />
+              <FormInputField
+                name="dynamicPricingMaxDecreasePercent"
+                control={form.control}
+                label="Sàn giảm giá (%)"
+                type="number"
+                min={0}
+                max={SETTINGS_FIELD_MAX.dynamicPricingMaxDecreasePercent}
+              />
+              <FormInputField
+                name="salesPaceCustomMarkMinutes"
+                control={form.control}
+                label="Mốc tốc độ bán tùy chỉnh (phút trước giờ chiếu)"
+                type="number"
+                min={0}
+                max={SETTINGS_FIELD_MAX.salesPaceCustomMarkMinutes}
               />
             </SettingsSection>
 

@@ -31,6 +31,11 @@ export interface CinemaSettingsDto {
   suggestionLowOccupancyPercent: number;
   suggestionMinShowtimes: number;
   suggestionLookbackDays: number;
+  ticketPriceRoundingStep: number;
+  dynamicPricingMaxIncreasePercent: number;
+  dynamicPricingMaxDecreasePercent: number;
+  minTicketPrice: number;
+  salesPaceCustomMarkMinutes: number;
   timeZoneId?: string;
   locale?: string;
   currencyCode?: string;
@@ -72,6 +77,11 @@ export interface UpdateSettingsRequest {
   suggestionLowOccupancyPercent?: number;
   suggestionMinShowtimes?: number;
   suggestionLookbackDays?: number;
+  ticketPriceRoundingStep?: number;
+  dynamicPricingMaxIncreasePercent?: number;
+  dynamicPricingMaxDecreasePercent?: number;
+  minTicketPrice?: number;
+  salesPaceCustomMarkMinutes?: number;
 }
 
 export type SettingsDto = CinemaSettingsDto;

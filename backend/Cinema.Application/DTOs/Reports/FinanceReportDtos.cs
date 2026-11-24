@@ -17,8 +17,11 @@ public record ReportBlockResult(
     string Title,
     IReadOnlyList<ReportColumn> Columns,
     IReadOnlyList<IReadOnlyDictionary<string, object?>> Rows,
-    IReadOnlyDictionary<string, object?>? Totals
+    IReadOnlyDictionary<string, object?>? Totals,
+    IReadOnlyList<string>? Warnings = null
 );
+
+public record FinanceExportFilter(DateOnly From, DateOnly To);
 
 public record ReportBlockInfoDto(string Key, string Title, int Order);
 

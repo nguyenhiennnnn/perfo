@@ -10,8 +10,6 @@ namespace Cinema.Application.Services.Reports.Finance;
 
 public class RevenueByChannelBlock(IAppDbContext db, IAppCache cache) : IReportBlock
 {
-    private const int ChunkSize = 1000;
-
     public string Key => "revenue-by-channel";
     public string Title => Messages.Report_Finance_RevenueByChannel_Title;
     public int Order => 10;
@@ -40,52 +38,12 @@ public class RevenueByChannelBlock(IAppDbContext db, IAppCache cache) : IReportB
             cancellationToken
         );
 
-        var orderIds = lines.Select(l => l.OrderId).Distinct().ToList();
-        var transactions = new List<(int OrderId, PaymentMethod Method, PaymentTransactionType Type, decimal Amount)>();
-        foreach (var chunk in orderIds.Chunk(ChunkSize))
-        {
-            var rows = await db
-                .PaymentTransactions.AsNoTracking()
-                .Where(t => chunk.Contains(t.OrderId) && t.Status == PaymentStatus.Success)
-                .Select(t => new
-                {
-                    t.OrderId,
-                    t.Method,
-                    t.Type,
-                    t.Amount,
-                })
-                .ToListAsync(cancellationToken);
-            transactions.AddRange(rows.Select(r => (r.OrderId, r.Method, r.Type, r.Amount)));
-        }
-
-        var weightsByOrder = transactions
-            .GroupBy(t => t.OrderId)
-            .ToDictionary(g => g.Key, g => MethodWeights(g.ToList()));
-
-        var buckets = new Dictionary<(SalesChannel Channel, PaymentMethod? Method), Bucket>();
-        Bucket BucketOf(SalesChannel channel, PaymentMethod? method)
+        var buckets = await MethodRevenueAllocator.AllocateAsync(db, lines, cancellationToken);
+        RevenueBucket BucketOf(SalesChannel channel, PaymentMethod? method)
         {
             if (!buckets.TryGetValue((channel, method), out var bucket))
-                buckets[(channel, method)] = bucket = new Bucket();
+                buckets[(channel, method)] = bucket = new RevenueBucket();
             return bucket;
-        }
-
-        foreach (var group in lines.GroupBy(l => (l.OrderId, l.Channel, l.Kind)))
-        {
-            var amount = group.Sum(l => l.Net);
-            if (amount == 0m)
-                continue;
-
-            var weights = weightsByOrder.GetValueOrDefault(group.Key.OrderId) ?? [];
-            if (weights.Count == 0)
-            {
-                Add(BucketOf(group.Key.Channel, null), group.Key.Kind, amount);
-                continue;
-            }
-
-            var shares = Spread(amount, weights.Select(w => w.Weight).ToList());
-            for (var i = 0; i < weights.Count; i++)
-                Add(BucketOf(group.Key.Channel, weights[i].Method), group.Key.Kind, shares[i]);
         }
 
         var payments = await db
@@ -108,7 +66,7 @@ public class RevenueByChannelBlock(IAppDbContext db, IAppCache cache) : IReportB
         }
 
         var rowsOut = new List<IReadOnlyDictionary<string, object?>>();
-        var total = new Bucket();
+        var total = new RevenueBucket();
         foreach (
             var entry in buckets
                 .OrderBy(e => e.Key.Channel)
@@ -157,7 +115,7 @@ public class RevenueByChannelBlock(IAppDbContext db, IAppCache cache) : IReportB
     private static IReadOnlyDictionary<string, object?> ToRow(
         string channel,
         string method,
-        Bucket b
+        RevenueBucket b
     ) =>
         new Dictionary<string, object?>
         {
@@ -170,69 +128,4 @@ public class RevenueByChannelBlock(IAppDbContext db, IAppCache cache) : IReportB
             ["collected"] = b.Collected,
             ["refunded"] = b.Refunded,
         };
-
-    private static void Add(Bucket bucket, RevenueKind kind, decimal amount)
-    {
-        switch (kind)
-        {
-            case RevenueKind.Ticket:
-                bucket.Ticket += amount;
-                break;
-            case RevenueKind.Combo:
-                bucket.Combo += amount;
-                break;
-            default:
-                bucket.GiftCard += amount;
-                break;
-        }
-    }
-
-    private static List<(PaymentMethod Method, decimal Weight)> MethodWeights(
-        List<(int OrderId, PaymentMethod Method, PaymentTransactionType Type, decimal Amount)> rows
-    )
-    {
-        List<(PaymentMethod Method, decimal Weight)> Weigh(Func<IGrouping<PaymentMethod, (int OrderId, PaymentMethod Method, PaymentTransactionType Type, decimal Amount)>, decimal> weight) =>
-            rows.GroupBy(r => r.Method)
-                .Select(g => (g.Key, weight(g)))
-                .Where(x => x.Item2 > 0m)
-                .OrderBy(x => x.Item2)
-                .ThenBy(x => x.Key)
-                .ToList();
-
-        var net = Weigh(g =>
-            g.Where(r => r.Type == PaymentTransactionType.Charge).Sum(r => r.Amount)
-            - g.Where(r => r.Type == PaymentTransactionType.Refund).Sum(r => r.Amount)
-        );
-        return net.Count > 0
-            ? net
-            : Weigh(g => g.Where(r => r.Type == PaymentTransactionType.Charge).Sum(r => r.Amount));
-    }
-
-    private static decimal[] Spread(decimal amount, IReadOnlyList<decimal> weights)
-    {
-        var shares = new decimal[weights.Count];
-        var total = weights.Sum();
-        if (total <= 0m)
-            return shares;
-
-        var largest = 0;
-        for (var i = 0; i < weights.Count; i++)
-        {
-            shares[i] = Math.Floor(amount * weights[i] / total);
-            if (weights[i] > weights[largest])
-                largest = i;
-        }
-
-        shares[largest] += amount - shares.Sum();
-        return shares;
-    }
-
-    private sealed class Bucket
-    {
-        public decimal Ticket { get; set; }
-        public decimal Combo { get; set; }
-        public decimal GiftCard { get; set; }
-        public decimal Collected { get; set; }
-        public decimal Refunded { get; set; }
-    }
 }

@@ -1,4 +1,5 @@
 using Cinema.Application.DTOs.Movies;
+using Cinema.Application.DTOs.Reports;
 using Cinema.Application.DTOs.Promotions;
 using Cinema.Application.DTOs.Showtimes;
 using Cinema.Application.Caching;
@@ -74,6 +75,10 @@ public static class DependencyInjection
         ));
         services.AddScoped<IExportModule>(sp => new ExportModule<PromotionRedemptionListFilter>(
             sp.GetRequiredService<IPromotionRedemptionExportService>()
+        ));
+        services.AddScoped<IFinanceReportExportService, FinanceReportExportService>();
+        services.AddScoped<IExportModule>(sp => new ExportModule<FinanceExportFilter>(
+            sp.GetRequiredService<IFinanceReportExportService>()
         ));
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<ISeatLayoutImportService, SeatLayoutImportService>();
@@ -187,6 +192,11 @@ public static class DependencyInjection
         services.AddScoped<IFinanceReportService, FinanceReportService>();
         services.AddReportBlock<RevenueByChannelBlock>();
         services.AddReportBlock<DiscountBlock>();
+        services.AddReportBlock<RefundCancellationBlock>();
+        services.AddReportBlock<GatewayFeeBlock>();
+        services.AddReportBlock<ComboProfitBlock>();
+        services.AddReportBlock<MovieProfitBlock>();
+        services.AddReportBlock<GiftCardLiabilityBlock>();
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IUserAdminService, UserAdminService>();
         services.AddScoped<AiToolExecutor>();

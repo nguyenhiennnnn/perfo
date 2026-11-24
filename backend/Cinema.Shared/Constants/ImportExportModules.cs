@@ -13,6 +13,7 @@ public class ImportExportModules
     public const string RevenueReport = "revenue";
     public const string TopMoviesReport = "top-movies";
     public const string EmployeePerformanceReport = "employee-performance";
+    public const string FinanceReport = "finance";
     public const string SalesStatsRebuild = "sales-stats";
 
     private static readonly HashSet<string> SensitiveModules =

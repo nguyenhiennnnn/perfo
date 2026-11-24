@@ -3618,4 +3618,83 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Report_Finance_Method_Unknown" xml:space="preserve">
     <value>Chưa xác định</value>
   </data>
+  <data name="Report_Finance_RefundsCancellations_Title" xml:space="preserve">
+    <value>Hoàn tiền và hủy</value>
+  </data>
+  <data name="Report_Finance_GatewayFees_Title" xml:space="preserve">
+    <value>Phí cổng và thực nhận</value>
+  </data>
+  <data name="Report_Finance_ComboProfit_Title" xml:space="preserve">
+    <value>Lợi nhuận combo</value>
+  </data>
+  <data name="Report_Finance_Col_CancelledOrders" xml:space="preserve">
+    <value>Số đơn hủy</value>
+  </data>
+  <data name="Report_Finance_Col_RefundAmount" xml:space="preserve">
+    <value>Hoàn tiền vé (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_TicketRevenueBeforeRefund" xml:space="preserve">
+    <value>Doanh thu vé trước hoàn (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_RefundRate" xml:space="preserve">
+    <value>Tỷ lệ hoàn vé (%)</value>
+  </data>
+  <data name="Report_Finance_Col_PaymentRefunded" xml:space="preserve">
+    <value>Tiền đã hoàn qua thanh toán (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_PaymentCollected" xml:space="preserve">
+    <value>Tiền đã thu (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_PaymentRefundRate" xml:space="preserve">
+    <value>Tỷ lệ hoàn so với tiền thu (%)</value>
+  </data>
+  <data name="Report_Finance_Col_TransactionCount" xml:space="preserve">
+    <value>Số giao dịch</value>
+  </data>
+  <data name="Report_Finance_Col_GatewayFee" xml:space="preserve">
+    <value>Phí cổng (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_FeeRate" xml:space="preserve">
+    <value>Tỷ lệ phí (%)</value>
+  </data>
+  <data name="Report_Finance_Col_RevenueBeforeFee" xml:space="preserve">
+    <value>Doanh thu vé và combo (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_RevenueAfterFee" xml:space="preserve">
+    <value>Doanh thu thực nhận sau phí (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_Combo" xml:space="preserve">
+    <value>Combo</value>
+  </data>
+  <data name="Report_Finance_Col_QuantitySold" xml:space="preserve">
+    <value>Số lượng thực bán</value>
+  </data>
+  <data name="Report_Finance_Col_Cost" xml:space="preserve">
+    <value>Giá vốn (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_Profit" xml:space="preserve">
+    <value>Lợi nhuận (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_Margin" xml:space="preserve">
+    <value>Biên lợi nhuận (%)</value>
+  </data>
+  <data name="Report_Finance_Col_MissingCostLines" xml:space="preserve">
+    <value>Dòng thiếu giá vốn</value>
+  </data>
+  <data name="Report_Finance_Warning_ComboMissingCost" xml:space="preserve">
+    <value>Có {0} dòng combo chưa có giá vốn. Giá vốn của các dòng này được tính bằng 0 nên lợi nhuận có thể cao hơn thực tế.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Report_Finance_Warning_ComboMissingCost, ...)</comment>
+  </data>
+  <data name="Report_Finance_MovieProfit_Title" xml:space="preserve">
+    <value>Lợi nhuận theo phim</value>
+  </data>
+  <data name="Report_Finance_GiftCardLiability_Title" xml:space="preserve">
+    <value>Khoản phải trả thẻ quà tặng</value>
+  </data>
+  <data name="Export_PdfTitleFinance" xml:space="preserve">
+    <value>Báo cáo tài chính</value>
+  </data>
+  <data name="Export_InvalidFinanceFormat" xml:space="preserve">
+    <value>Báo cáo tài chính chỉ xuất được định dạng xlsx hoặc pdf.</value>
+  </data>
 </root>

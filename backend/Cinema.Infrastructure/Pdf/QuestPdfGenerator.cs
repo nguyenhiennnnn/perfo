@@ -72,6 +72,91 @@ public class QuestPdfGenerator(IOptions<PdfOptions> options) : IPdfGenerator
         return new MemoryStream(bytes);
     }
 
+    public Stream GenerateSectionedReport(PdfSectionedReportDocument document)
+    {
+        EnsureFontsRegistered();
+
+        var bytes = Document
+            .Create(container =>
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(PageMargin);
+                    page.DefaultTextStyle(style =>
+                        style.FontFamily(_options.FontFamily).FontSize(10)
+                    );
+
+                    page.Header()
+                        .PaddingBottom(12)
+                        .Column(column =>
+                        {
+                            column.Item().Text(document.CinemaName).Bold().FontSize(11);
+                            column.Item().PaddingTop(4).Text(document.Title).Bold().FontSize(18);
+                            column
+                                .Item()
+                                .PaddingTop(2)
+                                .Text(document.PeriodText)
+                                .FontColor(Colors.Grey.Darken2);
+                        });
+
+                    page.Content()
+                        .Column(column =>
+                        {
+                            column.Spacing(18);
+                            foreach (var section in document.Sections)
+                            {
+                                column
+                                    .Item()
+                                    .Column(item =>
+                                    {
+                                        item.Item().PaddingBottom(4).Text(section.Title).Bold().FontSize(13);
+                                        foreach (var note in section.Notes)
+                                            item.Item()
+                                                .PaddingBottom(4)
+                                                .Text(note)
+                                                .FontSize(9)
+                                                .FontColor(Colors.Orange.Darken3);
+
+                                        if (section.Rows.Count == 0)
+                                            item.Item()
+                                                .Text(document.EmptyText)
+                                                .FontColor(Colors.Grey.Darken2);
+                                        else
+                                            item.Item()
+                                                .Element(c =>
+                                                    ComposeTable(
+                                                        c,
+                                                        section.Columns,
+                                                        section.Rows,
+                                                        section.TotalRow
+                                                    )
+                                                );
+                                    });
+                            }
+                        });
+
+                    page.Footer()
+                        .DefaultTextStyle(style => style.FontSize(9).FontColor(Colors.Grey.Darken2))
+                        .Row(row =>
+                        {
+                            row.RelativeItem().Text(document.ExportedAtText);
+                            row.RelativeItem()
+                                .AlignRight()
+                                .Text(text =>
+                                {
+                                    text.Span($"{document.PageLabel} ");
+                                    text.CurrentPageNumber();
+                                    text.Span(" / ");
+                                    text.TotalPages();
+                                });
+                        });
+                })
+            )
+            .GeneratePdf();
+
+        return new MemoryStream(bytes);
+    }
+
     public Stream GenerateTickets(PdfTicketDocument document)
     {
         EnsureFontsRegistered();
@@ -110,17 +195,27 @@ public class QuestPdfGenerator(IOptions<PdfOptions> options) : IPdfGenerator
             return;
         }
 
+        ComposeTable(container, document.Columns, document.Rows, document.TotalRow);
+    }
+
+    private static void ComposeTable(
+        IContainer container,
+        IReadOnlyList<PdfTableColumn> columns,
+        IReadOnlyList<IReadOnlyList<string>> rows,
+        IReadOnlyList<string>? totalRow
+    )
+    {
         container.Table(table =>
         {
-            table.ColumnsDefinition(columns =>
+            table.ColumnsDefinition(definition =>
             {
-                foreach (var column in document.Columns)
-                    columns.RelativeColumn(column.Weight);
+                foreach (var column in columns)
+                    definition.RelativeColumn(column.Weight);
             });
 
             table.Header(header =>
             {
-                foreach (var column in document.Columns)
+                foreach (var column in columns)
                 {
                     var alignRight = column.AlignRight;
                     header
@@ -131,21 +226,21 @@ public class QuestPdfGenerator(IOptions<PdfOptions> options) : IPdfGenerator
                 }
             });
 
-            foreach (var row in document.Rows)
+            foreach (var row in rows)
             {
-                for (var i = 0; i < document.Columns.Count; i++)
+                for (var i = 0; i < columns.Count; i++)
                 {
-                    var alignRight = document.Columns[i].AlignRight;
+                    var alignRight = columns[i].AlignRight;
                     var value = i < row.Count ? row[i] : string.Empty;
                     table.Cell().Element(cell => BodyCell(cell, alignRight)).Text(value);
                 }
             }
 
-            if (document.TotalRow is { } total)
+            if (totalRow is { } total)
             {
-                for (var i = 0; i < document.Columns.Count; i++)
+                for (var i = 0; i < columns.Count; i++)
                 {
-                    var alignRight = document.Columns[i].AlignRight;
+                    var alignRight = columns[i].AlignRight;
                     var value = i < total.Count ? total[i] : string.Empty;
                     table
                         .Cell()

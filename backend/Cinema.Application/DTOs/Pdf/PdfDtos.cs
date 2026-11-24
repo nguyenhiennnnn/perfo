@@ -14,6 +14,24 @@ public record PdfReportDocument(
     IReadOnlyList<string>? TotalRow
 );
 
+public record PdfReportSection(
+    string Title,
+    IReadOnlyList<PdfTableColumn> Columns,
+    IReadOnlyList<IReadOnlyList<string>> Rows,
+    IReadOnlyList<string>? TotalRow,
+    IReadOnlyList<string> Notes
+);
+
+public record PdfSectionedReportDocument(
+    string Title,
+    string CinemaName,
+    string PeriodText,
+    string ExportedAtText,
+    string PageLabel,
+    string EmptyText,
+    IReadOnlyList<PdfReportSection> Sections
+);
+
 public record PdfTicketLabels(
     string Title,
     string Movie,

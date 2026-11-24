@@ -22,7 +22,11 @@ internal sealed record RecognizedLine(
     decimal Net,
     decimal TierDiscount,
     decimal PromotionDiscount,
-    decimal OtherDiscount
+    decimal OtherDiscount,
+    int? ComboId,
+    string? ComboName,
+    int SoldQuantity,
+    decimal? UnitCost
 );
 
 internal static class RecognizedRevenueLoader
@@ -128,6 +132,11 @@ internal static class RecognizedRevenueLoader
         {
             OrderId = l.OrderId,
             OrderLineId = l.OrderLineId,
+            ComboId = l.ComboId,
+            ComboName = l.Combo != null ? l.Combo.Name : null,
+            Quantity = l.Quantity,
+            RefundedQuantity = l.RefundedQuantity,
+            UnitCost = l.UnitCost,
             LineType = l.LineType,
             Channel = l.Order.Channel,
             OrderStatus = l.Order.Status,
@@ -176,7 +185,11 @@ internal static class RecognizedRevenueLoader
                     d.Type != PriceAdjustmentType.TierDiscount
                     && d.Type != PriceAdjustmentType.Promotion
                 )
-                .Sum(d => d.Amount)
+                .Sum(d => d.Amount),
+            r.ComboId,
+            r.ComboName,
+            Math.Max(0, r.Quantity - r.RefundedQuantity),
+            r.UnitCost
         );
 
     private static decimal ShowtimeRefundShare(LineRow r)
@@ -215,6 +228,11 @@ internal static class RecognizedRevenueLoader
     {
         public int OrderId { get; init; }
         public int OrderLineId { get; init; }
+        public int? ComboId { get; init; }
+        public string? ComboName { get; init; }
+        public int Quantity { get; init; }
+        public int RefundedQuantity { get; init; }
+        public decimal? UnitCost { get; init; }
         public OrderLineType LineType { get; init; }
         public SalesChannel Channel { get; init; }
         public OrderStatus OrderStatus { get; init; }

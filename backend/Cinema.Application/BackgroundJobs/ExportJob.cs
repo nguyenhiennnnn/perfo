@@ -56,7 +56,7 @@ public class ExportJob(
 
             var file = await handler.ExportAsync(
                 filterJson,
-                ExportFormats.Parse(format),
+                ExportFormats.Parse(format, allowPdf: true),
                 exportContext,
                 progress,
                 cancellationToken

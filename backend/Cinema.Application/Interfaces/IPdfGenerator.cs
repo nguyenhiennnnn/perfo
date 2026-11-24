@@ -6,5 +6,7 @@ public interface IPdfGenerator
 {
     Stream GenerateReport(PdfReportDocument document);
 
+    Stream GenerateSectionedReport(PdfSectionedReportDocument document);
+
     Stream GenerateTickets(PdfTicketDocument document);
 }

@@ -54,7 +54,15 @@ public class PaymentRefundService(
         string? note,
         int? performedByUserId,
         CancellationToken cancellationToken
-    ) => ReserveCoreAsync(charge, amount, note, performedByUserId, false, cancellationToken);
+    ) => ReserveCoreAsync(charge, amount, note, performedByUserId, false, false, cancellationToken);
+
+    public Task<PaymentTransaction> RecordManualAsync(
+        PaymentTransaction charge,
+        decimal amount,
+        string? note,
+        int performedByUserId,
+        CancellationToken cancellationToken
+    ) => ReserveCoreAsync(charge, amount, note, performedByUserId, false, true, cancellationToken);
 
     public Task<PaymentTransaction> ReserveManualCashAsync(
         PaymentTransaction charge,
@@ -66,7 +74,7 @@ public class PaymentRefundService(
         if (charge.Method != PaymentMethod.Cash)
             throw new BusinessRuleException(Messages.Refund_CashOnly);
 
-        return ReserveCoreAsync(charge, amount, note, null, true, cancellationToken);
+        return ReserveCoreAsync(charge, amount, note, null, true, false, cancellationToken);
     }
 
     private async Task<PaymentTransaction> ReserveCoreAsync(
@@ -75,6 +83,7 @@ public class PaymentRefundService(
         string? note,
         int? performedByUserId,
         bool manualCash,
+        bool completedManually,
         CancellationToken cancellationToken
     )
     {
@@ -96,7 +105,7 @@ public class PaymentRefundService(
             throw new BusinessRuleException(Messages.Refund_ExceedsCollected);
 
         var now = DateTime.UtcNow;
-        var isPending = manualCash || charge.Method.IsGatewayMethod();
+        var isPending = !completedManually && (manualCash || charge.Method.IsGatewayMethod());
         var refund = new PaymentTransaction
         {
             OrderId = charge.OrderId,

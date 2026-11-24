@@ -31,6 +31,14 @@ public interface IPaymentRefundService
         CancellationToken cancellationToken
     );
 
+    Task<PaymentTransaction> RecordManualAsync(
+        PaymentTransaction charge,
+        decimal amount,
+        string? note,
+        int performedByUserId,
+        CancellationToken cancellationToken
+    );
+
     Task<PaymentTransaction> ReserveManualCashAsync(
         PaymentTransaction charge,
         decimal amount,

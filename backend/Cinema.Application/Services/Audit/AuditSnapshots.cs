@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Inventory;
+using Cinema.Application.DTOs.Showtimes;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Services.Pricing;
 using Cinema.Domain.Entities;
@@ -214,9 +215,12 @@ public static class AuditSnapshots
         CancelActor actor,
         CancelReason reason,
         decimal refundAmount,
-        decimal manualRefundAmount
-    ) =>
-        AuditJson.ToObject(
+        decimal manualRefundAmount,
+        int voidedRefundDueCount = 0,
+        decimal voidedRefundDueAmount = 0m
+    )
+    {
+        var snapshot = AuditJson.ToObject(
             new
             {
                 status = OrderStatus.Cancelled,
@@ -228,6 +232,14 @@ public static class AuditSnapshots
                 manualRefundAmount,
             }
         );
+        if (voidedRefundDueCount > 0)
+        {
+            snapshot["voidedRefundDueCount"] = voidedRefundDueCount;
+            snapshot["voidedRefundDueAmount"] = voidedRefundDueAmount;
+        }
+
+        return snapshot;
+    }
 
     public static JsonObject ShowtimeBeforeCancel() =>
         AuditJson.ToObject(new { status = ShowtimeStatus.Scheduled });
@@ -236,12 +248,14 @@ public static class AuditSnapshots
         int ordersCancelled,
         int autoRefundOrders,
         int manualRefundOrders,
-        decimal manualRefundAmount
+        decimal manualRefundAmount,
+        CancelReason reason = CancelReason.ShowtimeCancelled
     ) =>
         AuditJson.ToObject(
             new
             {
                 status = ShowtimeStatus.Cancelled,
+                reason,
                 ordersCancelled,
                 autoRefundOrders,
                 manualRefundOrders,
@@ -295,6 +309,39 @@ public static class AuditSnapshots
                 orderId = refund.OrderId,
                 amount = refund.Amount,
                 confirmedByUserId,
+            }
+        );
+
+    public static JsonObject RoomChangeRefundBeforeConfirm(RoomChangeRefundDue due) =>
+        AuditJson.ToObject(
+            new
+            {
+                status = RoomChangeRefundStatus.Pending,
+                orderId = due.OrderId,
+                orderLineId = due.OrderLineId,
+                amountDue = due.AmountDue,
+            }
+        );
+
+    public static JsonObject RoomChangeRefundAfterConfirm(
+        RoomChangeRefundDue due,
+        int confirmedByUserId,
+        IReadOnlyList<RoomChangeRefundTransactionDto> refunds
+    ) =>
+        AuditJson.ToObject(
+            new
+            {
+                status = RoomChangeRefundStatus.Refunded,
+                orderId = due.OrderId,
+                orderLineId = due.OrderLineId,
+                amountRefunded = due.AmountDue,
+                confirmedByUserId,
+                refunds = refunds.Select(r => new
+                {
+                    r.RefundTransactionId,
+                    r.Method,
+                    r.Amount,
+                }),
             }
         );
 }

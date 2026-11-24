@@ -3395,4 +3395,70 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_ShowtimeRoomChanged" xml:space="preserve">
     <value>Đã chuyển suất chiếu sang phòng mới.</value>
   </data>
+  <data name="Email_BadgeRoomChanged" xml:space="preserve">
+    <value>Đổi phòng chiếu</value>
+  </data>
+  <data name="Email_RoomChangedHeading" xml:space="preserve">
+    <value>Suất chiếu của bạn đã đổi phòng</value>
+  </data>
+  <data name="Email_RoomChangedSubject" xml:space="preserve">
+    <value>Suất chiếu của bạn đã đổi phòng — {0}</value>
+  </data>
+  <data name="Email_RoomChangedPreheader" xml:space="preserve">
+    <value>Đơn {0}: suất chiếu chuyển từ {1} sang {2}</value>
+  </data>
+  <data name="Email_RoomChangedBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, rạp đã chuyển suất chiếu trong đơn hàng &lt;strong&gt;{1}&lt;/strong&gt; sang một phòng chiếu khác. Đơn hàng, vé và mã QR của bạn vẫn giữ nguyên và dùng được như bình thường.</value>
+  </data>
+  <data name="Email_RoomChangedShowtimeLabel" xml:space="preserve">
+    <value>Giờ chiếu</value>
+  </data>
+  <data name="Email_RoomChangedFromRoomLabel" xml:space="preserve">
+    <value>Phòng cũ</value>
+  </data>
+  <data name="Email_RoomChangedToRoomLabel" xml:space="preserve">
+    <value>Phòng mới</value>
+  </data>
+  <data name="Email_RoomChangedSeatsLabel" xml:space="preserve">
+    <value>Ghế mới của bạn</value>
+  </data>
+  <data name="Email_RoomChangedRefundLabel" xml:space="preserve">
+    <value>Số tiền chênh lệch sẽ được hoàn</value>
+  </data>
+  <data name="Email_RoomChangedRefundNote" xml:space="preserve">
+    <value>Ghế mới thuộc loại có giá thấp hơn ghế cũ nên rạp sẽ hoàn phần chênh lệch về hình thức bạn đã thanh toán. Khoản hoàn này được rạp xử lý thủ công, có thể mất vài ngày làm việc.</value>
+  </data>
+  <data name="Email_RoomChangedCancelNote" xml:space="preserve">
+    <value>Nếu bạn không đồng ý với việc đổi phòng, bạn có thể hủy đơn hàng {0} và được hoàn lại đầy đủ số tiền đã thanh toán, không áp dụng hạn hủy hay phần trăm hoàn. Bạn có thể tự hủy trong mục Đơn hàng của tôi trên website, hoặc mang mã đơn hàng đến quầy để nhân viên hủy giúp. Combo đã nhận và lượt dùng mã khuyến mãi sẽ không được hoàn lại.</value>
+  </data>
+  <data name="Refund_RoomChangeCancelDescription" xml:space="preserve">
+    <value>Hoàn tiền hủy đơn {0} do đổi phòng chiếu</value>
+  </data>
+  <data name="Refund_RoomChangeDueDescription" xml:space="preserve">
+    <value>Hoàn chênh lệch giá ghế do đổi phòng, đơn {0}</value>
+  </data>
+  <data name="Rule_RoomChangeCancelNotAllowed" xml:space="preserve">
+    <value>Chỉ hủy được theo lý do đổi phòng với đơn hàng có vé của suất chiếu đã được chuyển sang phòng khác.</value>
+  </data>
+  <data name="Rule_RoomChangeCancelShowtimeStarted" xml:space="preserve">
+    <value>Suất chiếu đã bắt đầu, không thể hủy đơn hàng theo lý do đổi phòng.</value>
+  </data>
+  <data name="Rule_ShowtimeCancelReasonNotAllowed" xml:space="preserve">
+    <value>Lý do hủy suất chiếu chỉ có thể là rạp hủy suất hoặc đóng phòng chiếu.</value>
+  </data>
+  <data name="Rule_RoomChangeRefundVoided" xml:space="preserve">
+    <value>Khoản hoàn chênh lệch này đã bị hủy vì đơn hàng đã được hủy và hoàn tiền đầy đủ.</value>
+  </data>
+  <data name="Rule_RoomChangeRefundOrderNotConfirmed" xml:space="preserve">
+    <value>Đơn hàng không còn ở trạng thái đã xác nhận nên không thể hoàn chênh lệch.</value>
+  </data>
+  <data name="Conflict_RoomChangeRefundConcurrent" xml:space="preserve">
+    <value>Khoản hoàn chênh lệch vừa được xử lý bởi thao tác khác. Vui lòng tải lại danh sách.</value>
+  </data>
+  <data name="NotFound_RoomChangeRefundDue" xml:space="preserve">
+    <value>Không tìm thấy khoản hoàn chênh lệch đổi phòng.</value>
+  </data>
+  <data name="Success_RoomChangeRefundConfirmed" xml:space="preserve">
+    <value>Đã ghi nhận hoàn chênh lệch đổi phòng.</value>
+  </data>
 </root>

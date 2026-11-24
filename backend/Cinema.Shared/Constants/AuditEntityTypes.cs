@@ -18,4 +18,5 @@ public static class AuditEntityTypes
     public const string Showtime = "Showtime";
     public const string RoomClosure = "RoomClosure";
     public const string PaymentTransaction = "PaymentTransaction";
+    public const string RoomChangeRefundDue = "RoomChangeRefundDue";
 }

@@ -25,6 +25,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<RoomClosure> RoomClosures => Set<RoomClosure>();
     public DbSet<ShowtimeRoomChange> ShowtimeRoomChanges => Set<ShowtimeRoomChange>();
     public DbSet<RoomChangeRefundDue> RoomChangeRefundDues => Set<RoomChangeRefundDue>();
+    public DbSet<ShowtimeRoomChangeNotice> ShowtimeRoomChangeNotices => Set<ShowtimeRoomChangeNotice>();
     public DbSet<SeatType> SeatTypes => Set<SeatType>();
     public DbSet<Seat> Seats => Set<Seat>();
     public DbSet<Genre> Genres => Set<Genre>();

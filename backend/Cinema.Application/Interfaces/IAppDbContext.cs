@@ -22,6 +22,7 @@ public interface IAppDbContext
     DbSet<RoomClosure> RoomClosures { get; }
     DbSet<ShowtimeRoomChange> ShowtimeRoomChanges { get; }
     DbSet<RoomChangeRefundDue> RoomChangeRefundDues { get; }
+    DbSet<ShowtimeRoomChangeNotice> ShowtimeRoomChangeNotices { get; }
     DbSet<SeatType> SeatTypes { get; }
     DbSet<Seat> Seats { get; }
     DbSet<Genre> Genres { get; }

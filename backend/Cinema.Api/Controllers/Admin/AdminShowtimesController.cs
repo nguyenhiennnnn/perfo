@@ -4,6 +4,7 @@ using Cinema.Application.DTOs.Import;
 using Cinema.Application.DTOs.ImportExport;
 using Cinema.Application.DTOs.Showtimes;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Services.Showtimes;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
@@ -113,8 +114,18 @@ public class AdminShowtimesController(
     [HttpDelete("{id:int}")]
     [SuccessMessage(nameof(Messages.Success_ShowtimeDeleted))]
     [Authorize(Policy = Policies.AdminOnly)]
-    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken) =>
-        Ok(await showtimeCancellationService.DeleteShowtimeAsync(id, cancellationToken));
+    public async Task<IActionResult> Delete(
+        int id,
+        [FromQuery] string? reason,
+        CancellationToken cancellationToken
+    ) =>
+        Ok(
+            await showtimeCancellationService.DeleteShowtimeAsync(
+                id,
+                ShowtimeRules.ParseCancelReason(reason),
+                cancellationToken
+            )
+        );
 
     [HttpPost("{id:int}/room-change/preview")]
     [Authorize(Policy = Policies.AdminOnly)]

@@ -13,11 +13,13 @@ public static class OrderCancellationRules
             ? reason
                 is CancelReason.CustomerChangedMind
                     or CancelReason.DuplicateOrder
+                    or CancelReason.RoomClosed
                     or CancelReason.Other
             : reason
                 is CancelReason.CustomerChangedMind
                     or CancelReason.DuplicateOrder
                     or CancelReason.PaymentError
+                    or CancelReason.RoomClosed
                     or CancelReason.Other;
 
     public static CancelActorKind KindForRole(string? role) =>
@@ -78,6 +80,21 @@ public static class OrderCancellationRules
             throw new BusinessRuleException(
                 string.Format(Messages.Rule_RefundDeadlineExceeded, deadlineHours)
             );
+    }
+
+    public static void EnsureRoomChangeCancellable(
+        IReadOnlyList<(ShowtimeStatus Status, DateTime StartTime)> changedShowtimes,
+        DateTime now
+    )
+    {
+        if (
+            changedShowtimes.Count == 0
+            || changedShowtimes.Any(s => s.Status != ShowtimeStatus.Scheduled)
+        )
+            throw new BusinessRuleException(Messages.Rule_RoomChangeCancelNotAllowed);
+
+        if (changedShowtimes.Any(s => s.StartTime <= now))
+            throw new BusinessRuleException(Messages.Rule_RoomChangeCancelShowtimeStarted);
     }
 
     public static bool IsCustomerRefundableMethod(PaymentMethod method) =>

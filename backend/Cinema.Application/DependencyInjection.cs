@@ -79,6 +79,9 @@ public static class DependencyInjection
         services.AddScoped<IShowtimeService, ShowtimeService>();
         services.AddScoped<IShowtimeCancellationService, ShowtimeCancellationService>();
         services.AddScoped<IShowtimeRoomChangeService, ShowtimeRoomChangeService>();
+        services.AddScoped<IRoomChangeRefundService, RoomChangeRefundService>();
+        services.AddScoped<IOrderCancellationHook, RoomChangeRefundVoidHook>();
+        services.AddBackgroundEventHandler<ShowtimeRoomChanged, ShowtimeRoomChangedEmailHandler>();
         services.AddScoped<IShowtimeBatchService, ShowtimeBatchService>();
         services.AddScoped<IShowtimeAutoScheduleService, ShowtimeAutoScheduleService>();
         services.AddScoped<IShowtimeQueryService, ShowtimeQueryService>();

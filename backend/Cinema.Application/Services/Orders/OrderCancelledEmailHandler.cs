@@ -13,7 +13,17 @@ public class OrderCancelledEmailHandler(
 {
     public async Task HandleAsync(OrderCancelled businessEvent, CancellationToken cancellationToken)
     {
-        if (businessEvent.Reason is CancelReason.ShowtimeCancelled or CancelReason.RoomClosed)
+        if (businessEvent.Reason == CancelReason.ShowtimeCancelled)
+            return;
+
+        if (
+            businessEvent.Reason == CancelReason.RoomClosed
+            && await db
+                .Orders.AsNoTracking()
+                .Where(o => o.OrderId == businessEvent.OrderId)
+                .Where(ShowtimeCancellationRouting.CancelledByShowtime)
+                .AnyAsync(cancellationToken)
+        )
             return;
 
         var order = await db

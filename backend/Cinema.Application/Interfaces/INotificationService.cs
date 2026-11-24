@@ -82,5 +82,17 @@ public interface INotificationService
         decimal amountDue
     );
 
+    void SendShowtimeRoomChangedNotice(
+        string toEmail,
+        string customerName,
+        string orderCode,
+        string movieTitle,
+        DateTime showtimeStartUtc,
+        string fromRoomName,
+        string toRoomName,
+        IReadOnlyList<string> seatLabels,
+        decimal refundDueAmount
+    );
+
     void SendLowStockAlert(string toEmail, IReadOnlyList<LowStockEmailLine> items);
 }

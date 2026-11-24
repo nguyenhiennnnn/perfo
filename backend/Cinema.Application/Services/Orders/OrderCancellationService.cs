@@ -76,6 +76,9 @@ public class OrderCancellationService(
         CancellationToken cancellationToken
     )
     {
+        if (reason == CancelReason.RoomClosed)
+            await EnsureRoomChangeCancellableAsync(orderId, cancellationToken);
+
         var cancelled = await releaseService.CancelPendingAsync(
             orderId,
             reason,
@@ -85,7 +88,7 @@ public class OrderCancellationService(
         if (!cancelled)
             throw new ConflictAppException(Messages.Conflict_BookingBeingProcessedOrCancelled);
 
-        if (!actor.IsCustomer)
+        if (ShouldAudit(actor, reason))
         {
             RecordAudit(actor, orderId, OrderStatus.Pending, reason, 0m, 0m);
             await db.SaveChangesAsync(cancellationToken);
@@ -121,17 +124,25 @@ public class OrderCancellationService(
         if (status != OrderStatus.Confirmed)
             throw new ConflictAppException(Messages.Conflict_BookingBeingProcessedOrCancelled);
 
-        await EnsureCancellableAsync(orderId, actor, settings, cancellationToken);
+        await EnsureCancellableAsync(orderId, actor, reason, settings, cancellationToken);
 
+        var isRoomChangeCancel = reason == CancelReason.RoomClosed;
         var plan = await orderRefunds.BuildPlanAsync(
             orderId,
-            RefundScope.ByPercent(settings.CancelRefundPercent),
+            isRoomChangeCancel
+                ? RefundScope.Full(true)
+                : RefundScope.ByPercent(settings.CancelRefundPercent),
             cancellationToken
         );
         var reservations = await orderRefunds.ReserveAsync(
             plan,
             actor.UserId,
-            string.Format(Messages.Refund_CancelOrderDescription, orderCode),
+            string.Format(
+                isRoomChangeCancel
+                    ? Messages.Refund_RoomChangeCancelDescription
+                    : Messages.Refund_CancelOrderDescription,
+                orderCode
+            ),
             cancellationToken
         );
         var results = await orderRefunds.ExecuteAsync(reservations, cancellationToken);
@@ -161,6 +172,16 @@ public class OrderCancellationService(
             var failedIds = results.Where(r => !r.Success).Select(r => r.RefundTransactionId).ToList();
             await MarkManualRefundsAsync(orderId, reservations, failedIds, cancellationToken);
 
+            var voidedDues = ShouldAudit(actor, reason)
+                ? await db
+                    .RoomChangeRefundDues.AsNoTracking()
+                    .Where(d =>
+                        d.OrderId == orderId && d.Status == RoomChangeRefundStatus.Pending
+                    )
+                    .Select(d => d.AmountDue)
+                    .ToListAsync(cancellationToken)
+                : new List<decimal>();
+
             releasedSeats = await finalizer.FinalizeAsync(
                 orderId,
                 reason,
@@ -171,8 +192,17 @@ public class OrderCancellationService(
 
             var refunded = results.Where(r => r.Success).Sum(r => r.Amount);
             var manual = results.Where(r => !r.Success).Sum(r => r.Amount);
-            if (!actor.IsCustomer)
-                RecordAudit(actor, orderId, OrderStatus.Confirmed, reason, refunded, manual);
+            if (ShouldAudit(actor, reason))
+                RecordAudit(
+                    actor,
+                    orderId,
+                    OrderStatus.Confirmed,
+                    reason,
+                    refunded,
+                    manual,
+                    voidedDues.Count,
+                    voidedDues.Sum()
+                );
 
             await db.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
@@ -229,6 +259,7 @@ public class OrderCancellationService(
     private async Task EnsureCancellableAsync(
         int orderId,
         CancelActor actor,
+        CancelReason reason,
         CinemaSettingsSnapshot settings,
         CancellationToken cancellationToken
     )
@@ -257,6 +288,12 @@ public class OrderCancellationService(
                 throw new BusinessRuleException(Messages.Rule_BookingCancelAtCounter);
         }
 
+        if (reason == CancelReason.RoomClosed)
+        {
+            await EnsureRoomChangeCancellableAsync(orderId, cancellationToken);
+            return;
+        }
+
         var showtimeStart = await db
             .OrderLines.AsNoTracking()
             .Where(l => l.OrderId == orderId && l.LineType == OrderLineType.Ticket)
@@ -269,6 +306,31 @@ public class OrderCancellationService(
             DateTime.UtcNow
         );
     }
+
+    private async Task EnsureRoomChangeCancellableAsync(
+        int orderId,
+        CancellationToken cancellationToken
+    )
+    {
+        var changedShowtimes = await db
+            .OrderLines.AsNoTracking()
+            .Where(l =>
+                l.OrderId == orderId
+                && l.LineType == OrderLineType.Ticket
+                && l.ShowtimeId != null
+                && db.ShowtimeRoomChanges.Any(c => c.ShowtimeId == l.ShowtimeId)
+            )
+            .Select(l => new { l.Showtime!.Status, l.Showtime.StartTime })
+            .ToListAsync(cancellationToken);
+
+        OrderCancellationRules.EnsureRoomChangeCancellable(
+            [.. changedShowtimes.Select(s => (s.Status, s.StartTime))],
+            DateTime.UtcNow
+        );
+    }
+
+    private static bool ShouldAudit(CancelActor actor, CancelReason reason) =>
+        !actor.IsCustomer || reason == CancelReason.RoomClosed;
 
     private async Task MarkManualRefundsAsync(
         int orderId,
@@ -304,13 +366,22 @@ public class OrderCancellationService(
         OrderStatus before,
         CancelReason reason,
         decimal refunded,
-        decimal manualRefund
+        decimal manualRefund,
+        int voidedRefundDueCount = 0,
+        decimal voidedRefundDueAmount = 0m
     ) =>
         auditLogger.Record(
             AuditActions.Cancel,
             AuditEntityTypes.Order,
             orderId.ToString(),
             AuditSnapshots.OrderBeforeCancel(before),
-            AuditSnapshots.OrderAfterCancel(actor, reason, refunded, manualRefund)
+            AuditSnapshots.OrderAfterCancel(
+                actor,
+                reason,
+                refunded,
+                manualRefund,
+                voidedRefundDueCount,
+                voidedRefundDueAmount
+            )
         );
 }

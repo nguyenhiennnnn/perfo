@@ -21,6 +21,26 @@ public static class ShowtimeRules
             );
     }
 
+    public static CancelReason ParseCancelReason(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return CancelReason.ShowtimeCancelled;
+
+        if (
+            OrderCancellationRules.TryParseReason(value, out var reason)
+            && reason is CancelReason.ShowtimeCancelled or CancelReason.RoomClosed
+        )
+            return reason;
+
+        throw new ValidationAppException(
+            Messages.Rule_ShowtimeCancelReasonNotAllowed,
+            new Dictionary<string, string[]>
+            {
+                ["reason"] = [Messages.Rule_ShowtimeCancelReasonNotAllowed],
+            }
+        );
+    }
+
     public static void EnsureStartsInFuture(DateTime startTime)
     {
         if (startTime <= DateTime.UtcNow)

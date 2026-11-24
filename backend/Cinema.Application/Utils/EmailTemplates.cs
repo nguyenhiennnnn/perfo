@@ -3,6 +3,7 @@ using System.Net;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 
 namespace Cinema.Application.Utils;
@@ -474,6 +475,67 @@ public static class EmailTemplates
                     Money(cashAmount)
                 )
                 : string.Format(Messages.Email_ShowtimeCancelledNoticePreheader, orderCode),
+            body
+        );
+    }
+
+    public static string ShowtimeRoomChanged(
+        BrandOptions brand,
+        string customerName,
+        string orderCode,
+        string movieTitle,
+        DateTime showtimeStartUtc,
+        string fromRoomName,
+        string toRoomName,
+        IReadOnlyList<string> seatLabels,
+        decimal refundDueAmount
+    )
+    {
+        var startText = BusinessTime
+            .ToLocal(showtimeStartUtc)
+            .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture);
+
+        var rows = new List<string>
+        {
+            DetailRow(Messages.Email_OrderCodeLabel, Enc(orderCode), code: true),
+            DetailRow(Messages.Email_MovieLabel, Enc(movieTitle)),
+            DetailRow(Messages.Email_RoomChangedShowtimeLabel, Enc(startText)),
+            DetailRow(Messages.Email_RoomChangedFromRoomLabel, Enc(fromRoomName)),
+            DetailRow(
+                Messages.Email_RoomChangedToRoomLabel,
+                Enc(toRoomName),
+                isLast: seatLabels.Count == 0 && refundDueAmount <= 0m
+            ),
+        };
+        if (seatLabels.Count > 0)
+            rows.Add(
+                DetailRow(
+                    Messages.Email_RoomChangedSeatsLabel,
+                    Enc(string.Join(", ", seatLabels)),
+                    isLast: refundDueAmount <= 0m
+                )
+            );
+        if (refundDueAmount > 0m)
+            rows.Add(DetailRowTotal(Messages.Email_RoomChangedRefundLabel, refundDueAmount));
+
+        var notes = new List<string>();
+        if (refundDueAmount > 0m)
+            notes.Add(Messages.Email_RoomChangedRefundNote);
+        notes.Add(string.Format(Messages.Email_RoomChangedCancelNote, Enc(orderCode)));
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeRoomChanged, Warning, SymbolAlert)}
+            {Heading(Messages.Email_RoomChangedHeading)}
+            {Paragraph(
+                string.Format(Messages.Email_RoomChangedBody, Enc(customerName), Enc(orderCode))
+            )}
+            {DetailCard([.. rows])}
+            {MutedParagraph(string.Join("<br><br>", notes))}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_RoomChangedPreheader, orderCode, fromRoomName, toRoomName),
             body
         );
     }

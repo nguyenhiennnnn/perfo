@@ -32,8 +32,8 @@ public class ShowtimeRefundedEmailHandler(
                 o.OrderId == businessEvent.OrderId
                 && o.UserId != null
                 && o.Status == OrderStatus.Cancelled
-                && o.CancelReason == CancelReason.ShowtimeCancelled
             )
+            .Where(ShowtimeCancellationRouting.CancelledByShowtime)
             .Select(o => new
             {
                 o.OrderCode,

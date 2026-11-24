@@ -26,11 +26,26 @@ public class ShowtimeCancellationService(
     ILogger<ShowtimeCancellationService> logger
 ) : IShowtimeCancellationService
 {
+    public Task<DeleteShowtimeResponse> DeleteShowtimeAsync(
+        int showtimeId,
+        CancellationToken cancellationToken
+    ) => DeleteShowtimeAsync(showtimeId, CancelReason.ShowtimeCancelled, cancellationToken);
+
     public async Task<DeleteShowtimeResponse> DeleteShowtimeAsync(
         int showtimeId,
+        CancelReason reason,
         CancellationToken cancellationToken
     )
     {
+        if (reason is not (CancelReason.ShowtimeCancelled or CancelReason.RoomClosed))
+            throw new ValidationAppException(
+                Messages.Rule_ShowtimeCancelReasonNotAllowed,
+                new Dictionary<string, string[]>
+                {
+                    ["reason"] = [Messages.Rule_ShowtimeCancelReasonNotAllowed],
+                }
+            );
+
         var showtime =
             await db
                 .Showtimes.AsNoTracking()
@@ -74,7 +89,7 @@ public class ShowtimeCancellationService(
                     if (
                         await releaseService.CancelPendingAsync(
                             orderId,
-                            CancelReason.ShowtimeCancelled,
+                            reason,
                             CancelledBy.Admin,
                             cancellationToken
                         )
@@ -124,7 +139,8 @@ public class ShowtimeCancellationService(
                     cancelledCount,
                     gatewayOrderIds.Count,
                     cashOrderCount,
-                    cashTotal
+                    cashTotal,
+                    reason
                 )
             );
 
@@ -194,6 +210,7 @@ public class ShowtimeCancellationService(
         int orderId,
         string orderCode,
         int? adminUserId,
+        CancelReason reason,
         CancellationToken cancellationToken
     )
     {
@@ -245,7 +262,7 @@ public class ShowtimeCancellationService(
 
         await finalizer.FinalizeAsync(
             orderId,
-            CancelReason.ShowtimeCancelled,
+            reason,
             CancelledBy.Admin,
             plan,
             cancellationToken

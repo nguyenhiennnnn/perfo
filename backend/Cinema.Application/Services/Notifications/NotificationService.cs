@@ -187,6 +187,33 @@ public class NotificationService(
             )
         );
 
+    public void SendShowtimeRoomChangedNotice(
+        string toEmail,
+        string customerName,
+        string orderCode,
+        string movieTitle,
+        DateTime showtimeStartUtc,
+        string fromRoomName,
+        string toRoomName,
+        IReadOnlyList<string> seatLabels,
+        decimal refundDueAmount
+    ) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_RoomChangedSubject, orderCode),
+            EmailTemplates.ShowtimeRoomChanged(
+                _brand,
+                customerName,
+                orderCode,
+                movieTitle,
+                showtimeStartUtc,
+                fromRoomName,
+                toRoomName,
+                seatLabels,
+                refundDueAmount
+            )
+        );
+
     public void SendLowStockAlert(string toEmail, IReadOnlyList<LowStockEmailLine> items) =>
         Enqueue(
             toEmail,

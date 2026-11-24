@@ -178,6 +178,7 @@ public static class DependencyInjection
         services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<IOccupancyAnalyticsService, OccupancyAnalyticsService>();
         services.AddScoped<IComboAnalyticsService, ComboAnalyticsService>();
+        services.AddScoped<ICancellationAnalyticsService, CancellationAnalyticsService>();
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IUserAdminService, UserAdminService>();
         services.AddScoped<AiToolExecutor>();

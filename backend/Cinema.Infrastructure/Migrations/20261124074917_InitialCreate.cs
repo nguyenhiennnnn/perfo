@@ -318,6 +318,26 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SeatHoldEvents",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ShowtimeId = table.Column<int>(type: "integer", nullable: false),
+                    SeatId = table.Column<int>(type: "integer", nullable: false),
+                    RoomId = table.Column<int>(type: "integer", nullable: false),
+                    MovieId = table.Column<int>(type: "integer", nullable: false),
+                    BusinessDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Type = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    OccurredAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SeatHoldEvents", x => x.Id);
+                    table.CheckConstraint("CK_SeatHoldEvents_Type", "\"Type\" IN ('Held','Released','Expired')");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SeatTypes",
                 columns: table => new
                 {
@@ -2416,6 +2436,16 @@ namespace Cinema.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_SeatHoldEvents_Date_Movie",
+                table: "SeatHoldEvents",
+                columns: new[] { "BusinessDate", "MovieId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SeatHoldEvents_Room_Date",
+                table: "SeatHoldEvents",
+                columns: new[] { "RoomId", "BusinessDate" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Seats_SeatType",
                 table: "Seats",
                 column: "SeatTypeId");
@@ -2676,6 +2706,9 @@ namespace Cinema.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "SeatBlocks");
+
+            migrationBuilder.DropTable(
+                name: "SeatHoldEvents");
 
             migrationBuilder.DropTable(
                 name: "ShowtimeDailyStats");

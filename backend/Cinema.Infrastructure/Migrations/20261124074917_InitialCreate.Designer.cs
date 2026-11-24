@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cinema.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261124073439_InitialCreate")]
+    [Migration("20261124074917_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -2580,6 +2580,51 @@ namespace Cinema.Infrastructure.Migrations
                     b.ToTable("SeatBlocks", null, t =>
                         {
                             t.HasCheckConstraint("CK_SeatBlocks_Type", "\"Type\" IN ('Maintenance','Broken','RoomRental','WaitlistReserve')");
+                        });
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.SeatHoldEvent", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateOnly>("BusinessDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("OccurredAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SeatId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ShowtimeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BusinessDate", "MovieId")
+                        .HasDatabaseName("IX_SeatHoldEvents_Date_Movie");
+
+                    b.HasIndex("RoomId", "BusinessDate")
+                        .HasDatabaseName("IX_SeatHoldEvents_Room_Date");
+
+                    b.ToTable("SeatHoldEvents", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_SeatHoldEvents_Type", "\"Type\" IN ('Held','Released','Expired')");
                         });
                 });
 

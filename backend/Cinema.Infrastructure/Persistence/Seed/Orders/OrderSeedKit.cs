@@ -259,7 +259,6 @@ internal static class OrderSeedKit
             TransactionCode = $"{charge.TransactionCode}R{index:D4}",
             Status = PaymentStatus.Pending,
             CreatedAt = at,
-            NeedsManualRefund = true,
             OriginalTransaction = charge,
             Note = note,
         };

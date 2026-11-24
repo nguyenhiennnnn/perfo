@@ -118,6 +118,13 @@ public class ShowtimeCancellationService(
                 }
             }
 
+            var heldSeatIds = await db
+                .ShowtimeSeats.Where(ss =>
+                    ss.ShowtimeId == showtimeId && ss.Status == ShowtimeSeatStatus.Held
+                )
+                .Select(ss => ss.ShowtimeSeatId)
+                .ToListAsync(cancellationToken);
+
             await db
                 .ShowtimeSeats.Where(ss =>
                     ss.ShowtimeId == showtimeId && ss.Status == ShowtimeSeatStatus.Held
@@ -130,6 +137,14 @@ public class ShowtimeCancellationService(
                             .SetProperty(x => x.HeldUntil, (DateTime?)null),
                     cancellationToken
                 );
+
+            await SeatHoldEventRecorder.StageAsync(
+                db,
+                heldSeatIds,
+                SeatHoldEventType.Released,
+                DateTime.UtcNow,
+                cancellationToken
+            );
 
             auditLogger.Record(
                 AuditActions.Cancel,

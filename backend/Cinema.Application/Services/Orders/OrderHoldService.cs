@@ -135,6 +135,19 @@ public class OrderHoldService(
             holdUntil = showtime.StartTime;
         var distinctSeatIds = showtimeSeatIds.Distinct().ToList();
 
+        // Ghế còn ở trạng thái Held (giữ cũ của chính người này đã quá hạn, job chưa nhả): ghi Expired cho lượt giữ cũ.
+        var staleSeatIds = (
+            await db
+                .ShowtimeSeats.AsNoTracking()
+                .Where(ss =>
+                    distinctSeatIds.Contains(ss.ShowtimeSeatId)
+                    && ss.ShowtimeId == showtimeId
+                    && ss.Status == ShowtimeSeatStatus.Held
+                )
+                .Select(ss => ss.ShowtimeSeatId)
+                .ToListAsync(cancellationToken)
+        ).ToHashSet();
+
         var affected = await db
             .ShowtimeSeats.Where(ss =>
                 distinctSeatIds.Contains(ss.ShowtimeSeatId)
@@ -194,6 +207,25 @@ public class OrderHoldService(
                 distinctSeatIds.Contains(ss.ShowtimeSeatId) && ss.ShowtimeId == showtimeId
             )
             .ToListAsync(cancellationToken);
+
+        SeatHoldEventRecorder.Stage(
+            db,
+            heldSeats.Where(s => staleSeatIds.Contains(s.ShowtimeSeatId)),
+            showtime,
+            SeatHoldEventType.Expired,
+            now,
+            holdSettings.OpeningTime,
+            holdSettings.ClosingTime
+        );
+        SeatHoldEventRecorder.Stage(
+            db,
+            heldSeats,
+            showtime,
+            SeatHoldEventType.Held,
+            now,
+            holdSettings.OpeningTime,
+            holdSettings.ClosingTime
+        );
 
         var ticketLines = heldSeats
             .Select(seat => NewTicketLine(showtimeId, seat, pricedSeats[seat.ShowtimeSeatId]))

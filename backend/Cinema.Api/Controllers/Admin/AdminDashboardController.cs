@@ -13,7 +13,8 @@ namespace Cinema.Api.Controllers.Admin;
 public class AdminDashboardController(
     IDashboardService dashboardService,
     IOccupancyAnalyticsService occupancyService,
-    IComboAnalyticsService comboService
+    IComboAnalyticsService comboService,
+    ICancellationAnalyticsService cancellationService
 ) : ControllerBase
 {
     [HttpGet("summary")]
@@ -55,6 +56,17 @@ public class AdminDashboardController(
     )
     {
         var result = await comboService.GetAsync(from, to, cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("cancellations")]
+    public async Task<IActionResult> GetCancellations(
+        [FromQuery] DateOnly from,
+        [FromQuery] DateOnly to,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await cancellationService.GetAsync(from, to, cancellationToken);
         return Ok(result);
     }
 }

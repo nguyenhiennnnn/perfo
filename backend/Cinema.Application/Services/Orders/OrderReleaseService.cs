@@ -79,6 +79,16 @@ public class OrderReleaseService(
                             cancellationToken
                         );
                     releasedSeats.AddRange(seats.Select(s => (s.ShowtimeId, s.ShowtimeSeatId)));
+                    await SeatHoldEventRecorder.StageAsync(
+                        db,
+                        seatIds,
+                        target == OrderStatus.Expired
+                            ? SeatHoldEventType.Expired
+                            : SeatHoldEventType.Released,
+                        now,
+                        cancellationToken
+                    );
+                    await db.SaveChangesAsync(cancellationToken);
                 }
 
                 await db

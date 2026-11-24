@@ -71,6 +71,7 @@ public interface IAppDbContext
     DbSet<ShowtimeDailyStat> ShowtimeDailyStats { get; }
     DbSet<PaymentDailyStat> PaymentDailyStats { get; }
     DbSet<ShowtimeSalesPace> ShowtimeSalesPaces { get; }
+    DbSet<SeatHoldEvent> SeatHoldEvents { get; }
 }
 
 public static class AppDbContextExtensions

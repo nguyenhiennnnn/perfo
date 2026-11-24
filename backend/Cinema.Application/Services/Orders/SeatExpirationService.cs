@@ -1,4 +1,5 @@
 using Cinema.Application.Interfaces;
+using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -31,15 +32,50 @@ public class SeatExpirationService(
             query = query.Where(ss => showtimeIds.Contains(ss.ShowtimeId));
         }
 
-        return await query.ExecuteUpdateAsync(
-            setters =>
-                setters
-                    .SetProperty(x => x.Status, ShowtimeSeatStatus.Available)
-                    .SetProperty(x => x.HeldByUserId, (int?)null)
-                    .SetProperty(x => x.HeldByOrderId, (int?)null)
-                    .SetProperty(x => x.HeldUntil, (DateTime?)null),
+        var released = 0;
+        await db.InTransactionAsync(
+            async () =>
+            {
+                var seatIds = await query
+                    .Select(ss => ss.ShowtimeSeatId)
+                    .ToListAsync(cancellationToken);
+                if (seatIds.Count == 0)
+                    return;
+
+                released = await query
+                    .Where(ss => seatIds.Contains(ss.ShowtimeSeatId))
+                    .ExecuteUpdateAsync(
+                        setters =>
+                            setters
+                                .SetProperty(x => x.Status, ShowtimeSeatStatus.Available)
+                                .SetProperty(x => x.HeldByUserId, (int?)null)
+                                .SetProperty(x => x.HeldByOrderId, (int?)null)
+                                .SetProperty(x => x.HeldUntil, (DateTime?)null),
+                        cancellationToken
+                    );
+
+                // Có tranh chấp giữa hai lệnh: chỉ ghi cho ghế thực sự đã nhả.
+                if (released != seatIds.Count)
+                    seatIds = await db
+                        .ShowtimeSeats.Where(ss =>
+                            seatIds.Contains(ss.ShowtimeSeatId)
+                            && ss.Status == ShowtimeSeatStatus.Available
+                        )
+                        .Select(ss => ss.ShowtimeSeatId)
+                        .ToListAsync(cancellationToken);
+
+                await SeatHoldEventRecorder.StageAsync(
+                    db,
+                    seatIds,
+                    SeatHoldEventType.Expired,
+                    now,
+                    cancellationToken
+                );
+                await db.SaveChangesAsync(cancellationToken);
+            },
             cancellationToken
         );
+        return released;
     }
 
     public async Task ExpireDueOrdersAsync(CancellationToken cancellationToken)

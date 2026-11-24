@@ -66,14 +66,4 @@ public static class RoomClosureRules
         DateTime start,
         DateTime end
     ) => intervals.Any(i => i.End > start && i.Start < end);
-
-    public static double ClosedMinutes(
-        IEnumerable<(DateTime Start, DateTime End)> intervals,
-        DateTime from,
-        DateTime to
-    ) =>
-        intervals
-            .Select(i => (Start: i.Start > from ? i.Start : from, End: i.End < to ? i.End : to))
-            .Where(i => i.End > i.Start)
-            .Sum(i => (i.End - i.Start).TotalMinutes);
 }

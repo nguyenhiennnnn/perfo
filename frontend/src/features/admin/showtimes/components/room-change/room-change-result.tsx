@@ -65,6 +65,22 @@ export const RoomChangeResult = ({ movieTitle, result, onClose }: RoomChangeResu
       />
     </div>
 
+    {result.refundDueCount > 0 && (
+      <div className="flex flex-col gap-3 cut-sm bg-warning/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-warning-text">
+          Có {formatNumber(result.refundDueCount)} vé cần hoàn chênh lệch, tổng{" "}
+          {formatCurrency(result.refundDueTotal)}. Xác nhận hoàn tại trang hoàn chênh lệch đổi phòng.
+        </p>
+        <ButtonLink
+          size="sm"
+          to={ROUTES.admin.roomChangeRefundsByShowtime(result.showtimeId)}
+          onClick={onClose}
+        >
+          Xử lý hoàn chênh lệch
+        </ButtonLink>
+      </div>
+    )}
+
     <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
       <ButtonLink
         variant="outline"

@@ -24,7 +24,11 @@ import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
 import { useShowtimeSeats } from "@/features/client/showtimes/hooks/use-showtimes";
 import { useSeatTicketTypes } from "@/features/client/showtimes/hooks/use-seat-ticket-types";
 import { usePriceChangeConfirm } from "@/hooks/use-price-change-confirm";
-import { getPriceChangeRequired, isGenericConflictError } from "@/lib/error";
+import {
+  getPriceChangeRequired,
+  isComboOutOfStockError,
+  isGenericConflictError,
+} from "@/lib/error";
 import { useRealtimeSeatMap } from "@/hooks/use-realtime-seat-map";
 import { isValidVnPhone } from "@/lib/validators";
 import { useAuthUser, useIsAuthenticated } from "@/stores/auth-store";
@@ -290,7 +294,11 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
     };
 
     const recoverFromComboConflict = async (error: unknown) => {
-      if (combosPayload.length === 0 || !isGenericConflictError(error)) return;
+      if (
+        combosPayload.length === 0 ||
+        !(isGenericConflictError(error) || isComboOutOfStockError(error))
+      )
+        return;
       const refreshed = await activeCombos.refetch();
       if (refreshed.data) pruneUnavailableCombos(refreshed.data, true);
       document

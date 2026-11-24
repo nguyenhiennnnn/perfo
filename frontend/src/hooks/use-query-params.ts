@@ -200,6 +200,20 @@ export const useAdminCashRefundParams = (
   options?: Parameters<typeof useQueryStates<typeof adminCashRefundParsers>>[1],
 ) => useQueryStates(adminCashRefundParsers, options);
 
+const adminRoomChangeRefundParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  status: parseAsStringLiteral(["Pending", "Refunded", "Voided", "All"] as const).withDefault(
+    "Pending",
+  ),
+  orderCode: searchParser,
+  showtimeId: parseAsInteger,
+};
+
+export const useAdminRoomChangeRefundParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminRoomChangeRefundParsers>>[1],
+) => useQueryStates(adminRoomChangeRefundParsers, options);
+
 const adminInventoryItemParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),

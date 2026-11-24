@@ -1,5 +1,6 @@
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -71,7 +72,8 @@ public static class InventoryRequirements
             .OrderBy(n => n)
             .ToListAsync(cancellationToken);
         return new ConflictAppException(
-            string.Format(Messages.Conflict_ComboOutOfStock, string.Join(", ", names))
+            string.Format(Messages.Conflict_ComboOutOfStock, string.Join(", ", names)),
+            ApiErrorCodes.ComboOutOfStock
         );
     }
 

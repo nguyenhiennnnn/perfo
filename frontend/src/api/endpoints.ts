@@ -206,6 +206,10 @@ export const ENDPOINTS = {
       root: "/admin/cash-refunds",
       confirm: (id: number) => `/admin/cash-refunds/${id}/confirm`,
     },
+    roomChangeRefunds: {
+      root: "/admin/room-change-refunds",
+      confirm: (id: number) => `/admin/room-change-refunds/${id}/confirm`,
+    },
     reviews: {
       root: "/admin/reviews",
       byId: (id: number) => `/admin/reviews/${id}`,

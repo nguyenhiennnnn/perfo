@@ -76,10 +76,15 @@ public class ScheduleSuggestionService(
             settings.OpeningTime,
             settings.ClosingTime
         );
+        var periodEndUtc = BusinessDay.EndUtc(
+            report.To,
+            settings.OpeningTime,
+            settings.ClosingTime
+        );
         var closedRoomIds = (
             await db
                 .RoomClosures.AsNoTracking()
-                .Where(c => c.EndTime > periodStartUtc)
+                .Where(c => c.EndTime > periodStartUtc && c.StartTime < periodEndUtc)
                 .Select(c => c.RoomId)
                 .Distinct()
                 .ToListAsync(cancellationToken)

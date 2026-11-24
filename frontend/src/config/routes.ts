@@ -62,6 +62,9 @@ export const ROUTES = {
     unclaimedComboOrders: "/admin/combo-pickups/unclaimed",
     orders: "/admin/orders",
     cashRefunds: "/admin/cash-refunds",
+    roomChangeRefunds: "/admin/room-change-refunds",
+    roomChangeRefundsByShowtime: (showtimeId: number | string) =>
+      `/admin/room-change-refunds?showtimeId=${showtimeId}`,
     auditLogs: "/admin/audit-logs",
     promotions: "/admin/promotions",
     promotionReports: "/admin/promotions/reports",

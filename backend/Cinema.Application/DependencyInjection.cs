@@ -160,7 +160,7 @@ public static class DependencyInjection
         services.AddScoped<IMembershipBenefitPricer, NullMembershipBenefitPricer>();
         services.AddScoped<IOrderPriceCalculator, OrderPriceCalculator>();
         services.AddSingleton<IShowtimePricingScopeResolver, StandardShowtimePricingScopeResolver>();
-        services.AddSingleton<ISalesVelocityProvider, NullSalesVelocityProvider>();
+        services.AddScoped<ISalesVelocityProvider, PaceSalesVelocityProvider>();
         services.AddScoped<IPaymentLedgerService, PaymentLedgerService>();
         services.AddScoped<IPaymentRefundService, PaymentRefundService>();
         services.AddScoped<ICashRefundService, CashRefundService>();

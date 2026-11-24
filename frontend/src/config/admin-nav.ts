@@ -22,6 +22,7 @@ import {
   PackageCheck,
   Ticket,
   Banknote,
+  ArrowRightLeft,
   Tags,
   CalendarHeart,
   Calculator,
@@ -197,6 +198,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         label: "Đơn tiền mặt cần hoàn",
         icon: Banknote,
         roles: [Role.Admin, Role.Employee],
+      },
+      {
+        to: ROUTES.admin.roomChangeRefunds,
+        label: "Hoàn chênh lệch đổi phòng",
+        icon: ArrowRightLeft,
+        roles: [Role.Admin],
       },
       {
         to: ROUTES.admin.reports,

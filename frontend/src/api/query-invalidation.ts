@@ -12,6 +12,7 @@ const showtimeViews = (): KeyList => [
 const orderViews = (): KeyList => [
   k.adminOrders.all(),
   k.adminCashRefunds.all(),
+  k.adminRoomChangeRefunds.all(),
   k.orders.all(),
 ];
 

@@ -90,6 +90,13 @@ export function getPriceChangeRequired(error: unknown): PriceChangeRequired | nu
   };
 }
 
+export function isComboOutOfStockError(error: unknown): boolean {
+  if (!axios.isAxiosError(error)) return false;
+  if (error.response?.status !== HTTP_STATUS.conflict) return false;
+  const data = error.response.data as { errorCode?: unknown } | undefined;
+  return data?.errorCode === API_ERROR_CODES.comboOutOfStock;
+}
+
 export function isGenericConflictError(error: unknown): boolean {
   if (!axios.isAxiosError(error)) return false;
   if (error.response?.status !== HTTP_STATUS.conflict) return false;

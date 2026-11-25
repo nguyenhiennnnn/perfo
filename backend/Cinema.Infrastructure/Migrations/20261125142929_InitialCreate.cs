@@ -129,7 +129,13 @@ namespace Cinema.Infrastructure.Migrations
                     ReferralReferredPoints = table.Column<int>(type: "integer", nullable: false, defaultValue: 50),
                     ReferralMonthlyRewardLimit = table.Column<int>(type: "integer", nullable: false, defaultValue: 10),
                     SupportRequestDueHours = table.Column<int>(type: "integer", nullable: false, defaultValue: 48),
-                    ExceptionalRefundApprovalThreshold = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 500000m)
+                    ExceptionalRefundApprovalThreshold = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 500000m),
+                    ReviewInviteMinHours = table.Column<int>(type: "integer", nullable: false, defaultValue: 1),
+                    ReviewInviteMaxHours = table.Column<int>(type: "integer", nullable: false, defaultValue: 3),
+                    ReviewRewardPoints = table.Column<int>(type: "integer", nullable: false, defaultValue: 10),
+                    RoomQualityAlertThreshold = table.Column<decimal>(type: "numeric(3,2)", nullable: false, defaultValue: 3m),
+                    RoomQualityAlertDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 3),
+                    WaitlistPriorityMinutes = table.Column<int>(type: "integer", nullable: false, defaultValue: 10)
                 },
                 constraints: table =>
                 {
@@ -930,6 +936,58 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MoviePopularities",
+                columns: table => new
+                {
+                    MovieId = table.Column<int>(type: "integer", nullable: false),
+                    RecentTickets = table.Column<int>(type: "integer", nullable: false),
+                    ReviewCount = table.Column<int>(type: "integer", nullable: false),
+                    AverageRating = table.Column<decimal>(type: "numeric(4,2)", nullable: false),
+                    Score = table.Column<decimal>(type: "numeric(9,6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MoviePopularities", x => x.MovieId);
+                    table.CheckConstraint("CK_MoviePopularities_Values", "\"RecentTickets\" >= 0 AND \"ReviewCount\" >= 0 AND \"Score\" >= 0 AND \"Score\" <= 1");
+                    table.ForeignKey(
+                        name: "FK_MoviePopularities_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "MovieId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MovieSimilarities",
+                columns: table => new
+                {
+                    MovieId = table.Column<int>(type: "integer", nullable: false),
+                    SimilarMovieId = table.Column<int>(type: "integer", nullable: false),
+                    Score = table.Column<decimal>(type: "numeric(9,6)", nullable: false),
+                    CoViewers = table.Column<int>(type: "integer", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MovieSimilarities", x => new { x.MovieId, x.SimilarMovieId });
+                    table.CheckConstraint("CK_MovieSimilarities_Distinct", "\"MovieId\" <> \"SimilarMovieId\"");
+                    table.CheckConstraint("CK_MovieSimilarities_Values", "\"Score\" >= 0 AND \"Score\" <= 1 AND \"CoViewers\" > 0");
+                    table.ForeignKey(
+                        name: "FK_MovieSimilarities_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "MovieId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MovieSimilarities_Movies_SimilarMovieId",
+                        column: x => x.SimilarMovieId,
+                        principalTable: "Movies",
+                        principalColumn: "MovieId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CustomerProfiles",
                 columns: table => new
                 {
@@ -954,6 +1012,26 @@ namespace Cinema.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_CustomerProfiles_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomerTasteProfiles",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    MovieCount = table.Column<int>(type: "integer", nullable: false),
+                    TypicalTicketPrice = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomerTasteProfiles", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_CustomerTasteProfiles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -1122,6 +1200,56 @@ namespace Cinema.Infrastructure.Migrations
                     table.PrimaryKey("PK_InvoiceProfiles", x => x.InvoiceProfileId);
                     table.ForeignKey(
                         name: "FK_InvoiceProfiles_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MovieInterests",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    MovieId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MovieInterests", x => new { x.UserId, x.MovieId });
+                    table.ForeignKey(
+                        name: "FK_MovieInterests_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "MovieId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MovieInterests_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MovieIntroEmailNotices",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    MovieId = table.Column<int>(type: "integer", nullable: false),
+                    SentAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MovieIntroEmailNotices", x => new { x.UserId, x.MovieId });
+                    table.ForeignKey(
+                        name: "FK_MovieIntroEmailNotices_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "MovieId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MovieIntroEmailNotices_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -1298,6 +1426,59 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ReviewInviteNotices",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    MovieId = table.Column<int>(type: "integer", nullable: false),
+                    ShowtimeId = table.Column<int>(type: "integer", nullable: false),
+                    SentAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReviewInviteNotices", x => new { x.UserId, x.MovieId });
+                    table.ForeignKey(
+                        name: "FK_ReviewInviteNotices_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "MovieId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReviewInviteNotices_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReviewPointRewards",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    MovieId = table.Column<int>(type: "integer", nullable: false),
+                    Points = table.Column<int>(type: "integer", nullable: false),
+                    GrantedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReviewPointRewards", x => new { x.UserId, x.MovieId });
+                    table.CheckConstraint("CK_ReviewPointRewards_Points", "\"Points\" > 0");
+                    table.ForeignKey(
+                        name: "FK_ReviewPointRewards_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "MovieId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReviewPointRewards_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reviews",
                 columns: table => new
                 {
@@ -1307,6 +1488,7 @@ namespace Cinema.Infrastructure.Migrations
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     Rating = table.Column<int>(type: "integer", nullable: false),
                     Comment = table.Column<string>(type: "text", nullable: true),
+                    IsVerifiedViewer = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
@@ -1374,6 +1556,33 @@ namespace Cinema.Infrastructure.Migrations
                         principalTable: "CinemaRooms",
                         principalColumn: "RoomId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoomQualityAlerts",
+                columns: table => new
+                {
+                    RoomQualityAlertId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RoomId = table.Column<int>(type: "integer", nullable: false),
+                    FromDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ToDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ConsecutiveDays = table.Column<int>(type: "integer", nullable: false),
+                    AverageScore = table.Column<decimal>(type: "numeric(4,2)", nullable: false),
+                    Threshold = table.Column<decimal>(type: "numeric(4,2)", nullable: false),
+                    DetectedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    NotifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ResolvedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoomQualityAlerts", x => x.RoomQualityAlertId);
+                    table.ForeignKey(
+                        name: "FK_RoomQualityAlerts_CinemaRooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "CinemaRooms",
+                        principalColumn: "RoomId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1472,6 +1681,26 @@ namespace Cinema.Infrastructure.Migrations
                         name: "FK_LoyaltyChallengeProgresses_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomerTasteSignals",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    Kind = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    RefId = table.Column<int>(type: "integer", nullable: false),
+                    Weight = table.Column<decimal>(type: "numeric(18,4)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomerTasteSignals", x => new { x.UserId, x.Kind, x.RefId });
+                    table.ForeignKey(
+                        name: "FK_CustomerTasteSignals_CustomerTasteProfiles_UserId",
+                        column: x => x.UserId,
+                        principalTable: "CustomerTasteProfiles",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1629,6 +1858,42 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WaitlistEntries",
+                columns: table => new
+                {
+                    WaitlistEntryId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ShowtimeId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    SeatCount = table.Column<int>(type: "integer", nullable: false),
+                    RequireAdjacent = table.Column<bool>(type: "boolean", nullable: false),
+                    Position = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()"),
+                    NotifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    PriorityExpiresAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ClosedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WaitlistEntries", x => x.WaitlistEntryId);
+                    table.CheckConstraint("CK_WaitlistEntries_Position", "\"Position\" >= 1");
+                    table.CheckConstraint("CK_WaitlistEntries_SeatCount", "\"SeatCount\" >= 1");
+                    table.ForeignKey(
+                        name: "FK_WaitlistEntries_Showtimes_ShowtimeId",
+                        column: x => x.ShowtimeId,
+                        principalTable: "Showtimes",
+                        principalColumn: "ShowtimeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WaitlistEntries_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -1691,6 +1956,50 @@ namespace Cinema.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Orders_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExperienceSurveys",
+                columns: table => new
+                {
+                    SurveyId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    ShowtimeId = table.Column<int>(type: "integer", nullable: false),
+                    OrderId = table.Column<int>(type: "integer", nullable: false),
+                    RoomRating = table.Column<int>(type: "integer", nullable: false),
+                    SoundRating = table.Column<int>(type: "integer", nullable: false),
+                    PictureRating = table.Column<int>(type: "integer", nullable: false),
+                    CleanlinessRating = table.Column<int>(type: "integer", nullable: false),
+                    CounterServiceRating = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExperienceSurveys", x => x.SurveyId);
+                    table.CheckConstraint("CK_ExperienceSurveys_CleanlinessRating", "\"CleanlinessRating\" BETWEEN 1 AND 5");
+                    table.CheckConstraint("CK_ExperienceSurveys_CounterServiceRating", "\"CounterServiceRating\" BETWEEN 1 AND 5");
+                    table.CheckConstraint("CK_ExperienceSurveys_PictureRating", "\"PictureRating\" BETWEEN 1 AND 5");
+                    table.CheckConstraint("CK_ExperienceSurveys_RoomRating", "\"RoomRating\" BETWEEN 1 AND 5");
+                    table.CheckConstraint("CK_ExperienceSurveys_SoundRating", "\"SoundRating\" BETWEEN 1 AND 5");
+                    table.ForeignKey(
+                        name: "FK_ExperienceSurveys_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExperienceSurveys_Showtimes_ShowtimeId",
+                        column: x => x.ShowtimeId,
+                        principalTable: "Showtimes",
+                        principalColumn: "ShowtimeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExperienceSurveys_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -2434,6 +2743,7 @@ namespace Cinema.Infrastructure.Migrations
                     Reason = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     ExpiresAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     CreatedByUserId = table.Column<int>(type: "integer", nullable: true),
+                    WaitlistEntryId = table.Column<int>(type: "integer", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
@@ -2452,6 +2762,12 @@ namespace Cinema.Infrastructure.Migrations
                         principalTable: "Showtimes",
                         principalColumn: "ShowtimeId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SeatBlocks_WaitlistEntries_WaitlistEntryId",
+                        column: x => x.WaitlistEntryId,
+                        principalTable: "WaitlistEntries",
+                        principalColumn: "WaitlistEntryId",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -2878,6 +3194,11 @@ namespace Cinema.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CustomerTasteSignals_Kind_Ref",
+                table: "CustomerTasteSignals",
+                columns: new[] { "Kind", "RefId" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DailyClosings_ClosedByUserId",
                 table: "DailyClosings",
                 column: "ClosedByUserId");
@@ -2923,6 +3244,22 @@ namespace Cinema.Infrastructure.Migrations
                 name: "IX_ExceptionalRefundProposals_Status_ProposedAt",
                 table: "ExceptionalRefundProposals",
                 columns: new[] { "Status", "ProposedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExperienceSurveys_Order",
+                table: "ExperienceSurveys",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExperienceSurveys_Showtime",
+                table: "ExperienceSurveys",
+                column: "ShowtimeId");
+
+            migrationBuilder.CreateIndex(
+                name: "UQ_ExperienceSurveys_User_Showtime",
+                table: "ExperienceSurveys",
+                columns: new[] { "UserId", "ShowtimeId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Genres_Name",
@@ -3199,6 +3536,27 @@ namespace Cinema.Infrastructure.Migrations
                 column: "GenreId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MovieInterests_Movie",
+                table: "MovieInterests",
+                column: "MovieId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieInterests_User_CreatedAt",
+                table: "MovieInterests",
+                columns: new[] { "UserId", "CreatedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieIntroEmailNotices_Movie",
+                table: "MovieIntroEmailNotices",
+                column: "MovieId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MoviePopularities_Score",
+                table: "MoviePopularities",
+                column: "Score",
+                descending: new bool[0]);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Movies_AgeRating",
                 table: "Movies",
                 column: "AgeRatingId");
@@ -3222,6 +3580,17 @@ namespace Cinema.Infrastructure.Migrations
                 name: "IX_Movies_Status",
                 table: "Movies",
                 column: "Status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieSimilarities_Movie_Score",
+                table: "MovieSimilarities",
+                columns: new[] { "MovieId", "Score" },
+                descending: new[] { false, true });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieSimilarities_Similar",
+                table: "MovieSimilarities",
+                column: "SimilarMovieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderExchanges_NewShowtime",
@@ -3610,6 +3979,16 @@ namespace Cinema.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ReviewInviteNotices_Movie",
+                table: "ReviewInviteNotices",
+                column: "MovieId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReviewPointRewards_Movie",
+                table: "ReviewPointRewards",
+                column: "MovieId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reviews_Movie",
                 table: "Reviews",
                 column: "MovieId");
@@ -3663,6 +4042,18 @@ namespace Cinema.Infrastructure.Migrations
                 columns: new[] { "RoomId", "StartTime", "EndTime" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_RoomQualityAlerts_Room_DetectedAt",
+                table: "RoomQualityAlerts",
+                columns: new[] { "RoomId", "DetectedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "UQ_RoomQualityAlerts_Room_Active",
+                table: "RoomQualityAlerts",
+                column: "RoomId",
+                unique: true,
+                filter: "\"ResolvedAt\" IS NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ScreenTypes_Name",
                 table: "ScreenTypes",
                 column: "Name",
@@ -3678,6 +4069,12 @@ namespace Cinema.Infrastructure.Migrations
                 name: "IX_SeatBlocks_Showtime_Type",
                 table: "SeatBlocks",
                 columns: new[] { "ShowtimeId", "Type" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SeatBlocks_WaitlistEntry",
+                table: "SeatBlocks",
+                column: "WaitlistEntryId",
+                filter: "\"WaitlistEntryId\" IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "UQ_SeatBlocks_ShowtimeSeat",
@@ -3911,6 +4308,35 @@ namespace Cinema.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_WaitlistEntries_PriorityExpiresAt",
+                table: "WaitlistEntries",
+                column: "PriorityExpiresAt",
+                filter: "\"Status\" = 'Notified'");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WaitlistEntries_Showtime_Status_Position",
+                table: "WaitlistEntries",
+                columns: new[] { "ShowtimeId", "Status", "Position" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WaitlistEntries_User",
+                table: "WaitlistEntries",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "UQ_WaitlistEntries_Showtime_Position",
+                table: "WaitlistEntries",
+                columns: new[] { "ShowtimeId", "Position" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "UQ_WaitlistEntries_Showtime_User_Active",
+                table: "WaitlistEntries",
+                columns: new[] { "ShowtimeId", "UserId" },
+                unique: true,
+                filter: "\"Status\" IN ('Waiting', 'Notified', 'Held')");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WasteSheetLines_InventoryItemId",
                 table: "WasteSheetLines",
                 column: "InventoryItemId");
@@ -3946,10 +4372,16 @@ namespace Cinema.Infrastructure.Migrations
                 name: "CustomerProfiles");
 
             migrationBuilder.DropTable(
+                name: "CustomerTasteSignals");
+
+            migrationBuilder.DropTable(
                 name: "DailyClosings");
 
             migrationBuilder.DropTable(
                 name: "ExceptionalRefundProposals");
+
+            migrationBuilder.DropTable(
+                name: "ExperienceSurveys");
 
             migrationBuilder.DropTable(
                 name: "GiftCardAttemptLimit");
@@ -3985,6 +4417,18 @@ namespace Cinema.Infrastructure.Migrations
                 name: "MovieGenres");
 
             migrationBuilder.DropTable(
+                name: "MovieInterests");
+
+            migrationBuilder.DropTable(
+                name: "MovieIntroEmailNotices");
+
+            migrationBuilder.DropTable(
+                name: "MoviePopularities");
+
+            migrationBuilder.DropTable(
+                name: "MovieSimilarities");
+
+            migrationBuilder.DropTable(
                 name: "OrderExchanges");
 
             migrationBuilder.DropTable(
@@ -4018,6 +4462,12 @@ namespace Cinema.Infrastructure.Migrations
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
+                name: "ReviewInviteNotices");
+
+            migrationBuilder.DropTable(
+                name: "ReviewPointRewards");
+
+            migrationBuilder.DropTable(
                 name: "Reviews");
 
             migrationBuilder.DropTable(
@@ -4025,6 +4475,9 @@ namespace Cinema.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "RoomClosures");
+
+            migrationBuilder.DropTable(
+                name: "RoomQualityAlerts");
 
             migrationBuilder.DropTable(
                 name: "SeatBlocks");
@@ -4069,6 +4522,9 @@ namespace Cinema.Infrastructure.Migrations
                 name: "MembershipTiers");
 
             migrationBuilder.DropTable(
+                name: "CustomerTasteProfiles");
+
+            migrationBuilder.DropTable(
                 name: "InvoiceProfiles");
 
             migrationBuilder.DropTable(
@@ -4094,6 +4550,9 @@ namespace Cinema.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "OrderLines");
+
+            migrationBuilder.DropTable(
+                name: "WaitlistEntries");
 
             migrationBuilder.DropTable(
                 name: "ShowtimeRoomChanges");

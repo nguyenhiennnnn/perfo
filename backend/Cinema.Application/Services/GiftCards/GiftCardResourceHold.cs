@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Services.GiftCards;
 
-public class GiftCardResourceHold(IAppDbContext db) : IResourceHold, IGiftCardHoldService
+public class GiftCardResourceHold(IAppDbContext db, IGiftCardRevenueService revenue)
+    : IResourceHold,
+        IGiftCardHoldService
 {
     public string ResourceType => nameof(GiftCard);
 
@@ -38,7 +40,8 @@ public class GiftCardResourceHold(IAppDbContext db) : IResourceHold, IGiftCardHo
         if (reserved == 0)
             throw await RejectAsync(giftCardId, now, cancellationToken);
 
-        await AppendAsync(
+        await GiftCardLedgerWriter.AppendAsync(
+            db,
             giftCardId,
             orderId,
             GiftCardLedgerType.Reserve,
@@ -100,7 +103,8 @@ public class GiftCardResourceHold(IAppDbContext db) : IResourceHold, IGiftCardHo
             if (redeemed == 0)
                 throw new BusinessRuleException(Messages.Rule_GiftCardNotUsable);
 
-            await AppendAsync(
+            await GiftCardLedgerWriter.AppendAsync(
+                db,
                 entry.GiftCardId,
                 orderId,
                 GiftCardLedgerType.Redeem,
@@ -109,22 +113,22 @@ public class GiftCardResourceHold(IAppDbContext db) : IResourceHold, IGiftCardHo
                 now,
                 cancellationToken
             );
-            db.PaymentTransactions.Add(
-                new PaymentTransaction
-                {
-                    OrderId = orderId,
-                    Type = PaymentTransactionType.Charge,
-                    Method = PaymentMethod.GiftCard,
-                    Amount = amount,
-                    TransactionCode = CodeGenerator.GenerateGiftCardTransactionCode(order.OrderCode),
-                    Status = PaymentStatus.Success,
-                    CreatedAt = now,
-                    CompletedAt = now,
-                    PerformedByUserId = order.Channel == SalesChannel.Online ? order.UserId : null,
-                    CounterShiftId = order.CounterShiftId,
-                    GiftCardId = entry.GiftCardId,
-                }
-            );
+            var charge = new PaymentTransaction
+            {
+                OrderId = orderId,
+                Type = PaymentTransactionType.Charge,
+                Method = PaymentMethod.GiftCard,
+                Amount = amount,
+                TransactionCode = CodeGenerator.GenerateGiftCardTransactionCode(order.OrderCode),
+                Status = PaymentStatus.Success,
+                CreatedAt = now,
+                CompletedAt = now,
+                PerformedByUserId = order.Channel == SalesChannel.Online ? order.UserId : null,
+                CounterShiftId = order.CounterShiftId,
+                GiftCardId = entry.GiftCardId,
+            };
+            db.PaymentTransactions.Add(charge);
+            await revenue.RecognizeAsync(charge, entry.GiftCardId, amount, now, cancellationToken);
         }
 
         await db.SaveChangesAsync(cancellationToken);
@@ -203,7 +207,8 @@ public class GiftCardResourceHold(IAppDbContext db) : IResourceHold, IGiftCardHo
         if (released == 0)
             return;
 
-        await AppendAsync(
+        await GiftCardLedgerWriter.AppendAsync(
+            db,
             giftCardId,
             orderId,
             GiftCardLedgerType.Release,
@@ -213,37 +218,6 @@ public class GiftCardResourceHold(IAppDbContext db) : IResourceHold, IGiftCardHo
             cancellationToken
         );
         await db.SaveChangesAsync(cancellationToken);
-    }
-
-    private async Task AppendAsync(
-        int giftCardId,
-        int orderId,
-        GiftCardLedgerType type,
-        decimal balanceChange,
-        decimal reservedChange,
-        DateTime now,
-        CancellationToken cancellationToken
-    )
-    {
-        var state = await db
-            .GiftCards.AsNoTracking()
-            .Where(c => c.GiftCardId == giftCardId)
-            .Select(c => new { c.Balance, c.ReservedAmount })
-            .FirstAsync(cancellationToken);
-
-        db.GiftCardLedgers.Add(
-            new GiftCardLedger
-            {
-                GiftCardId = giftCardId,
-                EntryType = type,
-                BalanceChange = balanceChange,
-                ReservedChange = reservedChange,
-                BalanceAfter = state.Balance,
-                ReservedAfter = state.ReservedAmount,
-                OrderId = orderId,
-                OccurredAt = now,
-            }
-        );
     }
 
     private async Task<BusinessRuleException> RejectAsync(

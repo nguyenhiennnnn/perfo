@@ -80,6 +80,8 @@ ehthumbs.db
 *.bak
 *.tmp
 *.orig
+*.pyc
+__pycache__/
 
 # Playwright
 test-results/

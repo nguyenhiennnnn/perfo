@@ -66,6 +66,7 @@ public interface IAppDbContext
     DbSet<LedgerAdjustment> LedgerAdjustments { get; }
     DbSet<GiftCard> GiftCards { get; }
     DbSet<GiftCardLedger> GiftCardLedgers { get; }
+    DbSet<GiftCardRevenueEntry> GiftCardRevenueEntries { get; }
     DbSet<OrderResourceHold> OrderResourceHolds { get; }
     DbSet<OutboxMessage> OutboxMessages { get; }
     DbSet<OutboxDelivery> OutboxDeliveries { get; }

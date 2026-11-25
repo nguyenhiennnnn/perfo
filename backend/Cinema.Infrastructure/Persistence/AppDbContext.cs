@@ -85,6 +85,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<LedgerAdjustment> LedgerAdjustments => Set<LedgerAdjustment>();
     public DbSet<GiftCard> GiftCards => Set<GiftCard>();
     public DbSet<GiftCardLedger> GiftCardLedgers => Set<GiftCardLedger>();
+    public DbSet<GiftCardRevenueEntry> GiftCardRevenueEntries => Set<GiftCardRevenueEntry>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {

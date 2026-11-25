@@ -115,6 +115,12 @@ public static class BackgroundJobExtensions
             options.GiftCardDispatchCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<GiftCardExpiryJob>(
+            RecurringJobIds.GiftCardExpiry,
+            j => j.RunAsync(CancellationToken.None),
+            options.GiftCardExpiryCron,
+            jobOptions
+        );
 
         return app;
     }

@@ -154,5 +154,8 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.GiftCardValidityMonths)
             .HasDefaultValue(CinemaSettings.DefaultGiftCardValidityMonths);
+        builder
+            .Property(x => x.GiftCardRefundExtensionDays)
+            .HasDefaultValue(CinemaSettings.DefaultGiftCardRefundExtensionDays);
     }
 }

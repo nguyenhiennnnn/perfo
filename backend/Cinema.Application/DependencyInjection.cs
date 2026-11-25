@@ -161,6 +161,9 @@ public static class DependencyInjection
         services.AddScoped<IGiftCardPurchaseService, GiftCardPurchaseService>();
         services.AddScoped<IGiftCardEmailService, GiftCardEmailService>();
         services.AddScoped<IGiftCardDispatchService, GiftCardDispatchService>();
+        services.AddScoped<IGiftCardRevenueService, GiftCardRevenueService>();
+        services.AddScoped<IGiftCardRefundHandler, GiftCardRefundHandler>();
+        services.AddScoped<IGiftCardExpiryService, GiftCardExpiryService>();
         services.AddBackgroundEventHandler<GiftCardSent, GiftCardRecipientEmailHandler>();
         services.AddBackgroundEventHandler<GiftCardSent, GiftCardPurchaserEmailHandler>();
         services.AddInTransactionEventHandler<OrderConfirmed, GiftCardIssueHandler>();

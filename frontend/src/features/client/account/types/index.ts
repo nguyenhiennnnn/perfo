@@ -1,5 +1,3 @@
-// ── User Profile ──────────────────────────────────────────────────────────────
-
 export interface MembershipTierBriefDto {
   tierId: number;
   tierName: string;
@@ -26,8 +24,6 @@ export interface UserProfileDto {
   nextTier?: NextTierDto | null;
 }
 
-// ── Update Profile ────────────────────────────────────────────────────────────
-
 export interface UpdateProfileRequest {
   fullName: string;
   phone?: string | null;
@@ -35,8 +31,6 @@ export interface UpdateProfileRequest {
   dateOfBirth?: string | null;
   gender?: string | null;
 }
-
-// ── My Reviews ────────────────────────────────────────────────────────────────
 
 export interface UserMyReviewDto {
   reviewId: number;

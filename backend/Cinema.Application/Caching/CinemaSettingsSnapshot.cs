@@ -49,7 +49,8 @@ public sealed record CinemaSettingsSnapshot(
     decimal[] GiftCardDenominations,
     decimal GiftCardMinAmount,
     decimal GiftCardMaxAmount,
-    int GiftCardValidityMonths
+    int GiftCardValidityMonths,
+    int GiftCardRefundExtensionDays
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -99,6 +100,7 @@ public sealed record CinemaSettingsSnapshot(
             [.. s.GiftCardDenominations],
             s.GiftCardMinAmount,
             s.GiftCardMaxAmount,
-            s.GiftCardValidityMonths
+            s.GiftCardValidityMonths,
+            s.GiftCardRefundExtensionDays
         );
 }

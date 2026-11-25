@@ -110,8 +110,6 @@ public class CatalogService(IAppDbContext db, IAppCache cache, IAuditLogger audi
         return new DeleteCategoryResponse(id, true);
     }
 
-    // ---------------- Languages (Admin) ----------------
-
     public async Task<OffsetPageResult<LanguageDto>> GetLanguagesAdminAsync(
         int page,
         int pageSize,

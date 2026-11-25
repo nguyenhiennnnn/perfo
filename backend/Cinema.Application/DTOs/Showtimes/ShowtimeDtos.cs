@@ -161,8 +161,6 @@ public record BulkDeleteShowtimesResponse(
     int TotalFailed
 );
 
-// ── Admin showtime calendar (theo khoảng ngày) ─────────────────────────────────
-
 public record ShowtimeCalendarItemDto(
     int ShowtimeId,
     int MovieId,

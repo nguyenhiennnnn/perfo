@@ -88,6 +88,7 @@ namespace Cinema.Infrastructure.Migrations
                     MaxSeatsPerBooking = table.Column<int>(type: "integer", nullable: false, defaultValue: 10),
                     MaxComboQuantity = table.Column<int>(type: "integer", nullable: false, defaultValue: 10),
                     LoyaltyWindowMonths = table.Column<int>(type: "integer", nullable: false, defaultValue: 12),
+                    PointsExpiryMonths = table.Column<int>(type: "integer", nullable: false, defaultValue: 12),
                     MovieEndGraceDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 1),
                     ShowtimeLookaheadDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 7),
                     SchedulerStepMinutes = table.Column<int>(type: "integer", nullable: false, defaultValue: 5),
@@ -110,7 +111,25 @@ namespace Cinema.Infrastructure.Migrations
                     ComboVatPercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false, defaultValue: 10m),
                     GiftCardVatPercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false, defaultValue: 10m),
                     MembershipVatPercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false, defaultValue: 10m),
-                    InvoiceRequestWindowDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 30)
+                    InvoiceRequestWindowDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 30),
+                    GiftCardDenominations = table.Column<decimal[]>(type: "numeric(18,2)[]", nullable: false, defaultValueSql: "ARRAY[100000,200000,500000,1000000]::numeric(18,2)[]"),
+                    GiftCardMinAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 50000m),
+                    GiftCardMaxAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 5000000m),
+                    GiftCardValidityMonths = table.Column<int>(type: "integer", nullable: false, defaultValue: 12),
+                    GiftCardRefundExtensionDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 30),
+                    GiftCardMaxFailedAttempts = table.Column<int>(type: "integer", nullable: false, defaultValue: 5),
+                    GiftCardLockoutMinutes = table.Column<int>(type: "integer", nullable: false, defaultValue: 15),
+                    ExchangeDeadlineHours = table.Column<int>(type: "integer", nullable: false, defaultValue: 2),
+                    MaxExchangesPerOrder = table.Column<int>(type: "integer", nullable: false, defaultValue: 1),
+                    ExchangeCreditValidityDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 90),
+                    PreorderComboDiscountPercent = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    ReminderHoursBefore = table.Column<int>(type: "integer", nullable: false, defaultValue: 3),
+                    PointsExpiryReminderDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 14),
+                    ReferralReferrerPoints = table.Column<int>(type: "integer", nullable: false, defaultValue: 50),
+                    ReferralReferredPoints = table.Column<int>(type: "integer", nullable: false, defaultValue: 50),
+                    ReferralMonthlyRewardLimit = table.Column<int>(type: "integer", nullable: false, defaultValue: 10),
+                    SupportRequestDueHours = table.Column<int>(type: "integer", nullable: false, defaultValue: 48),
+                    ExceptionalRefundApprovalThreshold = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 500000m)
                 },
                 constraints: table =>
                 {
@@ -128,7 +147,8 @@ namespace Cinema.Infrastructure.Migrations
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     Price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     ImageUrl = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true)
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    SuggestedTicketCount = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -161,6 +181,20 @@ namespace Cinema.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Genres", x => x.GenreId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GiftCardAttemptLimit",
+                columns: table => new
+                {
+                    Key = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    FailedCount = table.Column<int>(type: "integer", nullable: false),
+                    WindowStartedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    LockedUntil = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GiftCardAttemptLimit", x => x.Key);
                 });
 
             migrationBuilder.CreateTable(
@@ -483,6 +517,48 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LoyaltyRewards",
+                columns: table => new
+                {
+                    RewardId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Type = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    PointsCost = table.Column<int>(type: "integer", nullable: false),
+                    RemainingQuantity = table.Column<int>(type: "integer", nullable: false),
+                    ValidFrom = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ValidTo = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CodeValidityDays = table.Column<int>(type: "integer", nullable: false),
+                    DiscountType = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    DiscountValue = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    MaxDiscountAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    ComboId = table.Column<int>(type: "integer", nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoyaltyRewards", x => x.RewardId);
+                    table.CheckConstraint("CK_LoyaltyRewards_CodeValidityDays", "\"CodeValidityDays\" > 0");
+                    table.CheckConstraint("CK_LoyaltyRewards_Combo", "(\"Type\" = 'FreeCombo') = (\"ComboId\" IS NOT NULL)");
+                    table.CheckConstraint("CK_LoyaltyRewards_Discount", "(\"Type\" = 'Discount' AND \"DiscountType\" IS NOT NULL AND \"DiscountValue\" > 0) OR (\"Type\" <> 'Discount' AND \"DiscountType\" IS NULL AND \"DiscountValue\" IS NULL AND \"MaxDiscountAmount\" IS NULL)");
+                    table.CheckConstraint("CK_LoyaltyRewards_MaxDiscount", "(\"Type\" = 'FreeTicket' AND \"MaxDiscountAmount\" > 0) OR (\"Type\" = 'FreeCombo' AND \"MaxDiscountAmount\" IS NULL) OR \"Type\" = 'Discount'");
+                    table.CheckConstraint("CK_LoyaltyRewards_PointsCost", "\"PointsCost\" > 0");
+                    table.CheckConstraint("CK_LoyaltyRewards_RemainingQuantity", "\"RemainingQuantity\" >= 0");
+                    table.CheckConstraint("CK_LoyaltyRewards_Type", "\"Type\" IN ('FreeTicket','FreeCombo','Discount')");
+                    table.CheckConstraint("CK_LoyaltyRewards_ValidRange", "\"ValidFrom\" IS NULL OR \"ValidTo\" IS NULL OR \"ValidTo\" > \"ValidFrom\"");
+                    table.ForeignKey(
+                        name: "FK_LoyaltyRewards_Combos_ComboId",
+                        column: x => x.ComboId,
+                        principalTable: "Combos",
+                        principalColumn: "ComboId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StockLedger",
                 columns: table => new
                 {
@@ -768,6 +844,43 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LoyaltyChallenges",
+                columns: table => new
+                {
+                    ChallengeId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    StartsOn = table.Column<DateOnly>(type: "date", nullable: false),
+                    EndsOn = table.Column<DateOnly>(type: "date", nullable: false),
+                    ConditionType = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    TargetCount = table.Column<int>(type: "integer", nullable: false),
+                    RewardType = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    RewardPoints = table.Column<int>(type: "integer", nullable: true),
+                    RewardGiftId = table.Column<int>(type: "integer", nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoyaltyChallenges", x => x.ChallengeId);
+                    table.CheckConstraint("CK_LoyaltyChallenges_ConditionType", "\"ConditionType\" IN ('DistinctMovies','Screenings')");
+                    table.CheckConstraint("CK_LoyaltyChallenges_Range", "\"EndsOn\" >= \"StartsOn\"");
+                    table.CheckConstraint("CK_LoyaltyChallenges_Reward", "(\"RewardType\" = 'Points' AND \"RewardPoints\" > 0 AND \"RewardGiftId\" IS NULL) OR (\"RewardType\" = 'Gift' AND \"RewardGiftId\" IS NOT NULL AND \"RewardPoints\" IS NULL)");
+                    table.CheckConstraint("CK_LoyaltyChallenges_RewardType", "\"RewardType\" IN ('Points','Gift')");
+                    table.CheckConstraint("CK_LoyaltyChallenges_Target", "\"TargetCount\" > 0");
+                    table.ForeignKey(
+                        name: "FK_LoyaltyChallenges_LoyaltyRewards_RewardGiftId",
+                        column: x => x.RewardGiftId,
+                        principalTable: "LoyaltyRewards",
+                        principalColumn: "RewardId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MovieCast",
                 columns: table => new
                 {
@@ -822,6 +935,7 @@ namespace Cinema.Infrastructure.Migrations
                 {
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     Points = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    PointDebt = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     TierId = table.Column<int>(type: "integer", nullable: true),
                     TotalSpent = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
                     MarketingOptIn = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
@@ -900,6 +1014,43 @@ namespace Cinema.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Employees_Users_UserId",
                         column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GiftCards",
+                columns: table => new
+                {
+                    GiftCardId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Code = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false),
+                    Type = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Gift"),
+                    FaceValue = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    Balance = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    ReservedAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
+                    PurchaserUserId = table.Column<int>(type: "integer", nullable: false),
+                    RecipientEmail = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    RecipientName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    Message = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    SendAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ExpiresAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "PendingSend"),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()"),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GiftCards", x => x.GiftCardId);
+                    table.CheckConstraint("CK_GiftCards_Balance", "\"Balance\" >= 0 AND \"Balance\" <= \"FaceValue\"");
+                    table.CheckConstraint("CK_GiftCards_FaceValue", "\"FaceValue\" > 0");
+                    table.CheckConstraint("CK_GiftCards_ReservedAmount", "\"ReservedAmount\" >= 0 AND \"ReservedAmount\" <= \"Balance\"");
+                    table.CheckConstraint("CK_GiftCards_Status", "\"Status\" IN ('PendingSend','Sent','InUse','Depleted','Expired','Cancelled')");
+                    table.CheckConstraint("CK_GiftCards_Type", "\"Type\" IN ('Gift','ExchangeCredit')");
+                    table.ForeignKey(
+                        name: "FK_GiftCards_Users_PurchaserUserId",
+                        column: x => x.PurchaserUserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
@@ -1085,6 +1236,37 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ReferralRelations",
+                columns: table => new
+                {
+                    ReferralId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ReferrerUserId = table.Column<int>(type: "integer", nullable: false),
+                    ReferredUserId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    RewardGrantedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    RewardBlockedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    RewardBlockedReason = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReferralRelations", x => x.ReferralId);
+                    table.CheckConstraint("CK_ReferralRelations_NotSelf", "\"ReferrerUserId\" <> \"ReferredUserId\"");
+                    table.ForeignKey(
+                        name: "FK_ReferralRelations_Users_ReferredUserId",
+                        column: x => x.ReferredUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReferralRelations_Users_ReferrerUserId",
+                        column: x => x.ReferrerUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RefreshTokens",
                 columns: table => new
                 {
@@ -1261,6 +1443,40 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LoyaltyChallengeProgresses",
+                columns: table => new
+                {
+                    ProgressId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ChallengeId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    CurrentCount = table.Column<int>(type: "integer", nullable: false),
+                    CountedMovieIds = table.Column<List<int>>(type: "integer[]", nullable: false, defaultValueSql: "'{}'"),
+                    CountedShowtimeIds = table.Column<List<int>>(type: "integer[]", nullable: false, defaultValueSql: "'{}'"),
+                    CompletedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    RewardGrantedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoyaltyChallengeProgresses", x => x.ProgressId);
+                    table.CheckConstraint("CK_LoyaltyChallengeProgresses_Count", "\"CurrentCount\" >= 0");
+                    table.ForeignKey(
+                        name: "FK_LoyaltyChallengeProgresses_LoyaltyChallenges_ChallengeId",
+                        column: x => x.ChallengeId,
+                        principalTable: "LoyaltyChallenges",
+                        principalColumn: "ChallengeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LoyaltyChallengeProgresses_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CounterShifts",
                 columns: table => new
                 {
@@ -1433,6 +1649,7 @@ namespace Cinema.Infrastructure.Migrations
                     TotalAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     DiscountAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
                     FinalAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    LoyaltyReversedAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
                     CancelReason = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     CancelledBy = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     CancelledAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
@@ -1451,9 +1668,9 @@ namespace Cinema.Infrastructure.Migrations
                     table.CheckConstraint("CK_Orders_DiscountAmount", "\"DiscountAmount\" >= 0");
                     table.CheckConstraint("CK_Orders_FinalAmount", "\"FinalAmount\" >= 0");
                     table.CheckConstraint("CK_Orders_Status", "\"Status\" IN ('Pending','Confirmed','Cancelled','Expired')");
-                    table.CheckConstraint("CK_Orders_Supplement_Original", "(\"Type\" = 'Supplement') = (\"OriginalOrderId\" IS NOT NULL)");
+                    table.CheckConstraint("CK_Orders_Supplement_Original", "(\"Type\" IN ('Supplement','Exchange')) = (\"OriginalOrderId\" IS NOT NULL)");
                     table.CheckConstraint("CK_Orders_TotalAmount", "\"TotalAmount\" >= 0");
-                    table.CheckConstraint("CK_Orders_Type", "\"Type\" IN ('Ticket','Combo','GiftCard','Membership','RoomRental','Supplement')");
+                    table.CheckConstraint("CK_Orders_Type", "\"Type\" IN ('Ticket','Combo','GiftCard','Membership','RoomRental','Supplement','Exchange')");
                     table.ForeignKey(
                         name: "FK_Orders_CounterShifts_CounterShiftId",
                         column: x => x.CounterShiftId,
@@ -1477,6 +1694,41 @@ namespace Cinema.Infrastructure.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GiftCardLedger",
+                columns: table => new
+                {
+                    GiftCardLedgerId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    GiftCardId = table.Column<int>(type: "integer", nullable: false),
+                    EntryType = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    BalanceChange = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    ReservedChange = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    BalanceAfter = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    ReservedAfter = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    OrderId = table.Column<int>(type: "integer", nullable: true),
+                    OccurredAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GiftCardLedger", x => x.GiftCardLedgerId);
+                    table.CheckConstraint("CK_GiftCardLedger_After", "\"BalanceAfter\" >= 0 AND \"ReservedAfter\" >= 0 AND \"ReservedAfter\" <= \"BalanceAfter\"");
+                    table.CheckConstraint("CK_GiftCardLedger_EntryType", "\"EntryType\" IN ('Issue','Reserve','Release','Redeem','Refund','Expire','Cancel')");
+                    table.CheckConstraint("CK_GiftCardLedger_Signs", "(\"EntryType\" = 'Issue' AND \"BalanceChange\" > 0 AND \"ReservedChange\" = 0) OR (\"EntryType\" = 'Reserve' AND \"BalanceChange\" = 0 AND \"ReservedChange\" > 0) OR (\"EntryType\" = 'Release' AND \"BalanceChange\" = 0 AND \"ReservedChange\" < 0) OR (\"EntryType\" = 'Redeem' AND \"BalanceChange\" < 0 AND \"ReservedChange\" <= 0) OR (\"EntryType\" = 'Refund' AND \"BalanceChange\" > 0 AND \"ReservedChange\" = 0) OR (\"EntryType\" IN ('Expire','Cancel') AND \"BalanceChange\" <= 0 AND \"ReservedChange\" <= 0 AND (\"BalanceChange\" < 0 OR \"ReservedChange\" < 0))");
+                    table.ForeignKey(
+                        name: "FK_GiftCardLedger_GiftCards_GiftCardId",
+                        column: x => x.GiftCardId,
+                        principalTable: "GiftCards",
+                        principalColumn: "GiftCardId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_GiftCardLedger_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -1547,14 +1799,19 @@ namespace Cinema.Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     OrderId = table.Column<int>(type: "integer", nullable: true),
+                    Type = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     Points = table.Column<int>(type: "integer", nullable: false),
                     RevokedPoints = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
-                    EarnedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    RemainingPoints = table.Column<int>(type: "integer", nullable: false),
+                    EarnedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ExpiryReminderSentAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LoyaltyPointEntries", x => x.EntryId);
                     table.CheckConstraint("CK_LoyaltyPointEntries_Points", "\"Points\" >= 0");
+                    table.CheckConstraint("CK_LoyaltyPointEntries_Remaining", "\"RemainingPoints\" >= 0 AND \"RemainingPoints\" <= \"Points\"");
                     table.CheckConstraint("CK_LoyaltyPointEntries_Revoked", "\"RevokedPoints\" >= 0 AND \"RevokedPoints\" <= \"Points\"");
                     table.ForeignKey(
                         name: "FK_LoyaltyPointEntries_Orders_OrderId",
@@ -1646,6 +1903,7 @@ namespace Cinema.Infrastructure.Migrations
                     ChangeGiven = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
                     OriginalTransactionId = table.Column<int>(type: "integer", nullable: true),
                     CounterShiftId = table.Column<int>(type: "integer", nullable: true),
+                    GiftCardId = table.Column<int>(type: "integer", nullable: true),
                     NeedsManualRefund = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     Note = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true)
                 },
@@ -1666,6 +1924,12 @@ namespace Cinema.Infrastructure.Migrations
                         column: x => x.CounterShiftId,
                         principalTable: "CounterShifts",
                         principalColumn: "CounterShiftId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PaymentTransactions_GiftCards_GiftCardId",
+                        column: x => x.GiftCardId,
+                        principalTable: "GiftCards",
+                        principalColumn: "GiftCardId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PaymentTransactions_Orders_OrderId",
@@ -1798,6 +2062,93 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LoyaltyPointTransactions",
+                columns: table => new
+                {
+                    TransactionId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    EntryId = table.Column<int>(type: "integer", nullable: true),
+                    OrderId = table.Column<int>(type: "integer", nullable: true),
+                    Type = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Points = table.Column<int>(type: "integer", nullable: false),
+                    ActorUserId = table.Column<int>(type: "integer", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoyaltyPointTransactions", x => x.TransactionId);
+                    table.CheckConstraint("CK_LoyaltyPointTransactions_Points", "\"Points\" <> 0");
+                    table.ForeignKey(
+                        name: "FK_LoyaltyPointTransactions_LoyaltyPointEntries_EntryId",
+                        column: x => x.EntryId,
+                        principalTable: "LoyaltyPointEntries",
+                        principalColumn: "EntryId");
+                    table.ForeignKey(
+                        name: "FK_LoyaltyPointTransactions_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LoyaltyPointTransactions_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GiftCardRevenueEntries",
+                columns: table => new
+                {
+                    GiftCardRevenueEntryId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    GiftCardId = table.Column<int>(type: "integer", nullable: false),
+                    OrderId = table.Column<int>(type: "integer", nullable: false),
+                    PaymentTransactionId = table.Column<int>(type: "integer", nullable: false),
+                    RecognizedEntryId = table.Column<long>(type: "bigint", nullable: true),
+                    EntryType = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    NetAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    TaxAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    TaxRatePercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false),
+                    BusinessDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    OccurredAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GiftCardRevenueEntries", x => x.GiftCardRevenueEntryId);
+                    table.CheckConstraint("CK_GiftCardRevenueEntries_EntryType", "\"EntryType\" IN ('Recognized','Reversed')");
+                    table.CheckConstraint("CK_GiftCardRevenueEntries_Signs", "(\"EntryType\" = 'Recognized' AND \"Amount\" > 0 AND \"NetAmount\" > 0 AND \"TaxAmount\" >= 0 AND \"RecognizedEntryId\" IS NULL) OR (\"EntryType\" = 'Reversed' AND \"Amount\" < 0 AND \"NetAmount\" <= 0 AND \"TaxAmount\" <= 0 AND \"RecognizedEntryId\" IS NOT NULL)");
+                    table.CheckConstraint("CK_GiftCardRevenueEntries_Total", "\"Amount\" = \"NetAmount\" + \"TaxAmount\"");
+                    table.ForeignKey(
+                        name: "FK_GiftCardRevenueEntries_GiftCardRevenueEntries_RecognizedEnt~",
+                        column: x => x.RecognizedEntryId,
+                        principalTable: "GiftCardRevenueEntries",
+                        principalColumn: "GiftCardRevenueEntryId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_GiftCardRevenueEntries_GiftCards_GiftCardId",
+                        column: x => x.GiftCardId,
+                        principalTable: "GiftCards",
+                        principalColumn: "GiftCardId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_GiftCardRevenueEntries_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_GiftCardRevenueEntries_PaymentTransactions_PaymentTransacti~",
+                        column: x => x.PaymentTransactionId,
+                        principalTable: "PaymentTransactions",
+                        principalColumn: "PaymentTransactionId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "LedgerAdjustments",
                 columns: table => new
                 {
@@ -1902,6 +2253,62 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SupportRequests",
+                columns: table => new
+                {
+                    SupportRequestId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    OrderId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: true),
+                    Type = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Subject = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    AssignedToUserId = table.Column<int>(type: "integer", nullable: true),
+                    ApologyPromotionId = table.Column<int>(type: "integer", nullable: true),
+                    SourcePaymentTransactionId = table.Column<int>(type: "integer", nullable: true),
+                    DueAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    LastMessageAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ResolvedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SupportRequests", x => x.SupportRequestId);
+                    table.ForeignKey(
+                        name: "FK_SupportRequests_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SupportRequests_PaymentTransactions_SourcePaymentTransactio~",
+                        column: x => x.SourcePaymentTransactionId,
+                        principalTable: "PaymentTransactions",
+                        principalColumn: "PaymentTransactionId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_SupportRequests_Promotions_ApologyPromotionId",
+                        column: x => x.ApologyPromotionId,
+                        principalTable: "Promotions",
+                        principalColumn: "PromotionId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_SupportRequests_Users_AssignedToUserId",
+                        column: x => x.AssignedToUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_SupportRequests_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrderLines",
                 columns: table => new
                 {
@@ -1918,6 +2325,7 @@ namespace Cinema.Infrastructure.Migrations
                     CardCheckRecordedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     CardCheckRecordedByUserId = table.Column<int>(type: "integer", nullable: true),
                     SupplementedLineId = table.Column<int>(type: "integer", nullable: true),
+                    ExchangeFromLineId = table.Column<int>(type: "integer", nullable: true),
                     ComboId = table.Column<int>(type: "integer", nullable: true),
                     Quantity = table.Column<int>(type: "integer", nullable: false, defaultValue: 1),
                     QuantityFulfilled = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
@@ -1929,7 +2337,13 @@ namespace Cinema.Infrastructure.Migrations
                     RefundedQuantity = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     QrCode = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     IsCheckedIn = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    CheckedInAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                    CheckedInAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ReminderSentAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    GiftCardId = table.Column<int>(type: "integer", nullable: true),
+                    GiftRecipientEmail = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    GiftRecipientName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    GiftMessage = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    GiftSendAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1939,6 +2353,8 @@ namespace Cinema.Infrastructure.Migrations
                     table.CheckConstraint("CK_OrderLines_CardCheckStatus", "\"CardCheckStatus\" IN ('NotRequired','Pending','NotPresented','Supplemented')");
                     table.CheckConstraint("CK_OrderLines_CardPresentation", "(NOT \"RequiresCardPresentation\") OR \"LineType\" = 'Ticket'");
                     table.CheckConstraint("CK_OrderLines_CheckIn", "(NOT \"IsCheckedIn\") OR \"LineType\" = 'Ticket'");
+                    table.CheckConstraint("CK_OrderLines_ExchangeFromLine", "\"ExchangeFromLineId\" IS NULL OR \"LineType\" = 'Ticket'");
+                    table.CheckConstraint("CK_OrderLines_GiftCardData", "\"LineType\" = 'GiftCard' OR (\"GiftCardId\" IS NULL AND \"GiftRecipientEmail\" IS NULL AND \"GiftRecipientName\" IS NULL AND \"GiftMessage\" IS NULL AND \"GiftSendAt\" IS NULL)");
                     table.CheckConstraint("CK_OrderLines_LineType", "\"LineType\" IN ('Ticket','Combo','GiftCard','Fee')");
                     table.CheckConstraint("CK_OrderLines_LockedUnitPrice", "\"LockedUnitPrice\" >= 0");
                     table.CheckConstraint("CK_OrderLines_PaidAmount", "\"PaidAmount\" >= 0 AND \"PaidAmount\" <= \"LockedUnitPrice\" * \"Quantity\"");
@@ -1955,6 +2371,18 @@ namespace Cinema.Infrastructure.Migrations
                         column: x => x.ComboId,
                         principalTable: "Combos",
                         principalColumn: "ComboId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderLines_GiftCards_GiftCardId",
+                        column: x => x.GiftCardId,
+                        principalTable: "GiftCards",
+                        principalColumn: "GiftCardId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderLines_OrderLines_ExchangeFromLineId",
+                        column: x => x.ExchangeFromLineId,
+                        principalTable: "OrderLines",
+                        principalColumn: "OrderLineId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_OrderLines_OrderLines_SupplementedLineId",
@@ -2027,6 +2455,35 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SupportMessages",
+                columns: table => new
+                {
+                    SupportMessageId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    SupportRequestId = table.Column<int>(type: "integer", nullable: false),
+                    AuthorType = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    AuthorUserId = table.Column<int>(type: "integer", nullable: true),
+                    Content = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SupportMessages", x => x.SupportMessageId);
+                    table.ForeignKey(
+                        name: "FK_SupportMessages_SupportRequests_SupportRequestId",
+                        column: x => x.SupportRequestId,
+                        principalTable: "SupportRequests",
+                        principalColumn: "SupportRequestId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SupportMessages_Users_AuthorUserId",
+                        column: x => x.AuthorUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ComboPickups",
                 columns: table => new
                 {
@@ -2060,6 +2517,55 @@ namespace Cinema.Infrastructure.Migrations
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExceptionalRefundProposals",
+                columns: table => new
+                {
+                    ExceptionalRefundProposalId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    OrderId = table.Column<int>(type: "integer", nullable: false),
+                    OrderLineId = table.Column<int>(type: "integer", nullable: true),
+                    Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    Reason = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    RequiresAdminApproval = table.Column<bool>(type: "boolean", nullable: false),
+                    ApprovalThreshold = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    ProposedByUserId = table.Column<int>(type: "integer", nullable: false),
+                    ProposedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ReviewedByUserId = table.Column<int>(type: "integer", nullable: true),
+                    ReviewedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ReviewNote = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExceptionalRefundProposals", x => x.ExceptionalRefundProposalId);
+                    table.ForeignKey(
+                        name: "FK_ExceptionalRefundProposals_OrderLines_OrderLineId",
+                        column: x => x.OrderLineId,
+                        principalTable: "OrderLines",
+                        principalColumn: "OrderLineId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExceptionalRefundProposals_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExceptionalRefundProposals_Users_ProposedByUserId",
+                        column: x => x.ProposedByUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExceptionalRefundProposals_Users_ReviewedByUserId",
+                        column: x => x.ReviewedByUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -2100,6 +2606,66 @@ namespace Cinema.Infrastructure.Migrations
                         principalTable: "Orders",
                         principalColumn: "OrderId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderExchanges",
+                columns: table => new
+                {
+                    OrderExchangeId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    OrderId = table.Column<int>(type: "integer", nullable: false),
+                    ExchangeNumber = table.Column<int>(type: "integer", nullable: false),
+                    OldOrderLineId = table.Column<int>(type: "integer", nullable: false),
+                    NewOrderLineId = table.Column<int>(type: "integer", nullable: false),
+                    OldShowtimeId = table.Column<int>(type: "integer", nullable: false),
+                    NewShowtimeId = table.Column<int>(type: "integer", nullable: false),
+                    PriceDifference = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    ExchangedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()"),
+                    PerformedByUserId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderExchanges", x => x.OrderExchangeId);
+                    table.CheckConstraint("CK_OrderExchanges_Lines", "\"OldOrderLineId\" <> \"NewOrderLineId\"");
+                    table.CheckConstraint("CK_OrderExchanges_Number", "\"ExchangeNumber\" >= 1");
+                    table.CheckConstraint("CK_OrderExchanges_Showtimes", "\"OldShowtimeId\" <> \"NewShowtimeId\"");
+                    table.ForeignKey(
+                        name: "FK_OrderExchanges_OrderLines_NewOrderLineId",
+                        column: x => x.NewOrderLineId,
+                        principalTable: "OrderLines",
+                        principalColumn: "OrderLineId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderExchanges_OrderLines_OldOrderLineId",
+                        column: x => x.OldOrderLineId,
+                        principalTable: "OrderLines",
+                        principalColumn: "OrderLineId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderExchanges_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderExchanges_Showtimes_NewShowtimeId",
+                        column: x => x.NewShowtimeId,
+                        principalTable: "Showtimes",
+                        principalColumn: "ShowtimeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderExchanges_Showtimes_OldShowtimeId",
+                        column: x => x.OldShowtimeId,
+                        principalTable: "Showtimes",
+                        principalColumn: "ShowtimeId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderExchanges_Users_PerformedByUserId",
+                        column: x => x.PerformedByUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -2334,10 +2900,98 @@ namespace Cinema.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ExceptionalRefundProposals_Order_Status",
+                table: "ExceptionalRefundProposals",
+                columns: new[] { "OrderId", "Status" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExceptionalRefundProposals_OrderLineId",
+                table: "ExceptionalRefundProposals",
+                column: "OrderLineId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExceptionalRefundProposals_ProposedByUserId",
+                table: "ExceptionalRefundProposals",
+                column: "ProposedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExceptionalRefundProposals_ReviewedByUserId",
+                table: "ExceptionalRefundProposals",
+                column: "ReviewedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExceptionalRefundProposals_Status_ProposedAt",
+                table: "ExceptionalRefundProposals",
+                columns: new[] { "Status", "ProposedAt" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Genres_Name",
                 table: "Genres",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GiftCardLedger_Card",
+                table: "GiftCardLedger",
+                columns: new[] { "GiftCardId", "GiftCardLedgerId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GiftCardLedger_Order",
+                table: "GiftCardLedger",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GiftCardRevenueEntries_Card",
+                table: "GiftCardRevenueEntries",
+                column: "GiftCardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GiftCardRevenueEntries_Date",
+                table: "GiftCardRevenueEntries",
+                columns: new[] { "BusinessDate", "EntryType" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GiftCardRevenueEntries_Order",
+                table: "GiftCardRevenueEntries",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GiftCardRevenueEntries_Recognized",
+                table: "GiftCardRevenueEntries",
+                column: "RecognizedEntryId",
+                filter: "\"RecognizedEntryId\" IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_GiftCardRevenueEntries_Transaction",
+                table: "GiftCardRevenueEntries",
+                column: "PaymentTransactionId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GiftCards_Code",
+                table: "GiftCards",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GiftCards_Purchaser",
+                table: "GiftCards",
+                column: "PurchaserUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GiftCards_RecipientEmail",
+                table: "GiftCards",
+                column: "RecipientEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GiftCards_Status_ExpiresAt",
+                table: "GiftCards",
+                columns: new[] { "Status", "ExpiresAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GiftCards_Status_SendAt",
+                table: "GiftCards",
+                columns: new[] { "Status", "SendAt" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ImportExportJobs_ExpiresAt_HasFile",
@@ -2463,9 +3117,37 @@ namespace Cinema.Infrastructure.Migrations
                 filter: "\"SourceKey\" IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LoyaltyChallengeProgresses_User",
+                table: "LoyaltyChallengeProgresses",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_LoyaltyChallengeProgresses_Challenge_User",
+                table: "LoyaltyChallengeProgresses",
+                columns: new[] { "ChallengeId", "UserId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LoyaltyChallenges_Range",
+                table: "LoyaltyChallenges",
+                columns: new[] { "StartsOn", "EndsOn" },
+                filter: "\"IsDeleted\" = FALSE");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LoyaltyChallenges_RewardGiftId",
+                table: "LoyaltyChallenges",
+                column: "RewardGiftId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LoyaltyPointEntries_User_EarnedAt",
                 table: "LoyaltyPointEntries",
                 columns: new[] { "UserId", "EarnedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LoyaltyPointEntries_User_Lots",
+                table: "LoyaltyPointEntries",
+                columns: new[] { "UserId", "ExpiresAt" },
+                filter: "\"RemainingPoints\" > 0");
 
             migrationBuilder.CreateIndex(
                 name: "UX_LoyaltyPointEntries_Order",
@@ -2473,6 +3155,32 @@ namespace Cinema.Infrastructure.Migrations
                 column: "OrderId",
                 unique: true,
                 filter: "\"OrderId\" IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LoyaltyPointTransactions_Entry",
+                table: "LoyaltyPointTransactions",
+                column: "EntryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LoyaltyPointTransactions_OrderId",
+                table: "LoyaltyPointTransactions",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LoyaltyPointTransactions_User_CreatedAt",
+                table: "LoyaltyPointTransactions",
+                columns: new[] { "UserId", "CreatedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LoyaltyRewards_Active",
+                table: "LoyaltyRewards",
+                columns: new[] { "IsActive", "PointsCost" },
+                filter: "\"IsDeleted\" = FALSE");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LoyaltyRewards_ComboId",
+                table: "LoyaltyRewards",
+                column: "ComboId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MembershipTiers_TierName",
@@ -2516,6 +3224,38 @@ namespace Cinema.Infrastructure.Migrations
                 column: "Status");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrderExchanges_NewShowtime",
+                table: "OrderExchanges",
+                column: "NewShowtimeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderExchanges_OldShowtime",
+                table: "OrderExchanges",
+                column: "OldShowtimeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderExchanges_Order",
+                table: "OrderExchanges",
+                columns: new[] { "OrderId", "ExchangeNumber" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderExchanges_PerformedByUserId",
+                table: "OrderExchanges",
+                column: "PerformedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_OrderExchanges_NewOrderLine",
+                table: "OrderExchanges",
+                column: "NewOrderLineId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "UX_OrderExchanges_OldOrderLine",
+                table: "OrderExchanges",
+                column: "OldOrderLineId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderLines_CardCheckRecordedByUserId",
                 table: "OrderLines",
                 column: "CardCheckRecordedByUserId");
@@ -2527,15 +3267,21 @@ namespace Cinema.Infrastructure.Migrations
                 filter: "\"ComboId\" IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrderLines_ExchangeFromLine",
+                table: "OrderLines",
+                column: "ExchangeFromLineId",
+                filter: "\"ExchangeFromLineId\" IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderLines_Order",
                 table: "OrderLines",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderLines_Showtime",
+                name: "IX_OrderLines_PendingReminder",
                 table: "OrderLines",
                 column: "ShowtimeId",
-                filter: "\"ShowtimeId\" IS NOT NULL");
+                filter: "\"LineType\" = 'Ticket' AND \"ReminderSentAt\" IS NULL AND \"QrCode\" IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderLines_ShowtimeSeat",
@@ -2554,6 +3300,13 @@ namespace Cinema.Infrastructure.Migrations
                 table: "OrderLines",
                 column: "TicketTypeId",
                 filter: "\"TicketTypeId\" IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_OrderLines_GiftCard",
+                table: "OrderLines",
+                column: "GiftCardId",
+                unique: true,
+                filter: "\"GiftCardId\" IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "UX_OrderLines_QrCode",
@@ -2671,6 +3424,12 @@ namespace Cinema.Infrastructure.Migrations
                 name: "IX_PaymentTransactions_CreatedAt",
                 table: "PaymentTransactions",
                 column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentTransactions_GiftCard",
+                table: "PaymentTransactions",
+                column: "GiftCardId",
+                filter: "\"GiftCardId\" IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentTransactions_NeedsManualRefund",
@@ -2822,6 +3581,17 @@ namespace Cinema.Infrastructure.Migrations
                 columns: new[] { "Gateway", "FileHash" },
                 unique: true,
                 filter: "\"Source\" = 'File'");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReferralRelations_Referrer",
+                table: "ReferralRelations",
+                column: "ReferrerUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_ReferralRelations_Referred",
+                table: "ReferralRelations",
+                column: "ReferredUserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshTokens_ReplacedByTokenId",
@@ -3063,6 +3833,48 @@ namespace Cinema.Infrastructure.Migrations
                 column: "StocktakeDate");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SupportMessages_AuthorUserId",
+                table: "SupportMessages",
+                column: "AuthorUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SupportMessages_Request_CreatedAt",
+                table: "SupportMessages",
+                columns: new[] { "SupportRequestId", "CreatedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SupportRequests_ApologyPromotionId",
+                table: "SupportRequests",
+                column: "ApologyPromotionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SupportRequests_AssignedToUserId",
+                table: "SupportRequests",
+                column: "AssignedToUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SupportRequests_OrderId",
+                table: "SupportRequests",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SupportRequests_Status_DueAt",
+                table: "SupportRequests",
+                columns: new[] { "Status", "DueAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SupportRequests_User_LastMessageAt",
+                table: "SupportRequests",
+                columns: new[] { "UserId", "LastMessageAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "UX_SupportRequests_SourcePaymentTransactionId",
+                table: "SupportRequests",
+                column: "SourcePaymentTransactionId",
+                unique: true,
+                filter: "\"SourcePaymentTransactionId\" IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "UX_TicketTypes_Name",
                 table: "TicketTypes",
                 column: "Name",
@@ -3137,6 +3949,18 @@ namespace Cinema.Infrastructure.Migrations
                 name: "DailyClosings");
 
             migrationBuilder.DropTable(
+                name: "ExceptionalRefundProposals");
+
+            migrationBuilder.DropTable(
+                name: "GiftCardAttemptLimit");
+
+            migrationBuilder.DropTable(
+                name: "GiftCardLedger");
+
+            migrationBuilder.DropTable(
+                name: "GiftCardRevenueEntries");
+
+            migrationBuilder.DropTable(
                 name: "ImportExportJobs");
 
             migrationBuilder.DropTable(
@@ -3149,13 +3973,19 @@ namespace Cinema.Infrastructure.Migrations
                 name: "LedgerAdjustments");
 
             migrationBuilder.DropTable(
-                name: "LoyaltyPointEntries");
+                name: "LoyaltyChallengeProgresses");
+
+            migrationBuilder.DropTable(
+                name: "LoyaltyPointTransactions");
 
             migrationBuilder.DropTable(
                 name: "MovieCast");
 
             migrationBuilder.DropTable(
                 name: "MovieGenres");
+
+            migrationBuilder.DropTable(
+                name: "OrderExchanges");
 
             migrationBuilder.DropTable(
                 name: "OrderPriceAdjustmentAllocations");
@@ -3180,6 +4010,9 @@ namespace Cinema.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "ReconciliationItems");
+
+            migrationBuilder.DropTable(
+                name: "ReferralRelations");
 
             migrationBuilder.DropTable(
                 name: "RefreshTokens");
@@ -3221,6 +4054,9 @@ namespace Cinema.Infrastructure.Migrations
                 name: "StocktakeSheetLines");
 
             migrationBuilder.DropTable(
+                name: "SupportMessages");
+
+            migrationBuilder.DropTable(
                 name: "UserVerificationTokens");
 
             migrationBuilder.DropTable(
@@ -3236,6 +4072,12 @@ namespace Cinema.Infrastructure.Migrations
                 name: "InvoiceProfiles");
 
             migrationBuilder.DropTable(
+                name: "LoyaltyChallenges");
+
+            migrationBuilder.DropTable(
+                name: "LoyaltyPointEntries");
+
+            migrationBuilder.DropTable(
                 name: "Actors");
 
             migrationBuilder.DropTable(
@@ -3246,12 +4088,6 @@ namespace Cinema.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "OutboxMessages");
-
-            migrationBuilder.DropTable(
-                name: "Promotions");
-
-            migrationBuilder.DropTable(
-                name: "PaymentTransactions");
 
             migrationBuilder.DropTable(
                 name: "ReconciliationSessions");
@@ -3269,13 +4105,16 @@ namespace Cinema.Infrastructure.Migrations
                 name: "StocktakeSheets");
 
             migrationBuilder.DropTable(
+                name: "SupportRequests");
+
+            migrationBuilder.DropTable(
                 name: "InventoryItems");
 
             migrationBuilder.DropTable(
                 name: "WasteSheets");
 
             migrationBuilder.DropTable(
-                name: "Combos");
+                name: "LoyaltyRewards");
 
             migrationBuilder.DropTable(
                 name: "ShowtimeSeats");
@@ -3284,7 +4123,13 @@ namespace Cinema.Infrastructure.Migrations
                 name: "TicketTypes");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "PaymentTransactions");
+
+            migrationBuilder.DropTable(
+                name: "Promotions");
+
+            migrationBuilder.DropTable(
+                name: "Combos");
 
             migrationBuilder.DropTable(
                 name: "Seats");
@@ -3293,7 +4138,10 @@ namespace Cinema.Infrastructure.Migrations
                 name: "Showtimes");
 
             migrationBuilder.DropTable(
-                name: "CounterShifts");
+                name: "GiftCards");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "SeatTypes");
@@ -3305,7 +4153,7 @@ namespace Cinema.Infrastructure.Migrations
                 name: "Movies");
 
             migrationBuilder.DropTable(
-                name: "Employees");
+                name: "CounterShifts");
 
             migrationBuilder.DropTable(
                 name: "ScreenTypes");
@@ -3318,6 +4166,9 @@ namespace Cinema.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Languages");
+
+            migrationBuilder.DropTable(
+                name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "Positions");

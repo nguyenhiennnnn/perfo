@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cinema.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261124143005_InitialCreate")]
+    [Migration("20261125102846_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -224,6 +224,57 @@ namespace Cinema.Infrastructure.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
 
+                    b.Property<decimal>("ExceptionalRefundApprovalThreshold")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(500000m);
+
+                    b.Property<int>("ExchangeCreditValidityDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(90);
+
+                    b.Property<int>("ExchangeDeadlineHours")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(2);
+
+                    b.PrimitiveCollection<decimal[]>("GiftCardDenominations")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("numeric(18,2)[]")
+                        .HasDefaultValueSql("ARRAY[100000,200000,500000,1000000]::numeric(18,2)[]");
+
+                    b.Property<int>("GiftCardLockoutMinutes")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(15);
+
+                    b.Property<decimal>("GiftCardMaxAmount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(5000000m);
+
+                    b.Property<int>("GiftCardMaxFailedAttempts")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(5);
+
+                    b.Property<decimal>("GiftCardMinAmount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(50000m);
+
+                    b.Property<int>("GiftCardRefundExtensionDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(30);
+
+                    b.Property<int>("GiftCardValidityMonths")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(12);
+
                     b.Property<decimal>("GiftCardVatPercent")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(5,2)")
@@ -250,6 +301,11 @@ namespace Cinema.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasDefaultValue(10);
+
+                    b.Property<int>("MaxExchangesPerOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
 
                     b.Property<int>("MaxSeatsPerBooking")
                         .ValueGeneratedOnAdd()
@@ -283,10 +339,45 @@ namespace Cinema.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<int>("PointsExpiryMonths")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(12);
+
+                    b.Property<int>("PointsExpiryReminderDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(14);
+
                     b.Property<decimal>("PointsPerAmount")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(18,2)")
                         .HasDefaultValue(10000m);
+
+                    b.Property<int>("PreorderComboDiscountPercent")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("ReferralMonthlyRewardLimit")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(10);
+
+                    b.Property<int>("ReferralReferredPoints")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(50);
+
+                    b.Property<int>("ReferralReferrerPoints")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(50);
+
+                    b.Property<int>("ReminderHoursBefore")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(3);
 
                     b.Property<int>("RoomBufferMinutes")
                         .ValueGeneratedOnAdd()
@@ -363,6 +454,11 @@ namespace Cinema.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(5);
 
+                    b.Property<int>("SupportRequestDueHours")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(48);
+
                     b.Property<string>("TaxCode")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
@@ -416,6 +512,9 @@ namespace Cinema.Infrastructure.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("SuggestedTicketCount")
+                        .HasColumnType("integer");
 
                     b.HasKey("ComboId");
 
@@ -616,6 +715,11 @@ namespace Cinema.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
+                    b.Property<int>("PointDebt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
                     b.Property<int>("Points")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
@@ -780,6 +884,78 @@ namespace Cinema.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Entities.ExceptionalRefundProposal", b =>
+                {
+                    b.Property<int>("ExceptionalRefundProposalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ExceptionalRefundProposalId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ApprovalThreshold")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("OrderLineId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ProposedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("ProposedByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("RequiresAdminApproval")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("ReviewNote")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("ReviewedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("ReviewedByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.HasKey("ExceptionalRefundProposalId");
+
+                    b.HasIndex("OrderLineId");
+
+                    b.HasIndex("ProposedByUserId");
+
+                    b.HasIndex("ReviewedByUserId");
+
+                    b.HasIndex("OrderId", "Status")
+                        .HasDatabaseName("IX_ExceptionalRefundProposals_Order_Status");
+
+                    b.HasIndex("Status", "ProposedAt")
+                        .HasDatabaseName("IX_ExceptionalRefundProposals_Status_ProposedAt");
+
+                    b.ToTable("ExceptionalRefundProposals", (string)null);
+                });
+
             modelBuilder.Entity("Cinema.Domain.Entities.Genre", b =>
                 {
                     b.Property<int>("GenreId")
@@ -799,6 +975,251 @@ namespace Cinema.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Genres", (string)null);
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.GiftCard", b =>
+                {
+                    b.Property<int>("GiftCardId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GiftCardId"));
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<decimal>("FaceValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<int>("PurchaserUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RecipientEmail")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("RecipientName")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<decimal>("ReservedAmount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<DateTime?>("SendAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("PendingSend");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("Gift");
+
+                    b.HasKey("GiftCardId");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("PurchaserUserId")
+                        .HasDatabaseName("IX_GiftCards_Purchaser");
+
+                    b.HasIndex("RecipientEmail")
+                        .HasDatabaseName("IX_GiftCards_RecipientEmail");
+
+                    b.HasIndex("Status", "ExpiresAt")
+                        .HasDatabaseName("IX_GiftCards_Status_ExpiresAt");
+
+                    b.HasIndex("Status", "SendAt")
+                        .HasDatabaseName("IX_GiftCards_Status_SendAt");
+
+                    b.ToTable("GiftCards", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_GiftCards_Balance", "\"Balance\" >= 0 AND \"Balance\" <= \"FaceValue\"");
+
+                            t.HasCheckConstraint("CK_GiftCards_FaceValue", "\"FaceValue\" > 0");
+
+                            t.HasCheckConstraint("CK_GiftCards_ReservedAmount", "\"ReservedAmount\" >= 0 AND \"ReservedAmount\" <= \"Balance\"");
+
+                            t.HasCheckConstraint("CK_GiftCards_Status", "\"Status\" IN ('PendingSend','Sent','InUse','Depleted','Expired','Cancelled')");
+
+                            t.HasCheckConstraint("CK_GiftCards_Type", "\"Type\" IN ('Gift','ExchangeCredit')");
+                        });
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.GiftCardAttemptLimit", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("FailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("LockedUntil")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("WindowStartedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("GiftCardAttemptLimit", (string)null);
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.GiftCardLedger", b =>
+                {
+                    b.Property<long>("GiftCardLedgerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("GiftCardLedgerId"));
+
+                    b.Property<decimal>("BalanceAfter")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("BalanceChange")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("EntryType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int>("GiftCardId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("OccurredAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("ReservedAfter")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ReservedChange")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("GiftCardLedgerId");
+
+                    b.HasIndex("OrderId")
+                        .HasDatabaseName("IX_GiftCardLedger_Order");
+
+                    b.HasIndex("GiftCardId", "GiftCardLedgerId")
+                        .HasDatabaseName("IX_GiftCardLedger_Card");
+
+                    b.ToTable("GiftCardLedger", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_GiftCardLedger_After", "\"BalanceAfter\" >= 0 AND \"ReservedAfter\" >= 0 AND \"ReservedAfter\" <= \"BalanceAfter\"");
+
+                            t.HasCheckConstraint("CK_GiftCardLedger_EntryType", "\"EntryType\" IN ('Issue','Reserve','Release','Redeem','Refund','Expire','Cancel')");
+
+                            t.HasCheckConstraint("CK_GiftCardLedger_Signs", "(\"EntryType\" = 'Issue' AND \"BalanceChange\" > 0 AND \"ReservedChange\" = 0) OR (\"EntryType\" = 'Reserve' AND \"BalanceChange\" = 0 AND \"ReservedChange\" > 0) OR (\"EntryType\" = 'Release' AND \"BalanceChange\" = 0 AND \"ReservedChange\" < 0) OR (\"EntryType\" = 'Redeem' AND \"BalanceChange\" < 0 AND \"ReservedChange\" <= 0) OR (\"EntryType\" = 'Refund' AND \"BalanceChange\" > 0 AND \"ReservedChange\" = 0) OR (\"EntryType\" IN ('Expire','Cancel') AND \"BalanceChange\" <= 0 AND \"ReservedChange\" <= 0 AND (\"BalanceChange\" < 0 OR \"ReservedChange\" < 0))");
+                        });
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.GiftCardRevenueEntry", b =>
+                {
+                    b.Property<long>("GiftCardRevenueEntryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("GiftCardRevenueEntryId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateOnly>("BusinessDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("EntryType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int>("GiftCardId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("NetAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("OccurredAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PaymentTransactionId")
+                        .HasColumnType("integer");
+
+                    b.Property<long?>("RecognizedEntryId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("TaxAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TaxRatePercent")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.HasKey("GiftCardRevenueEntryId");
+
+                    b.HasIndex("GiftCardId")
+                        .HasDatabaseName("IX_GiftCardRevenueEntries_Card");
+
+                    b.HasIndex("OrderId")
+                        .HasDatabaseName("IX_GiftCardRevenueEntries_Order");
+
+                    b.HasIndex("PaymentTransactionId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_GiftCardRevenueEntries_Transaction");
+
+                    b.HasIndex("RecognizedEntryId")
+                        .HasDatabaseName("IX_GiftCardRevenueEntries_Recognized")
+                        .HasFilter("\"RecognizedEntryId\" IS NOT NULL");
+
+                    b.HasIndex("BusinessDate", "EntryType")
+                        .HasDatabaseName("IX_GiftCardRevenueEntries_Date");
+
+                    b.ToTable("GiftCardRevenueEntries", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_GiftCardRevenueEntries_EntryType", "\"EntryType\" IN ('Recognized','Reversed')");
+
+                            t.HasCheckConstraint("CK_GiftCardRevenueEntries_Signs", "(\"EntryType\" = 'Recognized' AND \"Amount\" > 0 AND \"NetAmount\" > 0 AND \"TaxAmount\" >= 0 AND \"RecognizedEntryId\" IS NULL) OR (\"EntryType\" = 'Reversed' AND \"Amount\" < 0 AND \"NetAmount\" <= 0 AND \"TaxAmount\" <= 0 AND \"RecognizedEntryId\" IS NOT NULL)");
+
+                            t.HasCheckConstraint("CK_GiftCardRevenueEntries_Total", "\"Amount\" = \"NetAmount\" + \"TaxAmount\"");
+                        });
                 });
 
             modelBuilder.Entity("Cinema.Domain.Entities.ImportExportJob", b =>
@@ -1365,6 +1786,143 @@ namespace Cinema.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Entities.LoyaltyChallenge", b =>
+                {
+                    b.Property<int>("ChallengeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ChallengeId"));
+
+                    b.Property<string>("ConditionType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateOnly>("EndsOn")
+                        .HasColumnType("date");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<int?>("RewardGiftId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("RewardPoints")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RewardType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateOnly>("StartsOn")
+                        .HasColumnType("date");
+
+                    b.Property<int>("TargetCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("ChallengeId");
+
+                    b.HasIndex("RewardGiftId");
+
+                    b.HasIndex("StartsOn", "EndsOn")
+                        .HasDatabaseName("IX_LoyaltyChallenges_Range")
+                        .HasFilter("\"IsDeleted\" = FALSE");
+
+                    b.ToTable("LoyaltyChallenges", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_LoyaltyChallenges_ConditionType", "\"ConditionType\" IN ('DistinctMovies','Screenings')");
+
+                            t.HasCheckConstraint("CK_LoyaltyChallenges_Range", "\"EndsOn\" >= \"StartsOn\"");
+
+                            t.HasCheckConstraint("CK_LoyaltyChallenges_Reward", "(\"RewardType\" = 'Points' AND \"RewardPoints\" > 0 AND \"RewardGiftId\" IS NULL) OR (\"RewardType\" = 'Gift' AND \"RewardGiftId\" IS NOT NULL AND \"RewardPoints\" IS NULL)");
+
+                            t.HasCheckConstraint("CK_LoyaltyChallenges_RewardType", "\"RewardType\" IN ('Points','Gift')");
+
+                            t.HasCheckConstraint("CK_LoyaltyChallenges_Target", "\"TargetCount\" > 0");
+                        });
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.LoyaltyChallengeProgress", b =>
+                {
+                    b.Property<int>("ProgressId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ProgressId"));
+
+                    b.Property<int>("ChallengeId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.PrimitiveCollection<List<int>>("CountedMovieIds")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer[]")
+                        .HasDefaultValueSql("'{}'");
+
+                    b.PrimitiveCollection<List<int>>("CountedShowtimeIds")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer[]")
+                        .HasDefaultValueSql("'{}'");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("CurrentCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("RewardGrantedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ProgressId");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("IX_LoyaltyChallengeProgresses_User");
+
+                    b.HasIndex("ChallengeId", "UserId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_LoyaltyChallengeProgresses_Challenge_User");
+
+                    b.ToTable("LoyaltyChallengeProgresses", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_LoyaltyChallengeProgresses_Count", "\"CurrentCount\" >= 0");
+                        });
+                });
+
             modelBuilder.Entity("Cinema.Domain.Entities.LoyaltyPointEntry", b =>
                 {
                     b.Property<int>("EntryId")
@@ -1376,16 +1934,30 @@ namespace Cinema.Infrastructure.Migrations
                     b.Property<DateTime>("EarnedAt")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("ExpiryReminderSentAt")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<int?>("OrderId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Points")
                         .HasColumnType("integer");
 
+                    b.Property<int>("RemainingPoints")
+                        .HasColumnType("integer");
+
                     b.Property<int>("RevokedPoints")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
@@ -1400,11 +1972,155 @@ namespace Cinema.Infrastructure.Migrations
                     b.HasIndex("UserId", "EarnedAt")
                         .HasDatabaseName("IX_LoyaltyPointEntries_User_EarnedAt");
 
+                    b.HasIndex("UserId", "ExpiresAt")
+                        .HasDatabaseName("IX_LoyaltyPointEntries_User_Lots")
+                        .HasFilter("\"RemainingPoints\" > 0");
+
                     b.ToTable("LoyaltyPointEntries", null, t =>
                         {
                             t.HasCheckConstraint("CK_LoyaltyPointEntries_Points", "\"Points\" >= 0");
 
+                            t.HasCheckConstraint("CK_LoyaltyPointEntries_Remaining", "\"RemainingPoints\" >= 0 AND \"RemainingPoints\" <= \"Points\"");
+
                             t.HasCheckConstraint("CK_LoyaltyPointEntries_Revoked", "\"RevokedPoints\" >= 0 AND \"RevokedPoints\" <= \"Points\"");
+                        });
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.LoyaltyPointTransaction", b =>
+                {
+                    b.Property<long>("TransactionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("TransactionId"));
+
+                    b.Property<int?>("ActorUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("EntryId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("TransactionId");
+
+                    b.HasIndex("EntryId")
+                        .HasDatabaseName("IX_LoyaltyPointTransactions_Entry");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("UserId", "CreatedAt")
+                        .HasDatabaseName("IX_LoyaltyPointTransactions_User_CreatedAt");
+
+                    b.ToTable("LoyaltyPointTransactions", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_LoyaltyPointTransactions_Points", "\"Points\" <> 0");
+                        });
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.LoyaltyReward", b =>
+                {
+                    b.Property<int>("RewardId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RewardId"));
+
+                    b.Property<int>("CodeValidityDays")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ComboId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DiscountType")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<decimal?>("DiscountValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<decimal?>("MaxDiscountAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<int>("PointsCost")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RemainingQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("ValidFrom")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("ValidTo")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("RewardId");
+
+                    b.HasIndex("ComboId");
+
+                    b.HasIndex("IsActive", "PointsCost")
+                        .HasDatabaseName("IX_LoyaltyRewards_Active")
+                        .HasFilter("\"IsDeleted\" = FALSE");
+
+                    b.ToTable("LoyaltyRewards", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_LoyaltyRewards_CodeValidityDays", "\"CodeValidityDays\" > 0");
+
+                            t.HasCheckConstraint("CK_LoyaltyRewards_Combo", "(\"Type\" = 'FreeCombo') = (\"ComboId\" IS NOT NULL)");
+
+                            t.HasCheckConstraint("CK_LoyaltyRewards_Discount", "(\"Type\" = 'Discount' AND \"DiscountType\" IS NOT NULL AND \"DiscountValue\" > 0) OR (\"Type\" <> 'Discount' AND \"DiscountType\" IS NULL AND \"DiscountValue\" IS NULL AND \"MaxDiscountAmount\" IS NULL)");
+
+                            t.HasCheckConstraint("CK_LoyaltyRewards_MaxDiscount", "(\"Type\" = 'FreeTicket' AND \"MaxDiscountAmount\" > 0) OR (\"Type\" = 'FreeCombo' AND \"MaxDiscountAmount\" IS NULL) OR \"Type\" = 'Discount'");
+
+                            t.HasCheckConstraint("CK_LoyaltyRewards_PointsCost", "\"PointsCost\" > 0");
+
+                            t.HasCheckConstraint("CK_LoyaltyRewards_RemainingQuantity", "\"RemainingQuantity\" >= 0");
+
+                            t.HasCheckConstraint("CK_LoyaltyRewards_Type", "\"Type\" IN ('FreeTicket','FreeCombo','Discount')");
+
+                            t.HasCheckConstraint("CK_LoyaltyRewards_ValidRange", "\"ValidFrom\" IS NULL OR \"ValidTo\" IS NULL OR \"ValidTo\" > \"ValidFrom\"");
                         });
                 });
 
@@ -1624,6 +2340,11 @@ namespace Cinema.Infrastructure.Migrations
                     b.Property<decimal>("FinalAmount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal>("LoyaltyReversedAmount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
                     b.Property<string>("OrderCode")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -1713,11 +2434,79 @@ namespace Cinema.Infrastructure.Migrations
 
                             t.HasCheckConstraint("CK_Orders_Status", "\"Status\" IN ('Pending','Confirmed','Cancelled','Expired')");
 
-                            t.HasCheckConstraint("CK_Orders_Supplement_Original", "(\"Type\" = 'Supplement') = (\"OriginalOrderId\" IS NOT NULL)");
+                            t.HasCheckConstraint("CK_Orders_Supplement_Original", "(\"Type\" IN ('Supplement','Exchange')) = (\"OriginalOrderId\" IS NOT NULL)");
 
                             t.HasCheckConstraint("CK_Orders_TotalAmount", "\"TotalAmount\" >= 0");
 
-                            t.HasCheckConstraint("CK_Orders_Type", "\"Type\" IN ('Ticket','Combo','GiftCard','Membership','RoomRental','Supplement')");
+                            t.HasCheckConstraint("CK_Orders_Type", "\"Type\" IN ('Ticket','Combo','GiftCard','Membership','RoomRental','Supplement','Exchange')");
+                        });
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.OrderExchange", b =>
+                {
+                    b.Property<int>("OrderExchangeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderExchangeId"));
+
+                    b.Property<int>("ExchangeNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ExchangedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<int>("NewOrderLineId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("NewShowtimeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OldOrderLineId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OldShowtimeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("PerformedByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("PriceDifference")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("OrderExchangeId");
+
+                    b.HasIndex("NewOrderLineId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_OrderExchanges_NewOrderLine");
+
+                    b.HasIndex("NewShowtimeId")
+                        .HasDatabaseName("IX_OrderExchanges_NewShowtime");
+
+                    b.HasIndex("OldOrderLineId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_OrderExchanges_OldOrderLine");
+
+                    b.HasIndex("OldShowtimeId")
+                        .HasDatabaseName("IX_OrderExchanges_OldShowtime");
+
+                    b.HasIndex("PerformedByUserId");
+
+                    b.HasIndex("OrderId", "ExchangeNumber")
+                        .HasDatabaseName("IX_OrderExchanges_Order");
+
+                    b.ToTable("OrderExchanges", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_OrderExchanges_Lines", "\"OldOrderLineId\" <> \"NewOrderLineId\"");
+
+                            t.HasCheckConstraint("CK_OrderExchanges_Number", "\"ExchangeNumber\" >= 1");
+
+                            t.HasCheckConstraint("CK_OrderExchanges_Showtimes", "\"OldShowtimeId\" <> \"NewShowtimeId\"");
                         });
                 });
 
@@ -1751,6 +2540,27 @@ namespace Cinema.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
+
+                    b.Property<int?>("ExchangeFromLineId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("GiftCardId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("GiftMessage")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("GiftRecipientEmail")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("GiftRecipientName")
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<DateTime?>("GiftSendAt")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("IsCheckedIn")
                         .ValueGeneratedOnAdd()
@@ -1795,6 +2605,9 @@ namespace Cinema.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
+                    b.Property<DateTime?>("ReminderSentAt")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<bool>("RequiresCardPresentation")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -1826,6 +2639,15 @@ namespace Cinema.Infrastructure.Migrations
                         .HasDatabaseName("IX_OrderLines_Combo")
                         .HasFilter("\"ComboId\" IS NOT NULL");
 
+                    b.HasIndex("ExchangeFromLineId")
+                        .HasDatabaseName("IX_OrderLines_ExchangeFromLine")
+                        .HasFilter("\"ExchangeFromLineId\" IS NOT NULL");
+
+                    b.HasIndex("GiftCardId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_OrderLines_GiftCard")
+                        .HasFilter("\"GiftCardId\" IS NOT NULL");
+
                     b.HasIndex("OrderId")
                         .HasDatabaseName("IX_OrderLines_Order");
 
@@ -1835,8 +2657,8 @@ namespace Cinema.Infrastructure.Migrations
                         .HasFilter("\"QrCode\" IS NOT NULL");
 
                     b.HasIndex("ShowtimeId")
-                        .HasDatabaseName("IX_OrderLines_Showtime")
-                        .HasFilter("\"ShowtimeId\" IS NOT NULL");
+                        .HasDatabaseName("IX_OrderLines_PendingReminder")
+                        .HasFilter("\"LineType\" = 'Ticket' AND \"ReminderSentAt\" IS NULL AND \"QrCode\" IS NOT NULL");
 
                     b.HasIndex("ShowtimeSeatId")
                         .HasDatabaseName("IX_OrderLines_ShowtimeSeat")
@@ -1861,6 +2683,10 @@ namespace Cinema.Infrastructure.Migrations
                             t.HasCheckConstraint("CK_OrderLines_CardPresentation", "(NOT \"RequiresCardPresentation\") OR \"LineType\" = 'Ticket'");
 
                             t.HasCheckConstraint("CK_OrderLines_CheckIn", "(NOT \"IsCheckedIn\") OR \"LineType\" = 'Ticket'");
+
+                            t.HasCheckConstraint("CK_OrderLines_ExchangeFromLine", "\"ExchangeFromLineId\" IS NULL OR \"LineType\" = 'Ticket'");
+
+                            t.HasCheckConstraint("CK_OrderLines_GiftCardData", "\"LineType\" = 'GiftCard' OR (\"GiftCardId\" IS NULL AND \"GiftRecipientEmail\" IS NULL AND \"GiftRecipientName\" IS NULL AND \"GiftMessage\" IS NULL AND \"GiftSendAt\" IS NULL)");
 
                             t.HasCheckConstraint("CK_OrderLines_LineType", "\"LineType\" IN ('Ticket','Combo','GiftCard','Fee')");
 
@@ -2198,6 +3024,9 @@ namespace Cinema.Infrastructure.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
 
+                    b.Property<int?>("GiftCardId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Method")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -2246,6 +3075,10 @@ namespace Cinema.Infrastructure.Migrations
 
                     b.HasIndex("CreatedAt")
                         .HasDatabaseName("IX_PaymentTransactions_CreatedAt");
+
+                    b.HasIndex("GiftCardId")
+                        .HasDatabaseName("IX_PaymentTransactions_GiftCard")
+                        .HasFilter("\"GiftCardId\" IS NOT NULL");
 
                     b.HasIndex("NeedsManualRefund")
                         .HasDatabaseName("IX_PaymentTransactions_NeedsManualRefund")
@@ -2922,6 +3755,48 @@ namespace Cinema.Infrastructure.Migrations
                             t.HasCheckConstraint("CK_ReconciliationSessions_Source", "\"Source\" IN ('File','Api')");
 
                             t.HasCheckConstraint("CK_ReconciliationSessions_Status", "\"Status\" IN ('Running','Completed','Failed')");
+                        });
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.ReferralRelation", b =>
+                {
+                    b.Property<int>("ReferralId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ReferralId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("ReferredUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ReferrerUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("RewardBlockedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("RewardBlockedReason")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTime?>("RewardGrantedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("ReferralId");
+
+                    b.HasIndex("ReferredUserId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_ReferralRelations_Referred");
+
+                    b.HasIndex("ReferrerUserId")
+                        .HasDatabaseName("IX_ReferralRelations_Referrer");
+
+                    b.ToTable("ReferralRelations", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_ReferralRelations_NotSelf", "\"ReferrerUserId\" <> \"ReferredUserId\"");
                         });
                 });
 
@@ -3875,6 +4750,126 @@ namespace Cinema.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Entities.SupportMessage", b =>
+                {
+                    b.Property<int>("SupportMessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SupportMessageId"));
+
+                    b.Property<string>("AuthorType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int?>("AuthorUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("SupportRequestId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("SupportMessageId");
+
+                    b.HasIndex("AuthorUserId");
+
+                    b.HasIndex("SupportRequestId", "CreatedAt")
+                        .HasDatabaseName("IX_SupportMessages_Request_CreatedAt");
+
+                    b.ToTable("SupportMessages", (string)null);
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.SupportRequest", b =>
+                {
+                    b.Property<int>("SupportRequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SupportRequestId"));
+
+                    b.Property<int?>("ApologyPromotionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("AssignedToUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DueAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("LastMessageAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("ResolvedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<int?>("SourcePaymentTransactionId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("SupportRequestId");
+
+                    b.HasIndex("ApologyPromotionId");
+
+                    b.HasIndex("AssignedToUserId")
+                        .HasDatabaseName("IX_SupportRequests_AssignedToUserId");
+
+                    b.HasIndex("OrderId")
+                        .HasDatabaseName("IX_SupportRequests_OrderId");
+
+                    b.HasIndex("SourcePaymentTransactionId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_SupportRequests_SourcePaymentTransactionId")
+                        .HasFilter("\"SourcePaymentTransactionId\" IS NOT NULL");
+
+                    b.HasIndex("Status", "DueAt")
+                        .HasDatabaseName("IX_SupportRequests_Status_DueAt");
+
+                    b.HasIndex("UserId", "LastMessageAt")
+                        .HasDatabaseName("IX_SupportRequests_User_LastMessageAt");
+
+                    b.ToTable("SupportRequests", (string)null);
+                });
+
             modelBuilder.Entity("Cinema.Domain.Entities.TicketType", b =>
                 {
                     b.Property<int>("TicketTypeId")
@@ -4291,6 +5286,102 @@ namespace Cinema.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Entities.ExceptionalRefundProposal", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.OrderLine", "OrderLine")
+                        .WithMany()
+                        .HasForeignKey("OrderLineId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Cinema.Domain.Entities.User", "ProposedByUser")
+                        .WithMany()
+                        .HasForeignKey("ProposedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.User", "ReviewedByUser")
+                        .WithMany()
+                        .HasForeignKey("ReviewedByUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Order");
+
+                    b.Navigation("OrderLine");
+
+                    b.Navigation("ProposedByUser");
+
+                    b.Navigation("ReviewedByUser");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.GiftCard", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.User", "PurchaserUser")
+                        .WithMany()
+                        .HasForeignKey("PurchaserUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("PurchaserUser");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.GiftCardLedger", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.GiftCard", "GiftCard")
+                        .WithMany("LedgerEntries")
+                        .HasForeignKey("GiftCardId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("GiftCard");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.GiftCardRevenueEntry", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.GiftCard", "GiftCard")
+                        .WithMany()
+                        .HasForeignKey("GiftCardId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.PaymentTransaction", "PaymentTransaction")
+                        .WithMany()
+                        .HasForeignKey("PaymentTransactionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.GiftCardRevenueEntry", "RecognizedEntry")
+                        .WithMany()
+                        .HasForeignKey("RecognizedEntryId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("GiftCard");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("PaymentTransaction");
+
+                    b.Navigation("RecognizedEntry");
+                });
+
             modelBuilder.Entity("Cinema.Domain.Entities.ImportExportJob", b =>
                 {
                     b.HasOne("Cinema.Domain.Entities.User", "CreatedByUser")
@@ -4396,6 +5487,35 @@ namespace Cinema.Infrastructure.Migrations
                     b.Navigation("PaymentTransaction");
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Entities.LoyaltyChallenge", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.LoyaltyReward", "RewardGift")
+                        .WithMany()
+                        .HasForeignKey("RewardGiftId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("RewardGift");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.LoyaltyChallengeProgress", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.LoyaltyChallenge", "Challenge")
+                        .WithMany("Progresses")
+                        .HasForeignKey("ChallengeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Challenge");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Cinema.Domain.Entities.LoyaltyPointEntry", b =>
                 {
                     b.HasOne("Cinema.Domain.Entities.Order", "Order")
@@ -4412,6 +5532,41 @@ namespace Cinema.Infrastructure.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.LoyaltyPointTransaction", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.LoyaltyPointEntry", "Entry")
+                        .WithMany()
+                        .HasForeignKey("EntryId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Cinema.Domain.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Cinema.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Entry");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.LoyaltyReward", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.Combo", "Combo")
+                        .WithMany()
+                        .HasForeignKey("ComboId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Combo");
                 });
 
             modelBuilder.Entity("Cinema.Domain.Entities.Movie", b =>
@@ -4505,6 +5660,56 @@ namespace Cinema.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Entities.OrderExchange", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.OrderLine", "NewOrderLine")
+                        .WithMany()
+                        .HasForeignKey("NewOrderLineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.Showtime", "NewShowtime")
+                        .WithMany()
+                        .HasForeignKey("NewShowtimeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.OrderLine", "OldOrderLine")
+                        .WithMany()
+                        .HasForeignKey("OldOrderLineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.Showtime", "OldShowtime")
+                        .WithMany()
+                        .HasForeignKey("OldShowtimeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.User", "PerformedByUser")
+                        .WithMany()
+                        .HasForeignKey("PerformedByUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("NewOrderLine");
+
+                    b.Navigation("NewShowtime");
+
+                    b.Navigation("OldOrderLine");
+
+                    b.Navigation("OldShowtime");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("PerformedByUser");
+                });
+
             modelBuilder.Entity("Cinema.Domain.Entities.OrderLine", b =>
                 {
                     b.HasOne("Cinema.Domain.Entities.User", null)
@@ -4515,6 +5720,16 @@ namespace Cinema.Infrastructure.Migrations
                     b.HasOne("Cinema.Domain.Entities.Combo", "Combo")
                         .WithMany("OrderLines")
                         .HasForeignKey("ComboId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Cinema.Domain.Entities.OrderLine", "ExchangeFromLine")
+                        .WithMany()
+                        .HasForeignKey("ExchangeFromLineId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Cinema.Domain.Entities.GiftCard", "GiftCard")
+                        .WithMany()
+                        .HasForeignKey("GiftCardId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Cinema.Domain.Entities.Order", "Order")
@@ -4544,6 +5759,10 @@ namespace Cinema.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Combo");
+
+                    b.Navigation("ExchangeFromLine");
+
+                    b.Navigation("GiftCard");
 
                     b.Navigation("Order");
 
@@ -4615,6 +5834,11 @@ namespace Cinema.Infrastructure.Migrations
                         .HasForeignKey("CounterShiftId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Cinema.Domain.Entities.GiftCard", "GiftCard")
+                        .WithMany()
+                        .HasForeignKey("GiftCardId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Cinema.Domain.Entities.Order", "Order")
                         .WithMany("PaymentTransactions")
                         .HasForeignKey("OrderId")
@@ -4632,6 +5856,8 @@ namespace Cinema.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CounterShift");
+
+                    b.Navigation("GiftCard");
 
                     b.Navigation("Order");
 
@@ -4736,6 +5962,25 @@ namespace Cinema.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("CreatedByUser");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.ReferralRelation", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.User", "Referred")
+                        .WithMany()
+                        .HasForeignKey("ReferredUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.User", "Referrer")
+                        .WithMany()
+                        .HasForeignKey("ReferrerUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Referred");
+
+                    b.Navigation("Referrer");
                 });
 
             modelBuilder.Entity("Cinema.Domain.Entities.RefreshToken", b =>
@@ -5033,6 +6278,63 @@ namespace Cinema.Infrastructure.Migrations
                     b.Navigation("Sheet");
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Entities.SupportMessage", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.User", "AuthorUser")
+                        .WithMany()
+                        .HasForeignKey("AuthorUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Cinema.Domain.Entities.SupportRequest", "SupportRequest")
+                        .WithMany("Messages")
+                        .HasForeignKey("SupportRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AuthorUser");
+
+                    b.Navigation("SupportRequest");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.SupportRequest", b =>
+                {
+                    b.HasOne("Cinema.Domain.Entities.Promotion", "ApologyPromotion")
+                        .WithMany()
+                        .HasForeignKey("ApologyPromotionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Cinema.Domain.Entities.User", "AssignedToUser")
+                        .WithMany()
+                        .HasForeignKey("AssignedToUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Cinema.Domain.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cinema.Domain.Entities.PaymentTransaction", "SourcePaymentTransaction")
+                        .WithMany()
+                        .HasForeignKey("SourcePaymentTransactionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Cinema.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("ApologyPromotion");
+
+                    b.Navigation("AssignedToUser");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("SourcePaymentTransaction");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Cinema.Domain.Entities.User", b =>
                 {
                     b.HasOne("Cinema.Domain.Entities.Role", "Role")
@@ -5123,6 +6425,11 @@ namespace Cinema.Infrastructure.Migrations
                     b.Navigation("MovieGenres");
                 });
 
+            modelBuilder.Entity("Cinema.Domain.Entities.GiftCard", b =>
+                {
+                    b.Navigation("LedgerEntries");
+                });
+
             modelBuilder.Entity("Cinema.Domain.Entities.InventoryItem", b =>
                 {
                     b.Navigation("LedgerEntries");
@@ -5135,6 +6442,11 @@ namespace Cinema.Infrastructure.Migrations
             modelBuilder.Entity("Cinema.Domain.Entities.Language", b =>
                 {
                     b.Navigation("Movies");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.LoyaltyChallenge", b =>
+                {
+                    b.Navigation("Progresses");
                 });
 
             modelBuilder.Entity("Cinema.Domain.Entities.MembershipTier", b =>
@@ -5248,6 +6560,11 @@ namespace Cinema.Infrastructure.Migrations
             modelBuilder.Entity("Cinema.Domain.Entities.StocktakeSheet", b =>
                 {
                     b.Navigation("Lines");
+                });
+
+            modelBuilder.Entity("Cinema.Domain.Entities.SupportRequest", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Cinema.Domain.Entities.User", b =>

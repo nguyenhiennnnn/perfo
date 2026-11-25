@@ -8,6 +8,7 @@ const ORDER_TYPE_LABELS: Record<string, string> = {
   [OrderType.Membership]: "Gói thành viên",
   [OrderType.RoomRental]: "Thuê phòng chiếu",
   [OrderType.Supplement]: "Bán thêm",
+  [OrderType.Exchange]: "Đổi suất chiếu",
 };
 
 const PAYMENT_METHOD_LABELS: Record<string, string> = {

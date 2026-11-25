@@ -16,8 +16,16 @@ export const getTicketLines = (order: OrderDetailDto): OrderTicketLine[] =>
 export const isTicketRefunded = (line: OrderLineDto) =>
   line.refundedQuantity >= line.quantity;
 
-export const getActiveTicketLines = (order: OrderDetailDto): OrderTicketLine[] =>
-  getTicketLines(order).filter((line) => !isTicketRefunded(line));
+export const getActiveTicketLines = (order: OrderDetailDto): OrderTicketLine[] => {
+  const exchangedOut = new Set(
+    (order.exchanges ?? [])
+      .filter((exchange) => exchange.originalOrderId === order.orderId)
+      .map((exchange) => exchange.oldOrderLineId),
+  );
+  return getTicketLines(order).filter(
+    (line) => !isTicketRefunded(line) && !exchangedOut.has(line.orderLineId),
+  );
+};
 
 export const getOrderShowing = (order: OrderDetailDto) =>
   getTicketLines(order)[0]?.ticket ?? null;

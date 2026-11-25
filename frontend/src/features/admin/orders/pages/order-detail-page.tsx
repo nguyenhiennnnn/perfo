@@ -12,6 +12,8 @@ import { ROUTES } from "@/config/routes";
 import { formatDateTime } from "@/lib/formatters";
 import { OrderStatus } from "@/types/enum";
 
+import { OrderExchangeHistorySection } from "@/features/client/orders/components/exchange/order-exchange-history-section";
+import { getExchangeableLines } from "@/features/client/orders/utils/order-exchange";
 import { OrderCancelErrorNotice } from "../components/order-cancel-error-notice";
 import { OrderCancelResult } from "../components/order-cancel-result";
 import { OrderDetailSkeleton } from "../components/order-detail-skeleton";
@@ -56,6 +58,11 @@ const OrderDetailView = ({ order, onReload }: OrderDetailViewProps) => {
                 fallbackFilename={`tickets-${order.orderCode}.pdf`}
               />
             )}
+            {getExchangeableLines(order).length > 0 && (
+              <ButtonLink to={ROUTES.admin.orderExchange(order.orderId)} variant="outline">
+                Đổi suất
+              </ButtonLink>
+            )}
             {showCancel && (
               <Button
                 variant="destructive"
@@ -92,6 +99,7 @@ const OrderDetailView = ({ order, onReload }: OrderDetailViewProps) => {
         <div className="min-w-0 space-y-4 lg:col-span-2">
           <OrderInfoCard order={order} />
           <OrderLinesCard lines={order.lines} />
+          <OrderExchangeHistorySection order={order} linkTo={ROUTES.admin.orderDetail} />
           <OrderTransactionsCard transactions={order.transactions} />
         </div>
         <div className="min-w-0 space-y-4">

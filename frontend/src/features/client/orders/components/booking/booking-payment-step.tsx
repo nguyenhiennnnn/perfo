@@ -104,7 +104,11 @@ export const BookingPaymentStep = ({
 
       {showCancel && (
         <Button variant="outline" disabled={isCancelling} onClick={onCancel}>
-          {isCancelling ? "Đang hủy..." : "Hủy, chọn lại ghế"}
+          {isCancelling
+            ? "Đang hủy..."
+            : order?.type === OrderType.Exchange
+              ? "Hủy đổi suất, giữ vé cũ"
+              : "Hủy, chọn lại ghế"}
         </Button>
       )}
     </div>

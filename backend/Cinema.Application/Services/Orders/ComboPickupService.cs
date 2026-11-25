@@ -279,7 +279,8 @@ public class ComboPickupService(IAppDbContext db, ILogger<ComboPickupService> lo
             order.CustomerName,
             order.CustomerPhone,
             order.CreatedAt,
-            order.Type == OrderType.Combo,
+            order.Type == OrderType.Combo
+                || (order.Type == OrderType.Supplement && lineDtos.Count > 0),
             ComboPickupRules.IsUnclaimed(
                 order.Type,
                 order.Status,

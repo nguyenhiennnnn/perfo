@@ -9,6 +9,12 @@ import type {
   CancelOrderResponse,
   OrderDetailDto,
 } from "../types";
+import type {
+  OrderExchangePreviewParams,
+  OrderExchangePreviewResponse,
+  StartOrderExchangeRequest,
+  StartOrderExchangeResponse,
+} from "@/features/client/orders/types";
 
 export const ordersAdminApi = {
   getOrders: (params: AdminOrderListParams) =>
@@ -24,6 +30,18 @@ export const ordersAdminApi = {
     apiPost<ApiResponse<CancelOrderResponse>>(
       ENDPOINTS.admin.orders.counterCancel(orderId),
       { reason } satisfies CancelOrderRequest,
+    ),
+
+  previewExchange: (orderId: number, params: OrderExchangePreviewParams) =>
+    apiGet<ApiResponse<OrderExchangePreviewResponse>>(
+      ENDPOINTS.admin.orders.counterExchangePreview(orderId),
+      { params, paramsSerializer: { indexes: null } },
+    ),
+
+  startExchange: (orderId: number, body: StartOrderExchangeRequest) =>
+    apiPost<ApiResponse<StartOrderExchangeResponse>>(
+      ENDPOINTS.admin.orders.counterExchange(orderId),
+      body,
     ),
 
   cancelOrderKeepalive: (orderId: number, reason: CancelReason) =>

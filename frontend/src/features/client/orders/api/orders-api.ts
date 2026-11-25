@@ -12,6 +12,10 @@ import type {
   OrderListParams,
   OrderListItemDto,
   OrderDetailDto,
+  OrderExchangePreviewParams,
+  OrderExchangePreviewResponse,
+  StartOrderExchangeRequest,
+  StartOrderExchangeResponse,
 } from "../types";
 import { ENDPOINTS } from "@/api/endpoints";
 
@@ -36,4 +40,13 @@ export const ordersApi = {
 
   cancelOrder: (orderId: number, body: CancelOrderRequest) =>
     apiPost<ApiResponse<CancelOrderResponse>>(ENDPOINTS.orders.cancel(orderId), body),
+
+  previewExchange: (orderId: number, params: OrderExchangePreviewParams) =>
+    apiGet<ApiResponse<OrderExchangePreviewResponse>>(ENDPOINTS.orders.exchangePreview(orderId), {
+      params,
+      paramsSerializer: { indexes: null },
+    }),
+
+  startExchange: (orderId: number, body: StartOrderExchangeRequest) =>
+    apiPost<ApiResponse<StartOrderExchangeResponse>>(ENDPOINTS.orders.exchange(orderId), body),
 };

@@ -8,6 +8,8 @@ import type { OrderDetailDto } from "@/features/client/orders/types";
 import { getOrderShowing } from "@/features/client/orders/utils/order-lines";
 import { OrderCancelAction } from "@/features/client/orders/components/detail/order-cancel-action";
 import { OrderCancelSection } from "@/features/client/orders/components/detail/order-cancel-section";
+import { OrderExchangeAction } from "@/features/client/orders/components/detail/order-exchange-action";
+import { OrderExchangeHistorySection } from "@/features/client/orders/components/exchange/order-exchange-history-section";
 import { OrderDetailHeader } from "@/features/client/orders/components/detail/order-detail-header";
 import { OrderDetailSkeleton } from "@/features/client/orders/components/detail/order-detail-skeleton";
 import { OrderInvoiceSection } from "@/features/client/invoices/components/order-invoice-section";
@@ -58,6 +60,10 @@ const TicketDetailContent = ({ order }: { order: OrderDetailDto }) => {
       <OrderTransactionsSection order={order} />
 
       <OrderInvoiceSection order={order} />
+
+      <OrderExchangeHistorySection order={order} />
+
+      <OrderExchangeAction order={order} />
 
       <OrderCancelAction order={order} />
     </div>

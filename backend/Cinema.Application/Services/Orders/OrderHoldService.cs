@@ -299,7 +299,8 @@ public class OrderHoldService(
         string customerName,
         string? customerPhone,
         CancellationToken cancellationToken,
-        int? counterShiftId = null
+        int? counterShiftId = null,
+        ComboSupplementHold? supplement = null
     )
     {
         if (comboSelections.Count == 0)
@@ -340,7 +341,18 @@ public class OrderHoldService(
 
         var now = DateTime.UtcNow;
         var holdUntil = now.AddMinutes(holdSettings.HoldDurationMinutes);
+        if (supplement is not null && supplement.ValidUntilUtc < holdUntil)
+            holdUntil = supplement.ValidUntilUtc;
         var lines = comboSelectionList.Select(x => NewComboLine(null, x)).ToList();
+        if (supplement is { DiscountPercent: > 0 })
+        {
+            foreach (var line in lines)
+                line.LockedUnitPrice = Math.Round(
+                    line.UnitListPrice * (100 - supplement.DiscountPercent) / 100m,
+                    0,
+                    MidpointRounding.AwayFromZero
+                );
+        }
         var totalAmount = OrderPricing.TotalAmount(lines);
         foreach (var line in lines)
             line.PaidAmount = line.LockedUnitPrice * line.Quantity;
@@ -348,7 +360,8 @@ public class OrderHoldService(
         var order = new Order
         {
             OrderCode = orderCode,
-            Type = OrderType.Combo,
+            Type = supplement is null ? OrderType.Combo : OrderType.Supplement,
+            OriginalOrderId = supplement?.OriginalOrderId,
             Channel = channel,
             UserId = orderUserId,
             CustomerName = customerName,

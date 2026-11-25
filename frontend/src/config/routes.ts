@@ -32,6 +32,8 @@ export const ROUTES = {
     root: "/account",
     ticketDetail: (bookingId: number | string) =>
       `/account/tickets/${bookingId}`,
+    ticketExchange: (bookingId: number | string) =>
+      `/account/tickets/${bookingId}/exchange`,
     profile: "/account/profile",
     tickets: "/account/tickets",
     giftCards: "/account/gift-cards",
@@ -109,6 +111,7 @@ export const ROUTES = {
     catalogActors: "/admin/catalog/actors",
     catalogDirectors: "/admin/catalog/directors",
     orderDetail: (orderId: number | string) => `/admin/orders/${orderId}`,
+    orderExchange: (orderId: number | string) => `/admin/orders/${orderId}/exchange`,
     ordersByShowtime: (showtimeId: number | string) =>
       `/admin/orders?showtimeId=${showtimeId}`,
     roomSeats: (roomId: number | string) => `/admin/rooms/${roomId}/seats`,

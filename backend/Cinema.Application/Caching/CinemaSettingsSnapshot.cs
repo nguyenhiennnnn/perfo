@@ -55,7 +55,8 @@ public sealed record CinemaSettingsSnapshot(
     int GiftCardLockoutMinutes,
     int ExchangeDeadlineHours,
     int MaxExchangesPerOrder,
-    int ExchangeCreditValidityDays
+    int ExchangeCreditValidityDays,
+    int PreorderComboDiscountPercent
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -111,6 +112,7 @@ public sealed record CinemaSettingsSnapshot(
             s.GiftCardLockoutMinutes,
             s.ExchangeDeadlineHours,
             s.MaxExchangesPerOrder,
-            s.ExchangeCreditValidityDays
+            s.ExchangeCreditValidityDays,
+            s.PreorderComboDiscountPercent
         );
 }

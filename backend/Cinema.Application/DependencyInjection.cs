@@ -163,6 +163,8 @@ public static class DependencyInjection
         services.AddScoped<IOrderExchangeEligibilityService, OrderExchangeEligibilityService>();
         services.AddScoped<IOrderExchangePreviewService, OrderExchangePreviewService>();
         services.AddScoped<IOrderExchangeService, OrderExchangeService>();
+        services.AddScoped<IComboSupplementService, ComboSupplementService>();
+        services.AddScoped<IOrderComboSuggestionService, OrderComboSuggestionService>();
         services.AddScoped<IOrderExchangeSettlementService, OrderExchangeSettlementService>();
         services.AddScoped<IOrderExchangeCompletionService, OrderExchangeCompletionService>();
         services.AddScoped<IGiftCardService, GiftCardService>();
@@ -251,6 +253,8 @@ public static class DependencyInjection
         services.AddReportBlock<RevenueByChannelBlock>();
         services.AddReportBlock<DiscountBlock>();
         services.AddReportBlock<RefundCancellationBlock>();
+        services.AddReportBlock<ExchangeReportBlock>();
+        services.AddReportBlock<ExchangeHotspotBlock>();
         services.AddReportBlock<GatewayFeeBlock>();
         services.AddReportBlock<ComboProfitBlock>();
         services.AddReportBlock<MovieProfitBlock>();

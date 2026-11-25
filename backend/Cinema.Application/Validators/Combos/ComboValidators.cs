@@ -12,5 +12,6 @@ public class UpsertComboRequestValidator : AbstractValidator<UpsertComboRequest>
         RuleFor(x => x.Description).MaximumLength(FieldLengths.ComboDescription);
         RuleFor(x => x.Price).GreaterThanOrEqualTo(0);
         RuleFor(x => x.ImageUrl).MaximumLength(FieldLengths.Url);
+        RuleFor(x => x.SuggestedTicketCount).InclusiveBetween(0, 20).When(x => x.SuggestedTicketCount.HasValue);
     }
 }

@@ -159,6 +159,7 @@ public class ComboService(IAppDbContext db) : IComboService
             Price = request.Price,
             ImageUrl = request.ImageUrl,
             IsActive = true,
+            SuggestedTicketCount = request.SuggestedTicketCount is > 0 ? request.SuggestedTicketCount : null,
         };
         db.Combos.Add(combo);
         await db.SaveChangesAsync(cancellationToken);
@@ -179,6 +180,8 @@ public class ComboService(IAppDbContext db) : IComboService
         combo.Description = request.Description;
         combo.Price = request.Price;
         combo.ImageUrl = request.ImageUrl;
+        if (request.SuggestedTicketCount is { } suggestedTicketCount)
+            combo.SuggestedTicketCount = suggestedTicketCount > 0 ? suggestedTicketCount : null;
         await db.SaveChangesAsync(cancellationToken);
         return combo.Adapt<AdminComboDto>();
     }

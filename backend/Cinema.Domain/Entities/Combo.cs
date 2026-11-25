@@ -8,6 +8,7 @@ public class Combo
     public decimal Price { get; set; }
     public string? ImageUrl { get; set; }
     public bool IsActive { get; set; } = true;
+    public int? SuggestedTicketCount { get; set; }
 
     public ICollection<OrderLine> OrderLines { get; set; } = [];
 }

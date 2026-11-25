@@ -68,6 +68,8 @@ export const ENDPOINTS = {
     giftCard: (id: number) => `/bookings/${id}/gift-card`,
     giftCardById: (id: number, giftCardId: number) => `/bookings/${id}/gift-card/${giftCardId}`,
     cancel: (id: number) => `/bookings/${id}/cancel`,
+    exchangePreview: (id: number) => `/bookings/${id}/exchange-preview`,
+    exchange: (id: number) => `/bookings/${id}/exchange`,
     ticketsPdf: (id: number) => `/bookings/${id}/tickets/pdf`,
     invoiceRequests: (id: number) => `/bookings/${id}/invoice-requests`,
     invoiceFile: (id: number, requestId: number) =>
@@ -172,6 +174,8 @@ export const ENDPOINTS = {
       counterGiftCardById: (id: number, giftCardId: number) =>
         `/admin/bookings/${id}/counter-gift-card/${giftCardId}`,
       counterCancel: (id: number) => `/admin/bookings/${id}/counter-cancel`,
+      counterExchangePreview: (id: number) => `/admin/bookings/${id}/counter-exchange-preview`,
+      counterExchange: (id: number) => `/admin/bookings/${id}/counter-exchange`,
       checkin: "/admin/bookings/checkin",
       cardNotPresented: "/admin/bookings/card-not-presented",
       counterSupplementOrder: "/admin/bookings/counter-supplement-order",

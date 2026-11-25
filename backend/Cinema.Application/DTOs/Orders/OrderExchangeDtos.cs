@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Cinema.Application.DTOs.Orders;
 
 public record OrderExchangePreviewQuery(List<int>? OrderLineIds, int? NewShowtimeId);
@@ -60,6 +62,7 @@ public record StartOrderExchangeResponse(
     OrderExchangeSettlementResult? Settlement = null
 );
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum OrderExchangeSettlementKind
 {
     None,

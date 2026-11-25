@@ -16,9 +16,16 @@ public record AdminComboDto(
     string? Description,
     decimal Price,
     string? ImageUrl,
-    bool IsActive
+    bool IsActive,
+    int? SuggestedTicketCount = null
 );
 
-public record UpsertComboRequest(string Name, string? Description, decimal Price, string? ImageUrl);
+public record UpsertComboRequest(
+    string Name,
+    string? Description,
+    decimal Price,
+    string? ImageUrl,
+    int? SuggestedTicketCount = null
+);
 
 public record ToggleComboResponse(int ComboId, bool IsActive);

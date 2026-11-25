@@ -81,6 +81,7 @@ public class CinemaSettings
     public const int DefaultExchangeDeadlineHours = 2;
     public const int DefaultMaxExchangesPerOrder = 1;
     public const int DefaultExchangeCreditValidityDays = 90;
+    public const int DefaultPreorderComboDiscountPercent = 0;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -155,4 +156,6 @@ public class CinemaSettings
     public int MaxExchangesPerOrder { get; set; } = DefaultMaxExchangesPerOrder;
 
     public int ExchangeCreditValidityDays { get; set; } = DefaultExchangeCreditValidityDays;
+
+    public int PreorderComboDiscountPercent { get; set; } = DefaultPreorderComboDiscountPercent;
 }

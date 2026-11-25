@@ -19,6 +19,7 @@ const AccountTicketsPage = lazyRoute(() => import("@/features/client/account/pag
 const AccountReviewsPage = lazyRoute(() => import("@/features/client/account/pages/reviews-page"));
 const ChangePasswordPage = lazyRoute(() => import("@/features/client/account/pages/change-password-page"));
 const AccountTicketDetailPage = lazyRoute(() => import("@/features/client/account/pages/ticket-detail-page"));
+const OrderExchangePage = lazyRoute(() => import("@/features/client/orders/pages/order-exchange-page"));
 const LoginPage = lazyRoute(() => import("@/features/auth/pages/login-page"));
 const RegisterPage = lazyRoute(() => import("@/features/auth/pages/register-page"));
 const ConfirmEmailPage = lazyRoute(() => import("@/features/auth/pages/confirm-email-page"));
@@ -61,6 +62,7 @@ export const clientRoutes: RouteObject[] = [
             ],
           },
           { path: "tickets/:id", lazy: AccountTicketDetailPage },
+          { path: "tickets/:id/exchange", lazy: OrderExchangePage },
         ],
       },
     ],

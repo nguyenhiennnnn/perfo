@@ -35,7 +35,8 @@ public interface IOrderHoldService
         string customerName,
         string? customerPhone,
         CancellationToken cancellationToken,
-        int? counterShiftId = null
+        int? counterShiftId = null,
+        ComboSupplementHold? supplement = null
     );
     Task EnsureWithinBookingLimitsAsync(
         int seatCount,

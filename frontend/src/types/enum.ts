@@ -69,6 +69,7 @@ export const OrderType = {
   Membership: "Membership",
   RoomRental: "RoomRental",
   Supplement: "Supplement",
+  Exchange: "Exchange",
 } as const;
 export type OrderType = (typeof OrderType)[keyof typeof OrderType];
 

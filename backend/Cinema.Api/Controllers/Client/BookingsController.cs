@@ -25,7 +25,9 @@ public class BookingsController(
     IOrderPromotionService orderPromotionService,
     IOrderGiftCardService orderGiftCardService,
     IOrderExchangePreviewService orderExchangePreviewService,
-    IOrderExchangeService orderExchangeService
+    IOrderExchangeService orderExchangeService,
+    IComboSupplementService comboSupplementService,
+    IOrderComboSuggestionService orderComboSuggestionService
 ) : AppControllerBase
 {
     [HttpPost("hold")]
@@ -37,6 +39,30 @@ public class BookingsController(
     {
         var result = await bookingHoldService.HoldSeatsAsync(
             CurrentUserId,
+            request,
+            cancellationToken
+        );
+        return StatusCode(StatusCodes.Status201Created, result);
+    }
+
+    [HttpGet("{orderId:int}/combo-suggestions")]
+    public async Task<ActionResult<OrderComboSuggestionsDto>> GetComboSuggestions(
+        int orderId,
+        CancellationToken cancellationToken
+    ) =>
+        Ok(await orderComboSuggestionService.GetAsync(CurrentUserId, orderId, cancellationToken));
+
+    [HttpPost("{orderId:int}/combo-supplement")]
+    [EnableRateLimiting(RateLimitingExtensions.BookingHoldPolicy)]
+    public async Task<ActionResult<HoldOrderResponse>> CreateComboSupplement(
+        int orderId,
+        [FromBody] ComboSupplementRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await comboSupplementService.CreateAsync(
+            CurrentUserId,
+            orderId,
             request,
             cancellationToken
         );

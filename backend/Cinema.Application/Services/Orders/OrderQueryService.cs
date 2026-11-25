@@ -2,6 +2,7 @@ using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
+using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;
@@ -128,13 +129,82 @@ public class OrderQueryService(
         var tierNames = await LoadTierNamesAsync(order.PriceAdjustments, cancellationToken);
         var promotions = await LoadPromotionsAsync(order.PriceAdjustments, cancellationToken);
 
+        var exchanges = await LoadExchangesAsync(orderId, cancellationToken);
+
         return OrderDetailMapper.ToDetail(
             order,
             summary,
             tierNames,
             promotions,
-            ownerUserId is null
+            ownerUserId is null,
+            exchanges
         );
+    }
+
+    private async Task<List<OrderExchangeHistoryDto>> LoadExchangesAsync(
+        int orderId,
+        CancellationToken cancellationToken
+    )
+    {
+        var rows = await db
+            .OrderExchanges.AsNoTracking()
+            .Where(e => e.OrderId == orderId || e.NewOrderLine.OrderId == orderId)
+            .OrderBy(e => e.ExchangeNumber)
+            .ThenBy(e => e.OrderExchangeId)
+            .Select(e => new
+            {
+                e.OrderExchangeId,
+                e.ExchangeNumber,
+                e.OrderId,
+                OriginalOrderCode = e.Order.OrderCode,
+                NewOrderId = e.NewOrderLine.OrderId,
+                NewOrderCode = e.NewOrderLine.Order.OrderCode,
+                e.NewOrderLine.Order.Channel,
+                e.ExchangedAt,
+                e.OldOrderLineId,
+                e.NewOrderLineId,
+                e.OldShowtimeId,
+                MovieTitle = e.OldShowtime.Movie.Title,
+                OldRoomName = e.OldShowtime.Room.RoomName,
+                OldStartTime = e.OldShowtime.StartTime,
+                OldSeatRow = e.OldOrderLine.ShowtimeSeat!.Seat.SeatRow,
+                OldSeatNumber = e.OldOrderLine.ShowtimeSeat!.Seat.SeatNumber,
+                e.NewShowtimeId,
+                NewRoomName = e.NewShowtime.Room.RoomName,
+                NewStartTime = e.NewShowtime.StartTime,
+                NewSeatRow = e.NewOrderLine.ShowtimeSeat!.Seat.SeatRow,
+                NewSeatNumber = e.NewOrderLine.ShowtimeSeat!.Seat.SeatNumber,
+                e.PriceDifference,
+            })
+            .ToListAsync(cancellationToken);
+
+        return
+        [
+            .. rows.Select(r => new OrderExchangeHistoryDto(
+                r.OrderExchangeId,
+                r.ExchangeNumber,
+                r.OrderId,
+                r.OriginalOrderCode,
+                r.NewOrderId,
+                r.NewOrderCode,
+                r.Channel.ToDtoChannel(),
+                r.ExchangedAt,
+                r.OldOrderLineId,
+                r.NewOrderLineId,
+                r.OldShowtimeId,
+                r.MovieTitle,
+                r.OldRoomName,
+                r.OldStartTime,
+                r.OldSeatRow,
+                r.OldSeatNumber,
+                r.NewShowtimeId,
+                r.NewRoomName,
+                r.NewStartTime,
+                r.NewSeatRow,
+                r.NewSeatNumber,
+                r.PriceDifference
+            )),
+        ];
     }
 
     private async Task<Dictionary<int, OrderPromotionInfo>> LoadPromotionsAsync(

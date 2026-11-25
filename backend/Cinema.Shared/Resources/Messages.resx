@@ -4478,4 +4478,49 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_CancelOrderAllLinesExchanged" xml:space="preserve">
     <value>Tất cả vé của đơn này đã được đổi suất nên không còn dòng nào để hủy. Vui lòng xử lý trên đơn đổi suất tương ứng.</value>
   </data>
+  <data name="Report_Finance_Exchanges_Title" xml:space="preserve">
+    <value>Đổi suất chiếu</value>
+  </data>
+  <data name="Report_Finance_ExchangeHotspots_Title" xml:space="preserve">
+    <value>Phim và khung giờ hay bị đổi</value>
+  </data>
+  <data name="Report_Finance_ExchangeHotspots_Note" xml:space="preserve">
+    <value>Tính theo suất chiếu cũ bị đổi đi, hiển thị tối đa 20 dòng đứng đầu.</value>
+  </data>
+  <data name="Report_Finance_Col_ExchangeCount" xml:space="preserve">
+    <value>Số lần đổi</value>
+  </data>
+  <data name="Report_Finance_Col_ExchangedTickets" xml:space="preserve">
+    <value>Số vé đã đổi</value>
+  </data>
+  <data name="Report_Finance_Col_ExchangeVsCancelRate" xml:space="preserve">
+    <value>Tỷ lệ đổi trên (đổi + hủy)</value>
+  </data>
+  <data name="Report_Finance_Col_ExchangeSurcharge" xml:space="preserve">
+    <value>Chênh lệch thu thêm</value>
+  </data>
+  <data name="Report_Finance_Col_ExchangeCreditIssued" xml:space="preserve">
+    <value>Tín dụng đã cấp</value>
+  </data>
+  <data name="Report_Finance_Col_Movie" xml:space="preserve">
+    <value>Phim</value>
+  </data>
+  <data name="Report_Finance_Col_TimeSlot" xml:space="preserve">
+    <value>Khung giờ chiếu</value>
+  </data>
+  <data name="Report_Finance_Col_ExchangeShare" xml:space="preserve">
+    <value>Tỷ trọng lần đổi</value>
+  </data>
+  <data name="Rule_ComboSupplementOrderNotConfirmed" xml:space="preserve">
+    <value>Chỉ thêm combo được cho đơn đã thanh toán và còn hiệu lực.</value>
+  </data>
+  <data name="Rule_ComboSupplementNoActiveTicket" xml:space="preserve">
+    <value>Đơn này không còn vé hợp lệ để gắn combo đặt trước. Nếu đã đổi suất, vui lòng thêm combo ở đơn đổi suất mới.</value>
+  </data>
+  <data name="Rule_ComboSupplementShowtimeStarted" xml:space="preserve">
+    <value>Suất chiếu đã bắt đầu nên không thể đặt thêm combo cho đơn này.</value>
+  </data>
+  <data name="Combo_SuggestionPurchasedBefore" xml:space="preserve">
+    <value>Bạn đã từng mua combo này</value>
+  </data>
 </root>

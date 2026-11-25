@@ -116,5 +116,31 @@ public record OrderDetailDto(
     DateTime? CancelledAt,
     List<OrderLineDto> Lines,
     List<OrderPriceAdjustmentDto> PriceAdjustments,
-    List<OrderTransactionDto> Transactions
+    List<OrderTransactionDto> Transactions,
+    List<OrderExchangeHistoryDto>? Exchanges = null
+);
+
+public record OrderExchangeHistoryDto(
+    int OrderExchangeId,
+    int ExchangeNumber,
+    int OriginalOrderId,
+    string OriginalOrderCode,
+    int NewOrderId,
+    string NewOrderCode,
+    string Channel,
+    DateTime ExchangedAt,
+    int OldOrderLineId,
+    int NewOrderLineId,
+    int OldShowtimeId,
+    string MovieTitle,
+    string OldRoomName,
+    DateTime OldStartTime,
+    string OldSeatRow,
+    int OldSeatNumber,
+    int NewShowtimeId,
+    string NewRoomName,
+    DateTime NewStartTime,
+    string NewSeatRow,
+    int NewSeatNumber,
+    decimal PriceDifference
 );

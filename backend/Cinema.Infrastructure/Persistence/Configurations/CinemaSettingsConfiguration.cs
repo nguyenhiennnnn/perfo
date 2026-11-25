@@ -172,5 +172,8 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.ExchangeCreditValidityDays)
             .HasDefaultValue(CinemaSettings.DefaultExchangeCreditValidityDays);
+        builder
+            .Property(x => x.PreorderComboDiscountPercent)
+            .HasDefaultValue(CinemaSettings.DefaultPreorderComboDiscountPercent);
     }
 }

@@ -1,3 +1,4 @@
+import type { ApiResponse } from "@/types/api";
 import type { CancelReason, OrderStatus } from "@/types/enum";
 
 export interface ComboSelectionRequest {
@@ -203,6 +204,124 @@ export interface OrderDetailDto {
   lines: OrderLineDto[];
   priceAdjustments: OrderPriceAdjustmentDto[];
   transactions: OrderTransactionDto[];
+  exchanges?: OrderExchangeHistoryDto[];
+}
+
+export interface OrderExchangeHistoryDto {
+  orderExchangeId: number;
+  exchangeNumber: number;
+  originalOrderId: number;
+  originalOrderCode: string;
+  newOrderId: number;
+  newOrderCode: string;
+  channel: string;
+  exchangedAt: string;
+  oldOrderLineId: number;
+  newOrderLineId: number;
+  oldShowtimeId: number;
+  movieTitle: string;
+  oldRoomName: string;
+  oldStartTime: string;
+  oldSeatRow: string;
+  oldSeatNumber: number;
+  newShowtimeId: number;
+  newRoomName: string;
+  newStartTime: string;
+  newSeatRow: string;
+  newSeatNumber: number;
+  priceDifference: number;
+}
+
+export interface OrderExchangePreviewParams {
+  orderLineIds?: number[];
+  newShowtimeId?: number;
+}
+
+export interface OrderExchangeTicketPreviewDto {
+  orderLineId: number;
+  ticketTypeId?: number | null;
+  paidAmount: number;
+  newPrice: number;
+  difference: number;
+}
+
+export interface OrderExchangePricingDto {
+  oldAmount: number;
+  newAmount: number;
+  difference: number;
+  amountDue: number;
+  creditAmount: number;
+  tickets: OrderExchangeTicketPreviewDto[];
+}
+
+export interface OrderExchangeShowtimePreviewDto {
+  showtimeId: number;
+  startTime: string;
+  endTime: string;
+  roomId: number;
+  roomName: string;
+  canExchange: boolean;
+  reason?: string | null;
+  pricing?: OrderExchangePricingDto | null;
+}
+
+export interface OrderExchangePreviewResponse {
+  orderId: number;
+  movieId: number;
+  showtimes: OrderExchangeShowtimePreviewDto[];
+}
+
+export interface ExchangeSeatRequest {
+  orderLineId: number;
+  newShowtimeSeatId: number;
+  expectedPrice?: number | null;
+}
+
+export interface StartOrderExchangeRequest {
+  newShowtimeId: number;
+  seats: ExchangeSeatRequest[];
+  acceptPriceChange?: boolean;
+}
+
+export type OrderExchangeSettlementKind = "None" | "ExchangeCredit" | "CashRefund";
+
+export interface OrderExchangeSettlementResult {
+  kind: OrderExchangeSettlementKind;
+  amount: number;
+  giftCardId?: number | null;
+  giftCardCode?: string | null;
+  giftCardExpiresAt?: string | null;
+  refundTransactionIds: number[];
+}
+
+export interface StartOrderExchangeResponse {
+  exchangeOrderId: number;
+  exchangeOrderCode: string;
+  orderId: number;
+  status: OrderStatus;
+  newShowtimeId: number;
+  oldAmount: number;
+  newAmount: number;
+  difference: number;
+  amountDue: number;
+  creditAmount: number;
+  expiresAt: string;
+  tickets: OrderExchangeTicketPreviewDto[];
+  settlement?: OrderExchangeSettlementResult | null;
+}
+
+export type ExchangeChannel = "customer" | "counter";
+
+export interface OrderExchangeAdapter {
+  channel: ExchangeChannel;
+  preview: (
+    orderId: number,
+    params: OrderExchangePreviewParams,
+  ) => Promise<ApiResponse<OrderExchangePreviewResponse>>;
+  start: (
+    orderId: number,
+    body: StartOrderExchangeRequest,
+  ) => Promise<ApiResponse<StartOrderExchangeResponse>>;
 }
 
 export interface PricedSeat {

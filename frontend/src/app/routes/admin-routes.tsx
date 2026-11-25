@@ -77,6 +77,7 @@ const AdminSpecialDaysPage = lazyRoute(() => import("@/features/admin/pricing/pa
 const AdminPricePreviewPage = lazyRoute(() => import("@/features/admin/pricing/pages/price-preview-page"));
 const AdminOrdersPage = lazyRoute(() => import("@/features/admin/orders/pages/orders-page"));
 const AdminOrderDetailPage = lazyRoute(() => import("@/features/admin/orders/pages/order-detail-page"));
+const AdminOrderExchangePage = lazyRoute(() => import("@/features/admin/orders/pages/order-exchange-page"));
 
 export const adminRoutes: RouteObject[] = [
   {
@@ -113,6 +114,7 @@ export const adminRoutes: RouteObject[] = [
           { path: "schedule-analysis", lazy: AdminScheduleAnalysisPage },
           { path: "orders", lazy: AdminOrdersPage },
           { path: "orders/:id", lazy: AdminOrderDetailPage },
+          { path: "orders/:id/exchange", lazy: AdminOrderExchangePage },
           { path: "bookings/counter", lazy: AdminCounterPage },
           { path: "checkin", lazy: AdminCheckinPage },
           { path: "counter-shifts", lazy: AdminCounterShiftsPage },

@@ -16,7 +16,8 @@ internal static class OrderDetailMapper
         OrderPaymentSummary summary,
         IReadOnlyDictionary<int, string> tierNames,
         IReadOnlyDictionary<int, OrderPromotionInfo> promotions,
-        bool includeStaffInfo
+        bool includeStaffInfo,
+        List<OrderExchangeHistoryDto>? exchanges = null
     ) =>
         new(
             order.OrderId,
@@ -53,7 +54,8 @@ internal static class OrderDetailMapper
                 .PaymentTransactions.OrderBy(t => t.CreatedAt)
                 .ThenBy(t => t.PaymentTransactionId)
                 .Select(t => ToTransaction(t, includeStaffInfo))
-                .ToList()
+                .ToList(),
+            exchanges ?? []
         );
 
     private static OrderEmployeeBriefDto? ToEmployee(Employee? employee) =>

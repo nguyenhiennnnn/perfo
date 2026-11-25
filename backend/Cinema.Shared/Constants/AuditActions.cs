@@ -29,4 +29,7 @@ public static class AuditActions
     public const string ChangeSupportRequestStatus = "ChangeSupportRequestStatus";
     public const string IssueSupportApologyCode = "IssueSupportApologyCode";
     public const string ResendTicketEmail = "ResendTicketEmail";
+    public const string ProposeExceptionalRefund = "ProposeExceptionalRefund";
+    public const string ApproveExceptionalRefund = "ApproveExceptionalRefund";
+    public const string RejectExceptionalRefund = "RejectExceptionalRefund";
 }

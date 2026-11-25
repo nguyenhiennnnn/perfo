@@ -5030,4 +5030,52 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_SupportViewButton" xml:space="preserve">
     <value>Xem đơn hàng</value>
   </data>
+  <data name="Support_AutoSubject_ChargedNotConfirmed" xml:space="preserve">
+    <value>Đã thu tiền nhưng đơn {0} chưa được xác nhận</value>
+  </data>
+  <data name="Support_AutoSubject_OverpaymentRefundFailed" xml:space="preserve">
+    <value>Cần hoàn tiền thủ công cho đơn {0}</value>
+  </data>
+  <data name="Support_AutoMessage_ChargedNotConfirmed" xml:space="preserve">
+    <value>Hệ thống đối soát phát hiện giao dịch {0} qua {1} đã thu {2} VND nhưng đơn {3} chưa được xác nhận. Chúng tôi sẽ kiểm tra và xử lý cho bạn.</value>
+  </data>
+  <data name="Support_AutoMessage_OverpaymentRefundFailed" xml:space="preserve">
+    <value>Giao dịch {0} qua {1} đã thu {2} VND cho đơn {3} nhưng hệ thống chưa thể tự hoàn khoản tiền thu thừa. Chúng tôi sẽ xử lý hoàn tiền cho bạn.</value>
+  </data>
+  <data name="NotFound_ExceptionalRefundProposal" xml:space="preserve">
+    <value>Không tìm thấy đề xuất hoàn tiền.</value>
+  </data>
+  <data name="Forbidden_ExceptionalRefundAdminOnly" xml:space="preserve">
+    <value>Chỉ quản trị mới được duyệt hoặc từ chối đề xuất hoàn tiền.</value>
+  </data>
+  <data name="Forbidden_ExceptionalRefundSelfApprove" xml:space="preserve">
+    <value>Bạn không thể tự duyệt đề xuất hoàn tiền do chính mình tạo.</value>
+  </data>
+  <data name="Rule_ExceptionalRefundNotPending" xml:space="preserve">
+    <value>Đề xuất hoàn tiền này đã được xử lý.</value>
+  </data>
+  <data name="Rule_ExceptionalRefundExceedsRefundable" xml:space="preserve">
+    <value>Số tiền đề xuất vượt số tiền có thể hoàn ({0} VND).</value>
+  </data>
+  <data name="Invalid_ExceptionalRefund_OrderLine" xml:space="preserve">
+    <value>Dòng hàng không thuộc đơn hàng này.</value>
+  </data>
+  <data name="Validation_ExceptionalRefund_ApprovalNoteRequired" xml:space="preserve">
+    <value>Đề xuất vượt ngưỡng duyệt nhanh, vui lòng nhập ghi chú khi duyệt.</value>
+  </data>
+  <data name="Success_ExceptionalRefundProposed" xml:space="preserve">
+    <value>Đã gửi đề xuất hoàn tiền.</value>
+  </data>
+  <data name="Success_ExceptionalRefundApproved" xml:space="preserve">
+    <value>Đã duyệt đề xuất hoàn tiền.</value>
+  </data>
+  <data name="Success_ExceptionalRefundRejected" xml:space="preserve">
+    <value>Đã từ chối đề xuất hoàn tiền.</value>
+  </data>
+  <data name="Refund_ExceptionalDescription" xml:space="preserve">
+    <value>Hoàn tiền ngoại lệ #{0}</value>
+  </data>
+  <data name="Rule_ExceptionalRefundTicketNotCancellable" xml:space="preserve">
+    <value>Một hoặc nhiều vé được chọn không thuộc đơn này, đã hủy, đã đổi hoặc đã check-in nên không thể hủy.</value>
+  </data>
 </root>

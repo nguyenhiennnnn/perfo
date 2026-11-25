@@ -146,6 +146,12 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         IntRange(x => x.ReferralReferredPoints, "referralReferredPoints", 0, 100000);
         IntRange(x => x.ReferralMonthlyRewardLimit, "referralMonthlyRewardLimit", 1, 1000);
         IntRange(x => x.SupportRequestDueHours, "supportRequestDueHours", 1, 720);
+        WholeDecimalRange(
+            x => x.ExceptionalRefundApprovalThreshold,
+            "exceptionalRefundApprovalThreshold",
+            0,
+            100_000_000
+        );
 
         RuleFor(x => x.GiftCardDenominations!)
             .Must(BeValidDenominations)

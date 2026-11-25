@@ -168,6 +168,8 @@ public class SettingsService(
             settings.ReferralMonthlyRewardLimit = referralMonthlyRewardLimit;
         if (request.SupportRequestDueHours is { } supportRequestDueHours)
             settings.SupportRequestDueHours = supportRequestDueHours;
+        if (request.ExceptionalRefundApprovalThreshold is { } exceptionalRefundApprovalThreshold)
+            settings.ExceptionalRefundApprovalThreshold = exceptionalRefundApprovalThreshold;
         if (settings.GiftCardMinAmount > settings.GiftCardMaxAmount)
             throw new BusinessRuleException(Messages.Validation_GiftCardAmount_MinGreaterThanMax);
         if (
@@ -239,6 +241,7 @@ public class SettingsService(
             ReferralReferredPoints = settings.ReferralReferredPoints,
             ReferralMonthlyRewardLimit = settings.ReferralMonthlyRewardLimit,
             SupportRequestDueHours = settings.SupportRequestDueHours,
+            ExceptionalRefundApprovalThreshold = settings.ExceptionalRefundApprovalThreshold,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

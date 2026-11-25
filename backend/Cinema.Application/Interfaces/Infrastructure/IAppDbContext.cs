@@ -91,6 +91,7 @@ public interface IAppDbContext
     DbSet<InvoiceRequest> InvoiceRequests { get; }
     DbSet<SupportRequest> SupportRequests { get; }
     DbSet<SupportMessage> SupportMessages { get; }
+    DbSet<ExceptionalRefundProposal> ExceptionalRefundProposals { get; }
 }
 
 public static class AppDbContextExtensions

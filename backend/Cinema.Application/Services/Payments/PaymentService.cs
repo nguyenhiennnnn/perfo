@@ -2,6 +2,7 @@
 using Cinema.Application.Interfaces.Ledger;
 using Cinema.Application.Interfaces.Orders;
 using Cinema.Application.Interfaces.Payments;
+using Cinema.Application.Interfaces.Support;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
@@ -19,6 +20,7 @@ public class PaymentService(
     IPaymentLedgerService ledger,
     IPaymentRefundService refundService,
     IOrderConfirmationService confirmationService,
+    ISupportAutoRequestService supportAutoRequests,
     IEnumerable<IPaymentGateway> paymentGateways,
     ILogger<PaymentService> logger,
     IOptions<StripeOptions>? stripeOptions = null
@@ -397,6 +399,24 @@ public class PaymentService(
             orderId,
             result.Amount
         );
+
+        try
+        {
+            await supportAutoRequests.EnsureForTransactionAsync(
+                chargeId,
+                SupportAutoRequestReason.OverpaymentRefundFailed,
+                cancellationToken
+            );
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            logger.LogError(
+                ex,
+                "SupportAutoRequestFailed PaymentTransactionId {Id} OrderId {OrderId}",
+                chargeId,
+                orderId
+            );
+        }
     }
 
     private static bool IsAlreadyProcessed(PaymentTransaction charge, bool callbackSuccess) =>

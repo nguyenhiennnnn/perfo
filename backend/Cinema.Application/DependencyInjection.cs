@@ -246,6 +246,8 @@ public static class DependencyInjection
         services.AddScoped<IInvoiceAdminService, InvoiceAdminService>();
         services.AddScoped<ISupportRequestService, SupportRequestService>();
         services.AddScoped<ISupportRequestStaffService, SupportRequestStaffService>();
+        services.AddScoped<ISupportAutoRequestService, SupportAutoRequestService>();
+        services.AddScoped<IExceptionalRefundService, ExceptionalRefundService>();
         services.AddScoped<IRoomClosureService, RoomClosureService>();
         services.AddScoped<ICounterShiftService, CounterShiftService>();
         services.AddScoped<IUnclosedShiftAlertService, UnclosedShiftAlertService>();
@@ -289,7 +291,7 @@ public static class DependencyInjection
         services.AddScoped<ISalesStatsRebuildService, SalesStatsRebuildService>();
         services.AddScoped<IReconciliationService, ReconciliationService>();
         services.AddScoped<IReconciliationAdminService, ReconciliationAdminService>();
-        services.AddScoped<IReconciliationAnomalyHook, NullReconciliationAnomalyHook>();
+        services.AddScoped<IReconciliationAnomalyHook, SupportReconciliationAnomalyHook>();
         services.AddScoped<IReconciliationImportServiceFactory, ReconciliationImportServiceFactory>();
         services.AddScoped<IImportApplyModule, ReconciliationImportApplyModule>();
         services.AddScoped<IReconciliationStripeService, ReconciliationStripeService>();

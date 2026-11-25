@@ -196,5 +196,9 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.SupportRequestDueHours)
             .HasDefaultValue(CinemaSettings.DefaultSupportRequestDueHours);
+        builder
+            .Property(x => x.ExceptionalRefundApprovalThreshold)
+            .HasColumnType("decimal(18,2)")
+            .HasDefaultValue(CinemaSettings.DefaultExceptionalRefundApprovalThreshold);
     }
 }

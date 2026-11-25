@@ -49,6 +49,11 @@ public class SupportRequestConfiguration : IEntityTypeConfiguration<SupportReque
             .WithMany()
             .HasForeignKey(x => x.ApologyPromotionId)
             .OnDelete(DeleteBehavior.SetNull);
+        builder
+            .HasOne(x => x.SourcePaymentTransaction)
+            .WithMany()
+            .HasForeignKey(x => x.SourcePaymentTransactionId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder
             .HasIndex(x => new { x.UserId, x.LastMessageAt })
@@ -60,6 +65,11 @@ public class SupportRequestConfiguration : IEntityTypeConfiguration<SupportReque
         builder
             .HasIndex(x => x.AssignedToUserId)
             .HasDatabaseName("IX_SupportRequests_AssignedToUserId");
+        builder
+            .HasIndex(x => x.SourcePaymentTransactionId)
+            .IsUnique()
+            .HasFilter("\"SourcePaymentTransactionId\" IS NOT NULL")
+            .HasDatabaseName("UX_SupportRequests_SourcePaymentTransactionId");
     }
 }
 

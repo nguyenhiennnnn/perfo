@@ -89,6 +89,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<InvoiceRequest> InvoiceRequests => Set<InvoiceRequest>();
     public DbSet<SupportRequest> SupportRequests => Set<SupportRequest>();
     public DbSet<SupportMessage> SupportMessages => Set<SupportMessage>();
+    public DbSet<ExceptionalRefundProposal> ExceptionalRefundProposals => Set<ExceptionalRefundProposal>();
     public DbSet<CounterShift> CounterShifts => Set<CounterShift>();
     public DbSet<DailyClosing> DailyClosings => Set<DailyClosing>();
     public DbSet<LedgerAdjustment> LedgerAdjustments => Set<LedgerAdjustment>();

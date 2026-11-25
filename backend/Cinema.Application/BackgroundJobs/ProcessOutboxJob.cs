@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Events;
 using Hangfire;
 
 namespace Cinema.Application.BackgroundJobs;

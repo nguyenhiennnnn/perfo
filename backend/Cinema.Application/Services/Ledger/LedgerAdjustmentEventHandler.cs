@@ -1,11 +1,14 @@
-using Cinema.Application.Caching;
+﻿using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Ledger;
 using Cinema.Application.Events;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Ledger;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
+using Cinema.Application.Interfaces.Events;
+
 
 namespace Cinema.Application.Services.Ledger;
 

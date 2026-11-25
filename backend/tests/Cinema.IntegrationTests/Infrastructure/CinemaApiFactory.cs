@@ -1,4 +1,6 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Auth;
+using Cinema.Application.Interfaces.Notifications;
+using Cinema.Application.Interfaces.Payments;
 using Cinema.Infrastructure.Persistence;
 using Cinema.IntegrationTests.Fakes;
 using Cinema.Shared.Constants;

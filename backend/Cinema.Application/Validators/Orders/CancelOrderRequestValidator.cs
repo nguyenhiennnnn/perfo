@@ -1,5 +1,5 @@
-using Cinema.Application.DTOs.Orders;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Orders;
+using Cinema.Application.Interfaces.Auth;
 using Cinema.Application.Utils;
 using Cinema.Shared.Resources;
 using FluentValidation;

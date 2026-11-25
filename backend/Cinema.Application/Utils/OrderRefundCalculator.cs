@@ -1,8 +1,10 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
+using Cinema.Application.Interfaces.Orders;
+
 
 namespace Cinema.Application.Utils;
 

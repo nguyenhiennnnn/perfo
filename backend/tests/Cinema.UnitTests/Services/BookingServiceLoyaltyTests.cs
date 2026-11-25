@@ -1,5 +1,5 @@
-using Cinema.Application.BackgroundJobs;
-using Cinema.Application.DTOs.Bookings;
+﻿using Cinema.Application.BackgroundJobs;
+using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;

@@ -1,6 +1,8 @@
-using Cinema.Application.Caching;
+﻿using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Pricing;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Pricing;
+using Cinema.Application.Interfaces.Reports;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;

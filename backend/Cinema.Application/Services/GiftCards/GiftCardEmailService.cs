@@ -1,6 +1,9 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Notifications;
 using Cinema.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Cinema.Application.Interfaces.GiftCards;
+
 
 namespace Cinema.Application.Services.GiftCards;
 

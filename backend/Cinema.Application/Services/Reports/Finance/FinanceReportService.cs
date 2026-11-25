@@ -1,5 +1,5 @@
-using Cinema.Application.DTOs.Reports;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Reports;
+using Cinema.Application.Interfaces.Reports;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 

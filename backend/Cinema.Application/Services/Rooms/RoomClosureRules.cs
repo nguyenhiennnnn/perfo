@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;

@@ -1,5 +1,7 @@
-using Cinema.Application.Caching;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Caching;
+using Cinema.Application.Interfaces.Auth;
+using Cinema.Application.Interfaces.GiftCards;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Domain.Entities;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;

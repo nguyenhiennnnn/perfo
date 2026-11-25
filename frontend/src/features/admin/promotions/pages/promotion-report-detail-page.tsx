@@ -30,6 +30,7 @@ import {
   getPromotionTypeLabel,
   getTimeSlotLabel,
 } from "../utils/promotion-admin-labels";
+import { FilterBar } from "@/components/common/filter/filter-bar";
 
 const CHANNEL_ORDER = ["Online", "Counter"];
 const TIME_SLOT_ORDER = ["Morning", "Afternoon", "Evening", "Night"];
@@ -218,7 +219,7 @@ const AdminPromotionReportDetailPage = () => {
         }
       />
 
-      <div className="flex flex-wrap items-center gap-3">
+      <FilterBar>
         <DateFilterPicker
           value={fromDate}
           onChange={(value) => setParams({ fromDate: value })}
@@ -237,7 +238,7 @@ const AdminPromotionReportDetailPage = () => {
           <RotateCcw className="size-4" />
           <span>Đặt lại</span>
         </Button>
-      </div>
+      </FilterBar>
 
       <QueryState
         query={report}

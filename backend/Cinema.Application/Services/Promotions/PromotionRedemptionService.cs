@@ -1,6 +1,7 @@
-using Cinema.Application.DTOs.Common;
+﻿using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Promotions;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Promotions;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;

@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Reports;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 

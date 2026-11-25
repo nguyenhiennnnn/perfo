@@ -18,6 +18,7 @@ import { getDefaultReportRange } from "@/features/admin/reports/utils/default-ra
 import { useDashboardSeatHeatmap } from "../hooks/use-dashboard";
 import { SEAT_HEATMAP_MODE_OPTIONS } from "../utils/seat-heatmap";
 import { SeatHeatmapMap } from "./seat-heatmap-map";
+import { FilterBar } from "@/components/common/filter/filter-bar";
 
 const DEFAULT_RANGE_DAYS = 14;
 const MAP_SKELETON_CLASS = "h-96";
@@ -79,9 +80,9 @@ export const SeatHeatmapSection = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+        <FilterBar>
           <SelectField
-            className="col-span-2 md:col-span-1"
+            className="sm:w-48"
             value={roomId}
             onChange={(value) => void setParams({ heatRoom: Number(value) })}
             options={roomItems}
@@ -117,7 +118,7 @@ export const SeatHeatmapSection = () => {
             <RotateCcw className="size-4" />
             <span>Đặt lại</span>
           </Button>
-        </div>
+        </FilterBar>
 
         <Tabs
           value={params.heatMode}

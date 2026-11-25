@@ -3,7 +3,6 @@ import { ArrowRightLeft, X } from "lucide-react";
 import { DataTable } from "@/components/common/data-table/data-table";
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { DEFAULT_PAGE } from "@/config/default-constants";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useAdminRoomChangeRefundParams } from "@/hooks/use-query-params";
@@ -14,6 +13,7 @@ import { createRoomChangeRefundColumns } from "../components/room-change-refund-
 import { useRoomChangeRefundConfirm } from "../hooks/use-room-change-refund-confirm";
 import { useRoomChangeRefunds } from "../hooks/use-room-change-refunds";
 import { RoomChangeRefundStatus } from "../types";
+import { FilterBar, FilterSearch } from "@/components/common/filter/filter-bar";
 
 const STATUS_TABS: { value: RoomChangeRefundStatus; label: string }[] = [
   { value: RoomChangeRefundStatus.Pending, label: "Chờ hoàn" },
@@ -67,12 +67,11 @@ const AdminRoomChangeRefundsPage = () => {
         ))}
       </div>
 
-      <div className="mb-4 flex flex-wrap items-center gap-3">
-        <Input
+      <FilterBar className="mb-4">
+        <FilterSearch
           placeholder="Tìm theo mã đơn..."
           value={params.orderCode}
-          onChange={(e) => setParams({ orderCode: e.target.value, page: DEFAULT_PAGE })}
-          className="w-full md:max-w-xs"
+          onChange={(value) => setParams({ orderCode: value, page: DEFAULT_PAGE })}
         />
         {params.showtimeId !== null && (
           <Button
@@ -84,7 +83,7 @@ const AdminRoomChangeRefundsPage = () => {
             <X className="size-3.5" />
           </Button>
         )}
-      </div>
+      </FilterBar>
 
       <DataTable
         columns={columns}

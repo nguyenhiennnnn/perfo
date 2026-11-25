@@ -1,7 +1,8 @@
-using Cinema.Api.Extensions;
+﻿using Cinema.Api.Extensions;
 using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Promotions;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.ImportExport;
+using Cinema.Application.Interfaces.Promotions;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;

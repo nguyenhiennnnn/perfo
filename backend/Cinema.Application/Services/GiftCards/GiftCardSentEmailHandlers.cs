@@ -1,5 +1,8 @@
-using Cinema.Application.Events;
+﻿using Cinema.Application.Events;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Events;
+using Cinema.Application.Interfaces.GiftCards;
+
 
 namespace Cinema.Application.Services.GiftCards;
 

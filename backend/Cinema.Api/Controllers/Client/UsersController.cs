@@ -1,9 +1,12 @@
-using Cinema.Api.Filters;
+﻿using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Auth;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Reviews;
 using Cinema.Application.DTOs.Users;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Auth;
+using Cinema.Application.Interfaces.Promotions;
+using Cinema.Application.Interfaces.Reviews;
+using Cinema.Application.Interfaces.Users;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Cinema.Shared.Results;

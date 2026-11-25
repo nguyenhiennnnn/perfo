@@ -1,5 +1,7 @@
-using Cinema.Application.DTOs.Orders;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Orders;
+using Cinema.Application.Interfaces.Combos;
+using Cinema.Application.Interfaces.CounterShifts;
+using Cinema.Application.Interfaces.Orders;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Resources;
 using Microsoft.Extensions.Logging;

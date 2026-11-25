@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Payments;
 using Cinema.Domain.Enums;
 
 namespace Cinema.Application.Utils;

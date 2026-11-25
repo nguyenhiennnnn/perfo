@@ -1,8 +1,11 @@
-using Cinema.Application.DTOs.GiftCards;
+﻿using Cinema.Application.DTOs.GiftCards;
 using Cinema.Application.Events;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.GiftCards;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Cinema.Application.Interfaces.Events;
+
 
 namespace Cinema.Application.Services.GiftCards;
 

@@ -1,5 +1,5 @@
-using Cinema.Application.DTOs.Pdf;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Pdf;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Options;
 using Cinema.Shared.Resources;
 using Microsoft.Extensions.Options;

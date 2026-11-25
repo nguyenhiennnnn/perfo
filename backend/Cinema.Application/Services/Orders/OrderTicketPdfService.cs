@@ -1,7 +1,8 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Pdf;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Orders;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;

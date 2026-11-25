@@ -1,5 +1,5 @@
-using Cinema.Application.DTOs.Common;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Common;
+using Cinema.Application.Interfaces.ImportExport;
 using Cinema.Application.Utils;
 
 namespace Cinema.Application.Services.ImportExport;

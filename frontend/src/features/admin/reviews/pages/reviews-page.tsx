@@ -21,6 +21,7 @@ import { useTablePagination } from "@/hooks/use-table-pagination";
 import { stripNulls } from "@/lib/query-params";
 import { MessageSquareText } from "lucide-react";
 import { DEFAULT_PAGE } from "@/config/default-constants";
+import { FilterBar } from "@/components/common/filter/filter-bar";
 
 const ratingOptions = [
   { value: "all", label: "Tất cả số sao" },
@@ -86,7 +87,7 @@ const AdminReviewsPage = () => {
         description="Quản lý và kiểm duyệt các đánh giá từ người dùng."
       />
 
-      <div className="mb-4 flex justify-end">
+      <FilterBar className="mb-4">
         <SelectField
           value={params.rating ? String(params.rating) : "all"}
           onChange={(v) =>
@@ -95,9 +96,9 @@ const AdminReviewsPage = () => {
           options={ratingOptions}
           getOptionValue={(o) => o.value}
           getOptionLabel={(o) => o.label}
-          className="w-40"
+          className="sm:w-48"
         />
-      </div>
+      </FilterBar>
 
       <DataTable
         columns={columns}

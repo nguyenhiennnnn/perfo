@@ -1,5 +1,5 @@
-using System.Collections.Concurrent;
-using Cinema.Application.Interfaces;
+﻿using System.Collections.Concurrent;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Shared.Resources;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;

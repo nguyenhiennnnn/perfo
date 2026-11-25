@@ -1,4 +1,10 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Ai;
+using Cinema.Application.Interfaces.Auth;
+using Cinema.Application.Interfaces.Import;
+using Cinema.Application.Interfaces.ImportExport;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Notifications;
+using Cinema.Application.Interfaces.Payments;
 using Cinema.Application.Options;
 using Cinema.Infrastructure.Ai;
 using Cinema.Infrastructure.Auth;

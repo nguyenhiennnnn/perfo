@@ -1,5 +1,6 @@
-using Cinema.Application.DTOs.Common;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Common;
+using Cinema.Application.Interfaces.Import;
+using Cinema.Application.Interfaces.ImportExport;
 using Cinema.Application.Utils;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;

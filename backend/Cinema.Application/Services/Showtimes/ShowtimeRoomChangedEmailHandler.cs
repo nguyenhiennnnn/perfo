@@ -1,8 +1,12 @@
-using Cinema.Application.Events;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Events;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Notifications;
 using Cinema.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Cinema.Application.Interfaces.Events;
+using Cinema.Application.Interfaces.Users;
+
 
 namespace Cinema.Application.Services.Showtimes;
 

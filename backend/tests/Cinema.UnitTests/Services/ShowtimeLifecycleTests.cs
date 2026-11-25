@@ -1,4 +1,4 @@
-using Cinema.Application.DTOs.Bookings;
+﻿using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;

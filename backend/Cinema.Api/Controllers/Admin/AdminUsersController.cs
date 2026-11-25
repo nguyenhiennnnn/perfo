@@ -1,7 +1,7 @@
-using Cinema.Api.Filters;
+﻿using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Employees;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Users;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Cinema.Shared.Results;

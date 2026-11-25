@@ -1,4 +1,4 @@
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Inventory;
 using Cinema.Application.DTOs.Showtimes;
@@ -6,6 +6,8 @@ using Cinema.Application.Interfaces;
 using Cinema.Application.Services.Pricing;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
+using Cinema.Application.Interfaces.Orders;
+
 
 namespace Cinema.Application.Services.Audit;
 

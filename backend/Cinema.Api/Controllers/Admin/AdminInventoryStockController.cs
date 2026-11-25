@@ -1,5 +1,5 @@
-using Cinema.Application.DTOs.Inventory;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Inventory;
+using Cinema.Application.Interfaces.Inventory;
 using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,5 +1,5 @@
-using System.Collections.Concurrent;
-using Cinema.Application.Interfaces;
+﻿using System.Collections.Concurrent;
+using Cinema.Application.Interfaces.Notifications;
 
 namespace Cinema.IntegrationTests.Fakes;
 

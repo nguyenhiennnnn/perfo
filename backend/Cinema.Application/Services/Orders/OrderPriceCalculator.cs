@@ -1,5 +1,8 @@
-using Cinema.Application.Caching;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Caching;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Orders;
+using Cinema.Application.Interfaces.Pricing;
+using Cinema.Application.Interfaces.Promotions;
 using Cinema.Application.Services.Pricing;
 using Cinema.Application.Services.Promotions;
 using Cinema.Application.Utils;

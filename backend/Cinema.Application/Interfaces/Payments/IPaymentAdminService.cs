@@ -1,0 +1,29 @@
+﻿using Cinema.Application.DTOs.Common;
+using Cinema.Application.DTOs.Payments;
+
+namespace Cinema.Application.Interfaces.Payments;
+
+public record AdminPaymentListFilter(
+    string? Status,
+    string? PaymentMethod,
+    DateOnly? FromDate,
+    DateOnly? ToDate,
+    string? Search,
+    bool? NeedsRefund = null,
+    string? Type = null,
+    string? OrderCode = null
+);
+
+public interface IPaymentAdminService
+{
+    Task<OffsetPageResult<AdminPaymentListItemDto>> GetPaymentsAsync(
+        AdminPaymentListFilter filter,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken
+    );
+    Task<AdminPaymentDetailDto> GetPaymentDetailAsync(
+        int transactionId,
+        CancellationToken cancellationToken
+    );
+}

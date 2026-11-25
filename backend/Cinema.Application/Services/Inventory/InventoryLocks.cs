@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Services.Inventory;

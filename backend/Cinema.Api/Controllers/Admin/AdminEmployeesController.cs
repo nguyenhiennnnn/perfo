@@ -1,6 +1,6 @@
 ﻿using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Employees;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Employees;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Cinema.Shared.Results;

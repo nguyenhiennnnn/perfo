@@ -1,6 +1,8 @@
-using Cinema.Application.DTOs.Common;
+﻿using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Payments;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Ledger;
+using Cinema.Application.Interfaces.Payments;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;

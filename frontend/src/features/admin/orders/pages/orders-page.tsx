@@ -8,7 +8,6 @@ import { EnumSelectFilter } from "@/components/common/filter/enum-select-filter"
 import { ExportButton } from "@/components/common/export-button";
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ALL_STATUSES_LABEL, DEFAULT_PAGE, STATUS_LABEL } from "@/config/default-constants";
 import { ROUTES } from "@/config/routes";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
@@ -20,6 +19,7 @@ import { stripNulls } from "@/lib/query-params";
 import { createOrderColumns } from "../components/order-columns";
 import { useAdminOrders } from "../hooks/use-admin-orders";
 import type { AdminOrderListItemDto } from "../types";
+import { FilterBar, FilterSearch } from "@/components/common/filter/filter-bar";
 
 const AdminOrdersPage = () => {
   const [params, setParams] = useAdminOrderParams();
@@ -83,12 +83,11 @@ const AdminOrdersPage = () => {
         </div>
       )}
 
-      <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-        <Input
+      <FilterBar className="mb-4">
+        <FilterSearch
           placeholder="Tìm theo mã đơn, tên khách, số điện thoại..."
           value={params.search}
-          onChange={(e) => setParams({ search: e.target.value, page: DEFAULT_PAGE })}
-          className="col-span-2 md:col-span-3 xl:col-span-2"
+          onChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         />
         <EnumSelectFilter
           value={params.status}
@@ -121,7 +120,7 @@ const AdminOrdersPage = () => {
           onChange={(toDate) => setParams({ toDate, page: DEFAULT_PAGE })}
           placeholder="Đến ngày"
         />
-      </div>
+      </FilterBar>
 
       <DataTable
         columns={columns}

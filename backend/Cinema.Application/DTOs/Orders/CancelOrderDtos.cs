@@ -1,6 +1,8 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
+using Cinema.Application.Interfaces.Orders;
+
 
 namespace Cinema.Application.DTOs.Orders;
 

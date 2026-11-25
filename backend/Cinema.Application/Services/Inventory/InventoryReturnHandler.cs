@@ -1,9 +1,12 @@
-using Cinema.Application.DTOs.Inventory;
+﻿using Cinema.Application.DTOs.Inventory;
 using Cinema.Application.Events;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Inventory;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
+using Cinema.Application.Interfaces.Events;
+
 
 namespace Cinema.Application.Services.Inventory;
 

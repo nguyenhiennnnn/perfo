@@ -1,6 +1,6 @@
-using Cinema.Api.Filters;
+﻿using Cinema.Api.Filters;
 using Cinema.Application.DTOs.DailyClosings;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.DailyClosings;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;

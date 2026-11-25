@@ -1,5 +1,5 @@
-using Cinema.Application.DTOs.ImportExport;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.ImportExport;
+using Cinema.Application.Interfaces.Notifications;
 using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.SignalR;
 

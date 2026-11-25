@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Auth;
 using Cinema.Application.Options;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;

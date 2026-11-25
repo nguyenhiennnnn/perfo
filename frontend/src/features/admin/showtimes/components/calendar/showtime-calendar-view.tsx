@@ -33,6 +33,7 @@ import {
 import { ShowtimeCalendarDay } from "./showtime-calendar-day";
 import { ShowtimeCalendarLegend } from "./showtime-calendar-legend";
 import { LOOKUP_PAGE_SIZE, SKELETON_LIST_COUNT } from "@/config/default-constants";
+import { FilterBar } from "@/components/common/filter/filter-bar";
 
 interface ShowtimeCalendarViewProps {
   onSelectShowtime?: (showtime: ShowtimeCalendarItemDto) => void;
@@ -105,18 +106,16 @@ export const ShowtimeCalendarView = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+      <FilterBar>
         <DateFilterPicker
           value={params.from}
           onChange={(from) => setParams({ from })}
           placeholder="Từ ngày"
-          className="sm:w-44"
         />
         <DateFilterPicker
           value={params.to}
           onChange={(to) => setParams({ to })}
           placeholder="Đến ngày"
-          className="sm:w-44"
         />
         {canFilterByRoom && (
           <SelectField
@@ -126,7 +125,7 @@ export const ShowtimeCalendarView = ({
             getOptionValue={(room) => room.roomId}
             getOptionLabel={(room) => room.roomName}
             placeholder="Phòng chiếu"
-            className="sm:w-44"
+            className="sm:w-48"
           />
         )}
         <EnumSelectFilter
@@ -134,9 +133,8 @@ export const ShowtimeCalendarView = ({
           onChange={(status) => setParams({ status })}
           options={showtimeStatusOptions}
           placeholder="Trạng thái suất chiếu"
-          className="sm:w-52"
         />
-      </div>
+      </FilterBar>
 
       <ShowtimeCalendarLegend editable={Boolean(onSelectShowtime)} />
 

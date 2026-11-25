@@ -1,8 +1,12 @@
-using Cinema.Api.Filters;
+﻿using Cinema.Api.Filters;
 using Cinema.Application.DTOs.GiftCards;
 using Cinema.Application.DTOs.Invoices;
 using Cinema.Application.DTOs.Orders;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Bookings;
+using Cinema.Application.Interfaces.Combos;
+using Cinema.Application.Interfaces.CounterShifts;
+using Cinema.Application.Interfaces.Invoices;
+using Cinema.Application.Interfaces.Orders;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;

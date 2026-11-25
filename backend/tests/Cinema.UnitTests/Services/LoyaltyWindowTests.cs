@@ -1,4 +1,4 @@
-using Cinema.Application.DTOs.Bookings;
+﻿using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Services.Bookings;
 using Cinema.Domain.Entities;
 using Cinema.UnitTests.TestSupport;

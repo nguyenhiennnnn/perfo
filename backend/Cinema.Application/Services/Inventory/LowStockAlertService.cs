@@ -1,4 +1,6 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Inventory;
+using Cinema.Application.Interfaces.Notifications;
 using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

@@ -1,4 +1,4 @@
-using Cinema.Application.DTOs.Bookings;
+﻿using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
@@ -7,6 +7,8 @@ using Cinema.UnitTests.TestSupport;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Shouldly;
+using Cinema.Application.Interfaces.Payments;
+
 
 namespace Cinema.UnitTests.Services;
 

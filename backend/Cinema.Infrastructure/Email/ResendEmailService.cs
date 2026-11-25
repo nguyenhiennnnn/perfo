@@ -1,7 +1,7 @@
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Notifications;
 using Cinema.Application.Options;
 using Cinema.Shared.Resources;
 using Microsoft.Extensions.Logging;

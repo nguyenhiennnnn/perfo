@@ -1,5 +1,5 @@
-using Cinema.Application.DTOs.Settings;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Settings;
+using Cinema.Application.Interfaces.Settings;
 using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 

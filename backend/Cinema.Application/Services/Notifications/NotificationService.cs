@@ -1,6 +1,6 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Cinema.Application.BackgroundJobs;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Notifications;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;

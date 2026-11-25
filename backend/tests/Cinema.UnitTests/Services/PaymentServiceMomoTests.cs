@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Payments;
 using Cinema.Application.Options;
 using Cinema.Application.Services.Notifications;
 using Cinema.Application.Services.Payments;

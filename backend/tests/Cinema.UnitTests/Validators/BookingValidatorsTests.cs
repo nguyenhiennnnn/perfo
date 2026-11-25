@@ -1,5 +1,4 @@
-using Cinema.Application.DTOs.Bookings;
-using Cinema.Application.DTOs.Orders;
+﻿using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Validators.Bookings;
 using Cinema.Application.Validators.Orders;
 using FluentValidation.TestHelper;

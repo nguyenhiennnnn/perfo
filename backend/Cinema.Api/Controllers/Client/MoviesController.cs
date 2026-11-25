@@ -1,6 +1,7 @@
-using Cinema.Api.Filters;
+﻿using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Reviews;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Movies;
+using Cinema.Application.Interfaces.Reviews;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;

@@ -1,5 +1,8 @@
-using Cinema.Application.Caching;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Caching;
+using Cinema.Application.Interfaces.Audit;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Reconciliation;
+using Cinema.Application.Interfaces.Reports;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;

@@ -1,9 +1,10 @@
-using Cinema.Api.Extensions;
+﻿using Cinema.Api.Extensions;
 using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Import;
 using Cinema.Application.DTOs.ImportExport;
 using Cinema.Application.DTOs.Movies;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Import;
+using Cinema.Application.Interfaces.Movies;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;

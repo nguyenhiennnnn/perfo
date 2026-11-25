@@ -1,8 +1,8 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Payments;
 using Cinema.Application.Options;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;

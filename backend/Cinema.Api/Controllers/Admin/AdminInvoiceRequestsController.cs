@@ -1,6 +1,6 @@
-using Cinema.Api.Filters;
+﻿using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Invoices;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Invoices;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;

@@ -1,5 +1,9 @@
-using Cinema.Application.Events;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Events;
+using Cinema.Application.Interfaces.Audit;
+using Cinema.Application.Interfaces.Events;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Ledger;
+using Cinema.Application.Interfaces.Payments;
 using Cinema.Application.Services.Audit;
 using Cinema.Application.Services.CounterShifts;
 using Cinema.Application.Utils;

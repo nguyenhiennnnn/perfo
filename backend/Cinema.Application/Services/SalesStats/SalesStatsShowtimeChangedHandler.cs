@@ -1,5 +1,7 @@
-using Cinema.Application.Events;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Events;
+using Cinema.Application.Interfaces.Reports;
+using Cinema.Application.Interfaces.Events;
+
 
 namespace Cinema.Application.Services.SalesStats;
 

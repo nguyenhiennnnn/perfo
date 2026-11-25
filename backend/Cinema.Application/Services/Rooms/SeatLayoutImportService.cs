@@ -1,7 +1,11 @@
-using Cinema.Application.DTOs.Common;
+﻿using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Import;
 using Cinema.Application.DTOs.Rooms;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Bookings;
+using Cinema.Application.Interfaces.Import;
+using Cinema.Application.Interfaces.ImportExport;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Rooms;
 using Cinema.Application.Services.Import;
 using Cinema.Application.Services.ImportExport;
 using Cinema.Application.Utils;

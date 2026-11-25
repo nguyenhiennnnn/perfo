@@ -1,8 +1,10 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
+using Cinema.Application.Interfaces.Notifications;
+
 
 namespace Cinema.Application.Services.Orders;
 

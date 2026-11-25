@@ -121,7 +121,6 @@ const AdminRoomClosuresPage = () => {
           options={roomOptions}
           placeholder="Lọc theo phòng chiếu"
           allLabel="Tất cả phòng"
-          className="sm:w-56"
         />
       </div>
 

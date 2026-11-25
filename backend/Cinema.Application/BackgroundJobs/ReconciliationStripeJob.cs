@@ -1,6 +1,9 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Cinema.Application.Caching;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.ImportExport;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Payments;
+using Cinema.Application.Interfaces.Reconciliation;
 using Cinema.Application.Services.ImportExport;
 using Cinema.Application.Services.Reconciliation;
 using Cinema.Application.Utils;

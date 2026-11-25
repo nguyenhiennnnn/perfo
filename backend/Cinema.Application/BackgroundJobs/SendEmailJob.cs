@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Notifications;
 using Microsoft.Extensions.Logging;
 
 namespace Cinema.Application.BackgroundJobs;

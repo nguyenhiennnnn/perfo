@@ -1,6 +1,7 @@
-using Cinema.Application.DTOs.Common;
+﻿using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Employees;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Users;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;

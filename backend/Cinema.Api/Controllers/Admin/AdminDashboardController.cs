@@ -1,5 +1,10 @@
-using Cinema.Application.DTOs.Dashboard;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Dashboard;
+using Cinema.Application.Interfaces.Bookings;
+using Cinema.Application.Interfaces.Combos;
+using Cinema.Application.Interfaces.Dashboard;
+using Cinema.Application.Interfaces.Orders;
+using Cinema.Application.Interfaces.Reports;
+using Cinema.Application.Interfaces.Showtimes;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;

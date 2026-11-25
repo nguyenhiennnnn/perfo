@@ -142,16 +142,6 @@ const AdminMoviesPage = () => {
         }
       />
 
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
-        <EnumSelectFilter
-          value={params.status}
-          onChange={(status) => setParams({ status: status as typeof params.status, page: DEFAULT_PAGE })}
-          options={movieStatusOptions}
-          placeholder="Trạng thái phát hành"
-          className="sm:w-52"
-        />
-      </div>
-
       <DataTable
         columns={columns}
         data={movies.data?.items ?? []}
@@ -166,6 +156,14 @@ const AdminMoviesPage = () => {
         searchValue={params.search}
         onSearchChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         searchPlaceholder="Tìm theo tên phim..."
+        toolbarFilters={
+          <EnumSelectFilter
+            value={params.status}
+            onChange={(status) => setParams({ status: status as typeof params.status, page: DEFAULT_PAGE })}
+            options={movieStatusOptions}
+            placeholder="Trạng thái phát hành"
+          />
+        }
         empty={{
           icon: Film,
           title: "Chưa có bộ phim",

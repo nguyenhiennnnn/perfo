@@ -1,6 +1,7 @@
-using Cinema.Api.Extensions;
+﻿using Cinema.Api.Extensions;
 using Cinema.Application.DTOs.Common;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.ImportExport;
+using Cinema.Application.Interfaces.Reports;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;

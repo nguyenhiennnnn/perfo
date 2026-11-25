@@ -1,6 +1,7 @@
-using Cinema.Application.DTOs.Common;
+﻿using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Reviews;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Reviews;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Mapster;

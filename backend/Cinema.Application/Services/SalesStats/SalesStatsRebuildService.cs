@@ -1,9 +1,11 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Cinema.Application.BackgroundJobs;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.ImportExport;
 using Cinema.Application.DTOs.SalesStats;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.ImportExport;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Reports;
 using Cinema.Application.Options;
 using Cinema.Application.Services.ImportExport;
 using Cinema.Domain.Enums;

@@ -1,5 +1,7 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces;
 using Cinema.Domain.Enums;
+using Cinema.Application.Interfaces.Reconciliation;
+
 
 namespace Cinema.Application.DTOs.Reconciliation;
 

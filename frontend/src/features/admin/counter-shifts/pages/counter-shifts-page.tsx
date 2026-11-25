@@ -21,6 +21,7 @@ import {
   COUNTER_SHIFT_STATUS_OPEN,
   type CounterShift,
 } from "../types";
+import { FilterBar } from "@/components/common/filter/filter-bar";
 
 const EMPLOYEE_OPTIONS_PAGE_SIZE = 100;
 
@@ -59,7 +60,7 @@ const AdminCounterShiftsPage = () => {
 
       <OpenShiftsPanel onCloseByAdmin={handleCloseByAdmin} />
 
-      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <FilterBar className="mb-4">
         <DateFilterPicker
           value={params.fromDate}
           onChange={(fromDate) => setParams({ fromDate, page: DEFAULT_PAGE })}
@@ -84,7 +85,7 @@ const AdminCounterShiftsPage = () => {
           placeholder="Trạng thái"
           allLabel="Tất cả trạng thái"
         />
-      </div>
+      </FilterBar>
 
       <DataTable
         columns={columns}

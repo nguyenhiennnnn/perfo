@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.ImportExport;
 
 namespace Cinema.Application.BackgroundJobs;
 

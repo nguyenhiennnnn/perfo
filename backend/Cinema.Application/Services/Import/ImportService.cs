@@ -1,7 +1,8 @@
-using Cinema.Application.DTOs.Common;
+﻿using Cinema.Application.DTOs.Common;
 using Cinema.Application.BackgroundJobs;
 using Cinema.Application.DTOs.Import;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Import;
+using Cinema.Application.Interfaces.ImportExport;
 using Cinema.Application.Options;
 using Cinema.Application.Services.ImportExport;
 using Cinema.Application.Utils;

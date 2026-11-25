@@ -1,5 +1,5 @@
-using Cinema.Application.DTOs.SalesStats;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.SalesStats;
+using Cinema.Application.Interfaces.Reports;
 using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

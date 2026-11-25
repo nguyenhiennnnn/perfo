@@ -1,6 +1,7 @@
-using Cinema.Application.DTOs.Audit;
+﻿using Cinema.Application.DTOs.Audit;
 using Cinema.Application.DTOs.Common;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Audit;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;

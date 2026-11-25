@@ -1,5 +1,5 @@
-using Cinema.Application.DTOs.Showtimes;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Showtimes;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;

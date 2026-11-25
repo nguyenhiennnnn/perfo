@@ -1,4 +1,6 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Audit;
+using Cinema.Application.Interfaces.Auth;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Domain.Entities;
 
 namespace Cinema.Application.Services.Audit;

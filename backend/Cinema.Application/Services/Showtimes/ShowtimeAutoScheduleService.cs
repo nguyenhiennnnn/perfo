@@ -1,5 +1,6 @@
-using Cinema.Application.DTOs.Showtimes;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Showtimes;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Showtimes;
 using Cinema.Application.Options;
 using Cinema.Application.Services.Rooms;
 using Cinema.Application.Utils;

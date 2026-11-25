@@ -1,5 +1,5 @@
-using Cinema.Application.Caching;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Caching;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

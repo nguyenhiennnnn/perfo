@@ -1,6 +1,6 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Cinema.Application.DTOs.Common;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Auth;
 using Cinema.Shared.Constants;
 
 namespace Cinema.Api.Security;

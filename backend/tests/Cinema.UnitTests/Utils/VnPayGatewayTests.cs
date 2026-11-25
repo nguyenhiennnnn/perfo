@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using System.Web;
 using Cinema.Application.Interfaces;
@@ -7,6 +7,8 @@ using Cinema.Application.Utils;
 using Cinema.Infrastructure.Payments;
 using Microsoft.Extensions.Logging.Abstractions;
 using Shouldly;
+using Cinema.Application.Interfaces.Payments;
+
 
 namespace Cinema.UnitTests.Utils;
 

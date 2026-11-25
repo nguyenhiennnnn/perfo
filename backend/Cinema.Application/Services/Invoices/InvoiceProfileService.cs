@@ -1,5 +1,6 @@
-using Cinema.Application.DTOs.Invoices;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Invoices;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Invoices;
 using Cinema.Domain.Entities;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;

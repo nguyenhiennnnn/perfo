@@ -1,9 +1,11 @@
-using Cinema.Application.DTOs.Orders;
+﻿using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Resources;
+using Cinema.Application.Interfaces.Ledger;
+
 
 namespace Cinema.Application.Services.Orders;
 

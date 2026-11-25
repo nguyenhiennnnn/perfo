@@ -1,4 +1,4 @@
-using Cinema.Application.BackgroundJobs;
+﻿using Cinema.Application.BackgroundJobs;
 using Cinema.Application.DTOs.Showtimes;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
@@ -15,6 +15,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shouldly;
+using Cinema.Application.Interfaces.Payments;
+
 
 namespace Cinema.UnitTests.Services;
 

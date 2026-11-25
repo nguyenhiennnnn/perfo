@@ -1,6 +1,8 @@
-using Cinema.Application.Caching;
+﻿using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Settings;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Audit;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Settings;
 using Cinema.Application.Options;
 using Cinema.Application.Services.Audit;
 using Cinema.Application.Utils;

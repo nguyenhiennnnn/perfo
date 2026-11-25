@@ -1,4 +1,6 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Auth;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Notifications;
 using Cinema.Application.Options;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;

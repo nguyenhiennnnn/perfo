@@ -16,6 +16,7 @@ import { createStockLedgerColumns } from "../components/stock-ledger-columns";
 import { useAdminInventoryItemOptions, useAdminStockLedger } from "../hooks/use-admin-inventory";
 import type { StockLedgerResponse } from "../types";
 import { QUANTITY_EPSILON, formatQuantity } from "../utils/inventory-labels";
+import { FilterBar } from "@/components/common/filter/filter-bar";
 
 const SummaryFigure = ({ label, value }: { label: string; value: string }) => (
   <div className="bg-card p-4 cut-md">
@@ -80,7 +81,7 @@ const AdminInventoryLedgerPage = () => {
         description="Mọi biến động nhập, bán, hoàn, kiểm kê và hao hụt của một sản phẩm kho; tồn là kết quả cộng dồn."
       />
 
-      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,2fr)_1fr_1fr]">
+      <FilterBar className="mb-4">
         <SelectField
           value={params.itemId}
           onChange={(value) => setParams({ itemId: value ? Number(value) : null, page: DEFAULT_PAGE })}
@@ -88,6 +89,7 @@ const AdminInventoryLedgerPage = () => {
           getOptionValue={(item) => item.inventoryItemId}
           getOptionLabel={(item) => `${item.name} (${item.code})`}
           placeholder="Chọn sản phẩm kho"
+          className="sm:w-72"
         />
         <DateFilterPicker
           value={params.fromDate}
@@ -99,7 +101,7 @@ const AdminInventoryLedgerPage = () => {
           onChange={(toDate) => setParams({ toDate, page: DEFAULT_PAGE })}
           placeholder="Đến ngày"
         />
-      </div>
+      </FilterBar>
 
       {params.itemId === null ? (
         <EmptyState

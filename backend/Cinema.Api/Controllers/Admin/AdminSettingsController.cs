@@ -1,6 +1,6 @@
 ﻿using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Settings;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Settings;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;

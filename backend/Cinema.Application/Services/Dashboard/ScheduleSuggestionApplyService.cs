@@ -1,7 +1,8 @@
-using Cinema.Application.Caching;
+﻿using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Dashboard;
 using Cinema.Application.DTOs.Showtimes;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Showtimes;
 using Cinema.Application.Utils;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;

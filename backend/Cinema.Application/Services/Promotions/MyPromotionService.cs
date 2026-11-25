@@ -1,5 +1,6 @@
-using Cinema.Application.DTOs.Promotions;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Promotions;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Promotions;
 using Cinema.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 

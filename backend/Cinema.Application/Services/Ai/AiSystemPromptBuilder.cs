@@ -1,5 +1,5 @@
-using System.Globalization;
-using Cinema.Application.Interfaces;
+﻿using System.Globalization;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;

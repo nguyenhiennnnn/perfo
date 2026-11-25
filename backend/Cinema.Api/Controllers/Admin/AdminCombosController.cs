@@ -1,7 +1,7 @@
 ﻿using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Combos;
 using Cinema.Application.DTOs.Common;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Combos;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Cinema.Shared.Results;

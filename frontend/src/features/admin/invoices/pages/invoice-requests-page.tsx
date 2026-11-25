@@ -2,7 +2,6 @@ import { FileText } from "lucide-react";
 import { DataTable } from "@/components/common/data-table/data-table";
 import { EnumSelectFilter } from "@/components/common/filter/enum-select-filter";
 import { PageHeader } from "@/components/common/page-header";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DEFAULT_PAGE } from "@/config/default-constants";
 import { useAdminInvoiceRequestParams } from "@/hooks/use-query-params";
@@ -16,6 +15,7 @@ import { ReplaceInvoiceFileDialogContent } from "../components/replace-invoice-f
 import { ResolveAdjustmentDialogContent } from "../components/resolve-adjustment-dialog-content";
 import { useAdminInvoiceRequests } from "../hooks/use-admin-invoices";
 import { INVOICE_STATUS_OPTIONS } from "../utils/invoice-status-options";
+import { FilterBar, FilterSearch } from "@/components/common/filter/filter-bar";
 
 const AdminInvoiceRequestsPage = () => {
   const [params, setParams] = useAdminInvoiceRequestParams();
@@ -85,11 +85,11 @@ const AdminInvoiceRequestsPage = () => {
         </TabsList>
       </Tabs>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <Input
+      <FilterBar>
+        <FilterSearch
           placeholder="Mã đơn, mã số thuế, tên đơn vị, số hóa đơn..."
           value={params.search}
-          onChange={(e) => void setParams({ search: e.target.value, page: DEFAULT_PAGE })}
+          onChange={(value) => void setParams({ search: value, page: DEFAULT_PAGE })}
         />
         {!isAdjustmentTab && (
           <EnumSelectFilter
@@ -100,7 +100,7 @@ const AdminInvoiceRequestsPage = () => {
             allLabel="Tất cả trạng thái"
           />
         )}
-      </div>
+      </FilterBar>
 
       <DataTable
         columns={columns}

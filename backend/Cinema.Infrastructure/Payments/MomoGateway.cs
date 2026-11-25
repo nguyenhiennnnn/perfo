@@ -1,5 +1,5 @@
-using System.Text.Json;
-using Cinema.Application.Interfaces;
+﻿using System.Text.Json;
+using Cinema.Application.Interfaces.Payments;
 using Cinema.Application.Options;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;

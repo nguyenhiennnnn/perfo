@@ -1,6 +1,7 @@
 import { CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { FILTER_WIDTH } from "@/components/common/filter/filter-bar";
 import { toWallDate } from "@/lib/business-time";
 import { formatDate, toDateInputValue } from "@/lib/formatters";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,8 @@ export const DateFilterPicker = ({
             variant="outline"
             data-empty={!selected}
             className={cn(
-              "h-10 justify-start text-left font-normal data-[empty=true]:text-muted-foreground",
+              "h-10 shrink-0 justify-start text-left font-normal data-[empty=true]:text-muted-foreground",
+              FILTER_WIDTH.date,
               className,
             )}
           />

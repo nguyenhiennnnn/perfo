@@ -1,6 +1,6 @@
-using Cinema.Api.Filters;
+﻿using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Showtimes;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Bookings;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;

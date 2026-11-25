@@ -1,6 +1,6 @@
-using Cinema.Api.Extensions;
+﻿using Cinema.Api.Extensions;
 using Cinema.Application.DTOs.Users;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Users;
 using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

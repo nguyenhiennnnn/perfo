@@ -1,4 +1,6 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Notifications;
+using Cinema.Application.Interfaces.Payments;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
@@ -8,6 +10,8 @@ using Hangfire.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Cinema.Application.Interfaces.Users;
+
 
 namespace Cinema.Application.BackgroundJobs;
 

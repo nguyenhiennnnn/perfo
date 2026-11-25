@@ -1,6 +1,6 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.ImportExport;
 using Cinema.Shared.Constants;
 using ClosedXML.Excel;
 using CsvHelper;

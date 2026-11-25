@@ -1,5 +1,5 @@
 using Cinema.Application.DTOs.Showtimes;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Showtimes;
 using Cinema.Shared.Resources;
 using FluentValidation;
 

@@ -1,5 +1,6 @@
-using Cinema.Application.Caching;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Caching;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Orders;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;

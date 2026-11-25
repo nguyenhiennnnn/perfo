@@ -1,9 +1,13 @@
-using Cinema.Application.Events;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Events;
+using Cinema.Application.Interfaces.Audit;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Notifications;
 using Cinema.Application.Services.Audit;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
+using Cinema.Application.Interfaces.Events;
+
 
 namespace Cinema.Application.Services.Invoices;
 

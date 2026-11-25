@@ -1,6 +1,8 @@
-using Cinema.Application.Caching;
+﻿using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Reports;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Invoices;
+using Cinema.Application.Interfaces.Reports;
 using Cinema.Application.Services.Tax;
 using Cinema.Shared.Resources;
 

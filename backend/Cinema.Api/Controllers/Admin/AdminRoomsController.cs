@@ -1,8 +1,9 @@
-using Cinema.Api.Extensions;
+﻿using Cinema.Api.Extensions;
 using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Import;
 using Cinema.Application.DTOs.Rooms;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Bookings;
+using Cinema.Application.Interfaces.Rooms;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;

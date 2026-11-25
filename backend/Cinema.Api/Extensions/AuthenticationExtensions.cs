@@ -1,5 +1,5 @@
-using System.Text;
-using Cinema.Application.Interfaces;
+﻿using System.Text;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Options;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;

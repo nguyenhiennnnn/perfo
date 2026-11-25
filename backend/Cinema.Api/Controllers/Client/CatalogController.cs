@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Catalog;
 using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 

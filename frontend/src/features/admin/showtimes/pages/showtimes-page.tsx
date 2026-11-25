@@ -196,35 +196,6 @@ const AdminShowtimesPage = () => {
         </TabsList>
 
         <TabsContent value="list">
-          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
-            <DateFilterPicker
-              value={params.date}
-              onChange={(date) => setParams({ date, page: DEFAULT_PAGE })}
-              placeholder="Lọc theo ngày chiếu"
-              className="sm:w-48"
-            />
-            <EnumSelectFilter
-              value={params.status}
-              onChange={(status) => setParams({ status, page: DEFAULT_PAGE })}
-              options={showtimeStatusOptions}
-              placeholder="Trạng thái suất chiếu"
-              className="sm:w-52"
-            />
-            <ExportButton
-              endpoint={ENDPOINTS.admin.showtimes.export}
-              jobEndpoint={ENDPOINTS.admin.showtimes.exportJobs}
-              params={{
-                movieId: params.movieId,
-                roomId: params.roomId,
-                date: params.date,
-                status: params.status,
-              }}
-              fallbackFilename="showtimes"
-              size="default"
-              className="h-10"
-            />
-          </div>
-
           <DataTable
             columns={columns}
             data={showtimes.data?.items ?? []}
@@ -235,6 +206,36 @@ const AdminShowtimesPage = () => {
             totalItems={showtimes.data?.totalItems ?? 0}
             pagination={pagination}
             onPaginationChange={onPaginationChange}
+            toolbarFilters={
+              <>
+                <DateFilterPicker
+                  value={params.date}
+                  onChange={(date) => setParams({ date, page: DEFAULT_PAGE })}
+                  placeholder="Lọc theo ngày chiếu"
+                />
+                <EnumSelectFilter
+                  value={params.status}
+                  onChange={(status) => setParams({ status, page: DEFAULT_PAGE })}
+                  options={showtimeStatusOptions}
+                  placeholder="Trạng thái suất chiếu"
+                />
+              </>
+            }
+            toolbarActions={
+              <ExportButton
+                endpoint={ENDPOINTS.admin.showtimes.export}
+                jobEndpoint={ENDPOINTS.admin.showtimes.exportJobs}
+                params={{
+                  movieId: params.movieId,
+                  roomId: params.roomId,
+                  date: params.date,
+                  status: params.status,
+                }}
+                fallbackFilename="showtimes"
+                size="default"
+                className="h-10"
+              />
+            }
             empty={{
               icon: CalendarX,
               title: "Chưa có suất chiếu",

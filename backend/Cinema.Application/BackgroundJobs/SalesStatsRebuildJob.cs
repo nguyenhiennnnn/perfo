@@ -1,5 +1,6 @@
-using System.Globalization;
-using Cinema.Application.Interfaces;
+﻿using System.Globalization;
+using Cinema.Application.Interfaces.ImportExport;
+using Cinema.Application.Interfaces.Reports;
 using Cinema.Application.Services.ImportExport;
 using Cinema.Application.Services.SalesStats;
 using Hangfire;

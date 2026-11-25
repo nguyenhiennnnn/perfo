@@ -1,9 +1,11 @@
-using Cinema.Api.Extensions;
+﻿using Cinema.Api.Extensions;
 using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Import;
 using Cinema.Application.DTOs.ImportExport;
 using Cinema.Application.DTOs.Showtimes;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Import;
+using Cinema.Application.Interfaces.ImportExport;
+using Cinema.Application.Interfaces.Showtimes;
 using Cinema.Application.Services.Showtimes;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;

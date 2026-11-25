@@ -1,5 +1,7 @@
-using Cinema.Application.DTOs.GiftCards;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.GiftCards;
+using Cinema.Application.Interfaces.Audit;
+using Cinema.Application.Interfaces.GiftCards;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Services.Audit;
 using Cinema.Application.Services.Payments;
 using Cinema.Application.Utils;

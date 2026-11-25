@@ -1,6 +1,5 @@
 import { ScrollText } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/common/page-header";
 import { DataTable } from "@/components/common/data-table/data-table";
 import { EnumSelectFilter } from "@/components/common/filter/enum-select-filter";
@@ -21,6 +20,7 @@ import {
 import { createAuditLogColumns } from "../components/audit-log-columns";
 import { AuditLogDetailView } from "../components/audit-log-detail-view";
 import { getAuditEntityTypeLabel } from "../utils/audit-log-labels";
+import { FilterBar, FilterSearch } from "@/components/common/filter/filter-bar";
 
 const AdminAuditLogsPage = () => {
   const [params, setParams] = useAdminAuditLogParams();
@@ -59,7 +59,7 @@ const AdminAuditLogsPage = () => {
         description="Tra cứu các thao tác nhạy cảm của quản trị. Nhật ký chỉ được thêm, không thể sửa hoặc xóa."
       />
 
-      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <FilterBar className="mb-4">
         <EnumSelectFilter
           value={params.entityType}
           onChange={(entityType) => setParams({ entityType, page: DEFAULT_PAGE })}
@@ -67,10 +67,11 @@ const AdminAuditLogsPage = () => {
           placeholder="Đối tượng"
           allLabel="Tất cả đối tượng"
         />
-        <Input
+        <FilterSearch
+          className="sm:w-48 lg:w-48"
           placeholder="Mã đối tượng..."
           value={params.entityId}
-          onChange={(e) => setParams({ entityId: e.target.value, page: DEFAULT_PAGE })}
+          onChange={(value) => setParams({ entityId: value, page: DEFAULT_PAGE })}
         />
         <EnumSelectFilter
           value={params.actorUserId}
@@ -89,7 +90,7 @@ const AdminAuditLogsPage = () => {
           onChange={(toDate) => setParams({ toDate, page: DEFAULT_PAGE })}
           placeholder="Đến ngày"
         />
-      </div>
+      </FilterBar>
 
       <DataTable
         columns={columns}

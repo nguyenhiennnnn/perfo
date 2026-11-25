@@ -19,6 +19,7 @@ import {
   useImportExportJobs,
 } from "../hooks/use-import-export-jobs";
 import { History } from "lucide-react";
+import { FilterBar } from "@/components/common/filter/filter-bar";
 
 const AdminImportExportHistoryPage = () => {
   const [params, setParams] = useAdminImportExportJobParams();
@@ -47,7 +48,7 @@ const AdminImportExportHistoryPage = () => {
         description="Theo dõi tiến độ, kết quả và tải lại file của các tác vụ nhập/xuất dữ liệu."
       />
 
-      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <FilterBar className="mb-4">
         <EnumSelectFilter
           value={params.type}
           onChange={(type) => setParams({ type, page: DEFAULT_PAGE })}
@@ -69,7 +70,7 @@ const AdminImportExportHistoryPage = () => {
           placeholder={STATUS_LABEL}
           allLabel={ALL_STATUSES_LABEL}
         />
-      </div>
+      </FilterBar>
 
       <DataTable
         columns={columns}

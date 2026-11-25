@@ -15,6 +15,7 @@ import { useAdminLedgerAdjustments } from "../hooks/use-admin-ledger-adjustments
 import { createLedgerAdjustmentColumns } from "../components/ledger-adjustment-columns";
 import { LedgerAdjustmentFormDialogContent } from "../components/ledger-adjustment-form-dialog";
 import { ledgerAdjustmentTypeOptions } from "../utils/labels";
+import { FilterBar } from "@/components/common/filter/filter-bar";
 
 const columns = createLedgerAdjustmentColumns();
 
@@ -45,7 +46,7 @@ const AdminLedgerAdjustmentsPage = () => {
         }
       />
 
-      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <FilterBar className="mb-4">
         <DateFilterPicker
           value={params.postingFrom}
           onChange={(postingFrom) => setParams({ postingFrom, page: DEFAULT_PAGE })}
@@ -68,7 +69,7 @@ const AdminLedgerAdjustmentsPage = () => {
           placeholder="Loại bút toán"
           allLabel="Tất cả loại"
         />
-      </div>
+      </FilterBar>
 
       <DataTable
         columns={columns}

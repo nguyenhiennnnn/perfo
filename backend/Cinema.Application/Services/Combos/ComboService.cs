@@ -1,7 +1,8 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Cinema.Application.DTOs.Combos;
 using Cinema.Application.DTOs.Common;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Combos;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Services.Inventory;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;

@@ -1,4 +1,7 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Import;
+using Cinema.Application.Interfaces.ImportExport;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Reconciliation;
 using Cinema.Domain.Enums;
 
 namespace Cinema.Application.Services.Reconciliation;

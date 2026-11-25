@@ -1,5 +1,5 @@
-using System.Security.Cryptography;
-using Cinema.Application.Interfaces;
+﻿using System.Security.Cryptography;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;

@@ -1,5 +1,8 @@
-using Cinema.Application.DTOs.Orders;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Orders;
+using Cinema.Application.Interfaces.GiftCards;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Ledger;
+using Cinema.Application.Interfaces.Orders;
 using Cinema.Application.Services.Payments;
 using Cinema.Application.Services.Promotions;
 using Cinema.Application.Utils;

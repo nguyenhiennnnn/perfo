@@ -1,7 +1,7 @@
 ﻿using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Catalog;
 using Cinema.Application.DTOs.Common;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Catalog;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;

@@ -1,10 +1,14 @@
-using Cinema.Application.DTOs.DailyClosings;
+﻿using Cinema.Application.DTOs.DailyClosings;
 using Cinema.Application.Events;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.DailyClosings;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Notifications;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Cinema.Application.Interfaces.Events;
+
 
 namespace Cinema.Application.Services.DailyClosings;
 

@@ -12,6 +12,7 @@ import { useTablePagination } from "@/hooks/use-table-pagination";
 
 import { useAdminDailyClosingList } from "../hooks/use-admin-daily-closings";
 import { createDailyClosingHistoryColumns } from "../components/daily-closing-history-columns";
+import { FilterBar } from "@/components/common/filter/filter-bar";
 
 const columns = createDailyClosingHistoryColumns();
 
@@ -32,7 +33,7 @@ const AdminDailyClosingHistoryPage = () => {
         }
       />
 
-      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <FilterBar className="mb-4">
         <DateFilterPicker
           value={params.fromDate}
           onChange={(fromDate) => setParams({ fromDate, page: DEFAULT_PAGE })}
@@ -43,7 +44,7 @@ const AdminDailyClosingHistoryPage = () => {
           onChange={(toDate) => setParams({ toDate, page: DEFAULT_PAGE })}
           placeholder="Đến ngày"
         />
-      </div>
+      </FilterBar>
 
       <DataTable
         columns={columns}

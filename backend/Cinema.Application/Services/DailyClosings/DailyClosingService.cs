@@ -1,9 +1,12 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.DailyClosings;
 using Cinema.Application.Events;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Audit;
+using Cinema.Application.Interfaces.DailyClosings;
+using Cinema.Application.Interfaces.Events;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Services.Audit;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;

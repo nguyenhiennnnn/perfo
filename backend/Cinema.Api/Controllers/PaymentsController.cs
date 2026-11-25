@@ -1,7 +1,7 @@
-using Cinema.Shared.Constants;
+﻿using Cinema.Shared.Constants;
 using System.Text.Json;
 using Cinema.Api.Filters;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Payments;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cinema.Api.Controllers;

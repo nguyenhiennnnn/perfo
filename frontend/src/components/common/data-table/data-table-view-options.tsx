@@ -22,8 +22,7 @@ export const DataTableViewOptions = <TData extends RowData>({
       <DropdownMenuTrigger>
         <Button
           variant="outline"
-          size="sm"
-          className="ml-auto hidden h-8 lg:flex"
+          className="hidden h-10 lg:flex"
         >
           <Settings2 /> Hiển thị
         </Button>

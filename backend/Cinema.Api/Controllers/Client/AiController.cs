@@ -1,6 +1,6 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Cinema.Application.DTOs.Ai;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Ai;
 using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Mvc;
 

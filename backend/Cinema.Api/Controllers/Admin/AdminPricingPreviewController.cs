@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Pricing;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;

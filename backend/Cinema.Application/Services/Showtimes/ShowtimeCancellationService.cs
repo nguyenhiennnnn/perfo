@@ -1,6 +1,11 @@
-using Cinema.Application.BackgroundJobs;
+﻿using Cinema.Application.BackgroundJobs;
 using Cinema.Application.DTOs.Showtimes;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Audit;
+using Cinema.Application.Interfaces.Auth;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Orders;
+using Cinema.Application.Interfaces.Payments;
+using Cinema.Application.Interfaces.Showtimes;
 using Cinema.Application.Services.Audit;
 using Cinema.Application.Services.Payments;
 using Cinema.Application.Utils;

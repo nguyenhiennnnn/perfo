@@ -1,4 +1,6 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Import;
+
 
 namespace Cinema.Application.Services.Import;
 

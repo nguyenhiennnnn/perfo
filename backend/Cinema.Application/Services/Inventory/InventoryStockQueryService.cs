@@ -1,6 +1,7 @@
-using Cinema.Application.DTOs.Common;
+﻿using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Inventory;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Inventory;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;

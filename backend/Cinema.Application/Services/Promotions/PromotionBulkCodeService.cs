@@ -1,5 +1,7 @@
-using Cinema.Application.DTOs.Promotions;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Promotions;
+using Cinema.Application.Interfaces.Audit;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Promotions;
 using Cinema.Application.Options;
 using Cinema.Application.Services.Audit;
 using Cinema.Application.Utils;

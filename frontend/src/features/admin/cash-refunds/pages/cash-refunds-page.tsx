@@ -4,7 +4,6 @@ import { DataTable } from "@/components/common/data-table/data-table";
 import { DateFilterPicker } from "@/components/common/filter/date-filter-picker";
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { DEFAULT_PAGE } from "@/config/default-constants";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useAdminCashRefundParams } from "@/hooks/use-query-params";
@@ -15,6 +14,7 @@ import { createCashRefundColumns } from "../components/cash-refund-columns";
 import { useCashRefundConfirm } from "../hooks/use-cash-refund-confirm";
 import { useCashRefunds } from "../hooks/use-cash-refunds";
 import { CashRefundStatus } from "../types";
+import { FilterBar, FilterSearch } from "@/components/common/filter/filter-bar";
 
 const STATUS_TABS: { value: CashRefundStatus; label: string }[] = [
   { value: CashRefundStatus.Pending, label: "Chưa hoàn" },
@@ -65,12 +65,11 @@ const AdminCashRefundsPage = () => {
         ))}
       </div>
 
-      <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-3">
-        <Input
+      <FilterBar className="mb-4">
+        <FilterSearch
           placeholder="Tìm theo mã đơn..."
           value={params.orderCode}
-          onChange={(e) => setParams({ orderCode: e.target.value, page: DEFAULT_PAGE })}
-          className="col-span-2 md:col-span-1"
+          onChange={(value) => setParams({ orderCode: value, page: DEFAULT_PAGE })}
         />
         <DateFilterPicker
           value={params.fromDate}
@@ -82,7 +81,7 @@ const AdminCashRefundsPage = () => {
           onChange={(toDate) => setParams({ toDate, page: DEFAULT_PAGE })}
           placeholder="Đến ngày"
         />
-      </div>
+      </FilterBar>
 
       <DataTable
         columns={columns}

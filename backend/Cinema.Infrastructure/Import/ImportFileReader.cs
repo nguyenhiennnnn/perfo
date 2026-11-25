@@ -1,7 +1,7 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Import;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;

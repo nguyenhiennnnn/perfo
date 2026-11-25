@@ -1,6 +1,7 @@
 ﻿using Cinema.Api.Extensions;
 using Cinema.Api.Filters;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.ImportExport;
+using Cinema.Application.Interfaces.Payments;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;

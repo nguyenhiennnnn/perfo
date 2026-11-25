@@ -1,6 +1,6 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Auth;
 using Cinema.Application.Options;
 using Microsoft.Extensions.Options;
 

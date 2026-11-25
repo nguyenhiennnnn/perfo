@@ -5,7 +5,6 @@ import { DateFilterPicker } from "@/components/common/filter/date-filter-picker"
 import { EnumSelectFilter } from "@/components/common/filter/enum-select-filter";
 import { PageHeader } from "@/components/common/page-header";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ALL_STATUSES_LABEL, DEFAULT_PAGE, STATUS_LABEL } from "@/config/default-constants";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { useAdminPromotionReportParams } from "@/hooks/use-query-params";
@@ -20,6 +19,7 @@ import {
   PROMOTION_TYPE_OPTIONS,
   parseActiveFilter,
 } from "../utils/promotion-admin-labels";
+import { FilterBar, FilterSearch } from "@/components/common/filter/filter-bar";
 
 const typeFilterOptions = PROMOTION_TYPE_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
 const columns = createPromotionReportColumns();
@@ -61,12 +61,11 @@ const AdminPromotionReportsPage = () => {
         description="Lượt dùng, tiền giảm, doanh thu và mức sử dụng so với giới hạn của từng khuyến mãi."
       />
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-        <Input
+      <FilterBar>
+        <FilterSearch
           placeholder="Tìm theo mã hoặc tên khuyến mãi..."
           value={params.search}
-          onChange={(e) => setParams({ search: e.target.value, page: DEFAULT_PAGE })}
-          className="col-span-2 md:col-span-3 xl:col-span-2"
+          onChange={(value) => setParams({ search: value, page: DEFAULT_PAGE })}
         />
         <EnumSelectFilter
           value={params.type}
@@ -96,7 +95,7 @@ const AdminPromotionReportsPage = () => {
           <RotateCcw className="size-4" />
           <span>Đặt lại</span>
         </Button>
-      </div>
+      </FilterBar>
 
       <PromotionReportSummaryCards query={reports} />
 

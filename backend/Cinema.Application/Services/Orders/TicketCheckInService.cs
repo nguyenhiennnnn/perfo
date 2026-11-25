@@ -1,6 +1,8 @@
-using Cinema.Application.DTOs.Orders;
+﻿using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Events;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Bookings;
+using Cinema.Application.Interfaces.Events;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Services.Payments;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;

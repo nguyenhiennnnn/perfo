@@ -1,7 +1,9 @@
-using Cinema.Application.DTOs.Common;
+﻿using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Pdf;
 using Cinema.Application.DTOs.Reports;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.ImportExport;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Reports;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;

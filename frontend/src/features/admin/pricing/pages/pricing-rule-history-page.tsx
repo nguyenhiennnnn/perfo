@@ -1,6 +1,5 @@
 import { FileClock } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/common/page-header";
 import { DataTable } from "@/components/common/data-table/data-table";
 import { EnumSelectFilter } from "@/components/common/filter/enum-select-filter";
@@ -19,6 +18,7 @@ import {
 } from "@/features/admin/audit-logs/hooks/use-admin-audit-logs";
 import { createAuditLogColumns } from "@/features/admin/audit-logs/components/audit-log-columns";
 import { AuditLogDetailView } from "@/features/admin/audit-logs/components/audit-log-detail-view";
+import { FilterBar, FilterSearch } from "@/components/common/filter/filter-bar";
 
 const PRICING_RULE_ENTITY_TYPE = "PricingRule";
 
@@ -59,11 +59,11 @@ const AdminPricingRuleHistoryPage = () => {
         description="Các lần tạo, sửa, xóa quy tắc giá, lấy từ nhật ký thao tác."
       />
 
-      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Input
+      <FilterBar className="mb-4">
+        <FilterSearch
           placeholder="Mã quy tắc..."
           value={params.entityId}
-          onChange={(e) => setParams({ entityId: e.target.value, page: DEFAULT_PAGE })}
+          onChange={(value) => setParams({ entityId: value, page: DEFAULT_PAGE })}
         />
         <EnumSelectFilter
           value={params.actorUserId}
@@ -82,7 +82,7 @@ const AdminPricingRuleHistoryPage = () => {
           onChange={(toDate) => setParams({ toDate, page: DEFAULT_PAGE })}
           placeholder="Đến ngày"
         />
-      </div>
+      </FilterBar>
 
       <DataTable
         columns={columns}

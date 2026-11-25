@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Notifications;
 using Cinema.Application.Services.Bookings;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;

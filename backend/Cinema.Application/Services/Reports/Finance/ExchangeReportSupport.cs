@@ -1,6 +1,6 @@
-using Cinema.Application.Caching;
+﻿using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Reports;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Microsoft.EntityFrameworkCore;

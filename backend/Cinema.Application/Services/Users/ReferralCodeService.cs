@@ -1,4 +1,5 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Users;
 using Cinema.Application.Utils;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;

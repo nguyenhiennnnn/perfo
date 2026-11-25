@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Auth;
 
 namespace Cinema.IntegrationTests.Fakes;
 

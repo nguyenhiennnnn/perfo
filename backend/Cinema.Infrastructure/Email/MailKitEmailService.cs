@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Notifications;
 using Cinema.Application.Options;
 using Cinema.Shared.Resources;
 using MailKit.Net.Smtp;

@@ -1,7 +1,9 @@
-using Cinema.Application.Caching;
+﻿using Cinema.Application.Caching;
 using Cinema.Application.DTOs.DailyClosings;
 using Cinema.Application.DTOs.Reports;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.DailyClosings;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Reports;
 using Cinema.Application.Services.CounterShifts;
 using Cinema.Application.Services.Reports.Finance;
 using Cinema.Application.Utils;

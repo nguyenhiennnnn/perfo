@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/select";
 import { useFieldDisabled } from "@/components/ui/field";
 import type { EnumOption } from "@/lib/enum-options";
+import { FILTER_WIDTH } from "@/components/common/filter/filter-bar";
 import { cn } from "@/lib/utils";
 
 interface EnumSelectFilterProps {
@@ -41,7 +42,7 @@ export const EnumSelectFilter = ({
       onValueChange={(v) => onChange(v === "all" ? null : v)}
       disabled={isDisabled}
     >
-      <SelectTrigger className={cn("w-full", className)}>
+      <SelectTrigger className={cn(FILTER_WIDTH.select, "shrink-0", className)}>
         <SelectValue placeholder={placeholder}>{currentLabel}</SelectValue>
       </SelectTrigger>
       <SelectContent>

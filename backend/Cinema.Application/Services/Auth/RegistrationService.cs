@@ -1,5 +1,7 @@
-using Cinema.Application.DTOs.Auth;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Auth;
+using Cinema.Application.Interfaces.Auth;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Users;
 using Cinema.Application.Options;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;

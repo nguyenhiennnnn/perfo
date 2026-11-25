@@ -1,8 +1,10 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Cinema.Application.Interfaces.Orders;
+
 
 namespace Cinema.Application.Services.Orders;
 

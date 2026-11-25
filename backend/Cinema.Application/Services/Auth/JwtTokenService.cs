@@ -1,8 +1,8 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Auth;
 using Cinema.Application.Options;
 using Cinema.Domain.Entities;
 using Cinema.Shared.Constants;

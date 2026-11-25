@@ -1,5 +1,6 @@
-using Cinema.Application.Events;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Events;
+using Cinema.Application.Interfaces.Events;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Options;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;

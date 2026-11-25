@@ -1,7 +1,9 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
+using Cinema.Application.Interfaces.Showtimes;
+
 
 namespace Cinema.Application.Services.Showtimes;
 

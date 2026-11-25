@@ -1,9 +1,11 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Dashboard;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Reports;
+using Cinema.Application.Interfaces.Showtimes;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Resources;

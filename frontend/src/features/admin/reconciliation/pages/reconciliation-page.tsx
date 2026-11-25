@@ -13,6 +13,7 @@ import { NewReconciliationCard } from "../components/new-reconciliation-card";
 import { ReconciliationItemsTable } from "../components/reconciliation-items-table";
 import { useReconciliationSessions } from "../hooks/use-reconciliation";
 import { GATEWAY_OPTIONS } from "../utils/reconciliation-labels";
+import { FilterBar } from "@/components/common/filter/filter-bar";
 
 const columns = createSessionColumns();
 
@@ -60,7 +61,7 @@ const AdminReconciliationPage = () => {
         <ReconciliationItemsTable />
       ) : (
         <>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <FilterBar>
             <EnumSelectFilter
               value={params.gateway}
               onChange={(gateway) => void setParams({ gateway, page: DEFAULT_PAGE })}
@@ -78,7 +79,7 @@ const AdminReconciliationPage = () => {
               onChange={(toDate) => void setParams({ toDate, page: DEFAULT_PAGE })}
               placeholder="Đến ngày"
             />
-          </div>
+          </FilterBar>
 
           <DataTable
             columns={columns}

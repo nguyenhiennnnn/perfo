@@ -1,6 +1,10 @@
-using Cinema.Application.Caching;
+﻿using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Orders;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Audit;
+using Cinema.Application.Interfaces.Combos;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Orders;
+using Cinema.Application.Interfaces.Pricing;
 using Cinema.Application.Options;
 using Cinema.Application.Services.CounterShifts;
 using Cinema.Application.Services.Payments;

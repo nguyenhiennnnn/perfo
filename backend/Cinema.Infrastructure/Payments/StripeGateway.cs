@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Payments;
 using Cinema.Application.Options;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Stripe;
 using Stripe.Checkout;
+using Cinema.Application.Interfaces.Reconciliation;
+
 
 namespace Cinema.Infrastructure.Payments;
 

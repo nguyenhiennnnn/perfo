@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Reconciliation;
 using Cinema.Domain.Entities;
 
 namespace Cinema.Application.Services.Reconciliation;

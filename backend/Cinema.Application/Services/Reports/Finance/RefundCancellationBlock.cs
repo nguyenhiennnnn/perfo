@@ -1,5 +1,6 @@
-using Cinema.Application.DTOs.Reports;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Reports;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Reports;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;

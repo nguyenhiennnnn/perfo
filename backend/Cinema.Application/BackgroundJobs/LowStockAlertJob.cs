@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Inventory;
 
 namespace Cinema.Application.BackgroundJobs;
 

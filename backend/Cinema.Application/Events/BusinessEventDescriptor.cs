@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Events;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cinema.Application.Events;

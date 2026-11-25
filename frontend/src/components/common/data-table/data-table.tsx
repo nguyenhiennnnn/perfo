@@ -62,6 +62,7 @@ interface DataTableProps<TData extends RowData> {
   onSearchChange?: (value: string) => void;
   searchPlaceholder?: string;
   toolbarFilters?: ReactNode;
+  toolbarActions?: ReactNode;
   rowSelection?: RowSelectionState;
   onRowSelectionChange?: OnChangeFn<RowSelectionState>;
   getRowId?: (row: TData) => string;
@@ -90,6 +91,7 @@ export const DataTable = <TData extends RowData>({
   onSearchChange,
   searchPlaceholder,
   toolbarFilters,
+  toolbarActions,
   rowSelection,
   onRowSelectionChange,
   getRowId,
@@ -138,13 +140,14 @@ export const DataTable = <TData extends RowData>({
 
   return (
     <div className="space-y-4">
-      {(onSearchChange || bulkActions) && (
+      {(onSearchChange || toolbarFilters || toolbarActions || bulkActions) && (
         <DataTableToolbar
           table={table}
           searchValue={searchValue ?? ""}
-          onSearchChange={onSearchChange ?? (() => { })}
+          onSearchChange={onSearchChange}
           searchPlaceholder={searchPlaceholder}
           filters={toolbarFilters}
+          actions={toolbarActions}
         />
       )}
 

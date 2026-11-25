@@ -1,6 +1,7 @@
-using Cinema.Application.Caching;
+﻿using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Dashboard;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Bookings;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;

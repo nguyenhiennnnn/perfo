@@ -1,10 +1,12 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Net;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
+using Cinema.Application.Interfaces.Notifications;
+
 
 namespace Cinema.Application.Utils;
 

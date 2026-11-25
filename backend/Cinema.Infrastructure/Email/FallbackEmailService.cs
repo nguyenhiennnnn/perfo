@@ -1,4 +1,4 @@
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.Interfaces.Notifications;
 using Cinema.Application.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

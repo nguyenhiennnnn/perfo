@@ -1,5 +1,9 @@
-using Cinema.Application.DTOs.Showtimes;
-using Cinema.Application.Interfaces;
+﻿using Cinema.Application.DTOs.Showtimes;
+using Cinema.Application.Interfaces.Audit;
+using Cinema.Application.Interfaces.Auth;
+using Cinema.Application.Interfaces.Bookings;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Notifications;
 using Cinema.Application.Services.Audit;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;

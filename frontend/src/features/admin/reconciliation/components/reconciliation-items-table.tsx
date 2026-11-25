@@ -17,6 +17,7 @@ import {
 } from "../utils/reconciliation-labels";
 import { createItemColumns } from "./item-columns";
 import { ReconciliationItemForm } from "./reconciliation-item-form";
+import { FilterBar } from "@/components/common/filter/filter-bar";
 
 interface ReconciliationItemsTableProps {
   fixedSessionId?: number;
@@ -79,13 +80,7 @@ export const ReconciliationItemsTable = ({ fixedSessionId }: ReconciliationItems
 
   return (
     <div className="space-y-4">
-      <div
-        className={
-          fixedSessionId === undefined
-            ? "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"
-            : "grid grid-cols-1 gap-3 sm:grid-cols-3"
-        }
-      >
+      <FilterBar>
         <EnumSelectFilter
           value={params.result}
           onChange={(result) => void setParams({ result, page: DEFAULT_PAGE })}
@@ -120,7 +115,7 @@ export const ReconciliationItemsTable = ({ fixedSessionId }: ReconciliationItems
             allLabel="Tất cả phiên"
           />
         )}
-      </div>
+      </FilterBar>
 
       <DataTable
         columns={columns}

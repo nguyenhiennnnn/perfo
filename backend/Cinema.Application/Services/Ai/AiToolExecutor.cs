@@ -1,9 +1,11 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.Json.Nodes;
 using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Ai;
 using Cinema.Application.DTOs.Pricing;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Ledger;
+using Cinema.Application.Interfaces.Pricing;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;

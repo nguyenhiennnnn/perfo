@@ -1,6 +1,7 @@
-using Cinema.Api.Extensions;
+﻿using Cinema.Api.Extensions;
 using Cinema.Application.DTOs.Reports;
-using Cinema.Application.Interfaces;
+using Cinema.Application.Interfaces.ImportExport;
+using Cinema.Application.Interfaces.Reports;
 using Cinema.Application.Utils;
 using Cinema.Api.Filters;
 using Cinema.Shared.Constants;

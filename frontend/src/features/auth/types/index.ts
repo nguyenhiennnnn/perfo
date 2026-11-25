@@ -6,6 +6,7 @@ export interface RegisterRequest {
   password: string;
   phone?: string | null;
   marketingOptIn: boolean;
+  referralCode?: string | null;
 }
 
 export interface RegisterResponse {

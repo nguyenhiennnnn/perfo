@@ -112,6 +112,41 @@ export const GiftCardStatus = {
 } as const;
 export type GiftCardStatus = (typeof GiftCardStatus)[keyof typeof GiftCardStatus];
 
+export const LoyaltyRewardType = {
+  FreeTicket: "FreeTicket",
+  FreeCombo: "FreeCombo",
+  Discount: "Discount",
+} as const;
+export type LoyaltyRewardType = (typeof LoyaltyRewardType)[keyof typeof LoyaltyRewardType];
+
+export const LoyaltyLotType = {
+  Earn: "Earn",
+  Bonus: "Bonus",
+  Adjustment: "Adjustment",
+} as const;
+export type LoyaltyLotType = (typeof LoyaltyLotType)[keyof typeof LoyaltyLotType];
+
+export const LoyaltyChallengeConditionType = {
+  DistinctMovies: "DistinctMovies",
+  Screenings: "Screenings",
+} as const;
+export type LoyaltyChallengeConditionType =
+  (typeof LoyaltyChallengeConditionType)[keyof typeof LoyaltyChallengeConditionType];
+
+export const LoyaltyChallengeRewardType = {
+  Points: "Points",
+  Gift: "Gift",
+} as const;
+export type LoyaltyChallengeRewardType =
+  (typeof LoyaltyChallengeRewardType)[keyof typeof LoyaltyChallengeRewardType];
+
+export const LoyaltyLotStatus = {
+  Active: "Active",
+  Depleted: "Depleted",
+  Expired: "Expired",
+} as const;
+export type LoyaltyLotStatus = (typeof LoyaltyLotStatus)[keyof typeof LoyaltyLotStatus];
+
 export const PaymentStatus = {
   Pending: "Pending",
   Success: "Success",

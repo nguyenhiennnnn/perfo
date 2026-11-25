@@ -36,6 +36,14 @@ export const ENDPOINTS = {
     balance: "/gift-cards/balance",
     bulkImport: "/gift-cards/bulk/import",
   },
+  loyalty: {
+    summary: "/loyalty/summary",
+    lots: "/loyalty/lots",
+    rewards: "/loyalty/rewards",
+    challenges: "/loyalty/challenges",
+    referrals: "/loyalty/referrals",
+    redeemReward: (id: number) => `/loyalty/rewards/${id}/redeem`,
+  },
   catalog: {
     genres: "/genres",
     languages: "/languages",

@@ -60,6 +60,7 @@ export const invalidations = {
     k.adminComboPickups.all(),
     k.combos.all(),
     k.giftCards.all(),
+    k.loyalty.all(),
   ],
 
   counterShiftChanged: (): KeyList => [
@@ -97,6 +98,8 @@ export const invalidations = {
     k.adminInvoiceRequests.all(),
     k.adminAuditLogs.all(),
   ],
+
+  loyaltyChanged: (): KeyList => [k.loyalty.all(), k.promotions.mine(), k.users.me()],
 
   orderGiftCardChanged: (): KeyList => [...orderViews(), k.giftCards.all()],
   orderPromotionChanged: (): KeyList => [...orderViews(), k.promotions.mine()],

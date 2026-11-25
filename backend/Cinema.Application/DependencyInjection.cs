@@ -154,6 +154,7 @@ public static class DependencyInjection
         services.AddScoped<ILoyaltyPointService, LoyaltyPointService>();
         services.AddScoped<ILoyaltyExpiryReminderService, LoyaltyExpiryReminderService>();
         services.AddScoped<ILoyaltyAdminService, LoyaltyAdminService>();
+        services.AddScoped<ILoyaltyMemberQueryService, LoyaltyMemberQueryService>();
         services.AddScoped<ILoyaltyRewardAdminService, LoyaltyRewardAdminService>();
         services.AddScoped<ILoyaltyRewardCatalogService, LoyaltyRewardCatalogService>();
         services.AddScoped<ILoyaltyRewardRedemptionService, LoyaltyRewardRedemptionService>();

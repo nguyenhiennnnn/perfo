@@ -31,6 +31,9 @@ const MembershipPage = lazyRoute(() => import("@/features/client/membership/page
 const GiftCardPurchasePage = lazyRoute(() => import("@/features/client/gift-cards/pages/gift-card-purchase-page"));
 const GiftCardBulkPage = lazyRoute(() => import("@/features/client/gift-cards/pages/gift-card-bulk-page"));
 const AccountGiftCardsPage = lazyRoute(() => import("@/features/client/gift-cards/pages/purchased-gift-cards-page"));
+const AccountPointsPage = lazyRoute(() => import("@/features/client/loyalty/pages/loyalty-page"));
+const AccountChallengesPage = lazyRoute(() => import("@/features/client/loyalty/pages/challenges-page"));
+const AccountReferralsPage = lazyRoute(() => import("@/features/client/loyalty/pages/referrals-page"));
 const PolicyPage = lazyRoute(() => import("@/features/client/policies/pages/policy-page"));
 
 export const clientRoutes: RouteObject[] = [
@@ -59,6 +62,9 @@ export const clientRoutes: RouteObject[] = [
               { path: "profile", lazy: AccountProfilePage },
               { path: "tickets", lazy: AccountTicketsPage },
               { path: "gift-cards", lazy: AccountGiftCardsPage },
+              { path: "points", lazy: AccountPointsPage },
+              { path: "challenges", lazy: AccountChallengesPage },
+              { path: "referrals", lazy: AccountReferralsPage },
               { path: "reviews", lazy: AccountReviewsPage },
               { path: "change-password", lazy: ChangePasswordPage },
             ],

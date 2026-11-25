@@ -40,6 +40,15 @@ export const queryKeys = {
     purchased: (params?: object) => ["gift-cards", "purchased", params] as const,
   },
 
+  loyalty: {
+    all: () => ["loyalty"] as const,
+    summary: () => ["loyalty", "summary"] as const,
+    lots: (params?: object) => ["loyalty", "lots", params] as const,
+    rewards: () => ["loyalty", "rewards"] as const,
+    challenges: () => ["loyalty", "challenges"] as const,
+    referrals: () => ["loyalty", "referrals"] as const,
+  },
+
   invoices: {
     all: () => ["invoices"] as const,
     profiles: () => ["invoices", "profiles"] as const,

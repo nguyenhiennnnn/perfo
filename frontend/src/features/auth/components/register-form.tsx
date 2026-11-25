@@ -2,7 +2,7 @@ import { VALIDATION_MESSAGES } from "@/config/error-messages";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { CheckCircle2 } from "lucide-react";
 import { z } from "zod";
 
@@ -19,6 +19,10 @@ import { strongPasswordSchema } from "@/lib/validators";
 import type { RegisterRequest } from "../types";
 import { PasswordStrengthMeter } from "@/components/common/form/password-strength-meter";
 import { ROUTES } from "@/config/routes";
+import {
+  REFERRAL_CODE_MAX_LENGTH,
+  REFERRAL_QUERY_PARAM,
+} from "@/features/client/loyalty/utils/referral-link";
 
 import { PERSON_NAME_PLACEHOLDER, PASSWORD_PLACEHOLDER } from "@/config/default-constants";
 const registerSchema = z
@@ -38,6 +42,10 @@ const registerSchema = z
     password: strongPasswordSchema,
     confirmPassword: z.string().min(1, VALIDATION_MESSAGES.confirmPasswordRequired),
     marketingOptIn: z.boolean(),
+    referralCode: z
+      .string()
+      .max(REFERRAL_CODE_MAX_LENGTH, `Mã giới thiệu tối đa ${REFERRAL_CODE_MAX_LENGTH} ký tự.`)
+      .optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: VALIDATION_MESSAGES.passwordMismatch,
@@ -49,6 +57,11 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 export const RegisterForm = () => {
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
   const { mutate: registerUser, isPending, error } = useRegister();
+  const [searchParams] = useSearchParams();
+  const initialReferralCode = (searchParams.get(REFERRAL_QUERY_PARAM) ?? "")
+    .trim()
+    .toUpperCase()
+    .slice(0, REFERRAL_CODE_MAX_LENGTH);
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -60,6 +73,7 @@ export const RegisterForm = () => {
       password: "",
       confirmPassword: "",
       marketingOptIn: false,
+      referralCode: initialReferralCode,
     },
   });
 
@@ -72,6 +86,7 @@ export const RegisterForm = () => {
       password: data.password,
       phone: data.phone || null,
       marketingOptIn: data.marketingOptIn,
+      referralCode: data.referralCode?.trim().toUpperCase() || null,
     };
     registerUser(payload, {
       onSuccess: () => setSubmittedEmail(data.email),
@@ -157,6 +172,14 @@ export const RegisterForm = () => {
           type="password"
           autoComplete="new-password"
           placeholder={PASSWORD_PLACEHOLDER}
+        />
+
+        <FormInputField
+          name="referralCode"
+          control={form.control}
+          label="Mã giới thiệu (không bắt buộc)"
+          placeholder="Nhập mã của người giới thiệu"
+          autoComplete="off"
         />
 
         <Controller

@@ -24,6 +24,7 @@ const AdminDailyClosingPage = lazyRoute(() => import("@/features/admin/daily-clo
 const AdminDailyClosingHistoryPage = lazyRoute(() => import("@/features/admin/daily-closings/pages/daily-closing-history-page"));
 const AdminDailyClosingReportPage = lazyRoute(() => import("@/features/admin/daily-closings/pages/daily-closing-report-page"));
 const AdminLedgerAdjustmentsPage = lazyRoute(() => import("@/features/admin/ledger-adjustments/pages/ledger-adjustments-page"));
+const AdminGiftCardsPage = lazyRoute(() => import("@/features/admin/gift-cards/pages/gift-cards-page"));
 const AdminCashRefundsPage = lazyRoute(() => import("@/features/admin/cash-refunds/pages/cash-refunds-page"));
 const AdminRoomChangeRefundsPage = lazyRoute(
   () => import("@/features/admin/room-change-refunds/pages/room-change-refunds-page"),
@@ -119,6 +120,7 @@ export const adminRoutes: RouteObject[] = [
           { path: "daily-closings/history", lazy: AdminDailyClosingHistoryPage },
           { path: "daily-closings/:date/report", lazy: AdminDailyClosingReportPage },
           { path: "ledger-adjustments", lazy: AdminLedgerAdjustmentsPage },
+          { path: "gift-cards", lazy: AdminGiftCardsPage },
           { path: "cash-refunds", lazy: AdminCashRefundsPage },
           { path: "room-change-refunds", lazy: AdminRoomChangeRefundsPage },
           { path: "audit-logs", lazy: AdminAuditLogsPage },

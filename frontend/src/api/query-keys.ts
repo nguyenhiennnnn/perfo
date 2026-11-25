@@ -109,6 +109,12 @@ export const queryKeys = {
     list: (params: object) => ["admin", "ledger-adjustments", "list", params] as const,
   },
 
+  adminGiftCards: {
+    all: () => ["admin", "gift-cards"] as const,
+    list: (params: object) => ["admin", "gift-cards", "list", params] as const,
+    history: (id: number) => ["admin", "gift-cards", "history", id] as const,
+  },
+
   adminOrders: {
     all: () => ["admin", "orders"] as const,
     list: (params: object) => ["admin", "orders", "list", params] as const,

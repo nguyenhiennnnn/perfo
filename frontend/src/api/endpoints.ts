@@ -147,6 +147,12 @@ export const ENDPOINTS = {
     ledgerAdjustments: {
       root: "/admin/ledger-adjustments",
     },
+    giftCards: {
+      root: "/admin/gift-cards",
+      history: (id: number) => `/admin/gift-cards/${id}/history`,
+      resend: (id: number) => `/admin/gift-cards/${id}/resend`,
+      cancel: (id: number) => `/admin/gift-cards/${id}/cancel`,
+    },
     importExport: {
       jobs: "/admin/import-export/jobs",
       jobById: (id: string) => `/admin/import-export/jobs/${id}`,

@@ -75,6 +75,7 @@ export const ROUTES = {
     dailyClosingHistory: "/admin/daily-closings/history",
     dailyClosingReport: (date: string) => `/admin/daily-closings/${date}/report`,
     ledgerAdjustments: "/admin/ledger-adjustments",
+    giftCards: "/admin/gift-cards",
     promotions: "/admin/promotions",
     promotionReports: "/admin/promotions/reports",
     promotionRedemptions: (promotionId: number | string) =>

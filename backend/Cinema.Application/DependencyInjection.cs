@@ -165,6 +165,7 @@ public static class DependencyInjection
         services.AddScoped<IGiftCardCancellationService, GiftCardCancellationService>();
         services.AddScoped<IGiftCardPurchaseService, GiftCardPurchaseService>();
         services.AddScoped<IGiftCardPurchasedQueryService, GiftCardPurchasedQueryService>();
+        services.AddScoped<IGiftCardAdminQueryService, GiftCardAdminQueryService>();
         services.AddScoped<IGiftCardBulkOrderService, GiftCardBulkOrderService>();
         services.AddScoped<IGiftCardEmailService, GiftCardEmailService>();
         services.AddScoped<IGiftCardDispatchService, GiftCardDispatchService>();

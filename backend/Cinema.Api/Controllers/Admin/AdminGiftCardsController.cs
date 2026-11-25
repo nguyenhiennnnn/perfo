@@ -12,10 +12,23 @@ namespace Cinema.Api.Controllers.Admin;
 [Route(ApiPaths.AdminRoutePrefix + "/gift-cards")]
 [Authorize(Policy = Policies.AdminOnly)]
 public class AdminGiftCardsController(
+    IGiftCardAdminQueryService queryService,
     IGiftCardDispatchService dispatchService,
     IGiftCardCancellationService cancellationService
 ) : ControllerBase
 {
+    [HttpGet]
+    public async Task<IActionResult> GetAll(
+        [FromQuery] AdminGiftCardListFilter filter,
+        [FromQuery] int page = Pagination.DefaultPage,
+        [FromQuery] int pageSize = Pagination.DefaultPageSize,
+        CancellationToken cancellationToken = default
+    ) => Ok(await queryService.GetAsync(filter, page, pageSize, cancellationToken));
+
+    [HttpGet("{id:int}/history")]
+    public async Task<IActionResult> GetHistory(int id, CancellationToken cancellationToken) =>
+        Ok(await queryService.GetHistoryAsync(id, cancellationToken));
+
     [HttpPost("{id:int}/resend")]
     [SuccessMessage(nameof(Messages.Success_GiftCardResent))]
     public async Task<IActionResult> Resend(int id, CancellationToken cancellationToken)

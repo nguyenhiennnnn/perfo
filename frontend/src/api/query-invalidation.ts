@@ -75,6 +75,14 @@ export const invalidations = {
     ...dashboard(),
   ],
 
+  adminGiftCardChanged: (): KeyList => [
+    k.adminGiftCards.all(),
+    k.giftCards.all(),
+    ...orderViews(),
+    k.adminAuditLogs.all(),
+    ...dashboard(),
+  ],
+
   dailyClosingChanged: (): KeyList => [
     k.adminDailyClosings.all(),
     k.adminCounterShifts.all(),

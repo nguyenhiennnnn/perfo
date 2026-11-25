@@ -5,6 +5,7 @@ import {
   Film,
   Calendar,
   Wallet,
+  Gift,
   Landmark,
   CalendarClock,
   Tv,
@@ -198,6 +199,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         label: "Quản lý đơn hàng",
         icon: Ticket,
         roles: [Role.Admin, Role.Employee],
+      },
+      {
+        to: ROUTES.admin.giftCards,
+        label: "Thẻ quà tặng",
+        icon: Gift,
+        roles: [Role.Admin],
       },
       {
         to: ROUTES.admin.counterShifts,

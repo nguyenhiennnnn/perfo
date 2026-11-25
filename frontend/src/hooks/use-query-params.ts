@@ -355,6 +355,18 @@ export const useAdminLedgerAdjustmentParams = (
   options?: Parameters<typeof useQueryStates<typeof adminLedgerAdjustmentParsers>>[1],
 ) => useQueryStates(adminLedgerAdjustmentParsers, options);
 
+const adminGiftCardParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  status: parseAsString,
+  type: parseAsString,
+};
+
+export const useAdminGiftCardParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminGiftCardParsers>>[1],
+) => useQueryStates(adminGiftCardParsers, options);
+
 const adminDailyClosingParsers = {
   date: parseAsString,
 };

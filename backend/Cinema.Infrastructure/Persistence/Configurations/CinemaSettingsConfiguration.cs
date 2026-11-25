@@ -56,6 +56,9 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
             .Property(x => x.LoyaltyWindowMonths)
             .HasDefaultValue(CinemaSettings.DefaultLoyaltyWindowMonths);
         builder
+            .Property(x => x.PointsExpiryMonths)
+            .HasDefaultValue(CinemaSettings.DefaultPointsExpiryMonths);
+        builder
             .Property(x => x.MovieEndGraceDays)
             .HasDefaultValue(CinemaSettings.DefaultMovieEndGraceDays);
         builder

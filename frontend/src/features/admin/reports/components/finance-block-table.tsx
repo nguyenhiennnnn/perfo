@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { TriangleAlert } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -32,9 +33,10 @@ export const formatFinanceCell = (column: FinanceReportColumnDto, value: Finance
 interface FinanceBlockTableProps {
   block: FinanceReportBlockDto;
   className?: string;
+  children?: ReactNode;
 }
 
-export const FinanceBlockTable = ({ block, className }: FinanceBlockTableProps) => {
+export const FinanceBlockTable = ({ block, className, children }: FinanceBlockTableProps) => {
   const totals = block.totals ?? null;
   const hasTotals = totals != null && block.columns.some((c) => totals[c.key] != null);
 
@@ -54,6 +56,8 @@ export const FinanceBlockTable = ({ block, className }: FinanceBlockTableProps) 
             </div>
           </div>
         )}
+
+        {children}
 
         <Table>
           <TableHeader>

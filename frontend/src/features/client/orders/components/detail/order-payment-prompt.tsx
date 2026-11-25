@@ -19,6 +19,15 @@ const getPromptAction = (order: OrderDetailDto, showtimeId?: number | null) => {
       restartLabel: "Mua thẻ mới",
     };
   }
+  if (order.type === OrderType.Supplement) {
+    return {
+      resumeTo: ROUTES.booking.supplement(order.orderId),
+      restartTo: order.originalOrderId
+        ? ROUTES.account.ticketDetail(order.originalOrderId)
+        : ROUTES.account.tickets,
+      restartLabel: "Về đơn vé gốc",
+    };
+  }
   if (!showtimeId) return null;
   return {
     resumeTo: `${ROUTES.booking.detail(showtimeId)}?resume=${order.orderId}`,

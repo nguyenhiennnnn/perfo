@@ -396,7 +396,9 @@ internal static class OrderSeedKit
                     Order = order,
                     Points = earned,
                     RevokedPoints = revokedPoints,
+                    RemainingPoints = earned - revokedPoints,
                     EarnedAt = confirmedAt,
+                    ExpiresAt = confirmedAt.AddMonths(CinemaSettings.DefaultPointsExpiryMonths),
                 }
             );
 

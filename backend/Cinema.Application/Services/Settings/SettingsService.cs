@@ -86,6 +86,8 @@ public class SettingsService(
             settings.MaxComboQuantity = maxComboQuantity;
         if (request.LoyaltyWindowMonths is { } loyaltyWindowMonths)
             settings.LoyaltyWindowMonths = loyaltyWindowMonths;
+        if (request.PointsExpiryMonths is { } pointsExpiryMonths)
+            settings.PointsExpiryMonths = pointsExpiryMonths;
         if (request.MovieEndGraceDays is { } movieEndGraceDays)
             settings.MovieEndGraceDays = movieEndGraceDays;
         if (request.ShowtimeLookaheadDays is { } showtimeLookaheadDays)
@@ -194,6 +196,7 @@ public class SettingsService(
     private AdminCinemaSettingsDto ToAdminDto(CinemaSettings settings) =>
         new(ToDto(settings), settings.DefaultEmployeePassword)
         {
+            PointsExpiryMonths = settings.PointsExpiryMonths,
             TicketPriceRoundingStep = settings.TicketPriceRoundingStep,
             DynamicPricingMaxIncreasePercent = settings.DynamicPricingMaxIncreasePercent,
             DynamicPricingMaxDecreasePercent = settings.DynamicPricingMaxDecreasePercent,

@@ -12,6 +12,8 @@ import type {
   OrderListParams,
   OrderListItemDto,
   OrderDetailDto,
+  OrderComboSuggestionsDto,
+  ComboSupplementRequest,
   OrderExchangePreviewParams,
   OrderExchangePreviewResponse,
   StartOrderExchangeRequest,
@@ -28,6 +30,12 @@ export const ordersApi = {
 
   getOrderDetail: (orderId: number) =>
     apiGet<ApiResponse<OrderDetailDto>>(ENDPOINTS.orders.byId(orderId)),
+
+  getComboSuggestions: (orderId: number) =>
+    apiGet<ApiResponse<OrderComboSuggestionsDto>>(ENDPOINTS.orders.comboSuggestions(orderId)),
+
+  createComboSupplement: (orderId: number, body: ComboSupplementRequest) =>
+    apiPost<ApiResponse<HoldOrderResponse>>(ENDPOINTS.orders.comboSupplement(orderId), body),
 
   applyPayment: (orderId: number, body: CheckoutRequest) =>
     apiPost<ApiResponse<CheckoutResponse>>(ENDPOINTS.orders.checkout(orderId), body),

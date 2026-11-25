@@ -92,6 +92,7 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         IntRange(x => x.MaxSeatsPerBooking, "maxSeatsPerBooking", 1, 50);
         IntRange(x => x.MaxComboQuantity, "maxComboQuantity", 1, 50);
         IntRange(x => x.LoyaltyWindowMonths, "loyaltyWindowMonths", 1, 120);
+        IntRange(x => x.PointsExpiryMonths, "pointsExpiryMonths", 1, 120);
         IntRange(x => x.MovieEndGraceDays, "movieEndGraceDays", 0, 365);
         IntRange(x => x.ShowtimeLookaheadDays, "showtimeLookaheadDays", 1, 60);
         IntRange(x => x.SchedulerStepMinutes, "schedulerStepMinutes", 1, 60);

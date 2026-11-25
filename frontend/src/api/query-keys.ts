@@ -26,6 +26,7 @@ export const queryKeys = {
     all: () => ["orders"] as const,
     myList: (params?: object) => ["orders", "my", params] as const,
     detail: (orderId: number) => ["orders", "detail", orderId] as const,
+    comboSuggestions: (orderId: number) => ["orders", "combo-suggestions", orderId] as const,
     exchangePreview: (channel: string, orderId: number, lineIds: number[]) =>
       ["orders", "exchange-preview", channel, orderId, lineIds] as const,
   },

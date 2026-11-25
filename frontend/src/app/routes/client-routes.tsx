@@ -10,6 +10,7 @@ import { ROUTES } from "@/config/routes";
 
 const BookingPage = lazyRoute(() => import("@/features/client/orders/pages/booking-page"));
 const BookingResultPage = lazyRoute(() => import("@/features/client/orders/pages/booking-result-page"));
+const SupplementPaymentPage = lazyRoute(() => import("@/features/client/orders/pages/supplement-payment-page"));
 const HomePage = lazyRoute(() => import("@/features/client/home/pages/home-page"));
 const MovieDetailPage = lazyRoute(() => import("@/features/client/movies/pages/movie-detail-page"));
 const MoviesPage = lazyRoute(() => import("@/features/client/movies/pages/movies-page"));
@@ -47,6 +48,7 @@ export const clientRoutes: RouteObject[] = [
       { path: "policies/:slug", lazy: PolicyPage },
       { path: "booking/:showtimeId", lazy: BookingPage },
       { path: "booking/result", lazy: BookingResultPage },
+      { path: "booking/supplement/:orderId", lazy: SupplementPaymentPage },
       {
         path: "account",
         element: <CustomerProtectedRoute />,

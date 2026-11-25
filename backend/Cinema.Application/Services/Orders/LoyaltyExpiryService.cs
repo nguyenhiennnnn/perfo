@@ -1,5 +1,6 @@
 ﻿using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Utils;
+using Cinema.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -13,7 +14,7 @@ public class LoyaltyExpiryService(IAppDbContext db, ILogger<LoyaltyExpiryService
         var cutoff = LoyaltyWindow.Cutoff(now, await LoyaltyWindow.LoadMonthsAsync(db, ct));
 
         var sums = await db
-            .LoyaltyPointEntries.Where(e => e.EarnedAt > cutoff)
+            .LoyaltyPointEntries.Where(e => e.Type == LoyaltyLotType.Earn && e.EarnedAt > cutoff)
             .GroupBy(e => e.UserId)
             .Select(g => new { UserId = g.Key, Points = g.Sum(e => e.Points - e.RevokedPoints) })
             .ToDictionaryAsync(x => x.UserId, x => x.Points, ct);

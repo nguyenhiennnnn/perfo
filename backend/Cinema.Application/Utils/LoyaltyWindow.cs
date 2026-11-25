@@ -1,6 +1,7 @@
 ﻿using Cinema.Application.Caching;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Domain.Entities;
+using Cinema.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Utils;
@@ -31,7 +32,9 @@ public static class LoyaltyWindow
     {
         var cutoff = Cutoff(utcNow, await LoadMonthsAsync(db, ct));
         var entries = await db
-            .LoyaltyPointEntries.Where(e => e.UserId == userId && e.EarnedAt > cutoff)
+            .LoyaltyPointEntries.Where(e =>
+                e.UserId == userId && e.Type == LoyaltyLotType.Earn && e.EarnedAt > cutoff
+            )
             .ToListAsync(ct);
         return entries.Sum(e => e.Points - e.RevokedPoints);
     }
@@ -75,7 +78,9 @@ public static class LoyaltyWindow
 
         var cutoff = Cutoff(utcNow, await LoadMonthsAsync(db, ct));
         var sums = await db
-            .LoyaltyPointEntries.Where(e => userIds.Contains(e.UserId) && e.EarnedAt > cutoff)
+            .LoyaltyPointEntries.Where(e =>
+                userIds.Contains(e.UserId) && e.Type == LoyaltyLotType.Earn && e.EarnedAt > cutoff
+            )
             .GroupBy(e => e.UserId)
             .Select(g => new { UserId = g.Key, Points = g.Sum(e => e.Points - e.RevokedPoints) })
             .ToDictionaryAsync(x => x.UserId, x => x.Points, ct);

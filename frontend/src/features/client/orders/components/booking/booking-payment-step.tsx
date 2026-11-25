@@ -108,7 +108,9 @@ export const BookingPaymentStep = ({
             ? "Đang hủy..."
             : order?.type === OrderType.Exchange
               ? "Hủy đổi suất, giữ vé cũ"
-              : "Hủy, chọn lại ghế"}
+              : order?.type === OrderType.Supplement
+                ? "Hủy đơn combo"
+                : "Hủy, chọn lại ghế"}
         </Button>
       )}
     </div>

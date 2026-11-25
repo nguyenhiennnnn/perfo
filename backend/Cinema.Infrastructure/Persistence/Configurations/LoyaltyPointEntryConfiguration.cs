@@ -17,11 +17,17 @@ public class LoyaltyPointEntryConfiguration : IEntityTypeConfiguration<LoyaltyPo
                     "CK_LoyaltyPointEntries_Revoked",
                     "\"RevokedPoints\" >= 0 AND \"RevokedPoints\" <= \"Points\""
                 );
+                t.HasCheckConstraint(
+                    "CK_LoyaltyPointEntries_Remaining",
+                    "\"RemainingPoints\" >= 0 AND \"RemainingPoints\" <= \"Points\""
+                );
             }
         );
         builder.HasKey(x => x.EntryId);
+        builder.Property(x => x.Type).HasConversion<string>().HasMaxLength(20);
         builder.Property(x => x.RevokedPoints).HasDefaultValue(0);
         builder.Property(x => x.EarnedAt).HasColumnType("timestamp without time zone");
+        builder.Property(x => x.ExpiresAt).HasColumnType("timestamp without time zone");
 
         builder
             .HasOne(x => x.User)
@@ -42,5 +48,9 @@ public class LoyaltyPointEntryConfiguration : IEntityTypeConfiguration<LoyaltyPo
         builder
             .HasIndex(x => new { x.UserId, x.EarnedAt })
             .HasDatabaseName("IX_LoyaltyPointEntries_User_EarnedAt");
+        builder
+            .HasIndex(x => new { x.UserId, x.ExpiresAt })
+            .HasFilter("\"RemainingPoints\" > 0")
+            .HasDatabaseName("IX_LoyaltyPointEntries_User_Lots");
     }
 }

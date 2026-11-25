@@ -1,13 +1,19 @@
 ﻿using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Loyalty;
 using Cinema.Application.Interfaces.Orders;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
+using Cinema.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Cinema.Application.Services.Orders;
 
-public class OrderLoyaltyService(IAppDbContext db, ILogger<OrderLoyaltyService> logger)
+public class OrderLoyaltyService(
+    IAppDbContext db,
+    ILoyaltyPointService points,
+    ILogger<OrderLoyaltyService> logger
+)
     : IOrderLoyaltyService
 {
     public async Task AwardAsync(
@@ -32,14 +38,14 @@ public class OrderLoyaltyService(IAppDbContext db, ILogger<OrderLoyaltyService> 
         var earned = LoyaltyWindow.PointsFor(paidAmount, settings.PointsPerAmount);
 
         if (earned > 0)
-            db.LoyaltyPointEntries.Add(
-                new LoyaltyPointEntry
-                {
-                    UserId = userId,
-                    OrderId = orderId,
-                    Points = earned,
-                    EarnedAt = now,
-                }
+            await points.AddLotAsync(
+                userId,
+                LoyaltyLotType.Earn,
+                earned,
+                orderId,
+                null,
+                now,
+                cancellationToken
             );
 
         var oldTierId = profile.TierId;
@@ -89,7 +95,18 @@ public class OrderLoyaltyService(IAppDbContext db, ILogger<OrderLoyaltyService> 
         if (entry is not null)
         {
             var revoke = LoyaltyWindow.PointsFor(refundedAmount, settings.PointsPerAmount);
+            var revokedBefore = entry.RevokedPoints;
             entry.RevokedPoints = Math.Min(entry.Points, entry.RevokedPoints + revoke);
+            var effective = entry.RevokedPoints - revokedBefore;
+            if (effective > 0)
+                await points.RevokeAsync(
+                    userId,
+                    entry.EntryId,
+                    orderId,
+                    effective,
+                    DateTime.UtcNow,
+                    cancellationToken
+                );
         }
 
         profile.TotalSpent = Math.Max(0, profile.TotalSpent - refundedAmount);

@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/formatters";
 import { useFinanceReport } from "../hooks/use-reports";
 import { FinancePeriodFilter } from "../components/finance-period-filter";
+import { ComboPreorderSummary, COMBO_PREORDER_BLOCK_KEY } from "../components/combo-preorder-summary";
 import { FinanceBlockTable } from "../components/finance-block-table";
 import { resolveFinanceRange, shiftFinanceAnchor } from "../utils/finance-period";
 
@@ -93,7 +94,9 @@ const AdminFinanceReportPage = () => {
               {data.blocks
                 .filter((block) => block.rows.length > 0)
                 .map((block) => (
-                  <FinanceBlockTable key={block.key} block={block} />
+                  <FinanceBlockTable key={block.key} block={block}>
+                    {block.key === COMBO_PREORDER_BLOCK_KEY && <ComboPreorderSummary block={block} />}
+                  </FinanceBlockTable>
                 ))}
             </div>
           )}

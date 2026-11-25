@@ -53,6 +53,8 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
 
     public string DefaultEmployeePassword { get; init; }
 
+    public int PointsExpiryMonths { get; init; }
+
     public decimal TicketPriceRoundingStep { get; init; }
 
     public decimal DynamicPricingMaxIncreasePercent { get; init; }
@@ -128,6 +130,7 @@ public record UpdateSettingsRequest(
     int? MaxSeatsPerBooking = null,
     int? MaxComboQuantity = null,
     int? LoyaltyWindowMonths = null,
+    int? PointsExpiryMonths = null,
     int? MovieEndGraceDays = null,
     int? ShowtimeLookaheadDays = null,
     int? SchedulerStepMinutes = null,

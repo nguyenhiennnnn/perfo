@@ -8,6 +8,7 @@ import type {
   CancelOrderRequest,
   OrderDetailDto,
   OrderListParams,
+  ComboSupplementRequest,
 } from "../types";
 
 export function useMyOrders(params: Omit<OrderListParams, "cursor">) {
@@ -54,6 +55,23 @@ export function useHoldSeats() {
   return useMutation({
     meta: { invalidates: "bookingChanged" },
     mutationFn: (body: HoldSeatsRequest) => ordersApi.holdSeats(body),
+  });
+}
+
+export function useOrderComboSuggestions(orderId: number, enabled = true) {
+  return useQuery({
+    queryKey: queryKeys.orders.comboSuggestions(orderId),
+    queryFn: () => ordersApi.getComboSuggestions(orderId),
+    enabled: enabled && orderId > 0,
+    refetchOnMount: "always",
+    select: (res) => res.data,
+  });
+}
+
+export function useCreateComboSupplement(orderId: number) {
+  return useMutation({
+    meta: { invalidates: "bookingChanged" },
+    mutationFn: (body: ComboSupplementRequest) => ordersApi.createComboSupplement(orderId, body),
   });
 }
 

@@ -32,6 +32,32 @@ export interface HoldOrderResponse {
   expiresAt: string;
 }
 
+export interface ComboSupplementRequest {
+  combos: ComboSelectionRequest[];
+}
+
+export interface OrderComboSuggestionDto {
+  comboId: number;
+  name: string;
+  description?: string | null;
+  imageUrl?: string | null;
+  suggestedQuantity: number;
+  listPrice: number;
+  preorderPrice: number;
+  label: string;
+  matchesTicketCount: boolean;
+  purchasedBefore: boolean;
+}
+
+export interface OrderComboSuggestionsDto {
+  orderId: number;
+  canSupplement: boolean;
+  ticketCount: number;
+  discountPercent: number;
+  validUntil?: string | null;
+  items: OrderComboSuggestionDto[];
+}
+
 export interface CheckoutRequest {
   paymentMethod: string;
 }

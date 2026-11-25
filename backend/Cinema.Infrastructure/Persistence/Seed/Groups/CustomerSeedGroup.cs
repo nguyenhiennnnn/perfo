@@ -176,7 +176,11 @@ internal sealed class CustomerSeedGroup : ISeedGroup
                         {
                             User = user,
                             Points = seed.Points,
+                            RemainingPoints = seed.Points,
                             EarnedAt = DateTime.UtcNow,
+                            ExpiresAt = DateTime.UtcNow.AddMonths(
+                                CinemaSettings.DefaultPointsExpiryMonths
+                            ),
                         }
                     );
             }

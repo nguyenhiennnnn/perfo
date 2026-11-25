@@ -16,6 +16,9 @@ import { OrderInvoiceSection } from "@/features/client/invoices/components/order
 import { OrderLinesSection } from "@/features/client/orders/components/detail/order-lines-section";
 import { OrderPaymentPrompt } from "@/features/client/orders/components/detail/order-payment-prompt";
 import { OrderPriceSection } from "@/features/client/orders/components/detail/order-price-section";
+import { OrderComboSupplementSection } from "@/features/client/orders/components/supplement/order-combo-supplement-section";
+import { SupplementOriginalNotice } from "@/features/client/orders/components/supplement/supplement-original-notice";
+import { SupplementPickupSection } from "@/features/client/orders/components/supplement/supplement-pickup-section";
 import { OrderTicketsSection } from "@/features/client/orders/components/detail/order-tickets-section";
 import { OrderTransactionsSection } from "@/features/client/orders/components/detail/order-transactions-section";
 import { formatDateTime } from "@/lib/formatters";
@@ -30,9 +33,15 @@ const TicketDetailContent = ({ order }: { order: OrderDetailDto }) => {
 
       <OrderPaymentPrompt order={order} />
 
+      <SupplementOriginalNotice order={order} />
+
+      <SupplementPickupSection order={order} />
+
       <OrderCancelSection order={order} />
 
       <OrderTicketsSection order={order} />
+
+      <OrderComboSupplementSection order={order} />
 
       {showing && (
         <div className="flex gap-4 cut-md bg-card p-4">

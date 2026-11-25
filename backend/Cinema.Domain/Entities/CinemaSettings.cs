@@ -39,6 +39,7 @@ public class CinemaSettings
     public const int DefaultMaxSeatsPerBooking = 10;
     public const int DefaultMaxComboQuantity = 10;
     public const int DefaultLoyaltyWindowMonths = 12;
+    public const int DefaultPointsExpiryMonths = 12;
     public const int DefaultMovieEndGraceDays = 1;
     public const int DefaultShowtimeLookaheadDays = 7;
 
@@ -49,6 +50,8 @@ public class CinemaSettings
     public int MaxComboQuantity { get; set; } = DefaultMaxComboQuantity;
 
     public int LoyaltyWindowMonths { get; set; } = DefaultLoyaltyWindowMonths;
+
+    public int PointsExpiryMonths { get; set; } = DefaultPointsExpiryMonths;
 
     public int MovieEndGraceDays { get; set; } = DefaultMovieEndGraceDays;
 

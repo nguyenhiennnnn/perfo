@@ -13,6 +13,7 @@ public class CustomerProfileConfiguration : IEntityTypeConfiguration<CustomerPro
         builder.HasKey(x => x.UserId);
         builder.Property(x => x.UserId).ValueGeneratedNever();
         builder.Property(x => x.Points).HasDefaultValue(0);
+        builder.Property(x => x.PointDebt).HasDefaultValue(0);
         builder.Property(x => x.TotalSpent).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
         builder.Property(x => x.MarketingOptIn).HasDefaultValue(false);
         builder.Property(x => x.PersonalizedRecommendations).HasDefaultValue(true);

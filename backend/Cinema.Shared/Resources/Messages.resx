@@ -4622,4 +4622,46 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_BookingComboButton" xml:space="preserve">
     <value>Đặt combo cho đơn này</value>
   </data>
+  <data name="Report_Finance_ComboPreorder_Title" xml:space="preserve">
+    <value>Combo đặt trước sau khi mua vé</value>
+  </data>
+  <data name="Report_Finance_ComboPreorder_Note" xml:space="preserve">
+    <value>Tỷ lệ mua thêm tính theo ngày tạo đơn vé gốc. Số lượng và doanh thu combo tính theo ngày thanh toán đơn combo, đã trừ hoàn tiền. Combo quầy gồm mọi combo bán ở kênh quầy, không tính đơn bổ sung.</value>
+  </data>
+  <data name="Report_Finance_Col_TicketOrders" xml:space="preserve">
+    <value>Đơn vé</value>
+  </data>
+  <data name="Report_Finance_Col_SupplementedOrders" xml:space="preserve">
+    <value>Đơn vé có mua thêm combo</value>
+  </data>
+  <data name="Report_Finance_Col_SupplementRate" xml:space="preserve">
+    <value>Tỷ lệ mua thêm combo</value>
+  </data>
+  <data name="Report_Finance_Col_PreorderUnits" xml:space="preserve">
+    <value>Combo đặt trước (SL)</value>
+  </data>
+  <data name="Report_Finance_Col_PreorderRevenue" xml:space="preserve">
+    <value>Doanh thu combo đặt trước</value>
+  </data>
+  <data name="Report_Finance_Col_CounterComboUnits" xml:space="preserve">
+    <value>Combo mua tại quầy (SL)</value>
+  </data>
+  <data name="Report_Finance_Col_CounterComboRevenue" xml:space="preserve">
+    <value>Doanh thu combo tại quầy</value>
+  </data>
+  <data name="Report_Finance_Col_PreorderRevenueShare" xml:space="preserve">
+    <value>Đặt trước / (đặt trước + quầy)</value>
+  </data>
+  <data name="Report_Finance_Col_PreorderPickedUp" xml:space="preserve">
+    <value>Combo đặt trước đã nhận</value>
+  </data>
+  <data name="Report_Finance_Col_PreorderPickupRate" xml:space="preserve">
+    <value>Tỷ lệ đã nhận</value>
+  </data>
+  <data name="Rule_LoyaltyInvalidPoints" xml:space="preserve">
+    <value>Số điểm không hợp lệ.</value>
+  </data>
+  <data name="Rule_LoyaltyInsufficientPoints" xml:space="preserve">
+    <value>Số dư điểm đổi quà không đủ.</value>
+  </data>
 </root>

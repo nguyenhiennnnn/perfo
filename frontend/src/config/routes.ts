@@ -21,6 +21,7 @@ export const ROUTES = {
       `/booking/${showtimeId}`,
     result: (orderId: number | string) =>
       `/booking/result?bookingId=${orderId}`,
+    supplement: (orderId: number | string) => `/booking/supplement/${orderId}`,
   },
   auth: {
     root: "/auth",

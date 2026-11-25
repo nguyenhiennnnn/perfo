@@ -24,7 +24,9 @@ public class AdminCounterController(
     ISupplementOrderService supplementOrderService,
     IOrderPromotionService orderPromotionService,
     IOrderGiftCardService orderGiftCardService,
-    IInvoiceRequestService invoiceRequestService
+    IInvoiceRequestService invoiceRequestService,
+    IOrderExchangePreviewService orderExchangePreviewService,
+    IOrderExchangeService orderExchangeService
 ) : AppControllerBase
 {
     private int GetCurrentEmployeeId() =>
@@ -94,6 +96,42 @@ public class AdminCounterController(
             cancellationToken
         );
         return Ok(result);
+    }
+
+    [HttpGet("{orderId:int}/counter-exchange-preview")]
+    [Authorize(Policy = Policies.StaffOnly)]
+    public async Task<ActionResult<OrderExchangePreviewResponse>> CounterPreviewExchange(
+        int orderId,
+        [FromQuery] OrderExchangePreviewQuery query,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderExchangePreviewService.PreviewAsync(
+            orderId,
+            OrderExchangeCaller.Counter,
+            query,
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpPost("{orderId:int}/counter-exchange")]
+    [Authorize(Policy = Policies.StaffOnly)]
+    [SuccessMessage(nameof(Messages.Success_OrderExchangeStarted))]
+    public async Task<ActionResult<StartOrderExchangeResponse>> CounterStartExchange(
+        int orderId,
+        [FromBody] StartOrderExchangeRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderExchangeService.StartAtCounterAsync(
+            GetCurrentEmployeeId(),
+            CurrentUserId,
+            orderId,
+            request,
+            cancellationToken
+        );
+        return StatusCode(StatusCodes.Status201Created, result);
     }
 
     [HttpPost("{orderId:int}/counter-promotion")]

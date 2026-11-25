@@ -56,6 +56,12 @@ public class OrderConfirmationService(
                         return;
                     }
 
+                    if (order.Type == OrderType.Exchange)
+                    {
+                        result = OrderConfirmationResult.AwaitingPayment;
+                        return;
+                    }
+
                     var paymentSummary = await ledger.GetSummaryAsync(orderId, cancellationToken);
                     await giftCardHolds.TrimAsync(
                         orderId,

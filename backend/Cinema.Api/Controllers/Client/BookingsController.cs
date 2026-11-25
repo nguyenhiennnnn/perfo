@@ -23,7 +23,9 @@ public class BookingsController(
     IOrderCancellationService orderCancellationService,
     IOrderTicketPdfService orderTicketPdfService,
     IOrderPromotionService orderPromotionService,
-    IOrderGiftCardService orderGiftCardService
+    IOrderGiftCardService orderGiftCardService,
+    IOrderExchangePreviewService orderExchangePreviewService,
+    IOrderExchangeService orderExchangeService
 ) : AppControllerBase
 {
     [HttpPost("hold")]
@@ -169,6 +171,40 @@ public class BookingsController(
             cancellationToken
         );
         return Ok(result);
+    }
+
+    [HttpGet("{orderId:int}/exchange-preview")]
+    public async Task<ActionResult<OrderExchangePreviewResponse>> PreviewExchange(
+        int orderId,
+        [FromQuery] OrderExchangePreviewQuery query,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderExchangePreviewService.PreviewAsync(
+            orderId,
+            OrderExchangeCaller.Customer(CurrentUserId),
+            query,
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpPost("{orderId:int}/exchange")]
+    [EnableRateLimiting(RateLimitingExtensions.BookingHoldPolicy)]
+    [SuccessMessage(nameof(Messages.Success_OrderExchangeStarted))]
+    public async Task<ActionResult<StartOrderExchangeResponse>> StartExchange(
+        int orderId,
+        [FromBody] StartOrderExchangeRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderExchangeService.StartForCustomerAsync(
+            CurrentUserId,
+            orderId,
+            request,
+            cancellationToken
+        );
+        return StatusCode(StatusCodes.Status201Created, result);
     }
 
     [HttpPost("{bookingId:int}/cancel")]

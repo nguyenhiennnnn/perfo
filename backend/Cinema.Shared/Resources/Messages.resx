@@ -4410,4 +4410,20 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_ExchangeDifferentMovie" xml:space="preserve">
     <value>Chỉ được đổi sang suất chiếu của cùng một phim.</value>
   </data>
+  <data name="Rule_ExchangeInsufficientSeats" xml:space="preserve">
+    <value>Suất chiếu mới không còn đủ ghế trống cùng loại ghế với vé hiện tại.</value>
+  </data>
+  <data name="Rule_ExchangeTicketTypeIneligible" xml:space="preserve">
+    <value>Loại vé không áp dụng được cho suất chiếu mới: {0}</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Rule_ExchangeTicketTypeIneligible, ...)</comment>
+  </data>
+  <data name="Rule_ExchangeSeatSelectionInvalid" xml:space="preserve">
+    <value>Danh sách vé cần đổi và ghế mới không hợp lệ: mỗi vé phải có đúng một ghế mới, không trùng lặp.</value>
+  </data>
+  <data name="Conflict_ExchangePendingExists" xml:space="preserve">
+    <value>Đơn hàng đang có một yêu cầu đổi suất chưa hoàn tất.</value>
+  </data>
+  <data name="Success_OrderExchangeStarted" xml:space="preserve">
+    <value>Đã giữ ghế mới cho yêu cầu đổi suất.</value>
+  </data>
 </root>

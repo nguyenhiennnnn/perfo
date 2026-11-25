@@ -16,6 +16,7 @@ public class OrderLine
     public DateTime? CardCheckRecordedAt { get; set; }
     public int? CardCheckRecordedByUserId { get; set; }
     public int? SupplementedLineId { get; set; }
+    public int? ExchangeFromLineId { get; set; }
     public int? ComboId { get; set; }
     public int Quantity { get; set; } = 1;
     public int QuantityFulfilled { get; set; }
@@ -39,6 +40,7 @@ public class OrderLine
     public ShowtimeSeat? ShowtimeSeat { get; set; }
     public TicketType? TicketType { get; set; }
     public OrderLine? SupplementedLine { get; set; }
+    public OrderLine? ExchangeFromLine { get; set; }
     public Combo? Combo { get; set; }
     public GiftCard? GiftCard { get; set; }
     public ICollection<OrderPriceAdjustmentAllocation> AdjustmentAllocations { get; set; } = [];

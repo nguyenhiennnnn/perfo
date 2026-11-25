@@ -160,6 +160,8 @@ public static class DependencyInjection
         services.AddScoped<IPricingRuleService, PricingRuleService>();
         services.AddScoped<ISpecialDayService, SpecialDayService>();
         services.AddScoped<IOrderExchangeEligibilityService, OrderExchangeEligibilityService>();
+        services.AddScoped<IOrderExchangePreviewService, OrderExchangePreviewService>();
+        services.AddScoped<IOrderExchangeService, OrderExchangeService>();
         services.AddScoped<IGiftCardService, GiftCardService>();
         services.AddScoped<IGiftCardAttemptGuard, GiftCardAttemptGuard>();
         services.AddScoped<IGiftCardLookupService, GiftCardLookupService>();

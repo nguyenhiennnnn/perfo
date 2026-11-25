@@ -23,7 +23,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
                 );
                 t.HasCheckConstraint(
                     "CK_Orders_Type",
-                    "\"Type\" IN ('Ticket','Combo','GiftCard','Membership','RoomRental','Supplement')"
+                    "\"Type\" IN ('Ticket','Combo','GiftCard','Membership','RoomRental','Supplement','Exchange')"
                 );
                 t.HasCheckConstraint("CK_Orders_Channel", "\"Channel\" IN ('Online','Counter')");
                 t.HasCheckConstraint(
@@ -59,7 +59,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
                 );
                 t.HasCheckConstraint(
                     "CK_Orders_Supplement_Original",
-                    "(\"Type\" = 'Supplement') = (\"OriginalOrderId\" IS NOT NULL)"
+                    "(\"Type\" IN ('Supplement','Exchange')) = (\"OriginalOrderId\" IS NOT NULL)"
                 );
             }
         );

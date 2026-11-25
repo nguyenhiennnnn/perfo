@@ -8,4 +8,5 @@ public enum OrderType
     Membership,
     RoomRental,
     Supplement,
+    Exchange,
 }

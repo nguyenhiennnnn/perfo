@@ -86,6 +86,10 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
                     "CK_OrderLines_SupplementedLine",
                     "\"SupplementedLineId\" IS NULL OR \"LineType\" = 'Fee'"
                 );
+                t.HasCheckConstraint(
+                    "CK_OrderLines_ExchangeFromLine",
+                    "\"ExchangeFromLineId\" IS NULL OR \"LineType\" = 'Ticket'"
+                );
             }
         );
         builder.HasKey(x => x.OrderLineId);
@@ -188,6 +192,16 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
             .HasIndex(x => x.SupplementedLineId)
             .HasFilter("\"SupplementedLineId\" IS NOT NULL")
             .HasDatabaseName("IX_OrderLines_SupplementedLine");
+
+        builder
+            .HasOne(x => x.ExchangeFromLine)
+            .WithMany()
+            .HasForeignKey(x => x.ExchangeFromLineId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasIndex(x => x.ExchangeFromLineId)
+            .HasFilter("\"ExchangeFromLineId\" IS NOT NULL")
+            .HasDatabaseName("IX_OrderLines_ExchangeFromLine");
 
         builder
             .HasOne<User>()

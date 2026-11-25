@@ -205,6 +205,17 @@ export const queryKeys = {
     list: (params: object) => ["admin", "invoice-requests", "list", params] as const,
   },
 
+  adminSupportRequests: {
+    all: () => ["admin", "support-requests"] as const,
+    list: (params: object) => ["admin", "support-requests", "list", params] as const,
+    detail: (requestId: number) => ["admin", "support-requests", "detail", requestId] as const,
+  },
+
+  adminRefundProposals: {
+    all: () => ["admin", "refund-proposals"] as const,
+    list: (params: object) => ["admin", "refund-proposals", "list", params] as const,
+  },
+
   adminAuditLogs: {
     all: () => ["admin", "audit-logs"] as const,
     list: (params: object) => ["admin", "audit-logs", "list", params] as const,

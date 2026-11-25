@@ -319,3 +319,11 @@ export const SupportMessageAuthorType = {
 } as const;
 export type SupportMessageAuthorType =
   (typeof SupportMessageAuthorType)[keyof typeof SupportMessageAuthorType];
+
+export const ExceptionalRefundStatus = {
+  Pending: "Pending",
+  Approved: "Approved",
+  Rejected: "Rejected",
+} as const;
+export type ExceptionalRefundStatus =
+  (typeof ExceptionalRefundStatus)[keyof typeof ExceptionalRefundStatus];

@@ -45,6 +45,8 @@ import {
   ScrollText,
   Settings,
   Trophy,
+  LifeBuoy,
+  HandCoins,
   type LucideIcon,
 } from "lucide-react";
 import { ROUTES } from "@/config/routes";
@@ -236,6 +238,18 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         label: "Yêu cầu hóa đơn VAT",
         icon: FileText,
         roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.supportRequests,
+        label: "Yêu cầu hỗ trợ",
+        icon: LifeBuoy,
+        roles: [Role.Admin, Role.Employee],
+      },
+      {
+        to: ROUTES.admin.refundProposals,
+        label: "Hoàn tiền ngoại lệ",
+        icon: HandCoins,
+        roles: [Role.Admin, Role.Employee],
       },
       {
         to: ROUTES.admin.cashRefunds,

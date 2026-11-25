@@ -344,6 +344,31 @@ export const useAdminInvoiceRequestParams = (
   options?: Parameters<typeof useQueryStates<typeof adminInvoiceRequestParsers>>[1],
 ) => useQueryStates(adminInvoiceRequestParsers, options);
 
+const adminSupportRequestParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  status: parseAsStringLiteral(["New", "InProgress", "WaitingCustomer", "Resolved"] as const),
+  assignee: parseAsStringLiteral(["all", "mine", "unassigned"] as const).withDefault("all"),
+  search: searchParser,
+};
+
+export const useAdminSupportRequestParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminSupportRequestParsers>>[1],
+) => useQueryStates(adminSupportRequestParsers, options);
+
+const adminRefundProposalParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  status: parseAsStringLiteral(["Pending", "Approved", "Rejected", "All"] as const).withDefault(
+    "Pending",
+  ),
+  orderId: parseAsInteger,
+};
+
+export const useAdminRefundProposalParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminRefundProposalParsers>>[1],
+) => useQueryStates(adminRefundProposalParsers, options);
+
 const adminCounterShiftParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),

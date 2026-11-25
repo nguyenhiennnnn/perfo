@@ -288,6 +288,21 @@ export const ENDPOINTS = {
       root: "/admin/room-change-refunds",
       confirm: (id: number) => `/admin/room-change-refunds/${id}/confirm`,
     },
+    supportRequests: {
+      root: "/admin/support-requests",
+      byId: (id: number) => `/admin/support-requests/${id}`,
+      assignee: (id: number) => `/admin/support-requests/${id}/assignee`,
+      status: (id: number) => `/admin/support-requests/${id}/status`,
+      messages: (id: number) => `/admin/support-requests/${id}/messages`,
+      apologyCode: (id: number) => `/admin/support-requests/${id}/apology-code`,
+      resendTicketEmail: (id: number) => `/admin/support-requests/${id}/resend-ticket-email`,
+    },
+    refundProposals: {
+      root: "/admin/refund-proposals",
+      byId: (id: number) => `/admin/refund-proposals/${id}`,
+      approve: (id: number) => `/admin/refund-proposals/${id}/approve`,
+      reject: (id: number) => `/admin/refund-proposals/${id}/reject`,
+    },
     reviews: {
       root: "/admin/reviews",
       byId: (id: number) => `/admin/reviews/${id}`,

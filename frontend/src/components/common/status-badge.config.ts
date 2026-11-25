@@ -10,6 +10,7 @@ import {
   ImportExportJobStatus,
   InvoiceRequestStatus,
   SupportRequestStatus,
+  ExceptionalRefundStatus,
 } from "@/types/enum";
 import {
   CheckCircle2,
@@ -131,6 +132,21 @@ export const supportRequestStatusMap: Record<SupportRequestStatus, BadgeItem> = 
     icon: MessageCircle,
   },
   [SupportRequestStatus.Resolved]: { label: "Đã giải quyết", variant: "success", icon: CheckCircle2 },
+};
+
+export const staffSupportRequestStatusMap: Record<SupportRequestStatus, BadgeItem> = {
+  ...supportRequestStatusMap,
+  [SupportRequestStatus.WaitingCustomer]: {
+    label: "Chờ khách phản hồi",
+    variant: "default",
+    icon: MessageCircle,
+  },
+};
+
+export const exceptionalRefundStatusMap: Record<ExceptionalRefundStatus, BadgeItem> = {
+  [ExceptionalRefundStatus.Pending]: { label: "Chờ duyệt", variant: "warning", icon: Clock },
+  [ExceptionalRefundStatus.Approved]: { label: "Đã duyệt", variant: "success", icon: CheckCircle2 },
+  [ExceptionalRefundStatus.Rejected]: { label: "Từ chối", variant: "destructive", icon: XCircle },
 };
 
 export const paymentStatusMap: Record<PaymentStatus, BadgeItem> = {

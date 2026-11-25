@@ -101,6 +101,21 @@ export const invalidations = {
 
   supportRequestChanged: (): KeyList => [k.support.all()],
 
+  supportStaffChanged: (): KeyList => [
+    k.adminSupportRequests.all(),
+    k.support.all(),
+    k.adminAuditLogs.all(),
+  ],
+
+  refundProposalChanged: (): KeyList => [
+    k.adminRefundProposals.all(),
+    k.adminSupportRequests.all(),
+    k.support.all(),
+    ...orderViews(),
+    ...dashboard(),
+    k.adminAuditLogs.all(),
+  ],
+
   loyaltyChanged: (): KeyList => [k.loyalty.all(), k.promotions.mine(), k.users.me()],
 
   orderGiftCardChanged: (): KeyList => [...orderViews(), k.giftCards.all()],

@@ -55,6 +55,12 @@ export const queryKeys = {
     orderRequests: (orderId: number) => ["invoices", "order-requests", orderId] as const,
   },
 
+  support: {
+    all: () => ["support"] as const,
+    list: (params?: object) => ["support", "list", params] as const,
+    detail: (requestId: number) => ["support", "detail", requestId] as const,
+  },
+
   combos: {
     all: () => ["combos"] as const,
     active: () => ["combos", "active"] as const,

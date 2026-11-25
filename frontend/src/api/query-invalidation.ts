@@ -99,6 +99,8 @@ export const invalidations = {
     k.adminAuditLogs.all(),
   ],
 
+  supportRequestChanged: (): KeyList => [k.support.all()],
+
   loyaltyChanged: (): KeyList => [k.loyalty.all(), k.promotions.mine(), k.users.me()],
 
   orderGiftCardChanged: (): KeyList => [...orderViews(), k.giftCards.all()],

@@ -294,3 +294,28 @@ export const InvoiceRequestStatus = {
   Rejected: "Rejected",
 } as const;
 export type InvoiceRequestStatus = (typeof InvoiceRequestStatus)[keyof typeof InvoiceRequestStatus];
+
+export const SupportRequestType = {
+  TicketEmailNotReceived: "TicketEmailNotReceived",
+  ChargedOrderNotConfirmed: "ChargedOrderNotConfirmed",
+  RefundOutsidePolicy: "RefundOutsidePolicy",
+  ShowtimeFeedback: "ShowtimeFeedback",
+  Other: "Other",
+} as const;
+export type SupportRequestType = (typeof SupportRequestType)[keyof typeof SupportRequestType];
+
+export const SupportRequestStatus = {
+  New: "New",
+  InProgress: "InProgress",
+  WaitingCustomer: "WaitingCustomer",
+  Resolved: "Resolved",
+} as const;
+export type SupportRequestStatus = (typeof SupportRequestStatus)[keyof typeof SupportRequestStatus];
+
+export const SupportMessageAuthorType = {
+  Customer: "Customer",
+  Staff: "Staff",
+  System: "System",
+} as const;
+export type SupportMessageAuthorType =
+  (typeof SupportMessageAuthorType)[keyof typeof SupportMessageAuthorType];

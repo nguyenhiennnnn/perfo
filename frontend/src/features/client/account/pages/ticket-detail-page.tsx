@@ -21,6 +21,7 @@ import { SupplementOriginalNotice } from "@/features/client/orders/components/su
 import { SupplementPickupSection } from "@/features/client/orders/components/supplement/supplement-pickup-section";
 import { OrderTicketsSection } from "@/features/client/orders/components/detail/order-tickets-section";
 import { OrderTransactionsSection } from "@/features/client/orders/components/detail/order-transactions-section";
+import { OrderSupportSection } from "@/features/client/support/components/order-support-section";
 import { formatDateTime } from "@/lib/formatters";
 import { ROUTES } from "@/config/routes";
 
@@ -69,6 +70,8 @@ const TicketDetailContent = ({ order }: { order: OrderDetailDto }) => {
       <OrderTransactionsSection order={order} />
 
       <OrderInvoiceSection order={order} />
+
+      <OrderSupportSection order={order} />
 
       <OrderExchangeHistorySection order={order} />
 

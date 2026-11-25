@@ -10,6 +10,7 @@ import type {
   PaymentMethod,
   ImportExportJobStatus,
   InvoiceRequestStatus,
+  SupportRequestStatus,
 } from "@/types/enum";
 import {
   activeStatusConfigMap,
@@ -27,6 +28,7 @@ import {
   roleMap,
   seatTypeConfigMap,
   showtimeStatusMap,
+  supportRequestStatusMap,
   type ActiveStatusType,
   type BadgeItem,
   type BadgeVariant,
@@ -149,6 +151,13 @@ export const InvoiceRequestStatusBadge = ({
   className,
 }: StatusBadgeProps<InvoiceRequestStatus>) => (
   <MappedBadge value={status} map={invoiceRequestStatusMap} className={className} />
+);
+
+export const SupportRequestStatusBadge = ({
+  status,
+  className,
+}: StatusBadgeProps<SupportRequestStatus>) => (
+  <MappedBadge value={status} map={supportRequestStatusMap} className={className} />
 );
 
 export const PaymentStatusBadge = ({ status, className }: StatusBadgeProps<PaymentStatus>) => (

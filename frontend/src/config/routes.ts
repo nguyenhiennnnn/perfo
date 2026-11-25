@@ -37,6 +37,9 @@ export const ROUTES = {
       `/account/tickets/${bookingId}/exchange`,
     profile: "/account/profile",
     tickets: "/account/tickets",
+    supportRequests: "/account/support-requests",
+    supportRequestDetail: (requestId: number | string) =>
+      `/account/support-requests/${requestId}`,
     giftCards: "/account/gift-cards",
     points: "/account/points",
     challenges: "/account/challenges",

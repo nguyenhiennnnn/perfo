@@ -85,6 +85,11 @@ export const ENDPOINTS = {
     invoiceFile: (id: number, requestId: number) =>
       `/bookings/${id}/invoice-requests/${requestId}/file`,
   },
+  supportRequests: {
+    root: "/support-requests",
+    byId: (id: number) => `/support-requests/${id}`,
+    messages: (id: number) => `/support-requests/${id}/messages`,
+  },
   invoiceProfiles: {
     root: "/invoice-profiles",
     byId: (id: number) => `/invoice-profiles/${id}`,

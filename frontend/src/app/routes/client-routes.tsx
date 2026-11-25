@@ -20,6 +20,8 @@ const AccountTicketsPage = lazyRoute(() => import("@/features/client/account/pag
 const AccountReviewsPage = lazyRoute(() => import("@/features/client/account/pages/reviews-page"));
 const ChangePasswordPage = lazyRoute(() => import("@/features/client/account/pages/change-password-page"));
 const AccountTicketDetailPage = lazyRoute(() => import("@/features/client/account/pages/ticket-detail-page"));
+const AccountSupportRequestsPage = lazyRoute(() => import("@/features/client/support/pages/support-requests-page"));
+const AccountSupportRequestDetailPage = lazyRoute(() => import("@/features/client/support/pages/support-request-detail-page"));
 const OrderExchangePage = lazyRoute(() => import("@/features/client/orders/pages/order-exchange-page"));
 const LoginPage = lazyRoute(() => import("@/features/auth/pages/login-page"));
 const RegisterPage = lazyRoute(() => import("@/features/auth/pages/register-page"));
@@ -61,6 +63,7 @@ export const clientRoutes: RouteObject[] = [
             children: [
               { path: "profile", lazy: AccountProfilePage },
               { path: "tickets", lazy: AccountTicketsPage },
+              { path: "support-requests", lazy: AccountSupportRequestsPage },
               { path: "gift-cards", lazy: AccountGiftCardsPage },
               { path: "points", lazy: AccountPointsPage },
               { path: "challenges", lazy: AccountChallengesPage },
@@ -71,6 +74,7 @@ export const clientRoutes: RouteObject[] = [
           },
           { path: "tickets/:id", lazy: AccountTicketDetailPage },
           { path: "tickets/:id/exchange", lazy: OrderExchangePage },
+          { path: "support-requests/:id", lazy: AccountSupportRequestDetailPage },
         ],
       },
     ],

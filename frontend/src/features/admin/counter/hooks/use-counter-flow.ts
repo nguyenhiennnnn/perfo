@@ -13,6 +13,7 @@ import { useCounterSelection } from "./use-counter-selection";
 import { useCounterHoldFlow } from "./use-counter-hold";
 import { useCounterCheckoutFlow } from "./use-counter-checkout";
 import { useCounterLeaveCancel } from "./use-counter-leave-cancel";
+import { useCounterGiftCardFlow } from "./use-counter-gift-card";
 import { useCounterPromotionFlow } from "./use-counter-promotion";
 import type { CounterCheckoutRequest } from "../types";
 
@@ -52,6 +53,9 @@ export function useCounterFlow() {
   });
   const checkout = useCounterCheckoutFlow(hold.order, step === "done");
   const promotion = useCounterPromotionFlow(hold.order, hold.updatePricing);
+  const giftCard = useCounterGiftCardFlow(hold.order, () =>
+    dispatch({ type: "CHECKOUT_SUCCEEDED" }),
+  );
 
   const hasPartialPayment = step !== "done" && checkout.totalPaid > 0;
 
@@ -110,6 +114,7 @@ export function useCounterFlow() {
   const backToSeats = async () => {
     if (hasPartialPayment) return;
     if (!(await hold.cancelHold())) return;
+    giftCard.reset();
     dispatch({ type: "BACK_TO_SEATS" });
   };
 
@@ -119,6 +124,7 @@ export function useCounterFlow() {
     seatTicketTypes.reset();
     hold.clearHold();
     checkout.clearCheckout();
+    giftCard.reset();
   };
 
   const cancelOrder = async () => {
@@ -162,11 +168,12 @@ export function useCounterFlow() {
     isCancelling: hold.isCancelling,
     payments: checkout.payments,
     totalPaid: checkout.totalPaid,
-    outstandingAmount: checkout.outstandingAmount,
+    outstandingAmount: Math.max(0, checkout.outstandingAmount - giftCard.giftAmount),
     totalChange: checkout.totalChange,
     hasPartialPayment,
     orderDetail: checkout.orderDetail,
     promotion,
+    giftCard,
     pickShowtime,
     backToSeats,
     cancelOrder,

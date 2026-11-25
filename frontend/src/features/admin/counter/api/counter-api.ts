@@ -1,6 +1,7 @@
 import { apiDelete, apiPost } from "@/api/axios";
 import { ENDPOINTS } from "@/api/endpoints";
 import type { ApiResponse } from "@/types/api";
+import type { OrderGiftCardResponse } from "@/features/client/gift-cards/types";
 import type { OrderPromotionResponse } from "@/features/client/orders/types";
 import type {
   CounterCheckoutRequest,
@@ -26,6 +27,17 @@ export const counterApi = {
   removePromotion: (orderId: number) =>
     apiDelete<ApiResponse<OrderPromotionResponse>>(
       ENDPOINTS.admin.orders.counterPromotion(orderId),
+    ),
+
+  applyGiftCard: (orderId: number, code: string) =>
+    apiPost<ApiResponse<OrderGiftCardResponse>>(
+      ENDPOINTS.admin.orders.counterGiftCard(orderId),
+      { code },
+    ),
+
+  removeGiftCard: (orderId: number, giftCardId: number) =>
+    apiDelete<ApiResponse<OrderGiftCardResponse>>(
+      ENDPOINTS.admin.orders.counterGiftCardById(orderId, giftCardId),
     ),
 
   checkout: (orderId: number, body: CounterCheckoutRequest) =>

@@ -7,6 +7,7 @@ export const ROUTES = {
   schedule: "/schedule",
   membership: "/membership",
   giftCards: "/gift-cards",
+  giftCardBulk: "/gift-cards/bulk",
   giftCardResume: (orderId: number | string) => `/gift-cards?resume=${orderId}`,
   unsubscribe: "/unsubscribe",
   policy: (slug: string) => `/policies/${slug}`,

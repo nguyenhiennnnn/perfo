@@ -33,6 +33,8 @@ export const ENDPOINTS = {
   giftCards: {
     purchase: "/gift-cards/purchase",
     purchased: "/gift-cards/purchased",
+    balance: "/gift-cards/balance",
+    bulkImport: "/gift-cards/bulk/import",
   },
   catalog: {
     genres: "/genres",
@@ -63,6 +65,8 @@ export const ENDPOINTS = {
     byId: (id: number) => `/bookings/${id}`,
     checkout: (id: number) => `/bookings/${id}/checkout`,
     promotion: (id: number) => `/bookings/${id}/promotion`,
+    giftCard: (id: number) => `/bookings/${id}/gift-card`,
+    giftCardById: (id: number, giftCardId: number) => `/bookings/${id}/gift-card/${giftCardId}`,
     cancel: (id: number) => `/bookings/${id}/cancel`,
     ticketsPdf: (id: number) => `/bookings/${id}/tickets/pdf`,
     invoiceRequests: (id: number) => `/bookings/${id}/invoice-requests`,
@@ -158,6 +162,9 @@ export const ENDPOINTS = {
       counterComboOrder: "/admin/bookings/counter-combo-order",
       counterCheckout: (id: number) => `/admin/bookings/${id}/counter-checkout`,
       counterPromotion: (id: number) => `/admin/bookings/${id}/counter-promotion`,
+      counterGiftCard: (id: number) => `/admin/bookings/${id}/counter-gift-card`,
+      counterGiftCardById: (id: number, giftCardId: number) =>
+        `/admin/bookings/${id}/counter-gift-card/${giftCardId}`,
       counterCancel: (id: number) => `/admin/bookings/${id}/counter-cancel`,
       checkin: "/admin/bookings/checkin",
       cardNotPresented: "/admin/bookings/card-not-presented",

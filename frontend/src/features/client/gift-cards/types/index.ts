@@ -26,3 +26,30 @@ export interface PurchasedGiftCardListParams {
   cursor?: string;
   limit?: number;
 }
+
+export interface GiftCardLookupDto {
+  code: string;
+  type: string;
+  status: string;
+  balance: number;
+  availableBalance: number;
+  expiresAt: string;
+}
+
+export interface OrderGiftCardItemDto {
+  giftCardId: number;
+  code: string;
+  type: string;
+  amount: number;
+}
+
+export interface OrderGiftCardResponse {
+  orderId: number;
+  orderCode: string;
+  status: string;
+  finalAmount: number;
+  giftCardAmount: number;
+  payableAmount: number;
+  isFullyCovered: boolean;
+  cards: OrderGiftCardItemDto[];
+}

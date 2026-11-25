@@ -27,6 +27,7 @@ const ResetPasswordPage = lazyRoute(() => import("@/features/auth/pages/reset-pa
 const UnsubscribePage = lazyRoute(() => import("@/features/client/account/pages/unsubscribe-page"));
 const MembershipPage = lazyRoute(() => import("@/features/client/membership/pages/membership-page"));
 const GiftCardPurchasePage = lazyRoute(() => import("@/features/client/gift-cards/pages/gift-card-purchase-page"));
+const GiftCardBulkPage = lazyRoute(() => import("@/features/client/gift-cards/pages/gift-card-bulk-page"));
 const AccountGiftCardsPage = lazyRoute(() => import("@/features/client/gift-cards/pages/purchased-gift-cards-page"));
 const PolicyPage = lazyRoute(() => import("@/features/client/policies/pages/policy-page"));
 
@@ -41,6 +42,7 @@ export const clientRoutes: RouteObject[] = [
       { path: "schedule", lazy: SchedulePage },
       { path: "membership", lazy: MembershipPage },
       { path: "gift-cards", lazy: GiftCardPurchasePage },
+      { path: "gift-cards/bulk", lazy: GiftCardBulkPage },
       { path: "policies/:slug", lazy: PolicyPage },
       { path: "booking/:showtimeId", lazy: BookingPage },
       { path: "booking/result", lazy: BookingResultPage },

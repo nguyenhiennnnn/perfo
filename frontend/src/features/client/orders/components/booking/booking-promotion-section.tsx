@@ -11,9 +11,10 @@ import type { OrderDetailDto } from "../../types";
 
 interface BookingPromotionSectionProps {
   order: OrderDetailDto;
+  disabled?: boolean;
 }
 
-export const BookingPromotionSection = ({ order }: BookingPromotionSectionProps) => {
+export const BookingPromotionSection = ({ order, disabled }: BookingPromotionSectionProps) => {
   const applyPromotion = useApplyPromotion(order.orderId);
   const removePromotion = useRemovePromotion(order.orderId);
 
@@ -41,6 +42,8 @@ export const BookingPromotionSection = ({ order }: BookingPromotionSectionProps)
       discountAmount={applied?.amount}
       onApply={(code) => applyPromotion.mutateAsync({ code })}
       onRemove={() => removePromotion.mutateAsync()}
+      disabled={disabled}
+      disabledHint={disabled ? "Gỡ thẻ quà tặng trước khi đổi mã khuyến mãi." : undefined}
       suggestions={suggestions}
       suggestionsLoading={myPromotions.isLoading}
     />

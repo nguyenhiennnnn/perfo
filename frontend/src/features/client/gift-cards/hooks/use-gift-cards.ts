@@ -31,3 +31,24 @@ export function usePurchasedGiftCards(params: Omit<PurchasedGiftCardListParams, 
     }),
   });
 }
+
+export function useGiftCardBalance() {
+  return useMutation({
+    meta: { skipErrorToast: true },
+    mutationFn: (code: string) => giftCardsApi.checkBalance(code),
+  });
+}
+
+export function useApplyGiftCard(orderId: number) {
+  return useMutation({
+    meta: { invalidates: "orderGiftCardChanged", skipErrorToast: true },
+    mutationFn: (code: string) => giftCardsApi.applyToOrder(orderId, code),
+  });
+}
+
+export function useRemoveGiftCard(orderId: number) {
+  return useMutation({
+    meta: { invalidates: "orderGiftCardChanged", skipErrorToast: true },
+    mutationFn: (giftCardId: number) => giftCardsApi.removeFromOrder(orderId, giftCardId),
+  });
+}

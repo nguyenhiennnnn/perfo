@@ -49,6 +49,22 @@ export function useCounterRemovePromotion() {
   });
 }
 
+export function useCounterApplyGiftCard() {
+  return useMutation({
+    meta: { invalidates: "orderGiftCardChanged", skipErrorToast: true },
+    mutationFn: ({ orderId, code }: { orderId: number; code: string }) =>
+      counterApi.applyGiftCard(orderId, code),
+  });
+}
+
+export function useCounterRemoveGiftCard() {
+  return useMutation({
+    meta: { invalidates: "orderGiftCardChanged", skipErrorToast: true },
+    mutationFn: ({ orderId, giftCardId }: { orderId: number; giftCardId: number }) =>
+      counterApi.removeGiftCard(orderId, giftCardId),
+  });
+}
+
 export function useCounterCancelOrder() {
   return useMutation({
     meta: { invalidates: "bookingChanged" },

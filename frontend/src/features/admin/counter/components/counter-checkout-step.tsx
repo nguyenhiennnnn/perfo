@@ -1,4 +1,5 @@
 import { IdCard } from "lucide-react";
+import { GiftCardCodeBox } from "@/components/common/gift-card-code-box";
 import { PromotionCodeBox } from "@/components/common/promotion-code-box";
 import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
 
@@ -47,12 +48,29 @@ export function CounterCheckoutStep({ flow }: CounterCheckoutStepProps) {
         discountAmount={flow.promotion.appliedDiscount}
         onApply={flow.promotion.applyPromotion}
         onRemove={flow.promotion.removePromotion}
-        disabled={flow.hasPartialPayment || flow.isPaying || flow.isCancelling}
+        disabled={
+          flow.hasPartialPayment ||
+          flow.giftCard.cards.length > 0 ||
+          flow.isPaying ||
+          flow.isCancelling
+        }
         disabledHint={
           flow.hasPartialPayment
             ? "Đơn đã thu một phần nên không thể đổi mã khuyến mãi."
-            : undefined
+            : flow.giftCard.cards.length > 0
+              ? "Gỡ thẻ quà tặng trước khi đổi mã khuyến mãi."
+              : undefined
         }
+      />
+      <GiftCardCodeBox
+        inputId="counter-gift-card-code"
+        title="Thẻ quà tặng của khách"
+        cards={flow.giftCard.cards}
+        dueAmount={flow.outstandingAmount}
+        onLookup={flow.giftCard.lookup}
+        onApply={flow.giftCard.applyCard}
+        onRemove={flow.giftCard.removeCard}
+        disabled={flow.isPaying || flow.isCancelling}
       />
       <CounterCheckoutPanel
         order={flow.order}

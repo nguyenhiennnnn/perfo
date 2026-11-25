@@ -239,6 +239,16 @@ function toFieldPath(key: string): string {
   );
 }
 
+export function getGiftCardLockSeconds(error: unknown): number | null {
+  if (!axios.isAxiosError(error)) return null;
+  const body = error.response?.data as
+    | { errorCode?: string; data?: { retryAfterSeconds?: number } | null }
+    | undefined;
+  if (body?.errorCode !== API_ERROR_CODES.giftCardAttemptsLocked) return null;
+  const seconds = body.data?.retryAfterSeconds;
+  return typeof seconds === "number" && seconds > 0 ? seconds : 0;
+}
+
 export function getFieldErrors(error: unknown): Record<string, string> {
   const { errors } = extractApiError(error);
   if (!errors) return {};

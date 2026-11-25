@@ -172,6 +172,8 @@ public static class DependencyInjection
         services.AddScoped<LoyaltyChallengeCompletionNotifier>();
         services.AddBackgroundEventHandler<TicketCheckedIn, LoyaltyChallengeCheckInHandler>();
         services.AddScoped<ICustomerTasteProfileService, CustomerTasteProfileService>();
+        services.AddScoped<IMovieAffinityService, MovieAffinityService>();
+        services.AddScoped<IMovieRecommendationService, MovieRecommendationService>();
         services.AddBackgroundEventHandler<TicketCheckedIn, TasteProfileTicketCheckedInHandler>();
         services.AddBackgroundEventHandler<OrderConfirmed, TasteProfileOrderConfirmedHandler>();
         services.AddBackgroundEventHandler<ReviewChanged, TasteProfileReviewChangedHandler>();

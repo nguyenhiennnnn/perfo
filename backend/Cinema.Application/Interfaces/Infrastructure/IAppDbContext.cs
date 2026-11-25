@@ -16,6 +16,8 @@ public interface IAppDbContext
     DbSet<CustomerProfile> CustomerProfiles { get; }
     DbSet<CustomerTasteProfile> CustomerTasteProfiles { get; }
     DbSet<CustomerTasteSignal> CustomerTasteSignals { get; }
+    DbSet<MovieSimilarity> MovieSimilarities { get; }
+    DbSet<MoviePopularity> MoviePopularities { get; }
     DbSet<LoyaltyPointEntry> LoyaltyPointEntries { get; }
     DbSet<LoyaltyReward> LoyaltyRewards { get; }
     DbSet<LoyaltyChallenge> LoyaltyChallenges { get; }

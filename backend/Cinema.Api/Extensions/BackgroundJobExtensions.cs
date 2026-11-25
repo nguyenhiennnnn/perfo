@@ -133,6 +133,12 @@ public static class BackgroundJobExtensions
             options.ShowtimeReminderCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<MovieAffinityRefreshJob>(
+            RecurringJobIds.RefreshMovieAffinity,
+            j => j.RunAsync(CancellationToken.None),
+            options.MovieAffinityRefreshCron,
+            jobOptions
+        );
 
         return app;
     }

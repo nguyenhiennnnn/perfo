@@ -5144,4 +5144,19 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Report_Finance_Col_ExceptionalRefundShare" xml:space="preserve">
     <value>Tỷ trọng</value>
   </data>
+  <data name="Recommendation_Reason_Director" xml:space="preserve">
+    <value>Vì bạn đã xem phim cùng đạo diễn {0}</value>
+  </data>
+  <data name="Recommendation_Reason_Genre" xml:space="preserve">
+    <value>Vì bạn thích thể loại {0}</value>
+  </data>
+  <data name="Recommendation_Reason_Actor" xml:space="preserve">
+    <value>Vì bạn đã xem phim có diễn viên {0}</value>
+  </data>
+  <data name="Recommendation_Reason_SimilarMovie" xml:space="preserve">
+    <value>Nhiều người xem {0} cũng xem phim này</value>
+  </data>
+  <data name="Recommendation_Reason_Popular" xml:space="preserve">
+    <value>Đang được nhiều khách quan tâm</value>
+  </data>
 </root>

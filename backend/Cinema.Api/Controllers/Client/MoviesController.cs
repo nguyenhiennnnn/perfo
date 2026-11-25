@@ -1,6 +1,8 @@
 ﻿using Cinema.Api.Filters;
+using Cinema.Application.DTOs.Movies;
 using Cinema.Application.DTOs.Reviews;
 using Cinema.Application.Interfaces.Movies;
+using Cinema.Application.Interfaces.Recommendations;
 using Cinema.Application.Interfaces.Reviews;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
@@ -11,8 +13,11 @@ namespace Cinema.Api.Controllers.Client;
 
 [ApiController]
 [Route(ApiPaths.ApiVersionPrefix + "/movies")]
-public class MoviesController(IMovieService movieService, IReviewService reviewService)
-    : AppControllerBase
+public class MoviesController(
+    IMovieService movieService,
+    IReviewService reviewService,
+    IMovieRecommendationService recommendationService
+) : AppControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetMovies(
@@ -26,6 +31,20 @@ public class MoviesController(IMovieService movieService, IReviewService reviewS
             filter,
             cursor,
             ClampLimit(limit),
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpGet("recommendations")]
+    public async Task<ActionResult<MovieRecommendationsDto>> GetRecommendations(
+        [FromQuery] int? limit,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await recommendationService.GetForYouAsync(
+            CurrentUserIdOrNull,
+            limit,
             cancellationToken
         );
         return Ok(result);

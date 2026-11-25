@@ -4426,4 +4426,11 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_OrderExchangeStarted" xml:space="preserve">
     <value>Đã giữ ghế mới cho yêu cầu đổi suất.</value>
   </data>
+  <data name="Refund_ExchangeCashNote" xml:space="preserve">
+    <value>Hoàn chênh lệch đổi suất, đơn đổi {0}.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Refund_ExchangeCashNote, ...)</comment>
+  </data>
+  <data name="Rule_ExchangeGuestRefundCashOnly" xml:space="preserve">
+    <value>Khách vãng lai chưa có tài khoản nên chỉ nhận hoàn chênh lệch bằng tiền mặt, nhưng đơn này không còn đủ số tiền mặt đã thu để hoàn.</value>
+  </data>
 </root>

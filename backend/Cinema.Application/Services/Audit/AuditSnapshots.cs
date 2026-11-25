@@ -96,6 +96,41 @@ public static class AuditSnapshots
     public static JsonObject GiftCardBeforeCancel(GiftCardStatus status, decimal balance) =>
         AuditJson.ToObject(new { status, balance });
 
+    public static JsonObject ExchangeCreditIssued(
+        int exchangeOrderId,
+        GiftCard card,
+        int customerUserId
+    ) =>
+        AuditJson.ToObject(
+            new
+            {
+                exchangeOrderId,
+                giftCardId = card.GiftCardId,
+                type = GiftCardType.ExchangeCredit,
+                faceValue = card.FaceValue,
+                expiresAt = card.ExpiresAt,
+                customerUserId,
+            }
+        );
+
+    public static JsonObject ExchangeCashRefunded(
+        int originalOrderId,
+        decimal amount,
+        int counterShiftId,
+        int performedByUserId,
+        IReadOnlyList<int> refundTransactionIds
+    ) =>
+        AuditJson.ToObject(
+            new
+            {
+                originalOrderId,
+                amount,
+                counterShiftId,
+                performedByUserId,
+                refundTransactionIds,
+            }
+        );
+
     public static JsonObject GiftCardAfterCancel(
         string reason,
         decimal cancelledBalance,

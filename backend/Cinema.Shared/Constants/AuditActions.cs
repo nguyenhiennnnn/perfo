@@ -21,4 +21,6 @@ public static class AuditActions
     public const string FlagInvoiceAdjustment = "FlagInvoiceAdjustment";
     public const string ResolveInvoiceAdjustment = "ResolveInvoiceAdjustment";
     public const string CancelGiftCard = "CancelGiftCard";
+    public const string IssueExchangeCredit = "IssueExchangeCredit";
+    public const string ExchangeCashRefund = "ExchangeCashRefund";
 }

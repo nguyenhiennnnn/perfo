@@ -162,6 +162,7 @@ public static class DependencyInjection
         services.AddScoped<IOrderExchangeEligibilityService, OrderExchangeEligibilityService>();
         services.AddScoped<IOrderExchangePreviewService, OrderExchangePreviewService>();
         services.AddScoped<IOrderExchangeService, OrderExchangeService>();
+        services.AddScoped<IOrderExchangeSettlementService, OrderExchangeSettlementService>();
         services.AddScoped<IGiftCardService, GiftCardService>();
         services.AddScoped<IGiftCardAttemptGuard, GiftCardAttemptGuard>();
         services.AddScoped<IGiftCardLookupService, GiftCardLookupService>();

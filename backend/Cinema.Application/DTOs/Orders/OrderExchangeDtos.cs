@@ -58,3 +58,19 @@ public record StartOrderExchangeResponse(
     DateTime ExpiresAt,
     IReadOnlyList<OrderExchangeTicketPreviewDto> Tickets
 );
+
+public enum OrderExchangeSettlementKind
+{
+    None,
+    ExchangeCredit,
+    CashRefund,
+}
+
+public record OrderExchangeSettlementResult(
+    OrderExchangeSettlementKind Kind,
+    decimal Amount,
+    int? GiftCardId,
+    string? GiftCardCode,
+    DateTime? GiftCardExpiresAt,
+    IReadOnlyList<int> RefundTransactionIds
+);

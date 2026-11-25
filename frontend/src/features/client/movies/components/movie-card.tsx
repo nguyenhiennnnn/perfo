@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { CalendarDays, Star } from "lucide-react";
+import { CalendarDays, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AgeRatingBadge } from "@/components/common/status-badge";
 import { formatDuration } from "@/lib/cinema-format";
@@ -14,10 +14,11 @@ import { MOVIE_CARD_GENRES_LIMIT } from "@/config/default-constants";
 
 interface MovieCardProps {
   movie: MovieListItemDto;
+  reason?: string;
   className?: string;
 }
 
-export const MovieCard = ({ movie, className }: MovieCardProps) => {
+export const MovieCard = ({ movie, reason, className }: MovieCardProps) => {
   const href = ROUTES.movies.detail(movie.movieId);
   const prefetchMovie = usePrefetchMovieDetail();
   const prefetchProps = usePrefetchIntent(() => prefetchMovie(movie.movieId));
@@ -67,6 +68,12 @@ export const MovieCard = ({ movie, className }: MovieCardProps) => {
           <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
             {genreText ? `${genreText}, ${durationText}` : durationText}
           </p>
+          {reason && (
+            <p className="mt-2 flex items-start gap-1.5 text-xs text-primary-text">
+              <Sparkles className="mt-0.5 size-3.5 shrink-0" />
+              <span className="line-clamp-2">{reason}</span>
+            </p>
+          )}
         </div>
 
         {movie.averageRating > 0 && (

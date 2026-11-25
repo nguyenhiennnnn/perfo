@@ -4,6 +4,7 @@ import type {
   MovieListParams,
   MovieListItemDto,
   MovieDetailDto,
+  MovieRecommendationsDto,
   ReviewListParams,
   ReviewDto,
   CreateReviewRequest,
@@ -16,6 +17,11 @@ export const moviesApi = {
   getMovies: ({ cursor, limit, ...filter }: MovieListParams) =>
     apiGet<ApiResponse<CursorPageResult<MovieListItemDto>>>(ENDPOINTS.movies.root, {
       params: { ...filter, cursor, limit },
+    }),
+
+  getRecommendations: (limit: number) =>
+    apiGet<ApiResponse<MovieRecommendationsDto>>(ENDPOINTS.movies.recommendations, {
+      params: { limit },
     }),
 
   getMovieDetail: (movieId: number) =>

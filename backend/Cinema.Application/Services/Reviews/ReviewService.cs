@@ -4,6 +4,7 @@ using Cinema.Application.Events;
 using Cinema.Application.Interfaces.Events;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Reviews;
+using Cinema.Application.Utils;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Mapster;
@@ -17,16 +18,19 @@ public class ReviewService : IReviewService
 {
     private readonly IAppDbContext db;
     private readonly IBusinessEventDispatcher eventDispatcher;
+    private readonly IReviewRewardService rewardService;
     private readonly ILogger<ReviewService> logger;
 
     public ReviewService(
         IAppDbContext db,
         IBusinessEventDispatcher eventDispatcher,
+        IReviewRewardService rewardService,
         ILogger<ReviewService>? logger = null
     )
     {
         this.db = db;
         this.eventDispatcher = eventDispatcher;
+        this.rewardService = rewardService;
         this.logger = logger ?? NullLogger<ReviewService>.Instance;
     }
 
@@ -127,10 +131,18 @@ public class ReviewService : IReviewService
             UserId = userId,
             Rating = request.Rating,
             Comment = request.Comment,
+            IsVerifiedViewer = true,
             CreatedAt = DateTime.UtcNow,
         };
-        db.Reviews.Add(review);
-        await db.SaveChangesAsync(cancellationToken);
+        await db.InTransactionAsync(
+            async () =>
+            {
+                db.Reviews.Add(review);
+                await db.SaveChangesAsync(cancellationToken);
+                await rewardService.GrantAsync(userId, movieId, cancellationToken);
+            },
+            cancellationToken
+        );
 
         await RecalculateMovieAverageRatingAsync(movieId, cancellationToken);
         await PublishChangedAsync(review, cancellationToken);
@@ -333,7 +345,7 @@ public class ReviewService : IReviewService
     {
         var average =
             await db
-                .Reviews.Where(r => r.MovieId == movieId)
+                .Reviews.Where(r => r.MovieId == movieId && r.IsVerifiedViewer)
                 .Select(r => (decimal?)r.Rating)
                 .AverageAsync(cancellationToken)
             ?? 0m;

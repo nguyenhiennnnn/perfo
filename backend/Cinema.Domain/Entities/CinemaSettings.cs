@@ -92,6 +92,9 @@ public class CinemaSettings
     public const int DefaultReferralMonthlyRewardLimit = 10;
     public const int DefaultSupportRequestDueHours = 48;
     public const decimal DefaultExceptionalRefundApprovalThreshold = 500_000m;
+    public const int DefaultReviewInviteMinHours = 1;
+    public const int DefaultReviewInviteMaxHours = 3;
+    public const int DefaultReviewRewardPoints = 10;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -183,4 +186,10 @@ public class CinemaSettings
 
     public decimal ExceptionalRefundApprovalThreshold { get; set; } =
         DefaultExceptionalRefundApprovalThreshold;
+
+    public int ReviewInviteMinHours { get; set; } = DefaultReviewInviteMinHours;
+
+    public int ReviewInviteMaxHours { get; set; } = DefaultReviewInviteMaxHours;
+
+    public int ReviewRewardPoints { get; set; } = DefaultReviewRewardPoints;
 }

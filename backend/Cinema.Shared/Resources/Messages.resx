@@ -5199,4 +5199,43 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_MovieIntroPreferencesLabel" xml:space="preserve">
     <value>tài khoản của bạn</value>
   </data>
+  <data name="Validation_ReviewInviteWindow_Invalid" xml:space="preserve">
+    <value>Thời gian mời đánh giá tối thiểu phải nhỏ hơn thời gian tối đa.</value>
+  </data>
+  <data name="Email_ReviewInviteSubject" xml:space="preserve">
+    <value>Bạn thấy phim thế nào? — {0}</value>
+  </data>
+  <data name="Email_BadgeReviewInvite" xml:space="preserve">
+    <value>Mời đánh giá</value>
+  </data>
+  <data name="Email_ReviewInviteHeading" xml:space="preserve">
+    <value>Chia sẻ cảm nhận của bạn về phim</value>
+  </data>
+  <data name="Email_ReviewInviteBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, cảm ơn bạn đã đến xem phim &lt;strong&gt;{1}&lt;/strong&gt;. Đánh giá của bạn giúp những khán giả khác chọn được phim phù hợp.</value>
+  </data>
+  <data name="Email_ReviewInviteRewardNote" xml:space="preserve">
+    <value>Gửi đánh giá để nhận {0} điểm thưởng vào tài khoản.</value>
+  </data>
+  <data name="Email_ReviewInviteButton" xml:space="preserve">
+    <value>Viết đánh giá</value>
+  </data>
+  <data name="Email_ReviewInvitePreheader" xml:space="preserve">
+    <value>Bạn thấy phim {0} thế nào?</value>
+  </data>
+  <data name="Email_ReviewInviteOptOutNote" xml:space="preserve">
+    <value>Bạn nhận email này vì đang bật nhắc lịch chiếu và mời đánh giá. Có thể tắt trong phần thông tin liên lạc của tài khoản.</value>
+  </data>
+  <data name="Rule_SurveyRequiresCheckIn" xml:space="preserve">
+    <value>Bạn cần check-in suất chiếu này trước khi gửi khảo sát.</value>
+  </data>
+  <data name="Conflict_SurveyAlreadyExists" xml:space="preserve">
+    <value>Bạn đã gửi khảo sát cho suất chiếu này rồi.</value>
+  </data>
+  <data name="NotFound_ExperienceSurvey" xml:space="preserve">
+    <value>Bạn chưa gửi khảo sát cho suất chiếu này.</value>
+  </data>
+  <data name="Success_ExperienceSurveySubmitted" xml:space="preserve">
+    <value>Đã gửi khảo sát trải nghiệm. Cảm ơn bạn!</value>
+  </data>
 </root>

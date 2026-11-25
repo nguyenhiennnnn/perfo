@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { moviesApi } from "../api/movies-api";
 import { queryKeys } from "@/api/query-keys";
+import { useIsAuthenticated } from "@/stores/auth-store";
 import type {
   CreateReviewRequest,
   MovieListParams,
@@ -22,6 +23,17 @@ export function useMovies(params: Omit<MovieListParams, "cursor">) {
       hasMore: data.pages.at(-1)?.data.hasMore ?? false,
       totalCount: data.pages[0]?.data.totalCount ?? null,
     }),
+  });
+}
+
+export function useMovieRecommendations(limit: number) {
+  const isAuthenticated = useIsAuthenticated();
+
+  return useQuery({
+    queryKey: queryKeys.movies.recommendations({ limit, isAuthenticated }),
+    queryFn: () => moviesApi.getRecommendations(limit),
+    select: (res) => res.data,
+    meta: { skipErrorToast: true },
   });
 }
 

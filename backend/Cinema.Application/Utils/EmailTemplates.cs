@@ -704,6 +704,37 @@ public static class EmailTemplates
         );
     }
 
+    public static string ReviewInvite(BrandOptions brand, ReviewInviteEmailData data)
+    {
+        var reward =
+            data.RewardPoints > 0
+                ? Paragraph(
+                    string.Format(
+                        Messages.Email_ReviewInviteRewardNote,
+                        data.RewardPoints.ToString("N0", MoneyFormat)
+                    )
+                )
+                : string.Empty;
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeReviewInvite, Success, SymbolCheck)}
+            {Heading(Messages.Email_ReviewInviteHeading)}
+            {Paragraph(
+                string.Format(Messages.Email_ReviewInviteBody, Enc(data.CustomerName), Enc(data.MovieTitle))
+            )}
+            {reward}
+            {Button(Messages.Email_ReviewInviteButton, data.ReviewLink)}
+            <div style="height:12px; line-height:12px; font-size:0;">&nbsp;</div>
+            {MutedParagraph(Messages.Email_ReviewInviteOptOutNote)}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_ReviewInvitePreheader, data.MovieTitle),
+            body
+        );
+    }
+
     public static string PointsExpiryReminder(BrandOptions brand, PointsExpiryReminderEmailData data)
     {
         var rows = data

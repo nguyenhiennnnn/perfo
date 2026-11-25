@@ -8,6 +8,7 @@ export const queryKeys = {
     lists: () => ["movies", "list"] as const,
     list: (params: object) => ["movies", "list", params] as const,
     detail: (movieId: number) => ["movies", "detail", movieId] as const,
+    recommendations: (params?: object) => ["movies", "recommendations", params] as const,
     reviews: (movieId: number, params?: object) =>
       ["movies", movieId, "reviews", params] as const,
     canReview: (movieId: number) => ["movies", movieId, "can-review"] as const,

@@ -1,4 +1,5 @@
 import { HeroCarousel } from "@/features/client/home/components/hero-carousel";
+import { ForYouSection } from "@/features/client/movies/components/for-you-section";
 import { MovieSection } from "@/features/client/home/components/movie-section";
 import { ComboCarousel } from "@/features/client/home/components/combo-carousel";
 import { CinemaExperienceSection } from "@/features/client/home/components/cinema-experience-section";
@@ -37,6 +38,8 @@ const HomePage = () => {
 
       <PageContainer size="xl" className="space-y-14 pt-10 pb-14 md:pt-14">
         <CinemaExperienceSection />
+
+        <ForYouSection className="mt-10" />
 
         <MovieSection
           title="Phim đang chiếu"

@@ -7,6 +7,7 @@ public class Review
     public int UserId { get; set; }
     public int Rating { get; set; }
     public string? Comment { get; set; }
+    public bool IsVerifiedViewer { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public Movie Movie { get; set; } = null!;

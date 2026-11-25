@@ -4,6 +4,7 @@ import { MovieHero } from "@/features/client/movies/components/movie-hero";
 import { MovieCastCrew } from "@/features/client/movies/components/movie-cast-crew";
 import { MovieShowtimeSelector } from "@/features/client/movies/components/movie-showtime-selector";
 import { MovieReviews } from "@/features/client/movies/components/movie-reviews";
+import { ForYouSection } from "@/features/client/movies/components/for-you-section";
 import { ExpandableText } from "@/components/common/expandable-text";
 import { useMovieDetail } from "@/features/client/movies/hooks/use-movies";
 import type { MovieDetailDto } from "@/features/client/movies/types";
@@ -86,6 +87,8 @@ const MovieDetailContent = ({ movie }: { movie: MovieDetailDto }) => {
           <MovieShowtimeSelector showtimes={movie.upcomingShowtimes} />
         </aside>
       </div>
+
+      <ForYouSection excludeMovieId={movie.movieId} />
 
       <MovieReviews movieId={movie.movieId} />
     </div>

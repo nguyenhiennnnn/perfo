@@ -57,6 +57,7 @@ export const ENDPOINTS = {
   movies: {
     root: "/movies",
     byId: (id: number) => `/movies/${id}`,
+    recommendations: "/movies/recommendations",
     reviews: (id: number) => `/movies/${id}/reviews`,
     canReview: (id: number) => `/movies/${id}/can-review`,
     reviewById: (movieId: number, reviewId: number) =>

@@ -146,6 +146,9 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         IntRange(x => x.ReferralReferredPoints, "referralReferredPoints", 0, 100000);
         IntRange(x => x.ReferralMonthlyRewardLimit, "referralMonthlyRewardLimit", 1, 1000);
         IntRange(x => x.SupportRequestDueHours, "supportRequestDueHours", 1, 720);
+        IntRange(x => x.ReviewInviteMinHours, "reviewInviteMinHours", 0, 72);
+        IntRange(x => x.ReviewInviteMaxHours, "reviewInviteMaxHours", 1, 168);
+        IntRange(x => x.ReviewRewardPoints, "reviewRewardPoints", 0, 100000);
         WholeDecimalRange(
             x => x.ExceptionalRefundApprovalThreshold,
             "exceptionalRefundApprovalThreshold",

@@ -170,6 +170,14 @@ public class SettingsService(
             settings.SupportRequestDueHours = supportRequestDueHours;
         if (request.ExceptionalRefundApprovalThreshold is { } exceptionalRefundApprovalThreshold)
             settings.ExceptionalRefundApprovalThreshold = exceptionalRefundApprovalThreshold;
+        if (request.ReviewInviteMinHours is { } reviewInviteMinHours)
+            settings.ReviewInviteMinHours = reviewInviteMinHours;
+        if (request.ReviewInviteMaxHours is { } reviewInviteMaxHours)
+            settings.ReviewInviteMaxHours = reviewInviteMaxHours;
+        if (request.ReviewRewardPoints is { } reviewRewardPoints)
+            settings.ReviewRewardPoints = reviewRewardPoints;
+        if (settings.ReviewInviteMinHours >= settings.ReviewInviteMaxHours)
+            throw new BusinessRuleException(Messages.Validation_ReviewInviteWindow_Invalid);
         if (settings.GiftCardMinAmount > settings.GiftCardMaxAmount)
             throw new BusinessRuleException(Messages.Validation_GiftCardAmount_MinGreaterThanMax);
         if (
@@ -224,10 +232,6 @@ public class SettingsService(
             GiftCardVatPercent = settings.GiftCardVatPercent,
             MembershipVatPercent = settings.MembershipVatPercent,
             InvoiceRequestWindowDays = settings.InvoiceRequestWindowDays,
-            GiftCardDenominations = [.. settings.GiftCardDenominations],
-            GiftCardMinAmount = settings.GiftCardMinAmount,
-            GiftCardMaxAmount = settings.GiftCardMaxAmount,
-            GiftCardValidityMonths = settings.GiftCardValidityMonths,
             GiftCardRefundExtensionDays = settings.GiftCardRefundExtensionDays,
             GiftCardMaxFailedAttempts = settings.GiftCardMaxFailedAttempts,
             GiftCardLockoutMinutes = settings.GiftCardLockoutMinutes,
@@ -242,6 +246,9 @@ public class SettingsService(
             ReferralMonthlyRewardLimit = settings.ReferralMonthlyRewardLimit,
             SupportRequestDueHours = settings.SupportRequestDueHours,
             ExceptionalRefundApprovalThreshold = settings.ExceptionalRefundApprovalThreshold,
+            ReviewInviteMinHours = settings.ReviewInviteMinHours,
+            ReviewInviteMaxHours = settings.ReviewInviteMaxHours,
+            ReviewRewardPoints = settings.ReviewRewardPoints,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

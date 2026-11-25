@@ -39,6 +39,7 @@ export const SEARCH_LOOKUP_PAGE_SIZE = 20;
 export const COUNT_ONLY_PAGE_SIZE = 1;
 export const ACCOUNT_LIST_PAGE_LIMIT = 10;
 export const HOME_MOVIE_SECTION_LIMIT = 10;
+export const FOR_YOU_SECTION_LIMIT = 5;
 export const HERO_CAROUSEL_MOVIES_LIMIT = 5;
 export const DEFAULT_MOVIES_PAGE_LIMIT = 12;
 export const TOP_MOVIES_REPORT_LIMIT = 10;

@@ -27,7 +27,11 @@ public record CinemaSettingsDto(
     int SchedulerHeatLookbackDays,
     double SchedulerHeatSalesWeight,
     double SchedulerHeatRatingWeight,
-    double SchedulerMaxRating
+    double SchedulerMaxRating,
+    decimal[] GiftCardDenominations,
+    decimal GiftCardMinAmount,
+    decimal GiftCardMaxAmount,
+    int GiftCardValidityMonths
 )
 {
     public string TimeZoneId { get; init; } = string.Empty;
@@ -85,14 +89,6 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
 
     public int InvoiceRequestWindowDays { get; init; }
 
-    public decimal[] GiftCardDenominations { get; init; } = [];
-
-    public decimal GiftCardMinAmount { get; init; }
-
-    public decimal GiftCardMaxAmount { get; init; }
-
-    public int GiftCardValidityMonths { get; init; }
-
     public int GiftCardRefundExtensionDays { get; init; }
 
     public int GiftCardMaxFailedAttempts { get; init; }
@@ -120,6 +116,12 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int SupportRequestDueHours { get; init; }
 
     public decimal ExceptionalRefundApprovalThreshold { get; init; }
+
+    public int ReviewInviteMinHours { get; init; }
+
+    public int ReviewInviteMaxHours { get; init; }
+
+    public int ReviewRewardPoints { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -184,5 +186,8 @@ public record UpdateSettingsRequest(
     int? ReferralReferredPoints = null,
     int? ReferralMonthlyRewardLimit = null,
     int? SupportRequestDueHours = null,
-    decimal? ExceptionalRefundApprovalThreshold = null
+    decimal? ExceptionalRefundApprovalThreshold = null,
+    int? ReviewInviteMinHours = null,
+    int? ReviewInviteMaxHours = null,
+    int? ReviewRewardPoints = null
 );

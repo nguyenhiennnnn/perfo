@@ -69,6 +69,7 @@ export function useUpdateMyPreferences() {
       accountApi.updateMyPreferences(body),
     onSuccess: (res) => {
       queryClient.setQueryData(queryKeys.users.preferences(), res);
+      void queryClient.invalidateQueries({ queryKey: queryKeys.movies.recommendations() });
     },
   });
 }

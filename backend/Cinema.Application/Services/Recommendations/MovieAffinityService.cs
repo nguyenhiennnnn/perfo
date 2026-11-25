@@ -106,6 +106,7 @@ public class MovieAffinityService(IAppDbContext db) : IMovieAffinityService
 
         var reviews = await db
             .Reviews.AsNoTracking()
+            .Where(r => r.IsVerifiedViewer)
             .GroupBy(r => r.MovieId)
             .Select(g => new
             {

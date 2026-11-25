@@ -63,7 +63,10 @@ public sealed record CinemaSettingsSnapshot(
     int ReferralReferredPoints,
     int ReferralMonthlyRewardLimit,
     int SupportRequestDueHours,
-    decimal ExceptionalRefundApprovalThreshold
+    decimal ExceptionalRefundApprovalThreshold,
+    int ReviewInviteMinHours,
+    int ReviewInviteMaxHours,
+    int ReviewRewardPoints
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -127,6 +130,9 @@ public sealed record CinemaSettingsSnapshot(
             s.ReferralReferredPoints,
             s.ReferralMonthlyRewardLimit,
             s.SupportRequestDueHours,
-            s.ExceptionalRefundApprovalThreshold
+            s.ExceptionalRefundApprovalThreshold,
+            s.ReviewInviteMinHours,
+            s.ReviewInviteMaxHours,
+            s.ReviewRewardPoints
         );
 }

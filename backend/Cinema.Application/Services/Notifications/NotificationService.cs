@@ -134,6 +134,13 @@ public class NotificationService(
             EmailTemplates.ShowtimeReminder(_brand, data)
         );
 
+    public void SendReviewInvite(string toEmail, ReviewInviteEmailData data) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_ReviewInviteSubject, _brand.Name),
+            EmailTemplates.ReviewInvite(_brand, data)
+        );
+
     public void SendInvoiceRequestProcessed(
         string toEmail,
         string customerName,

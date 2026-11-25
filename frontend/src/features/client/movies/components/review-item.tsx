@@ -1,3 +1,5 @@
+import { BadgeCheck } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RatingStars } from "@/components/common/rating-stars";
 import { UserAvatar } from "@/components/common/user-avatar";
@@ -19,7 +21,15 @@ export const ReviewItem = ({ review, isOwner, onEdit, onDelete }: ReviewItemProp
       <div className="flex-1">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <p className="text-sm font-semibold text-foreground">{review.userName}</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-sm font-semibold text-foreground">{review.userName}</p>
+              {review.isVerifiedViewer && (
+                <Badge variant="success">
+                  <BadgeCheck />
+                  Đã xem
+                </Badge>
+              )}
+            </div>
             <div className="mt-0.5 flex items-center gap-2">
               <RatingStars value={review.rating} size="sm" />
               <span className="text-xs text-muted-foreground">{formatDate(review.createdAt)}</span>

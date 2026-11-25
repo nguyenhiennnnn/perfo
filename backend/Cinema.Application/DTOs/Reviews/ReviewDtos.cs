@@ -7,6 +7,7 @@ public record ReviewDto(
     string? UserAvatar,
     int Rating,
     string? Comment,
+    bool IsVerifiedViewer,
     DateTime CreatedAt
 );
 

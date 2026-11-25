@@ -14,6 +14,7 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
         );
         builder.HasKey(x => x.ReviewId);
         builder.Property(x => x.Comment);
+        builder.Property(x => x.IsVerifiedViewer).HasDefaultValue(true);
         builder
             .Property(x => x.CreatedAt)
             .HasColumnType("timestamp without time zone")

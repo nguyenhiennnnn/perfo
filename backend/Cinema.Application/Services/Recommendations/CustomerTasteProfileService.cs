@@ -117,7 +117,7 @@ public class CustomerTasteProfileService(IAppDbContext db) : ICustomerTasteProfi
 
         var reviews = await db
             .Reviews.AsNoTracking()
-            .Where(r => r.UserId == userId)
+            .Where(r => r.UserId == userId && r.IsVerifiedViewer)
             .Select(r => new TasteReview(r.MovieId, r.Rating, r.CreatedAt))
             .ToListAsync(cancellationToken);
 

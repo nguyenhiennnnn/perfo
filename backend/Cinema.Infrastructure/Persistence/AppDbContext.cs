@@ -22,6 +22,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<MovieSimilarity> MovieSimilarities => Set<MovieSimilarity>();
     public DbSet<MoviePopularity> MoviePopularities => Set<MoviePopularity>();
     public DbSet<MovieIntroEmailNotice> MovieIntroEmailNotices => Set<MovieIntroEmailNotice>();
+    public DbSet<ReviewInviteNotice> ReviewInviteNotices => Set<ReviewInviteNotice>();
+    public DbSet<ExperienceSurvey> ExperienceSurveys => Set<ExperienceSurvey>();
+    public DbSet<ReviewPointReward> ReviewPointRewards => Set<ReviewPointReward>();
     public DbSet<LoyaltyPointEntry> LoyaltyPointEntries => Set<LoyaltyPointEntry>();
     public DbSet<LoyaltyReward> LoyaltyRewards => Set<LoyaltyReward>();
     public DbSet<LoyaltyChallenge> LoyaltyChallenges => Set<LoyaltyChallenge>();

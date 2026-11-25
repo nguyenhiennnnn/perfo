@@ -26,6 +26,17 @@ export interface MovieListItemDto {
   releaseDate?: string | null;
 }
 
+export interface RecommendedMovieDto {
+  movie: MovieListItemDto;
+  reason: string;
+  reasonType: string;
+}
+
+export interface MovieRecommendationsDto {
+  personalized: boolean;
+  items: RecommendedMovieDto[];
+}
+
 export interface DirectorDto {
   directorId: number;
   fullName: string;
@@ -102,6 +113,7 @@ export interface ReviewDto {
   userAvatar?: string | null;
   rating: number;
   comment?: string | null;
+  isVerifiedViewer: boolean;
   createdAt: string;
 }
 

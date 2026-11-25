@@ -4916,4 +4916,118 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_SupportMessageSent" xml:space="preserve">
     <value>Đã gửi phản hồi.</value>
   </data>
+  <data name="Invalid_SupportRequest_Assignee" xml:space="preserve">
+    <value>Người phụ trách không hợp lệ. Chỉ gán cho nhân viên hoặc quản trị đang hoạt động.</value>
+  </data>
+  <data name="Validation_SupportRequest_StatusInvalid" xml:space="preserve">
+    <value>Trạng thái không hợp lệ. Chỉ chuyển sang Đang xử lý, Chờ khách phản hồi hoặc Đã giải quyết.</value>
+  </data>
+  <data name="Rule_SupportRequestStatusUnchanged" xml:space="preserve">
+    <value>Yêu cầu hỗ trợ đã ở trạng thái này.</value>
+  </data>
+  <data name="Rule_SupportRequestResolvedStaff" xml:space="preserve">
+    <value>Yêu cầu hỗ trợ đã được giải quyết. Hãy mở lại yêu cầu trước khi thao tác.</value>
+  </data>
+  <data name="Rule_SupportRequestNoCustomer" xml:space="preserve">
+    <value>Yêu cầu này không còn gắn với tài khoản khách nên không thể thực hiện thao tác này.</value>
+  </data>
+  <data name="Conflict_SupportApologyCodeIssued" xml:space="preserve">
+    <value>Yêu cầu này đã được cấp mã quà xin lỗi.</value>
+  </data>
+  <data name="Rule_SupportTicketEmailOrderNotConfirmed" xml:space="preserve">
+    <value>Chỉ gửi lại email vé cho đơn hàng đã xác nhận.</value>
+  </data>
+  <data name="Rule_SupportTicketEmailUnavailable" xml:space="preserve">
+    <value>Đơn hàng này không có vé hoặc không gắn với tài khoản nhận để gửi lại email.</value>
+  </data>
+  <data name="Support_ApologyPromotionName" xml:space="preserve">
+    <value>Mã xin lỗi đơn {0}</value>
+  </data>
+  <data name="Support_MessageApologyCodeIssued" xml:space="preserve">
+    <value>Đã cấp mã quà xin lỗi {0}, dùng một lần, hạn dùng đến {1}.</value>
+  </data>
+  <data name="Support_MessageTicketEmailResent" xml:space="preserve">
+    <value>Đã gửi lại email vé của đơn {0}.</value>
+  </data>
+  <data name="Success_SupportAssigned" xml:space="preserve">
+    <value>Đã cập nhật người phụ trách.</value>
+  </data>
+  <data name="Success_SupportStatusChanged" xml:space="preserve">
+    <value>Đã cập nhật trạng thái yêu cầu.</value>
+  </data>
+  <data name="Success_SupportStaffReplied" xml:space="preserve">
+    <value>Đã gửi phản hồi cho khách.</value>
+  </data>
+  <data name="Success_SupportApologyCodeIssued" xml:space="preserve">
+    <value>Đã cấp mã quà xin lỗi và gửi email cho khách.</value>
+  </data>
+  <data name="Success_SupportTicketEmailResent" xml:space="preserve">
+    <value>Đã gửi lại email vé cho khách.</value>
+  </data>
+  <data name="Email_SupportUpdatedSubject" xml:space="preserve">
+    <value>[{0}] Cập nhật yêu cầu hỗ trợ #{1}</value>
+  </data>
+  <data name="Email_SupportUpdatedHeading" xml:space="preserve">
+    <value>Yêu cầu hỗ trợ của bạn có cập nhật</value>
+  </data>
+  <data name="Email_SupportUpdatedBody" xml:space="preserve">
+    <value>Xin chào {0}, yêu cầu hỗ trợ của bạn cho đơn hàng {1} vừa được cập nhật.</value>
+  </data>
+  <data name="Email_SupportUpdatedPreheader" xml:space="preserve">
+    <value>Yêu cầu hỗ trợ đơn {0} vừa có cập nhật</value>
+  </data>
+  <data name="Email_SupportSubjectLabel" xml:space="preserve">
+    <value>Nội dung yêu cầu</value>
+  </data>
+  <data name="Email_SupportStatusLabel" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Email_SupportReplyLabel" xml:space="preserve">
+    <value>Phản hồi từ nhân viên</value>
+  </data>
+  <data name="Email_SupportStatusNew" xml:space="preserve">
+    <value>Mới</value>
+  </data>
+  <data name="Email_SupportStatusInProgress" xml:space="preserve">
+    <value>Đang xử lý</value>
+  </data>
+  <data name="Email_SupportStatusWaitingCustomer" xml:space="preserve">
+    <value>Chờ bạn phản hồi</value>
+  </data>
+  <data name="Email_SupportStatusResolved" xml:space="preserve">
+    <value>Đã giải quyết</value>
+  </data>
+  <data name="Email_SupportCodeLabel" xml:space="preserve">
+    <value>Mã quà xin lỗi</value>
+  </data>
+  <data name="Email_SupportCodeDiscountLabel" xml:space="preserve">
+    <value>Ưu đãi</value>
+  </data>
+  <data name="Email_SupportCodeExpiryLabel" xml:space="preserve">
+    <value>Hạn dùng</value>
+  </data>
+  <data name="Email_SupportCodeDiscountPercent" xml:space="preserve">
+    <value>Giảm {0}%</value>
+  </data>
+  <data name="Email_SupportCodeDiscountPercentCapped" xml:space="preserve">
+    <value>Giảm {0}% (tối đa {1})</value>
+  </data>
+  <data name="Email_SupportCodeDiscountFixed" xml:space="preserve">
+    <value>Giảm {0}</value>
+  </data>
+  <data name="Email_SupportInProgressNote" xml:space="preserve">
+    <value>Chúng tôi sẽ tiếp tục thông báo cho bạn qua email mỗi khi yêu cầu có cập nhật.</value>
+  </data>
+  <data name="Email_SupportWaitingNote" xml:space="preserve">
+    <value>Vui lòng phản hồi để chúng tôi có thể tiếp tục hỗ trợ bạn.</value>
+  </data>
+  <data name="Email_SupportResolvedNote" xml:space="preserve">
+    <value>Nếu vấn đề chưa được giải quyết, bạn có thể tạo yêu cầu hỗ trợ mới từ chi tiết đơn hàng.</value>
+  </data>
+  <data name="Email_SupportCodeNote" xml:space="preserve">
+    <value>Mã chỉ dùng được một lần trên tài khoản của bạn, trước ngày hết hạn. Nhập mã ở bước thanh toán.</value>
+  </data>
+  <data name="Email_SupportViewButton" xml:space="preserve">
+    <value>Xem đơn hàng</value>
+  </data>
 </root>

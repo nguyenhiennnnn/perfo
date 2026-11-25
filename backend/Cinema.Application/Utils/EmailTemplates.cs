@@ -381,6 +381,125 @@ public static class EmailTemplates
             """;
     }
 
+    public static string SupportRequestUpdated(
+        BrandOptions brand,
+        SupportRequestUpdateEmailData data
+    )
+    {
+        var tone = data.Status switch
+        {
+            SupportRequestStatus.Resolved => Success,
+            SupportRequestStatus.WaitingCustomer => Warning,
+            _ => Neutral,
+        };
+        var symbol = data.Status switch
+        {
+            SupportRequestStatus.Resolved => SymbolCheck,
+            SupportRequestStatus.WaitingCustomer => SymbolAlert,
+            _ => "&#8226;",
+        };
+        var statusLabel = SupportStatusLabel(data.Status);
+
+        var lines = new List<(string Label, string Value, bool Code)>
+        {
+            (Messages.Email_SupportSubjectLabel, Enc(data.Subject), false),
+            (Messages.Email_OrderCodeLabel, Enc(data.OrderCode), true),
+            (Messages.Email_SupportStatusLabel, Enc(statusLabel), false),
+        };
+        if (data.ApologyCode is { } apology)
+        {
+            lines.Add((Messages.Email_SupportCodeLabel, Enc(apology.Code), true));
+            lines.Add(
+                (Messages.Email_SupportCodeDiscountLabel, Enc(DescribeApologyDiscount(apology)), false)
+            );
+            lines.Add(
+                (
+                    Messages.Email_SupportCodeExpiryLabel,
+                    Enc(
+                        BusinessTime
+                            .ToLocal(apology.ExpiresAtUtc)
+                            .ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture)
+                    ),
+                    false
+                )
+            );
+        }
+
+        var rows = lines
+            .Select(
+                (line, index) =>
+                    DetailRow(
+                        Enc(line.Label),
+                        line.Value,
+                        isLast: index == lines.Count - 1,
+                        code: line.Code
+                    )
+            )
+            .ToArray();
+
+        var reply = string.Empty;
+        if (!string.IsNullOrWhiteSpace(data.StaffMessage))
+        {
+            var replyHtml = Enc(data.StaffMessage.Trim()).Replace("\r\n", "\n").Replace("\n", "<br>");
+            reply = Paragraph($"<strong>{Enc(Messages.Email_SupportReplyLabel)}</strong><br>{replyHtml}");
+        }
+
+        var notes = new List<string>();
+        if (data.ApologyCode is not null)
+            notes.Add(Messages.Email_SupportCodeNote);
+        notes.Add(
+            data.Status switch
+            {
+                SupportRequestStatus.WaitingCustomer => Messages.Email_SupportWaitingNote,
+                SupportRequestStatus.Resolved => Messages.Email_SupportResolvedNote,
+                _ => Messages.Email_SupportInProgressNote,
+            }
+        );
+
+        var body = $"""
+            {Badge(Enc(statusLabel), tone, symbol)}
+            {Heading(Messages.Email_SupportUpdatedHeading)}
+            {Paragraph(
+                string.Format(
+                    Messages.Email_SupportUpdatedBody,
+                    Enc(data.CustomerName),
+                    Enc(data.OrderCode)
+                )
+            )}
+            {reply}
+            {DetailCard(rows)}
+            {Button(Messages.Email_SupportViewButton, data.OrderLink)}
+            <div style="height:12px; line-height:12px; font-size:0;">&nbsp;</div>
+            {MutedParagraph(string.Join("<br><br>", notes))}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_SupportUpdatedPreheader, data.OrderCode),
+            body
+        );
+    }
+
+    private static string SupportStatusLabel(SupportRequestStatus status) =>
+        status switch
+        {
+            SupportRequestStatus.New => Messages.Email_SupportStatusNew,
+            SupportRequestStatus.InProgress => Messages.Email_SupportStatusInProgress,
+            SupportRequestStatus.WaitingCustomer => Messages.Email_SupportStatusWaitingCustomer,
+            _ => Messages.Email_SupportStatusResolved,
+        };
+
+    private static string DescribeApologyDiscount(SupportApologyCodeEmailData code)
+    {
+        if (code.DiscountType != PromotionDiscountType.Percent)
+            return string.Format(Messages.Email_SupportCodeDiscountFixed, Money(code.DiscountValue));
+
+        var percent = code.DiscountValue.ToString("0.##", CultureInfo.InvariantCulture);
+        return code.MaxDiscountAmount is { } cap
+            ? string.Format(Messages.Email_SupportCodeDiscountPercentCapped, percent, Money(cap))
+            : string.Format(Messages.Email_SupportCodeDiscountPercent, percent);
+    }
+
     public static string OrderExchanged(BrandOptions brand, OrderExchangeEmailData data)
     {
         var hasCredit = data.CreditAmount > 0m && !string.IsNullOrEmpty(data.CreditCode);

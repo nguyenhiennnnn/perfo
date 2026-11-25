@@ -222,6 +222,7 @@ public static class DependencyInjection
         services.AddScoped<IOrderExchangeService, OrderExchangeService>();
         services.AddScoped<IComboSupplementService, ComboSupplementService>();
         services.AddScoped<IOrderComboSuggestionService, OrderComboSuggestionService>();
+        services.AddScoped<IOrderTicketEmailSender, OrderTicketEmailSender>();
         services.AddScoped<IOrderExchangeSettlementService, OrderExchangeSettlementService>();
         services.AddScoped<IOrderExchangeCompletionService, OrderExchangeCompletionService>();
         services.AddScoped<IGiftCardService, GiftCardService>();
@@ -244,6 +245,7 @@ public static class DependencyInjection
         services.AddScoped<IInvoiceRequestService, InvoiceRequestService>();
         services.AddScoped<IInvoiceAdminService, InvoiceAdminService>();
         services.AddScoped<ISupportRequestService, SupportRequestService>();
+        services.AddScoped<ISupportRequestStaffService, SupportRequestStaffService>();
         services.AddScoped<IRoomClosureService, RoomClosureService>();
         services.AddScoped<ICounterShiftService, CounterShiftService>();
         services.AddScoped<IUnclosedShiftAlertService, UnclosedShiftAlertService>();

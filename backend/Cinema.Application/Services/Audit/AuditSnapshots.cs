@@ -227,6 +227,33 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject SupportRequestState(SupportRequest r) =>
+        AuditJson.ToObject(
+            new
+            {
+                r.Status,
+                r.AssignedToUserId,
+                r.ApologyPromotionId,
+                r.ResolvedAt,
+            }
+        );
+
+    public static JsonObject SupportApologyCodeState(SupportRequest r, Promotion p) =>
+        AuditJson.ToObject(
+            new
+            {
+                r.Status,
+                r.AssignedToUserId,
+                p.Code,
+                p.DiscountType,
+                p.DiscountValue,
+                p.MaxDiscountAmount,
+                p.AssignedUserId,
+                p.StartsAt,
+                p.EndsAt,
+            }
+        );
+
     public static JsonObject SpecialDayState(SpecialDay d) =>
         AuditJson.ToObject(
             new

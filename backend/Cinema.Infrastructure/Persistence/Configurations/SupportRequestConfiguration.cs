@@ -44,6 +44,11 @@ public class SupportRequestConfiguration : IEntityTypeConfiguration<SupportReque
             .WithMany()
             .HasForeignKey(x => x.AssignedToUserId)
             .OnDelete(DeleteBehavior.SetNull);
+        builder
+            .HasOne(x => x.ApologyPromotion)
+            .WithMany()
+            .HasForeignKey(x => x.ApologyPromotionId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder
             .HasIndex(x => new { x.UserId, x.LastMessageAt })

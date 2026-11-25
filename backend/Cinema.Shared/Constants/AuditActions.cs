@@ -25,4 +25,8 @@ public static class AuditActions
     public const string ExchangeCashRefund = "ExchangeCashRefund";
     public const string CompleteOrderExchange = "CompleteOrderExchange";
     public const string AdjustLoyaltyPoints = "AdjustLoyaltyPoints";
+    public const string AssignSupportRequest = "AssignSupportRequest";
+    public const string ChangeSupportRequestStatus = "ChangeSupportRequestStatus";
+    public const string IssueSupportApologyCode = "IssueSupportApologyCode";
+    public const string ResendTicketEmail = "ResendTicketEmail";
 }

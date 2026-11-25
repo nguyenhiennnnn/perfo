@@ -153,8 +153,30 @@ public sealed record LoyaltyChallengeCompletedEmailData(
     string AccountLink
 );
 
+public sealed record SupportApologyCodeEmailData(
+    string Code,
+    PromotionDiscountType DiscountType,
+    decimal DiscountValue,
+    decimal? MaxDiscountAmount,
+    DateTime ExpiresAtUtc
+);
+
+public sealed record SupportRequestUpdateEmailData(
+    string CustomerName,
+    int SupportRequestId,
+    string Subject,
+    string OrderCode,
+    SupportRequestStatus Status,
+    bool StatusChanged,
+    string? StaffMessage,
+    SupportApologyCodeEmailData? ApologyCode,
+    string OrderLink
+);
+
 public interface INotificationService
 {
+    void SendSupportRequestUpdated(string toEmail, SupportRequestUpdateEmailData data);
+
     void SendLoyaltyChallengeCompleted(string toEmail, LoyaltyChallengeCompletedEmailData data);
 
     void SendPointsExpiryReminder(string toEmail, PointsExpiryReminderEmailData data);

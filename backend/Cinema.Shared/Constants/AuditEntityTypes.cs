@@ -29,4 +29,5 @@ public static class AuditEntityTypes
     public const string LoyaltyAccount = "LoyaltyAccount";
     public const string LoyaltyReward = "LoyaltyReward";
     public const string LoyaltyChallenge = "LoyaltyChallenge";
+    public const string SupportRequest = "SupportRequest";
 }

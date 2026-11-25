@@ -82,6 +82,13 @@ public class NotificationService(
             )
         );
 
+    public void SendSupportRequestUpdated(string toEmail, SupportRequestUpdateEmailData data) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_SupportUpdatedSubject, _brand.Name, data.SupportRequestId),
+            EmailTemplates.SupportRequestUpdated(_brand, data)
+        );
+
     public void SendOrderExchanged(string toEmail, OrderExchangeEmailData data) =>
         Enqueue(
             toEmail,

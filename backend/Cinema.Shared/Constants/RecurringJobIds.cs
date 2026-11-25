@@ -16,4 +16,5 @@ public class RecurringJobIds
     public const string GiftCardExpiry = "gift-card-expiry";
     public const string ShowtimeReminder = "showtime-reminder";
     public const string RefreshMovieAffinity = "refresh-movie-affinity";
+    public const string MovieIntroEmail = "movie-intro-email";
 }

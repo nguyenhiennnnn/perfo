@@ -8,3 +8,5 @@ public record RecommendedMovieDto(
 );
 
 public record MovieRecommendationsDto(bool Personalized, List<RecommendedMovieDto> Items);
+
+public record RecommendationWindow(DateOnly? Date, TimeOnly? FromTime);

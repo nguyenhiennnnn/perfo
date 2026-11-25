@@ -752,6 +752,65 @@ public static class EmailTemplates
         );
     }
 
+    public static string MovieIntro(BrandOptions brand, MovieIntroEmailData data)
+    {
+        var sections = data.Movies.Select(movie =>
+        {
+            var rows = movie
+                .Showtimes.Select(
+                    (showtime, index) =>
+                        DetailRow(
+                            Enc(
+                                BusinessTime
+                                    .ToLocal(showtime.StartUtc)
+                                    .ToString(
+                                        DateTimePatterns.DateHourMinute,
+                                        CultureInfo.InvariantCulture
+                                    )
+                            ),
+                            Enc(
+                                showtime.FromPrice is { } price
+                                    ? string.Format(
+                                        Messages.Email_MovieIntroShowtimeValue,
+                                        showtime.RoomName,
+                                        Money(price)
+                                    )
+                                    : showtime.RoomName
+                            ),
+                            isLast: index == movie.Showtimes.Count - 1
+                        )
+                )
+                .ToArray();
+
+            return $"""
+                {Heading3(movie.Title)}
+                {Paragraph(Enc(movie.Reason))}
+                {DetailCard(rows)}
+                {Button(Messages.Email_MovieIntroButton, movie.MovieLink)}
+                """;
+        });
+
+        var unsubscribe =
+            $"<a href=\"{Enc(data.UnsubscribeLink)}\" class=\"tx\" style=\"color:{ColorForeground}; text-decoration:underline;\">{Messages.Email_MovieIntroUnsubscribeLabel}</a>";
+        var preferences =
+            $"<a href=\"{Enc(data.PreferencesLink)}\" class=\"tx\" style=\"color:{ColorForeground}; text-decoration:underline;\">{Messages.Email_MovieIntroPreferencesLabel}</a>";
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeMovieIntro, Success, SymbolCheck)}
+            {Heading(Messages.Email_MovieIntroHeading)}
+            {Paragraph(string.Format(Messages.Email_MovieIntroBody, Enc(data.CustomerName)))}
+            {string.Concat(sections)}
+            <div style="height:12px; line-height:12px; font-size:0;">&nbsp;</div>
+            {MutedParagraph(string.Format(Messages.Email_MovieIntroOptOutNote, unsubscribe, preferences))}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_MovieIntroPreheader, data.Movies[0].Title),
+            body
+        );
+    }
+
     public static string LoyaltyChallengeCompleted(
         BrandOptions brand,
         LoyaltyChallengeCompletedEmailData data

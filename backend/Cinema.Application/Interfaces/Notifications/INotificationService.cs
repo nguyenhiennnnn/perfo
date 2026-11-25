@@ -173,8 +173,30 @@ public sealed record SupportRequestUpdateEmailData(
     string OrderLink
 );
 
+public sealed record MovieIntroEmailShowtimeLine(
+    DateTime StartUtc,
+    string RoomName,
+    decimal? FromPrice
+);
+
+public sealed record MovieIntroEmailMovieLine(
+    string Title,
+    string Reason,
+    string MovieLink,
+    IReadOnlyList<MovieIntroEmailShowtimeLine> Showtimes
+);
+
+public sealed record MovieIntroEmailData(
+    string CustomerName,
+    IReadOnlyList<MovieIntroEmailMovieLine> Movies,
+    string UnsubscribeLink,
+    string PreferencesLink
+);
+
 public interface INotificationService
 {
+    void SendMovieIntro(string toEmail, MovieIntroEmailData data);
+
     void SendSupportRequestUpdated(string toEmail, SupportRequestUpdateEmailData data);
 
     void SendLoyaltyChallengeCompleted(string toEmail, LoyaltyChallengeCompletedEmailData data);

@@ -19,4 +19,7 @@ public static class RecommendationWeights
     public const int DefaultLimit = 10;
     public const int MaxLimit = 20;
     public const int ShowtimesPerMovie = 3;
+
+    public const int NewMovieWindowDays = 7;
+    public const int MaxMoviesPerIntroEmail = 3;
 }

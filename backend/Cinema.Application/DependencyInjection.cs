@@ -174,6 +174,7 @@ public static class DependencyInjection
         services.AddScoped<ICustomerTasteProfileService, CustomerTasteProfileService>();
         services.AddScoped<IMovieAffinityService, MovieAffinityService>();
         services.AddScoped<IMovieRecommendationService, MovieRecommendationService>();
+        services.AddScoped<IMovieIntroEmailService, MovieIntroEmailService>();
         services.AddBackgroundEventHandler<TicketCheckedIn, TasteProfileTicketCheckedInHandler>();
         services.AddBackgroundEventHandler<OrderConfirmed, TasteProfileOrderConfirmedHandler>();
         services.AddBackgroundEventHandler<ReviewChanged, TasteProfileReviewChangedHandler>();

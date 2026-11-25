@@ -6,6 +6,7 @@ using Cinema.Application.DTOs.Pricing;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Ledger;
 using Cinema.Application.Interfaces.Pricing;
+using Cinema.Application.Interfaces.Recommendations;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
@@ -19,6 +20,7 @@ public class AiToolExecutor(
     IAppDbContext db,
     IPaymentLedgerService paymentLedger,
     IPricingService pricingService,
+    IMovieRecommendationService recommendations,
     IAppCache cache,
     ILogger<AiToolExecutor> logger
 )
@@ -26,9 +28,11 @@ public class AiToolExecutor(
     public const string SearchShowtimes = "search_showtimes";
     public const string GetSeatAvailability = "get_seat_availability";
     public const string GetMyOrders = "get_my_orders";
+    public const string RecommendMovies = "recommend_movies";
 
     private const int MaxShowtimeResults = 8;
     private const int MaxOrderResults = 5;
+    private const int MaxRecommendedMovies = 5;
     private const int MaxSeatLabels = 40;
 
     public record ToolResult(JsonObject Response, List<AiCardDto> Cards);
@@ -63,6 +67,18 @@ public class AiToolExecutor(
                         AiToolParameterType.Integer,
                         Messages.Ai_Param_ShowtimeId,
                         Required: true
+                    ),
+                ]
+            ),
+            new(
+                RecommendMovies,
+                Messages.Ai_Tool_RecommendMovies_Description,
+                [
+                    new AiToolParameter("date", AiToolParameterType.String, Messages.Ai_Param_Date),
+                    new AiToolParameter(
+                        "from_time",
+                        AiToolParameterType.String,
+                        Messages.Ai_Param_FromTime
                     ),
                 ]
             ),
@@ -110,6 +126,7 @@ public class AiToolExecutor(
                 SearchShowtimes => await SearchShowtimesAsync(args, cancellationToken),
                 GetSeatAvailability => await GetSeatAvailabilityAsync(args, cancellationToken),
                 GetMyOrders => await GetMyOrdersAsync(args, userId, cancellationToken),
+                RecommendMovies => await RecommendMoviesAsync(args, userId, cancellationToken),
                 _ => Error(string.Format(Messages.Ai_Error_UnknownFunction, name)),
             };
         }
@@ -237,6 +254,118 @@ public class AiToolExecutor(
 
         return new ToolResult(
             new JsonObject { ["count"] = items.Count, ["showtimes"] = items },
+            cards
+        );
+    }
+
+    private async Task<ToolResult> RecommendMoviesAsync(
+        JsonObject? args,
+        int? userId,
+        CancellationToken ct
+    )
+    {
+        DateOnly? date = null;
+        if (GetString(args, "date") is { } dateStr)
+        {
+            if (
+                !DateOnly.TryParseExact(
+                    dateStr,
+                    DateTimePatterns.IsoDate,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out var parsedDate
+                )
+            )
+                return Error(Messages.Ai_Error_DateFormat);
+            date = parsedDate;
+        }
+
+        TimeOnly? fromTime = null;
+        if (GetString(args, "from_time") is { } timeStr)
+        {
+            if (
+                !TimeOnly.TryParseExact(
+                    timeStr,
+                    DateTimePatterns.HourMinute,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out var parsedTime
+                )
+            )
+                return Error(Messages.Ai_Error_TimeFormat);
+            fromTime = parsedTime;
+        }
+
+        var result = await recommendations.GetForYouAsync(
+            userId,
+            MaxRecommendedMovies,
+            date is null ? null : new RecommendationWindow(date, fromTime),
+            ct
+        );
+
+        var movies = new JsonArray();
+        var cards = new List<AiCardDto>();
+        foreach (var item in result.Items.Where(i => i.Showtimes.Count > 0))
+        {
+            var showtimes = new JsonArray();
+            foreach (var s in item.Showtimes.OrderBy(x => x.StartTime).ThenBy(x => x.ShowtimeId))
+                showtimes.Add(
+                    new JsonObject
+                    {
+                        ["showtimeId"] = s.ShowtimeId,
+                        ["room"] = s.RoomName,
+                        ["screenType"] = s.ScreenType,
+                        ["startTime"] = BusinessTime
+                            .ToLocal(s.StartTime)
+                            .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture),
+                        ["fromPriceVnd"] = s.FromPrice,
+                        ["availableSeats"] = s.AvailableSeats,
+                    }
+                );
+
+            movies.Add(
+                new JsonObject
+                {
+                    ["movieId"] = item.Movie.MovieId,
+                    ["movieTitle"] = item.Movie.Title,
+                    ["genres"] = new JsonArray(
+                        item.Movie.Genres.Select(g => (JsonNode?)g).ToArray()
+                    ),
+                    ["durationMinutes"] = item.Movie.DurationMinutes,
+                    ["ageRating"] = item.Movie.AgeRating?.Code,
+                    ["averageRating"] = item.Movie.AverageRating,
+                    ["reason"] = item.Reason,
+                    ["showtimes"] = showtimes,
+                }
+            );
+
+            var best = item.Showtimes[0];
+            cards.Add(
+                new AiCardDto(
+                    "showtime",
+                    item.Movie.Title,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Messages.Ai_Card_ShowtimeSubtitle,
+                        BusinessTime.ToLocal(best.StartTime),
+                        best.RoomName
+                    ),
+                    best.FromPrice is { } price
+                        ? string.Format(Messages.Ai_Card_PriceAndSeats, price, best.AvailableSeats)
+                        : string.Format(Messages.Ai_Card_SeatsOnly, best.AvailableSeats),
+                    item.Movie.PosterUrl,
+                    $"/booking/{best.ShowtimeId}"
+                )
+            );
+        }
+
+        return new ToolResult(
+            new JsonObject
+            {
+                ["personalized"] = result.Personalized,
+                ["count"] = movies.Count,
+                ["movies"] = movies,
+            },
             cards
         );
     }

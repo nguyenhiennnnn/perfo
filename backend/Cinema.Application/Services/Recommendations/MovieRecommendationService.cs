@@ -23,9 +23,16 @@ public class MovieRecommendationService(IAppDbContext db, IPricingService pricin
 
     private sealed record SeatCount(int Total, int Available);
 
+    public Task<MovieRecommendationsDto> GetForYouAsync(
+        int? userId,
+        int? limit,
+        CancellationToken cancellationToken
+    ) => GetForYouAsync(userId, limit, null, cancellationToken);
+
     public async Task<MovieRecommendationsDto> GetForYouAsync(
         int? userId,
         int? limit,
+        RecommendationWindow? window,
         CancellationToken cancellationToken
     )
     {
@@ -35,27 +42,28 @@ public class MovieRecommendationService(IAppDbContext db, IPricingService pricin
             RecommendationWeights.MaxLimit
         );
         var now = DateTime.UtcNow;
-        var until = now.AddDays(await db.LoadShowtimeLookaheadDaysAsync(cancellationToken));
+        var lookaheadEnd = now.AddDays(await db.LoadShowtimeLookaheadDaysAsync(cancellationToken));
+        var (rangeStart, rangeEnd) = ResolveRange(window, now, lookaheadEnd);
 
         var personal = userId is { } id ? await LoadPersonalAsync(id, cancellationToken) : null;
         var personalized = personal?.Taste.HasSignals == true;
 
-        var window = db
+        var candidatesWindow = db
             .Showtimes.AsNoTracking()
             .WhereRegularKind(db)
             .Where(s =>
                 s.Status == ShowtimeStatus.Scheduled
-                && s.StartTime >= now
-                && s.StartTime <= until
+                && s.StartTime >= rangeStart
+                && s.StartTime <= rangeEnd
                 && s.Movie.Status == MovieStatus.NowShowing
             );
         if (personal is { ExcludedMovieIds.Count: > 0 })
         {
             var excluded = personal.ExcludedMovieIds.ToList();
-            window = window.Where(s => !excluded.Contains(s.MovieId));
+            candidatesWindow = candidatesWindow.Where(s => !excluded.Contains(s.MovieId));
         }
 
-        var rows = await window
+        var rows = await candidatesWindow
             .Select(s => new ShowtimeRow(s.ShowtimeId, s.MovieId, s.StartTime, s.Room.ScreenTypeId))
             .ToListAsync(cancellationToken);
         if (rows.Count == 0)
@@ -64,7 +72,7 @@ public class MovieRecommendationService(IAppDbContext db, IPricingService pricin
         var seatCounts = await db
             .ShowtimeSeats.AsNoTracking()
             .WhereSellable()
-            .Where(ss => window.Any(s => s.ShowtimeId == ss.ShowtimeId))
+            .Where(ss => candidatesWindow.Any(s => s.ShowtimeId == ss.ShowtimeId))
             .GroupBy(ss => ss.ShowtimeId)
             .Select(g => new
             {
@@ -110,6 +118,21 @@ public class MovieRecommendationService(IAppDbContext db, IPricingService pricin
             cancellationToken
         );
         return new MovieRecommendationsDto(personalized, items);
+    }
+
+    private static (DateTime Start, DateTime End) ResolveRange(
+        RecommendationWindow? window,
+        DateTime now,
+        DateTime lookaheadEnd
+    )
+    {
+        if (window?.Date is not { } date)
+            return (now, lookaheadEnd);
+
+        var dayStart = BusinessTime.StartOfDayUtc(date);
+        var dayEnd = BusinessTime.StartOfNextDayUtc(date).AddTicks(-1);
+        var start = window.FromTime is { } time ? BusinessTime.ToUtc(date, time) : dayStart;
+        return (start > now ? start : now, dayEnd < lookaheadEnd ? dayEnd : lookaheadEnd);
     }
 
     private async Task<PersonalContext?> LoadPersonalAsync(int userId, CancellationToken cancellationToken)

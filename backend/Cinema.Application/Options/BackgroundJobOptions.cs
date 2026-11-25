@@ -18,6 +18,7 @@ public class BackgroundJobOptions
     public string GiftCardExpiryCron { get; set; } = "*/15 * * * *";
     public string ShowtimeReminderCron { get; set; } = "* * * * *";
     public string MovieAffinityRefreshCron { get; set; } = "20 * * * *";
+    public string MovieIntroEmailCron { get; set; } = "0 10 * * *";
     public int OutboxBatchSize { get; set; } = 50;
     public int OutboxMaxAttempts { get; set; } = 5;
     public int[] OutboxRetryDelaysSeconds { get; set; } = [30, 120, 600, 1800];

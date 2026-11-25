@@ -103,6 +103,13 @@ public class NotificationService(
             EmailTemplates.SupplementOrderReminder(_brand, data)
         );
 
+    public void SendMovieIntro(string toEmail, MovieIntroEmailData data) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_MovieIntroSubject, _brand.Name),
+            EmailTemplates.MovieIntro(_brand, data)
+        );
+
     public void SendPointsExpiryReminder(string toEmail, PointsExpiryReminderEmailData data) =>
         Enqueue(
             toEmail,

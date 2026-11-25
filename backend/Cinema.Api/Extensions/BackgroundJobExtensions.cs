@@ -139,6 +139,12 @@ public static class BackgroundJobExtensions
             options.MovieAffinityRefreshCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<MovieIntroEmailJob>(
+            RecurringJobIds.MovieIntroEmail,
+            j => j.RunAsync(CancellationToken.None),
+            options.MovieIntroEmailCron,
+            jobOptions
+        );
 
         return app;
     }

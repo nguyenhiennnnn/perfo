@@ -298,7 +298,8 @@ public static class EmailTemplates
         string customerName,
         string bookingCode,
         string movieTitle,
-        IReadOnlyList<OrderTicketEmailLine> tickets
+        IReadOnlyList<OrderTicketEmailLine> tickets,
+        BookingComboSuggestionEmailData? comboSuggestions = null
     )
     {
         var rows = new List<string>();
@@ -329,6 +330,7 @@ public static class EmailTemplates
             )}
             {DetailCard([.. rows])}
             {MutedParagraph(string.Join("<br><br>", notes))}
+            {BookingComboSuggestionBlock(comboSuggestions)}
             """;
 
         return Layout(
@@ -337,6 +339,46 @@ public static class EmailTemplates
             body,
             TicketStub(bookingCode)
         );
+    }
+
+    private static string BookingComboSuggestionBlock(BookingComboSuggestionEmailData? data)
+    {
+        if (data is null || data.Items.Count == 0)
+            return string.Empty;
+
+        var rows = data.Items.Select(
+            (item, i) =>
+            {
+                var price =
+                    item.PreorderPrice < item.ListPrice
+                        ? $"""<s class="tx-mut" style="font-weight:400; color:{ColorMuted};">{Money(item.ListPrice)}</s> {Money(item.PreorderPrice)}"""
+                        : Money(item.PreorderPrice);
+                return DetailRow(
+                    Enc(string.Format(Messages.Email_BookingComboItemLabel, item.ComboName, item.Quantity)),
+                    price,
+                    isLast: i == data.Items.Count - 1
+                );
+            }
+        );
+
+        var validUntil = BusinessTime
+            .ToLocal(data.ValidUntilUtc)
+            .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture);
+        var notes = new List<string>
+        {
+            string.Format(Messages.Email_BookingComboValidNote, Enc(validUntil)),
+        };
+        if (data.DiscountPercent > 0)
+            notes.Insert(0, string.Format(Messages.Email_BookingComboDiscountNote, data.DiscountPercent));
+
+        return $"""
+            <div style="height:20px; line-height:20px; font-size:0;">&nbsp;</div>
+            {Heading3(Messages.Email_BookingComboHeading)}
+            {Paragraph(Messages.Email_BookingComboIntro)}
+            {DetailCard([.. rows])}
+            {Button(Messages.Email_BookingComboButton, data.PurchaseLink)}
+            {MutedParagraph(string.Join(" ", notes))}
+            """;
     }
 
     public static string OrderExchanged(BrandOptions brand, OrderExchangeEmailData data)
@@ -447,6 +489,132 @@ public static class EmailTemplates
             body
         );
     }
+
+    public static string ShowtimeReminder(BrandOptions brand, ShowtimeReminderEmailData data)
+    {
+        var start = BusinessTime.ToLocal(data.StartUtc);
+        var startText = start.ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture);
+        var checkInText = start
+            .AddMinutes(-data.CheckInOpenMinutes)
+            .ToString(DateTimePatterns.HourMinute, CultureInfo.InvariantCulture);
+
+        var rows = new List<string>
+        {
+            DetailRow(Messages.Email_MovieLabel, Enc(data.MovieTitle)),
+            DetailRow(Messages.Email_ShowtimeReminderStartLabel, Enc(startText)),
+            DetailRow(Messages.Email_ShowtimeReminderRoomLabel, Enc(data.RoomName)),
+            DetailRow(Messages.Email_ShowtimeReminderAddressLabel, Enc(data.CinemaAddress)),
+            DetailRow(
+                Messages.Email_ShowtimeReminderCheckInLabel,
+                Enc(checkInText),
+                isLast: true
+            ),
+        };
+
+        var qrBlocks = string.Concat(data.Tickets.Select(ShowtimeReminderQrBlock));
+
+        var comboBlock = string.Empty;
+        if (data.Combos.Count > 0)
+        {
+            var comboRows = data.Combos.Select(
+                (c, i) =>
+                    DetailRow(
+                        c.SupplementOrderCode is null
+                            ? Enc(c.ComboName)
+                            : Enc(
+                                string.Format(
+                                    Messages.Email_ShowtimeReminderComboSupplementLabel,
+                                    c.ComboName,
+                                    c.SupplementOrderCode
+                                )
+                            ),
+                        string.Format(Messages.Email_SupplementReminderComboQuantity, c.Remaining),
+                        isLast: i == data.Combos.Count - 1
+                    )
+            );
+            comboBlock = $"""
+                {Heading3(Messages.Email_ShowtimeReminderComboHeading)}
+                {DetailCard([.. comboRows])}
+                {MutedParagraph(Messages.Email_ShowtimeReminderComboNote)}
+                """;
+        }
+
+        var notes = new List<string>
+        {
+            string.Format(
+                Messages.Email_ShowtimeReminderCheckInNote,
+                Enc(checkInText),
+                data.CheckInOpenMinutes
+            ),
+        };
+        var cardTypes = ReminderCardTypeNames(data.Tickets);
+        if (cardTypes.Count > 0)
+            notes.Add(
+                string.Format(
+                    Messages.Email_CardPresentationNote,
+                    Enc(string.Join(", ", cardTypes))
+                )
+            );
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeShowtimeReminder, Warning, SymbolAlert)}
+            {Heading(Messages.Email_ShowtimeReminderHeading)}
+            {Paragraph(
+                string.Format(
+                    Messages.Email_ShowtimeReminderBody,
+                    Enc(data.CustomerName),
+                    Enc(data.MovieTitle),
+                    Enc(startText)
+                )
+            )}
+            {DetailCard([.. rows])}
+            {Heading3(Messages.Email_ShowtimeReminderQrHeading)}
+            {qrBlocks}
+            {Button(Messages.Email_ShowtimeReminderViewButton, data.TicketsLink)}
+            {comboBlock}
+            {MutedParagraph(string.Join("<br><br>", notes))}
+            <div style="height:12px; line-height:12px; font-size:0;">&nbsp;</div>
+            {MutedParagraph(Messages.Email_ShowtimeReminderOptOutNote)}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_ShowtimeReminderPreheader, data.MovieTitle, startText),
+            body,
+            TicketStub(data.OrderCode)
+        );
+    }
+
+    private static string Heading3(string text) =>
+        $"""<h2 class="tx" style="margin:8px 0 12px 0; font-family:{FontHeading}; font-weight:700; font-size:18px; line-height:1.25; color:{ColorForeground};">{Enc(text)}</h2>""";
+
+    private static string ShowtimeReminderQrBlock(ShowtimeReminderTicketLine ticket)
+    {
+        var label = Enc(
+            string.Format(Messages.Email_TicketLineLabel, ticket.SeatLabel, ticket.TicketTypeName)
+        );
+        var alt = Enc(string.Format(Messages.Email_ShowtimeReminderQrAlt, ticket.SeatLabel));
+
+        return $"""
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="bg-sec" style="background-color:{ColorSecondary}; margin:0 0 12px 0;">
+              <tr>
+                <td align="center" style="padding:16px;">
+                  <p class="tx" style="margin:0 0 10px 0; font-size:15px; line-height:1.4; font-weight:600; color:{ColorForeground};">{label}</p>
+                  <img src="{QrCodeHelper.GenerateDataUri(ticket.QrCode)}" width="160" height="160" alt="{alt}" style="display:block; width:160px; height:160px; padding:8px; background-color:#ffffff;" />
+                </td>
+              </tr>
+            </table>
+            """;
+    }
+
+    private static List<string> ReminderCardTypeNames(
+        IReadOnlyList<ShowtimeReminderTicketLine> tickets
+    ) =>
+        tickets
+            .Where(t => t.RequiresCardPresentation)
+            .Select(t => t.TicketTypeName)
+            .Distinct()
+            .ToList();
 
     public static string InvoiceAdjustmentNeeded(
         BrandOptions brand,

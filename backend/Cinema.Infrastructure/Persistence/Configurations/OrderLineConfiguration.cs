@@ -120,6 +120,7 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
             .HasColumnType("timestamp without time zone");
         builder.Property(x => x.IsCheckedIn).HasDefaultValue(false);
         builder.Property(x => x.CheckedInAt).HasColumnType("timestamp without time zone");
+        builder.Property(x => x.ReminderSentAt).HasColumnType("timestamp without time zone");
         builder.Property(x => x.GiftRecipientEmail).HasMaxLength(FieldLengths.Email);
         builder.Property(x => x.GiftRecipientName).HasMaxLength(FieldLengths.PersonName);
         builder.Property(x => x.GiftMessage).HasMaxLength(FieldLengths.GiftCardMessage);
@@ -214,5 +215,11 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
             .IsUnique()
             .HasFilter("\"QrCode\" IS NOT NULL")
             .HasDatabaseName("UX_OrderLines_QrCode");
+        builder
+            .HasIndex(x => x.ShowtimeId)
+            .HasFilter(
+                "\"LineType\" = 'Ticket' AND \"ReminderSentAt\" IS NULL AND \"QrCode\" IS NOT NULL"
+            )
+            .HasDatabaseName("IX_OrderLines_PendingReminder");
     }
 }

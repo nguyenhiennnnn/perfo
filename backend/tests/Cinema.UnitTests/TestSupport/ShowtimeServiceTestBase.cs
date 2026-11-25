@@ -1,4 +1,4 @@
-﻿using Cinema.Application.Interfaces.Payments;
+using Cinema.Application.Interfaces.Payments;
 using Cinema.Application.Options;
 using Cinema.Application.Services.Notifications;
 using Cinema.Application.Services.Showtimes;
@@ -16,9 +16,7 @@ public abstract class ShowtimeServiceTestBase(PostgresContainerFixture fixture) 
 
     protected AppDbContext Db => _handle.Db;
     protected int RoomBufferMinutes { get; set; } = 15;
-    protected Mock<IBackgroundJobClient> BackgroundJobClientMock { get; } = new();
-    protected Mock<IBookingFulfillmentService> BookingServiceMock { get; } = new();
-    protected List<Mock<IPaymentGateway>> PaymentGatewayMocks { get; } = [];
+    protected Mock<IBackgroundJobClient> BackgroundJobClientMock { get; } = new();    protected List<Mock<IPaymentGateway>> PaymentGatewayMocks { get; } = [];
 
     protected Mock<IPaymentGateway> AddPaymentGateway(string methodName)
     {

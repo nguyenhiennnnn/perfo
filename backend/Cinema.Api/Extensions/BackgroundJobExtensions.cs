@@ -121,6 +121,12 @@ public static class BackgroundJobExtensions
             options.GiftCardExpiryCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<ShowtimeReminderJob>(
+            RecurringJobIds.ShowtimeReminder,
+            j => j.RunAsync(CancellationToken.None),
+            options.ShowtimeReminderCron,
+            jobOptions
+        );
 
         return app;
     }

@@ -66,7 +66,8 @@ public class NotificationService(
         string customerName,
         string bookingCode,
         string movieTitle,
-        IReadOnlyList<OrderTicketEmailLine> tickets
+        IReadOnlyList<OrderTicketEmailLine> tickets,
+        BookingComboSuggestionEmailData? comboSuggestions = null
     ) =>
         Enqueue(
             toEmail,
@@ -76,7 +77,8 @@ public class NotificationService(
                 customerName,
                 bookingCode,
                 movieTitle: movieTitle,
-                tickets: tickets
+                tickets: tickets,
+                comboSuggestions: comboSuggestions
             )
         );
 
@@ -92,6 +94,13 @@ public class NotificationService(
             toEmail,
             string.Format(Messages.Email_SupplementReminderSubject, _brand.Name),
             EmailTemplates.SupplementOrderReminder(_brand, data)
+        );
+
+    public void SendShowtimeReminder(string toEmail, ShowtimeReminderEmailData data) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_ShowtimeReminderSubject, _brand.Name),
+            EmailTemplates.ShowtimeReminder(_brand, data)
         );
 
     public void SendInvoiceRequestProcessed(

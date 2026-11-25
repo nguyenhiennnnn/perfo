@@ -29,6 +29,7 @@ public class OrderLine
     public string? QrCode { get; set; }
     public bool IsCheckedIn { get; set; }
     public DateTime? CheckedInAt { get; set; }
+    public DateTime? ReminderSentAt { get; set; }
     public int? GiftCardId { get; set; }
     public string? GiftRecipientEmail { get; set; }
     public string? GiftRecipientName { get; set; }

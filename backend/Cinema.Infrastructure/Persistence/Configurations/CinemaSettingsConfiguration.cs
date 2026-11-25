@@ -175,5 +175,8 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.PreorderComboDiscountPercent)
             .HasDefaultValue(CinemaSettings.DefaultPreorderComboDiscountPercent);
+        builder
+            .Property(x => x.ReminderHoursBefore)
+            .HasDefaultValue(CinemaSettings.DefaultReminderHoursBefore);
     }
 }

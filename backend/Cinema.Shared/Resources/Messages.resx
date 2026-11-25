@@ -4553,4 +4553,73 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_SupplementReminderPreheader" xml:space="preserve">
     <value>Đơn bổ sung của đơn hàng {0} cần bạn xử lý</value>
   </data>
+  <data name="Email_ShowtimeReminderSubject" xml:space="preserve">
+    <value>Nhắc lịch chiếu sắp tới — {0}</value>
+  </data>
+  <data name="Email_BadgeShowtimeReminder" xml:space="preserve">
+    <value>Sắp đến giờ chiếu</value>
+  </data>
+  <data name="Email_ShowtimeReminderHeading" xml:space="preserve">
+    <value>Suất chiếu của bạn sắp bắt đầu</value>
+  </data>
+  <data name="Email_ShowtimeReminderBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, suất chiếu phim &lt;strong&gt;{1}&lt;/strong&gt; của bạn bắt đầu lúc &lt;strong&gt;{2}&lt;/strong&gt;. Dưới đây là thông tin để bạn vào rạp thuận tiện.</value>
+  </data>
+  <data name="Email_ShowtimeReminderPreheader" xml:space="preserve">
+    <value>Suất chiếu {0} bắt đầu lúc {1}</value>
+  </data>
+  <data name="Email_ShowtimeReminderStartLabel" xml:space="preserve">
+    <value>Giờ chiếu</value>
+  </data>
+  <data name="Email_ShowtimeReminderRoomLabel" xml:space="preserve">
+    <value>Phòng chiếu</value>
+  </data>
+  <data name="Email_ShowtimeReminderAddressLabel" xml:space="preserve">
+    <value>Địa chỉ rạp</value>
+  </data>
+  <data name="Email_ShowtimeReminderCheckInLabel" xml:space="preserve">
+    <value>Mở check-in từ</value>
+  </data>
+  <data name="Email_ShowtimeReminderQrHeading" xml:space="preserve">
+    <value>Mã QR vào rạp</value>
+  </data>
+  <data name="Email_ShowtimeReminderQrAlt" xml:space="preserve">
+    <value>Mã QR vé ghế {0}</value>
+  </data>
+  <data name="Email_ShowtimeReminderCheckInNote" xml:space="preserve">
+    <value>Check-in mở từ {0}, trước giờ chiếu {1} phút. Đưa mã QR của từng vé cho nhân viên soát vé. Nếu hình QR không hiển thị trong email, hãy mở nút bên dưới để xem mã QR trên hệ thống.</value>
+  </data>
+  <data name="Email_ShowtimeReminderViewButton" xml:space="preserve">
+    <value>Xem vé và mã QR</value>
+  </data>
+  <data name="Email_ShowtimeReminderComboHeading" xml:space="preserve">
+    <value>Combo chưa nhận</value>
+  </data>
+  <data name="Email_ShowtimeReminderComboSupplementLabel" xml:space="preserve">
+    <value>{0} (đơn bổ sung {1})</value>
+  </data>
+  <data name="Email_ShowtimeReminderComboNote" xml:space="preserve">
+    <value>Nhận combo tại quầy bắp nước: đưa mã QR vé của đơn gốc, hoặc mã của đơn bổ sung đối với combo đặt thêm. Nhân viên sẽ trao đúng số lượng còn lại.</value>
+  </data>
+  <data name="Email_ShowtimeReminderOptOutNote" xml:space="preserve">
+    <value>Bạn nhận email này vì đang bật nhắc lịch chiếu. Có thể tắt trong phần thông tin liên lạc của tài khoản.</value>
+  </data>
+  <data name="Email_BookingComboHeading" xml:space="preserve">
+    <value>Đặt trước combo, nhận tại quầy</value>
+  </data>
+  <data name="Email_BookingComboIntro" xml:space="preserve">
+    <value>Thêm combo ngay bây giờ, thanh toán riêng và nhận tại quầy bắp nước bằng mã QR vé. Vé và ghế của bạn không bị ảnh hưởng.</value>
+  </data>
+  <data name="Email_BookingComboItemLabel" xml:space="preserve">
+    <value>{0} × {1}</value>
+  </data>
+  <data name="Email_BookingComboDiscountNote" xml:space="preserve">
+    <value>Giá đặt trước đã giảm {0}%.</value>
+  </data>
+  <data name="Email_BookingComboValidNote" xml:space="preserve">
+    <value>Có thể đặt thêm đến trước {0}.</value>
+  </data>
+  <data name="Email_BookingComboButton" xml:space="preserve">
+    <value>Đặt combo cho đơn này</value>
+  </data>
 </root>

@@ -161,6 +161,7 @@ public static class DependencyInjection
         services.AddBackgroundEventHandler<OrderExchanged, OrderExchangedEmailHandler>();
         services.AddBackgroundEventHandler<OrderCancelled, ShowtimeCancelledEmailHandler>();
         services.AddScoped<ISupplementReminderService, SupplementReminderService>();
+        services.AddScoped<IShowtimeReminderService, ShowtimeReminderService>();
         services.AddBackgroundEventHandler<OrderCancelled, SupplementOrderCancelledReminderHandler>();
         services.AddBackgroundEventHandler<OrderExchanged, SupplementOrderExchangedReminderHandler>();
         services.AddBackgroundEventHandler<OrderRefunded, ShowtimeRefundedEmailHandler>();

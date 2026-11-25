@@ -47,6 +47,46 @@ public sealed record SupplementReminderEmailData(
     IReadOnlyList<SupplementReminderOrderLine> Supplements
 );
 
+public sealed record BookingComboSuggestionLine(
+    string ComboName,
+    int Quantity,
+    decimal ListPrice,
+    decimal PreorderPrice
+);
+
+public sealed record BookingComboSuggestionEmailData(
+    int DiscountPercent,
+    DateTime ValidUntilUtc,
+    string PurchaseLink,
+    IReadOnlyList<BookingComboSuggestionLine> Items
+);
+
+public sealed record ShowtimeReminderTicketLine(
+    string SeatLabel,
+    string TicketTypeName,
+    string QrCode,
+    bool RequiresCardPresentation
+);
+
+public sealed record ShowtimeReminderComboLine(
+    string ComboName,
+    int Remaining,
+    string? SupplementOrderCode
+);
+
+public sealed record ShowtimeReminderEmailData(
+    string CustomerName,
+    string OrderCode,
+    string MovieTitle,
+    DateTime StartUtc,
+    string RoomName,
+    string CinemaAddress,
+    int CheckInOpenMinutes,
+    string TicketsLink,
+    IReadOnlyList<ShowtimeReminderTicketLine> Tickets,
+    IReadOnlyList<ShowtimeReminderComboLine> Combos
+);
+
 public sealed record LowStockEmailLine(
     string Code,
     string Name,
@@ -113,12 +153,15 @@ public interface INotificationService
         string customerName,
         string bookingCode,
         string movieTitle,
-        IReadOnlyList<OrderTicketEmailLine> tickets
+        IReadOnlyList<OrderTicketEmailLine> tickets,
+        BookingComboSuggestionEmailData? comboSuggestions = null
     );
 
     void SendOrderExchanged(string toEmail, OrderExchangeEmailData data);
 
     void SendSupplementOrderReminder(string toEmail, SupplementReminderEmailData data);
+
+    void SendShowtimeReminder(string toEmail, ShowtimeReminderEmailData data);
 
     void SendInvoiceRequestProcessed(
         string toEmail,

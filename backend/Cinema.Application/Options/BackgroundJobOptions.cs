@@ -15,6 +15,7 @@ public class BackgroundJobOptions
     public string UnclosedShiftAlertCron { get; set; } = "*/15 * * * *";
     public string GiftCardDispatchCron { get; set; } = "* * * * *";
     public string GiftCardExpiryCron { get; set; } = "*/15 * * * *";
+    public string ShowtimeReminderCron { get; set; } = "* * * * *";
     public int OutboxBatchSize { get; set; } = 50;
     public int OutboxMaxAttempts { get; set; } = 5;
     public int[] OutboxRetryDelaysSeconds { get; set; } = [30, 120, 600, 1800];

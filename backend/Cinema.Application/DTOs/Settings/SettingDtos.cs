@@ -104,6 +104,8 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int ExchangeCreditValidityDays { get; init; }
 
     public int PreorderComboDiscountPercent { get; init; }
+
+    public int ReminderHoursBefore { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -160,5 +162,6 @@ public record UpdateSettingsRequest(
     int? ExchangeDeadlineHours = null,
     int? MaxExchangesPerOrder = null,
     int? ExchangeCreditValidityDays = null,
-    int? PreorderComboDiscountPercent = null
+    int? PreorderComboDiscountPercent = null,
+    int? ReminderHoursBefore = null
 );

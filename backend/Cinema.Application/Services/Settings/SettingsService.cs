@@ -154,6 +154,8 @@ public class SettingsService(
             settings.ExchangeCreditValidityDays = exchangeCreditValidityDays;
         if (request.PreorderComboDiscountPercent is { } preorderComboDiscountPercent)
             settings.PreorderComboDiscountPercent = preorderComboDiscountPercent;
+        if (request.ReminderHoursBefore is { } reminderHoursBefore)
+            settings.ReminderHoursBefore = reminderHoursBefore;
         if (settings.GiftCardMinAmount > settings.GiftCardMaxAmount)
             throw new BusinessRuleException(Messages.Validation_GiftCardAmount_MinGreaterThanMax);
         if (
@@ -218,6 +220,7 @@ public class SettingsService(
             MaxExchangesPerOrder = settings.MaxExchangesPerOrder,
             ExchangeCreditValidityDays = settings.ExchangeCreditValidityDays,
             PreorderComboDiscountPercent = settings.PreorderComboDiscountPercent,
+            ReminderHoursBefore = settings.ReminderHoursBefore,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

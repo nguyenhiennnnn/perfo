@@ -41,6 +41,9 @@ public sealed record ShowtimeRoomChanged(
     DateTime OccurredAt
 ) : IBusinessEvent;
 
+public sealed record ReviewChanged(int ReviewId, int UserId, int MovieId, DateTime OccurredAt)
+    : IBusinessEvent;
+
 public sealed record TicketCheckedIn(
     int OrderId,
     int OrderLineId,

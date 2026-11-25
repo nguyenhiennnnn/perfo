@@ -1,5 +1,7 @@
 ﻿using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Reviews;
+using Cinema.Application.Events;
+using Cinema.Application.Interfaces.Events;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Reviews;
 using Cinema.Shared.Exceptions;
@@ -14,11 +16,17 @@ namespace Cinema.Application.Services.Reviews;
 public class ReviewService : IReviewService
 {
     private readonly IAppDbContext db;
+    private readonly IBusinessEventDispatcher eventDispatcher;
     private readonly ILogger<ReviewService> logger;
 
-    public ReviewService(IAppDbContext db, ILogger<ReviewService>? logger = null)
+    public ReviewService(
+        IAppDbContext db,
+        IBusinessEventDispatcher eventDispatcher,
+        ILogger<ReviewService>? logger = null
+    )
     {
         this.db = db;
+        this.eventDispatcher = eventDispatcher;
         this.logger = logger ?? NullLogger<ReviewService>.Instance;
     }
 
@@ -125,6 +133,7 @@ public class ReviewService : IReviewService
         await db.SaveChangesAsync(cancellationToken);
 
         await RecalculateMovieAverageRatingAsync(movieId, cancellationToken);
+        await PublishChangedAsync(review, cancellationToken);
 
         review.User = user;
         return review.Adapt<ReviewDto>();
@@ -154,6 +163,7 @@ public class ReviewService : IReviewService
         await db.SaveChangesAsync(cancellationToken);
 
         await RecalculateMovieAverageRatingAsync(movieId, cancellationToken);
+        await PublishChangedAsync(review, cancellationToken);
 
         return review.Adapt<ReviewDto>();
     }
@@ -177,6 +187,7 @@ public class ReviewService : IReviewService
         await db.SaveChangesAsync(cancellationToken);
 
         await RecalculateMovieAverageRatingAsync(movieId, cancellationToken);
+        await PublishChangedAsync(review, cancellationToken);
 
         return new DeleteReviewResponse(reviewId, true);
     }
@@ -251,6 +262,7 @@ public class ReviewService : IReviewService
         await db.SaveChangesAsync(cancellationToken);
 
         await RecalculateMovieAverageRatingAsync(movieId, cancellationToken);
+        await PublishChangedAsync(review, cancellationToken);
 
         return new DeleteReviewResponse(reviewId, true);
     }
@@ -274,6 +286,7 @@ public class ReviewService : IReviewService
                 affectedMovieIds.Add(review.MovieId);
                 db.Reviews.Remove(review);
                 await db.SaveChangesAsync(cancellationToken);
+                await PublishChangedAsync(review, cancellationToken);
                 results.Add(new BulkDeleteReviewsResultItem(reviewId, true, null));
             }
             catch (NotFoundException)
@@ -303,6 +316,15 @@ public class ReviewService : IReviewService
         var successCount = results.Count(r => r.Success);
         return new BulkDeleteReviewsResponse(results, successCount, results.Count - successCount);
     }
+
+    private Task PublishChangedAsync(
+        Domain.Entities.Review review,
+        CancellationToken cancellationToken
+    ) =>
+        eventDispatcher.PublishAsync(
+            new ReviewChanged(review.ReviewId, review.UserId, review.MovieId, DateTime.UtcNow),
+            cancellationToken
+        );
 
     private async Task RecalculateMovieAverageRatingAsync(
         int movieId,

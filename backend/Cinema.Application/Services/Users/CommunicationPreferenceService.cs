@@ -2,6 +2,7 @@
 using Cinema.Application.DTOs.Users;
 using Cinema.Application.Interfaces.Auth;
 using Cinema.Application.Interfaces.Infrastructure;
+using Cinema.Application.Interfaces.Recommendations;
 using Cinema.Application.Interfaces.Users;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
@@ -15,7 +16,8 @@ namespace Cinema.Application.Services.Users;
 public class CommunicationPreferenceService(
     IAppDbContext db,
     IUnsubscribeTokenService unsubscribeTokenService,
-    IReferralCodeService referralCodeService
+    IReferralCodeService referralCodeService,
+    ICustomerTasteProfileService tasteProfiles
 ) : ICommunicationPreferenceService
 {
     public async Task<CommunicationPreferencesDto> GetAsync(
@@ -34,10 +36,21 @@ public class CommunicationPreferenceService(
     )
     {
         var profile = await GetOrCreateProfileAsync(userId, cancellationToken);
+        var personalizationChanged =
+            profile.PersonalizedRecommendations != request.PersonalizedRecommendations;
         profile.MarketingOptIn = request.MarketingOptIn;
         profile.PersonalizedRecommendations = request.PersonalizedRecommendations;
         profile.ReminderAndReviewInvites = request.ReminderAndReviewInvites;
         await db.SaveChangesAsync(cancellationToken);
+
+        if (personalizationChanged)
+        {
+            if (request.PersonalizedRecommendations)
+                await tasteProfiles.RebuildAsync(userId, cancellationToken);
+            else
+                await tasteProfiles.ClearAsync(userId, cancellationToken);
+        }
+
         return ToDto(profile);
     }
 

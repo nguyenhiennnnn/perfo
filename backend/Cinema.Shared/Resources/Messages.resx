@@ -5078,4 +5078,70 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_ExceptionalRefundTicketNotCancellable" xml:space="preserve">
     <value>Một hoặc nhiều vé được chọn không thuộc đơn này, đã hủy, đã đổi hoặc đã check-in nên không thể hủy.</value>
   </data>
+  <data name="Report_Finance_Support_Title" xml:space="preserve">
+    <value>Yêu cầu hỗ trợ</value>
+  </data>
+  <data name="Report_Finance_Support_Note" xml:space="preserve">
+    <value>Tính theo yêu cầu tạo trong kỳ. Tỷ lệ giải quyết trong hạn = số yêu cầu giải quyết đúng hạn trên số yêu cầu đã giải quyết hoặc đã quá hạn mà chưa giải quyết. Thời gian xử lý tính từ lúc tạo đến lúc giải quyết.</value>
+  </data>
+  <data name="Report_Finance_SupportType_TicketEmailNotReceived" xml:space="preserve">
+    <value>Không nhận được email vé</value>
+  </data>
+  <data name="Report_Finance_SupportType_ChargedOrderNotConfirmed" xml:space="preserve">
+    <value>Bị trừ tiền nhưng đơn chưa xác nhận</value>
+  </data>
+  <data name="Report_Finance_SupportType_RefundOutsidePolicy" xml:space="preserve">
+    <value>Đề nghị hoàn tiền ngoài chính sách</value>
+  </data>
+  <data name="Report_Finance_SupportType_ShowtimeFeedback" xml:space="preserve">
+    <value>Góp ý về suất chiếu</value>
+  </data>
+  <data name="Report_Finance_SupportType_Other" xml:space="preserve">
+    <value>Vấn đề khác</value>
+  </data>
+  <data name="Report_Finance_Col_SupportType" xml:space="preserve">
+    <value>Loại yêu cầu</value>
+  </data>
+  <data name="Report_Finance_Col_SupportRequests" xml:space="preserve">
+    <value>Số yêu cầu</value>
+  </data>
+  <data name="Report_Finance_Col_SupportResolved" xml:space="preserve">
+    <value>Đã giải quyết</value>
+  </data>
+  <data name="Report_Finance_Col_SupportOnTime" xml:space="preserve">
+    <value>Giải quyết trong hạn</value>
+  </data>
+  <data name="Report_Finance_Col_SupportOverdueOpen" xml:space="preserve">
+    <value>Quá hạn chưa giải quyết</value>
+  </data>
+  <data name="Report_Finance_Col_SupportAverageHours" xml:space="preserve">
+    <value>Thời gian xử lý trung bình (giờ)</value>
+  </data>
+  <data name="Report_Finance_Col_SupportOnTimeRate" xml:space="preserve">
+    <value>Tỷ lệ giải quyết trong hạn</value>
+  </data>
+  <data name="Report_Finance_ExceptionalRefundReason_Title" xml:space="preserve">
+    <value>Hoàn tiền ngoại lệ theo lý do</value>
+  </data>
+  <data name="Report_Finance_ExceptionalRefundProposer_Title" xml:space="preserve">
+    <value>Hoàn tiền ngoại lệ theo người đề xuất</value>
+  </data>
+  <data name="Report_Finance_ExceptionalRefund_Note" xml:space="preserve">
+    <value>Chỉ tính đề xuất đã được duyệt, theo ngày duyệt.</value>
+  </data>
+  <data name="Report_Finance_Col_RefundReason" xml:space="preserve">
+    <value>Lý do</value>
+  </data>
+  <data name="Report_Finance_Col_RefundProposer" xml:space="preserve">
+    <value>Người đề xuất</value>
+  </data>
+  <data name="Report_Finance_Col_RefundProposalCount" xml:space="preserve">
+    <value>Số đề xuất đã duyệt</value>
+  </data>
+  <data name="Report_Finance_Col_ExceptionalRefundAmount" xml:space="preserve">
+    <value>Tiền hoàn ngoại lệ</value>
+  </data>
+  <data name="Report_Finance_Col_ExceptionalRefundShare" xml:space="preserve">
+    <value>Tỷ trọng</value>
+  </data>
 </root>

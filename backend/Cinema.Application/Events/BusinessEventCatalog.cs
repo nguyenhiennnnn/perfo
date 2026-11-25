@@ -15,6 +15,7 @@ public static class BusinessEventCatalog
         Register<ShowtimeEnded>();
         Register<ShowtimeRoomChanged>();
         Register<TicketCheckedIn>();
+        Register<ReviewChanged>();
         Register<GiftCardSent>();
     }
 

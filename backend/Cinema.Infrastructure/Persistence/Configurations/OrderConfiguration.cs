@@ -92,6 +92,10 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(x => x.DiscountAmount).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
         builder.Property(x => x.FinalAmount).HasColumnType("decimal(18,2)");
         builder
+            .Property(x => x.LoyaltyReversedAmount)
+            .HasColumnType("decimal(18,2)")
+            .HasDefaultValue(0m);
+        builder
             .Property(x => x.CancelReason)
             .HasConversion<string>()
             .HasMaxLength(FieldLengths.EnumValue);

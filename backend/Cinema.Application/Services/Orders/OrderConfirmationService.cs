@@ -19,7 +19,6 @@ namespace Cinema.Application.Services.Orders;
 public class OrderConfirmationService(
     IAppDbContext db,
     IPaymentLedgerService ledger,
-    IOrderLoyaltyService loyalty,
     IOrderResourceHoldService resourceHolds,
     IGiftCardHoldService giftCardHolds,
     IOrderReleaseService releaseService,
@@ -136,16 +135,6 @@ public class OrderConfirmationService(
                     bookedSeats.AddRange(
                         ticketLines.Select(l => (l.ShowtimeId!.Value, l.ShowtimeSeatId!.Value))
                     );
-
-                    if (order.UserId is not null && order.Type != OrderType.GiftCard)
-                        await loyalty.AwardAsync(
-                            order.UserId.Value,
-                            orderId,
-                            lines
-                                .Where(l => l.LineType is OrderLineType.Ticket or OrderLineType.Combo)
-                                .Sum(l => l.PaidAmount),
-                            cancellationToken
-                        );
 
                     await resourceHolds.CommitAllAsync(orderId, cancellationToken);
                     await db.SaveChangesAsync(cancellationToken);

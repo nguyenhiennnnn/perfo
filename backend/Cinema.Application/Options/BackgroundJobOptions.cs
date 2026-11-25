@@ -7,6 +7,7 @@ public class BackgroundJobOptions
     public string ReleaseExpiredSeatsCron { get; set; } = "* * * * *";
     public string ShowtimeLifecycleCron { get; set; } = "* * * * *";
     public string ExpireLoyaltyPointsCron { get; set; } = "5 * * * *";
+    public string LoyaltyExpiryReminderCron { get; set; } = "0 9 * * *";
     public string CleanupImportExportFilesCron { get; set; } = "*/30 * * * *";
     public string CleanupImportSessionsCron { get; set; } = "*/5 * * * *";
     public string ProcessOutboxCron { get; set; } = "* * * * *";

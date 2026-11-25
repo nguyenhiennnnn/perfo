@@ -96,6 +96,13 @@ public class NotificationService(
             EmailTemplates.SupplementOrderReminder(_brand, data)
         );
 
+    public void SendPointsExpiryReminder(string toEmail, PointsExpiryReminderEmailData data) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_PointsExpiryReminderSubject, _brand.Name),
+            EmailTemplates.PointsExpiryReminder(_brand, data)
+        );
+
     public void SendShowtimeReminder(string toEmail, ShowtimeReminderEmailData data) =>
         Enqueue(
             toEmail,

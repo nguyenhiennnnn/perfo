@@ -57,7 +57,8 @@ public sealed record CinemaSettingsSnapshot(
     int MaxExchangesPerOrder,
     int ExchangeCreditValidityDays,
     int PreorderComboDiscountPercent,
-    int ReminderHoursBefore
+    int ReminderHoursBefore,
+    int PointsExpiryReminderDays
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -115,6 +116,7 @@ public sealed record CinemaSettingsSnapshot(
             s.MaxExchangesPerOrder,
             s.ExchangeCreditValidityDays,
             s.PreorderComboDiscountPercent,
-            s.ReminderHoursBefore
+            s.ReminderHoursBefore,
+            s.PointsExpiryReminderDays
         );
 }

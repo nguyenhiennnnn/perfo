@@ -585,6 +585,54 @@ public static class EmailTemplates
         );
     }
 
+    public static string PointsExpiryReminder(BrandOptions brand, PointsExpiryReminderEmailData data)
+    {
+        var rows = data
+            .Lots.Select(
+                (lot, index) =>
+                    DetailRow(
+                        Enc(
+                            string.Format(
+                                Messages.Email_PointsExpiryReminderLotLabel,
+                                lot.Points.ToString("N0", MoneyFormat)
+                            )
+                        ),
+                        Enc(
+                            BusinessTime
+                                .ToLocal(lot.ExpiresAtUtc)
+                                .ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture)
+                        ),
+                        isLast: index == data.Lots.Count - 1
+                    )
+            )
+            .ToArray();
+
+        var body = $"""
+            {Badge(Messages.Email_BadgePointsExpiry, Warning, SymbolAlert)}
+            {Heading(Messages.Email_PointsExpiryReminderHeading)}
+            {Paragraph(
+                string.Format(
+                    Messages.Email_PointsExpiryReminderBody,
+                    Enc(data.CustomerName),
+                    data.TotalPoints.ToString("N0", MoneyFormat)
+                )
+            )}
+            {DetailCard(rows)}
+            {Button(Messages.Email_PointsExpiryReminderButton, data.AccountLink)}
+            <div style="height:12px; line-height:12px; font-size:0;">&nbsp;</div>
+            {MutedParagraph(Messages.Email_PointsExpiryReminderOptOutNote)}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(
+                Messages.Email_PointsExpiryReminderPreheader,
+                data.TotalPoints.ToString("N0", MoneyFormat)
+            ),
+            body
+        );
+    }
+
     private static string Heading3(string text) =>
         $"""<h2 class="tx" style="margin:8px 0 12px 0; font-family:{FontHeading}; font-weight:700; font-size:18px; line-height:1.25; color:{ColorForeground};">{Enc(text)}</h2>""";
 

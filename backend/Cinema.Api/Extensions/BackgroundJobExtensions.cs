@@ -73,6 +73,12 @@ public static class BackgroundJobExtensions
             options.ExpireLoyaltyPointsCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<LoyaltyExpiryReminderJob>(
+            RecurringJobIds.LoyaltyExpiryReminder,
+            j => j.RunAsync(CancellationToken.None),
+            options.LoyaltyExpiryReminderCron,
+            jobOptions
+        );
         RecurringJob.AddOrUpdate<CleanupImportExportFilesJob>(
             RecurringJobIds.CleanupImportExportFiles,
             j => j.RunAsync(CancellationToken.None),

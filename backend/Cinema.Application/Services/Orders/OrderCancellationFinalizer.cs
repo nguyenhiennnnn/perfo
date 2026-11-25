@@ -12,7 +12,6 @@ namespace Cinema.Application.Services.Orders;
 
 public class OrderCancellationFinalizer(
     IAppDbContext db,
-    IOrderRefundService orderRefunds,
     IEnumerable<IOrderCancellationHook> hooks,
     IBusinessEventDispatcher eventDispatcher
 ) : IOrderCancellationFinalizer
@@ -52,12 +51,6 @@ public class OrderCancellationFinalizer(
         order.CancelledAt = now;
 
         var releasedSeats = await ReleaseSeatsAsync(orderId, cancellationToken);
-
-        await orderRefunds.ReverseLoyaltyForRefundAsync(
-            order,
-            refundPlan.TotalAmount,
-            cancellationToken
-        );
 
         var context = new OrderCancellationContext(order, reason, cancelledBy, refundPlan);
         foreach (var hook in hooks)

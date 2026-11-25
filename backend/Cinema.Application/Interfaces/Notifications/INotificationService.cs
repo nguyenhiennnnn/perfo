@@ -134,8 +134,19 @@ public sealed record GiftCardEmailData(
     DateTime ExpiresAtUtc
 );
 
+public sealed record PointsExpiryReminderLine(int Points, DateTime ExpiresAtUtc);
+
+public sealed record PointsExpiryReminderEmailData(
+    string CustomerName,
+    int TotalPoints,
+    string AccountLink,
+    IReadOnlyList<PointsExpiryReminderLine> Lots
+);
+
 public interface INotificationService
 {
+    void SendPointsExpiryReminder(string toEmail, PointsExpiryReminderEmailData data);
+
     void SendGiftCardReceived(string toEmail, GiftCardEmailData data);
 
     void SendGiftCardPurchaserConfirmation(string toEmail, GiftCardEmailData data);

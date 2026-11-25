@@ -1,5 +1,4 @@
 ﻿using Cinema.Application.Interfaces.Payments;
-using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 
 namespace Cinema.Application.Interfaces.Orders;
@@ -63,12 +62,6 @@ public interface IOrderRefundService
 
     Task<IReadOnlyList<PaymentRefundResult>> ExecuteAsync(
         IReadOnlyList<OrderRefundReservation> reservations,
-        CancellationToken cancellationToken
-    );
-
-    Task ReverseLoyaltyForRefundAsync(
-        Order order,
-        decimal refundedAmount,
         CancellationToken cancellationToken
     );
 }

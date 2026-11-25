@@ -181,5 +181,8 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.ReminderHoursBefore)
             .HasDefaultValue(CinemaSettings.DefaultReminderHoursBefore);
+        builder
+            .Property(x => x.PointsExpiryReminderDays)
+            .HasDefaultValue(CinemaSettings.DefaultPointsExpiryReminderDays);
     }
 }

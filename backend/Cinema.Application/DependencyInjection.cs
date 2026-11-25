@@ -152,7 +152,11 @@ public static class DependencyInjection
         services.AddInTransactionEventHandler<OrderCancelled, InventoryReturnHandler>();
         services.AddScoped<IOrderPromotionService, OrderPromotionService>();
         services.AddScoped<ILoyaltyPointService, LoyaltyPointService>();
+        services.AddScoped<ILoyaltyExpiryReminderService, LoyaltyExpiryReminderService>();
         services.AddScoped<IOrderLoyaltyService, OrderLoyaltyService>();
+        services.AddInTransactionEventHandler<OrderConfirmed, OrderLoyaltyEarnHandler>();
+        services.AddInTransactionEventHandler<OrderRefunded, OrderLoyaltyRevokeHandler>();
+        services.AddInTransactionEventHandler<OrderCancelled, OrderLoyaltyRevokeHandler>();
         services.AddScoped<IOrderRefundService, OrderRefundService>();
         services.AddScoped<IOrderLineRefundService, OrderLineRefundService>();
         services.AddScoped<IOrderReleaseService, OrderReleaseService>();

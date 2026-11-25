@@ -2,7 +2,6 @@
 using Cinema.Application.Interfaces.Loyalty;
 using Cinema.Application.Interfaces.Orders;
 using Cinema.Application.Utils;
-using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,16 +12,36 @@ public class OrderLoyaltyService(
     IAppDbContext db,
     ILoyaltyPointService points,
     ILogger<OrderLoyaltyService> logger
-)
-    : IOrderLoyaltyService
+) : IOrderLoyaltyService
 {
-    public async Task AwardAsync(
-        int userId,
-        int orderId,
-        decimal paidAmount,
-        CancellationToken cancellationToken
-    )
+    private static readonly OrderType[] EarningTypes =
+    [
+        OrderType.Ticket,
+        OrderType.Combo,
+        OrderType.Supplement,
+    ];
+
+    public async Task AwardForOrderAsync(int orderId, CancellationToken cancellationToken)
     {
+        var order = await db
+            .Orders.AsNoTracking()
+            .Where(o => o.OrderId == orderId)
+            .Select(o => new { o.UserId, o.Type })
+            .FirstOrDefaultAsync(cancellationToken);
+        if (order?.UserId is not { } userId || !EarningTypes.Contains(order.Type))
+            return;
+
+        var paidAmount =
+            await db
+                .OrderLines.AsNoTracking()
+                .Where(l =>
+                    l.OrderId == orderId
+                    && (l.LineType == OrderLineType.Ticket || l.LineType == OrderLineType.Combo)
+                )
+                .SumAsync(l => (decimal?)l.PaidAmount, cancellationToken) ?? 0m;
+        if (paidAmount <= 0m)
+            return;
+
         var profile = await db.CustomerProfiles.FirstOrDefaultAsync(
             p => p.UserId == userId,
             cancellationToken
@@ -30,7 +49,12 @@ public class OrderLoyaltyService(
         if (profile is null)
             return;
 
-        if (await db.LoyaltyPointEntries.AnyAsync(e => e.OrderId == orderId, cancellationToken))
+        if (
+            await db.LoyaltyPointEntries.AnyAsync(
+                e => e.OrderId == orderId && e.Type == LoyaltyLotType.Earn,
+                cancellationToken
+            )
+        )
             return;
 
         var settings = await db.GetCinemaSettingsAsync(cancellationToken);
@@ -62,25 +86,59 @@ public class OrderLoyaltyService(
             );
     }
 
-    public async Task ReverseAsync(
-        int userId,
-        int orderId,
-        decimal refundedAmount,
-        CancellationToken cancellationToken
-    )
+    public async Task RevokeForOrderAsync(int orderId, CancellationToken cancellationToken)
     {
-        var settings = await db.GetCinemaSettingsAsync(cancellationToken);
-        await ReverseAsync(userId, orderId, refundedAmount, settings, cancellationToken);
-    }
+        var order = await db
+            .Orders.AsNoTracking()
+            .Where(o => o.OrderId == orderId)
+            .Select(o => new
+            {
+                o.UserId,
+                o.Type,
+                o.FinalAmount,
+                o.LoyaltyReversedAmount,
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+        if (order?.UserId is not { } userId || !EarningTypes.Contains(order.Type))
+            return;
 
-    public async Task ReverseAsync(
-        int userId,
-        int orderId,
-        decimal refundedAmount,
-        CinemaSettings settings,
-        CancellationToken cancellationToken
-    )
-    {
+        var earnedBase =
+            await db
+                .OrderLines.AsNoTracking()
+                .Where(l =>
+                    l.OrderId == orderId
+                    && (l.LineType == OrderLineType.Ticket || l.LineType == OrderLineType.Combo)
+                )
+                .SumAsync(l => (decimal?)l.PaidAmount, cancellationToken) ?? 0m;
+        var refundedTotal =
+            await db
+                .PaymentTransactions.AsNoTracking()
+                .Where(t =>
+                    t.OrderId == orderId
+                    && t.Type == PaymentTransactionType.Refund
+                    && (t.Status == PaymentStatus.Success || t.Status == PaymentStatus.Pending)
+                )
+                .SumAsync(t => (decimal?)t.Amount, cancellationToken) ?? 0m;
+
+        var targetBase = OrderRefundCalculator.LoyaltyReversalBase(
+            earnedBase,
+            order.FinalAmount,
+            refundedTotal
+        );
+        var deltaBase = targetBase - order.LoyaltyReversedAmount;
+        if (deltaBase <= 0m)
+            return;
+
+        var previous = order.LoyaltyReversedAmount;
+        var claimed = await db
+            .Orders.Where(o => o.OrderId == orderId && o.LoyaltyReversedAmount == previous)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(o => o.LoyaltyReversedAmount, targetBase),
+                cancellationToken
+            );
+        if (claimed == 0)
+            return;
+
         var profile = await db.CustomerProfiles.FirstOrDefaultAsync(
             p => p.UserId == userId,
             cancellationToken
@@ -88,34 +146,34 @@ public class OrderLoyaltyService(
         if (profile is null)
             return;
 
+        var now = DateTime.UtcNow;
         var entry = await db.LoyaltyPointEntries.FirstOrDefaultAsync(
-            e => e.OrderId == orderId,
+            e => e.OrderId == orderId && e.Type == LoyaltyLotType.Earn,
             cancellationToken
         );
         if (entry is not null)
         {
-            var revoke = LoyaltyWindow.PointsFor(refundedAmount, settings.PointsPerAmount);
-            var revokedBefore = entry.RevokedPoints;
-            entry.RevokedPoints = Math.Min(entry.Points, entry.RevokedPoints + revoke);
-            var effective = entry.RevokedPoints - revokedBefore;
+            var settings = await db.GetCinemaSettingsAsync(cancellationToken);
+            var targetPoints = Math.Min(
+                entry.Points,
+                LoyaltyWindow.PointsFor(targetBase, settings.PointsPerAmount)
+            );
+            var effective = targetPoints - entry.RevokedPoints;
             if (effective > 0)
+            {
+                entry.RevokedPoints = targetPoints;
                 await points.RevokeAsync(
                     userId,
                     entry.EntryId,
                     orderId,
                     effective,
-                    DateTime.UtcNow,
+                    now,
                     cancellationToken
                 );
+            }
         }
 
-        profile.TotalSpent = Math.Max(0, profile.TotalSpent - refundedAmount);
-        await LoyaltyWindow.ResyncProfileAsync(
-            db,
-            profile,
-            pendingNewPoints: 0,
-            DateTime.UtcNow,
-            cancellationToken
-        );
+        profile.TotalSpent = Math.Max(0m, profile.TotalSpent - deltaBase);
+        await LoyaltyWindow.ResyncProfileAsync(db, profile, 0, now, cancellationToken);
     }
 }

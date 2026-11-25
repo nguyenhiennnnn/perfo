@@ -28,6 +28,9 @@ public class LoyaltyPointEntryConfiguration : IEntityTypeConfiguration<LoyaltyPo
         builder.Property(x => x.RevokedPoints).HasDefaultValue(0);
         builder.Property(x => x.EarnedAt).HasColumnType("timestamp without time zone");
         builder.Property(x => x.ExpiresAt).HasColumnType("timestamp without time zone");
+        builder
+            .Property(x => x.ExpiryReminderSentAt)
+            .HasColumnType("timestamp without time zone");
 
         builder
             .HasOne(x => x.User)

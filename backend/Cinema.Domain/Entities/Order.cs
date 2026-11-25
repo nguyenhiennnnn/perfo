@@ -20,6 +20,7 @@ public class Order
     public decimal TotalAmount { get; set; }
     public decimal DiscountAmount { get; set; }
     public decimal FinalAmount { get; set; }
+    public decimal LoyaltyReversedAmount { get; set; }
     public CancelReason? CancelReason { get; set; }
     public CancelledBy? CancelledBy { get; set; }
     public DateTime? CancelledAt { get; set; }

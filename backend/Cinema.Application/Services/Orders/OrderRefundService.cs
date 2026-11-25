@@ -20,7 +20,6 @@ public class OrderRefundService(
     IAppDbContext db,
     IPaymentLedgerService ledger,
     IPaymentRefundService refundService,
-    IOrderLoyaltyService loyalty,
     IBusinessEventDispatcher eventDispatcher,
     ILogger<OrderRefundService> logger,
     IGiftCardRefundHandler? giftCardHandler = null
@@ -169,32 +168,6 @@ public class OrderRefundService(
         }
 
         return results;
-    }
-
-    public async Task ReverseLoyaltyForRefundAsync(
-        Order order,
-        decimal refundedAmount,
-        CancellationToken cancellationToken
-    )
-    {
-        if (order.UserId is null || refundedAmount <= 0m)
-            return;
-
-        var earned =
-            await db
-                .OrderLines.AsNoTracking()
-                .Where(l =>
-                    l.OrderId == order.OrderId
-                    && (l.LineType == OrderLineType.Ticket || l.LineType == OrderLineType.Combo)
-                )
-                .SumAsync(l => (decimal?)l.PaidAmount, cancellationToken) ?? 0m;
-
-        await loyalty.ReverseAsync(
-            order.UserId.Value,
-            order.OrderId,
-            OrderRefundCalculator.LoyaltyReversalBase(earned, order.FinalAmount, refundedAmount),
-            cancellationToken
-        );
     }
 
     private async Task<decimal?> LoadLiveLineValueAsync(

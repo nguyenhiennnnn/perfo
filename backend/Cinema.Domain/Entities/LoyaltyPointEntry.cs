@@ -13,6 +13,7 @@ public class LoyaltyPointEntry
     public int RemainingPoints { get; set; }
     public DateTime EarnedAt { get; set; }
     public DateTime ExpiresAt { get; set; }
+    public DateTime? ExpiryReminderSentAt { get; set; }
 
     public User User { get; set; } = null!;
     public Order? Order { get; set; }

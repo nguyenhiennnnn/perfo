@@ -4664,4 +4664,28 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_LoyaltyInsufficientPoints" xml:space="preserve">
     <value>Số dư điểm đổi quà không đủ.</value>
   </data>
+  <data name="Email_PointsExpiryReminderSubject" xml:space="preserve">
+    <value>{0}: Điểm thưởng của bạn sắp hết hạn</value>
+  </data>
+  <data name="Email_BadgePointsExpiry" xml:space="preserve">
+    <value>Điểm sắp hết hạn</value>
+  </data>
+  <data name="Email_PointsExpiryReminderHeading" xml:space="preserve">
+    <value>Điểm thưởng sắp hết hạn</value>
+  </data>
+  <data name="Email_PointsExpiryReminderBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, bạn có &lt;strong&gt;{1} điểm&lt;/strong&gt; sắp hết hạn. Hãy dùng điểm để đổi quà trước khi điểm hết hiệu lực.</value>
+  </data>
+  <data name="Email_PointsExpiryReminderPreheader" xml:space="preserve">
+    <value>{0} điểm của bạn sắp hết hạn.</value>
+  </data>
+  <data name="Email_PointsExpiryReminderLotLabel" xml:space="preserve">
+    <value>{0} điểm</value>
+  </data>
+  <data name="Email_PointsExpiryReminderButton" xml:space="preserve">
+    <value>Xem tài khoản</value>
+  </data>
+  <data name="Email_PointsExpiryReminderOptOutNote" xml:space="preserve">
+    <value>Bạn nhận email này vì đang bật nhận nhắc nhở. Có thể tắt trong phần thông tin liên lạc của tài khoản.</value>
+  </data>
 </root>

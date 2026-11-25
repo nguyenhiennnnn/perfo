@@ -119,7 +119,6 @@ public class OrderLineRefundService(IAppDbContext db, IOrderRefundService orderR
                     command.Note,
                     cancellationToken
                 );
-                await orderRefunds.ReverseLoyaltyForRefundAsync(order, total, cancellationToken);
                 await db.SaveChangesAsync(cancellationToken);
             },
             cancellationToken

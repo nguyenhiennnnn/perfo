@@ -161,8 +161,6 @@ public class RoomChangeRefundService(
                     cancellationToken
                 );
 
-                await orderRefunds.ReverseLoyaltyForRefundAsync(order, amount, cancellationToken);
-
                 due.Status = RoomChangeRefundStatus.Refunded;
                 auditLogger.Record(
                     AuditActions.ManualRefund,

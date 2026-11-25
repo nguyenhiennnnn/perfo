@@ -226,29 +226,37 @@ public class LoyaltyPointService(IAppDbContext db) : ILoyaltyPointService
             if (lots.Count == 0)
                 break;
 
-            var progressed = false;
-            foreach (var lot in lots)
-            {
-                var taken = await TakeUpToAsync(lot.EntryId, int.MaxValue, cancellationToken);
-                if (taken == 0)
-                    continue;
-
-                progressed = true;
-                expired++;
-                db.LoyaltyPointTransactions.Add(
-                    new LoyaltyPointTransaction
+            var batchExpired = 0;
+            await db.InTransactionAsync(
+                async () =>
+                {
+                    batchExpired = 0;
+                    foreach (var lot in lots)
                     {
-                        UserId = lot.UserId,
-                        EntryId = lot.EntryId,
-                        Type = LoyaltyTransactionType.Expire,
-                        Points = -taken,
-                        CreatedAt = now,
-                    }
-                );
-            }
+                        var taken = await TakeUpToAsync(lot.EntryId, int.MaxValue, cancellationToken);
+                        if (taken == 0)
+                            continue;
 
-            await db.SaveChangesAsync(cancellationToken);
-            if (!progressed)
+                        batchExpired++;
+                        db.LoyaltyPointTransactions.Add(
+                            new LoyaltyPointTransaction
+                            {
+                                UserId = lot.UserId,
+                                EntryId = lot.EntryId,
+                                Type = LoyaltyTransactionType.Expire,
+                                Points = -taken,
+                                CreatedAt = now,
+                            }
+                        );
+                    }
+
+                    await db.SaveChangesAsync(cancellationToken);
+                },
+                cancellationToken
+            );
+
+            expired += batchExpired;
+            if (batchExpired == 0)
                 break;
         }
 

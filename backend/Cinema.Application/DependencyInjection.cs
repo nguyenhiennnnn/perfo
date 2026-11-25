@@ -159,6 +159,13 @@ public static class DependencyInjection
         services.AddScoped<ILoyaltyRewardRedemptionService, LoyaltyRewardRedemptionService>();
         services.AddScoped<ILoyaltyChallengeAdminService, LoyaltyChallengeAdminService>();
         services.AddScoped<ILoyaltyChallengeQueryService, LoyaltyChallengeQueryService>();
+        services.AddScoped<IReferralService, ReferralService>();
+        services.AddScoped<IReferralRewardService, ReferralRewardService>();
+        services.AddScoped<IReferralDeviceCheck, NullReferralDeviceCheck>();
+        services.AddBackgroundEventHandler<OrderConfirmed, ReferralRewardHandler>();
+        services.AddScoped<ILoyaltyChallengeProgressService, LoyaltyChallengeProgressService>();
+        services.AddScoped<LoyaltyChallengeCompletionNotifier>();
+        services.AddBackgroundEventHandler<TicketCheckedIn, LoyaltyChallengeCheckInHandler>();
         services.AddScoped<IOrderLoyaltyService, OrderLoyaltyService>();
         services.AddInTransactionEventHandler<OrderConfirmed, OrderLoyaltyEarnHandler>();
         services.AddInTransactionEventHandler<OrderRefunded, OrderLoyaltyRevokeHandler>();

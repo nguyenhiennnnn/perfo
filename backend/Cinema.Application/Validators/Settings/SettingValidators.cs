@@ -142,6 +142,9 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         IntRange(x => x.PreorderComboDiscountPercent, "preorderComboDiscountPercent", 0, 100);
         IntRange(x => x.ReminderHoursBefore, "reminderHoursBefore", 1, 72);
         IntRange(x => x.PointsExpiryReminderDays, "pointsExpiryReminderDays", 1, 90);
+        IntRange(x => x.ReferralReferrerPoints, "referralReferrerPoints", 0, 100000);
+        IntRange(x => x.ReferralReferredPoints, "referralReferredPoints", 0, 100000);
+        IntRange(x => x.ReferralMonthlyRewardLimit, "referralMonthlyRewardLimit", 1, 1000);
 
         RuleFor(x => x.GiftCardDenominations!)
             .Must(BeValidDenominations)

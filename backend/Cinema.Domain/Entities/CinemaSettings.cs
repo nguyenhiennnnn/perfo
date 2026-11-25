@@ -87,6 +87,9 @@ public class CinemaSettings
     public const int DefaultPreorderComboDiscountPercent = 0;
     public const int DefaultReminderHoursBefore = 3;
     public const int DefaultPointsExpiryReminderDays = 14;
+    public const int DefaultReferralReferrerPoints = 50;
+    public const int DefaultReferralReferredPoints = 50;
+    public const int DefaultReferralMonthlyRewardLimit = 10;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -167,4 +170,10 @@ public class CinemaSettings
     public int ReminderHoursBefore { get; set; } = DefaultReminderHoursBefore;
 
     public int PointsExpiryReminderDays { get; set; } = DefaultPointsExpiryReminderDays;
+
+    public int ReferralReferrerPoints { get; set; } = DefaultReferralReferrerPoints;
+
+    public int ReferralReferredPoints { get; set; } = DefaultReferralReferredPoints;
+
+    public int ReferralMonthlyRewardLimit { get; set; } = DefaultReferralMonthlyRewardLimit;
 }

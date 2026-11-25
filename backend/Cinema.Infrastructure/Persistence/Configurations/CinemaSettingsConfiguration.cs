@@ -184,5 +184,14 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.PointsExpiryReminderDays)
             .HasDefaultValue(CinemaSettings.DefaultPointsExpiryReminderDays);
+        builder
+            .Property(x => x.ReferralReferrerPoints)
+            .HasDefaultValue(CinemaSettings.DefaultReferralReferrerPoints);
+        builder
+            .Property(x => x.ReferralReferredPoints)
+            .HasDefaultValue(CinemaSettings.DefaultReferralReferredPoints);
+        builder
+            .Property(x => x.ReferralMonthlyRewardLimit)
+            .HasDefaultValue(CinemaSettings.DefaultReferralMonthlyRewardLimit);
     }
 }

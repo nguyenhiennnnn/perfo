@@ -1,5 +1,6 @@
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Loyalty;
+using Cinema.Application.Events;
 
 namespace Cinema.Application.Interfaces.Loyalty;
 
@@ -34,4 +35,9 @@ public interface ILoyaltyChallengeQueryService
         int userId,
         CancellationToken cancellationToken
     );
+}
+
+public interface ILoyaltyChallengeProgressService
+{
+    Task RecordCheckInAsync(TicketCheckedIn checkIn, CancellationToken cancellationToken);
 }

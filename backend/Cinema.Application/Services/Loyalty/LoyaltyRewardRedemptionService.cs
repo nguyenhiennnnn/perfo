@@ -14,10 +14,6 @@ namespace Cinema.Application.Services.Loyalty;
 public class LoyaltyRewardRedemptionService(IAppDbContext db, ILoyaltyPointService points)
     : ILoyaltyRewardRedemptionService
 {
-    private const string CodePrefix = "RW";
-    private const int MaxCodeAttempts = 5;
-    private const decimal FullPercent = 100m;
-
     public async Task<RedeemLoyaltyRewardResponse> RedeemAsync(
         int userId,
         int rewardId,
@@ -75,7 +71,12 @@ public class LoyaltyRewardRedemptionService(IAppDbContext db, ILoyaltyPointServi
                 if (reserved != 1)
                     throw new BusinessRuleException(Messages.Rule_LoyaltyRewardUnavailable);
 
-                var promotion = BuildPromotion(reward, userId, await NewCodeAsync(cancellationToken), now);
+                var promotion = LoyaltyRewardPromotionFactory.Build(
+                    reward,
+                    userId,
+                    await LoyaltyRewardPromotionFactory.NewCodeAsync(db, cancellationToken),
+                    now
+                );
                 db.Promotions.Add(promotion);
                 await db.SaveChangesAsync(cancellationToken);
 
@@ -103,61 +104,4 @@ public class LoyaltyRewardRedemptionService(IAppDbContext db, ILoyaltyPointServi
         && (reward.ValidFrom is null || reward.ValidFrom <= now)
         && (reward.ValidTo is null || reward.ValidTo > now)
         && (reward.Combo is null || reward.Combo.IsActive);
-
-    private static Promotion BuildPromotion(
-        LoyaltyReward reward,
-        int userId,
-        string code,
-        DateTime now
-    )
-    {
-        var promotion = new Promotion
-        {
-            Code = code,
-            Name = reward.Name,
-            Type = PromotionType.PersonalCode,
-            StartsAt = now,
-            EndsAt = now.AddDays(reward.CodeValidityDays),
-            TotalUsageLimit = 1,
-            PerCustomerLimit = 1,
-            AssignedUserId = userId,
-            IsActive = true,
-            CreatedAt = now,
-        };
-
-        switch (reward.Type)
-        {
-            case LoyaltyRewardType.FreeTicket:
-                promotion.DiscountType = PromotionDiscountType.Percent;
-                promotion.DiscountValue = FullPercent;
-                promotion.MaxDiscountAmount = reward.MaxDiscountAmount;
-                promotion.Scope = PromotionScope.TicketsOnly;
-                break;
-            case LoyaltyRewardType.FreeCombo:
-                promotion.DiscountType = PromotionDiscountType.FixedAmount;
-                promotion.DiscountValue = reward.Combo!.Price;
-                promotion.Scope = PromotionScope.CombosOnly;
-                break;
-            default:
-                promotion.DiscountType = reward.DiscountType!.Value;
-                promotion.DiscountValue = reward.DiscountValue!.Value;
-                promotion.MaxDiscountAmount = reward.MaxDiscountAmount;
-                promotion.Scope = PromotionScope.WholeOrder;
-                break;
-        }
-
-        return promotion;
-    }
-
-    private async Task<string> NewCodeAsync(CancellationToken cancellationToken)
-    {
-        for (var attempt = 0; attempt < MaxCodeAttempts; attempt++)
-        {
-            var code = $"{CodePrefix}-{ReferralCodeGenerator.Generate()}";
-            if (!await db.Promotions.AnyAsync(p => p.Code == code, cancellationToken))
-                return code;
-        }
-
-        throw new ConflictAppException(Messages.Conflict_PromotionCodeExists);
-    }
 }

@@ -21,6 +21,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<LoyaltyReward> LoyaltyRewards => Set<LoyaltyReward>();
     public DbSet<LoyaltyChallenge> LoyaltyChallenges => Set<LoyaltyChallenge>();
     public DbSet<LoyaltyChallengeProgress> LoyaltyChallengeProgresses => Set<LoyaltyChallengeProgress>();
+    public DbSet<ReferralRelation> ReferralRelations => Set<ReferralRelation>();
     public DbSet<LoyaltyPointTransaction> LoyaltyPointTransactions =>
         Set<LoyaltyPointTransaction>();
     public DbSet<Position> Positions => Set<Position>();

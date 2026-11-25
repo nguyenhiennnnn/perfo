@@ -4850,4 +4850,55 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Validation_LoyaltyChallenge_GiftNotAllowed" xml:space="preserve">
     <value>Chỉ thử thách thưởng quà mới được chọn quà.</value>
   </data>
+  <data name="Rule_LoyaltyChallengeRewardUnavailable" xml:space="preserve">
+    <value>Phần thưởng của thử thách không còn khả dụng.</value>
+  </data>
+  <data name="Email_LoyaltyChallengeCompletedSubject" xml:space="preserve">
+    <value>{0}: Bạn đã hoàn thành thử thách</value>
+  </data>
+  <data name="Email_BadgeLoyaltyChallenge" xml:space="preserve">
+    <value>Hoàn thành thử thách</value>
+  </data>
+  <data name="Email_LoyaltyChallengeCompletedHeading" xml:space="preserve">
+    <value>Chúc mừng, bạn đã hoàn thành thử thách</value>
+  </data>
+  <data name="Email_LoyaltyChallengeCompletedBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, bạn đã hoàn thành thử thách &lt;strong&gt;{1}&lt;/strong&gt;. Phần thưởng đã được cấp cho bạn.</value>
+  </data>
+  <data name="Email_LoyaltyChallengeCompletedPreheader" xml:space="preserve">
+    <value>Bạn đã hoàn thành thử thách {0} và nhận thưởng.</value>
+  </data>
+  <data name="Email_LoyaltyChallengeNameLabel" xml:space="preserve">
+    <value>Thử thách</value>
+  </data>
+  <data name="Email_LoyaltyChallengeRewardLabel" xml:space="preserve">
+    <value>Phần thưởng</value>
+  </data>
+  <data name="Email_LoyaltyChallengeRewardPoints" xml:space="preserve">
+    <value>{0} điểm</value>
+  </data>
+  <data name="Email_LoyaltyChallengeCodeLabel" xml:space="preserve">
+    <value>Mã ưu đãi</value>
+  </data>
+  <data name="Email_LoyaltyChallengeCodeExpiryLabel" xml:space="preserve">
+    <value>Hạn dùng mã</value>
+  </data>
+  <data name="Email_LoyaltyChallengeCodeNote" xml:space="preserve">
+    <value>Mã chỉ dùng được một lần, nhập ở bước thanh toán trước hạn dùng.</value>
+  </data>
+  <data name="Email_LoyaltyChallengePointsNote" xml:space="preserve">
+    <value>Điểm thưởng đã được cộng vào tài khoản của bạn.</value>
+  </data>
+  <data name="Email_LoyaltyChallengeCompletedButton" xml:space="preserve">
+    <value>Xem tài khoản</value>
+  </data>
+  <data name="Validation_ReferralCode_Invalid" xml:space="preserve">
+    <value>Mã giới thiệu không hợp lệ.</value>
+  </data>
+  <data name="Validation_ReferralCode_Self" xml:space="preserve">
+    <value>Bạn không thể tự giới thiệu chính mình.</value>
+  </data>
+  <data name="Validation_ReferralCode_AlreadyReferred" xml:space="preserve">
+    <value>Tài khoản này đã được giới thiệu trước đó.</value>
+  </data>
 </root>

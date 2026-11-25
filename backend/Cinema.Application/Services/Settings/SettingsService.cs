@@ -160,6 +160,12 @@ public class SettingsService(
             settings.ReminderHoursBefore = reminderHoursBefore;
         if (request.PointsExpiryReminderDays is { } pointsExpiryReminderDays)
             settings.PointsExpiryReminderDays = pointsExpiryReminderDays;
+        if (request.ReferralReferrerPoints is { } referralReferrerPoints)
+            settings.ReferralReferrerPoints = referralReferrerPoints;
+        if (request.ReferralReferredPoints is { } referralReferredPoints)
+            settings.ReferralReferredPoints = referralReferredPoints;
+        if (request.ReferralMonthlyRewardLimit is { } referralMonthlyRewardLimit)
+            settings.ReferralMonthlyRewardLimit = referralMonthlyRewardLimit;
         if (settings.GiftCardMinAmount > settings.GiftCardMaxAmount)
             throw new BusinessRuleException(Messages.Validation_GiftCardAmount_MinGreaterThanMax);
         if (
@@ -227,6 +233,9 @@ public class SettingsService(
             PreorderComboDiscountPercent = settings.PreorderComboDiscountPercent,
             ReminderHoursBefore = settings.ReminderHoursBefore,
             PointsExpiryReminderDays = settings.PointsExpiryReminderDays,
+            ReferralReferrerPoints = settings.ReferralReferrerPoints,
+            ReferralReferredPoints = settings.ReferralReferredPoints,
+            ReferralMonthlyRewardLimit = settings.ReferralMonthlyRewardLimit,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

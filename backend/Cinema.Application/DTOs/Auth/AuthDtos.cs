@@ -5,7 +5,8 @@ public record RegisterRequest(
     string Email,
     string Password,
     string? Phone,
-    bool MarketingOptIn = false
+    bool MarketingOptIn = false,
+    string? ReferralCode = null
 );
 
 public record RegisterResponse(int UserId, string Email, string Message);

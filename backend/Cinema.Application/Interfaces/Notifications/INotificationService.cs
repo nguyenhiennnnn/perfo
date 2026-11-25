@@ -143,8 +143,20 @@ public sealed record PointsExpiryReminderEmailData(
     IReadOnlyList<PointsExpiryReminderLine> Lots
 );
 
+public sealed record LoyaltyChallengeCompletedEmailData(
+    string CustomerName,
+    string ChallengeName,
+    int? RewardPoints,
+    string? RewardName,
+    string? PromoCode,
+    DateTime? CodeExpiresAtUtc,
+    string AccountLink
+);
+
 public interface INotificationService
 {
+    void SendLoyaltyChallengeCompleted(string toEmail, LoyaltyChallengeCompletedEmailData data);
+
     void SendPointsExpiryReminder(string toEmail, PointsExpiryReminderEmailData data);
 
     void SendGiftCardReceived(string toEmail, GiftCardEmailData data);

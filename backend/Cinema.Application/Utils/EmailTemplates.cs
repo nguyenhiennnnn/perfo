@@ -633,6 +633,89 @@ public static class EmailTemplates
         );
     }
 
+    public static string LoyaltyChallengeCompleted(
+        BrandOptions brand,
+        LoyaltyChallengeCompletedEmailData data
+    )
+    {
+        var hasCode = !string.IsNullOrEmpty(data.PromoCode);
+        var lines = new List<(string Label, string Value, bool Code)>
+        {
+            (Messages.Email_LoyaltyChallengeNameLabel, Enc(data.ChallengeName), false),
+        };
+        if (data.RewardPoints is { } rewardPoints)
+            lines.Add(
+                (
+                    Messages.Email_LoyaltyChallengeRewardLabel,
+                    Enc(
+                        string.Format(
+                            Messages.Email_LoyaltyChallengeRewardPoints,
+                            rewardPoints.ToString("N0", MoneyFormat)
+                        )
+                    ),
+                    false
+                )
+            );
+        if (hasCode)
+        {
+            if (!string.IsNullOrEmpty(data.RewardName))
+                lines.Add(
+                    (Messages.Email_LoyaltyChallengeRewardLabel, Enc(data.RewardName), false)
+                );
+            lines.Add((Messages.Email_LoyaltyChallengeCodeLabel, Enc(data.PromoCode), true));
+            if (data.CodeExpiresAtUtc is { } expiresAt)
+                lines.Add(
+                    (
+                        Messages.Email_LoyaltyChallengeCodeExpiryLabel,
+                        Enc(
+                            BusinessTime
+                                .ToLocal(expiresAt)
+                                .ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture)
+                        ),
+                        false
+                    )
+                );
+        }
+
+        var rows = lines
+            .Select(
+                (line, index) =>
+                    DetailRow(
+                        Enc(line.Label),
+                        line.Value,
+                        isLast: index == lines.Count - 1,
+                        code: line.Code
+                    )
+            )
+            .ToArray();
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeLoyaltyChallenge, Success, SymbolCheck)}
+            {Heading(Messages.Email_LoyaltyChallengeCompletedHeading)}
+            {Paragraph(
+                string.Format(
+                    Messages.Email_LoyaltyChallengeCompletedBody,
+                    Enc(data.CustomerName),
+                    Enc(data.ChallengeName)
+                )
+            )}
+            {DetailCard(rows)}
+            {Button(Messages.Email_LoyaltyChallengeCompletedButton, data.AccountLink)}
+            <div style="height:12px; line-height:12px; font-size:0;">&nbsp;</div>
+            {MutedParagraph(
+                hasCode
+                    ? Messages.Email_LoyaltyChallengeCodeNote
+                    : Messages.Email_LoyaltyChallengePointsNote
+            )}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_LoyaltyChallengeCompletedPreheader, data.ChallengeName),
+            body
+        );
+    }
+
     private static string Heading3(string text) =>
         $"""<h2 class="tx" style="margin:8px 0 12px 0; font-family:{FontHeading}; font-weight:700; font-size:18px; line-height:1.25; color:{ColorForeground};">{Enc(text)}</h2>""";
 

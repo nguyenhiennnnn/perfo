@@ -18,6 +18,7 @@ public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
             .When(x => !string.IsNullOrEmpty(x.Phone))
             .WithMessage(Messages.Validation_Phone_Invalid)
             .MaximumLength(FieldLengths.Phone);
+        RuleFor(x => x.ReferralCode).MaximumLength(FieldLengths.ReferralCode);
     }
 }
 

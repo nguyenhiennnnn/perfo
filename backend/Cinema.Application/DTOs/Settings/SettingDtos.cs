@@ -110,6 +110,12 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int ReminderHoursBefore { get; init; }
 
     public int PointsExpiryReminderDays { get; init; }
+
+    public int ReferralReferrerPoints { get; init; }
+
+    public int ReferralReferredPoints { get; init; }
+
+    public int ReferralMonthlyRewardLimit { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -169,5 +175,8 @@ public record UpdateSettingsRequest(
     int? ExchangeCreditValidityDays = null,
     int? PreorderComboDiscountPercent = null,
     int? ReminderHoursBefore = null,
-    int? PointsExpiryReminderDays = null
+    int? PointsExpiryReminderDays = null,
+    int? ReferralReferrerPoints = null,
+    int? ReferralReferredPoints = null,
+    int? ReferralMonthlyRewardLimit = null
 );

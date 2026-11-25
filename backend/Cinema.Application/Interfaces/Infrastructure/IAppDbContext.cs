@@ -18,6 +18,7 @@ public interface IAppDbContext
     DbSet<LoyaltyReward> LoyaltyRewards { get; }
     DbSet<LoyaltyChallenge> LoyaltyChallenges { get; }
     DbSet<LoyaltyChallengeProgress> LoyaltyChallengeProgresses { get; }
+    DbSet<ReferralRelation> ReferralRelations { get; }
     DbSet<LoyaltyPointTransaction> LoyaltyPointTransactions { get; }
     DbSet<Position> Positions { get; }
     DbSet<Employee> Employees { get; }

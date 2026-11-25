@@ -43,6 +43,7 @@ public static class FieldLengths
     public const int CounterShiftNote = 500;
     public const int DailyClosingNote = 1000;
     public const int LedgerAdjustmentReason = 500;
+    public const int LoyaltyAdjustmentReason = 500;
     public const int LedgerAdjustmentSourceKey = 100;
     public const int TaxCode = 14;
     public const int InvoiceCompanyName = 255;

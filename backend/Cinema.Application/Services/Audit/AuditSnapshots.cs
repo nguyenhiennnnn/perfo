@@ -61,6 +61,44 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject LoyaltyRewardState(LoyaltyReward r) =>
+        AuditJson.ToObject(
+            new
+            {
+                r.Name,
+                r.Type,
+                r.PointsCost,
+                r.RemainingQuantity,
+                r.ValidFrom,
+                r.ValidTo,
+                r.CodeValidityDays,
+                r.DiscountType,
+                r.DiscountValue,
+                r.MaxDiscountAmount,
+                r.ComboId,
+                r.IsActive,
+                r.IsDeleted,
+            }
+        );
+
+    public static JsonObject LoyaltyChallengeState(LoyaltyChallenge c) =>
+        AuditJson.ToObject(
+            new
+            {
+                c.Name,
+                c.Description,
+                c.StartsOn,
+                c.EndsOn,
+                c.ConditionType,
+                c.TargetCount,
+                c.RewardType,
+                c.RewardPoints,
+                c.RewardGiftId,
+                c.IsActive,
+                c.IsDeleted,
+            }
+        );
+
     public static JsonObject PromotionState(Promotion p) =>
         AuditJson.ToObject(
             new

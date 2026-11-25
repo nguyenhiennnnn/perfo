@@ -26,4 +26,7 @@ public static class AuditEntityTypes
     public const string LedgerAdjustment = "LedgerAdjustment";
     public const string InvoiceRequest = "InvoiceRequest";
     public const string GiftCard = "GiftCard";
+    public const string LoyaltyAccount = "LoyaltyAccount";
+    public const string LoyaltyReward = "LoyaltyReward";
+    public const string LoyaltyChallenge = "LoyaltyChallenge";
 }

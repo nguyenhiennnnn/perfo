@@ -153,6 +153,12 @@ public static class DependencyInjection
         services.AddScoped<IOrderPromotionService, OrderPromotionService>();
         services.AddScoped<ILoyaltyPointService, LoyaltyPointService>();
         services.AddScoped<ILoyaltyExpiryReminderService, LoyaltyExpiryReminderService>();
+        services.AddScoped<ILoyaltyAdminService, LoyaltyAdminService>();
+        services.AddScoped<ILoyaltyRewardAdminService, LoyaltyRewardAdminService>();
+        services.AddScoped<ILoyaltyRewardCatalogService, LoyaltyRewardCatalogService>();
+        services.AddScoped<ILoyaltyRewardRedemptionService, LoyaltyRewardRedemptionService>();
+        services.AddScoped<ILoyaltyChallengeAdminService, LoyaltyChallengeAdminService>();
+        services.AddScoped<ILoyaltyChallengeQueryService, LoyaltyChallengeQueryService>();
         services.AddScoped<IOrderLoyaltyService, OrderLoyaltyService>();
         services.AddInTransactionEventHandler<OrderConfirmed, OrderLoyaltyEarnHandler>();
         services.AddInTransactionEventHandler<OrderRefunded, OrderLoyaltyRevokeHandler>();
@@ -302,6 +308,7 @@ public static class DependencyInjection
         services.AddReportBlock<MovieProfitBlock>();
         services.AddReportBlock<GiftCardLiabilityBlock>();
         services.AddReportBlock<VatReportBlock>();
+        services.AddReportBlock<LoyaltyPointsBlock>();
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IUserAdminService, UserAdminService>();
         services.AddScoped<AiToolExecutor>();

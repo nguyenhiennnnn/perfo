@@ -4688,4 +4688,166 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_PointsExpiryReminderOptOutNote" xml:space="preserve">
     <value>Bạn nhận email này vì đang bật nhận nhắc nhở. Có thể tắt trong phần thông tin liên lạc của tài khoản.</value>
   </data>
+  <data name="Success_LoyaltyPointsAdjusted" xml:space="preserve">
+    <value>Đã điều chỉnh điểm của khách hàng.</value>
+  </data>
+  <data name="Validation_LoyaltyAdjustment_PointsRequired" xml:space="preserve">
+    <value>Số điểm điều chỉnh phải khác 0.</value>
+  </data>
+  <data name="Validation_LoyaltyAdjustment_PointsRange" xml:space="preserve">
+    <value>Số điểm điều chỉnh tối đa là 1.000.000 mỗi lần.</value>
+  </data>
+  <data name="Validation_LoyaltyAdjustment_ReasonRequired" xml:space="preserve">
+    <value>Vui lòng nhập lý do điều chỉnh điểm.</value>
+  </data>
+  <data name="Validation_LoyaltyAdjustment_ReasonMaxLength" xml:space="preserve">
+    <value>Lý do điều chỉnh điểm tối đa 500 ký tự.</value>
+  </data>
+  <data name="Report_Finance_LoyaltyPoints_Title" xml:space="preserve">
+    <value>Điểm đổi quà</value>
+  </data>
+  <data name="Report_Finance_Col_LoyaltyMetric" xml:space="preserve">
+    <value>Chỉ tiêu</value>
+  </data>
+  <data name="Report_Finance_Col_LoyaltyTransactions" xml:space="preserve">
+    <value>Số dòng sổ</value>
+  </data>
+  <data name="Report_Finance_Col_LoyaltyPoints" xml:space="preserve">
+    <value>Số điểm</value>
+  </data>
+  <data name="Report_Finance_LoyaltyPoints_Opening" xml:space="preserve">
+    <value>Số dư sổ đầu kỳ</value>
+  </data>
+  <data name="Report_Finance_LoyaltyPoints_Earned" xml:space="preserve">
+    <value>Đã phát từ đơn hàng</value>
+  </data>
+  <data name="Report_Finance_LoyaltyPoints_Bonus" xml:space="preserve">
+    <value>Đã phát thưởng</value>
+  </data>
+  <data name="Report_Finance_LoyaltyPoints_AdjustmentUp" xml:space="preserve">
+    <value>Điều chỉnh cộng</value>
+  </data>
+  <data name="Report_Finance_LoyaltyPoints_Redeemed" xml:space="preserve">
+    <value>Đã đổi quà</value>
+  </data>
+  <data name="Report_Finance_LoyaltyPoints_Expired" xml:space="preserve">
+    <value>Đã hết hạn</value>
+  </data>
+  <data name="Report_Finance_LoyaltyPoints_Revoked" xml:space="preserve">
+    <value>Thu hồi khi hủy hoặc hoàn</value>
+  </data>
+  <data name="Report_Finance_LoyaltyPoints_AdjustmentDown" xml:space="preserve">
+    <value>Điều chỉnh trừ</value>
+  </data>
+  <data name="Report_Finance_LoyaltyPoints_Closing" xml:space="preserve">
+    <value>Số dư sổ cuối kỳ</value>
+  </data>
+  <data name="Report_Finance_LoyaltyPoints_Note" xml:space="preserve">
+    <value>Số liệu lấy từ sổ điểm: số dư cuối kỳ bằng số dư đầu kỳ cộng các biến động trong kỳ.</value>
+  </data>
+  <data name="NotFound_LoyaltyReward" xml:space="preserve">
+    <value>Không tìm thấy quà đổi điểm.</value>
+  </data>
+  <data name="Success_LoyaltyRewardCreated" xml:space="preserve">
+    <value>Đã thêm quà đổi điểm.</value>
+  </data>
+  <data name="Success_LoyaltyRewardUpdated" xml:space="preserve">
+    <value>Đã cập nhật quà đổi điểm.</value>
+  </data>
+  <data name="Success_LoyaltyRewardDeleted" xml:space="preserve">
+    <value>Đã xóa quà đổi điểm.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_TypeInvalid" xml:space="preserve">
+    <value>Loại quà không hợp lệ.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_PointsCostRange" xml:space="preserve">
+    <value>Số điểm cần để đổi phải từ 1 đến 10.000.000.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_QuantityRange" xml:space="preserve">
+    <value>Số lượng quà phải từ 0 đến 1.000.000.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_CodeValidityRange" xml:space="preserve">
+    <value>Hạn dùng của mã được cấp phải từ 1 đến 3650 ngày.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_ValidRangeOrder" xml:space="preserve">
+    <value>Thời điểm kết thúc hiệu lực phải sau thời điểm bắt đầu.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_ComboRequired" xml:space="preserve">
+    <value>Quà combo miễn phí cần chọn combo.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_ComboNotAllowed" xml:space="preserve">
+    <value>Chỉ quà combo miễn phí mới được chọn combo.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_DiscountNotAllowed" xml:space="preserve">
+    <value>Chỉ quà mã giảm giá mới có thông tin giảm giá.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_DiscountTypeInvalid" xml:space="preserve">
+    <value>Loại giảm giá không hợp lệ.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_DiscountPercentRange" xml:space="preserve">
+    <value>Phần trăm giảm phải lớn hơn 0 và không vượt quá 100, tối đa 2 chữ số thập phân.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_DiscountAmountRange" xml:space="preserve">
+    <value>Số tiền giảm phải là số nguyên đồng lớn hơn 0.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_MaxDiscountRange" xml:space="preserve">
+    <value>Mức giảm tối đa phải là số nguyên đồng lớn hơn 0.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_MaxDiscountNotAllowed" xml:space="preserve">
+    <value>Chỉ giảm theo phần trăm mới có mức giảm tối đa.</value>
+  </data>
+  <data name="Rule_LoyaltyRewardUnavailable" xml:space="preserve">
+    <value>Quà này đã hết số lượng hoặc không còn đổi được.</value>
+  </data>
+  <data name="Info_LoyaltyRewardCodeNoRefund" xml:space="preserve">
+    <value>Mã quà chỉ dùng được một lần và có hạn dùng. Nếu mã hết hạn mà chưa dùng, điểm đã đổi sẽ không được hoàn lại.</value>
+  </data>
+  <data name="Success_LoyaltyRewardRedeemed" xml:space="preserve">
+    <value>Đổi quà thành công.</value>
+  </data>
+  <data name="Validation_LoyaltyReward_FreeTicketCapRequired" xml:space="preserve">
+    <value>Quà vé miễn phí cần nhập mức giá vé tối đa được miễn là số nguyên đồng lớn hơn 0.</value>
+  </data>
+  <data name="NotFound_LoyaltyChallenge" xml:space="preserve">
+    <value>Không tìm thấy thử thách.</value>
+  </data>
+  <data name="Conflict_LoyaltyChallengeHasProgress" xml:space="preserve">
+    <value>Thử thách đã có khách tham gia nên không thể đổi loại điều kiện.</value>
+  </data>
+  <data name="Success_LoyaltyChallengeCreated" xml:space="preserve">
+    <value>Đã tạo thử thách.</value>
+  </data>
+  <data name="Success_LoyaltyChallengeUpdated" xml:space="preserve">
+    <value>Đã cập nhật thử thách.</value>
+  </data>
+  <data name="Success_LoyaltyChallengeDeleted" xml:space="preserve">
+    <value>Đã xóa thử thách.</value>
+  </data>
+  <data name="Validation_LoyaltyChallenge_ConditionInvalid" xml:space="preserve">
+    <value>Loại điều kiện của thử thách không hợp lệ.</value>
+  </data>
+  <data name="Validation_LoyaltyChallenge_RewardTypeInvalid" xml:space="preserve">
+    <value>Loại phần thưởng của thử thách không hợp lệ.</value>
+  </data>
+  <data name="Validation_LoyaltyChallenge_TargetRange" xml:space="preserve">
+    <value>Mục tiêu của thử thách phải từ 1 đến 100.</value>
+  </data>
+  <data name="Validation_LoyaltyChallenge_RangeOrder" xml:space="preserve">
+    <value>Ngày kết thúc phải từ ngày bắt đầu trở đi.</value>
+  </data>
+  <data name="Validation_LoyaltyChallenge_RangeTooLong" xml:space="preserve">
+    <value>Kỳ áp dụng của thử thách tối đa 366 ngày.</value>
+  </data>
+  <data name="Validation_LoyaltyChallenge_PointsRange" xml:space="preserve">
+    <value>Điểm thưởng phải từ 1 đến 1.000.000.</value>
+  </data>
+  <data name="Validation_LoyaltyChallenge_PointsNotAllowed" xml:space="preserve">
+    <value>Chỉ thử thách thưởng điểm mới có số điểm thưởng.</value>
+  </data>
+  <data name="Validation_LoyaltyChallenge_GiftRequired" xml:space="preserve">
+    <value>Thử thách thưởng quà cần chọn quà.</value>
+  </data>
+  <data name="Validation_LoyaltyChallenge_GiftNotAllowed" xml:space="preserve">
+    <value>Chỉ thử thách thưởng quà mới được chọn quà.</value>
+  </data>
 </root>

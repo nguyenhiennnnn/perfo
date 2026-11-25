@@ -68,6 +68,9 @@ export const ENDPOINTS = {
     seats: (id: number) => `/showtimes/${id}/seats`,
     seatSuggestions: (id: number) => `/showtimes/${id}/seat-suggestions`,
   },
+  experienceSurveys: {
+    byShowtime: (showtimeId: number) => `/experience-surveys/showtimes/${showtimeId}`,
+  },
   orders: {
     root: "/bookings",
     hold: "/bookings/hold",

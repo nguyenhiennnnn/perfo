@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useSearchParams } from "react-router";
 import { MessageSquareText } from "lucide-react";
 import { EmptyState } from "@/components/common/empty-state";
 import { InfiniteScrollTrigger } from "@/components/common/infinite-scroll-trigger";
@@ -8,7 +9,9 @@ import { AvatarSkeleton, LineSkeleton } from "@/components/common/skeleton-shape
 import { ReviewForm } from "@/features/client/movies/components/review-form";
 import { ReviewItem } from "@/features/client/movies/components/review-item";
 import { useCanReviewStatus, useCreateReview, useDeleteMyReview, useMovieReviews, useUpdateReview } from "@/features/client/movies/hooks/use-movies";
+import { ExperienceSurveyCard } from "@/features/client/surveys/components/experience-survey-card";
 import { useAuthUser } from "@/stores/auth-store";
+import { ROUTES } from "@/config/routes";
 import { SKELETON_LIST_COUNT } from "@/config/default-constants";
 
 const ReviewSkeleton = () => (
@@ -29,6 +32,9 @@ interface MovieReviewsProps {
 export const MovieReviews = ({ movieId }: MovieReviewsProps) => {
   const user = useAuthUser();
   const [editingId, setEditingId] = useState<number | null>(null);
+  const { hash, pathname, search } = useLocation();
+  const [searchParams] = useSearchParams();
+  const surveyShowtimeId = Number(searchParams.get("survey"));
 
   const reviewsQuery = useMovieReviews({ movieId });
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = reviewsQuery;
@@ -37,16 +43,37 @@ export const MovieReviews = ({ movieId }: MovieReviewsProps) => {
   const updateReview = useUpdateReview(movieId);
   const deleteReview = useDeleteMyReview(movieId);
 
+  useEffect(() => {
+    if (hash === "#reviews") {
+      document.getElementById("reviews")?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [hash]);
+
   const reviews = data?.reviews ?? [];
   const editingReview = reviews.find((r) => r.reviewId === editingId);
 
   return (
-    <div>
+    <div id="reviews" className="scroll-mt-24">
       <h2 className="t-h2 text-foreground">Đánh giá & Bình luận</h2>
+
+      {!user && (
+        <p className="mt-4 cut-md bg-card p-4 text-sm text-muted-foreground">
+          <Link to={`${ROUTES.auth.login}?redirect=${encodeURIComponent(`${pathname}${search}${hash}`)}`} className="font-medium text-primary hover:underline">
+            Đăng nhập
+          </Link>{" "}
+          để đánh giá phim và gửi khảo sát sau khi xem.
+        </p>
+      )}
 
       {user && canReviewData?.canReview && !editingId && (
         <div className="mt-4">
           <ReviewForm isSubmitting={createReview.isPending} onSubmit={(payload) => createReview.mutate(payload)} />
+        </div>
+      )}
+
+      {user && Number.isInteger(surveyShowtimeId) && surveyShowtimeId > 0 && (
+        <div className="mt-4">
+          <ExperienceSurveyCard showtimeId={surveyShowtimeId} />
         </div>
       )}
 

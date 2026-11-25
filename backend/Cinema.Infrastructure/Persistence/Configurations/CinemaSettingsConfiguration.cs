@@ -203,6 +203,13 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
             .Property(x => x.ReviewRewardPoints)
             .HasDefaultValue(CinemaSettings.DefaultReviewRewardPoints);
         builder
+            .Property(x => x.RoomQualityAlertThreshold)
+            .HasColumnType("decimal(3,2)")
+            .HasDefaultValue(CinemaSettings.DefaultRoomQualityAlertThreshold);
+        builder
+            .Property(x => x.RoomQualityAlertDays)
+            .HasDefaultValue(CinemaSettings.DefaultRoomQualityAlertDays);
+        builder
             .Property(x => x.SupportRequestDueHours)
             .HasDefaultValue(CinemaSettings.DefaultSupportRequestDueHours);
         builder

@@ -147,7 +147,7 @@ public class ReviewInviteService(
                 new ReviewInviteEmailData(
                     ticket.FullName,
                     ticket.MovieTitle,
-                    $"{baseUrl}/movies/{ticket.MovieId}#reviews",
+                    $"{baseUrl}/movies/{ticket.MovieId}?survey={ticket.ShowtimeId}#reviews",
                     rewardPoints
                 )
             );

@@ -95,6 +95,8 @@ public class CinemaSettings
     public const int DefaultReviewInviteMinHours = 1;
     public const int DefaultReviewInviteMaxHours = 3;
     public const int DefaultReviewRewardPoints = 10;
+    public const decimal DefaultRoomQualityAlertThreshold = 3m;
+    public const int DefaultRoomQualityAlertDays = 3;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -192,4 +194,8 @@ public class CinemaSettings
     public int ReviewInviteMaxHours { get; set; } = DefaultReviewInviteMaxHours;
 
     public int ReviewRewardPoints { get; set; } = DefaultReviewRewardPoints;
+
+    public decimal RoomQualityAlertThreshold { get; set; } = DefaultRoomQualityAlertThreshold;
+
+    public int RoomQualityAlertDays { get; set; } = DefaultRoomQualityAlertDays;
 }

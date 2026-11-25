@@ -102,6 +102,15 @@ public sealed record LowStockEmailLine(
     decimal LowStockThreshold
 );
 
+public sealed record RoomQualityEmailLine(
+    string RoomName,
+    decimal AverageScore,
+    int ConsecutiveDays,
+    decimal Threshold,
+    DateOnly FromDate,
+    DateOnly ToDate
+);
+
 public sealed record UnclosedShiftEmailLine(
     int ShiftId,
     string EmployeeName,
@@ -315,6 +324,8 @@ public interface INotificationService
     void SendLowStockAlert(string toEmail, IReadOnlyList<LowStockEmailLine> items);
 
     void SendUnclosedShiftAlert(string toEmail, IReadOnlyList<UnclosedShiftEmailLine> shifts);
+
+    void SendRoomQualityAlert(string toEmail, IReadOnlyList<RoomQualityEmailLine> rooms);
 
     void SendDailyClosingReport(string toEmail, DailyClosingEmailData report);
 }

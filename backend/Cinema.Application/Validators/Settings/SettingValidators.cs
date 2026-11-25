@@ -149,6 +149,8 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         IntRange(x => x.ReviewInviteMinHours, "reviewInviteMinHours", 0, 72);
         IntRange(x => x.ReviewInviteMaxHours, "reviewInviteMaxHours", 1, 168);
         IntRange(x => x.ReviewRewardPoints, "reviewRewardPoints", 0, 100000);
+        DecimalRange(x => x.RoomQualityAlertThreshold, "roomQualityAlertThreshold", 1, 5);
+        IntRange(x => x.RoomQualityAlertDays, "roomQualityAlertDays", 1, 60);
         WholeDecimalRange(
             x => x.ExceptionalRefundApprovalThreshold,
             "exceptionalRefundApprovalThreshold",

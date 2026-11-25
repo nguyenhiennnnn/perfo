@@ -19,6 +19,7 @@ import { OrderPriceSection } from "@/features/client/orders/components/detail/or
 import { OrderComboSupplementSection } from "@/features/client/orders/components/supplement/order-combo-supplement-section";
 import { SupplementOriginalNotice } from "@/features/client/orders/components/supplement/supplement-original-notice";
 import { SupplementPickupSection } from "@/features/client/orders/components/supplement/supplement-pickup-section";
+import { OrderSurveySection } from "@/features/client/orders/components/detail/order-survey-section";
 import { OrderTicketsSection } from "@/features/client/orders/components/detail/order-tickets-section";
 import { OrderTransactionsSection } from "@/features/client/orders/components/detail/order-transactions-section";
 import { OrderSupportSection } from "@/features/client/support/components/order-support-section";
@@ -41,6 +42,8 @@ const TicketDetailContent = ({ order }: { order: OrderDetailDto }) => {
       <OrderCancelSection order={order} />
 
       <OrderTicketsSection order={order} />
+
+      <OrderSurveySection order={order} />
 
       <OrderComboSupplementSection order={order} />
 

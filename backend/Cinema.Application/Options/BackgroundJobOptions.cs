@@ -20,6 +20,7 @@ public class BackgroundJobOptions
     public string MovieAffinityRefreshCron { get; set; } = "20 * * * *";
     public string ReviewInviteCron { get; set; } = "*/5 * * * *";
     public string MovieIntroEmailCron { get; set; } = "0 10 * * *";
+    public string RoomQualityAlertCron { get; set; } = "*/30 * * * *";
     public int OutboxBatchSize { get; set; } = 50;
     public int OutboxMaxAttempts { get; set; } = 5;
     public int[] OutboxRetryDelaysSeconds { get; set; } = [30, 120, 600, 1800];

@@ -249,6 +249,8 @@ export const invalidations = {
     k.adminEmployees.all(),
   ],
 
+  surveyChanged: (): KeyList => [k.surveys.all()],
+
   reviewChanged: (): KeyList => [
     k.adminReviews.all(),
     ...movieViews(),

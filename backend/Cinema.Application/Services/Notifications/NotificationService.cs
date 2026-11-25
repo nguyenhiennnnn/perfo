@@ -337,6 +337,13 @@ public class NotificationService(
             EmailTemplates.LowStockAlert(_brand, items)
         );
 
+    public void SendRoomQualityAlert(string toEmail, IReadOnlyList<RoomQualityEmailLine> rooms) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_RoomQualitySubject, _brand.Name, rooms.Count),
+            EmailTemplates.RoomQualityAlert(_brand, rooms)
+        );
+
     public void SendUnclosedShiftAlert(
         string toEmail,
         IReadOnlyList<UnclosedShiftEmailLine> shifts

@@ -23,6 +23,11 @@ export const queryKeys = {
       ["showtimes", "seat-suggestions", showtimeId, count] as const,
   },
 
+  surveys: {
+    all: () => ["surveys"] as const,
+    mine: (showtimeId: number) => ["surveys", "mine", showtimeId] as const,
+  },
+
   orders: {
     all: () => ["orders"] as const,
     myList: (params?: object) => ["orders", "my", params] as const,

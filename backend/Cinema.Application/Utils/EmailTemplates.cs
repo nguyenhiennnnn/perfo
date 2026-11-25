@@ -1467,6 +1467,47 @@ public static class EmailTemplates
         );
     }
 
+    public static string RoomQualityAlert(
+        BrandOptions brand,
+        IReadOnlyList<RoomQualityEmailLine> rooms
+    )
+    {
+        var rows = rooms
+            .Select(
+                (room, index) =>
+                    DetailRow(
+                        Enc(room.RoomName),
+                        Enc(
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                Messages.Email_RoomQualityRowValue,
+                                room.AverageScore.ToString("0.00", CultureInfo.InvariantCulture),
+                                room.ConsecutiveDays,
+                                room.Threshold.ToString("0.00", CultureInfo.InvariantCulture),
+                                room.FromDate.ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture),
+                                room.ToDate.ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture)
+                            )
+                        ),
+                        isLast: index == rooms.Count - 1
+                    )
+            )
+            .ToArray();
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeRoomQuality, Warning, SymbolAlert)}
+            {Heading(Messages.Email_RoomQualityHeading)}
+            {Paragraph(Messages.Email_RoomQualityIntro)}
+            {DetailCard(rows)}
+            {MutedParagraph(Messages.Email_RoomQualityNote)}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_RoomQualityPreheader, rooms.Count),
+            body
+        );
+    }
+
     public static string GiftCardReceived(BrandOptions brand, GiftCardEmailData data)
     {
         var message = string.IsNullOrWhiteSpace(data.Message)

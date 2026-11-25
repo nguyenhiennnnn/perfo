@@ -5238,4 +5238,70 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_ExperienceSurveySubmitted" xml:space="preserve">
     <value>Đã gửi khảo sát trải nghiệm. Cảm ơn bạn!</value>
   </data>
+  <data name="Report_RoomQuality_ByRoom_Title" xml:space="preserve">
+    <value>Chất lượng theo phòng</value>
+  </data>
+  <data name="Report_RoomQuality_ByCriterion_Title" xml:space="preserve">
+    <value>Chất lượng theo tiêu chí</value>
+  </data>
+  <data name="Report_RoomQuality_ByTime_Title" xml:space="preserve">
+    <value>Chất lượng theo thời gian</value>
+  </data>
+  <data name="Report_RoomQuality_Col_Room" xml:space="preserve">
+    <value>Phòng</value>
+  </data>
+  <data name="Report_RoomQuality_Col_Surveys" xml:space="preserve">
+    <value>Số khảo sát</value>
+  </data>
+  <data name="Report_RoomQuality_Col_Score" xml:space="preserve">
+    <value>Điểm phòng</value>
+  </data>
+  <data name="Report_RoomQuality_Col_Criterion" xml:space="preserve">
+    <value>Tiêu chí</value>
+  </data>
+  <data name="Report_RoomQuality_Col_Average" xml:space="preserve">
+    <value>Điểm trung bình</value>
+  </data>
+  <data name="Report_RoomQuality_Col_LowRate" xml:space="preserve">
+    <value>Tỷ lệ điểm thấp (1–2 sao)</value>
+  </data>
+  <data name="Report_RoomQuality_Criterion_Room" xml:space="preserve">
+    <value>Không gian phòng</value>
+  </data>
+  <data name="Report_RoomQuality_Criterion_Sound" xml:space="preserve">
+    <value>Âm thanh</value>
+  </data>
+  <data name="Report_RoomQuality_Criterion_Picture" xml:space="preserve">
+    <value>Hình ảnh</value>
+  </data>
+  <data name="Report_RoomQuality_Criterion_Cleanliness" xml:space="preserve">
+    <value>Vệ sinh</value>
+  </data>
+  <data name="Report_RoomQuality_Criterion_CounterService" xml:space="preserve">
+    <value>Dịch vụ quầy</value>
+  </data>
+  <data name="Report_RoomQuality_ScoreNote" xml:space="preserve">
+    <value>Điểm phòng là trung bình của bốn tiêu chí: không gian phòng, âm thanh, hình ảnh, vệ sinh. Dịch vụ quầy không tính vào điểm phòng.</value>
+  </data>
+  <data name="Email_RoomQualitySubject" xml:space="preserve">
+    <value>[{0}] Cảnh báo chất lượng: {1} phòng điểm thấp liên tục</value>
+  </data>
+  <data name="Email_RoomQualityPreheader" xml:space="preserve">
+    <value>{0} phòng chiếu có điểm khảo sát thấp liên tục.</value>
+  </data>
+  <data name="Email_BadgeRoomQuality" xml:space="preserve">
+    <value>Chất lượng phòng</value>
+  </data>
+  <data name="Email_RoomQualityHeading" xml:space="preserve">
+    <value>Phòng chiếu có điểm khảo sát thấp liên tục</value>
+  </data>
+  <data name="Email_RoomQualityIntro" xml:space="preserve">
+    <value>Các phòng dưới đây có điểm khảo sát trung bình thấp hơn ngưỡng cảnh báo trong nhiều ngày liên tiếp. Nên kiểm tra âm thanh, hình ảnh và vệ sinh của phòng.</value>
+  </data>
+  <data name="Email_RoomQualityRowValue" xml:space="preserve">
+    <value>Điểm {0} trong {1} ngày liên tiếp ({3} – {4}), ngưỡng {2}</value>
+  </data>
+  <data name="Email_RoomQualityNote" xml:space="preserve">
+    <value>Mỗi phòng chỉ được báo một lần cho mỗi đợt, cho đến khi điểm phòng phục hồi trên ngưỡng.</value>
+  </data>
 </root>

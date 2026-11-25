@@ -18,4 +18,5 @@ public class RecurringJobIds
     public const string RefreshMovieAffinity = "refresh-movie-affinity";
     public const string ReviewInvite = "review-invite";
     public const string MovieIntroEmail = "movie-intro-email";
+    public const string RoomQualityAlert = "room-quality-alert";
 }

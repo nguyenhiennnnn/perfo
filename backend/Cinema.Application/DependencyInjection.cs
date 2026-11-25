@@ -295,6 +295,8 @@ public static class DependencyInjection
         services.AddScoped<IPaymentExportService, PaymentExportService>();
         services.AddScoped<IReviewService, ReviewService>();
         services.AddScoped<IExperienceSurveyService, ExperienceSurveyService>();
+        services.AddScoped<IRoomQualityAlertService, RoomQualityAlertService>();
+        services.AddScoped<IRoomQualityAlertQueryService, RoomQualityAlertQueryService>();
         services.AddScoped<ISettingsService, SettingsService>();
         services.AddScoped<IUserProfileService, UserProfileService>();
         services.AddScoped<IReferralCodeService, ReferralCodeService>();
@@ -341,6 +343,9 @@ public static class DependencyInjection
         services.AddReportBlock<SupportRequestReportBlock>();
         services.AddReportBlock<ExceptionalRefundByReasonBlock>();
         services.AddReportBlock<ExceptionalRefundByProposerBlock>();
+        services.AddReportBlock<RoomQualityByRoomBlock>();
+        services.AddReportBlock<RoomQualityByCriterionBlock>();
+        services.AddReportBlock<RoomQualityByTimeBlock>();
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IUserAdminService, UserAdminService>();
         services.AddScoped<AiToolExecutor>();

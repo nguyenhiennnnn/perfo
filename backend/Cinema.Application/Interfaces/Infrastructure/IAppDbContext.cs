@@ -21,6 +21,7 @@ public interface IAppDbContext
     DbSet<MovieIntroEmailNotice> MovieIntroEmailNotices { get; }
     DbSet<ReviewInviteNotice> ReviewInviteNotices { get; }
     DbSet<ExperienceSurvey> ExperienceSurveys { get; }
+    DbSet<RoomQualityAlert> RoomQualityAlerts { get; }
     DbSet<ReviewPointReward> ReviewPointRewards { get; }
     DbSet<LoyaltyPointEntry> LoyaltyPointEntries { get; }
     DbSet<LoyaltyReward> LoyaltyRewards { get; }

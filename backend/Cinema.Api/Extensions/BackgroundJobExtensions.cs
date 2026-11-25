@@ -151,6 +151,12 @@ public static class BackgroundJobExtensions
             options.MovieIntroEmailCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<RoomQualityAlertJob>(
+            RecurringJobIds.RoomQualityAlert,
+            j => j.RunAsync(CancellationToken.None),
+            options.RoomQualityAlertCron,
+            jobOptions
+        );
 
         return app;
     }

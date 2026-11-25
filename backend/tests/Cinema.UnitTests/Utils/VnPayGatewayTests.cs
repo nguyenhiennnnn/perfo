@@ -1,7 +1,6 @@
-﻿using System.Net;
+using System.Net;
 using System.Text.Json;
 using System.Web;
-using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Infrastructure.Payments;

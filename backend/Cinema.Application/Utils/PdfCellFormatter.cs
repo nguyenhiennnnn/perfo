@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Cinema.Application.Interfaces;
+using System.Globalization;
 using Cinema.Shared.Constants;
 using Cinema.Application.Interfaces.ImportExport;
 

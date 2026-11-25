@@ -1,4 +1,3 @@
-﻿using Cinema.Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Cinema.Application.Interfaces.Events;

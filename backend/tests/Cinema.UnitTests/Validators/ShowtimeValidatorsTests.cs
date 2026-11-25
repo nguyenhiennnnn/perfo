@@ -1,5 +1,4 @@
-﻿using Cinema.Application.DTOs.Showtimes;
-using Cinema.Application.Interfaces;
+using Cinema.Application.DTOs.Showtimes;
 using Cinema.Application.Validators.Showtimes;
 using FluentValidation.TestHelper;
 using Shouldly;

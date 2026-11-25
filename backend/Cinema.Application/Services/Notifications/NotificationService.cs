@@ -87,6 +87,13 @@ public class NotificationService(
             EmailTemplates.OrderExchanged(_brand, data)
         );
 
+    public void SendSupplementOrderReminder(string toEmail, SupplementReminderEmailData data) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_SupplementReminderSubject, _brand.Name),
+            EmailTemplates.SupplementOrderReminder(_brand, data)
+        );
+
     public void SendInvoiceRequestProcessed(
         string toEmail,
         string customerName,

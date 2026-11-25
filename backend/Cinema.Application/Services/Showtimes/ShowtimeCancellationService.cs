@@ -213,18 +213,57 @@ public class ShowtimeCancellationService(
             .OrderLines.Where(l => l.ShowtimeId == showtimeId && l.LineType == OrderLineType.Ticket)
             .Select(l => l.OrderId);
 
-        return await db
+        var directOrderIds = await db
             .Orders.AsNoTracking()
             .Where(o =>
                 (o.Status == OrderStatus.Pending || o.Status == OrderStatus.Confirmed)
                 && (
                     ticketOrderIds.Contains(o.OrderId)
-                    || (o.OriginalOrderId != null && ticketOrderIds.Contains(o.OriginalOrderId.Value))
+                    || (
+                        o.Type != OrderType.Supplement
+                        && o.OriginalOrderId != null
+                        && ticketOrderIds.Contains(o.OriginalOrderId.Value)
+                    )
                 )
             )
-            .OrderBy(o => o.OrderId)
             .Select(o => o.OrderId)
             .ToListAsync(cancellationToken);
+
+        var activeTicketOrderIds = await db
+            .OrderLines.AsNoTracking()
+            .ExcludingExchangedOut(db)
+            .Where(l => l.ShowtimeId == showtimeId && l.LineType == OrderLineType.Ticket)
+            .Select(l => l.OrderId)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        var familyOrderIds = new HashSet<int>();
+        foreach (var orderId in activeTicketOrderIds)
+        {
+            if (familyOrderIds.Contains(orderId))
+                continue;
+
+            var rootOrderId = await db.ResolveRootOrderIdAsync(orderId, cancellationToken);
+            familyOrderIds.UnionWith(
+                await db.LoadExchangeFamilyOrderIdsAsync(rootOrderId, cancellationToken)
+            );
+        }
+
+        var supplementOrderIds =
+            familyOrderIds.Count == 0
+                ? new List<int>()
+                : await db
+                    .Orders.AsNoTracking()
+                    .Where(o =>
+                        o.Type == OrderType.Supplement
+                        && (o.Status == OrderStatus.Pending || o.Status == OrderStatus.Confirmed)
+                        && o.OriginalOrderId != null
+                        && familyOrderIds.Contains(o.OriginalOrderId.Value)
+                    )
+                    .Select(o => o.OrderId)
+                    .ToListAsync(cancellationToken);
+
+        return [.. directOrderIds.Union(supplementOrderIds).OrderBy(id => id)];
     }
 
     private async Task<ConfirmedOrderOutcome> CancelConfirmedAsync(

@@ -396,6 +396,58 @@ public static class EmailTemplates
         );
     }
 
+    public static string SupplementOrderReminder(
+        BrandOptions brand,
+        SupplementReminderEmailData data
+    )
+    {
+        var rows = new List<string>
+        {
+            DetailRow(Messages.Email_SupplementReminderOriginalLabel, Enc(data.OriginalOrderCode), code: true),
+        };
+        for (var i = 0; i < data.Supplements.Count; i++)
+        {
+            var supplement = data.Supplements[i];
+            var isLastOrder = i == data.Supplements.Count - 1;
+            rows.Add(
+                DetailRow(
+                    Messages.Email_SupplementReminderOrderLabel,
+                    Enc(supplement.OrderCode),
+                    code: true
+                )
+            );
+            for (var j = 0; j < supplement.Combos.Count; j++)
+            {
+                var combo = supplement.Combos[j];
+                rows.Add(
+                    DetailRow(
+                        Enc(combo.ComboName),
+                        string.Format(Messages.Email_SupplementReminderComboQuantity, combo.Remaining),
+                        isLast: isLastOrder && j == supplement.Combos.Count - 1
+                    )
+                );
+            }
+        }
+
+        var intro = data.Reason == SupplementReminderReason.OriginalExchanged
+            ? Messages.Email_SupplementReminderExchangedBody
+            : Messages.Email_SupplementReminderCancelledBody;
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeSupplementReminder, Warning, SymbolAlert)}
+            {Heading(Messages.Email_SupplementReminderHeading)}
+            {Paragraph(string.Format(intro, Enc(data.CustomerName), Enc(data.OriginalOrderCode)))}
+            {DetailCard([.. rows])}
+            {MutedParagraph(Messages.Email_SupplementReminderActionNote)}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_SupplementReminderPreheader, data.OriginalOrderCode),
+            body
+        );
+    }
+
     public static string InvoiceAdjustmentNeeded(
         BrandOptions brand,
         string orderCode,

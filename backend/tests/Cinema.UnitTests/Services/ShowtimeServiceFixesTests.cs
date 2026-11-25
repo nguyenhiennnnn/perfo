@@ -1,6 +1,5 @@
-﻿using Cinema.Application.BackgroundJobs;
+using Cinema.Application.BackgroundJobs;
 using Cinema.Application.DTOs.Showtimes;
-using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Application.Services.Notifications;
 using Cinema.Application.Utils;

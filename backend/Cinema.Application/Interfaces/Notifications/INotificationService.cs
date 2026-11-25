@@ -26,6 +26,27 @@ public sealed record OrderExchangeEmailData(
     DateTime? CreditExpiresAtUtc
 );
 
+public enum SupplementReminderReason
+{
+    OriginalCancelled,
+    OriginalExchanged,
+}
+
+public sealed record SupplementReminderComboLine(string ComboName, int Remaining);
+
+public sealed record SupplementReminderOrderLine(
+    string OrderCode,
+    decimal Amount,
+    IReadOnlyList<SupplementReminderComboLine> Combos
+);
+
+public sealed record SupplementReminderEmailData(
+    string CustomerName,
+    string OriginalOrderCode,
+    SupplementReminderReason Reason,
+    IReadOnlyList<SupplementReminderOrderLine> Supplements
+);
+
 public sealed record LowStockEmailLine(
     string Code,
     string Name,
@@ -96,6 +117,8 @@ public interface INotificationService
     );
 
     void SendOrderExchanged(string toEmail, OrderExchangeEmailData data);
+
+    void SendSupplementOrderReminder(string toEmail, SupplementReminderEmailData data);
 
     void SendInvoiceRequestProcessed(
         string toEmail,

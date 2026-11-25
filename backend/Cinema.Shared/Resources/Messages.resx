@@ -4523,4 +4523,34 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Combo_SuggestionPurchasedBefore" xml:space="preserve">
     <value>Bạn đã từng mua combo này</value>
   </data>
+  <data name="Email_SupplementReminderSubject" xml:space="preserve">
+    <value>Nhắc xử lý đơn bổ sung — {0}</value>
+  </data>
+  <data name="Email_BadgeSupplementReminder" xml:space="preserve">
+    <value>Cần xử lý đơn bổ sung</value>
+  </data>
+  <data name="Email_SupplementReminderHeading" xml:space="preserve">
+    <value>Đơn bổ sung combo của bạn vẫn còn hiệu lực</value>
+  </data>
+  <data name="Email_SupplementReminderCancelledBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, đơn hàng &lt;strong&gt;{1}&lt;/strong&gt; đã được hủy. Đơn bổ sung combo đặt trước của đơn này không bị hủy tự động.</value>
+  </data>
+  <data name="Email_SupplementReminderExchangedBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, đơn hàng &lt;strong&gt;{1}&lt;/strong&gt; đã được đổi sang suất chiếu mới. Đơn bổ sung combo đặt trước của đơn này vẫn còn hiệu lực.</value>
+  </data>
+  <data name="Email_SupplementReminderOriginalLabel" xml:space="preserve">
+    <value>Đơn hàng gốc</value>
+  </data>
+  <data name="Email_SupplementReminderOrderLabel" xml:space="preserve">
+    <value>Đơn bổ sung</value>
+  </data>
+  <data name="Email_SupplementReminderComboQuantity" xml:space="preserve">
+    <value>Còn {0} chưa nhận</value>
+  </data>
+  <data name="Email_SupplementReminderActionNote" xml:space="preserve">
+    <value>Nếu chưa nhận combo, bạn có thể hủy đơn bổ sung để được hoàn tiền, hoặc giữ lại và nhận combo tại quầy vào suất chiếu mới bằng mã QR của đơn bổ sung.</value>
+  </data>
+  <data name="Email_SupplementReminderPreheader" xml:space="preserve">
+    <value>Đơn bổ sung của đơn hàng {0} cần bạn xử lý</value>
+  </data>
 </root>

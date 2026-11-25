@@ -1,6 +1,5 @@
-﻿using Cinema.Application.DTOs.Orders;
+using Cinema.Application.DTOs.Orders;
 using Cinema.Application.DTOs.Settings;
-using Cinema.Application.Interfaces;
 using Cinema.Application.Services.Settings;
 using Cinema.Application.Utils;
 using Cinema.Application.Validators.Settings;

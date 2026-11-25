@@ -1,6 +1,5 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using System.Text;
-using Cinema.Application.Interfaces;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Cinema.Application.Interfaces.Import;

@@ -204,6 +204,12 @@ export const ENDPOINTS = {
       redemptionsExportJobs: (id: number) =>
         `/admin/promotions/${id}/redemptions/export-jobs`,
     },
+    loyalty: {
+      rewards: "/admin/loyalty/rewards",
+      rewardById: (id: number) => `/admin/loyalty/rewards/${id}`,
+      challenges: "/admin/loyalty/challenges",
+      challengeById: (id: number) => `/admin/loyalty/challenges/${id}`,
+    },
     combos: {
       root: "/admin/combos",
       byId: (id: number) => `/admin/combos/${id}`,

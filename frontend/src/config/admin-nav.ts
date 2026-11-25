@@ -44,6 +44,7 @@ import {
   History,
   ScrollText,
   Settings,
+  Trophy,
   type LucideIcon,
 } from "lucide-react";
 import { ROUTES } from "@/config/routes";
@@ -287,6 +288,23 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         to: ROUTES.admin.promotionReports,
         label: "Báo cáo khuyến mãi",
         icon: BarChart3,
+        roles: [Role.Admin],
+      },
+    ],
+  },
+  {
+    label: "Tích điểm",
+    items: [
+      {
+        to: ROUTES.admin.loyaltyRewards,
+        label: "Quản lý quà",
+        icon: Gift,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.loyaltyChallenges,
+        label: "Quản lý thử thách",
+        icon: Trophy,
         roles: [Role.Admin],
       },
     ],

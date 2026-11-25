@@ -110,6 +110,19 @@ export const invalidations = {
     k.adminAuditLogs.all(),
   ],
 
+  loyaltyRewardChanged: (): KeyList => [
+    k.adminLoyaltyRewards.all(),
+    k.adminLoyaltyChallenges.all(),
+    k.loyalty.all(),
+    k.adminAuditLogs.all(),
+  ],
+
+  loyaltyChallengeChanged: (): KeyList => [
+    k.adminLoyaltyChallenges.all(),
+    k.loyalty.all(),
+    k.adminAuditLogs.all(),
+  ],
+
   comboChanged: (): KeyList => [k.adminCombos.all(), k.combos.all()],
 
   inventoryChanged: (): KeyList => [

@@ -118,6 +118,29 @@ export const useAdminPromotionParams = (
   options?: Parameters<typeof useQueryStates<typeof adminPromotionParsers>>[1],
 ) => useQueryStates(adminPromotionParsers, options);
 
+const adminLoyaltyRewardParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  type: parseAsString,
+  isActive: parseAsString,
+};
+
+export const useAdminLoyaltyRewardParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminLoyaltyRewardParsers>>[1],
+) => useQueryStates(adminLoyaltyRewardParsers, options);
+
+const adminLoyaltyChallengeParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  isActive: parseAsString,
+};
+
+export const useAdminLoyaltyChallengeParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminLoyaltyChallengeParsers>>[1],
+) => useQueryStates(adminLoyaltyChallengeParsers, options);
+
 const adminPromotionReportParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),

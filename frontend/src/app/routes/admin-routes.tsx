@@ -70,6 +70,8 @@ const AdminPromotionsPage = lazyRoute(() => import("@/features/admin/promotions/
 const AdminPromotionReportsPage = lazyRoute(() => import("@/features/admin/promotions/pages/promotion-reports-page"));
 const AdminPromotionReportDetailPage = lazyRoute(() => import("@/features/admin/promotions/pages/promotion-report-detail-page"));
 const AdminPromotionRedemptionsPage = lazyRoute(() => import("@/features/admin/promotions/pages/promotion-redemptions-page"));
+const AdminLoyaltyRewardsPage = lazyRoute(() => import("@/features/admin/loyalty/pages/loyalty-rewards-page"));
+const AdminLoyaltyChallengesPage = lazyRoute(() => import("@/features/admin/loyalty/pages/loyalty-challenges-page"));
 const AdminTicketTypesPage = lazyRoute(() => import("@/features/admin/pricing/pages/ticket-types-page"));
 const AdminPricingRulesPage = lazyRoute(() => import("@/features/admin/pricing/pages/pricing-rules-page"));
 const AdminPricingRuleHistoryPage = lazyRoute(() => import("@/features/admin/pricing/pages/pricing-rule-history-page"));
@@ -153,6 +155,8 @@ export const adminRoutes: RouteObject[] = [
           { path: "promotions/reports", lazy: AdminPromotionReportsPage },
           { path: "promotions/:id/report", lazy: AdminPromotionReportDetailPage },
           { path: "promotions/:id/redemptions", lazy: AdminPromotionRedemptionsPage },
+          { path: "loyalty/rewards", lazy: AdminLoyaltyRewardsPage },
+          { path: "loyalty/challenges", lazy: AdminLoyaltyChallengesPage },
           { path: "pricing/ticket-types", lazy: AdminTicketTypesPage },
           { path: "pricing/rules", lazy: AdminPricingRulesPage },
           { path: "pricing/rule-history", lazy: AdminPricingRuleHistoryPage },

@@ -141,6 +141,17 @@ export const useAdminLoyaltyChallengeParams = (
   options?: Parameters<typeof useQueryStates<typeof adminLoyaltyChallengeParsers>>[1],
 ) => useQueryStates(adminLoyaltyChallengeParsers, options);
 
+const adminLoyaltyAdjustmentParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  userId: parseAsInteger,
+};
+
+export const useAdminLoyaltyAdjustmentParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminLoyaltyAdjustmentParsers>>[1],
+) => useQueryStates(adminLoyaltyAdjustmentParsers, options);
+
 const adminPromotionReportParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),

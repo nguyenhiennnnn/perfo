@@ -116,6 +116,8 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int ReferralReferredPoints { get; init; }
 
     public int ReferralMonthlyRewardLimit { get; init; }
+
+    public int SupportRequestDueHours { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -178,5 +180,6 @@ public record UpdateSettingsRequest(
     int? PointsExpiryReminderDays = null,
     int? ReferralReferrerPoints = null,
     int? ReferralReferredPoints = null,
-    int? ReferralMonthlyRewardLimit = null
+    int? ReferralMonthlyRewardLimit = null,
+    int? SupportRequestDueHours = null
 );

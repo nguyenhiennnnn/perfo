@@ -1,4 +1,5 @@
 import type {
+  LoyaltyTransactionType,
   LoyaltyChallengeConditionType,
   LoyaltyChallengeRewardType,
   LoyaltyRewardType,
@@ -94,4 +95,49 @@ export interface LoyaltyChallengeListParams {
 export interface DeleteLoyaltyChallengeResponse {
   id: number;
   deleted: boolean;
+}
+
+export interface LoyaltyCustomerLookupItemDto {
+  userId: number;
+  fullName: string;
+  email: string;
+  phone: string | null;
+  tierId: number | null;
+  tierName: string | null;
+  rankPoints: number;
+  balance: number;
+  debt: number;
+}
+
+export type LoyaltyCustomerDetailDto = LoyaltyCustomerLookupItemDto;
+
+export interface LoyaltyTransactionDto {
+  transactionId: number;
+  type: LoyaltyTransactionType;
+  points: number;
+  entryId: number | null;
+  orderId: number | null;
+  actorUserId: number | null;
+  actorName: string | null;
+  createdAt: string;
+}
+
+export interface LoyaltyTransactionListParams {
+  page?: number;
+  pageSize?: number;
+}
+
+export interface AdjustLoyaltyPointsRequest {
+  points: number;
+  reason: string;
+}
+
+export interface LoyaltyAdjustmentResultDto {
+  userId: number;
+  points: number;
+  entryId: number | null;
+  balanceBefore: number;
+  balanceAfter: number;
+  debtBefore: number;
+  debtAfter: number;
 }

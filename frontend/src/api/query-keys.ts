@@ -155,6 +155,14 @@ export const queryKeys = {
     list: (params?: object) => ["admin", "loyalty", "challenges", "list", params] as const,
   },
 
+  adminLoyaltyCustomers: {
+    all: () => ["admin", "loyalty", "customers"] as const,
+    search: (query: string) => ["admin", "loyalty", "customers", "search", query] as const,
+    detail: (userId: number) => ["admin", "loyalty", "customers", "detail", userId] as const,
+    transactions: (userId: number, params?: object) =>
+      ["admin", "loyalty", "customers", "transactions", userId, params] as const,
+  },
+
   adminTicketTypes: {
     all: () => ["admin", "ticket-types"] as const,
     list: (params?: object) => ["admin", "ticket-types", "list", params] as const,

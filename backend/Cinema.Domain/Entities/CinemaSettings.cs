@@ -90,6 +90,7 @@ public class CinemaSettings
     public const int DefaultReferralReferrerPoints = 50;
     public const int DefaultReferralReferredPoints = 50;
     public const int DefaultReferralMonthlyRewardLimit = 10;
+    public const int DefaultSupportRequestDueHours = 48;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -176,4 +177,6 @@ public class CinemaSettings
     public int ReferralReferredPoints { get; set; } = DefaultReferralReferredPoints;
 
     public int ReferralMonthlyRewardLimit { get; set; } = DefaultReferralMonthlyRewardLimit;
+
+    public int SupportRequestDueHours { get; set; } = DefaultSupportRequestDueHours;
 }

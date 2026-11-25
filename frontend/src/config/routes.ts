@@ -90,6 +90,8 @@ export const ROUTES = {
       `/admin/promotions/${promotionId}/report`,
     loyaltyRewards: "/admin/loyalty/rewards",
     loyaltyChallenges: "/admin/loyalty/challenges",
+    loyaltyAdjustments: "/admin/loyalty/adjustments",
+    loyaltyReport: "/admin/loyalty/report",
     pricingTicketTypes: "/admin/pricing/ticket-types",
     pricingRules: "/admin/pricing/rules",
     pricingRuleHistory: "/admin/pricing/rule-history",

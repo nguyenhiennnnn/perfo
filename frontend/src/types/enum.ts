@@ -126,6 +126,17 @@ export const LoyaltyLotType = {
 } as const;
 export type LoyaltyLotType = (typeof LoyaltyLotType)[keyof typeof LoyaltyLotType];
 
+export const LoyaltyTransactionType = {
+  Earn: "Earn",
+  Bonus: "Bonus",
+  Redeem: "Redeem",
+  Expire: "Expire",
+  Revoke: "Revoke",
+  Adjustment: "Adjustment",
+} as const;
+export type LoyaltyTransactionType =
+  (typeof LoyaltyTransactionType)[keyof typeof LoyaltyTransactionType];
+
 export const LoyaltyChallengeConditionType = {
   DistinctMovies: "DistinctMovies",
   Screenings: "Screenings",

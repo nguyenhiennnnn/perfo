@@ -307,6 +307,18 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         icon: Trophy,
         roles: [Role.Admin],
       },
+      {
+        to: ROUTES.admin.loyaltyAdjustments,
+        label: "Điều chỉnh điểm",
+        icon: Coins,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.loyaltyReport,
+        label: "Báo cáo điểm",
+        icon: BarChart3,
+        roles: [Role.Admin],
+      },
     ],
   },
   {

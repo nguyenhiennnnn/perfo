@@ -4,12 +4,14 @@ const ACTION_LABELS: Record<string, string> = {
   Create: "Tạo mới",
   Update: "Cập nhật",
   Delete: "Xóa",
+  AdjustLoyaltyPoints: "Điều chỉnh điểm",
 };
 
 const ACTION_VARIANTS: Record<string, BadgeVariant> = {
   Create: "success",
   Update: "secondary",
   Delete: "destructive",
+  AdjustLoyaltyPoints: "secondary",
 };
 
 const ENTITY_TYPE_LABELS: Record<string, string> = {
@@ -19,6 +21,7 @@ const ENTITY_TYPE_LABELS: Record<string, string> = {
   PricingRule: "Quy tắc giá",
   SpecialDay: "Ngày đặc biệt",
   Promotion: "Khuyến mãi",
+  LoyaltyAccount: "Điểm thành viên",
 };
 
 export const SYSTEM_ACTOR_LABEL = "Hệ thống";

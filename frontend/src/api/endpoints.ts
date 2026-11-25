@@ -209,6 +209,10 @@ export const ENDPOINTS = {
       rewardById: (id: number) => `/admin/loyalty/rewards/${id}`,
       challenges: "/admin/loyalty/challenges",
       challengeById: (id: number) => `/admin/loyalty/challenges/${id}`,
+      customers: "/admin/loyalty/customers",
+      customerById: (userId: number) => `/admin/loyalty/customers/${userId}`,
+      customerTransactions: (userId: number) => `/admin/loyalty/customers/${userId}/transactions`,
+      customerAdjustments: (userId: number) => `/admin/loyalty/customers/${userId}/adjustments`,
     },
     combos: {
       root: "/admin/combos",

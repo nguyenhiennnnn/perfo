@@ -193,5 +193,8 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.ReferralMonthlyRewardLimit)
             .HasDefaultValue(CinemaSettings.DefaultReferralMonthlyRewardLimit);
+        builder
+            .Property(x => x.SupportRequestDueHours)
+            .HasDefaultValue(CinemaSettings.DefaultSupportRequestDueHours);
     }
 }

@@ -5,6 +5,7 @@ import {
   LoyaltyChallengeConditionType,
   LoyaltyChallengeRewardType,
   LoyaltyRewardType,
+  LoyaltyTransactionType,
   PromotionDiscountType,
 } from "@/types/enum";
 import type { AdminLoyaltyChallengeDto, AdminLoyaltyRewardDto } from "../types";
@@ -14,6 +15,10 @@ export const REWARD_MAX_POINTS_COST = 10_000_000;
 export const REWARD_MAX_QUANTITY = 1_000_000;
 export const REWARD_MAX_CODE_VALIDITY_DAYS = 3650;
 export const REWARD_MAX_AMOUNT = 1_000_000_000;
+
+export const LOYALTY_POINTS_BLOCK_KEY = "loyalty-points";
+export const ADJUSTMENT_MAX_POINTS = 1_000_000;
+export const ADJUSTMENT_REASON_MAX_LENGTH = 500;
 
 export const CHALLENGE_NAME_MAX_LENGTH = 150;
 export const CHALLENGE_DESCRIPTION_MAX_LENGTH = 500;
@@ -143,3 +148,32 @@ export const CHALLENGE_PHASE_BADGES: Record<
   ended: { label: "Đã kết thúc", variant: "secondary" },
   inactive: { label: "Tạm tắt", variant: "secondary" },
 };
+
+export const ADJUSTMENT_DIRECTION = {
+  Add: "add",
+  Subtract: "subtract",
+} as const;
+export type AdjustmentDirection = (typeof ADJUSTMENT_DIRECTION)[keyof typeof ADJUSTMENT_DIRECTION];
+
+export const ADJUSTMENT_DIRECTION_OPTIONS: EnumOption<AdjustmentDirection>[] = [
+  { value: ADJUSTMENT_DIRECTION.Add, label: "Cộng điểm" },
+  { value: ADJUSTMENT_DIRECTION.Subtract, label: "Trừ điểm" },
+];
+
+export const TRANSACTION_TYPE_BADGES: Record<
+  LoyaltyTransactionType,
+  { label: string; variant: "success" | "secondary" | "destructive" | "warning" | "outline" }
+> = {
+  [LoyaltyTransactionType.Earn]: { label: "Tích từ đơn", variant: "success" },
+  [LoyaltyTransactionType.Bonus]: { label: "Thưởng", variant: "success" },
+  [LoyaltyTransactionType.Redeem]: { label: "Đổi quà", variant: "warning" },
+  [LoyaltyTransactionType.Expire]: { label: "Hết hạn", variant: "secondary" },
+  [LoyaltyTransactionType.Revoke]: { label: "Thu hồi", variant: "destructive" },
+  [LoyaltyTransactionType.Adjustment]: { label: "Điều chỉnh", variant: "outline" },
+};
+
+export const getTransactionTypeBadge = (type: string) =>
+  TRANSACTION_TYPE_BADGES[type as LoyaltyTransactionType] ?? {
+    label: type,
+    variant: "outline" as const,
+  };

@@ -61,7 +61,8 @@ public sealed record CinemaSettingsSnapshot(
     int PointsExpiryReminderDays,
     int ReferralReferrerPoints,
     int ReferralReferredPoints,
-    int ReferralMonthlyRewardLimit
+    int ReferralMonthlyRewardLimit,
+    int SupportRequestDueHours
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -123,6 +124,7 @@ public sealed record CinemaSettingsSnapshot(
             s.PointsExpiryReminderDays,
             s.ReferralReferrerPoints,
             s.ReferralReferredPoints,
-            s.ReferralMonthlyRewardLimit
+            s.ReferralMonthlyRewardLimit,
+            s.SupportRequestDueHours
         );
 }

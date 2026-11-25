@@ -117,6 +117,13 @@ export const invalidations = {
     k.adminAuditLogs.all(),
   ],
 
+  loyaltyPointsAdjusted: (): KeyList => [
+    k.adminLoyaltyCustomers.all(),
+    k.adminReports.all(),
+    k.loyalty.all(),
+    k.adminAuditLogs.all(),
+  ],
+
   loyaltyChallengeChanged: (): KeyList => [
     k.adminLoyaltyChallenges.all(),
     k.loyalty.all(),

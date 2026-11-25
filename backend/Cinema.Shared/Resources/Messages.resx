@@ -4901,4 +4901,19 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Validation_ReferralCode_AlreadyReferred" xml:space="preserve">
     <value>Tài khoản này đã được giới thiệu trước đó.</value>
   </data>
+  <data name="NotFound_SupportRequest" xml:space="preserve">
+    <value>Không tìm thấy yêu cầu hỗ trợ.</value>
+  </data>
+  <data name="Rule_SupportRequestResolved" xml:space="preserve">
+    <value>Yêu cầu hỗ trợ này đã được giải quyết. Vui lòng tạo yêu cầu mới nếu bạn cần thêm trợ giúp.</value>
+  </data>
+  <data name="Rule_SupportRequestTooManyOpen" xml:space="preserve">
+    <value>Đơn hàng này đã có {0} yêu cầu hỗ trợ đang xử lý. Vui lòng chờ xử lý xong hoặc trả lời trên yêu cầu hiện có.</value>
+  </data>
+  <data name="Success_SupportRequestCreated" xml:space="preserve">
+    <value>Đã gửi yêu cầu hỗ trợ. Chúng tôi sẽ phản hồi sớm nhất có thể.</value>
+  </data>
+  <data name="Success_SupportMessageSent" xml:space="preserve">
+    <value>Đã gửi phản hồi.</value>
+  </data>
 </root>

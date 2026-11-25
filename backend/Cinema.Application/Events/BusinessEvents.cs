@@ -31,6 +31,8 @@ public sealed record GiftCardSent(int GiftCardId, DateTime OccurredAt) : IBusine
 public sealed record DailyClosed(int DailyClosingId, DateOnly BusinessDate, DateTime OccurredAt)
     : IBusinessEvent;
 
+public sealed record ShowtimeSeatsReleased(int ShowtimeId, DateTime OccurredAt) : IBusinessEvent;
+
 public sealed record ShowtimeEnded(int ShowtimeId, DateTime OccurredAt) : IBusinessEvent;
 
 public sealed record ShowtimeRoomChanged(

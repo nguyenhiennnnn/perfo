@@ -13,6 +13,7 @@ public static class BusinessEventCatalog
         Register<OrderExchanged>();
         Register<DailyClosed>();
         Register<ShowtimeEnded>();
+        Register<ShowtimeSeatsReleased>();
         Register<ShowtimeRoomChanged>();
         Register<TicketCheckedIn>();
         Register<ReviewChanged>();

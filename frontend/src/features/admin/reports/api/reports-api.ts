@@ -9,6 +9,7 @@ import type {
   EmployeePerformanceDto,
   FinanceReportDto,
   FinanceReportParams,
+  RoomQualityAlertDto,
 } from "../types";
 import { ENDPOINTS } from "@/api/endpoints";
 
@@ -24,4 +25,9 @@ export const reportsApi = {
 
   getFinance: (params: FinanceReportParams) =>
     apiGet<ApiResponse<FinanceReportDto>>(ENDPOINTS.admin.reports.finance, { params }),
+
+  getRoomQualityAlerts: (activeOnly: boolean) =>
+    apiGet<ApiResponse<RoomQualityAlertDto[]>>(ENDPOINTS.admin.reports.roomQualityAlerts, {
+      params: { activeOnly },
+    }),
 };

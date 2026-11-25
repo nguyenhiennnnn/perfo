@@ -1,4 +1,6 @@
-﻿using Cinema.Application.Interfaces.Bookings;
+﻿using Cinema.Application.Events;
+using Cinema.Application.Interfaces.Bookings;
+using Cinema.Application.Interfaces.Events;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Orders;
 using Cinema.Application.Utils;
@@ -12,6 +14,7 @@ public class SeatExpirationService(
     IAppDbContext db,
     IOrderConfirmationService confirmationService,
     IOrderReleaseService releaseService,
+    IBusinessEventDispatcher eventDispatcher,
     ILogger<SeatExpirationService> logger
 ) : ISeatExpirationService
 {
@@ -74,6 +77,17 @@ public class SeatExpirationService(
                     cancellationToken
                 );
                 await db.SaveChangesAsync(cancellationToken);
+
+                var showtimeIds = await db
+                    .ShowtimeSeats.Where(ss => seatIds.Contains(ss.ShowtimeSeatId))
+                    .Select(ss => ss.ShowtimeId)
+                    .Distinct()
+                    .ToListAsync(cancellationToken);
+                foreach (var showtimeId in showtimeIds)
+                    await eventDispatcher.PublishAsync(
+                        new ShowtimeSeatsReleased(showtimeId, now),
+                        cancellationToken
+                    );
             },
             cancellationToken
         );

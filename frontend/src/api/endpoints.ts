@@ -135,6 +135,7 @@ export const ENDPOINTS = {
       finance: "/admin/reports/finance",
       financeExport: "/admin/reports/finance/export",
       financeExportJobs: "/admin/reports/finance/export-jobs",
+      roomQualityAlerts: "/admin/room-quality-alerts",
     },
     invoiceRequests: {
       root: "/admin/invoice-requests",

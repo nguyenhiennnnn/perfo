@@ -335,6 +335,8 @@ export const queryKeys = {
       ["admin", "reports", "employee-performance", params] as const,
     finance: (params: object) =>
       ["admin", "reports", "finance", params] as const,
+    roomQualityAlerts: (activeOnly: boolean) =>
+      ["admin", "reports", "room-quality-alerts", activeOnly] as const,
   },
 
   adminImportExport: {

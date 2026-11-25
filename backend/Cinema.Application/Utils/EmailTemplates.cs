@@ -735,6 +735,45 @@ public static class EmailTemplates
         );
     }
 
+    public static string WaitlistSeatsAvailable(
+        BrandOptions brand,
+        WaitlistSeatsAvailableEmailData data
+    )
+    {
+        var startText = BusinessTime
+            .ToLocal(data.ShowtimeStartUtc)
+            .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture);
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeWaitlistSeats, Success, SymbolCheck)}
+            {Heading(Messages.Email_WaitlistSeatsHeading)}
+            {Paragraph(
+                string.Format(Messages.Email_WaitlistSeatsBody, Enc(data.CustomerName), Enc(data.MovieTitle))
+            )}
+            {DetailCard(
+                [
+                    DetailRow(Messages.Email_MovieLabel, Enc(data.MovieTitle)),
+                    DetailRow(Messages.Email_WaitlistShowtimeLabel, Enc(startText)),
+                    DetailRow(Messages.Email_WaitlistRoomLabel, Enc(data.RoomName)),
+                    DetailRow(
+                        Messages.Email_WaitlistSeatCountLabel,
+                        Enc(data.SeatCount.ToString(CultureInfo.InvariantCulture)),
+                        isLast: true
+                    ),
+                ]
+            )}
+            {Button(Messages.Email_WaitlistSeatsButton, data.BookingLink)}
+            <div style="height:12px; line-height:12px; font-size:0;">&nbsp;</div>
+            {MutedParagraph(Messages.Email_WaitlistSeatsNote)}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_WaitlistSeatsPreheader, data.MovieTitle),
+            body
+        );
+    }
+
     public static string PointsExpiryReminder(BrandOptions brand, PointsExpiryReminderEmailData data)
     {
         var rows = data

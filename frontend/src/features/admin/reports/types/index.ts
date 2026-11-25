@@ -79,3 +79,17 @@ export interface FinanceReportDto {
   to: string;
   blocks: FinanceReportBlockDto[];
 }
+
+export interface RoomQualityAlertDto {
+  roomQualityAlertId: number;
+  roomId: number;
+  roomName: string;
+  fromDate: string;
+  toDate: string;
+  consecutiveDays: number;
+  averageScore: number;
+  threshold: number;
+  detectedAt: string;
+  notifiedAt?: string | null;
+  resolvedAt?: string | null;
+}

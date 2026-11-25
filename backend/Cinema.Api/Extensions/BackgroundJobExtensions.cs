@@ -157,6 +157,12 @@ public static class BackgroundJobExtensions
             options.RoomQualityAlertCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<WaitlistCloseJob>(
+            RecurringJobIds.WaitlistClose,
+            j => j.RunAsync(CancellationToken.None),
+            options.WaitlistCloseCron,
+            jobOptions
+        );
 
         return app;
     }

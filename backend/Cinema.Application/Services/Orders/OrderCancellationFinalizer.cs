@@ -51,6 +51,11 @@ public class OrderCancellationFinalizer(
         order.CancelledAt = now;
 
         var releasedSeats = await ReleaseSeatsAsync(orderId, cancellationToken);
+        foreach (var showtimeId in releasedSeats.Select(s => s.ShowtimeId).Distinct())
+            await eventDispatcher.PublishAsync(
+                new ShowtimeSeatsReleased(showtimeId, now),
+                cancellationToken
+            );
 
         var context = new OrderCancellationContext(order, reason, cancelledBy, refundPlan);
         foreach (var hook in hooks)

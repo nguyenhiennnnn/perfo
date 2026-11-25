@@ -25,6 +25,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<ReviewInviteNotice> ReviewInviteNotices => Set<ReviewInviteNotice>();
     public DbSet<ExperienceSurvey> ExperienceSurveys => Set<ExperienceSurvey>();
     public DbSet<RoomQualityAlert> RoomQualityAlerts => Set<RoomQualityAlert>();
+    public DbSet<WaitlistEntry> WaitlistEntries => Set<WaitlistEntry>();
     public DbSet<ReviewPointReward> ReviewPointRewards => Set<ReviewPointReward>();
     public DbSet<LoyaltyPointEntry> LoyaltyPointEntries => Set<LoyaltyPointEntry>();
     public DbSet<LoyaltyReward> LoyaltyRewards => Set<LoyaltyReward>();

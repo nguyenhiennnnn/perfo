@@ -5304,4 +5304,61 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_RoomQualityNote" xml:space="preserve">
     <value>Mỗi phòng chỉ được báo một lần cho mỗi đợt, cho đến khi điểm phòng phục hồi trên ngưỡng.</value>
   </data>
+  <data name="Validation_Waitlist_SeatCountMin" xml:space="preserve">
+    <value>Số ghế cần chờ phải từ 1 trở lên.</value>
+  </data>
+  <data name="Rule_WaitlistShowtimeStarted" xml:space="preserve">
+    <value>Suất chiếu đã bắt đầu, không thể đăng ký chờ.</value>
+  </data>
+  <data name="Rule_WaitlistSeatsStillAvailable" xml:space="preserve">
+    <value>Suất chiếu vẫn còn ghế phù hợp, bạn có thể đặt vé ngay mà không cần đăng ký chờ.</value>
+  </data>
+  <data name="Conflict_WaitlistAlreadyRegistered" xml:space="preserve">
+    <value>Bạn đã đăng ký chờ cho suất chiếu này rồi.</value>
+  </data>
+  <data name="Conflict_WaitlistBusy" xml:space="preserve">
+    <value>Hệ thống đang bận, vui lòng thử đăng ký chờ lại.</value>
+  </data>
+  <data name="Conflict_WaitlistNotWithdrawable" xml:space="preserve">
+    <value>Đăng ký chờ này không còn có thể rút.</value>
+  </data>
+  <data name="NotFound_WaitlistEntry" xml:space="preserve">
+    <value>Bạn chưa đăng ký chờ cho suất chiếu này.</value>
+  </data>
+  <data name="Success_WaitlistRegistered" xml:space="preserve">
+    <value>Đã đăng ký chờ. Chúng tôi sẽ báo khi có ghế phù hợp.</value>
+  </data>
+  <data name="Success_WaitlistWithdrawn" xml:space="preserve">
+    <value>Đã rút đăng ký chờ.</value>
+  </data>
+  <data name="Email_WaitlistSeatsSubject" xml:space="preserve">
+    <value>Đã có ghế trống cho {0}</value>
+  </data>
+  <data name="Email_BadgeWaitlistSeats" xml:space="preserve">
+    <value>Có ghế trống</value>
+  </data>
+  <data name="Email_WaitlistSeatsHeading" xml:space="preserve">
+    <value>Ghế bạn đang chờ đã có chỗ</value>
+  </data>
+  <data name="Email_WaitlistSeatsBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, suất chiếu phim &lt;strong&gt;{1}&lt;/strong&gt; mà bạn đăng ký chờ vừa có ghế phù hợp.</value>
+  </data>
+  <data name="Email_WaitlistShowtimeLabel" xml:space="preserve">
+    <value>Suất chiếu</value>
+  </data>
+  <data name="Email_WaitlistRoomLabel" xml:space="preserve">
+    <value>Phòng chiếu</value>
+  </data>
+  <data name="Email_WaitlistSeatCountLabel" xml:space="preserve">
+    <value>Số ghế cần</value>
+  </data>
+  <data name="Email_WaitlistSeatsButton" xml:space="preserve">
+    <value>Đặt vé ngay</value>
+  </data>
+  <data name="Email_WaitlistSeatsPreheader" xml:space="preserve">
+    <value>Suất chiếu {0} vừa có ghế trống cho bạn.</value>
+  </data>
+  <data name="Email_WaitlistSeatsNote" xml:space="preserve">
+    <value>Ghế có thể được đặt bởi người khác bất cứ lúc nào, hãy hoàn tất đặt vé sớm. Bạn nhận email này vì đã đăng ký chờ suất chiếu.</value>
+  </data>
 </root>

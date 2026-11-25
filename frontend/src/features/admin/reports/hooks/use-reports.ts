@@ -44,3 +44,12 @@ export function useFinanceReport(params: FinanceReportParams, enabled = true) {
     placeholderData: keepPreviousData,
   });
 }
+
+export function useRoomQualityAlerts(activeOnly: boolean) {
+  return useQuery({
+    queryKey: queryKeys.adminReports.roomQualityAlerts(activeOnly),
+    queryFn: () => reportsApi.getRoomQualityAlerts(activeOnly),
+    select: (res) => res.data,
+    placeholderData: keepPreviousData,
+  });
+}

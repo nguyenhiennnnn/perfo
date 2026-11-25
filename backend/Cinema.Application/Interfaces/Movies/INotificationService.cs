@@ -94,6 +94,15 @@ public sealed record ReviewInviteEmailData(
     int RewardPoints
 );
 
+public sealed record WaitlistSeatsAvailableEmailData(
+    string CustomerName,
+    string MovieTitle,
+    DateTime ShowtimeStartUtc,
+    string RoomName,
+    int SeatCount,
+    string BookingLink
+);
+
 public sealed record LowStockEmailLine(
     string Code,
     string Name,
@@ -247,6 +256,8 @@ public interface INotificationService
     void SendShowtimeReminder(string toEmail, ShowtimeReminderEmailData data);
 
     void SendReviewInvite(string toEmail, ReviewInviteEmailData data);
+
+    void SendWaitlistSeatsAvailable(string toEmail, WaitlistSeatsAvailableEmailData data);
 
     void SendInvoiceRequestProcessed(
         string toEmail,

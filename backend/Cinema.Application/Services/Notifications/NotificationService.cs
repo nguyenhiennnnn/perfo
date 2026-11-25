@@ -141,6 +141,13 @@ public class NotificationService(
             EmailTemplates.ReviewInvite(_brand, data)
         );
 
+    public void SendWaitlistSeatsAvailable(string toEmail, WaitlistSeatsAvailableEmailData data) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_WaitlistSeatsSubject, data.MovieTitle),
+            EmailTemplates.WaitlistSeatsAvailable(_brand, data)
+        );
+
     public void SendInvoiceRequestProcessed(
         string toEmail,
         string customerName,

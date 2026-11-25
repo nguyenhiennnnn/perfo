@@ -92,6 +92,11 @@ public class OrderReleaseService(
                         cancellationToken
                     );
                     await db.SaveChangesAsync(cancellationToken);
+                    foreach (var showtimeId in seats.Select(s => s.ShowtimeId).Distinct())
+                        await eventDispatcher.PublishAsync(
+                            new ShowtimeSeatsReleased(showtimeId, now),
+                            cancellationToken
+                        );
                 }
 
                 await db

@@ -135,6 +135,9 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         IntRange(x => x.GiftCardRefundExtensionDays, "giftCardRefundExtensionDays", 1, 365);
         IntRange(x => x.GiftCardMaxFailedAttempts, "giftCardMaxFailedAttempts", 3, 20);
         IntRange(x => x.GiftCardLockoutMinutes, "giftCardLockoutMinutes", 1, 1440);
+        IntRange(x => x.ExchangeDeadlineHours, "exchangeDeadlineHours", 0, 720);
+        IntRange(x => x.MaxExchangesPerOrder, "maxExchangesPerOrder", 1, 10);
+        IntRange(x => x.ExchangeCreditValidityDays, "exchangeCreditValidityDays", 1, 3650);
 
         RuleFor(x => x.GiftCardDenominations!)
             .Must(BeValidDenominations)

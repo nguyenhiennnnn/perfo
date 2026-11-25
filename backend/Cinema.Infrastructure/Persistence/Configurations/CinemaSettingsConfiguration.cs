@@ -163,5 +163,14 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.GiftCardLockoutMinutes)
             .HasDefaultValue(CinemaSettings.DefaultGiftCardLockoutMinutes);
+        builder
+            .Property(x => x.ExchangeDeadlineHours)
+            .HasDefaultValue(CinemaSettings.DefaultExchangeDeadlineHours);
+        builder
+            .Property(x => x.MaxExchangesPerOrder)
+            .HasDefaultValue(CinemaSettings.DefaultMaxExchangesPerOrder);
+        builder
+            .Property(x => x.ExchangeCreditValidityDays)
+            .HasDefaultValue(CinemaSettings.DefaultExchangeCreditValidityDays);
     }
 }

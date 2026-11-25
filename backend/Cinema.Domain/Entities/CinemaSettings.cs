@@ -78,6 +78,9 @@ public class CinemaSettings
     public const int DefaultGiftCardRefundExtensionDays = 30;
     public const int DefaultGiftCardMaxFailedAttempts = 5;
     public const int DefaultGiftCardLockoutMinutes = 15;
+    public const int DefaultExchangeDeadlineHours = 2;
+    public const int DefaultMaxExchangesPerOrder = 1;
+    public const int DefaultExchangeCreditValidityDays = 90;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -146,4 +149,10 @@ public class CinemaSettings
     public int GiftCardMaxFailedAttempts { get; set; } = DefaultGiftCardMaxFailedAttempts;
 
     public int GiftCardLockoutMinutes { get; set; } = DefaultGiftCardLockoutMinutes;
+
+    public int ExchangeDeadlineHours { get; set; } = DefaultExchangeDeadlineHours;
+
+    public int MaxExchangesPerOrder { get; set; } = DefaultMaxExchangesPerOrder;
+
+    public int ExchangeCreditValidityDays { get; set; } = DefaultExchangeCreditValidityDays;
 }

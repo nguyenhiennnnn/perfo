@@ -24,6 +24,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<CinemaRoom> CinemaRooms => Set<CinemaRoom>();
     public DbSet<RoomClosure> RoomClosures => Set<RoomClosure>();
     public DbSet<ShowtimeRoomChange> ShowtimeRoomChanges => Set<ShowtimeRoomChange>();
+    public DbSet<OrderExchange> OrderExchanges => Set<OrderExchange>();
     public DbSet<RoomChangeRefundDue> RoomChangeRefundDues => Set<RoomChangeRefundDue>();
     public DbSet<ShowtimeRoomChangeNotice> ShowtimeRoomChangeNotices => Set<ShowtimeRoomChangeNotice>();
     public DbSet<SeatType> SeatTypes => Set<SeatType>();

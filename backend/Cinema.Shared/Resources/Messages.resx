@@ -4327,4 +4327,87 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Invalid_ImportControlCharacters" xml:space="preserve">
     <value>Văn bản chứa ký tự điều khiển không hợp lệ.</value>
   </data>
+  <data name="Report_Finance_Col_GiftCardType" xml:space="preserve">
+    <value>Loại thẻ</value>
+  </data>
+  <data name="Report_Finance_Col_GiftCardCards" xml:space="preserve">
+    <value>Số thẻ còn số dư</value>
+  </data>
+  <data name="Report_Finance_Col_GiftCardOpening" xml:space="preserve">
+    <value>Đầu kỳ (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_GiftCardIssued" xml:space="preserve">
+    <value>Phát hành (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_GiftCardRedeemed" xml:space="preserve">
+    <value>Đã dùng (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_GiftCardRefunded" xml:space="preserve">
+    <value>Hoàn lại thẻ (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_GiftCardCancelled" xml:space="preserve">
+    <value>Hủy thẻ (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_GiftCardExpired" xml:space="preserve">
+    <value>Hết hạn (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_GiftCardClosing" xml:space="preserve">
+    <value>Khoản phải trả cuối kỳ (VND)</value>
+  </data>
+  <data name="Report_Finance_GiftCardLiability_TypeGift" xml:space="preserve">
+    <value>Thẻ quà tặng</value>
+  </data>
+  <data name="Report_Finance_GiftCardLiability_TypeExchangeCredit" xml:space="preserve">
+    <value>Tín dụng đổi suất</value>
+  </data>
+  <data name="Report_Finance_GiftCardLiability_Note" xml:space="preserve">
+    <value>Khoản phải trả cuối kỳ là số dư chưa dùng của các thẻ đã phát hành tính đến hết ngày cuối kỳ; số dư hết hạn và số dư hủy được trừ ra ở các cột riêng.</value>
+  </data>
+  <data name="Rule_ExchangeOrderNotConfirmed" xml:space="preserve">
+    <value>Chỉ đơn hàng đã xác nhận mới được đổi suất.</value>
+  </data>
+  <data name="Rule_ExchangeCashCounterOnly" xml:space="preserve">
+    <value>Đơn thanh toán bằng tiền mặt chỉ được đổi suất tại quầy.</value>
+  </data>
+  <data name="Rule_ExchangeNoTickets" xml:space="preserve">
+    <value>Đơn hàng không có vé nào có thể đổi suất.</value>
+  </data>
+  <data name="Rule_ExchangeTicketNotInOrder" xml:space="preserve">
+    <value>Vé được chọn không thuộc đơn hàng này.</value>
+  </data>
+  <data name="Rule_ExchangeMixedShowtimes" xml:space="preserve">
+    <value>Các vé được chọn thuộc nhiều suất chiếu khác nhau nên không thể đổi cùng lúc sang một suất.</value>
+  </data>
+  <data name="Rule_ExchangeTicketCheckedIn" xml:space="preserve">
+    <value>Vé đã check-in không thể đổi suất.</value>
+  </data>
+  <data name="Rule_ExchangeTicketRefunded" xml:space="preserve">
+    <value>Vé đã được hoàn tiền hoặc hủy nên không thể đổi suất.</value>
+  </data>
+  <data name="Rule_ExchangeTicketAlreadyExchanged" xml:space="preserve">
+    <value>Vé này đã được đổi sang suất khác trước đó.</value>
+  </data>
+  <data name="Rule_ExchangeOldShowtimeUnavailable" xml:space="preserve">
+    <value>Suất chiếu hiện tại đã bị hủy hoặc đã kết thúc nên không thể đổi suất.</value>
+  </data>
+  <data name="Rule_ExchangeFromPrivateShowtime" xml:space="preserve">
+    <value>Vé của suất chiếu riêng không được đổi sang suất khác.</value>
+  </data>
+  <data name="Rule_ExchangeToPrivateShowtime" xml:space="preserve">
+    <value>Không thể đổi sang suất chiếu riêng.</value>
+  </data>
+  <data name="Rule_ExchangeDeadlineExceeded" xml:space="preserve">
+    <value>Đã quá hạn đổi suất: chỉ được đổi trước giờ chiếu ít nhất {0} giờ.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Rule_ExchangeDeadlineExceeded, ...)</comment>
+  </data>
+  <data name="Rule_ExchangeLimitReached" xml:space="preserve">
+    <value>Đơn hàng đã đạt số lần đổi suất tối đa ({0} lần).</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Rule_ExchangeLimitReached, ...)</comment>
+  </data>
+  <data name="Rule_ExchangeSameShowtime" xml:space="preserve">
+    <value>Suất chiếu mới phải khác suất chiếu hiện tại.</value>
+  </data>
+  <data name="Rule_ExchangeDifferentMovie" xml:space="preserve">
+    <value>Chỉ được đổi sang suất chiếu của cùng một phim.</value>
+  </data>
 </root>

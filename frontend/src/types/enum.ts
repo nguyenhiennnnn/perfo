@@ -101,6 +101,16 @@ export const PaymentMethod = {
 } as const;
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod];
 
+export const GiftCardStatus = {
+  PendingSend: "PendingSend",
+  Sent: "Sent",
+  InUse: "InUse",
+  Depleted: "Depleted",
+  Expired: "Expired",
+  Cancelled: "Cancelled",
+} as const;
+export type GiftCardStatus = (typeof GiftCardStatus)[keyof typeof GiftCardStatus];
+
 export const PaymentStatus = {
   Pending: "Pending",
   Success: "Success",

@@ -26,6 +26,8 @@ const ForgotPasswordPage = lazyRoute(() => import("@/features/auth/pages/forgot-
 const ResetPasswordPage = lazyRoute(() => import("@/features/auth/pages/reset-password-page"));
 const UnsubscribePage = lazyRoute(() => import("@/features/client/account/pages/unsubscribe-page"));
 const MembershipPage = lazyRoute(() => import("@/features/client/membership/pages/membership-page"));
+const GiftCardPurchasePage = lazyRoute(() => import("@/features/client/gift-cards/pages/gift-card-purchase-page"));
+const AccountGiftCardsPage = lazyRoute(() => import("@/features/client/gift-cards/pages/purchased-gift-cards-page"));
 const PolicyPage = lazyRoute(() => import("@/features/client/policies/pages/policy-page"));
 
 export const clientRoutes: RouteObject[] = [
@@ -38,6 +40,7 @@ export const clientRoutes: RouteObject[] = [
       { path: "movies/:id", lazy: MovieDetailPage },
       { path: "schedule", lazy: SchedulePage },
       { path: "membership", lazy: MembershipPage },
+      { path: "gift-cards", lazy: GiftCardPurchasePage },
       { path: "policies/:slug", lazy: PolicyPage },
       { path: "booking/:showtimeId", lazy: BookingPage },
       { path: "booking/result", lazy: BookingResultPage },
@@ -50,6 +53,7 @@ export const clientRoutes: RouteObject[] = [
             children: [
               { path: "profile", lazy: AccountProfilePage },
               { path: "tickets", lazy: AccountTicketsPage },
+              { path: "gift-cards", lazy: AccountGiftCardsPage },
               { path: "reviews", lazy: AccountReviewsPage },
               { path: "change-password", lazy: ChangePasswordPage },
             ],

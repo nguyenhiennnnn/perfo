@@ -2,6 +2,7 @@ import {
   MovieStatus,
   ShowtimeStatus,
   OrderStatus,
+  GiftCardStatus,
   PaymentStatus,
   OrderChannel,
   PaymentMethod,
@@ -13,6 +14,8 @@ import {
   CheckCircle2,
   Clock,
   Loader2,
+  Send,
+  Ticket,
   XCircle,
   type LucideIcon,
 } from "lucide-react";
@@ -100,6 +103,15 @@ export const orderStatusMap: Record<OrderStatus, BadgeItem> = {
   [OrderStatus.Confirmed]: { label: "Đã xác nhận", variant: "success", icon: CheckCircle2 },
   [OrderStatus.Cancelled]: { label: "Đã hủy", variant: "destructive", icon: XCircle },
   [OrderStatus.Expired]: { label: "Hết hạn giữ vé", variant: "outline", icon: XCircle },
+};
+
+export const giftCardStatusMap: Record<GiftCardStatus, BadgeItem> = {
+  [GiftCardStatus.PendingSend]: { label: "Chờ gửi", variant: "warning", icon: Clock },
+  [GiftCardStatus.Sent]: { label: "Đã gửi", variant: "success", icon: Send },
+  [GiftCardStatus.InUse]: { label: "Đang sử dụng", variant: "secondary", icon: Ticket },
+  [GiftCardStatus.Depleted]: { label: "Đã dùng hết", variant: "outline", icon: CheckCircle2 },
+  [GiftCardStatus.Expired]: { label: "Hết hạn", variant: "outline", icon: XCircle },
+  [GiftCardStatus.Cancelled]: { label: "Đã hủy", variant: "destructive", icon: XCircle },
 };
 
 export const invoiceRequestStatusMap: Record<InvoiceRequestStatus, BadgeItem> = {

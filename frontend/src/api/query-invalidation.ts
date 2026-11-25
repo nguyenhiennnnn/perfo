@@ -59,6 +59,7 @@ export const invalidations = {
     k.adminInventory.all(),
     k.adminComboPickups.all(),
     k.combos.all(),
+    k.giftCards.all(),
   ],
 
   counterShiftChanged: (): KeyList => [

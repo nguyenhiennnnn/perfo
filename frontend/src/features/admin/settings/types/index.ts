@@ -36,6 +36,10 @@ export interface CinemaSettingsDto {
   dynamicPricingMaxDecreasePercent: number;
   minTicketPrice: number;
   salesPaceCustomMarkMinutes: number;
+  giftCardDenominations: number[];
+  giftCardMinAmount: number;
+  giftCardMaxAmount: number;
+  giftCardValidityMonths: number;
   timeZoneId?: string;
   locale?: string;
   currencyCode?: string;

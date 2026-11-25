@@ -4,6 +4,7 @@ import type {
   MovieStatus,
   ShowtimeStatus,
   OrderStatus,
+  GiftCardStatus,
   PaymentStatus,
   OrderChannel,
   PaymentMethod,
@@ -17,6 +18,7 @@ import {
   orderStatusMap,
   defaultAgeRatingConfig,
   defaultSeatTypeConfig,
+  giftCardStatusMap,
   importExportJobStatusMap,
   invoiceRequestStatusMap,
   movieStatusMap,
@@ -136,6 +138,10 @@ export const ShowtimeStatusBadge = ({ status, className }: StatusBadgeProps<Show
 
 export const BookingStatusBadge = ({ status, className }: StatusBadgeProps<OrderStatus>) => (
   <MappedBadge value={status} map={orderStatusMap} className={className} />
+);
+
+export const GiftCardStatusBadge = ({ status, className }: StatusBadgeProps<GiftCardStatus>) => (
+  <MappedBadge value={status} map={giftCardStatusMap} className={className} />
 );
 
 export const InvoiceRequestStatusBadge = ({

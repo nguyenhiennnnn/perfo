@@ -30,6 +30,10 @@ export const ENDPOINTS = {
     chat: "/ai/chat",
   },
   settings: "/settings",
+  giftCards: {
+    purchase: "/gift-cards/purchase",
+    purchased: "/gift-cards/purchased",
+  },
   catalog: {
     genres: "/genres",
     languages: "/languages",

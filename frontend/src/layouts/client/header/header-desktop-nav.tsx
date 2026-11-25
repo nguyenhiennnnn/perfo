@@ -9,6 +9,7 @@ export const NAV_LINKS = [
   { to: ROUTES.movies.list, label: "Phim" },
   { to: ROUTES.schedule, label: "Lịch chiếu" },
   { to: ROUTES.membership, label: "Thành viên" },
+  { to: ROUTES.giftCards, label: "Thẻ quà tặng" },
 ];
 
 export const HeaderDesktopNav = () => {

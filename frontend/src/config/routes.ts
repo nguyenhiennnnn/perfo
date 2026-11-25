@@ -6,6 +6,8 @@ export const ROUTES = {
   notFound: "/404",
   schedule: "/schedule",
   membership: "/membership",
+  giftCards: "/gift-cards",
+  giftCardResume: (orderId: number | string) => `/gift-cards?resume=${orderId}`,
   unsubscribe: "/unsubscribe",
   policy: (slug: string) => `/policies/${slug}`,
   movies: {
@@ -31,6 +33,7 @@ export const ROUTES = {
       `/account/tickets/${bookingId}`,
     profile: "/account/profile",
     tickets: "/account/tickets",
+    giftCards: "/account/gift-cards",
     reviews: "/account/reviews",
     changePassword: "/account/change-password",
   },

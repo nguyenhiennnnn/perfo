@@ -32,6 +32,11 @@ export const queryKeys = {
     mine: () => ["promotions", "mine"] as const,
   },
 
+  giftCards: {
+    all: () => ["gift-cards"] as const,
+    purchased: (params?: object) => ["gift-cards", "purchased", params] as const,
+  },
+
   invoices: {
     all: () => ["invoices"] as const,
     profiles: () => ["invoices", "profiles"] as const,

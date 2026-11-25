@@ -1,4 +1,5 @@
 using Cinema.Api.Extensions;
+using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.GiftCards;
 using Cinema.Application.DTOs.Import;
 using Cinema.Application.DTOs.Orders;
@@ -17,6 +18,7 @@ namespace Cinema.Api.Controllers.Client;
 public class GiftCardsController(
     IGiftCardPurchaseService purchaseService,
     IGiftCardLookupService lookupService,
+    IGiftCardPurchasedQueryService purchasedQueryService,
     IImportService<GiftCardBulkImportRow> bulkImportService,
     IGiftCardBulkOrderService bulkOrderService
 ) : AppControllerBase
@@ -30,6 +32,22 @@ public class GiftCardsController(
     {
         var result = await purchaseService.PurchaseAsync(CurrentUserId, request, cancellationToken);
         return StatusCode(StatusCodes.Status201Created, result);
+    }
+
+    [HttpGet("purchased")]
+    public async Task<ActionResult<CursorPageResult<PurchasedGiftCardDto>>> GetPurchased(
+        [FromQuery] string? cursor,
+        [FromQuery] int? limit = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var result = await purchasedQueryService.GetPurchasedAsync(
+            CurrentUserId,
+            cursor,
+            ClampLimit(limit),
+            cancellationToken
+        );
+        return Ok(result);
     }
 
     [HttpPost("balance")]

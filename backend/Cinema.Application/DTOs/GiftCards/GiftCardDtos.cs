@@ -32,3 +32,17 @@ public record PurchaseGiftCardRequest(
     string? Message,
     DateTime? SendAt
 );
+
+public record PurchasedGiftCardDto(
+    int GiftCardId,
+    string MaskedCode,
+    string Status,
+    decimal FaceValue,
+    decimal Balance,
+    string? RecipientName,
+    string? RecipientEmail,
+    string? Message,
+    DateTime? SendAt,
+    DateTime ExpiresAt,
+    DateTime CreatedAt
+);

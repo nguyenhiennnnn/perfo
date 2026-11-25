@@ -129,6 +129,20 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         DecimalRange(x => x.GiftCardVatPercent, "giftCardVatPercent", 0, 30);
         DecimalRange(x => x.MembershipVatPercent, "membershipVatPercent", 0, 30);
         IntRange(x => x.InvoiceRequestWindowDays, "invoiceRequestWindowDays", 1, 365);
+        WholeDecimalRange(x => x.GiftCardMinAmount, "giftCardMinAmount", 1_000, 100_000_000);
+        WholeDecimalRange(x => x.GiftCardMaxAmount, "giftCardMaxAmount", 1_000, 100_000_000);
+        IntRange(x => x.GiftCardValidityMonths, "giftCardValidityMonths", 1, 60);
+
+        RuleFor(x => x.GiftCardDenominations!)
+            .Must(BeValidDenominations)
+            .When(x => x.GiftCardDenominations is not null)
+            .WithMessage(Messages.Validation_GiftCardDenominations_Invalid);
+
+        RuleFor(x => x)
+            .Must(x => x.GiftCardMinAmount!.Value <= x.GiftCardMaxAmount!.Value)
+            .When(x => x.GiftCardMinAmount is not null && x.GiftCardMaxAmount is not null)
+            .WithName("giftCardMinAmount")
+            .WithMessage(Messages.Validation_GiftCardAmount_MinGreaterThanMax);
 
         RuleFor(x => x)
             .Must(x => x.SuggestionHighOccupancyPercent!.Value > x.SuggestionLowOccupancyPercent!.Value)
@@ -203,6 +217,11 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
             .When(x => get(x) is not null)
             .WithMessage(string.Format(Messages.Validation_Setting_NumberRange, name, min, max));
     }
+
+    private static bool BeValidDenominations(decimal[] values) =>
+        values.Length is >= 1 and <= 20
+        && values.All(v => v > 0 && v == decimal.Truncate(v))
+        && values.Distinct().Count() == values.Length;
 
     private static bool BeValidTime(string? value) =>
         value is not null

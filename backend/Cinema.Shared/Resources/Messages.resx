@@ -4144,4 +4144,94 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Report_Finance_Col_VatTax" xml:space="preserve">
     <value>Thuế phải nộp (VND)</value>
   </data>
+  <data name="Validation_GiftCardDenominations_Invalid" xml:space="preserve">
+    <value>Danh sách mệnh giá thẻ quà tặng phải có từ 1 đến 20 mức, mỗi mức là số tiền nguyên dương và không trùng nhau.</value>
+  </data>
+  <data name="Validation_GiftCardAmount_MinGreaterThanMax" xml:space="preserve">
+    <value>Mệnh giá thẻ quà tặng tối thiểu không được lớn hơn mệnh giá tối đa.</value>
+  </data>
+  <data name="Validation_GiftCardDenominations_OutOfRange" xml:space="preserve">
+    <value>Mọi mệnh giá có sẵn của thẻ quà tặng phải nằm trong khoảng mệnh giá tối thiểu và tối đa.</value>
+  </data>
+  <data name="Rule_GiftCardCodeGenerationFailed" xml:space="preserve">
+    <value>Không thể tạo mã thẻ quà tặng. Vui lòng thử lại.</value>
+  </data>
+  <data name="Rule_GiftCardAmountInvalid" xml:space="preserve">
+    <value>Mệnh giá thẻ quà tặng phải là số tiền nguyên dương.</value>
+  </data>
+  <data name="Rule_GiftCardAmountOutOfRange" xml:space="preserve">
+    <value>Mệnh giá thẻ quà tặng phải từ {0} đến {1}.</value>
+  </data>
+  <data name="Rule_GiftCardRecipientRequired" xml:space="preserve">
+    <value>Thẻ quà tặng cần có email và tên người nhận.</value>
+  </data>
+  <data name="NotFound_GiftCard" xml:space="preserve">
+    <value>Không tìm thấy thẻ quà tặng.</value>
+  </data>
+  <data name="Rule_GiftCardSendAtInvalid" xml:space="preserve">
+    <value>Thời điểm gửi thẻ quà tặng phải ở tương lai và trước khi thẻ hết hạn.</value>
+  </data>
+  <data name="Order_GiftCardLineDescription" xml:space="preserve">
+    <value>Thẻ quà tặng {0}</value>
+  </data>
+  <data name="Validation_GiftCardRecipientName_MaxLength" xml:space="preserve">
+    <value>Tên người nhận không được vượt quá 150 ký tự.</value>
+  </data>
+  <data name="Validation_GiftCardMessage_MaxLength" xml:space="preserve">
+    <value>Lời nhắn không được vượt quá 500 ký tự.</value>
+  </data>
+  <data name="Rule_GiftCardResendNotAllowed" xml:space="preserve">
+    <value>Chỉ gửi lại được email của thẻ quà tặng đã gửi hoặc đang sử dụng.</value>
+  </data>
+  <data name="Success_GiftCardResent" xml:space="preserve">
+    <value>Đã gửi lại email thẻ quà tặng.</value>
+  </data>
+  <data name="Email_GiftCardReceivedSubject" xml:space="preserve">
+    <value>{0} gửi tặng bạn thẻ quà tặng {1}</value>
+  </data>
+  <data name="Email_GiftCardPurchaserSubject" xml:space="preserve">
+    <value>{0}: Thẻ quà tặng của bạn đã được gửi</value>
+  </data>
+  <data name="Email_BadgeGiftCard" xml:space="preserve">
+    <value>Quà tặng dành cho bạn</value>
+  </data>
+  <data name="Email_BadgeGiftCardSent" xml:space="preserve">
+    <value>Đã gửi thẻ quà tặng</value>
+  </data>
+  <data name="Email_GiftCardReceivedHeading" xml:space="preserve">
+    <value>Bạn nhận được một thẻ quà tặng</value>
+  </data>
+  <data name="Email_GiftCardReceivedBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, &lt;strong&gt;{1}&lt;/strong&gt; đã gửi tặng bạn thẻ quà tặng của {2}.</value>
+  </data>
+  <data name="Email_GiftCardReceivedPreheader" xml:space="preserve">
+    <value>{0} đã gửi tặng bạn một thẻ quà tặng.</value>
+  </data>
+  <data name="Email_GiftCardCodeLabel" xml:space="preserve">
+    <value>Mã thẻ</value>
+  </data>
+  <data name="Email_GiftCardValueLabel" xml:space="preserve">
+    <value>Giá trị thẻ</value>
+  </data>
+  <data name="Email_GiftCardExpiryLabel" xml:space="preserve">
+    <value>Hạn sử dụng</value>
+  </data>
+  <data name="Email_GiftCardUsageNote" xml:space="preserve">
+    <value>Nhập mã thẻ ở bước thanh toán khi đặt vé hoặc mua combo. Thẻ dùng được nhiều lần cho đến khi hết số dư hoặc hết hạn. Vui lòng không chia sẻ mã thẻ cho người khác.</value>
+  </data>
+  <data name="Email_GiftCardPurchaserHeading" xml:space="preserve">
+    <value>Thẻ quà tặng đã được gửi</value>
+  </data>
+  <data name="Email_GiftCardPurchaserBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, thẻ quà tặng trị giá &lt;strong&gt;{1}&lt;/strong&gt; của bạn đã được gửi tới &lt;strong&gt;{2}&lt;/strong&gt;.</value>
+  </data>
+  <data name="Email_GiftCardPurchaserPreheader" xml:space="preserve">
+    <value>Thẻ quà tặng của bạn đã được gửi tới người nhận.</value>
+  </data>
+  <data name="Email_GiftCardRecipientLabel" xml:space="preserve">
+    <value>Người nhận</value>
+  </data>
+  <data name="Email_GiftCardRecipientEmailLabel" xml:space="preserve">
+    <value>Email người nhận</value>
+  </data>
 </root>

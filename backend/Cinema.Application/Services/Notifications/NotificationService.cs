@@ -255,6 +255,20 @@ public class NotificationService(
             )
         );
 
+    public void SendGiftCardReceived(string toEmail, GiftCardEmailData data) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_GiftCardReceivedSubject, data.PurchaserName, _brand.Name),
+            EmailTemplates.GiftCardReceived(_brand, data)
+        );
+
+    public void SendGiftCardPurchaserConfirmation(string toEmail, GiftCardEmailData data) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_GiftCardPurchaserSubject, _brand.Name),
+            EmailTemplates.GiftCardPurchaserConfirmation(_brand, data)
+        );
+
     public void SendLowStockAlert(string toEmail, IReadOnlyList<LowStockEmailLine> items) =>
         Enqueue(
             toEmail,

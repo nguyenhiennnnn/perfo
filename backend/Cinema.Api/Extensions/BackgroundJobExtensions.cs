@@ -109,6 +109,12 @@ public static class BackgroundJobExtensions
             options.UnclosedShiftAlertCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<GiftCardDispatchJob>(
+            RecurringJobIds.GiftCardDispatch,
+            j => j.RunAsync(CancellationToken.None),
+            options.GiftCardDispatchCron,
+            jobOptions
+        );
 
         return app;
     }

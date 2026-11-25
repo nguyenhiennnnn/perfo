@@ -64,6 +64,8 @@ public interface IAppDbContext
     DbSet<CounterShift> CounterShifts { get; }
     DbSet<DailyClosing> DailyClosings { get; }
     DbSet<LedgerAdjustment> LedgerAdjustments { get; }
+    DbSet<GiftCard> GiftCards { get; }
+    DbSet<GiftCardLedger> GiftCardLedgers { get; }
     DbSet<OrderResourceHold> OrderResourceHolds { get; }
     DbSet<OutboxMessage> OutboxMessages { get; }
     DbSet<OutboxDelivery> OutboxDeliveries { get; }

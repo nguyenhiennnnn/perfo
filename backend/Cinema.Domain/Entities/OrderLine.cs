@@ -28,6 +28,11 @@ public class OrderLine
     public string? QrCode { get; set; }
     public bool IsCheckedIn { get; set; }
     public DateTime? CheckedInAt { get; set; }
+    public int? GiftCardId { get; set; }
+    public string? GiftRecipientEmail { get; set; }
+    public string? GiftRecipientName { get; set; }
+    public string? GiftMessage { get; set; }
+    public DateTime? GiftSendAt { get; set; }
 
     public Order Order { get; set; } = null!;
     public Showtime? Showtime { get; set; }
@@ -35,5 +40,6 @@ public class OrderLine
     public TicketType? TicketType { get; set; }
     public OrderLine? SupplementedLine { get; set; }
     public Combo? Combo { get; set; }
+    public GiftCard? GiftCard { get; set; }
     public ICollection<OrderPriceAdjustmentAllocation> AdjustmentAllocations { get; set; } = [];
 }

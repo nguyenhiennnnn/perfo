@@ -48,8 +48,22 @@ public sealed record DailyClosingEmailData(
     int ProblemOrders
 );
 
+public sealed record GiftCardEmailData(
+    string RecipientName,
+    string RecipientEmail,
+    string PurchaserName,
+    string? Message,
+    string Code,
+    decimal Amount,
+    DateTime ExpiresAtUtc
+);
+
 public interface INotificationService
 {
+    void SendGiftCardReceived(string toEmail, GiftCardEmailData data);
+
+    void SendGiftCardPurchaserConfirmation(string toEmail, GiftCardEmailData data);
+
     void SendVerificationLink(
         VerificationTokenPurpose purpose,
         string toEmail,

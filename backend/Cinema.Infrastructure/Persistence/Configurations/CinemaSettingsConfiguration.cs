@@ -130,5 +130,29 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.InvoiceRequestWindowDays)
             .HasDefaultValue(CinemaSettings.DefaultInvoiceRequestWindowDays);
+        builder
+            .Property(x => x.GiftCardDenominations)
+            .HasColumnType("numeric(18,2)[]")
+            .HasDefaultValueSql(
+                "ARRAY["
+                    + string.Join(
+                        ",",
+                        CinemaSettings.DefaultGiftCardDenominations.Select(v =>
+                            v.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                        )
+                    )
+                    + "]::numeric(18,2)[]"
+            );
+        builder
+            .Property(x => x.GiftCardMinAmount)
+            .HasColumnType("decimal(18,2)")
+            .HasDefaultValue(CinemaSettings.DefaultGiftCardMinAmount);
+        builder
+            .Property(x => x.GiftCardMaxAmount)
+            .HasColumnType("decimal(18,2)")
+            .HasDefaultValue(CinemaSettings.DefaultGiftCardMaxAmount);
+        builder
+            .Property(x => x.GiftCardValidityMonths)
+            .HasDefaultValue(CinemaSettings.DefaultGiftCardValidityMonths);
     }
 }

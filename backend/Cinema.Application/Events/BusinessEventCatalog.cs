@@ -14,6 +14,7 @@ public static class BusinessEventCatalog
         Register<ShowtimeEnded>();
         Register<ShowtimeRoomChanged>();
         Register<TicketCheckedIn>();
+        Register<GiftCardSent>();
     }
 
     public static IBusinessEventDescriptor For<TEvent>()

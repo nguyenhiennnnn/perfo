@@ -130,6 +130,22 @@ public class SettingsService(
             settings.MembershipVatPercent = membershipVatPercent;
         if (request.InvoiceRequestWindowDays is { } invoiceRequestWindowDays)
             settings.InvoiceRequestWindowDays = invoiceRequestWindowDays;
+        if (request.GiftCardDenominations is { } giftCardDenominations)
+            settings.GiftCardDenominations = [.. giftCardDenominations.Order()];
+        if (request.GiftCardMinAmount is { } giftCardMinAmount)
+            settings.GiftCardMinAmount = giftCardMinAmount;
+        if (request.GiftCardMaxAmount is { } giftCardMaxAmount)
+            settings.GiftCardMaxAmount = giftCardMaxAmount;
+        if (request.GiftCardValidityMonths is { } giftCardValidityMonths)
+            settings.GiftCardValidityMonths = giftCardValidityMonths;
+        if (settings.GiftCardMinAmount > settings.GiftCardMaxAmount)
+            throw new BusinessRuleException(Messages.Validation_GiftCardAmount_MinGreaterThanMax);
+        if (
+            settings.GiftCardDenominations.Any(d =>
+                d < settings.GiftCardMinAmount || d > settings.GiftCardMaxAmount
+            )
+        )
+            throw new BusinessRuleException(Messages.Validation_GiftCardDenominations_OutOfRange);
         if (settings.SchedulerHeatSalesWeight + settings.SchedulerHeatRatingWeight <= 0)
             throw new BusinessRuleException(Messages.Validation_SchedulerHeatWeights_SumPositive);
         if (settings.SuggestionHighOccupancyPercent <= settings.SuggestionLowOccupancyPercent)
@@ -175,6 +191,10 @@ public class SettingsService(
             GiftCardVatPercent = settings.GiftCardVatPercent,
             MembershipVatPercent = settings.MembershipVatPercent,
             InvoiceRequestWindowDays = settings.InvoiceRequestWindowDays,
+            GiftCardDenominations = [.. settings.GiftCardDenominations],
+            GiftCardMinAmount = settings.GiftCardMinAmount,
+            GiftCardMaxAmount = settings.GiftCardMaxAmount,
+            GiftCardValidityMonths = settings.GiftCardValidityMonths,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

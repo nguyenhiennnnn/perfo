@@ -77,6 +77,12 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
                         + "= (\"CardCheckRecordedByUserId\" IS NULL))"
                 );
                 t.HasCheckConstraint(
+                    "CK_OrderLines_GiftCardData",
+                    "\"LineType\" = 'GiftCard' OR (\"GiftCardId\" IS NULL "
+                        + "AND \"GiftRecipientEmail\" IS NULL AND \"GiftRecipientName\" IS NULL "
+                        + "AND \"GiftMessage\" IS NULL AND \"GiftSendAt\" IS NULL)"
+                );
+                t.HasCheckConstraint(
                     "CK_OrderLines_SupplementedLine",
                     "\"SupplementedLineId\" IS NULL OR \"LineType\" = 'Fee'"
                 );
@@ -110,6 +116,10 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
             .HasColumnType("timestamp without time zone");
         builder.Property(x => x.IsCheckedIn).HasDefaultValue(false);
         builder.Property(x => x.CheckedInAt).HasColumnType("timestamp without time zone");
+        builder.Property(x => x.GiftRecipientEmail).HasMaxLength(FieldLengths.Email);
+        builder.Property(x => x.GiftRecipientName).HasMaxLength(FieldLengths.PersonName);
+        builder.Property(x => x.GiftMessage).HasMaxLength(FieldLengths.GiftCardMessage);
+        builder.Property(x => x.GiftSendAt).HasColumnType("timestamp without time zone");
 
         builder
             .HasOne(x => x.Order)
@@ -147,6 +157,17 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
             .HasIndex(x => x.ComboId)
             .HasFilter("\"ComboId\" IS NOT NULL")
             .HasDatabaseName("IX_OrderLines_Combo");
+
+        builder
+            .HasOne(x => x.GiftCard)
+            .WithMany()
+            .HasForeignKey(x => x.GiftCardId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasIndex(x => x.GiftCardId)
+            .IsUnique()
+            .HasFilter("\"GiftCardId\" IS NOT NULL")
+            .HasDatabaseName("UX_OrderLines_GiftCard");
 
         builder
             .HasOne(x => x.TicketType)

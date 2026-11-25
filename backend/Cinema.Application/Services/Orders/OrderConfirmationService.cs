@@ -110,7 +110,7 @@ public class OrderConfirmationService(
                         ticketLines.Select(l => (l.ShowtimeId!.Value, l.ShowtimeSeatId!.Value))
                     );
 
-                    if (order.UserId is not null)
+                    if (order.UserId is not null && order.Type != OrderType.GiftCard)
                         await loyalty.AwardAsync(
                             order.UserId.Value,
                             orderId,

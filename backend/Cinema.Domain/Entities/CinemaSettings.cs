@@ -72,6 +72,17 @@ public class CinemaSettings
     public const int DefaultSuggestionLookbackDays = 14;
     public const decimal DefaultVatPercent = 10m;
     public const int DefaultInvoiceRequestWindowDays = 30;
+    public const decimal DefaultGiftCardMinAmount = 50_000m;
+    public const decimal DefaultGiftCardMaxAmount = 5_000_000m;
+    public const int DefaultGiftCardValidityMonths = 12;
+
+    public static readonly decimal[] DefaultGiftCardDenominations =
+    [
+        100_000m,
+        200_000m,
+        500_000m,
+        1_000_000m,
+    ];
 
     public int SchedulerStepMinutes { get; set; } = DefaultSchedulerStepMinutes;
 
@@ -118,4 +129,12 @@ public class CinemaSettings
     public decimal MembershipVatPercent { get; set; } = DefaultVatPercent;
 
     public int InvoiceRequestWindowDays { get; set; } = DefaultInvoiceRequestWindowDays;
+
+    public decimal[] GiftCardDenominations { get; set; } = [.. DefaultGiftCardDenominations];
+
+    public decimal GiftCardMinAmount { get; set; } = DefaultGiftCardMinAmount;
+
+    public decimal GiftCardMaxAmount { get; set; } = DefaultGiftCardMaxAmount;
+
+    public int GiftCardValidityMonths { get; set; } = DefaultGiftCardValidityMonths;
 }

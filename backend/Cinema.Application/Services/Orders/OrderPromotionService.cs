@@ -57,6 +57,11 @@ public class OrderPromotionService(
                 EnsureAccess(order, caller);
                 if (order.Status != OrderStatus.Pending || order.ExpiresAt <= DateTime.UtcNow)
                     throw new BusinessRuleException(Messages.Rule_BookingNotPendingOrExpired);
+                if (
+                    !string.IsNullOrWhiteSpace(code)
+                    && order.Type is not (OrderType.Ticket or OrderType.Combo)
+                )
+                    throw new BusinessRuleException(Messages.Promotion_Rejected_OrderTypeNotAllowed);
 
                 await promotionHold.ReleaseAsync(orderId, cancellationToken);
 

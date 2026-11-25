@@ -848,6 +848,52 @@ public static class EmailTemplates
         );
     }
 
+    public static string GiftCardReceived(BrandOptions brand, GiftCardEmailData data)
+    {
+        var message = string.IsNullOrWhiteSpace(data.Message)
+            ? string.Empty
+            : Callout(Enc(data.Message).Replace("\n", "<br>"), Neutral, "&ldquo;");
+
+        var body = $"{Badge(Messages.Email_BadgeGiftCard, Success, SymbolCheck)}"
+            + $"{Heading(Messages.Email_GiftCardReceivedHeading)}"
+            + $"{Paragraph(string.Format(Messages.Email_GiftCardReceivedBody, Enc(data.RecipientName), Enc(data.PurchaserName), Enc(brand.DisplayName)))}"
+            + message
+            + DetailCard(
+                DetailRow(
+                    Messages.Email_GiftCardCodeLabel,
+                    Enc(GiftCardCodes.Format(data.Code)),
+                    code: true
+                ),
+                DetailRow(Messages.Email_GiftCardValueLabel, Money(data.Amount)),
+                DetailRow(Messages.Email_GiftCardExpiryLabel, GiftCardDate(data.ExpiresAtUtc), isLast: true)
+            )
+            + MutedParagraph(Messages.Email_GiftCardUsageNote);
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_GiftCardReceivedPreheader, Enc(data.PurchaserName)),
+            body
+        );
+    }
+
+    public static string GiftCardPurchaserConfirmation(BrandOptions brand, GiftCardEmailData data)
+    {
+        var body = $"{Badge(Messages.Email_BadgeGiftCardSent, Success, SymbolCheck)}"
+            + $"{Heading(Messages.Email_GiftCardPurchaserHeading)}"
+            + $"{Paragraph(string.Format(Messages.Email_GiftCardPurchaserBody, Enc(data.PurchaserName), Money(data.Amount), Enc(data.RecipientName)))}"
+            + DetailCard(
+                DetailRow(Messages.Email_GiftCardRecipientLabel, Enc(data.RecipientName)),
+                DetailRow(Messages.Email_GiftCardRecipientEmailLabel, Enc(data.RecipientEmail)),
+                DetailRow(Messages.Email_GiftCardValueLabel, Money(data.Amount)),
+                DetailRow(Messages.Email_GiftCardExpiryLabel, GiftCardDate(data.ExpiresAtUtc), isLast: true)
+            );
+
+        return Layout(brand, Messages.Email_GiftCardPurchaserPreheader, body);
+    }
+
+    private static string GiftCardDate(DateTime utc) =>
+        BusinessTime.ToLocal(utc).ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture);
+
     public static string UnclosedShiftAlert(
         BrandOptions brand,
         IReadOnlyList<UnclosedShiftEmailLine> shifts

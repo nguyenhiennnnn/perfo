@@ -45,7 +45,11 @@ public sealed record CinemaSettingsSnapshot(
     decimal ComboVatPercent,
     decimal GiftCardVatPercent,
     decimal MembershipVatPercent,
-    int InvoiceRequestWindowDays
+    int InvoiceRequestWindowDays,
+    decimal[] GiftCardDenominations,
+    decimal GiftCardMinAmount,
+    decimal GiftCardMaxAmount,
+    int GiftCardValidityMonths
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -91,6 +95,10 @@ public sealed record CinemaSettingsSnapshot(
             s.ComboVatPercent,
             s.GiftCardVatPercent,
             s.MembershipVatPercent,
-            s.InvoiceRequestWindowDays
+            s.InvoiceRequestWindowDays,
+            [.. s.GiftCardDenominations],
+            s.GiftCardMinAmount,
+            s.GiftCardMaxAmount,
+            s.GiftCardValidityMonths
         );
 }

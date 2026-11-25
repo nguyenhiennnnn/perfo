@@ -83,6 +83,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<CounterShift> CounterShifts => Set<CounterShift>();
     public DbSet<DailyClosing> DailyClosings => Set<DailyClosing>();
     public DbSet<LedgerAdjustment> LedgerAdjustments => Set<LedgerAdjustment>();
+    public DbSet<GiftCard> GiftCards => Set<GiftCard>();
+    public DbSet<GiftCardLedger> GiftCardLedgers => Set<GiftCardLedger>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {

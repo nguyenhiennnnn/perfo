@@ -82,6 +82,14 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public decimal MembershipVatPercent { get; init; }
 
     public int InvoiceRequestWindowDays { get; init; }
+
+    public decimal[] GiftCardDenominations { get; init; } = [];
+
+    public decimal GiftCardMinAmount { get; init; }
+
+    public decimal GiftCardMaxAmount { get; init; }
+
+    public int GiftCardValidityMonths { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -127,5 +135,9 @@ public record UpdateSettingsRequest(
     decimal? ComboVatPercent = null,
     decimal? GiftCardVatPercent = null,
     decimal? MembershipVatPercent = null,
-    int? InvoiceRequestWindowDays = null
+    int? InvoiceRequestWindowDays = null,
+    decimal[]? GiftCardDenominations = null,
+    decimal? GiftCardMinAmount = null,
+    decimal? GiftCardMaxAmount = null,
+    int? GiftCardValidityMonths = null
 );

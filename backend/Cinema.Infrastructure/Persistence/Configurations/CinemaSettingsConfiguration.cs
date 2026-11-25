@@ -157,5 +157,11 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.GiftCardRefundExtensionDays)
             .HasDefaultValue(CinemaSettings.DefaultGiftCardRefundExtensionDays);
+        builder
+            .Property(x => x.GiftCardMaxFailedAttempts)
+            .HasDefaultValue(CinemaSettings.DefaultGiftCardMaxFailedAttempts);
+        builder
+            .Property(x => x.GiftCardLockoutMinutes)
+            .HasDefaultValue(CinemaSettings.DefaultGiftCardLockoutMinutes);
     }
 }

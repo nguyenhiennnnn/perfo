@@ -1,3 +1,4 @@
+using Cinema.Application.DTOs.GiftCards;
 using Cinema.Application.DTOs.Movies;
 using Cinema.Application.DTOs.Reports;
 using Cinema.Application.DTOs.Promotions;
@@ -64,6 +65,7 @@ public static class DependencyInjection
         services.AddSingleton<IImportSessionStore, ImportSessionStore>();
         services.AddScoped<IImportProcessor<MovieImportRow>, MovieImportProcessor>();
         services.AddScoped<IImportProcessor<ShowtimeImportRow>, ShowtimeImportProcessor>();
+        services.AddScoped<IImportProcessor<GiftCardBulkImportRow>, GiftCardBulkImportProcessor>();
         services.AddScoped(typeof(IImportService<>), typeof(ImportService<>));
         services.AddScoped<IImportApplyModule, ImportApplyModule<MovieImportRow>>();
         services.AddScoped<IImportApplyModule, ImportApplyModule<ShowtimeImportRow>>();
@@ -158,7 +160,11 @@ public static class DependencyInjection
         services.AddScoped<IPricingRuleService, PricingRuleService>();
         services.AddScoped<ISpecialDayService, SpecialDayService>();
         services.AddScoped<IGiftCardService, GiftCardService>();
+        services.AddScoped<IGiftCardAttemptGuard, GiftCardAttemptGuard>();
+        services.AddScoped<IGiftCardLookupService, GiftCardLookupService>();
+        services.AddScoped<IGiftCardCancellationService, GiftCardCancellationService>();
         services.AddScoped<IGiftCardPurchaseService, GiftCardPurchaseService>();
+        services.AddScoped<IGiftCardBulkOrderService, GiftCardBulkOrderService>();
         services.AddScoped<IGiftCardEmailService, GiftCardEmailService>();
         services.AddScoped<IGiftCardDispatchService, GiftCardDispatchService>();
         services.AddScoped<IGiftCardRevenueService, GiftCardRevenueService>();

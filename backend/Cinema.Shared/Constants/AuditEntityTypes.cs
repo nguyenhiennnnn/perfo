@@ -25,4 +25,5 @@ public static class AuditEntityTypes
     public const string DailyClosing = "DailyClosing";
     public const string LedgerAdjustment = "LedgerAdjustment";
     public const string InvoiceRequest = "InvoiceRequest";
+    public const string GiftCard = "GiftCard";
 }

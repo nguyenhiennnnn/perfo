@@ -71,24 +71,13 @@ public class GiftCardPurchaseService(
             ExpiresAt = now.AddMinutes(settings.HoldDurationMinutes),
         };
         order.Lines.Add(
-            new OrderLine
-            {
-                LineType = OrderLineType.GiftCard,
-                Description = string.Format(
-                    Messages.Order_GiftCardLineDescription,
-                    GiftCardRules.FormatMoney(amount)
-                ),
-                Quantity = 1,
-                UnitListPrice = amount,
-                LockedUnitPrice = amount,
-                GiftRecipientEmail = recipientEmail,
-                GiftRecipientName = recipientName,
-                GiftMessage = GiftCardRules.NormalizeText(
-                    request.Message,
-                    FieldLengths.GiftCardMessage
-                ),
-                GiftSendAt = request.SendAt,
-            }
+            GiftCardOrderLines.Create(
+                amount,
+                recipientEmail,
+                recipientName,
+                request.Message,
+                request.SendAt
+            )
         );
         OrderPricing.ApplyTotals(order);
 

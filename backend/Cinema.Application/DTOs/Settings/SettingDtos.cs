@@ -92,6 +92,10 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int GiftCardValidityMonths { get; init; }
 
     public int GiftCardRefundExtensionDays { get; init; }
+
+    public int GiftCardMaxFailedAttempts { get; init; }
+
+    public int GiftCardLockoutMinutes { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -142,5 +146,7 @@ public record UpdateSettingsRequest(
     decimal? GiftCardMinAmount = null,
     decimal? GiftCardMaxAmount = null,
     int? GiftCardValidityMonths = null,
-    int? GiftCardRefundExtensionDays = null
+    int? GiftCardRefundExtensionDays = null,
+    int? GiftCardMaxFailedAttempts = null,
+    int? GiftCardLockoutMinutes = null
 );

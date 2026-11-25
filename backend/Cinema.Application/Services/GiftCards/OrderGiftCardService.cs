@@ -15,6 +15,7 @@ public class OrderGiftCardService(
     IPaymentLedgerService ledger,
     IGiftCardHoldService holds,
     IOrderConfirmationService confirmationService,
+    IGiftCardAttemptGuard attemptGuard,
     ILogger<OrderGiftCardService> logger
 ) : IOrderGiftCardService
 {
@@ -27,8 +28,18 @@ public class OrderGiftCardService(
         CancellationToken cancellationToken
     )
     {
-        var normalized =
-            GiftCardCodes.Normalize(code) ?? throw new NotFoundException(Messages.NotFound_GiftCard);
+        await attemptGuard.EnsureNotLockedAsync(cancellationToken);
+
+        var normalized = GiftCardCodes.Normalize(code);
+        if (
+            normalized is null
+            || !await db.GiftCards.AnyAsync(c => c.Code == normalized, cancellationToken)
+        )
+        {
+            await attemptGuard.RecordFailureAsync(cancellationToken);
+            throw new NotFoundException(Messages.NotFound_GiftCard);
+        }
+
         var coversOrder = false;
         decimal appliedAmount = 0m;
 

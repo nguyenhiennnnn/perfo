@@ -4261,4 +4261,70 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_OrderGiftCardRemoved" xml:space="preserve">
     <value>Đã gỡ thẻ quà tặng khỏi đơn.</value>
   </data>
+  <data name="Rule_GiftCardAttemptsLocked" xml:space="preserve">
+    <value>Bạn đã nhập sai mã thẻ quà tặng quá nhiều lần. Vui lòng thử lại sau {0} phút.</value>
+  </data>
+  <data name="Rule_GiftCardNotCancellable" xml:space="preserve">
+    <value>Chỉ có thể hủy thẻ quà tặng đang chờ gửi, đã gửi hoặc đang sử dụng.</value>
+  </data>
+  <data name="Rule_GiftCardCancelBalanceActionRequired" xml:space="preserve">
+    <value>Thẻ đã được dùng một phần. Vui lòng chọn cách xử lý số dư còn lại.</value>
+  </data>
+  <data name="Rule_GiftCardCancelConflict" xml:space="preserve">
+    <value>Thẻ quà tặng vừa có thay đổi. Vui lòng tải lại và thử hủy lần nữa.</value>
+  </data>
+  <data name="Validation_GiftCardCancelReason_Required" xml:space="preserve">
+    <value>Cần nhập lý do hủy thẻ.</value>
+  </data>
+  <data name="Validation_GiftCardCancelReason_MaxLength" xml:space="preserve">
+    <value>Lý do hủy thẻ không được vượt quá 500 ký tự.</value>
+  </data>
+  <data name="Validation_GiftCardCancelBalanceAction_Invalid" xml:space="preserve">
+    <value>Cách xử lý số dư không hợp lệ.</value>
+  </data>
+  <data name="Success_GiftCardCancelled" xml:space="preserve">
+    <value>Đã hủy thẻ quà tặng.</value>
+  </data>
+  <data name="Import_SheetGiftCards" xml:space="preserve">
+    <value>Thẻ quà tặng</value>
+  </data>
+  <data name="Import_GiftCard_RecipientName_Desc" xml:space="preserve">
+    <value>Họ tên người nhận thẻ.</value>
+  </data>
+  <data name="Import_GiftCard_RecipientName_Format" xml:space="preserve">
+    <value>Văn bản, tối đa 150 ký tự.</value>
+  </data>
+  <data name="Import_GiftCard_RecipientEmail_Desc" xml:space="preserve">
+    <value>Email nhận thẻ quà tặng.</value>
+  </data>
+  <data name="Import_GiftCard_RecipientEmail_Format" xml:space="preserve">
+    <value>Email hợp lệ, tối đa 150 ký tự, không trùng giữa các dòng.</value>
+  </data>
+  <data name="Import_GiftCard_Amount_Desc" xml:space="preserve">
+    <value>Mệnh giá thẻ, đơn vị đồng.</value>
+  </data>
+  <data name="Import_GiftCard_Amount_Format" xml:space="preserve">
+    <value>Số nguyên, không dùng dấu phân cách hàng nghìn.</value>
+  </data>
+  <data name="Import_GiftCard_Message_Desc" xml:space="preserve">
+    <value>Lời nhắn gửi kèm thẻ.</value>
+  </data>
+  <data name="Import_GiftCard_Message_Format" xml:space="preserve">
+    <value>Văn bản, tối đa 500 ký tự.</value>
+  </data>
+  <data name="Import_Note_GiftCard_Rules" xml:space="preserve">
+    <value>Mệnh giá mỗi thẻ phải từ {0} đến {1}; mỗi email người nhận chỉ xuất hiện một lần trong file.</value>
+  </data>
+  <data name="Import_Note_GiftCard_Examples" xml:space="preserve">
+    <value>Hãy xóa các dòng ví dụ trong sheet "Thẻ quà tặng" trước khi nhập dữ liệu thật.</value>
+  </data>
+  <data name="Invalid_ImportGiftCardDuplicateEmail" xml:space="preserve">
+    <value>Trùng email người nhận với dòng {0} trong file.</value>
+  </data>
+  <data name="Invalid_ImportTextTooLong" xml:space="preserve">
+    <value>Văn bản không được vượt quá {0} ký tự.</value>
+  </data>
+  <data name="Invalid_ImportControlCharacters" xml:space="preserve">
+    <value>Văn bản chứa ký tự điều khiển không hợp lệ.</value>
+  </data>
 </root>

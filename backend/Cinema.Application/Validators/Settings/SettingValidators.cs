@@ -133,6 +133,8 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         WholeDecimalRange(x => x.GiftCardMaxAmount, "giftCardMaxAmount", 1_000, 100_000_000);
         IntRange(x => x.GiftCardValidityMonths, "giftCardValidityMonths", 1, 60);
         IntRange(x => x.GiftCardRefundExtensionDays, "giftCardRefundExtensionDays", 1, 365);
+        IntRange(x => x.GiftCardMaxFailedAttempts, "giftCardMaxFailedAttempts", 3, 20);
+        IntRange(x => x.GiftCardLockoutMinutes, "giftCardLockoutMinutes", 1, 1440);
 
         RuleFor(x => x.GiftCardDenominations!)
             .Must(BeValidDenominations)

@@ -93,6 +93,27 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject GiftCardBeforeCancel(GiftCardStatus status, decimal balance) =>
+        AuditJson.ToObject(new { status, balance });
+
+    public static JsonObject GiftCardAfterCancel(
+        string reason,
+        decimal cancelledBalance,
+        GiftCardCancelBalanceAction? balanceAction,
+        int? creditGiftCardId
+    ) =>
+        AuditJson.ToObject(
+            new
+            {
+                status = GiftCardStatus.Cancelled,
+                balance = 0m,
+                reason,
+                cancelledBalance,
+                balanceAction,
+                creditGiftCardId,
+            }
+        );
+
     public static JsonObject InvoiceRequestState(InvoiceRequest r) =>
         AuditJson.ToObject(
             new

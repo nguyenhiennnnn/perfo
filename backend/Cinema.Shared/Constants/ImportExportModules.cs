@@ -17,6 +17,7 @@ public class ImportExportModules
     public const string SalesStatsRebuild = "sales-stats";
     public const string Reconciliation = "reconciliation";
     public const string ReconciliationStripe = "reconciliation-stripe";
+    public const string GiftCardBulk = "gift-card-bulk";
 
     private static readonly HashSet<string> SensitiveModules =
     [
@@ -33,6 +34,7 @@ public class ImportExportModules
         Users,
         Orders,
         PromotionRedemptions,
+        GiftCardBulk,
     ];
 
     public static bool ContainsPersonalData(string module) => PersonalDataModules.Contains(module);

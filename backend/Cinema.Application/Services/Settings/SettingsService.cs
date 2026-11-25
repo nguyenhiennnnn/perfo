@@ -140,6 +140,10 @@ public class SettingsService(
             settings.GiftCardValidityMonths = giftCardValidityMonths;
         if (request.GiftCardRefundExtensionDays is { } giftCardRefundExtensionDays)
             settings.GiftCardRefundExtensionDays = giftCardRefundExtensionDays;
+        if (request.GiftCardMaxFailedAttempts is { } giftCardMaxFailedAttempts)
+            settings.GiftCardMaxFailedAttempts = giftCardMaxFailedAttempts;
+        if (request.GiftCardLockoutMinutes is { } giftCardLockoutMinutes)
+            settings.GiftCardLockoutMinutes = giftCardLockoutMinutes;
         if (settings.GiftCardMinAmount > settings.GiftCardMaxAmount)
             throw new BusinessRuleException(Messages.Validation_GiftCardAmount_MinGreaterThanMax);
         if (
@@ -198,6 +202,8 @@ public class SettingsService(
             GiftCardMaxAmount = settings.GiftCardMaxAmount,
             GiftCardValidityMonths = settings.GiftCardValidityMonths,
             GiftCardRefundExtensionDays = settings.GiftCardRefundExtensionDays,
+            GiftCardMaxFailedAttempts = settings.GiftCardMaxFailedAttempts,
+            GiftCardLockoutMinutes = settings.GiftCardLockoutMinutes,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

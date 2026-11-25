@@ -8,4 +8,5 @@ internal static class StatusCodes
     public const int Status404NotFound = 404;
     public const int Status409Conflict = 409;
     public const int Status422UnprocessableEntity = 422;
+    public const int Status429TooManyRequests = 429;
 }

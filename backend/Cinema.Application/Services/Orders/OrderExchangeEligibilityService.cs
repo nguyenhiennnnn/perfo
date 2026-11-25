@@ -1,5 +1,6 @@
 using Cinema.Application.Caching;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
@@ -54,10 +55,19 @@ public class OrderExchangeEligibilityService(
         if (tickets.Count == 0)
             throw new BusinessRuleException(Messages.Rule_ExchangeNoTickets);
 
+        var familyOrderIds = await db.LoadExchangeFamilyOrderIdsAsync(
+            await db.ResolveRootOrderIdAsync(request.OrderId, cancellationToken),
+            cancellationToken
+        );
         var exchanges = await db
             .OrderExchanges.AsNoTracking()
-            .Where(e => e.OrderId == request.OrderId)
-            .Select(e => new { e.ExchangeNumber, e.OldOrderLineId })
+            .Where(e => familyOrderIds.Contains(e.OrderId))
+            .Select(e => new
+            {
+                e.OrderId,
+                e.ExchangeNumber,
+                e.OldOrderLineId,
+            })
             .ToListAsync(cancellationToken);
         var exchangedOut = exchanges.Select(e => e.OldOrderLineId).ToHashSet();
 
@@ -88,7 +98,7 @@ public class OrderExchangeEligibilityService(
                 string.Format(Messages.Rule_ExchangeDeadlineExceeded, settings.ExchangeDeadlineHours)
             );
 
-        var usedExchanges = exchanges.Select(e => e.ExchangeNumber).Distinct().Count();
+        var usedExchanges = exchanges.Select(e => (e.OrderId, e.ExchangeNumber)).Distinct().Count();
         if (usedExchanges >= settings.MaxExchangesPerOrder)
             throw new BusinessRuleException(
                 string.Format(Messages.Rule_ExchangeLimitReached, settings.MaxExchangesPerOrder)

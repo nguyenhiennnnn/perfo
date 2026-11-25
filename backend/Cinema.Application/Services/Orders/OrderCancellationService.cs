@@ -265,6 +265,24 @@ public class OrderCancellationService(
     )
     {
         if (
+            await db.OrderExchanges.AnyAsync(
+                e => e.OldOrderLine.OrderId == orderId,
+                cancellationToken
+            )
+            && !await db
+                .OrderLines.AsNoTracking()
+                .ExcludingExchangedOut(db)
+                .AnyAsync(
+                    l =>
+                        l.OrderId == orderId
+                        && (l.LineType == OrderLineType.Ticket || l.LineType == OrderLineType.Combo)
+                        && l.Quantity > l.RefundedQuantity,
+                    cancellationToken
+                )
+        )
+            throw new BusinessRuleException(Messages.Rule_CancelOrderAllLinesExchanged);
+
+        if (
             await db.OrderLines.AnyAsync(
                 l => l.OrderId == orderId && l.IsCheckedIn,
                 cancellationToken
@@ -296,6 +314,7 @@ public class OrderCancellationService(
 
         var showtimeStart = await db
             .OrderLines.AsNoTracking()
+            .ExcludingExchangedOut(db)
             .Where(l => l.OrderId == orderId && l.LineType == OrderLineType.Ticket)
             .Select(l => (DateTime?)l.Showtime!.StartTime)
             .MinAsync(cancellationToken);
@@ -314,6 +333,7 @@ public class OrderCancellationService(
     {
         var changedShowtimes = await db
             .OrderLines.AsNoTracking()
+            .ExcludingExchangedOut(db)
             .Where(l =>
                 l.OrderId == orderId
                 && l.LineType == OrderLineType.Ticket

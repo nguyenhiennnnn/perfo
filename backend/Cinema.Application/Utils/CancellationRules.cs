@@ -1,11 +1,13 @@
 using System.Linq.Expressions;
 using Cinema.Domain.Entities;
+using Cinema.Domain.Enums;
 
 namespace Cinema.Application.Utils;
 
 public static class CancellationRules
 {
-    private static readonly Expression<Func<Order, bool>> ExchangeExpression = _ => false;
+    private static readonly Expression<Func<Order, bool>> ExchangeExpression = o =>
+        o.Type == OrderType.Exchange;
 
     private static readonly Func<Order, bool> ExchangeCompiled = ExchangeExpression.Compile();
 

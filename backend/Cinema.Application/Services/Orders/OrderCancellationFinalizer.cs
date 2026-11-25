@@ -1,5 +1,6 @@
 using Cinema.Application.Events;
 using Cinema.Application.Interfaces;
+using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
@@ -75,6 +76,7 @@ public class OrderCancellationFinalizer(
     {
         var seats = await db
             .OrderLines.AsNoTracking()
+            .ExcludingExchangedOut(db)
             .Where(l =>
                 l.OrderId == orderId
                 && l.LineType == OrderLineType.Ticket

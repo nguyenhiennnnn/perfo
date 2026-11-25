@@ -63,6 +63,7 @@ public class ReportService(IAppDbContext db, IAppCache cache) : IReportService
 
         var showtimeOrders = await db
             .OrderLines.AsNoTracking()
+            .ExcludingExchangedOut(db)
             .Where(l =>
                 l.ShowtimeId != null
                 && (l.LineType == OrderLineType.Ticket || l.LineType == OrderLineType.Combo)
@@ -241,7 +242,8 @@ public class ReportService(IAppDbContext db, IAppCache cache) : IReportService
         var toDateVal = DateTimeUtils.GetStartOfNextDay(toDate);
 
         var query = db
-            .OrderLines.Where(l =>
+            .OrderLines.ExcludingExchangedOut(db)
+            .Where(l =>
                 l.LineType == OrderLineType.Ticket
                 && l.Showtime != null
                 && l.Order.Status == OrderStatus.Confirmed
@@ -286,12 +288,13 @@ public class ReportService(IAppDbContext db, IAppCache cache) : IReportService
                 EmployeeId = g.Key.CreatedByEmployeeId!.Value,
                 g.Key.FullName,
                 Revenue = g.Sum(o => o.FinalAmount),
-                BookingCount = g.Count(),
+                BookingCount = g.Count(o => o.Type != OrderType.Exchange),
             })
             .ToListAsync(cancellationToken);
 
         var ticketsByEmployee = await db
-            .OrderLines.Where(l =>
+            .OrderLines.ExcludingExchangedOut(db)
+            .Where(l =>
                 l.LineType == OrderLineType.Ticket
                 && l.Order.Status == OrderStatus.Confirmed
                 && l.Order.Channel == SalesChannel.Counter

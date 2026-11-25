@@ -55,7 +55,8 @@ public class DashboardService(IAppDbContext db, IReportService reportService) : 
 
         var ticketsSoldToday =
             await db
-                .OrderLines.Where(l =>
+                .OrderLines.ExcludingExchangedOut(db)
+                .Where(l =>
                     l.LineType == OrderLineType.Ticket
                     && l.Order.Status == OrderStatus.Confirmed
                     && l.Order.CreatedAt >= todayStart
@@ -66,6 +67,7 @@ public class DashboardService(IAppDbContext db, IReportService reportService) : 
         var confirmedBookingsToday = await db.Orders.CountAsync(
             o =>
                 o.Status == OrderStatus.Confirmed
+                && o.Type != OrderType.Exchange
                 && o.CreatedAt >= todayStart
                 && o.CreatedAt < todayEnd,
             cancellationToken

@@ -186,7 +186,8 @@ public class ComboPickupService(IAppDbContext db, ILogger<ComboPickupService> lo
         var raw = code.Trim();
         var normalized = raw.ToUpperInvariant();
 
-        return await db
+        var resolvedOrderId =
+            await db
                 .Orders.AsNoTracking()
                 .Where(o => o.OrderCode == normalized)
                 .Select(o => (int?)o.OrderId)
@@ -200,6 +201,8 @@ public class ComboPickupService(IAppDbContext db, ILogger<ComboPickupService> lo
                 .Select(l => (int?)l.OrderId)
                 .FirstOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(Messages.NotFound_ComboPickupCode);
+
+        return await db.ResolveRootOrderIdAsync(resolvedOrderId, cancellationToken);
     }
 
     private async Task<ComboPickupOrderDto> LoadOrderAsync(

@@ -267,11 +267,11 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
     ) =>
         await db
             .OrderLines.AsNoTracking()
+            .ExcludingExchangedOut(db)
             .Where(l =>
                 l.ShowtimeId != null
                 && showtimeIds.Contains(l.ShowtimeId.Value)
                 && (l.LineType == OrderLineType.Ticket || l.LineType == OrderLineType.Combo)
-                && !db.OrderExchanges.Any(e => e.OldOrderLineId == l.OrderLineId)
                 && (
                     l.Order.Status == OrderStatus.Confirmed
                     || (
@@ -289,6 +289,7 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
                 OrderId = l.OrderId,
                 LineType = l.LineType,
                 OrderStatus = l.Order.Status,
+                IsExchangeOrder = l.Order.Type == OrderType.Exchange,
                 OrderCreatedAt = l.Order.CreatedAt,
                 OrderCancelledAt = l.Order.CancelledAt,
                 Quantity = l.Quantity,
@@ -332,7 +333,11 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
             tickets.Sum(l => l.Discount),
             tickets.Sum(l => l.RefundShare()),
             combos.Sum(l => Math.Max(0m, l.PaidAmount - l.RefundShare())),
-            lines.Where(l => l.OrderStatus == OrderStatus.Cancelled).Select(l => l.OrderId).Distinct().Count()
+            lines
+                .Where(l => l.OrderStatus == OrderStatus.Cancelled && !l.IsExchangeOrder)
+                .Select(l => l.OrderId)
+                .Distinct()
+                .Count()
         );
     }
 
@@ -478,6 +483,7 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
         public int OrderId { get; init; }
         public OrderLineType LineType { get; init; }
         public OrderStatus OrderStatus { get; init; }
+        public bool IsExchangeOrder { get; init; }
         public DateTime OrderCreatedAt { get; init; }
         public DateTime? OrderCancelledAt { get; init; }
         public DateTime? FirstPaidAt { get; init; }

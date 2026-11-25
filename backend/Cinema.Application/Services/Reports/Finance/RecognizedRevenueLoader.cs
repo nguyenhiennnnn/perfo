@@ -43,7 +43,7 @@ internal static class RecognizedRevenueLoader
         var toUtc = BusinessDay.EndUtc(to, settings.OpeningTime, settings.ClosingTime);
 
         var showtimeRows = await Project(
-                Billable(db.OrderLines.AsNoTracking())
+                Billable(db.OrderLines.AsNoTracking().ExcludingExchangedOut(db))
                     .Where(l =>
                         l.ShowtimeId != null
                         && (l.LineType == OrderLineType.Ticket || l.LineType == OrderLineType.Combo)

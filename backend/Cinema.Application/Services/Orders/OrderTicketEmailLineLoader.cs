@@ -1,4 +1,5 @@
 using Cinema.Application.Interfaces;
+using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ internal static class OrderTicketEmailLineLoader
     {
         var rows = await db
             .OrderLines.AsNoTracking()
+            .ExcludingExchangedOut(db)
             .Where(l =>
                 l.OrderId == orderId
                 && l.LineType == OrderLineType.Ticket

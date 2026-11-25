@@ -63,6 +63,7 @@ public class SeatHeatmapService(IAppDbContext db, IAppCache cache) : ISeatHeatma
 
         var sold = await db
             .OrderLines.AsNoTracking()
+            .ExcludingExchangedOut(db)
             .Where(l =>
                 l.LineType == OrderLineType.Ticket
                 && l.Order.Status == OrderStatus.Confirmed

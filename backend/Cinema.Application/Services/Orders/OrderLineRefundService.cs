@@ -47,11 +47,19 @@ public class OrderLineRefundService(IAppDbContext db, IOrderRefundService orderR
                     .Where(l => l.OrderId == order.OrderId && lineIds.Contains(l.OrderLineId))
                     .ToDictionaryAsync(l => l.OrderLineId, cancellationToken);
 
+                var exchangedLineIds = await db
+                    .OrderExchanges.AsNoTracking()
+                    .Where(e => lineIds.Contains(e.OldOrderLineId))
+                    .Select(e => e.OldOrderLineId)
+                    .ToListAsync(cancellationToken);
+
                 var updates = new List<(OrderLine Line, int Units, decimal Amount)>();
                 foreach (var request in requests)
                 {
                     if (!lines.TryGetValue(request.OrderLineId, out var line))
                         throw new NotFoundException(Messages.NotFound_OrderLine);
+                    if (exchangedLineIds.Contains(line.OrderLineId))
+                        throw new BusinessRuleException(Messages.Refund_LineExchanged);
                     if (request.Quantity > OrderRefundCalculator.RefundableUnits(line))
                         throw new BusinessRuleException(Messages.Refund_LineQuantityExceeds);
 

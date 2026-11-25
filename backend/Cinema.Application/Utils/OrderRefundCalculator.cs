@@ -21,7 +21,8 @@ public static class OrderRefundCalculator
         int orderId,
         RefundScope scope,
         IReadOnlyList<RefundComboShare> combos,
-        IReadOnlyList<RefundChargeCapacity> charges
+        IReadOnlyList<RefundChargeCapacity> charges,
+        decimal? refundableCap = null
     )
     {
         var percent = scope.Kind == RefundScopeKind.Full ? 100m : scope.Percent;
@@ -29,6 +30,8 @@ public static class OrderRefundCalculator
             throw new BusinessRuleException(Messages.Refund_PercentInvalid);
 
         var capacity = TotalCapacity(charges);
+        if (refundableCap is { } cap)
+            capacity = Math.Min(capacity, Math.Max(0m, cap));
         var fulfilled = scope.DeductFulfilledCombo
             ? Math.Min(capacity, FulfilledComboAmount(combos))
             : 0m;

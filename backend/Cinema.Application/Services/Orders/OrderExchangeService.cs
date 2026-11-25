@@ -124,6 +124,9 @@ public class OrderExchangeService(
         await db.InTransactionAsync(
             async () =>
             {
+                var rootOrderId = await db.ResolveRootOrderIdAsync(orderId, cancellationToken);
+                if (rootOrderId != orderId)
+                    await db.LockOrderAsync(rootOrderId, cancellationToken);
                 await db.LockOrderAsync(orderId, cancellationToken);
 
                 var lineIds = seats.Select(s => s.OrderLineId).ToList();
@@ -138,9 +141,14 @@ public class OrderExchangeService(
                 );
 
                 var now = DateTime.UtcNow;
+                var familyOrderIds = await db.LoadExchangeFamilyOrderIdsAsync(
+                    rootOrderId,
+                    cancellationToken
+                );
                 var pendingExists = await db.Orders.AnyAsync(
                     o =>
-                        o.OriginalOrderId == orderId
+                        o.OriginalOrderId != null
+                        && familyOrderIds.Contains(o.OriginalOrderId.Value)
                         && o.Type == OrderType.Exchange
                         && o.Status == OrderStatus.Pending
                         && o.ExpiresAt > now,

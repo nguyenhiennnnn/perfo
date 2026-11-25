@@ -4472,4 +4472,10 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_ExchangeCreditNote" xml:space="preserve">
     <value>Phần chênh lệch được cấp dưới dạng mã quà dùng một lần, không hoàn về cổng thanh toán. Hãy dùng mã trước ngày hết hạn.</value>
   </data>
+  <data name="Refund_LineExchanged" xml:space="preserve">
+    <value>Vé này đã được đổi sang suất khác nên không thể hoàn tiền hoặc hủy riêng.</value>
+  </data>
+  <data name="Rule_CancelOrderAllLinesExchanged" xml:space="preserve">
+    <value>Tất cả vé của đơn này đã được đổi suất nên không còn dòng nào để hủy. Vui lòng xử lý trên đơn đổi suất tương ứng.</value>
+  </data>
 </root>

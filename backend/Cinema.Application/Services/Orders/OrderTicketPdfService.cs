@@ -57,6 +57,7 @@ public class OrderTicketPdfService(
 
         var lines = await db
             .OrderLines.AsNoTracking()
+            .ExcludingExchangedOut(db)
             .Where(l =>
                 l.OrderId == orderId
                 && l.LineType == OrderLineType.Ticket

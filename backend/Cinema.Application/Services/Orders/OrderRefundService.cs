@@ -34,7 +34,13 @@ public class OrderRefundService(
             .Select(l => new RefundComboShare(l.PaidAmount, l.Quantity, l.QuantityFulfilled))
             .ToListAsync(cancellationToken);
 
-        return OrderRefundCalculator.BuildPlan(orderId, scope, combos, charges);
+        return OrderRefundCalculator.BuildPlan(
+            orderId,
+            scope,
+            combos,
+            charges,
+            await LoadLiveLineValueAsync(orderId, cancellationToken)
+        );
     }
 
     public async Task<OrderRefundPlan> BuildPlanForAmountAsync(
@@ -184,6 +190,26 @@ public class OrderRefundService(
             OrderRefundCalculator.LoyaltyReversalBase(earned, order.FinalAmount, refundedAmount),
             cancellationToken
         );
+    }
+
+    private async Task<decimal?> LoadLiveLineValueAsync(
+        int orderId,
+        CancellationToken cancellationToken
+    )
+    {
+        if (
+            !await db
+                .OrderExchanges.AsNoTracking()
+                .AnyAsync(e => e.OldOrderLine.OrderId == orderId, cancellationToken)
+        )
+            return null;
+
+        return await db
+                .OrderLines.AsNoTracking()
+                .Where(l => l.OrderId == orderId)
+                .ExcludingExchangedOut(db)
+                .SumAsync(l => (decimal?)(l.PaidAmount - l.RefundedAmount), cancellationToken)
+            ?? 0m;
     }
 
     private async Task<IReadOnlyList<RefundChargeCapacity>> LoadChargeCapacitiesAsync(

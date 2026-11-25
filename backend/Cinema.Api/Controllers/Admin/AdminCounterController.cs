@@ -1,4 +1,5 @@
 using Cinema.Api.Filters;
+using Cinema.Application.DTOs.GiftCards;
 using Cinema.Application.DTOs.Invoices;
 using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
@@ -22,6 +23,7 @@ public class AdminCounterController(
     ICardCheckService cardCheckService,
     ISupplementOrderService supplementOrderService,
     IOrderPromotionService orderPromotionService,
+    IOrderGiftCardService orderGiftCardService,
     IInvoiceRequestService invoiceRequestService
 ) : AppControllerBase
 {
@@ -121,6 +123,42 @@ public class AdminCounterController(
         var result = await orderPromotionService.RemoveAsync(
             orderId,
             OrderPromotionCaller.Counter,
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpPost("{orderId:int}/counter-gift-card")]
+    [Authorize(Policy = Policies.StaffOnly)]
+    [SuccessMessage(nameof(Messages.Success_OrderGiftCardApplied))]
+    public async Task<ActionResult<OrderGiftCardResponse>> CounterApplyGiftCard(
+        int orderId,
+        [FromBody] ApplyGiftCardRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderGiftCardService.ApplyAsync(
+            orderId,
+            OrderPromotionCaller.Counter,
+            request.Code,
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpDelete("{orderId:int}/counter-gift-card/{giftCardId:int}")]
+    [Authorize(Policy = Policies.StaffOnly)]
+    [SuccessMessage(nameof(Messages.Success_OrderGiftCardRemoved))]
+    public async Task<ActionResult<OrderGiftCardResponse>> CounterRemoveGiftCard(
+        int orderId,
+        int giftCardId,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderGiftCardService.RemoveAsync(
+            orderId,
+            OrderPromotionCaller.Counter,
+            giftCardId,
             cancellationToken
         );
         return Ok(result);

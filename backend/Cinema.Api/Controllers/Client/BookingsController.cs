@@ -1,6 +1,7 @@
 using Cinema.Api.Extensions;
 using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Common;
+using Cinema.Application.DTOs.GiftCards;
 using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Utils;
@@ -21,7 +22,8 @@ public class BookingsController(
     IOrderCheckoutService bookingCheckoutService,
     IOrderCancellationService orderCancellationService,
     IOrderTicketPdfService orderTicketPdfService,
-    IOrderPromotionService orderPromotionService
+    IOrderPromotionService orderPromotionService,
+    IOrderGiftCardService orderGiftCardService
 ) : AppControllerBase
 {
     [HttpPost("hold")]
@@ -129,6 +131,41 @@ public class BookingsController(
         var result = await orderPromotionService.RemoveAsync(
             orderId,
             OrderPromotionCaller.Customer(CurrentUserId),
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpPost("{orderId:int}/gift-card")]
+    [EnableRateLimiting(RateLimitingExtensions.BookingHoldPolicy)]
+    [SuccessMessage(nameof(Messages.Success_OrderGiftCardApplied))]
+    public async Task<ActionResult<OrderGiftCardResponse>> ApplyGiftCard(
+        int orderId,
+        [FromBody] ApplyGiftCardRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderGiftCardService.ApplyAsync(
+            orderId,
+            OrderPromotionCaller.Customer(CurrentUserId),
+            request.Code,
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpDelete("{orderId:int}/gift-card/{giftCardId:int}")]
+    [SuccessMessage(nameof(Messages.Success_OrderGiftCardRemoved))]
+    public async Task<ActionResult<OrderGiftCardResponse>> RemoveGiftCard(
+        int orderId,
+        int giftCardId,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderGiftCardService.RemoveAsync(
+            orderId,
+            OrderPromotionCaller.Customer(CurrentUserId),
+            giftCardId,
             cancellationToken
         );
         return Ok(result);

@@ -16,6 +16,7 @@ public class OrderConfirmationService(
     IPaymentLedgerService ledger,
     IOrderLoyaltyService loyalty,
     IOrderResourceHoldService resourceHolds,
+    IGiftCardHoldService giftCardHolds,
     IOrderReleaseService releaseService,
     IBusinessEventDispatcher eventDispatcher,
     IRealtimeNotifier realtimeNotifier,
@@ -55,7 +56,17 @@ public class OrderConfirmationService(
                         return;
                     }
 
-                    if (!await ledger.IsFullyPaidAsync(orderId, cancellationToken))
+                    var paymentSummary = await ledger.GetSummaryAsync(orderId, cancellationToken);
+                    await giftCardHolds.TrimAsync(
+                        orderId,
+                        paymentSummary.FinalAmount - paymentSummary.NetPaidAmount,
+                        cancellationToken
+                    );
+                    var giftCardReserved = await giftCardHolds.GetReservedAmountAsync(
+                        orderId,
+                        cancellationToken
+                    );
+                    if (paymentSummary.NetPaidAmount + giftCardReserved < paymentSummary.FinalAmount)
                     {
                         result = OrderConfirmationResult.AwaitingPayment;
                         return;

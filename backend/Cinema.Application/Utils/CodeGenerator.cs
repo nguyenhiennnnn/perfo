@@ -35,6 +35,9 @@ public static class CodeGenerator
     public static string GenerateCounterTransactionCode(string orderCode) =>
         $"{orderCode}{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}{Guid.NewGuid().ToString("N")[..6].ToUpperInvariant()}";
 
+    public static string GenerateGiftCardTransactionCode(string orderCode) =>
+        $"{orderCode}{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}G{Guid.NewGuid().ToString("N")[..6].ToUpperInvariant()}";
+
     public static string GenerateRefundTransactionCode(string chargeTransactionCode) =>
         $"{chargeTransactionCode}R{Guid.NewGuid().ToString("N")[..10].ToUpperInvariant()}";
 }

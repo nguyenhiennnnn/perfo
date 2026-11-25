@@ -16,6 +16,8 @@ public class OrderPromotionService(
     IAppDbContext db,
     IOrderPriceCalculator priceCalculator,
     PromotionResourceHold promotionHold,
+    IGiftCardHoldService giftCardHolds,
+    IPaymentLedgerService ledger,
     ILogger<OrderPromotionService> logger
 ) : IOrderPromotionService
 {
@@ -75,6 +77,11 @@ public class OrderPromotionService(
 
                 await promotionHold.ReserveAsync(new ResourceHoldRequest(order), cancellationToken);
                 await db.SaveChangesAsync(cancellationToken);
+                await giftCardHolds.TrimAsync(
+                    orderId,
+                    order.FinalAmount - await ledger.GetNetPaidAmountAsync(orderId, cancellationToken),
+                    cancellationToken
+                );
 
                 var applied = result.AppliedPromotions.FirstOrDefault();
                 response = new OrderPromotionResponse(

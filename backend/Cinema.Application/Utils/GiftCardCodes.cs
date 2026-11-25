@@ -40,6 +40,14 @@ public static class GiftCardCodes
         return code.Length == Length && code.All(c => Alphabet.Contains(c)) ? code : null;
     }
 
+    public static string Mask(string code) =>
+        Format(
+            string.Concat(
+                new string('*', Math.Max(0, code.Length - GroupSize)),
+                code[^Math.Min(GroupSize, code.Length)..]
+            )
+        );
+
     public static string Format(string code) =>
         string.Join(
             '-',

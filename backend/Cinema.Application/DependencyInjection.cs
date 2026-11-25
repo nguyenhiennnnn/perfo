@@ -109,6 +109,10 @@ public static class DependencyInjection
         services.AddScoped<PromotionResourceHold>();
         services.AddResourceHold<PromotionResourceHold>();
         services.AddResourceHold<InventoryResourceHold>();
+        services.AddScoped<GiftCardResourceHold>();
+        services.AddScoped<IGiftCardHoldService>(sp => sp.GetRequiredService<GiftCardResourceHold>());
+        services.AddResourceHold<GiftCardResourceHold>();
+        services.AddScoped<IOrderGiftCardService, OrderGiftCardService>();
         services.AddScoped<IComboAvailabilityService, ComboAvailabilityService>();
         services.AddInTransactionEventHandler<OrderConfirmed, InventorySaleHandler>();
         services.AddInTransactionEventHandler<OrderCancelled, InventoryReturnHandler>();

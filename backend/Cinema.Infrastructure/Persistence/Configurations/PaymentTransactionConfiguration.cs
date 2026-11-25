@@ -124,6 +124,15 @@ public class PaymentTransactionConfiguration : IEntityTypeConfiguration<PaymentT
         builder.HasIndex(x => x.Status).HasDatabaseName("IX_PaymentTransactions_Status");
         builder.HasIndex(x => x.CreatedAt).HasDatabaseName("IX_PaymentTransactions_CreatedAt");
         builder
+            .HasOne(x => x.GiftCard)
+            .WithMany()
+            .HasForeignKey(x => x.GiftCardId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasIndex(x => x.GiftCardId)
+            .HasFilter("\"GiftCardId\" IS NOT NULL")
+            .HasDatabaseName("IX_PaymentTransactions_GiftCard");
+        builder
             .HasIndex(x => x.NeedsManualRefund)
             .HasFilter("\"NeedsManualRefund\"")
             .HasDatabaseName("IX_PaymentTransactions_NeedsManualRefund");

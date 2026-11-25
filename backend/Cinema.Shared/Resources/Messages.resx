@@ -4234,4 +4234,31 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_GiftCardRecipientEmailLabel" xml:space="preserve">
     <value>Email người nhận</value>
   </data>
+  <data name="Rule_GiftCardNotForGiftCardOrder" xml:space="preserve">
+    <value>Không thể dùng thẻ quà tặng để mua thẻ quà tặng.</value>
+  </data>
+  <data name="Rule_GiftCardNotUsable" xml:space="preserve">
+    <value>Thẻ quà tặng không thể sử dụng. Thẻ có thể chưa được gửi, đã hết hạn, đã bị hủy hoặc đã hết số dư.</value>
+  </data>
+  <data name="Rule_GiftCardBalanceInsufficient" xml:space="preserve">
+    <value>Số dư thẻ quà tặng không đủ hoặc đang được giữ cho đơn khác.</value>
+  </data>
+  <data name="Rule_GiftCardExchangeCreditOwnerOnly" xml:space="preserve">
+    <value>Thẻ này chỉ dùng được cho tài khoản được cấp thẻ.</value>
+  </data>
+  <data name="Rule_GiftCardAlreadyApplied" xml:space="preserve">
+    <value>Thẻ quà tặng này đã được áp cho đơn.</value>
+  </data>
+  <data name="Rule_GiftCardOrderFullyCovered" xml:space="preserve">
+    <value>Thẻ quà tặng đã đủ trả toàn bộ đơn.</value>
+  </data>
+  <data name="Validation_GiftCardCode_Required" xml:space="preserve">
+    <value>Vui lòng nhập mã thẻ quà tặng.</value>
+  </data>
+  <data name="Success_OrderGiftCardApplied" xml:space="preserve">
+    <value>Đã áp thẻ quà tặng cho đơn.</value>
+  </data>
+  <data name="Success_OrderGiftCardRemoved" xml:space="preserve">
+    <value>Đã gỡ thẻ quà tặng khỏi đơn.</value>
+  </data>
 </root>

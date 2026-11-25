@@ -13,6 +13,7 @@ namespace Cinema.Application.Services.Orders;
 public class OrderCheckoutService(
     IAppDbContext db,
     IPaymentLedgerService ledger,
+    IGiftCardHoldService giftCardHolds,
     IEnumerable<IPaymentGateway> paymentGateways,
     ILogger<OrderCheckoutService> logger
 ) : IOrderCheckoutService
@@ -40,10 +41,19 @@ public class OrderCheckoutService(
                 string.Format(Messages.Rule_PaymentGatewayNotConfigured, request.PaymentMethod)
             );
 
-        var outstanding = (await ledger.GetSummaryAsync(orderId, cancellationToken))
-            .OutstandingAmount;
+        var giftCardReserved = await giftCardHolds.GetReservedAmountAsync(
+            orderId,
+            cancellationToken
+        );
+        var outstanding =
+            (await ledger.GetSummaryAsync(orderId, cancellationToken)).OutstandingAmount
+            - giftCardReserved;
         if (outstanding <= 0m)
-            throw new BusinessRuleException(Messages.Rule_BookingNotPendingOrExpired);
+            throw new BusinessRuleException(
+                giftCardReserved > 0m
+                    ? Messages.Rule_GiftCardOrderFullyCovered
+                    : Messages.Rule_BookingNotPendingOrExpired
+            );
 
         await db
             .PaymentTransactions.Where(t =>

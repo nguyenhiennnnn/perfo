@@ -15,6 +15,7 @@ namespace Cinema.Application.Services.Orders;
 public class CounterPaymentService(
     IAppDbContext db,
     IPaymentLedgerService ledger,
+    IGiftCardHoldService giftCardHolds,
     IPaymentRefundService refundService,
     IOrderConfirmationService confirmationService,
     ILogger<CounterPaymentService> logger
@@ -70,10 +71,19 @@ public class CounterPaymentService(
             if (order.Status != OrderStatus.Pending || order.ExpiresAt <= DateTime.UtcNow)
                 throw new BusinessRuleException(Messages.Rule_CounterOrderNotPendingOrExpired);
 
-            var outstanding = (await ledger.GetSummaryAsync(orderId, cancellationToken))
-                .OutstandingAmount;
+            var giftCardReserved = await giftCardHolds.GetReservedAmountAsync(
+                orderId,
+                cancellationToken
+            );
+            var outstanding =
+                (await ledger.GetSummaryAsync(orderId, cancellationToken)).OutstandingAmount
+                - giftCardReserved;
             if (outstanding <= 0m)
-                throw new BusinessRuleException(Messages.Rule_CounterOrderAlreadyPaid);
+                throw new BusinessRuleException(
+                    giftCardReserved > 0m
+                        ? Messages.Rule_GiftCardOrderFullyCovered
+                        : Messages.Rule_CounterOrderAlreadyPaid
+                );
 
             amount = request.Amount is { } requested
                 ? OrderPricing.RoundToDong(requested)
@@ -133,6 +143,11 @@ public class CounterPaymentService(
         }
 
         var summary = await ledger.GetSummaryAsync(orderId, cancellationToken);
+        var remaining = Math.Max(
+            0m,
+            summary.OutstandingAmount
+                - await giftCardHolds.GetReservedAmountAsync(orderId, cancellationToken)
+        );
         var confirmed =
             confirmation
                 is OrderConfirmationResult.Confirmed
@@ -149,8 +164,8 @@ public class CounterPaymentService(
             received,
             change,
             summary.NetPaidAmount,
-            summary.OutstandingAmount,
-            summary.IsFullyPaid
+            remaining,
+            remaining <= 0m
         );
     }
 

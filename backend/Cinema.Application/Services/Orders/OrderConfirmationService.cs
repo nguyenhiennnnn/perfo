@@ -18,6 +18,7 @@ public class OrderConfirmationService(
     IOrderResourceHoldService resourceHolds,
     IGiftCardHoldService giftCardHolds,
     IOrderReleaseService releaseService,
+    IOrderExchangeCompletionService exchangeCompletion,
     IBusinessEventDispatcher eventDispatcher,
     IRealtimeNotifier realtimeNotifier,
     ILogger<OrderConfirmationService> logger
@@ -28,6 +29,16 @@ public class OrderConfirmationService(
         CancellationToken cancellationToken
     )
     {
+        var orderType =
+            await db
+                .Orders.AsNoTracking()
+                .Where(o => o.OrderId == orderId)
+                .Select(o => (OrderType?)o.Type)
+                .FirstOrDefaultAsync(cancellationToken)
+            ?? throw new NotFoundException(Messages.NotFound_Order);
+        if (orderType == OrderType.Exchange)
+            return await CompleteExchangeAsync(orderId, cancellationToken);
+
         var result = OrderConfirmationResult.AwaitingPayment;
         var bookedSeats = new List<(int ShowtimeId, int SeatId)>();
 
@@ -53,12 +64,6 @@ public class OrderConfirmationService(
                     if (order.Status != OrderStatus.Pending)
                     {
                         result = OrderConfirmationResult.NotPayable;
-                        return;
-                    }
-
-                    if (order.Type == OrderType.Exchange)
-                    {
-                        result = OrderConfirmationResult.AwaitingPayment;
                         return;
                     }
 
@@ -176,5 +181,26 @@ public class OrderConfirmationService(
             bookedSeats.Count
         );
         return result;
+    }
+
+    private async Task<OrderConfirmationResult> CompleteExchangeAsync(
+        int exchangeOrderId,
+        CancellationToken cancellationToken
+    )
+    {
+        var completion = await exchangeCompletion.TryCompleteAsync(
+            exchangeOrderId,
+            null,
+            cancellationToken
+        );
+        return completion.Status switch
+        {
+            OrderExchangeCompletionStatus.Completed => OrderConfirmationResult.Confirmed,
+            OrderExchangeCompletionStatus.AlreadyCompleted =>
+                OrderConfirmationResult.AlreadyConfirmed,
+            OrderExchangeCompletionStatus.AwaitingPayment =>
+                OrderConfirmationResult.AwaitingPayment,
+            _ => OrderConfirmationResult.NotPayable,
+        };
     }
 }

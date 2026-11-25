@@ -271,6 +271,7 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
                 l.ShowtimeId != null
                 && showtimeIds.Contains(l.ShowtimeId.Value)
                 && (l.LineType == OrderLineType.Ticket || l.LineType == OrderLineType.Combo)
+                && !db.OrderExchanges.Any(e => e.OldOrderLineId == l.OrderLineId)
                 && (
                     l.Order.Status == OrderStatus.Confirmed
                     || (

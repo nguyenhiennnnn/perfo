@@ -113,6 +113,30 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject OrderExchangeCompleted(
+        int originalOrderId,
+        int exchangeNumber,
+        int oldShowtimeId,
+        int newShowtimeId,
+        IReadOnlyList<int> oldOrderLineIds,
+        IReadOnlyList<int> newOrderLineIds,
+        decimal priceDifference,
+        int? performedByUserId
+    ) =>
+        AuditJson.ToObject(
+            new
+            {
+                originalOrderId,
+                exchangeNumber,
+                oldShowtimeId,
+                newShowtimeId,
+                oldOrderLineIds,
+                newOrderLineIds,
+                priceDifference,
+                performedByUserId,
+            }
+        );
+
     public static JsonObject ExchangeCashRefunded(
         int originalOrderId,
         decimal amount,

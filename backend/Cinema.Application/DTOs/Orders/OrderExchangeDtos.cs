@@ -56,7 +56,8 @@ public record StartOrderExchangeResponse(
     decimal AmountDue,
     decimal CreditAmount,
     DateTime ExpiresAt,
-    IReadOnlyList<OrderExchangeTicketPreviewDto> Tickets
+    IReadOnlyList<OrderExchangeTicketPreviewDto> Tickets,
+    OrderExchangeSettlementResult? Settlement = null
 );
 
 public enum OrderExchangeSettlementKind

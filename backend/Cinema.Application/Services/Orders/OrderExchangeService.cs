@@ -19,6 +19,8 @@ namespace Cinema.Application.Services.Orders;
 public class OrderExchangeService(
     IAppDbContext db,
     IOrderExchangeEligibilityService eligibility,
+    IOrderExchangeCompletionService completionService,
+    IOrderReleaseService releaseService,
     IOrderTicketPricer ticketPricer,
     IEnumerable<IOrderHoldPolicy> holdPolicies,
     IRealtimeNotifier realtimeNotifier,
@@ -380,13 +382,39 @@ public class OrderExchangeService(
             newSeatIds.Count
         );
 
+        var status = created.Status;
+        OrderExchangeSettlementResult? settlement = null;
+        if (created.FinalAmount == 0m)
+        {
+            OrderExchangeCompletion completion;
+            try
+            {
+                completion = await completionService.TryCompleteAsync(
+                    created.OrderId,
+                    context.HolderUserId,
+                    cancellationToken
+                );
+            }
+            catch (BusinessRuleException)
+            {
+                await releaseService.ExpireAsync(created.OrderId, cancellationToken);
+                throw;
+            }
+
+            if (completion.Status != OrderExchangeCompletionStatus.Completed)
+                throw new ConflictAppException(Messages.Conflict_ExchangeCompletionFailed);
+
+            status = OrderStatus.Confirmed;
+            settlement = completion.Settlement;
+        }
+
         var newTotal = created.TotalAmount;
         var difference = OrderPricing.RoundToDong(newTotal - oldAmount);
         return new StartOrderExchangeResponse(
             created.OrderId,
             created.OrderCode,
             orderId,
-            created.Status.ToDtoStatus(),
+            status.ToDtoStatus(),
             request.NewShowtimeId,
             oldAmount,
             newTotal,
@@ -394,7 +422,8 @@ public class OrderExchangeService(
             created.FinalAmount,
             Math.Max(-difference, 0m),
             created.ExpiresAt!.Value,
-            tickets
+            tickets,
+            settlement
         );
     }
 

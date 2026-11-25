@@ -4433,4 +4433,43 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_ExchangeGuestRefundCashOnly" xml:space="preserve">
     <value>Khách vãng lai chưa có tài khoản nên chỉ nhận hoàn chênh lệch bằng tiền mặt, nhưng đơn này không còn đủ số tiền mặt đã thu để hoàn.</value>
   </data>
+  <data name="Conflict_ExchangeCompletionFailed" xml:space="preserve">
+    <value>Không thể hoàn tất đổi suất vì vé hoặc ghế không còn hợp lệ. Vé cũ của bạn vẫn giữ nguyên.</value>
+  </data>
+  <data name="Ledger_Reason_ExchangeAfterClose" xml:space="preserve">
+    <value>Đổi suất đơn {0} phát sinh sau khi ngày gốc đã chốt.</value>
+  </data>
+  <data name="Email_OrderExchangedSubject" xml:space="preserve">
+    <value>Đổi suất thành công — {0}</value>
+  </data>
+  <data name="Email_BadgeExchanged" xml:space="preserve">
+    <value>Đổi suất thành công</value>
+  </data>
+  <data name="Email_ExchangeHeading" xml:space="preserve">
+    <value>Bạn đã đổi suất chiếu thành công</value>
+  </data>
+  <data name="Email_ExchangeBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, đơn hàng &lt;strong&gt;{1}&lt;/strong&gt; đã được đổi sang suất chiếu mới. Vui lòng dùng vé và mã QR mới bên dưới.</value>
+  </data>
+  <data name="Email_ExchangePreheader" xml:space="preserve">
+    <value>Đơn {0}: đổi suất chiếu thành công</value>
+  </data>
+  <data name="Email_ExchangeOldShowtimeLabel" xml:space="preserve">
+    <value>Suất cũ</value>
+  </data>
+  <data name="Email_ExchangeNewShowtimeLabel" xml:space="preserve">
+    <value>Suất mới</value>
+  </data>
+  <data name="Email_ExchangeAmountPaidLabel" xml:space="preserve">
+    <value>Đã thanh toán thêm</value>
+  </data>
+  <data name="Email_ExchangeCreditLabel" xml:space="preserve">
+    <value>Chênh lệch được cấp lại dưới dạng mã quà</value>
+  </data>
+  <data name="Email_ExchangeOldTicketNote" xml:space="preserve">
+    <value>Vé và mã QR của suất cũ đã hết hiệu lực.</value>
+  </data>
+  <data name="Email_ExchangeCreditNote" xml:space="preserve">
+    <value>Phần chênh lệch được cấp dưới dạng mã quà dùng một lần, không hoàn về cổng thanh toán. Hãy dùng mã trước ngày hết hạn.</value>
+  </data>
 </root>

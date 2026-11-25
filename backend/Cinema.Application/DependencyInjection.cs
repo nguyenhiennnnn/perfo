@@ -128,6 +128,7 @@ public static class DependencyInjection
         services.AddScoped<IOrderConfirmationService, OrderConfirmationService>();
         services.AddBackgroundEventHandler<OrderConfirmed, OrderConfirmedEmailHandler>();
         services.AddBackgroundEventHandler<OrderCancelled, OrderCancelledEmailHandler>();
+        services.AddBackgroundEventHandler<OrderExchanged, OrderExchangedEmailHandler>();
         services.AddBackgroundEventHandler<OrderCancelled, ShowtimeCancelledEmailHandler>();
         services.AddBackgroundEventHandler<OrderRefunded, ShowtimeRefundedEmailHandler>();
         services.AddScoped<IOrderQueryService, OrderQueryService>();
@@ -163,6 +164,7 @@ public static class DependencyInjection
         services.AddScoped<IOrderExchangePreviewService, OrderExchangePreviewService>();
         services.AddScoped<IOrderExchangeService, OrderExchangeService>();
         services.AddScoped<IOrderExchangeSettlementService, OrderExchangeSettlementService>();
+        services.AddScoped<IOrderExchangeCompletionService, OrderExchangeCompletionService>();
         services.AddScoped<IGiftCardService, GiftCardService>();
         services.AddScoped<IGiftCardAttemptGuard, GiftCardAttemptGuard>();
         services.AddScoped<IGiftCardLookupService, GiftCardLookupService>();
@@ -193,6 +195,7 @@ public static class DependencyInjection
         services.AddScoped<ILedgerAdjustmentService, LedgerAdjustmentService>();
         services.AddBackgroundEventHandler<OrderRefunded, LedgerAdjustmentEventHandler>();
         services.AddBackgroundEventHandler<OrderCancelled, LedgerAdjustmentEventHandler>();
+        services.AddBackgroundEventHandler<OrderExchanged, LedgerAdjustmentEventHandler>();
         services.AddScoped<ISeatBlockService, SeatBlockService>();
         services.AddScoped<IPricingService, PricingService>();
         services.AddScoped<IPromotionService, PromotionService>();
@@ -231,6 +234,7 @@ public static class DependencyInjection
         services.AddBackgroundEventHandler<OrderConfirmed, SalesStatsOrderChangedHandler>();
         services.AddBackgroundEventHandler<OrderCancelled, SalesStatsOrderChangedHandler>();
         services.AddBackgroundEventHandler<OrderRefunded, SalesStatsOrderChangedHandler>();
+        services.AddBackgroundEventHandler<OrderExchanged, SalesStatsOrderChangedHandler>();
         services.AddBackgroundEventHandler<OrderRefunded, InvoiceRefundAdjustmentHandler>();
         services.AddBackgroundEventHandler<ShowtimeEnded, SalesStatsShowtimeChangedHandler>();
         services.AddBackgroundEventHandler<ShowtimeRoomChanged, SalesStatsShowtimeChangedHandler>();

@@ -18,6 +18,14 @@ public sealed record OrderRefunded(
     DateTime OccurredAt
 ) : IBusinessEvent;
 
+public sealed record OrderExchanged(
+    int OrderId,
+    int ExchangeOrderId,
+    int OldShowtimeId,
+    int NewShowtimeId,
+    DateTime OccurredAt
+) : IBusinessEvent;
+
 public sealed record GiftCardSent(int GiftCardId, DateTime OccurredAt) : IBusinessEvent;
 
 public sealed record DailyClosed(int DailyClosingId, DateOnly BusinessDate, DateTime OccurredAt)

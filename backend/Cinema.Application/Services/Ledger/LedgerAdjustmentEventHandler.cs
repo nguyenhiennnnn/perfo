@@ -13,7 +13,9 @@ public class LedgerAdjustmentEventHandler(
     IAppDbContext db,
     IAppCache cache,
     ILedgerAdjustmentWriter writer
-) : IBackgroundEventHandler<OrderRefunded>, IBackgroundEventHandler<OrderCancelled>
+) : IBackgroundEventHandler<OrderRefunded>,
+        IBackgroundEventHandler<OrderCancelled>,
+        IBackgroundEventHandler<OrderExchanged>
 {
     private sealed record Line(
         OrderLineType LineType,
@@ -128,6 +130,57 @@ public class LedgerAdjustmentEventHandler(
             );
     }
 
+    public async Task HandleAsync(OrderExchanged businessEvent, CancellationToken cancellationToken)
+    {
+        var rows = await db
+            .OrderExchanges.AsNoTracking()
+            .Where(e => e.NewOrderLine.OrderId == businessEvent.ExchangeOrderId)
+            .Select(e => new
+            {
+                OldStart = e.OldShowtime.StartTime,
+                NewStart = e.NewShowtime.StartTime,
+                OldPaid = e.OldOrderLine.PaidAmount,
+                OldDiscount = e.OldOrderLine.AdjustmentAllocations.Sum(a => (decimal?)a.Amount) ?? 0m,
+                NewPaid = e.NewOrderLine.PaidAmount,
+            })
+            .ToListAsync(cancellationToken);
+        if (rows.Count == 0)
+            return;
+
+        var orderCode = await db
+            .Orders.AsNoTracking()
+            .Where(o => o.OrderId == businessEvent.OrderId)
+            .Select(o => o.OrderCode)
+            .FirstAsync(cancellationToken);
+        var settings = await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken);
+
+        var byDate = new Dictionary<DateOnly, ExchangeTotals>();
+        foreach (var row in rows)
+        {
+            var oldDate = BusinessDay.Of(row.OldStart, settings.OpeningTime, settings.ClosingTime);
+            var newDate = BusinessDay.Of(row.NewStart, settings.OpeningTime, settings.ClosingTime);
+            var oldTotals = byDate.GetValueOrDefault(oldDate) ?? (byDate[oldDate] = new());
+            oldTotals.Ticket -= row.OldPaid;
+            oldTotals.Discount -= row.OldDiscount;
+            var newTotals = byDate.GetValueOrDefault(newDate) ?? (byDate[newDate] = new());
+            newTotals.Ticket += row.NewPaid;
+        }
+
+        foreach (var (date, totals) in byDate.OrderBy(e => e.Key))
+            await writer.RecordIfOriginalDayClosedAsync(
+                new LedgerAdjustmentInput(
+                    date,
+                    LedgerAdjustmentType.ShowtimeChange,
+                    string.Format(Messages.Ledger_Reason_ExchangeAfterClose, orderCode),
+                    TicketRevenueDelta: totals.Ticket,
+                    DiscountDelta: totals.Discount,
+                    OrderId: businessEvent.OrderId,
+                    SourceKey: $"exchange:{businessEvent.ExchangeOrderId}"
+                ),
+                cancellationToken
+            );
+    }
+
     private async Task<Source?> LoadSourceAsync(int orderId, CancellationToken cancellationToken)
     {
         var order = await db
@@ -185,6 +238,12 @@ public class LedgerAdjustmentEventHandler(
 
     private static DateOnly OriginalDate(Line line, DateTime paidAt, CinemaSettingsSnapshot settings) =>
         BusinessDay.Of(line.StartTime ?? paidAt, settings.OpeningTime, settings.ClosingTime);
+
+    private sealed class ExchangeTotals
+    {
+        public decimal Ticket { get; set; }
+        public decimal Discount { get; set; }
+    }
 
     private sealed class Totals
     {

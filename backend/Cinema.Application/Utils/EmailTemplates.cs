@@ -337,6 +337,63 @@ public static class EmailTemplates
         );
     }
 
+    public static string OrderExchanged(BrandOptions brand, OrderExchangeEmailData data)
+    {
+        var hasCredit = data.CreditAmount > 0m && !string.IsNullOrEmpty(data.CreditCode);
+        var hasPaid = data.AmountPaid > 0m;
+        string Local(DateTime utc) =>
+            BusinessTime
+                .ToLocal(utc)
+                .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture);
+
+        var rows = new List<string>
+        {
+            DetailRow(Messages.Email_OrderCodeLabel, Enc(data.OrderCode), code: true),
+            DetailRow(Messages.Email_MovieLabel, Enc(data.MovieTitle)),
+            DetailRow(Messages.Email_ExchangeOldShowtimeLabel, Enc(Local(data.OldStartUtc))),
+            DetailRow(Messages.Email_ExchangeNewShowtimeLabel, Enc(Local(data.NewStartUtc))),
+            DetailRow(
+                Messages.Email_RoomChangedToRoomLabel,
+                Enc(data.NewRoomName),
+                isLast: data.Tickets.Count == 0 && !hasPaid && !hasCredit
+            ),
+        };
+        rows.AddRange(
+            TicketRows(data.Tickets, lastIsLast: !hasPaid && !hasCredit)
+        );
+        if (hasPaid)
+            rows.Add(DetailRow(Messages.Email_ExchangeAmountPaidLabel, Money(data.AmountPaid), isLast: !hasCredit));
+        if (hasCredit)
+        {
+            rows.Add(DetailRow(Messages.Email_ExchangeCreditLabel, Money(data.CreditAmount)));
+            rows.Add(DetailRow(Messages.Email_GiftCardCodeLabel, Enc(data.CreditCode!), code: true, isLast: data.CreditExpiresAtUtc is null));
+            if (data.CreditExpiresAtUtc is { } expiresAt)
+                rows.Add(DetailRow(Messages.Email_GiftCardExpiryLabel, GiftCardDate(expiresAt), isLast: true));
+        }
+
+        var notes = new List<string> { Messages.Email_ExchangeOldTicketNote };
+        if (hasCredit)
+            notes.Add(Messages.Email_ExchangeCreditNote);
+        var cardTypes = CardTypeNames(data.Tickets);
+        if (cardTypes.Count > 0)
+            notes.Add(string.Format(Messages.Email_CardPresentationNote, Enc(string.Join(", ", cardTypes))));
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeExchanged, Success, SymbolCheck)}
+            {Heading(Messages.Email_ExchangeHeading)}
+            {Paragraph(string.Format(Messages.Email_ExchangeBody, Enc(data.CustomerName), Enc(data.OrderCode)))}
+            {DetailCard([.. rows])}
+            {MutedParagraph(string.Join("<br><br>", notes))}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_ExchangePreheader, data.OrderCode),
+            body,
+            TicketStub(data.ExchangeOrderCode)
+        );
+    }
+
     public static string InvoiceAdjustmentNeeded(
         BrandOptions brand,
         string orderCode,

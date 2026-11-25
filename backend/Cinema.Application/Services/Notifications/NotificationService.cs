@@ -80,6 +80,13 @@ public class NotificationService(
             )
         );
 
+    public void SendOrderExchanged(string toEmail, OrderExchangeEmailData data) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_OrderExchangedSubject, _brand.Name),
+            EmailTemplates.OrderExchanged(_brand, data)
+        );
+
     public void SendInvoiceRequestProcessed(
         string toEmail,
         string customerName,

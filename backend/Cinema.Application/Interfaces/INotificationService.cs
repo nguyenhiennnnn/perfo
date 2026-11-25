@@ -11,6 +11,21 @@ public sealed record OrderTicketEmailLine(
     bool RequiresCardPresentation
 );
 
+public sealed record OrderExchangeEmailData(
+    string CustomerName,
+    string OrderCode,
+    string ExchangeOrderCode,
+    string MovieTitle,
+    DateTime OldStartUtc,
+    DateTime NewStartUtc,
+    string NewRoomName,
+    IReadOnlyList<OrderTicketEmailLine> Tickets,
+    decimal AmountPaid,
+    decimal CreditAmount,
+    string? CreditCode,
+    DateTime? CreditExpiresAtUtc
+);
+
 public sealed record LowStockEmailLine(
     string Code,
     string Name,
@@ -79,6 +94,8 @@ public interface INotificationService
         string movieTitle,
         IReadOnlyList<OrderTicketEmailLine> tickets
     );
+
+    void SendOrderExchanged(string toEmail, OrderExchangeEmailData data);
 
     void SendInvoiceRequestProcessed(
         string toEmail,

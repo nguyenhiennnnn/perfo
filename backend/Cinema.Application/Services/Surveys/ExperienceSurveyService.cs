@@ -61,9 +61,11 @@ public class ExperienceSurveyService(IAppDbContext db) : IExperienceSurveyServic
             await db.SaveChangesAsync(cancellationToken);
         }
         catch (DbUpdateException)
-            when (await ExistsAsync(userId, showtimeId, CancellationToken.None))
         {
-            throw new ConflictAppException(Messages.Conflict_SurveyAlreadyExists);
+            db.ExperienceSurveys.Remove(survey);
+            if (await ExistsAsync(userId, showtimeId, CancellationToken.None))
+                throw new ConflictAppException(Messages.Conflict_SurveyAlreadyExists);
+            throw;
         }
 
         return ToDto(survey);

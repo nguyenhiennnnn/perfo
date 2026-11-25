@@ -743,6 +743,9 @@ public static class EmailTemplates
         var startText = BusinessTime
             .ToLocal(data.ShowtimeStartUtc)
             .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture);
+        var priorityText = BusinessTime
+            .ToLocal(data.PriorityUntilUtc)
+            .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture);
 
         var body = $"""
             {Badge(Messages.Email_BadgeWaitlistSeats, Success, SymbolCheck)}
@@ -757,9 +760,9 @@ public static class EmailTemplates
                     DetailRow(Messages.Email_WaitlistRoomLabel, Enc(data.RoomName)),
                     DetailRow(
                         Messages.Email_WaitlistSeatCountLabel,
-                        Enc(data.SeatCount.ToString(CultureInfo.InvariantCulture)),
-                        isLast: true
+                        Enc(data.SeatCount.ToString(CultureInfo.InvariantCulture))
                     ),
+                    DetailRow(Messages.Email_WaitlistPriorityUntilLabel, Enc(priorityText), isLast: true),
                 ]
             )}
             {Button(Messages.Email_WaitlistSeatsButton, data.BookingLink)}

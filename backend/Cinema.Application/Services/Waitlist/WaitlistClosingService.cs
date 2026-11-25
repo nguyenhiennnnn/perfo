@@ -6,15 +6,45 @@ using Microsoft.Extensions.Logging;
 
 namespace Cinema.Application.Services.Waitlist;
 
-public class WaitlistClosingService(IAppDbContext db, ILogger<WaitlistClosingService> logger)
-    : IWaitlistClosingService
+public class WaitlistClosingService(
+    IAppDbContext db,
+    IWaitlistPriorityService priorityService,
+    ILogger<WaitlistClosingService> logger
+) : IWaitlistClosingService
 {
     public async Task<int> CloseEndedAsync(CancellationToken cancellationToken)
     {
         var now = DateTime.UtcNow;
-        var closed = await db
+        var notifiedIds = await db
             .WaitlistEntries.Where(e =>
-                (e.Status == WaitlistStatus.Waiting || e.Status == WaitlistStatus.Notified)
+                e.Status == WaitlistStatus.Notified
+                && db.Showtimes.Any(s =>
+                    s.ShowtimeId == e.ShowtimeId
+                    && (s.Status != ShowtimeStatus.Scheduled || s.StartTime <= now)
+                )
+            )
+            .Select(e => e.WaitlistEntryId)
+            .ToListAsync(cancellationToken);
+
+        var closed = 0;
+        foreach (var entryId in notifiedIds)
+            if (
+                await priorityService.EndAsync(
+                    entryId,
+                    WaitlistStatus.Closed,
+                    onlyIfDue: false,
+                    cancellationToken
+                )
+            )
+                closed++;
+
+        closed += await db
+            .WaitlistEntries.Where(e =>
+                (
+                    e.Status == WaitlistStatus.Waiting
+                    || e.Status == WaitlistStatus.Notified
+                    || e.Status == WaitlistStatus.Held
+                )
                 && db.Showtimes.Any(s =>
                     s.ShowtimeId == e.ShowtimeId
                     && (s.Status != ShowtimeStatus.Scheduled || s.StartTime <= now)

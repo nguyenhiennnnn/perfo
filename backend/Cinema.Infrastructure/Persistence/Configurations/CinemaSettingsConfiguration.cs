@@ -210,6 +210,9 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
             .Property(x => x.RoomQualityAlertDays)
             .HasDefaultValue(CinemaSettings.DefaultRoomQualityAlertDays);
         builder
+            .Property(x => x.WaitlistPriorityMinutes)
+            .HasDefaultValue(CinemaSettings.DefaultWaitlistPriorityMinutes);
+        builder
             .Property(x => x.SupportRequestDueHours)
             .HasDefaultValue(CinemaSettings.DefaultSupportRequestDueHours);
         builder

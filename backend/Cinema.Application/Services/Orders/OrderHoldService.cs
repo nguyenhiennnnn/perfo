@@ -4,6 +4,7 @@ using Cinema.Application.Interfaces.Combos;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Notifications;
 using Cinema.Application.Interfaces.Orders;
+using Cinema.Application.Interfaces.Waitlist;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
@@ -24,6 +25,7 @@ public class OrderHoldService(
     IComboAvailabilityService comboAvailability,
     IOrderTicketPricer ticketPricer,
     IOrderPriceCalculator priceCalculator,
+    IWaitlistPriorityService waitlistPriority,
     IOptions<BookingOptions> bookingOptions,
     ILogger<OrderHoldService> logger,
     IAppCache cache
@@ -138,6 +140,16 @@ public class OrderHoldService(
         if (holdUntil > showtime.StartTime)
             holdUntil = showtime.StartTime;
         var distinctSeatIds = showtimeSeatIds.Distinct().ToList();
+
+        var priorityReleasedSeatIds =
+            channel == SalesChannel.Online
+                ? await waitlistPriority.ConsumeAsync(
+                    holderUserId,
+                    showtimeId,
+                    distinctSeatIds,
+                    cancellationToken
+                )
+                : new List<int>();
 
         // Ghế còn ở trạng thái Held (giữ cũ của chính người này đã quá hạn, job chưa nhả): ghi Expired cho lượt giữ cũ.
         var staleSeatIds = (
@@ -276,6 +288,13 @@ public class OrderHoldService(
             );
         await transaction.CommitAsync(cancellationToken);
 
+        var leftoverReservedSeatIds = priorityReleasedSeatIds.Except(distinctSeatIds).ToList();
+        if (leftoverReservedSeatIds.Count > 0)
+            await realtimeNotifier.NotifySeatReleasedAsync(
+                showtimeId,
+                leftoverReservedSeatIds,
+                cancellationToken
+            );
         await realtimeNotifier.NotifySeatHeldAsync(
             showtimeId,
             distinctSeatIds,

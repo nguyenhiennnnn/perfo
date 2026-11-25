@@ -1,3 +1,5 @@
+using Cinema.Application.Caching;
+using Cinema.Application.Interfaces.Bookings;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Notifications;
 using Cinema.Application.Interfaces.Users;
@@ -5,6 +7,8 @@ using Cinema.Application.Interfaces.Waitlist;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Exceptions;
+using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -13,12 +17,17 @@ namespace Cinema.Application.Services.Waitlist;
 
 public class WaitlistNotificationService(
     IAppDbContext db,
+    IAppCache cache,
+    ISeatBlockService seatBlockService,
+    IWaitlistPriorityService priorityService,
     ICommunicationPreferenceService preferences,
     INotificationService notificationService,
     IOptions<AppUrlOptions> appUrlOptions,
     ILogger<WaitlistNotificationService> logger
 ) : IWaitlistNotificationService
 {
+    private const int MaxClaimAttempts = 3;
+
     private sealed record Candidate(
         int WaitlistEntryId,
         int UserId,
@@ -30,22 +39,33 @@ public class WaitlistNotificationService(
 
     private sealed record ShowtimeInfo(string MovieTitle, DateTime StartTime, string RoomName);
 
-    private sealed record Claimed(Candidate Entry, ShowtimeInfo Showtime);
+    private sealed record Claimed(Candidate Entry, ShowtimeInfo Showtime, DateTime PriorityUntil);
 
     public async Task<bool> NotifyHeadAsync(int showtimeId, CancellationToken cancellationToken)
     {
         Claimed? claimed = null;
-        await db.InTransactionAsync(
-            async () =>
+        for (var attempt = 0; attempt < MaxClaimAttempts; attempt++)
+        {
+            try
             {
-                await db.Database.ExecuteSqlInterpolatedAsync(
-                    $"SELECT 1 FROM \"Showtimes\" WHERE \"ShowtimeId\" = {showtimeId} FOR NO KEY UPDATE",
+                await db.InTransactionAsync(
+                    async () =>
+                    {
+                        await db.Database.ExecuteSqlInterpolatedAsync(
+                            $"SELECT 1 FROM \"Showtimes\" WHERE \"ShowtimeId\" = {showtimeId} FOR NO KEY UPDATE",
+                            cancellationToken
+                        );
+                        claimed = await ClaimHeadAsync(showtimeId, cancellationToken);
+                    },
                     cancellationToken
                 );
-                claimed = await ClaimHeadAsync(showtimeId, cancellationToken);
-            },
-            cancellationToken
-        );
+                break;
+            }
+            catch (SeatConflictException)
+            {
+                claimed = null;
+            }
+        }
 
         if (claimed is null)
             return false;
@@ -61,7 +81,8 @@ public class WaitlistNotificationService(
                     claimed.Showtime.StartTime,
                     claimed.Showtime.RoomName,
                     claimed.Entry.SeatCount,
-                    link
+                    link,
+                    claimed.PriorityUntil
                 )
             );
         }
@@ -73,17 +94,12 @@ public class WaitlistNotificationService(
                 showtimeId,
                 claimed.Entry.WaitlistEntryId
             );
-            await db
-                .WaitlistEntries.Where(e =>
-                    e.WaitlistEntryId == claimed.Entry.WaitlistEntryId
-                    && e.Status == WaitlistStatus.Notified
-                )
-                .ExecuteUpdateAsync(
-                    s =>
-                        s.SetProperty(x => x.Status, WaitlistStatus.Waiting)
-                            .SetProperty(x => x.NotifiedAt, (DateTime?)null),
-                    CancellationToken.None
-                );
+            await priorityService.EndAsync(
+                claimed.Entry.WaitlistEntryId,
+                WaitlistStatus.Waiting,
+                onlyIfDue: false,
+                CancellationToken.None
+            );
             throw;
         }
 
@@ -137,16 +153,20 @@ public class WaitlistNotificationService(
         var slots = await db.LoadSeatSlotsAsync(showtimeId, cancellationToken);
         var gapRuleMode = await db.LoadSeatGapRuleModeAsync(cancellationToken);
 
+        var settings = await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken);
+        var priorityUntil = now.AddMinutes(settings.WaitlistPriorityMinutes);
+        if (priorityUntil > showtime.StartTime)
+            priorityUntil = showtime.StartTime;
+
         foreach (var entry in entries)
         {
-            if (
-                !WaitlistSeatAvailability.HasFeasibleSelection(
-                    slots,
-                    entry.SeatCount,
-                    entry.RequireAdjacent,
-                    gapRuleMode
-                )
-            )
+            var seatIds = WaitlistSeatAvailability.FindSelection(
+                slots,
+                entry.SeatCount,
+                entry.RequireAdjacent,
+                gapRuleMode
+            );
+            if (seatIds is null)
                 continue;
 
             if (
@@ -167,11 +187,22 @@ public class WaitlistNotificationService(
                 .ExecuteUpdateAsync(
                     s =>
                         s.SetProperty(x => x.Status, WaitlistStatus.Notified)
-                            .SetProperty(x => x.NotifiedAt, now),
+                            .SetProperty(x => x.NotifiedAt, now)
+                            .SetProperty(x => x.PriorityExpiresAt, priorityUntil),
                     cancellationToken
                 );
             if (updated == 0)
                 return null;
+
+            await seatBlockService.BlockSeatsAsync(
+                showtimeId,
+                seatIds,
+                SeatBlockType.WaitlistReserve,
+                Messages.SeatBlock_WaitlistReserveReason,
+                priorityUntil,
+                cancellationToken,
+                entry.WaitlistEntryId
+            );
 
             return new Claimed(
                 new Candidate(
@@ -182,7 +213,8 @@ public class WaitlistNotificationService(
                     entry.Email,
                     entry.FullName
                 ),
-                showtime
+                showtime,
+                priorityUntil
             );
         }
 

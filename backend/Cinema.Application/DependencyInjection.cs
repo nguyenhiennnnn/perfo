@@ -296,12 +296,15 @@ public static class DependencyInjection
         services.AddScoped<IPaymentAdminService, PaymentAdminService>();
         services.AddScoped<IPaymentExportService, PaymentExportService>();
         services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<IMovieInterestService, MovieInterestService>();
         services.AddScoped<IExperienceSurveyService, ExperienceSurveyService>();
         services.AddScoped<IRoomQualityAlertService, RoomQualityAlertService>();
         services.AddScoped<IRoomQualityAlertQueryService, RoomQualityAlertQueryService>();
         services.AddScoped<IWaitlistService, WaitlistService>();
         services.AddScoped<IWaitlistClosingService, WaitlistClosingService>();
         services.AddScoped<IWaitlistNotificationService, WaitlistNotificationService>();
+        services.AddScoped<IWaitlistPriorityService, WaitlistPriorityService>();
+        services.AddScoped<IWaitlistPriorityExpiryService, WaitlistPriorityExpiryService>();
         services.AddBackgroundEventHandler<ShowtimeSeatsReleased, WaitlistSeatsReleasedHandler>();
         services.AddScoped<ISettingsService, SettingsService>();
         services.AddScoped<IUserProfileService, UserProfileService>();

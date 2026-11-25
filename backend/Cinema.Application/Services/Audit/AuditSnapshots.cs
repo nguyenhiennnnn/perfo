@@ -483,6 +483,7 @@ public static class AuditSnapshots
                 b.Type,
                 b.Reason,
                 b.ExpiresAt,
+                b.WaitlistEntryId,
             }
         );
 

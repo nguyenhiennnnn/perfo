@@ -25,6 +25,13 @@ public interface ISeatBlockService
         SeatBlockType type,
         string reason,
         DateTime? expiresAt,
+        CancellationToken cancellationToken,
+        int? waitlistEntryId = null
+    );
+
+    Task<List<int>> ReleaseWaitlistReserveAsync(
+        int showtimeId,
+        IReadOnlyCollection<int> waitlistEntryIds,
         CancellationToken cancellationToken
     );
 

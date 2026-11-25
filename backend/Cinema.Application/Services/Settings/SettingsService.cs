@@ -180,6 +180,8 @@ public class SettingsService(
             settings.RoomQualityAlertThreshold = roomQualityAlertThreshold;
         if (request.RoomQualityAlertDays is { } roomQualityAlertDays)
             settings.RoomQualityAlertDays = roomQualityAlertDays;
+        if (request.WaitlistPriorityMinutes is { } waitlistPriorityMinutes)
+            settings.WaitlistPriorityMinutes = waitlistPriorityMinutes;
         if (settings.ReviewInviteMinHours >= settings.ReviewInviteMaxHours)
             throw new BusinessRuleException(Messages.Validation_ReviewInviteWindow_Invalid);
         if (settings.GiftCardMinAmount > settings.GiftCardMaxAmount)
@@ -255,6 +257,7 @@ public class SettingsService(
             ReviewRewardPoints = settings.ReviewRewardPoints,
             RoomQualityAlertThreshold = settings.RoomQualityAlertThreshold,
             RoomQualityAlertDays = settings.RoomQualityAlertDays,
+            WaitlistPriorityMinutes = settings.WaitlistPriorityMinutes,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

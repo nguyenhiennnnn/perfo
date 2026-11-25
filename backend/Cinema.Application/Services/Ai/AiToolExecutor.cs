@@ -2,6 +2,7 @@
 using System.Text.Json.Nodes;
 using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Ai;
+using Cinema.Application.DTOs.Movies;
 using Cinema.Application.DTOs.Pricing;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Ledger;

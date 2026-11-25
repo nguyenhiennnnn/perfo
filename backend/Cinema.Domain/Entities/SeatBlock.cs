@@ -11,8 +11,10 @@ public class SeatBlock
     public string Reason { get; set; } = null!;
     public DateTime? ExpiresAt { get; set; }
     public int? CreatedByUserId { get; set; }
+    public int? WaitlistEntryId { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public Showtime Showtime { get; set; } = null!;
     public ShowtimeSeat ShowtimeSeat { get; set; } = null!;
+    public WaitlistEntry? WaitlistEntry { get; set; }
 }

@@ -22,6 +22,7 @@ public class BackgroundJobOptions
     public string MovieIntroEmailCron { get; set; } = "0 10 * * *";
     public string RoomQualityAlertCron { get; set; } = "*/30 * * * *";
     public string WaitlistCloseCron { get; set; } = "* * * * *";
+    public string WaitlistPriorityExpiryCron { get; set; } = "* * * * *";
     public int OutboxBatchSize { get; set; } = 50;
     public int OutboxMaxAttempts { get; set; } = 5;
     public int[] OutboxRetryDelaysSeconds { get; set; } = [30, 120, 600, 1800];

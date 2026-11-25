@@ -66,7 +66,10 @@ public sealed record CinemaSettingsSnapshot(
     decimal ExceptionalRefundApprovalThreshold,
     int ReviewInviteMinHours,
     int ReviewInviteMaxHours,
-    int ReviewRewardPoints
+    int ReviewRewardPoints,
+    decimal RoomQualityAlertThreshold,
+    int RoomQualityAlertDays,
+    int WaitlistPriorityMinutes
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -133,6 +136,9 @@ public sealed record CinemaSettingsSnapshot(
             s.ExceptionalRefundApprovalThreshold,
             s.ReviewInviteMinHours,
             s.ReviewInviteMaxHours,
-            s.ReviewRewardPoints
+            s.ReviewRewardPoints,
+            s.RoomQualityAlertThreshold,
+            s.RoomQualityAlertDays,
+            s.WaitlistPriorityMinutes
         );
 }

@@ -13,5 +13,6 @@ public record WaitlistEntryDto(
     int? QueuePosition,
     DateTime CreatedAt,
     DateTime? NotifiedAt,
-    DateTime? ClosedAt
+    DateTime? ClosedAt,
+    DateTime? PriorityExpiresAt = null
 );

@@ -13,6 +13,7 @@ public class WaitlistEntry
     public WaitlistStatus Status { get; set; } = WaitlistStatus.Waiting;
     public DateTime CreatedAt { get; set; }
     public DateTime? NotifiedAt { get; set; }
+    public DateTime? PriorityExpiresAt { get; set; }
     public DateTime? ClosedAt { get; set; }
 
     public Showtime Showtime { get; set; } = null!;

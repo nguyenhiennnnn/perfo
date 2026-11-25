@@ -20,6 +20,7 @@ public interface IAppDbContext
     DbSet<MoviePopularity> MoviePopularities { get; }
     DbSet<MovieIntroEmailNotice> MovieIntroEmailNotices { get; }
     DbSet<ReviewInviteNotice> ReviewInviteNotices { get; }
+    DbSet<MovieInterest> MovieInterests { get; }
     DbSet<ExperienceSurvey> ExperienceSurveys { get; }
     DbSet<RoomQualityAlert> RoomQualityAlerts { get; }
     DbSet<WaitlistEntry> WaitlistEntries { get; }

@@ -97,6 +97,7 @@ public class CinemaSettings
     public const int DefaultReviewRewardPoints = 10;
     public const decimal DefaultRoomQualityAlertThreshold = 3m;
     public const int DefaultRoomQualityAlertDays = 3;
+    public const int DefaultWaitlistPriorityMinutes = 10;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -198,4 +199,6 @@ public class CinemaSettings
     public decimal RoomQualityAlertThreshold { get; set; } = DefaultRoomQualityAlertThreshold;
 
     public int RoomQualityAlertDays { get; set; } = DefaultRoomQualityAlertDays;
+
+    public int WaitlistPriorityMinutes { get; set; } = DefaultWaitlistPriorityMinutes;
 }

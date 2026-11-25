@@ -151,6 +151,7 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         IntRange(x => x.ReviewRewardPoints, "reviewRewardPoints", 0, 100000);
         DecimalRange(x => x.RoomQualityAlertThreshold, "roomQualityAlertThreshold", 1, 5);
         IntRange(x => x.RoomQualityAlertDays, "roomQualityAlertDays", 1, 60);
+        IntRange(x => x.WaitlistPriorityMinutes, "waitlistPriorityMinutes", 1, 120);
         WholeDecimalRange(
             x => x.ExceptionalRefundApprovalThreshold,
             "exceptionalRefundApprovalThreshold",

@@ -5359,6 +5359,21 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
     <value>Suất chiếu {0} vừa có ghế trống cho bạn.</value>
   </data>
   <data name="Email_WaitlistSeatsNote" xml:space="preserve">
-    <value>Ghế có thể được đặt bởi người khác bất cứ lúc nào, hãy hoàn tất đặt vé sớm. Bạn nhận email này vì đã đăng ký chờ suất chiếu.</value>
+    <value>Các ghế đang được giữ riêng cho bạn đến thời điểm nêu trên. Sau đó ghế sẽ được mở cho người chờ kế tiếp và khách khác. Bạn nhận email này vì đã đăng ký chờ suất chiếu.</value>
+  </data>
+  <data name="Email_WaitlistPriorityUntilLabel" xml:space="preserve">
+    <value>Ghế được giữ cho bạn đến</value>
+  </data>
+  <data name="SeatBlock_WaitlistReserveReason" xml:space="preserve">
+    <value>Giữ ghế ưu tiên cho khách đang chờ</value>
+  </data>
+  <data name="Success_MovieInterestAdded" xml:space="preserve">
+    <value>Đã đánh dấu quan tâm. Chúng tôi sẽ báo khi phim mở bán.</value>
+  </data>
+  <data name="Success_MovieInterestRemoved" xml:space="preserve">
+    <value>Đã bỏ quan tâm phim.</value>
+  </data>
+  <data name="Rule_MovieInterestNotComingSoon" xml:space="preserve">
+    <value>Chỉ có thể đánh dấu quan tâm phim sắp chiếu.</value>
   </data>
 </root>

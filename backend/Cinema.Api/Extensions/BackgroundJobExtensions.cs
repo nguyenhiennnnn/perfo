@@ -163,6 +163,12 @@ public static class BackgroundJobExtensions
             options.WaitlistCloseCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<WaitlistPriorityExpiryJob>(
+            RecurringJobIds.WaitlistPriorityExpiry,
+            j => j.RunAsync(CancellationToken.None),
+            options.WaitlistPriorityExpiryCron,
+            jobOptions
+        );
 
         return app;
     }

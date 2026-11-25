@@ -87,12 +87,38 @@ public sealed record ShowtimeReminderEmailData(
     IReadOnlyList<ShowtimeReminderComboLine> Combos
 );
 
+public sealed record ReviewInviteEmailData(
+    string CustomerName,
+    string MovieTitle,
+    string ReviewLink,
+    int RewardPoints
+);
+
+public sealed record WaitlistSeatsAvailableEmailData(
+    string CustomerName,
+    string MovieTitle,
+    DateTime ShowtimeStartUtc,
+    string RoomName,
+    int SeatCount,
+    string BookingLink,
+    DateTime PriorityUntilUtc
+);
+
 public sealed record LowStockEmailLine(
     string Code,
     string Name,
     string Unit,
     decimal QuantityOnHand,
     decimal LowStockThreshold
+);
+
+public sealed record RoomQualityEmailLine(
+    string RoomName,
+    decimal AverageScore,
+    int ConsecutiveDays,
+    decimal Threshold,
+    DateOnly FromDate,
+    DateOnly ToDate
 );
 
 public sealed record UnclosedShiftEmailLine(
@@ -230,6 +256,10 @@ public interface INotificationService
 
     void SendShowtimeReminder(string toEmail, ShowtimeReminderEmailData data);
 
+    void SendReviewInvite(string toEmail, ReviewInviteEmailData data);
+
+    void SendWaitlistSeatsAvailable(string toEmail, WaitlistSeatsAvailableEmailData data);
+
     void SendInvoiceRequestProcessed(
         string toEmail,
         string customerName,
@@ -306,6 +336,8 @@ public interface INotificationService
     void SendLowStockAlert(string toEmail, IReadOnlyList<LowStockEmailLine> items);
 
     void SendUnclosedShiftAlert(string toEmail, IReadOnlyList<UnclosedShiftEmailLine> shifts);
+
+    void SendRoomQualityAlert(string toEmail, IReadOnlyList<RoomQualityEmailLine> rooms);
 
     void SendDailyClosingReport(string toEmail, DailyClosingEmailData report);
 }

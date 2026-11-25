@@ -8,10 +8,17 @@ using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Cinema.Application.Services.Waitlist;
 
-public class WaitlistService(IAppDbContext db, IAppCache cache) : IWaitlistService
+public class WaitlistService(
+    IAppDbContext db,
+    IAppCache cache,
+    IWaitlistPriorityService priorityService,
+    IWaitlistNotificationService notificationService,
+    ILogger<WaitlistService> logger
+) : IWaitlistService
 {
     private const int MaxPositionAttempts = 5;
 
@@ -123,8 +130,7 @@ public class WaitlistService(IAppDbContext db, IAppCache cache) : IWaitlistServi
         var now = DateTime.UtcNow;
         var updated = await db
             .WaitlistEntries.Where(e =>
-                e.WaitlistEntryId == entryId
-                && (e.Status == WaitlistStatus.Waiting || e.Status == WaitlistStatus.Notified)
+                e.WaitlistEntryId == entryId && e.Status == WaitlistStatus.Waiting
             )
             .ExecuteUpdateAsync(
                 s =>
@@ -133,7 +139,31 @@ public class WaitlistService(IAppDbContext db, IAppCache cache) : IWaitlistServi
                 cancellationToken
             );
         if (updated == 0)
-            throw new ConflictAppException(Messages.Conflict_WaitlistNotWithdrawable);
+        {
+            if (
+                !await priorityService.EndAsync(
+                    entryId,
+                    WaitlistStatus.Withdrawn,
+                    onlyIfDue: false,
+                    cancellationToken
+                )
+            )
+                throw new ConflictAppException(Messages.Conflict_WaitlistNotWithdrawable);
+
+            try
+            {
+                await notificationService.NotifyHeadAsync(showtimeId, cancellationToken);
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                logger.LogError(
+                    ex,
+                    "WaitlistHandoverFailed ShowtimeId {ShowtimeId} WaitlistEntryId {WaitlistEntryId}",
+                    showtimeId,
+                    entryId
+                );
+            }
+        }
 
         var entry = await db
             .WaitlistEntries.AsNoTracking()
@@ -204,7 +234,8 @@ public class WaitlistService(IAppDbContext db, IAppCache cache) : IWaitlistServi
             queuePosition,
             entry.CreatedAt,
             entry.NotifiedAt,
-            entry.ClosedAt
+            entry.ClosedAt,
+            entry.PriorityExpiresAt
         );
     }
 }

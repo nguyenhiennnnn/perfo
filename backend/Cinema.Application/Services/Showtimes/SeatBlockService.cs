@@ -72,7 +72,8 @@ public class SeatBlockService(
         SeatBlockType type,
         string reason,
         DateTime? expiresAt,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken,
+        int? waitlistEntryId = null
     )
     {
         var ids = DistinctSeatIds(showtimeSeatIds);
@@ -124,6 +125,7 @@ public class SeatBlockService(
                 Reason = trimmedReason,
                 ExpiresAt = expiresAt,
                 CreatedByUserId = actorUserId,
+                WaitlistEntryId = waitlistEntryId,
                 CreatedAt = now,
             })
             .ToList();
@@ -213,9 +215,8 @@ public class SeatBlockService(
     public async Task<int> ReleaseExpiredAsync(CancellationToken cancellationToken)
     {
         var now = DateTime.UtcNow;
-        var expired = await db
-            .SeatBlocks.AsNoTracking()
-            .Where(b => b.ExpiresAt != null && b.ExpiresAt <= now)
+        var expired = await ExpiredBlocks(now)
+            .AsNoTracking()
             .OrderBy(b => b.SeatBlockId)
             .Select(b => new { b.SeatBlockId, b.ShowtimeId })
             .Take(SeatBlockLimits.ReleaseBatchSize)
@@ -234,13 +235,9 @@ public class SeatBlockService(
                 await db.InTransactionAsync(
                     async () =>
                     {
-                        var blocks = await db
-                            .SeatBlocks.AsNoTracking()
-                            .Where(b =>
-                                blockIds.Contains(b.SeatBlockId)
-                                && b.ExpiresAt != null
-                                && b.ExpiresAt <= now
-                            )
+                        var blocks = await ExpiredBlocks(now)
+                            .AsNoTracking()
+                            .Where(b => blockIds.Contains(b.SeatBlockId))
                             .ToListAsync(cancellationToken);
                         if (blocks.Count == 0)
                             return;
@@ -272,6 +269,41 @@ public class SeatBlockService(
             logger.LogInformation("SeatBlocksExpired Count {Count}", released);
         return released;
     }
+
+    public async Task<List<int>> ReleaseWaitlistReserveAsync(
+        int showtimeId,
+        IReadOnlyCollection<int> waitlistEntryIds,
+        CancellationToken cancellationToken
+    )
+    {
+        var entryIds = waitlistEntryIds.Distinct().ToList();
+        var blocks = await db
+            .SeatBlocks.AsNoTracking()
+            .Where(b =>
+                b.ShowtimeId == showtimeId
+                && b.Type == SeatBlockType.WaitlistReserve
+                && b.WaitlistEntryId != null
+                && entryIds.Contains(b.WaitlistEntryId.Value)
+            )
+            .ToListAsync(cancellationToken);
+        if (blocks.Count == 0)
+            return [];
+
+        await ReleaseBlocksAsync(showtimeId, blocks, strict: false, cancellationToken);
+        return blocks.Select(b => b.ShowtimeSeatId).ToList();
+    }
+
+    private IQueryable<SeatBlock> ExpiredBlocks(DateTime now) =>
+        db.SeatBlocks.Where(b =>
+            b.ExpiresAt != null
+            && b.ExpiresAt <= now
+            && !(
+                b.Type == SeatBlockType.WaitlistReserve
+                && db.WaitlistEntries.Any(e =>
+                    e.WaitlistEntryId == b.WaitlistEntryId && e.Status == WaitlistStatus.Notified
+                )
+            )
+        );
 
     private async Task ReleaseBlocksAsync(
         int showtimeId,

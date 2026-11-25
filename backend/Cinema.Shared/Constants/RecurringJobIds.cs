@@ -20,4 +20,5 @@ public class RecurringJobIds
     public const string MovieIntroEmail = "movie-intro-email";
     public const string RoomQualityAlert = "room-quality-alert";
     public const string WaitlistClose = "waitlist-close";
+    public const string WaitlistPriorityExpiry = "waitlist-priority-expiry";
 }

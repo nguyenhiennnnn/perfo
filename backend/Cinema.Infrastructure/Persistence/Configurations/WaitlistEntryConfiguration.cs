@@ -23,6 +23,9 @@ public class WaitlistEntryConfiguration : IEntityTypeConfiguration<WaitlistEntry
             .HasColumnType("timestamp without time zone")
             .HasDefaultValueSql("NOW()");
         builder.Property(x => x.NotifiedAt).HasColumnType("timestamp without time zone");
+        builder
+            .Property(x => x.PriorityExpiresAt)
+            .HasColumnType("timestamp without time zone");
         builder.Property(x => x.ClosedAt).HasColumnType("timestamp without time zone");
 
         builder
@@ -48,6 +51,10 @@ public class WaitlistEntryConfiguration : IEntityTypeConfiguration<WaitlistEntry
         builder
             .HasIndex(x => new { x.ShowtimeId, x.Status, x.Position })
             .HasDatabaseName("IX_WaitlistEntries_Showtime_Status_Position");
+        builder
+            .HasIndex(x => x.PriorityExpiresAt)
+            .HasFilter("\"Status\" = 'Notified'")
+            .HasDatabaseName("IX_WaitlistEntries_PriorityExpiresAt");
         builder.HasIndex(x => x.UserId).HasDatabaseName("IX_WaitlistEntries_User");
     }
 }

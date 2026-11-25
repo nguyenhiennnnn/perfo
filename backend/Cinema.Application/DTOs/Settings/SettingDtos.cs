@@ -126,6 +126,8 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public decimal RoomQualityAlertThreshold { get; init; }
 
     public int RoomQualityAlertDays { get; init; }
+
+    public int WaitlistPriorityMinutes { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -195,5 +197,6 @@ public record UpdateSettingsRequest(
     int? ReviewInviteMaxHours = null,
     int? ReviewRewardPoints = null,
     decimal? RoomQualityAlertThreshold = null,
-    int? RoomQualityAlertDays = null
+    int? RoomQualityAlertDays = null,
+    int? WaitlistPriorityMinutes = null
 );

@@ -14,6 +14,6 @@ public class AdminRoomQualityAlertsController(IRoomQualityAlertQueryService aler
     [HttpGet]
     public async Task<IActionResult> Get(
         [FromQuery] bool activeOnly = true,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     ) => Ok(await alertQueryService.GetAsync(activeOnly, cancellationToken));
 }

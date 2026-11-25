@@ -23,6 +23,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<MoviePopularity> MoviePopularities => Set<MoviePopularity>();
     public DbSet<MovieIntroEmailNotice> MovieIntroEmailNotices => Set<MovieIntroEmailNotice>();
     public DbSet<ReviewInviteNotice> ReviewInviteNotices => Set<ReviewInviteNotice>();
+    public DbSet<MovieInterest> MovieInterests => Set<MovieInterest>();
     public DbSet<ExperienceSurvey> ExperienceSurveys => Set<ExperienceSurvey>();
     public DbSet<RoomQualityAlert> RoomQualityAlerts => Set<RoomQualityAlert>();
     public DbSet<WaitlistEntry> WaitlistEntries => Set<WaitlistEntry>();

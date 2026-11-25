@@ -39,12 +39,22 @@ public class SeatBlockConfiguration : IEntityTypeConfiguration<SeatBlock>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder
+            .HasOne(x => x.WaitlistEntry)
+            .WithMany()
+            .HasForeignKey(x => x.WaitlistEntryId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder
             .HasIndex(x => x.ShowtimeSeatId)
             .IsUnique()
             .HasDatabaseName("UQ_SeatBlocks_ShowtimeSeat");
         builder
             .HasIndex(x => new { x.ShowtimeId, x.Type })
             .HasDatabaseName("IX_SeatBlocks_Showtime_Type");
+        builder
+            .HasIndex(x => x.WaitlistEntryId)
+            .HasFilter("\"WaitlistEntryId\" IS NOT NULL")
+            .HasDatabaseName("IX_SeatBlocks_WaitlistEntry");
         builder
             .HasIndex(x => x.ExpiresAt)
             .HasFilter("\"ExpiresAt\" IS NOT NULL")

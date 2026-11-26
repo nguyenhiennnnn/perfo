@@ -54,6 +54,10 @@ export const ENDPOINTS = {
     languages: "/languages",
     ageRatings: "/age-ratings",
     membershipTiers: "/membership-tiers",
+    screenTypes: "/screen-types",
+  },
+  roomRentalRequests: {
+    root: "/room-rental-requests",
   },
   combos: {
     root: "/combos",

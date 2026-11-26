@@ -351,3 +351,26 @@ export const CustomerRestrictionStatus = {
 } as const;
 export type CustomerRestrictionStatus =
   (typeof CustomerRestrictionStatus)[keyof typeof CustomerRestrictionStatus];
+
+export const RoomRentalAudienceType = {
+  Business: "Business",
+  School: "School",
+  FriendGroup: "FriendGroup",
+} as const;
+export type RoomRentalAudienceType =
+  (typeof RoomRentalAudienceType)[keyof typeof RoomRentalAudienceType];
+
+export const RoomRentalRequestStatus = {
+  New: "New",
+  Processing: "Processing",
+  Quoted: "Quoted",
+  Accepted: "Accepted",
+  Declined: "Declined",
+  DepositPaid: "DepositPaid",
+  FullyPaid: "FullyPaid",
+  Completed: "Completed",
+  Cancelled: "Cancelled",
+  QuoteExpired: "QuoteExpired",
+} as const;
+export type RoomRentalRequestStatus =
+  (typeof RoomRentalRequestStatus)[keyof typeof RoomRentalRequestStatus];

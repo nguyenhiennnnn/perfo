@@ -284,6 +284,21 @@ export function getGiftCardLockSeconds(error: unknown): number | null {
   return typeof seconds === "number" && seconds > 0 ? seconds : 0;
 }
 
+export function getPublicFormRetrySeconds(error: unknown): number | null {
+  if (!axios.isAxiosError(error)) return null;
+  const body = error.response?.data as
+    | { errorCode?: string; data?: { retryAfterSeconds?: number } | null }
+    | undefined;
+  if (
+    error.response?.status !== HTTP_STATUS.tooManyRequests &&
+    body?.errorCode !== API_ERROR_CODES.publicFormRateLimited
+  ) {
+    return null;
+  }
+  const seconds = body?.data?.retryAfterSeconds;
+  return typeof seconds === "number" && seconds > 0 ? seconds : 0;
+}
+
 export function getFieldErrors(error: unknown): Record<string, string> {
   const { errors } = extractApiError(error);
   if (!errors) return {};

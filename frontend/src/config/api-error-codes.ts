@@ -5,6 +5,7 @@ export const API_ERROR_CODES = {
   giftCardAttemptsLocked: "GIFT_CARD_ATTEMPTS_LOCKED",
   pendingOrdersLimitExceeded: "PENDING_ORDERS_LIMIT_EXCEEDED",
   verificationRequired: "VERIFICATION_REQUIRED",
+  publicFormRateLimited: "PUBLIC_FORM_RATE_LIMITED",
 } as const;
 
 export const SEAT_CONFLICT_ERROR_KEY = "conflictSeatIds";

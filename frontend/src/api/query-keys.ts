@@ -90,6 +90,11 @@ export const queryKeys = {
     languages: () => ["catalog", "languages"] as const,
     ageRatings: () => ["catalog", "age-ratings"] as const,
     membershipTiers: () => ["catalog", "membership-tiers"] as const,
+    screenTypes: () => ["catalog", "screen-types"] as const,
+  },
+
+  roomRentals: {
+    movieOptions: () => ["room-rentals", "movie-options"] as const,
   },
 
   settings: {

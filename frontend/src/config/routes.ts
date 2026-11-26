@@ -10,6 +10,11 @@ export const ROUTES = {
   giftCardBulk: "/gift-cards/bulk",
   giftCardResume: (orderId: number | string) => `/gift-cards?resume=${orderId}`,
   unsubscribe: "/unsubscribe",
+  roomRental: {
+    request: "/room-rental",
+    submitted: (requestCode: string) =>
+      `/room-rental/submitted?code=${encodeURIComponent(requestCode)}`,
+  },
   policy: (slug: string) => `/policies/${slug}`,
   movies: {
     list: "/movies",

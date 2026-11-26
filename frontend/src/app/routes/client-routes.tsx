@@ -36,6 +36,8 @@ const AccountGiftCardsPage = lazyRoute(() => import("@/features/client/gift-card
 const AccountPointsPage = lazyRoute(() => import("@/features/client/loyalty/pages/loyalty-page"));
 const AccountChallengesPage = lazyRoute(() => import("@/features/client/loyalty/pages/challenges-page"));
 const AccountReferralsPage = lazyRoute(() => import("@/features/client/loyalty/pages/referrals-page"));
+const RoomRentalRequestPage = lazyRoute(() => import("@/features/client/room-rentals/pages/room-rental-request-page"));
+const RoomRentalSubmittedPage = lazyRoute(() => import("@/features/client/room-rentals/pages/room-rental-submitted-page"));
 const PolicyPage = lazyRoute(() => import("@/features/client/policies/pages/policy-page"));
 
 export const clientRoutes: RouteObject[] = [
@@ -50,6 +52,8 @@ export const clientRoutes: RouteObject[] = [
       { path: "membership", lazy: MembershipPage },
       { path: "gift-cards", lazy: GiftCardPurchasePage },
       { path: "gift-cards/bulk", lazy: GiftCardBulkPage },
+      { path: "room-rental", lazy: RoomRentalRequestPage },
+      { path: "room-rental/submitted", lazy: RoomRentalSubmittedPage },
       { path: "policies/:slug", lazy: PolicyPage },
       { path: "booking/:showtimeId", lazy: BookingPage },
       { path: "booking/result", lazy: BookingResultPage },

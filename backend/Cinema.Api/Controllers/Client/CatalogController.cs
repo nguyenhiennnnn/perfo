@@ -20,6 +20,16 @@ public class CatalogController(ICatalogService catalogService) : ControllerBase
     public async Task<IActionResult> GetAgeRatings(CancellationToken cancellationToken) =>
         Ok(await catalogService.GetAgeRatingsAsync(cancellationToken));
 
+    [HttpGet("screen-types")]
+    public async Task<IActionResult> GetScreenTypes(CancellationToken cancellationToken) =>
+        Ok(
+            await catalogService.GetScreenTypesAsync(
+                Pagination.DefaultPage,
+                Pagination.MaxPageSize,
+                cancellationToken
+            )
+        );
+
     [HttpGet("membership-tiers")]
     public async Task<IActionResult> GetMembershipTiers(CancellationToken cancellationToken) =>
         Ok(await catalogService.GetMembershipTiersAsync(cancellationToken));

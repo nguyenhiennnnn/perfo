@@ -14,5 +14,6 @@ public record WaitlistEntryDto(
     DateTime CreatedAt,
     DateTime? NotifiedAt,
     DateTime? ClosedAt,
-    DateTime? PriorityExpiresAt = null
+    DateTime? PriorityExpiresAt = null,
+    IReadOnlyList<int>? ReservedSeatIds = null
 );

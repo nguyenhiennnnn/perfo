@@ -61,6 +61,7 @@ export const invalidations = {
     k.combos.all(),
     k.giftCards.all(),
     k.loyalty.all(),
+    k.waitlist.all(),
   ],
 
   counterShiftChanged: (): KeyList => [
@@ -250,6 +251,8 @@ export const invalidations = {
   ],
 
   surveyChanged: (): KeyList => [k.surveys.all()],
+
+  waitlistChanged: (): KeyList => [k.waitlist.all()],
 
   reviewChanged: (): KeyList => [
     k.adminReviews.all(),

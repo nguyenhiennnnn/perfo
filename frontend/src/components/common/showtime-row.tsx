@@ -1,6 +1,8 @@
 import { formatShowtimeTime } from "@/lib/cinema-format";
 import { formatCurrency } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
+import { getServerNow } from "@/lib/server-clock";
+import { WaitlistRowAction } from "@/features/client/waitlist/components/waitlist-row-action";
 import type { ShowtimeSlotItem } from "@/components/common/showtime-group-list";
 
 interface ShowtimeRowProps {
@@ -11,6 +13,7 @@ interface ShowtimeRowProps {
 
 export const ShowtimeRow = ({ item, disabled = false, onBook }: ShowtimeRowProps) => {
   const soldOut = item.availableSeats === 0;
+  const canWaitlist = soldOut && new Date(item.startTime).getTime() > getServerNow();
   const startLabel = formatShowtimeTime(item.startTime);
 
   return (
@@ -55,7 +58,7 @@ export const ShowtimeRow = ({ item, disabled = false, onBook }: ShowtimeRowProps
           )}
         >
           {soldOut ? (
-            <p className="t-h3">Hết ghế</p>
+            <WaitlistRowAction showtimeId={item.showtimeId} enabled={canWaitlist} />
           ) : (
             <>
               <p className="flex flex-col items-start @md:items-center">

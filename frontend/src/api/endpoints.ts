@@ -71,6 +71,9 @@ export const ENDPOINTS = {
   experienceSurveys: {
     byShowtime: (showtimeId: number) => `/experience-surveys/showtimes/${showtimeId}`,
   },
+  waitlist: {
+    byShowtime: (showtimeId: number) => `/waitlist/showtimes/${showtimeId}`,
+  },
   orders: {
     root: "/bookings",
     hold: "/bookings/hold",

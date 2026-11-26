@@ -12,7 +12,10 @@ import { NotFoundState } from "@/components/common/not-found-state";
 import { PageContainer } from "@/components/common/page-container";
 import { QueryState } from "@/components/common/query-state";
 import { CardSkeleton } from "@/components/common/skeleton-shapes";
+import { WaitlistPanel } from "@/features/client/waitlist/components/waitlist-panel";
 import { ROUTES } from "@/config/routes";
+import { getServerNow } from "@/lib/server-clock";
+import { ShowtimeSeatStatus } from "@/types/enum";
 
 const RESUME_NOTICE = {
   "not-pending": {
@@ -36,12 +39,20 @@ const SeatSelectionSkeleton = () => (
   </div>
 );
 
-const BookingPage = () => {
-  const { showtimeId } = useParams<{ showtimeId: string }>();
-  const [searchParams] = useSearchParams();
-  const resumeOrderId = Number(searchParams.get("resume") ?? 0) || undefined;
-
+const BookingPageContent = ({
+  showtimeId,
+  resumeOrderId,
+}: {
+  showtimeId: string | undefined;
+  resumeOrderId?: number;
+}) => {
   const flow = useBookingFlow(Number(showtimeId), resumeOrderId);
+  const seatsData = flow.showtimeSeats.data;
+  const isSoldOut =
+    !!seatsData &&
+    seatsData.seats.length > 0 &&
+    new Date(seatsData.startTime).getTime() > getServerNow() &&
+    ![...flow.seatStatusMap.values()].includes(ShowtimeSeatStatus.Available);
 
   return (
     <PageContainer size="xl" className="flex flex-col gap-6">
@@ -84,6 +95,10 @@ const BookingPage = () => {
             />
           )}
         </div>
+      )}
+
+      {flow.step === "select" && !flow.isResumeMode && seatsData && (
+        <WaitlistPanel showtimeId={Number(showtimeId)} soldOut={isSoldOut} />
       )}
 
       {flow.step === "select" && !flow.isResumeMode && (
@@ -154,6 +169,20 @@ const BookingPage = () => {
         </>
       )}
     </PageContainer>
+  );
+};
+
+const BookingPage = () => {
+  const { showtimeId } = useParams<{ showtimeId: string }>();
+  const [searchParams] = useSearchParams();
+  const resumeOrderId = Number(searchParams.get("resume") ?? 0) || undefined;
+
+  return (
+    <BookingPageContent
+      key={resumeOrderId ?? "new"}
+      showtimeId={showtimeId}
+      resumeOrderId={resumeOrderId}
+    />
   );
 };
 

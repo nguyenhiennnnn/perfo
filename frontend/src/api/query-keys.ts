@@ -23,6 +23,11 @@ export const queryKeys = {
       ["showtimes", "seat-suggestions", showtimeId, count] as const,
   },
 
+  waitlist: {
+    all: () => ["waitlist"] as const,
+    mine: (showtimeId: number) => ["waitlist", "mine", showtimeId] as const,
+  },
+
   surveys: {
     all: () => ["surveys"] as const,
     mine: (showtimeId: number) => ["surveys", "mine", showtimeId] as const,

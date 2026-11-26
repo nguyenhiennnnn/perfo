@@ -225,6 +225,18 @@ public class WaitlistService(
                         cancellationToken
                     ) + 1;
 
+        IReadOnlyList<int>? reservedSeatIds = null;
+        if (entry.Status == WaitlistStatus.Notified)
+            reservedSeatIds = await db
+                .SeatBlocks.AsNoTracking()
+                .Where(b =>
+                    b.WaitlistEntryId == entry.WaitlistEntryId
+                    && b.Type == SeatBlockType.WaitlistReserve
+                )
+                .OrderBy(b => b.ShowtimeSeatId)
+                .Select(b => b.ShowtimeSeatId)
+                .ToListAsync(cancellationToken);
+
         return new WaitlistEntryDto(
             entry.WaitlistEntryId,
             entry.ShowtimeId,
@@ -235,7 +247,8 @@ public class WaitlistService(
             entry.CreatedAt,
             entry.NotifiedAt,
             entry.ClosedAt,
-            entry.PriorityExpiresAt
+            entry.PriorityExpiresAt,
+            reservedSeatIds
         );
     }
 }

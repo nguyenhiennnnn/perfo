@@ -29,6 +29,16 @@ export const ShowtimeSeatStatus = {
 export type ShowtimeSeatStatus =
   (typeof ShowtimeSeatStatus)[keyof typeof ShowtimeSeatStatus];
 
+export const WaitlistStatus = {
+  Waiting: "Waiting",
+  Notified: "Notified",
+  Held: "Held",
+  Withdrawn: "Withdrawn",
+  Closed: "Closed",
+} as const;
+export type WaitlistStatus =
+  (typeof WaitlistStatus)[keyof typeof WaitlistStatus];
+
 export const SeatGapRuleMode = {
   Strict: "Strict",
   AllowEdge: "AllowEdge",

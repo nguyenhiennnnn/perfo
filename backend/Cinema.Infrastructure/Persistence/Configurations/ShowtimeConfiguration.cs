@@ -19,6 +19,10 @@ public class ShowtimeConfiguration : IEntityTypeConfiguration<Showtime>
                     "CK_Showtimes_Status",
                     "\"Status\" IN ('Scheduled','Cancelled','Completed')"
                 );
+                t.HasCheckConstraint(
+                    "CK_Showtimes_Kind",
+                    "\"Kind\" IN ('Regular','Private','Event')"
+                );
             }
         );
         builder.HasKey(x => x.ShowtimeId);
@@ -30,6 +34,12 @@ public class ShowtimeConfiguration : IEntityTypeConfiguration<Showtime>
             .HasConversion<string>()
             .HasMaxLength(FieldLengths.EnumValue)
             .HasDefaultValue(Domain.Enums.ShowtimeStatus.Scheduled);
+        builder
+            .Property(x => x.Kind)
+            .HasConversion<string>()
+            .HasMaxLength(FieldLengths.EnumValue)
+            .HasDefaultValue(Domain.Enums.ShowtimeKind.Regular);
+        builder.Property(x => x.ContentTitle).HasMaxLength(FieldLengths.MovieTitle);
         builder
             .Property(x => x.CreatedAt)
             .HasColumnType("timestamp without time zone")
@@ -47,6 +57,17 @@ public class ShowtimeConfiguration : IEntityTypeConfiguration<Showtime>
             .HasForeignKey(x => x.RoomId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder
+            .HasOne(x => x.RoomRentalRequest)
+            .WithMany()
+            .HasForeignKey(x => x.RoomRentalRequestId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasIndex(x => x.RoomRentalRequestId)
+            .IsUnique()
+            .HasFilter("\"RoomRentalRequestId\" IS NOT NULL")
+            .HasDatabaseName("UX_Showtime_RoomRentalRequest");
         builder
             .HasIndex(x => new
             {

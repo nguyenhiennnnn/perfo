@@ -1,3 +1,4 @@
+using Cinema.Application.Utils;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Movies;
 using Cinema.Application.Interfaces.Notifications;
@@ -34,10 +35,12 @@ public class MovieInterestNotificationService(
 
         var firstOpenedAt = await db
             .Showtimes.AsNoTracking()
+            .WherePublicKind()
             .Where(s => s.MovieId == movieId)
             .MinAsync(s => (DateTime?)s.CreatedAt, cancellationToken);
         var firstStartTime = await db
             .Showtimes.AsNoTracking()
+            .WherePublicKind()
             .Where(s =>
                 s.MovieId == movieId && s.Status == ShowtimeStatus.Scheduled && s.StartTime > now
             )

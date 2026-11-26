@@ -42,6 +42,17 @@ public class OrderLoyaltyService(
         if (paidAmount <= 0m)
             return;
 
+        if (
+            await db.OrderLines.AnyAsync(
+                l =>
+                    l.OrderId == orderId
+                    && l.Showtime != null
+                    && l.Showtime.Kind == ShowtimeKind.Private,
+                cancellationToken
+            )
+        )
+            return;
+
         var profile = await db.CustomerProfiles.FirstOrDefaultAsync(
             p => p.UserId == userId,
             cancellationToken

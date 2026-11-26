@@ -11,10 +11,14 @@ public class Showtime
     public DateTime EndTime { get; set; }
     public decimal BasePrice { get; set; }
     public ShowtimeStatus Status { get; set; } = ShowtimeStatus.Scheduled;
+    public ShowtimeKind Kind { get; set; } = ShowtimeKind.Regular;
+    public int? RoomRentalRequestId { get; set; }
+    public string? ContentTitle { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public Movie Movie { get; set; } = null!;
     public CinemaRoom Room { get; set; } = null!;
+    public RoomRentalRequest? RoomRentalRequest { get; set; }
     public ICollection<ShowtimeSeat> ShowtimeSeats { get; set; } = [];
     public ICollection<OrderLine> OrderLines { get; set; } = [];
 }

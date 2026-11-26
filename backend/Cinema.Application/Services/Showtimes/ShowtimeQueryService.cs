@@ -32,8 +32,10 @@ public class ShowtimeQueryService(
                     .ThenInclude(r => r.ScreenType)
                 .Include(s => s.Movie)
                     .ThenInclude(m => m.AgeRating)
-                .FirstOrDefaultAsync(s => s.ShowtimeId == showtimeId, cancellationToken)
-            ?? throw new NotFoundException(Messages.NotFound_Showtime);
+                .FirstOrDefaultAsync(
+                    s => s.ShowtimeId == showtimeId && s.Kind != ShowtimeKind.Private,
+                    cancellationToken
+                ) ?? throw new NotFoundException(Messages.NotFound_Showtime);
 
         var seatRows = await db
             .ShowtimeSeats.Where(ss => ss.ShowtimeId == showtimeId)
@@ -206,7 +208,9 @@ public class ShowtimeQueryService(
     {
         var roomCols =
             await db
-                .Showtimes.Where(s => s.ShowtimeId == showtimeId)
+                .Showtimes.Where(s =>
+                    s.ShowtimeId == showtimeId && s.Kind != ShowtimeKind.Private
+                )
                 .Select(s => (int?)s.Room.Cols)
                 .FirstOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(Messages.NotFound_Showtime);
@@ -252,7 +256,10 @@ public class ShowtimeQueryService(
         var dayEnd = BusinessTime.StartOfNextDayUtc(date);
 
         var dayQuery = db.Showtimes.Where(s =>
-            s.Status == ShowtimeStatus.Scheduled && s.StartTime >= dayStart && s.StartTime < dayEnd
+            s.Status == ShowtimeStatus.Scheduled
+            && s.Kind != ShowtimeKind.Private
+            && s.StartTime >= dayStart
+            && s.StartTime < dayEnd
         );
 
         var formats = await dayQuery

@@ -31,7 +31,7 @@ public class ComboService(IAppDbContext db) : IComboService
     {
         var showtime =
             await db
-                .Showtimes.Where(s => s.ShowtimeId == showtimeId)
+                .Showtimes.Where(s => s.ShowtimeId == showtimeId && s.Kind != ShowtimeKind.Private)
                 .Select(s => new
                 {
                     s.StartTime,

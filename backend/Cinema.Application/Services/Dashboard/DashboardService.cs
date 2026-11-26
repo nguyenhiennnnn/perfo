@@ -85,6 +85,7 @@ public class DashboardService(IAppDbContext db, IReportService reportService) : 
             .Where(ss =>
                 ss.Showtime.StartTime >= todayStart
                 && ss.Showtime.StartTime < todayEnd
+                && ss.Showtime.Kind == ShowtimeKind.Regular
                 && ss.Showtime.Status != ShowtimeStatus.Cancelled
             )
             .GroupBy(_ => 1)
@@ -142,7 +143,8 @@ public class DashboardService(IAppDbContext db, IReportService reportService) : 
         );
 
         var todayShowtimes = await db
-            .Showtimes.Where(s => s.StartTime >= todayStart && s.StartTime < todayEnd)
+            .Showtimes.WhereRegularKind()
+            .Where(s => s.StartTime >= todayStart && s.StartTime < todayEnd)
             .OrderBy(s => s.StartTime)
             .ProjectToType<DashboardShowtimeItemDto>()
             .ToListAsync(cancellationToken);

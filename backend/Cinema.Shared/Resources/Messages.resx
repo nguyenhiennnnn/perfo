@@ -5838,4 +5838,40 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_RoomRentalQuoteResponseExpired" xml:space="preserve">
     <value>Báo giá đã hết hạn hiệu lực. Vui lòng liên hệ rạp để nhận báo giá mới.</value>
   </data>
+  <data name="Rule_RoomRentalShowtimeStatusInvalid" xml:space="preserve">
+    <value>Chỉ tạo được suất riêng khi yêu cầu thuê phòng đã đặt cọc.</value>
+  </data>
+  <data name="RoomRental_ShowtimeSeatBlockReason" xml:space="preserve">
+    <value>Thuê phòng {0}</value>
+  </data>
+  <data name="RoomRental_CustomContentMovieTitle" xml:space="preserve">
+    <value>Nội dung khách mang</value>
+  </data>
+  <data name="Report_Finance_RoomRental_Title" xml:space="preserve">
+    <value>Thuê phòng và suất riêng</value>
+  </data>
+  <data name="Report_Finance_RoomRental_Note" xml:space="preserve">
+    <value>Tính theo suất riêng bắt đầu trong kỳ, không gồm suất đã hủy. Giá trị báo giá và tiền cọc lấy từ phiên bản báo giá đã gửi mới nhất; doanh thu combo lấy từ thống kê suất. Suất riêng không tính vào thống kê lấp đầy.</value>
+  </data>
+  <data name="Report_Finance_Col_RentalCode" xml:space="preserve">
+    <value>Mã yêu cầu</value>
+  </data>
+  <data name="Report_Finance_Col_RentalCustomer" xml:space="preserve">
+    <value>Khách thuê</value>
+  </data>
+  <data name="Report_Finance_Col_RentalRoom" xml:space="preserve">
+    <value>Phòng</value>
+  </data>
+  <data name="Report_Finance_Col_RentalAttendees" xml:space="preserve">
+    <value>Số người</value>
+  </data>
+  <data name="Report_Finance_Col_RentalQuoted" xml:space="preserve">
+    <value>Giá trị báo giá</value>
+  </data>
+  <data name="Report_Finance_Col_RentalDeposit" xml:space="preserve">
+    <value>Tiền cọc</value>
+  </data>
+  <data name="Report_Finance_Col_RentalCombo" xml:space="preserve">
+    <value>Doanh thu combo</value>
+  </data>
 </root>

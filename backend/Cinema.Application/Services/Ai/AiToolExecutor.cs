@@ -149,7 +149,11 @@ public class AiToolExecutor(
 
         var query = db
             .Showtimes.AsNoTracking()
-            .Where(s => s.Status == ShowtimeStatus.Scheduled && s.StartTime >= now);
+            .Where(s =>
+                s.Status == ShowtimeStatus.Scheduled
+                && s.Kind != ShowtimeKind.Private
+                && s.StartTime >= now
+            );
 
         if (GetString(args, "date") is { } dateStr)
         {
@@ -388,7 +392,7 @@ public class AiToolExecutor(
         var now = DateTime.UtcNow;
         var showtime = await db
             .Showtimes.AsNoTracking()
-            .Where(s => s.ShowtimeId == showtimeId.Value)
+            .Where(s => s.ShowtimeId == showtimeId.Value && s.Kind != ShowtimeKind.Private)
             .Select(s => new
             {
                 s.ShowtimeId,

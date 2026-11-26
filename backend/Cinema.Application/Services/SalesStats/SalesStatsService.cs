@@ -122,7 +122,7 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
         var showtimes = await db
             .Showtimes.AsNoTracking()
             .Where(s => ids.Contains(s.ShowtimeId))
-            .Select(s => new { s.ShowtimeId, s.StartTime })
+            .Select(s => new { s.ShowtimeId, s.StartTime, s.Kind })
             .ToListAsync(cancellationToken);
         if (showtimes.Count == 0)
             return;
@@ -153,6 +153,7 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
             await UpsertShowtimeStatAsync(
                 showtime.ShowtimeId,
                 date,
+                showtime.Kind,
                 sellable,
                 Summarize(lines),
                 now,
@@ -357,13 +358,14 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
     private Task UpsertShowtimeStatAsync(
         int showtimeId,
         DateOnly date,
+        ShowtimeKind showtimeKind,
         int sellable,
         ShowtimeTotals totals,
         DateTime now,
         CancellationToken cancellationToken
     )
     {
-        var kind = nameof(ShowtimeKind.Regular);
+        var kind = showtimeKind.ToString();
         return db.Database.ExecuteSqlInterpolatedAsync(
             $"""
             INSERT INTO "ShowtimeDailyStats" AS t

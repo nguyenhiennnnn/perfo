@@ -48,9 +48,7 @@ public class SeatHeatmapService(IAppDbContext db, IAppCache cache) : ISeatHeatma
                 && s.StartTime >= startUtc
                 && s.StartTime < endUtc
                 && s.Status != ShowtimeStatus.Cancelled
-                && !db.ShowtimeDailyStats.Any(d =>
-                    d.ShowtimeId == s.ShowtimeId && d.Kind != ShowtimeKind.Regular
-                )
+                && s.Kind == ShowtimeKind.Regular
             );
 
         if (movieId is { } mid)

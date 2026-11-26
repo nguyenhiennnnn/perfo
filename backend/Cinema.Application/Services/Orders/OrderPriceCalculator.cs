@@ -41,6 +41,23 @@ public class OrderPriceCalculator(
         }
 
         var lines = order.Lines.ToList();
+        var showtimeIds = lines
+            .Where(l => l.ShowtimeId != null)
+            .Select(l => l.ShowtimeId!.Value)
+            .Distinct()
+            .ToList();
+        if (
+            showtimeIds.Count > 0
+            && await db.Showtimes.AnyAsync(
+                s => showtimeIds.Contains(s.ShowtimeId) && s.Kind == ShowtimeKind.Private,
+                cancellationToken
+            )
+        )
+        {
+            OrderPricing.ApplyTotals(order);
+            return OrderPriceResult.None;
+        }
+
         var remaining = lines.Select(l => l.LockedUnitPrice * l.Quantity).ToArray();
         var hasTickets = lines.Any(l => l.LineType == OrderLineType.Ticket);
         var wantsPromotions =

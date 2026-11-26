@@ -119,6 +119,7 @@ public class MovieService : IMovieService
                 .ThenInclude(r => r.ScreenType)
             .Where(s =>
                 s.MovieId == movieId
+                && s.Kind != ShowtimeKind.Private
                 && s.Status == ShowtimeStatus.Scheduled
                 && s.StartTime >= now
                 && s.StartTime <= now.AddDays(lookaheadDays)

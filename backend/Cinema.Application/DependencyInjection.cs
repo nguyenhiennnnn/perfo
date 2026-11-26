@@ -281,6 +281,7 @@ public static class DependencyInjection
         services.AddScoped<IRoomRentalTrackingQuoteService, RoomRentalTrackingQuoteService>();
         services.AddScoped<IRoomRentalQuoteExpiryService, RoomRentalQuoteExpiryService>();
         services.AddScoped<IRoomRentalAdminService, RoomRentalAdminService>();
+        services.AddScoped<IRoomRentalShowtimeService, RoomRentalShowtimeService>();
         services.AddScoped<ISupportRequestService, SupportRequestService>();
         services.AddScoped<ISupportRequestStaffService, SupportRequestStaffService>();
         services.AddScoped<ISupportAutoRequestService, SupportAutoRequestService>();
@@ -380,6 +381,7 @@ public static class DependencyInjection
         services.AddReportBlock<RoomQualityByCriterionBlock>();
         services.AddReportBlock<RoomQualityByTimeBlock>();
         services.AddReportBlock<WaitlistReportBlock>();
+        services.AddReportBlock<RoomRentalReportBlock>();
         services.AddReportBlock<MovieInterestReportBlock>();
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IUserAdminService, UserAdminService>();

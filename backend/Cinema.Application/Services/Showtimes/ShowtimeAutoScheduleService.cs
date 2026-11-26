@@ -132,7 +132,7 @@ public class ShowtimeAutoScheduleService(
         var since = DateTime.UtcNow.AddDays(-scheduler.HeatLookbackDays);
         var regularShowtimeIds = db
             .Showtimes.Where(s => movieIds.Contains(s.MovieId))
-            .WhereRegularKind(db)
+            .WhereRegularKind()
             .Select(s => s.ShowtimeId);
         var tickets = await db
             .OrderLines.Where(l =>

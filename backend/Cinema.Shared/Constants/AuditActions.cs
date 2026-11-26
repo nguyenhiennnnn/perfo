@@ -40,4 +40,5 @@ public static class AuditActions
     public const string AcceptRoomRentalQuote = "AcceptRoomRentalQuote";
     public const string DeclineRoomRentalQuote = "DeclineRoomRentalQuote";
     public const string ExpireRoomRentalQuote = "ExpireRoomRentalQuote";
+    public const string CreateRoomRentalShowtime = "CreateRoomRentalShowtime";
 }

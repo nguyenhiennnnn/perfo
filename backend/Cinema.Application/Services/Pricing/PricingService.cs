@@ -364,7 +364,9 @@ public class PricingService(
             : [];
 
         var localTime = TimeOnly.FromDateTime(localStart);
-        var rules = PricingRuleMatcher.Match(
+        IReadOnlyList<AppliedRule> rules = showtime.Kind == ShowtimeKind.Private
+            ? []
+            : PricingRuleMatcher.Match(
             candidates,
             new RuleMatchContext(
                 showtime.RoomId,

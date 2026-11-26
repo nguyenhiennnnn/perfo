@@ -50,7 +50,7 @@ public class MovieRecommendationService(IAppDbContext db, IPricingService pricin
 
         var candidatesWindow = db
             .Showtimes.AsNoTracking()
-            .WhereRegularKind(db)
+            .WhereRegularKind()
             .Where(s =>
                 s.Status == ShowtimeStatus.Scheduled
                 && s.StartTime >= rangeStart

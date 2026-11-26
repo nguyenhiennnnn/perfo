@@ -132,6 +132,38 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject BundleState(Bundle b) =>
+        AuditJson.ToObject(
+            new
+            {
+                b.Name,
+                b.Description,
+                b.Price,
+                items = b
+                    .Items.OrderBy(i => i.TicketTypeId == null)
+                    .ThenBy(i => i.TicketTypeId)
+                    .ThenBy(i => i.ComboId)
+                    .Select(i => new
+                    {
+                        i.TicketTypeId,
+                        i.ComboId,
+                        i.Quantity,
+                    }),
+                b.ValidFrom,
+                b.ValidTo,
+                movieIds = b.MovieIds.Order(),
+                showtimeIds = b.ShowtimeIds.Order(),
+                daysOfWeek = b.DaysOfWeek.Order(),
+                seatTypeIds = b.SeatTypeIds.Order(),
+                allowedFromTime = PricingMapper.FormatTime(b.AllowedFromTime),
+                allowedToTime = PricingMapper.FormatTime(b.AllowedToTime),
+                b.DailyLimit,
+                b.ExcludesPromotions,
+                b.IsActive,
+                b.IsDeleted,
+            }
+        );
+
     public static JsonObject GiftCardBeforeCancel(GiftCardStatus status, decimal balance) =>
         AuditJson.ToObject(new { status, balance });
 

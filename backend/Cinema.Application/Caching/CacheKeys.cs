@@ -17,6 +17,9 @@ public static class CacheKeys
     public static readonly CacheKey<IReadOnlyList<PromotionSnapshot>> Promotions =
         new("promotions", CacheGroups.Promotions);
 
+    public static readonly CacheKey<IReadOnlyList<BundleSnapshot>> Bundles =
+        new("bundles", CacheGroups.Bundles);
+
     public static readonly CacheKey<IReadOnlyList<SpecialDaySnapshot>> HolidayCalendar =
         new("holiday-calendar", CacheGroups.HolidayCalendar);
 

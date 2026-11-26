@@ -91,6 +91,21 @@ public static class CacheRegistrationExtensions
                         .Select(PromotionSnapshot.From)
                         .ToList()
             )
+            .AddCachedData<IReadOnlyList<BundleSnapshot>>(
+                CacheKeys.Bundles,
+                async (db, ct) =>
+                    (
+                        await db
+                            .Bundles.AsNoTracking()
+                            .Include(b => b.Items)
+                            .Where(b => b.IsActive)
+                            .OrderBy(b => b.Price)
+                            .ThenBy(b => b.BundleId)
+                            .ToListAsync(ct)
+                    )
+                        .Select(BundleSnapshot.From)
+                        .ToList()
+            )
             .AddCachedData<IReadOnlyList<SpecialDaySnapshot>>(
                 CacheKeys.HolidayCalendar,
                 async (db, ct) =>

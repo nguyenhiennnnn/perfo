@@ -5934,4 +5934,65 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_RoomRentalCancelled" xml:space="preserve">
     <value>Đã hủy yêu cầu thuê phòng.</value>
   </data>
+  <data name="NotFound_Bundle" xml:space="preserve">
+    <value>Không tìm thấy gói sản phẩm.</value>
+  </data>
+  <data name="Conflict_BundleNameExists" xml:space="preserve">
+    <value>Tên gói sản phẩm đã tồn tại.</value>
+  </data>
+  <data name="Success_BundleCreated" xml:space="preserve">
+    <value>Đã thêm gói sản phẩm mới.</value>
+  </data>
+  <data name="Success_BundleUpdated" xml:space="preserve">
+    <value>Đã cập nhật gói sản phẩm.</value>
+  </data>
+  <data name="Success_BundleDeleted" xml:space="preserve">
+    <value>Đã xóa gói sản phẩm.</value>
+  </data>
+  <data name="Invalid_Bundle_ItemNotFound" xml:space="preserve">
+    <value>Loại vé hoặc combo trong gói không tồn tại hoặc đang ngừng áp dụng.</value>
+  </data>
+  <data name="Invalid_Bundle_ReferenceNotFound" xml:space="preserve">
+    <value>Phim, suất chiếu hoặc loại ghế được chọn không tồn tại.</value>
+  </data>
+  <data name="Rule_Bundle_NoReferenceShowtime" xml:space="preserve">
+    <value>Chưa có suất chiếu sắp tới phù hợp với điều kiện của gói để so sánh giá lẻ. Hãy nới điều kiện hoặc tạo suất chiếu trước.</value>
+  </data>
+  <data name="Rule_Bundle_PriceNotBelowRetail" xml:space="preserve">
+    <value>Giá gói phải thấp hơn tổng giá lẻ của các thành phần ({0}).</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Rule_Bundle_PriceNotBelowRetail, ...)</comment>
+  </data>
+  <data name="Validation_Bundle_PriceRange" xml:space="preserve">
+    <value>Giá gói phải lớn hơn 0, là số nguyên đồng và không vượt quá 1.000.000.000.</value>
+  </data>
+  <data name="Validation_Bundle_ItemsCount" xml:space="preserve">
+    <value>Gói phải có từ 1 đến {0} thành phần.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Validation_Bundle_ItemsCount, ...)</comment>
+  </data>
+  <data name="Validation_Bundle_ItemInvalid" xml:space="preserve">
+    <value>Mỗi thành phần phải là một loại vé hoặc một combo, với số lượng từ 1 đến {0}.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Validation_Bundle_ItemInvalid, ...)</comment>
+  </data>
+  <data name="Validation_Bundle_ItemDuplicate" xml:space="preserve">
+    <value>Mỗi loại vé hoặc combo chỉ xuất hiện một lần trong gói.</value>
+  </data>
+  <data name="Validation_Bundle_TicketRequired" xml:space="preserve">
+    <value>Gói phải có ít nhất một loại vé.</value>
+  </data>
+  <data name="Validation_Bundle_ValidRangeOrder" xml:space="preserve">
+    <value>Thời điểm kết thúc hiệu lực phải sau thời điểm bắt đầu.</value>
+  </data>
+  <data name="Validation_Bundle_TimeWindowBoth" xml:space="preserve">
+    <value>Khung giờ áp dụng phải có cả giờ bắt đầu và giờ kết thúc.</value>
+  </data>
+  <data name="Validation_Bundle_DailyLimitRange" xml:space="preserve">
+    <value>Hạn mức số gói mỗi ngày phải từ 1 đến {0}.</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Validation_Bundle_DailyLimitRange, ...)</comment>
+  </data>
+  <data name="Conflict_BundleDailyLimitReached" xml:space="preserve">
+    <value>Gói sản phẩm đã hết hạn mức bán trong ngày.</value>
+  </data>
+  <data name="Invalid_BundleShowtimeIdRequired" xml:space="preserve">
+    <value>Cần chọn suất chiếu để xem các gói sản phẩm áp dụng.</value>
+  </data>
 </root>

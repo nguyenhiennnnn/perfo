@@ -82,6 +82,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Promotion> Promotions => Set<Promotion>();
     public DbSet<PromotionRedemption> PromotionRedemptions => Set<PromotionRedemption>();
     public DbSet<PromotionCustomerUsage> PromotionCustomerUsages => Set<PromotionCustomerUsage>();
+    public DbSet<Bundle> Bundles => Set<Bundle>();
+    public DbSet<BundleItem> BundleItems => Set<BundleItem>();
+    public DbSet<BundleDailyUsage> BundleDailyUsages => Set<BundleDailyUsage>();
+    public DbSet<BundleReservation> BundleReservations => Set<BundleReservation>();
     public DbSet<PaymentTransaction> PaymentTransactions => Set<PaymentTransaction>();
     public DbSet<OrderResourceHold> OrderResourceHolds => Set<OrderResourceHold>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();

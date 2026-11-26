@@ -77,6 +77,10 @@ public interface IAppDbContext
     DbSet<Promotion> Promotions { get; }
     DbSet<PromotionRedemption> PromotionRedemptions { get; }
     DbSet<PromotionCustomerUsage> PromotionCustomerUsages { get; }
+    DbSet<Bundle> Bundles { get; }
+    DbSet<BundleItem> BundleItems { get; }
+    DbSet<BundleDailyUsage> BundleDailyUsages { get; }
+    DbSet<BundleReservation> BundleReservations { get; }
     DbSet<PaymentTransaction> PaymentTransactions { get; }
     DbSet<CounterShift> CounterShifts { get; }
     DbSet<DailyClosing> DailyClosings { get; }

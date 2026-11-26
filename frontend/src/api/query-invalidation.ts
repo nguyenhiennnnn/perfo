@@ -271,6 +271,13 @@ export const invalidations = {
   ],
 
   roomRentalChanged: (): KeyList => [k.adminRoomRentals.all(), k.adminAuditLogs.all()],
+  roomRentalPaymentChanged: (): KeyList => [
+    k.adminRoomRentals.all(),
+    k.adminAuditLogs.all(),
+    ...orderViews(),
+    ...showtimeViews(),
+    ...dashboard(),
+  ],
   roomRentalRateChanged: (): KeyList => [
     k.adminRoomRentalRates.all(),
     k.adminRoomRentals.all(),

@@ -4,7 +4,17 @@ import { EXPORT_TIMEOUT_MS } from "@/config/default-constants";
 import { getFilenameFromContentDisposition, normalizeBlobError } from "@/lib/download";
 import type { ApiResponse, OffsetPageResult } from "@/types/api";
 import type {
+  CancelRoomRentalBody,
   ChangeRoomRentalStatusBody,
+  RecordRoomRentalBankTransferBody,
+  RoomRentalCalendarItemDto,
+  RoomRentalCalendarParams,
+  RoomRentalCancelPreviewDto,
+  RoomRentalCancellationResultDto,
+  RoomRentalPaymentOrderDto,
+  RoomRentalPaymentsDto,
+  RoomRentalReportDto,
+  RoomRentalReportParams,
   RoomRentalAdminDto,
   RoomRentalAdminListItemDto,
   RoomRentalListParams,
@@ -41,6 +51,25 @@ export const roomRentalsAdminApi = {
 
   sendQuote: (id: number, version: number) =>
     apiPost<ApiResponse<RoomRentalQuoteVersionDto>>(requests.quoteSend(id, version)),
+
+  getCalendar: (params: RoomRentalCalendarParams) =>
+    apiGet<ApiResponse<RoomRentalCalendarItemDto[]>>(requests.calendar, { params }),
+
+  getReport: (params: RoomRentalReportParams) =>
+    apiGet<ApiResponse<RoomRentalReportDto>>(requests.report, { params }),
+
+  getPayments: (id: number) => apiGet<ApiResponse<RoomRentalPaymentsDto>>(requests.payments(id)),
+
+  recordBankTransfer: (id: number, body: RecordRoomRentalBankTransferBody) =>
+    apiPost<ApiResponse<RoomRentalPaymentOrderDto>>(requests.bankTransfer(id), body),
+
+  getCancelPreview: (id: number, venueIncident: boolean) =>
+    apiGet<ApiResponse<RoomRentalCancelPreviewDto>>(requests.cancelPreview(id), {
+      params: { venueIncident },
+    }),
+
+  cancel: (id: number, body: CancelRoomRentalBody) =>
+    apiPost<ApiResponse<RoomRentalCancellationResultDto>>(requests.cancel(id), body),
 
   calculate: (body: RoomRentalQuotePricingRequest) =>
     apiPost<ApiResponse<RoomRentalQuoteResultDto>>(ENDPOINTS.admin.roomRentalQuotes.calculate, body),

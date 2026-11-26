@@ -4,7 +4,11 @@ import { saveBlob } from "@/lib/download";
 import type { RoomRentalRequestStatus } from "@/types/enum";
 import { roomRentalsAdminApi } from "../api/room-rentals-admin-api";
 import type {
+  CancelRoomRentalBody,
   ChangeRoomRentalStatusBody,
+  RecordRoomRentalBankTransferBody,
+  RoomRentalCalendarParams,
+  RoomRentalReportParams,
   RoomRentalListParams,
   RoomRentalQuotePricingRequest,
   UpsertRoomRentalQuoteVersionBody,
@@ -112,3 +116,46 @@ export function useDownloadAdminRoomRentalQuotePdf(id: number) {
   });
 }
 
+export function useAdminRoomRentalCalendar(params: RoomRentalCalendarParams) {
+  return useQuery({
+    queryKey: queryKeys.adminRoomRentals.calendar(params),
+    queryFn: () => roomRentalsAdminApi.getCalendar(params),
+    placeholderData: keepPreviousData,
+    select: (res) => res.data,
+  });
+}
+
+export function useAdminRoomRentalReport(params: RoomRentalReportParams, enabled: boolean) {
+  return useQuery({
+    queryKey: queryKeys.adminRoomRentals.report(params),
+    queryFn: () => roomRentalsAdminApi.getReport(params),
+    enabled,
+    placeholderData: keepPreviousData,
+    select: (res) => res.data,
+  });
+}
+
+export function useRecordRoomRentalBankTransfer(id: number) {
+  return useMutation({
+    meta: { invalidates: "roomRentalPaymentChanged" },
+    mutationFn: (body: RecordRoomRentalBankTransferBody) =>
+      roomRentalsAdminApi.recordBankTransfer(id, body),
+  });
+}
+
+export function useRoomRentalCancelPreview(id: number, venueIncident: boolean) {
+  return useQuery({
+    queryKey: queryKeys.adminRoomRentals.cancelPreview(id, venueIncident),
+    queryFn: () => roomRentalsAdminApi.getCancelPreview(id, venueIncident),
+    enabled: id > 0,
+    gcTime: 0,
+    select: (res) => res.data,
+  });
+}
+
+export function useCancelRoomRental(id: number) {
+  return useMutation({
+    meta: { invalidates: "roomRentalPaymentChanged" },
+    mutationFn: (body: CancelRoomRentalBody) => roomRentalsAdminApi.cancel(id, body),
+  });
+}

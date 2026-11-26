@@ -11,6 +11,8 @@ import { RoomRentalRequestStatus } from "@/types/enum";
 import { useDialogClose, useDialogOpen } from "@/stores/dialog-store";
 import { useSheetClose, useSheetOpen } from "@/stores/sheet-store";
 import { RoomRentalQuoteDetail } from "../components/room-rental-quote-detail";
+import { RoomRentalCancelDialogContent } from "../components/room-rental-cancel-dialog-content";
+import { RoomRentalPaymentsSection } from "../components/room-rental-payments-section";
 import { RoomRentalQuoteVersions } from "../components/room-rental-quote-versions";
 import { RoomRentalQuoteForm } from "../components/forms/room-rental-quote-form";
 import { RoomRentalRequestInfo } from "../components/room-rental-request-info";
@@ -19,6 +21,7 @@ import { RoomRentalStatusDialogContent } from "../components/room-rental-status-
 import { roomRentalsAdminApi } from "../api/room-rentals-admin-api";
 import { useAdminRoomRental } from "../hooks/use-admin-room-rentals";
 import {
+  CANCELLABLE_BY_POLICY_STATUSES,
   QUOTABLE_STATUSES,
   ROOM_RENTAL_ADMIN_STATUS,
   ROOM_RENTAL_STATUS_ACTION_LABELS,
@@ -41,6 +44,9 @@ const RoomRentalRequestContent = ({ request }: { request: RoomRentalAdminDto }) 
   const requestId = request.roomRentalRequestId;
   const canQuote = QUOTABLE_STATUSES.includes(request.status);
   const nextStatuses = getManualNextStatuses(request.status, request.allowedNextStatuses);
+  const canCancelByPolicy =
+    CANCELLABLE_BY_POLICY_STATUSES.includes(request.status) &&
+    request.allowedNextStatuses.includes(RoomRentalRequestStatus.Cancelled);
 
   const openComposer = (sourceVersion?: number) => {
     const open = (source: RoomRentalQuoteVersionDto | null) =>
@@ -73,6 +79,13 @@ const RoomRentalRequestContent = ({ request }: { request: RoomRentalAdminDto }) 
       ),
     });
 
+  const openCancelByPolicy = () =>
+    openDialog({
+      title: "Hủy yêu cầu theo chính sách",
+      description: `Yêu cầu ${request.requestCode} · ${request.fullName}`,
+      content: <RoomRentalCancelDialogContent requestId={requestId} onDone={closeDialog} />,
+    });
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -87,7 +100,7 @@ const RoomRentalRequestContent = ({ request }: { request: RoomRentalAdminDto }) 
         <p className="text-sm text-muted-foreground">
           {request.fullName} · gửi {formatDateTime(request.createdAt)} · cập nhật {formatDateTime(request.updatedAt)}
         </p>
-        {nextStatuses.length > 0 && (
+        {(nextStatuses.length > 0 || canCancelByPolicy) && (
           <div className="flex flex-wrap gap-2 pt-1">
             {nextStatuses.map((status) => (
               <Button
@@ -99,6 +112,11 @@ const RoomRentalRequestContent = ({ request }: { request: RoomRentalAdminDto }) 
                 {ROOM_RENTAL_STATUS_ACTION_LABELS[status] ?? ROOM_RENTAL_ADMIN_STATUS[status].label}
               </Button>
             ))}
+            {canCancelByPolicy && (
+              <Button size="sm" variant="destructive" onClick={openCancelByPolicy}>
+                Hủy theo chính sách
+              </Button>
+            )}
           </div>
         )}
       </div>
@@ -114,6 +132,12 @@ const RoomRentalRequestContent = ({ request }: { request: RoomRentalAdminDto }) 
           onView={openView}
         />
       </div>
+
+      <RoomRentalPaymentsSection
+        requestId={requestId}
+        requestCode={request.requestCode}
+        status={request.status}
+      />
     </div>
   );
 };

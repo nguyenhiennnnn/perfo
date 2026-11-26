@@ -364,6 +364,13 @@ export const ENDPOINTS = {
         `/admin/room-rental-requests/${id}/quotes/${version}/pdf`,
       quoteSend: (id: number, version: number) =>
         `/admin/room-rental-requests/${id}/quotes/${version}/send`,
+      calendar: "/admin/room-rental-requests/calendar",
+      report: "/admin/room-rental-requests/report",
+      cancel: (id: number) => `/admin/room-rental-requests/${id}/cancel`,
+      cancelPreview: (id: number) => `/admin/room-rental-requests/${id}/cancel-preview`,
+      payments: (id: number) => `/admin/room-rental-requests/${id}/payments`,
+      paymentOrders: (id: number) => `/admin/room-rental-requests/${id}/payments/orders`,
+      bankTransfer: (id: number) => `/admin/room-rental-requests/${id}/payments/bank-transfer`,
     },
     roomRentalRates: {
       root: "/admin/room-rental-rates",

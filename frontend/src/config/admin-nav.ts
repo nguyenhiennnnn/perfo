@@ -137,6 +137,18 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         roles: [Role.Admin],
       },
       {
+        to: ROUTES.admin.roomRentalCalendar,
+        label: "Lịch phòng thuê",
+        icon: CalendarClock,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.roomRentalReport,
+        label: "Báo cáo thuê phòng",
+        icon: Banknote,
+        roles: [Role.Admin],
+      },
+      {
         to: ROUTES.admin.roomRentalRates,
         label: "Bảng giá thuê phòng",
         icon: BadgeDollarSign,
@@ -281,7 +293,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
       {
         to: ROUTES.admin.reports,
         label: "Báo cáo & doanh thu",
-        icon: BarChart3,
+        icon: Banknote,
         roles: [Role.Admin],
       },
       {
@@ -316,7 +328,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
       {
         to: ROUTES.admin.promotionReports,
         label: "Báo cáo khuyến mãi",
-        icon: BarChart3,
+        icon: Banknote,
         roles: [Role.Admin],
       },
     ],
@@ -345,7 +357,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
       {
         to: ROUTES.admin.loyaltyReport,
         label: "Báo cáo điểm",
-        icon: BarChart3,
+        icon: Banknote,
         roles: [Role.Admin],
       },
     ],

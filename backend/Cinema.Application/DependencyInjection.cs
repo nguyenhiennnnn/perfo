@@ -1,4 +1,4 @@
-﻿using Cinema.Application.DTOs.GiftCards;
+using Cinema.Application.DTOs.GiftCards;
 using Cinema.Application.DTOs.Movies;
 using Cinema.Application.DTOs.Reports;
 using Cinema.Application.DTOs.Promotions;
@@ -281,6 +281,7 @@ public static class DependencyInjection
         services.AddScoped<IRoomRentalTrackingQuoteService, RoomRentalTrackingQuoteService>();
         services.AddScoped<IRoomRentalQuoteExpiryService, RoomRentalQuoteExpiryService>();
         services.AddScoped<IRoomRentalAdminService, RoomRentalAdminService>();
+        services.AddScoped<IRoomRentalInsightService, RoomRentalInsightService>();
         services.AddScoped<IRoomRentalShowtimeService, RoomRentalShowtimeService>();
         services.AddScoped<IRoomRentalPaymentOrderService, RoomRentalPaymentOrderService>();
         services.AddScoped<IRoomRentalBankTransferService, RoomRentalBankTransferService>();

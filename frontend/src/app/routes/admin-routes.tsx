@@ -46,6 +46,8 @@ const AdminRoomClosuresPage = lazyRoute(() => import("@/features/admin/room-clos
 const AdminRoomClosureDetailPage = lazyRoute(() => import("@/features/admin/room-closures/pages/room-closure-detail-page"));
 const AdminRoomRentalsPage = lazyRoute(() => import("@/features/admin/room-rentals/pages/room-rental-requests-page"));
 const AdminRoomRentalDetailPage = lazyRoute(() => import("@/features/admin/room-rentals/pages/room-rental-request-detail-page"));
+const AdminRoomRentalCalendarPage = lazyRoute(() => import("@/features/admin/room-rentals/pages/room-rental-calendar-page"));
+const AdminRoomRentalReportPage = lazyRoute(() => import("@/features/admin/room-rentals/pages/room-rental-report-page"));
 const AdminRoomRentalRatesPage = lazyRoute(() => import("@/features/admin/room-rentals/pages/room-rental-rates-page"));
 const AdminCombosPage = lazyRoute(() => import("@/features/admin/combos/pages/combos-page"));
 const AdminInventoryStockPage = lazyRoute(() => import("@/features/admin/inventory/pages/inventory-stock-page"));
@@ -156,6 +158,8 @@ export const adminRoutes: RouteObject[] = [
           { path: "room-closures/:id", lazy: AdminRoomClosureDetailPage },
           { path: "room-rentals", lazy: AdminRoomRentalsPage },
           { path: "room-rentals/rates", lazy: AdminRoomRentalRatesPage },
+          { path: "room-rentals/calendar", lazy: AdminRoomRentalCalendarPage },
+          { path: "room-rentals/report", lazy: AdminRoomRentalReportPage },
           { path: "room-rentals/:id", lazy: AdminRoomRentalDetailPage },
           { path: "combos", lazy: AdminCombosPage },
           { path: "inventory", lazy: AdminInventoryStockPage },

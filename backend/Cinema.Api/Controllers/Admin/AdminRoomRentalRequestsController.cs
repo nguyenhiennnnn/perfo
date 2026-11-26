@@ -14,6 +14,7 @@ namespace Cinema.Api.Controllers.Admin;
 [Authorize(Policy = Policies.AdminOnly)]
 public class AdminRoomRentalRequestsController(
     IRoomRentalAdminService roomRentalAdminService,
+    IRoomRentalInsightService roomRentalInsightService,
     IRoomRentalCancellationService roomRentalCancellationService
 ) : ControllerBase
 {
@@ -30,6 +31,35 @@ public class AdminRoomRentalRequestsController(
                 new RoomRentalAdminListFilter(status, search),
                 page,
                 pageSize,
+                cancellationToken
+            )
+        );
+
+    [HttpGet("calendar")]
+    public async Task<ActionResult<List<RoomRentalCalendarItemDto>>> GetCalendar(
+        [FromQuery] DateOnly from,
+        [FromQuery] DateOnly to,
+        [FromQuery] int? roomId,
+        CancellationToken cancellationToken
+    ) => Ok(await roomRentalInsightService.GetCalendarAsync(from, to, roomId, cancellationToken));
+
+    [HttpGet("report")]
+    public async Task<ActionResult<RoomRentalReportDto>> GetReport(
+        [FromQuery] DateOnly from,
+        [FromQuery] DateOnly to,
+        CancellationToken cancellationToken
+    ) => Ok(await roomRentalInsightService.GetReportAsync(from, to, cancellationToken));
+
+    [HttpGet("{requestId:int}/cancel-preview")]
+    public async Task<ActionResult<RoomRentalCancelPreviewDto>> GetCancelPreview(
+        int requestId,
+        [FromQuery] bool venueIncident,
+        CancellationToken cancellationToken
+    ) =>
+        Ok(
+            await roomRentalInsightService.GetCancelPreviewAsync(
+                requestId,
+                venueIncident,
                 cancellationToken
             )
         );

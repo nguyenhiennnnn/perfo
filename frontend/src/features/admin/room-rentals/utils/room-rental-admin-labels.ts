@@ -1,6 +1,6 @@
 import type { BadgeVariant } from "@/components/common/status-badge.config";
 import type { EnumOption } from "@/lib/enum-options";
-import { RoomRentalRequestStatus } from "@/types/enum";
+import { RoomRentalRequestStatus, type RoomRentalPaymentStage } from "@/types/enum";
 
 export interface RoomRentalAdminStatusInfo {
   label: string;
@@ -72,3 +72,31 @@ export const ROOM_RENTAL_QUOTE_MAX_EXTRAS = 20;
 export const ROOM_RENTAL_QUOTE_MAX_COMBOS = 20;
 export const ROOM_RENTAL_QUOTE_MAX_TIERS = 10;
 export const ROOM_RENTAL_CALCULATE_DEBOUNCE_MS = 500;
+
+export const ROOM_RENTAL_PAYMENT_STAGE_LABELS: Record<RoomRentalPaymentStage, string> = {
+  Deposit: "Đặt cọc",
+  Balance: "Thanh toán nốt",
+};
+
+export const ROOM_RENTAL_PAYMENT_ORDER_STATUS: Record<string, RoomRentalAdminStatusInfo> = {
+  Pending: { label: "Chờ thanh toán", variant: "warning" },
+  Confirmed: { label: "Đã thanh toán", variant: "success" },
+  Cancelled: { label: "Đã hủy", variant: "destructive" },
+  Expired: { label: "Hết hạn", variant: "secondary" },
+};
+
+export const PAYMENT_VISIBLE_STATUSES: RoomRentalRequestStatus[] = [
+  RoomRentalRequestStatus.Accepted,
+  RoomRentalRequestStatus.DepositPaid,
+  RoomRentalRequestStatus.FullyPaid,
+  RoomRentalRequestStatus.Completed,
+  RoomRentalRequestStatus.Cancelled,
+];
+
+export const CANCELLABLE_BY_POLICY_STATUSES: RoomRentalRequestStatus[] = PAID_STAGE_STATUSES;
+
+export const ROOM_RENTAL_BANK_REFERENCE_MAX_LENGTH = 100;
+export const ROOM_RENTAL_CANCEL_NOTE_MAX_LENGTH = 2000;
+export const ROOM_RENTAL_CALENDAR_DAYS = 7;
+export const ROOM_RENTAL_REPORT_DEFAULT_DAYS = 90;
+export const ROOM_RENTAL_REPORT_MAX_DAYS = 92;

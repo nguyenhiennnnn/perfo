@@ -69,6 +69,8 @@ export const ROUTES = {
     roomClosures: "/admin/room-closures",
     roomRentals: "/admin/room-rentals",
     roomRentalRates: "/admin/room-rentals/rates",
+    roomRentalCalendar: "/admin/room-rentals/calendar",
+    roomRentalReport: "/admin/room-rentals/report",
     roomRentalDetail: (requestId: number | string) => `/admin/room-rentals/${requestId}`,
     combos: "/admin/combos",
     inventory: "/admin/inventory",

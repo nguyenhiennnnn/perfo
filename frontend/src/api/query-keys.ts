@@ -274,6 +274,11 @@ export const queryKeys = {
     quote: (id: number, version: number) =>
       ["admin", "room-rentals", "quote", id, version] as const,
     calculate: (params: object) => ["admin", "room-rentals", "calculate", params] as const,
+    calendar: (params: object) => ["admin", "room-rentals", "calendar", params] as const,
+    report: (params: object) => ["admin", "room-rentals", "report", params] as const,
+    payments: (id: number) => ["admin", "room-rentals", "payments", id] as const,
+    cancelPreview: (id: number, venueIncident: boolean) =>
+      ["admin", "room-rentals", "cancel-preview", id, venueIncident] as const,
   },
 
   adminRoomRentalRates: {

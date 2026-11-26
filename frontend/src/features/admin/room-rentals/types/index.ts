@@ -1,7 +1,9 @@
 import type {
   RoomRentalAudienceType,
+  RoomRentalPaymentStage,
   RoomRentalQuoteLineKind,
   RoomRentalRequestStatus,
+  ShowtimeStatus,
 } from "@/types/enum";
 
 export interface RoomRentalAdminListItemDto {
@@ -182,4 +184,121 @@ export interface RoomRentalRateListParams {
   isActive?: boolean;
   page?: number;
   pageSize?: number;
+}
+
+export interface RoomRentalPaymentOrderDto {
+  orderId: number;
+  orderCode: string;
+  stage: RoomRentalPaymentStage;
+  status: string;
+  amount: number;
+  paidAmount: number;
+  outstandingAmount: number;
+  expiresAt: string | null;
+}
+
+export interface RoomRentalPaymentStageDto {
+  stage: RoomRentalPaymentStage;
+  amount: number;
+  dueAt: string | null;
+  order: RoomRentalPaymentOrderDto | null;
+  isPaid: boolean;
+}
+
+export interface RoomRentalPaymentsDto {
+  requestId: number;
+  requestCode: string;
+  status: RoomRentalRequestStatus;
+  total: number;
+  paidTotal: number;
+  stages: RoomRentalPaymentStageDto[];
+}
+
+export interface RecordRoomRentalBankTransferBody {
+  stage: RoomRentalPaymentStage;
+  amount: number | null;
+  reference: string;
+  note: string | null;
+}
+
+export interface CancelRoomRentalBody {
+  venueIncident: boolean;
+  note: string;
+}
+
+export interface RoomRentalCancellationResultDto {
+  requestId: number;
+  requestCode: string;
+  status: RoomRentalRequestStatus;
+  kind: "Customer" | "Venue" | "PaymentOverdue";
+  depositRefundPercent: number;
+  refundedAmount: number;
+  retainedAmount: number;
+  showtimeReleased: boolean;
+}
+
+export interface RoomRentalCancelPreviewDto {
+  requestId: number;
+  requestCode: string;
+  status: RoomRentalRequestStatus;
+  canCancel: boolean;
+  kind: "Customer" | "Venue" | "PaymentOverdue";
+  startAt: string | null;
+  hoursBeforeStart: number;
+  depositRefundPercent: number;
+  depositPaid: number;
+  balancePaid: number;
+  estimatedRefund: number;
+  estimatedRetained: number;
+}
+
+export interface RoomRentalCalendarParams {
+  from: string;
+  to: string;
+  roomId?: number;
+}
+
+export interface RoomRentalCalendarItemDto {
+  showtimeId: number;
+  roomId: number;
+  roomName: string;
+  startTime: string;
+  endTime: string;
+  contentTitle: string | null;
+  showtimeStatus: ShowtimeStatus;
+  requestId: number;
+  requestCode: string;
+  customer: string;
+  requestStatus: RoomRentalRequestStatus;
+  attendeeCount: number;
+}
+
+export interface RoomRentalReportParams {
+  from: string;
+  to: string;
+}
+
+export interface RoomRentalReportStatusDto {
+  status: RoomRentalRequestStatus;
+  count: number;
+}
+
+export interface RoomRentalReportDailyDto {
+  businessDate: string;
+  revenue: number;
+  events: number;
+}
+
+export interface RoomRentalReportDto {
+  from: string;
+  to: string;
+  totalRequests: number;
+  quotedRequests: number;
+  closedRequests: number;
+  cancelledRequests: number;
+  closeRate: number;
+  recognizedRevenue: number;
+  pendingRevenue: number;
+  byStatus: RoomRentalReportStatusDto[];
+  daily: RoomRentalReportDailyDto[];
 }

@@ -98,6 +98,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<SeatHoldEvent> SeatHoldEvents => Set<SeatHoldEvent>();
     public DbSet<InvoiceProfile> InvoiceProfiles => Set<InvoiceProfile>();
     public DbSet<InvoiceRequest> InvoiceRequests => Set<InvoiceRequest>();
+    public DbSet<RoomRentalRequest> RoomRentalRequests => Set<RoomRentalRequest>();
+    public DbSet<RoomRentalTrackingAttemptLimit> RoomRentalTrackingAttemptLimits =>
+        Set<RoomRentalTrackingAttemptLimit>();
     public DbSet<SupportRequest> SupportRequests => Set<SupportRequest>();
     public DbSet<SupportMessage> SupportMessages => Set<SupportMessage>();
     public DbSet<ExceptionalRefundProposal> ExceptionalRefundProposals => Set<ExceptionalRefundProposal>();

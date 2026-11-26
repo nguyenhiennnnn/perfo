@@ -82,6 +82,16 @@ public class NotificationService(
             )
         );
 
+    public void SendRoomRentalRequestReceived(
+        string toEmail,
+        RoomRentalRequestReceivedEmailData data
+    ) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_RoomRentalReceivedSubject, _brand.Name, data.RequestCode),
+            EmailTemplates.RoomRentalRequestReceived(_brand, data)
+        );
+
     public void SendSupportRequestUpdated(string toEmail, SupportRequestUpdateEmailData data) =>
         Enqueue(
             toEmail,

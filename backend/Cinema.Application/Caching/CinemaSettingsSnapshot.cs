@@ -83,7 +83,10 @@ public sealed record CinemaSettingsSnapshot(
     int AbusePaymentFailureThreshold,
     int AbusePaymentFailureWindowMinutes,
     int VerificationCodeMinutes,
-    int VerificationMaxAttempts
+    int VerificationMaxAttempts,
+    int RoomRentalTrackingTokenValidDays,
+    int RoomRentalTrackingMaxFailedAttempts,
+    int RoomRentalTrackingLockoutMinutes
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -167,6 +170,9 @@ public sealed record CinemaSettingsSnapshot(
             s.AbusePaymentFailureThreshold,
             s.AbusePaymentFailureWindowMinutes,
             s.VerificationCodeMinutes,
-            s.VerificationMaxAttempts
+            s.VerificationMaxAttempts,
+            s.RoomRentalTrackingTokenValidDays,
+            s.RoomRentalTrackingMaxFailedAttempts,
+            s.RoomRentalTrackingLockoutMinutes
         );
 }

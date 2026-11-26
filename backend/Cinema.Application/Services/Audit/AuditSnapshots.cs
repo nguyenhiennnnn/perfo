@@ -227,6 +227,9 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject RoomRentalRequestState(RoomRentalRequest r) =>
+        AuditJson.ToObject(new { r.Status, r.StatusNote, r.UpdatedAt });
+
     public static JsonObject SupportRequestState(SupportRequest r) =>
         AuditJson.ToObject(
             new

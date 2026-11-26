@@ -210,6 +210,12 @@ public class SettingsService(
             settings.VerificationCodeMinutes = verificationCodeMinutes;
         if (request.VerificationMaxAttempts is { } verificationMaxAttempts)
             settings.VerificationMaxAttempts = verificationMaxAttempts;
+        if (request.RoomRentalTrackingTokenValidDays is { } roomRentalTrackingTokenValidDays)
+            settings.RoomRentalTrackingTokenValidDays = roomRentalTrackingTokenValidDays;
+        if (request.RoomRentalTrackingMaxFailedAttempts is { } roomRentalTrackingMaxFailedAttempts)
+            settings.RoomRentalTrackingMaxFailedAttempts = roomRentalTrackingMaxFailedAttempts;
+        if (request.RoomRentalTrackingLockoutMinutes is { } roomRentalTrackingLockoutMinutes)
+            settings.RoomRentalTrackingLockoutMinutes = roomRentalTrackingLockoutMinutes;
         if (settings.ReviewInviteMinHours >= settings.ReviewInviteMaxHours)
             throw new BusinessRuleException(Messages.Validation_ReviewInviteWindow_Invalid);
         if (settings.GiftCardMinAmount > settings.GiftCardMaxAmount)
@@ -300,6 +306,9 @@ public class SettingsService(
             AbusePaymentFailureWindowMinutes = settings.AbusePaymentFailureWindowMinutes,
             VerificationCodeMinutes = settings.VerificationCodeMinutes,
             VerificationMaxAttempts = settings.VerificationMaxAttempts,
+            RoomRentalTrackingTokenValidDays = settings.RoomRentalTrackingTokenValidDays,
+            RoomRentalTrackingMaxFailedAttempts = settings.RoomRentalTrackingMaxFailedAttempts,
+            RoomRentalTrackingLockoutMinutes = settings.RoomRentalTrackingLockoutMinutes,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

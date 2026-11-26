@@ -34,4 +34,5 @@ public static class AuditActions
     public const string RejectExceptionalRefund = "RejectExceptionalRefund";
     public const string RestrictCustomer = "RestrictCustomer";
     public const string LiftCustomerRestriction = "LiftCustomerRestriction";
+    public const string ChangeRoomRentalRequestStatus = "ChangeRoomRentalRequestStatus";
 }

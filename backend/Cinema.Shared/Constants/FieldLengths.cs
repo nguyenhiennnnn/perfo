@@ -59,6 +59,9 @@ public static class FieldLengths
     public const int SupportRequestSubject = 150;
     public const int SupportMessageContent = 2000;
     public const int RefundProposalReason = 500;
+    public const int RoomRentalRequestCode = 20;
+    public const int RoomRentalOrganization = 150;
+    public const int RoomRentalNote = 2000;
 
     public const int FileName = 255;
     public const int ErrorMessage = 2000;

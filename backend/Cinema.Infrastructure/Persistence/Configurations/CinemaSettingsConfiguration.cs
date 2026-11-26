@@ -255,6 +255,15 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
             .Property(x => x.VerificationMaxAttempts)
             .HasDefaultValue(CinemaSettings.DefaultVerificationMaxAttempts);
         builder
+            .Property(x => x.RoomRentalTrackingTokenValidDays)
+            .HasDefaultValue(CinemaSettings.DefaultRoomRentalTrackingTokenValidDays);
+        builder
+            .Property(x => x.RoomRentalTrackingMaxFailedAttempts)
+            .HasDefaultValue(CinemaSettings.DefaultRoomRentalTrackingMaxFailedAttempts);
+        builder
+            .Property(x => x.RoomRentalTrackingLockoutMinutes)
+            .HasDefaultValue(CinemaSettings.DefaultRoomRentalTrackingLockoutMinutes);
+        builder
             .Property(x => x.SupportRequestDueHours)
             .HasDefaultValue(CinemaSettings.DefaultSupportRequestDueHours);
         builder

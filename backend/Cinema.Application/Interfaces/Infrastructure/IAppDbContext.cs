@@ -105,6 +105,8 @@ public interface IAppDbContext
     DbSet<SeatHoldEvent> SeatHoldEvents { get; }
     DbSet<InvoiceProfile> InvoiceProfiles { get; }
     DbSet<InvoiceRequest> InvoiceRequests { get; }
+    DbSet<RoomRentalRequest> RoomRentalRequests { get; }
+    DbSet<RoomRentalTrackingAttemptLimit> RoomRentalTrackingAttemptLimits { get; }
     DbSet<SupportRequest> SupportRequests { get; }
     DbSet<SupportMessage> SupportMessages { get; }
     DbSet<ExceptionalRefundProposal> ExceptionalRefundProposals { get; }

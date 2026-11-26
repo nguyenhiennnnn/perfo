@@ -166,6 +166,19 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         IntRange(x => x.AbusePaymentFailureWindowMinutes, "abusePaymentFailureWindowMinutes", 1, 1440);
         IntRange(x => x.VerificationCodeMinutes, "verificationCodeMinutes", 1, 60);
         IntRange(x => x.VerificationMaxAttempts, "verificationMaxAttempts", 1, 10);
+        IntRange(x => x.RoomRentalTrackingTokenValidDays, "roomRentalTrackingTokenValidDays", 1, 365);
+        IntRange(
+            x => x.RoomRentalTrackingMaxFailedAttempts,
+            "roomRentalTrackingMaxFailedAttempts",
+            3,
+            20
+        );
+        IntRange(
+            x => x.RoomRentalTrackingLockoutMinutes,
+            "roomRentalTrackingLockoutMinutes",
+            1,
+            1440
+        );
         WholeDecimalRange(
             x => x.ExceptionalRefundApprovalThreshold,
             "exceptionalRefundApprovalThreshold",

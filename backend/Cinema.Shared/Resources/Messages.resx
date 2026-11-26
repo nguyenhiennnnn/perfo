@@ -5508,4 +5508,79 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_CustomerRestrictionLifted" xml:space="preserve">
     <value>Đã gỡ hạn chế khách hàng.</value>
   </data>
+  <data name="Validation_RoomRental_DesiredStartPast" xml:space="preserve">
+    <value>Ngày giờ mong muốn phải ở tương lai.</value>
+  </data>
+  <data name="Validation_RoomRental_FlexibleRangeIncomplete" xml:space="preserve">
+    <value>Khoảng thời gian dự phòng cần có cả thời điểm bắt đầu và kết thúc.</value>
+  </data>
+  <data name="Validation_RoomRental_FlexibleRangeInvalid" xml:space="preserve">
+    <value>Khoảng thời gian dự phòng phải có thời điểm bắt đầu không sau thời điểm kết thúc và dài tối đa {0} ngày.</value>
+  </data>
+  <data name="Validation_RoomRental_AttendeeCountRange" xml:space="preserve">
+    <value>Số người phải từ {0} đến {1}.</value>
+  </data>
+  <data name="Validation_RoomRental_ContentConflict" xml:space="preserve">
+    <value>Không chọn phim khi khách tự mang nội dung.</value>
+  </data>
+  <data name="Rule_RoomRentalMovieEnded" xml:space="preserve">
+    <value>Phim đã ngừng chiếu, vui lòng chọn phim khác hoặc để trống.</value>
+  </data>
+  <data name="Rule_RoomRentalCodeGenerationFailed" xml:space="preserve">
+    <value>Không thể tạo mã yêu cầu thuê phòng, vui lòng thử lại.</value>
+  </data>
+  <data name="Success_RoomRentalRequestCreated" xml:space="preserve">
+    <value>Đã gửi yêu cầu thuê phòng. Rạp sẽ liên hệ với bạn sớm.</value>
+  </data>
+  <data name="Validation_RoomRental_CancelNoteRequired" xml:space="preserve">
+    <value>Vui lòng nhập lý do hủy yêu cầu.</value>
+  </data>
+  <data name="NotFound_RoomRentalTracking" xml:space="preserve">
+    <value>Liên kết theo dõi không hợp lệ hoặc đã hết hạn.</value>
+  </data>
+  <data name="NotFound_RoomRentalRequest" xml:space="preserve">
+    <value>Không tìm thấy yêu cầu thuê phòng.</value>
+  </data>
+  <data name="Rule_RoomRentalTrackingLocked" xml:space="preserve">
+    <value>Bạn đã thử liên kết sai quá nhiều lần. Vui lòng thử lại sau {0} phút.</value>
+  </data>
+  <data name="Rule_RoomRentalStatusUnchanged" xml:space="preserve">
+    <value>Yêu cầu đã ở trạng thái này.</value>
+  </data>
+  <data name="Rule_RoomRentalStatusTransitionInvalid" xml:space="preserve">
+    <value>Không thể chuyển yêu cầu sang trạng thái này từ trạng thái hiện tại.</value>
+  </data>
+  <data name="Success_RoomRentalStatusChanged" xml:space="preserve">
+    <value>Đã cập nhật trạng thái yêu cầu thuê phòng.</value>
+  </data>
+  <data name="Email_RoomRentalReceivedSubject" xml:space="preserve">
+    <value>{0}: Đã nhận yêu cầu thuê phòng {1}</value>
+  </data>
+  <data name="Email_RoomRentalReceivedPreheader" xml:space="preserve">
+    <value>Chúng tôi đã nhận yêu cầu thuê phòng {0} của bạn.</value>
+  </data>
+  <data name="Email_BadgeRoomRentalReceived" xml:space="preserve">
+    <value>Đã nhận yêu cầu</value>
+  </data>
+  <data name="Email_RoomRentalReceivedHeading" xml:space="preserve">
+    <value>Chúng tôi đã nhận yêu cầu thuê phòng</value>
+  </data>
+  <data name="Email_RoomRentalReceivedBody" xml:space="preserve">
+    <value>Xin chào {0}, rạp đã nhận yêu cầu thuê phòng của bạn và sẽ liên hệ sớm để báo giá. Bạn có thể xem tiến độ xử lý bất cứ lúc nào qua liên kết riêng bên dưới.</value>
+  </data>
+  <data name="Email_RoomRentalRequestCodeLabel" xml:space="preserve">
+    <value>Mã yêu cầu</value>
+  </data>
+  <data name="Email_RoomRentalDesiredStartLabel" xml:space="preserve">
+    <value>Ngày giờ mong muốn</value>
+  </data>
+  <data name="Email_RoomRentalAttendeeLabel" xml:space="preserve">
+    <value>Số người</value>
+  </data>
+  <data name="Email_RoomRentalTrackButton" xml:space="preserve">
+    <value>Theo dõi yêu cầu</value>
+  </data>
+  <data name="Email_RoomRentalTrackNote" xml:space="preserve">
+    <value>Liên kết này là riêng của bạn, có hiệu lực đến {0}. Vui lòng không chia sẻ cho người khác.</value>
+  </data>
 </root>

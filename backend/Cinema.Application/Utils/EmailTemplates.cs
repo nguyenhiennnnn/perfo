@@ -1126,6 +1126,41 @@ public static class EmailTemplates
         );
     }
 
+    public static string RoomRentalRequestReceived(
+        BrandOptions brand,
+        RoomRentalRequestReceivedEmailData data
+    )
+    {
+        var desired = BusinessTime
+            .ToLocal(data.DesiredStartUtc)
+            .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture);
+        var expires = BusinessTime
+            .ToLocal(data.LinkExpiresAtUtc)
+            .ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture);
+        var body = $"""
+            {Badge(Messages.Email_BadgeRoomRentalReceived, Success, SymbolCheck)}
+            {Heading(Messages.Email_RoomRentalReceivedHeading)}
+            {Paragraph(string.Format(Messages.Email_RoomRentalReceivedBody, Enc(data.CustomerName)))}
+            {DetailCard(
+                DetailRow(Messages.Email_RoomRentalRequestCodeLabel, Enc(data.RequestCode), code: true),
+                DetailRow(Messages.Email_RoomRentalDesiredStartLabel, Enc(desired)),
+                DetailRow(
+                    Messages.Email_RoomRentalAttendeeLabel,
+                    data.AttendeeCount.ToString(CultureInfo.InvariantCulture),
+                    isLast: true
+                )
+            )}
+            {Button(Messages.Email_RoomRentalTrackButton, data.TrackingLink)}
+            {MutedParagraph(string.Format(Messages.Email_RoomRentalTrackNote, expires))}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_RoomRentalReceivedPreheader, data.RequestCode),
+            body
+        );
+    }
+
     public static string OrderCancelled(
         BrandOptions brand,
         string customerName,

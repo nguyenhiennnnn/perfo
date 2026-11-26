@@ -156,6 +156,12 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int VerificationCodeMinutes { get; init; }
 
     public int VerificationMaxAttempts { get; init; }
+
+    public int RoomRentalTrackingTokenValidDays { get; init; }
+
+    public int RoomRentalTrackingMaxFailedAttempts { get; init; }
+
+    public int RoomRentalTrackingLockoutMinutes { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -240,5 +246,8 @@ public record UpdateSettingsRequest(
     int? AbusePaymentFailureThreshold = null,
     int? AbusePaymentFailureWindowMinutes = null,
     int? VerificationCodeMinutes = null,
-    int? VerificationMaxAttempts = null
+    int? VerificationMaxAttempts = null,
+    int? RoomRentalTrackingTokenValidDays = null,
+    int? RoomRentalTrackingMaxFailedAttempts = null,
+    int? RoomRentalTrackingLockoutMinutes = null
 );

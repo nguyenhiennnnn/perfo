@@ -112,6 +112,9 @@ public class CinemaSettings
     public const int DefaultAbusePaymentFailureWindowMinutes = 15;
     public const int DefaultVerificationCodeMinutes = 10;
     public const int DefaultVerificationMaxAttempts = 5;
+    public const int DefaultRoomRentalTrackingTokenValidDays = 60;
+    public const int DefaultRoomRentalTrackingMaxFailedAttempts = 5;
+    public const int DefaultRoomRentalTrackingLockoutMinutes = 15;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -243,4 +246,13 @@ public class CinemaSettings
     public int VerificationCodeMinutes { get; set; } = DefaultVerificationCodeMinutes;
 
     public int VerificationMaxAttempts { get; set; } = DefaultVerificationMaxAttempts;
+
+    public int RoomRentalTrackingTokenValidDays { get; set; } =
+        DefaultRoomRentalTrackingTokenValidDays;
+
+    public int RoomRentalTrackingMaxFailedAttempts { get; set; } =
+        DefaultRoomRentalTrackingMaxFailedAttempts;
+
+    public int RoomRentalTrackingLockoutMinutes { get; set; } =
+        DefaultRoomRentalTrackingLockoutMinutes;
 }

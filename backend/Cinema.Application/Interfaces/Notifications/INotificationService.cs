@@ -226,8 +226,19 @@ public sealed record MovieIntroEmailData(
     string PreferencesLink
 );
 
+public sealed record RoomRentalRequestReceivedEmailData(
+    string CustomerName,
+    string RequestCode,
+    DateTime DesiredStartUtc,
+    int AttendeeCount,
+    string TrackingLink,
+    DateTime LinkExpiresAtUtc
+);
+
 public interface INotificationService
 {
+    void SendRoomRentalRequestReceived(string toEmail, RoomRentalRequestReceivedEmailData data);
+
     void SendMovieIntro(string toEmail, MovieIntroEmailData data);
 
     void SendSupportRequestUpdated(string toEmail, SupportRequestUpdateEmailData data);

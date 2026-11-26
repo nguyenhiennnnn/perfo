@@ -75,5 +75,6 @@ public record ApplicableBundleDto(
     decimal SavingsAmount,
     decimal SavingsPercent,
     bool ExcludesPromotions,
-    int? RemainingToday
+    int? RemainingToday,
+    IReadOnlyList<int>? AllowedSeatTypeIds = null
 );

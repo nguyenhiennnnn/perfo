@@ -72,6 +72,9 @@ export const ENDPOINTS = {
     trackingPaymentGiftCard: (stage: string) =>
       `/room-rental-requests/tracking/payments/${stage}/gift-card`,
   },
+  bundles: {
+    root: "/bundles",
+  },
   combos: {
     root: "/combos",
     suggestions: "/combos/suggestions",

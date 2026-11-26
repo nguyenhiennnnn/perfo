@@ -55,6 +55,8 @@ public record OrderLineDto(
     OrderComboDto? Combo
 );
 
+public record OrderPriceAllocationDto(int OrderLineId, decimal Amount);
+
 public record OrderPriceAdjustmentDto(
     int AdjustmentId,
     string Type,
@@ -62,7 +64,8 @@ public record OrderPriceAdjustmentDto(
     string? ReferenceType,
     int? ReferenceId,
     string? ReferenceName,
-    string? PromotionCode = null
+    string? PromotionCode = null,
+    List<OrderPriceAllocationDto>? Allocations = null
 );
 
 public record OrderTransactionDto(

@@ -14,6 +14,7 @@ interface SeatSuggestionPanelProps {
   selectedIds: Set<number>;
   onSelect: (showtimeSeatIds: number[]) => void;
   onHighlight: (showtimeSeatIds: number[]) => void;
+  lockedCount?: number;
 }
 
 export const SeatSuggestionPanel = ({
@@ -22,8 +23,10 @@ export const SeatSuggestionPanel = ({
   selectedIds,
   onSelect,
   onHighlight,
+  lockedCount,
 }: SeatSuggestionPanelProps) => {
-  const [count, setCount] = useState(2);
+  const [chosenCount, setCount] = useState(2);
+  const count = lockedCount ?? chosenCount;
   const [requested, setRequested] = useState<number | null>(null);
   const query = useSeatSuggestions(showtimeId, requested);
 
@@ -44,7 +47,11 @@ export const SeatSuggestionPanel = ({
         <h3 className="t-h3 text-foreground">Gợi ý ghế liền kề</h3>
         <div className="flex items-center gap-3">
           <span className="text-xs text-muted-foreground">Số người</span>
-          <ComboQuantityStepper value={count} max={SEAT_SUGGESTION_MAX_COUNT} onChange={(v) => setCount(Math.max(1, v))} />
+          {lockedCount != null ? (
+            <span className="w-5 text-center text-sm font-semibold tabular-nums">{lockedCount}</span>
+          ) : (
+            <ComboQuantityStepper value={count} max={SEAT_SUGGESTION_MAX_COUNT} onChange={(v) => setCount(Math.max(1, v))} />
+          )}
           <Button size="sm" onClick={request} disabled={query.isFetching}>
             <Sparkles className="size-4" />
             <span>{query.isFetching ? "Đang tìm..." : "Gợi ý"}</span>

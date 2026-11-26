@@ -1,20 +1,36 @@
 import { formatCurrency, formatDateTime } from "@/lib/formatters";
 import { OrderLineType } from "@/types/enum";
 import type { OrderDetailDto, OrderLineDto } from "../../types";
-import { getTicketLines, type OrderTicketLine } from "../../utils/order-lines";
+import { getTicketLines, isTicketLine, type OrderTicketLine } from "../../utils/order-lines";
+import { groupBundleLines, type OrderBundleGroup } from "../../utils/order-bundles";
 
 interface LinePriceProps {
   line: OrderLineDto;
+  splitPrice?: number;
 }
 
-const LinePrice = ({ line }: LinePriceProps) => (
-  <div className="shrink-0 text-right tabular-nums">
-    <p className="text-sm font-medium text-foreground">{formatCurrency(line.lineTotal)}</p>
-    {line.unitListPrice > line.lockedUnitPrice && (
-      <p className="text-xs text-muted-foreground line-through">{formatCurrency(line.unitListPrice * line.quantity)}</p>
-    )}
-  </div>
-);
+const LinePrice = ({ line, splitPrice }: LinePriceProps) => {
+  if (splitPrice != null) {
+    return (
+      <div className="shrink-0 text-right tabular-nums">
+        <p className="text-sm font-medium text-foreground">{formatCurrency(splitPrice)}</p>
+        <p className="text-xs text-muted-foreground">Giá trong gói</p>
+        {splitPrice < line.lineTotal && (
+          <p className="text-xs text-muted-foreground line-through">{formatCurrency(line.lineTotal)}</p>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="shrink-0 text-right tabular-nums">
+      <p className="text-sm font-medium text-foreground">{formatCurrency(line.lineTotal)}</p>
+      {line.unitListPrice > line.lockedUnitPrice && (
+        <p className="text-xs text-muted-foreground line-through">{formatCurrency(line.unitListPrice * line.quantity)}</p>
+      )}
+    </div>
+  );
+};
 
 const RefundNote = ({ line }: LinePriceProps) => {
   if (line.refundedQuantity <= 0 && line.refundedAmount <= 0) return null;
@@ -26,7 +42,7 @@ const RefundNote = ({ line }: LinePriceProps) => {
   );
 };
 
-const TicketLineRow = ({ line }: { line: OrderTicketLine }) => {
+const TicketLineRow = ({ line, splitPrice }: { line: OrderTicketLine; splitPrice?: number }) => {
   const { ticket } = line;
   const ticketType = line.description?.trim();
 
@@ -44,12 +60,12 @@ const TicketLineRow = ({ line }: { line: OrderTicketLine }) => {
         </p>
         <RefundNote line={line} />
       </div>
-      <LinePrice line={line} />
+      <LinePrice line={line} splitPrice={splitPrice} />
     </li>
   );
 };
 
-const ComboLineRow = ({ line }: { line: OrderLineDto }) => {
+const ComboLineRow = ({ line, splitPrice }: { line: OrderLineDto; splitPrice?: number }) => {
   const name = line.combo?.name ?? line.description ?? "";
   const fulfilled = line.combo?.quantityFulfilled ?? 0;
   const isAllFulfilled = fulfilled >= line.quantity;
@@ -66,10 +82,35 @@ const ComboLineRow = ({ line }: { line: OrderLineDto }) => {
         </p>
         <RefundNote line={line} />
       </div>
-      <LinePrice line={line} />
+      <LinePrice line={line} splitPrice={splitPrice} />
     </li>
   );
 };
+
+const BundleGroupRow = ({ group }: { group: OrderBundleGroup }) => (
+  <li className="py-3">
+    <div className="flex items-start justify-between gap-3">
+      <div className="min-w-0">
+        <p className="text-sm font-semibold text-foreground">{group.title}</p>
+        <p className="mt-0.5 text-xs tabular-nums text-muted-foreground">
+          Giá lẻ {formatCurrency(group.listTotal)}, tiết kiệm {formatCurrency(group.savings)}
+        </p>
+      </div>
+      <p className="shrink-0 text-sm font-semibold tabular-nums text-foreground">
+        {formatCurrency(group.packagePrice)}
+      </p>
+    </div>
+    <ul className="mt-2 ml-3 divide-y divide-border bg-secondary/40 px-3">
+      {group.components.map(({ line, splitPrice }) =>
+        isTicketLine(line) ? (
+          <TicketLineRow key={line.orderLineId} line={line} splitPrice={splitPrice} />
+        ) : (
+          <ComboLineRow key={line.orderLineId} line={line} splitPrice={splitPrice} />
+        ),
+      )}
+    </ul>
+  </li>
+);
 
 const OtherLineRow = ({ line }: { line: OrderLineDto }) => (
   <li className="flex items-start justify-between gap-3 py-3">
@@ -87,8 +128,11 @@ interface OrderLinesSectionProps {
 }
 
 export const OrderLinesSection = ({ order }: OrderLinesSectionProps) => {
-  const ticketLines = getTicketLines(order);
-  const comboLines = order.lines.filter((line) => line.lineType === OrderLineType.Combo);
+  const { groups, bundledLineIds } = groupBundleLines(order);
+  const ticketLines = getTicketLines(order).filter((line) => !bundledLineIds.has(line.orderLineId));
+  const comboLines = order.lines.filter(
+    (line) => line.lineType === OrderLineType.Combo && !bundledLineIds.has(line.orderLineId),
+  );
   const otherLines = order.lines.filter(
     (line) => line.lineType !== OrderLineType.Combo && !(line.lineType === OrderLineType.Ticket && line.ticket != null),
   );
@@ -101,6 +145,9 @@ export const OrderLinesSection = ({ order }: OrderLinesSectionProps) => {
         Dòng hàng
       </h2>
       <ul className="mt-2 divide-y divide-border">
+        {groups.map((group) => (
+          <BundleGroupRow key={group.adjustmentId} group={group} />
+        ))}
         {ticketLines.map((line) => (
           <TicketLineRow key={line.orderLineId} line={line} />
         ))}

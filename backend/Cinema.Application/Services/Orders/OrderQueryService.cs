@@ -107,6 +107,7 @@ public class OrderQueryService(
                 .Include(o => o.CreatedByEmployee)
                     .ThenInclude(e => e!.User)
                 .Include(o => o.PriceAdjustments)
+                    .ThenInclude(a => a.Allocations)
                 .Include(o => o.PaymentTransactions)
                 .Include(o => o.Lines)
                     .ThenInclude(l => l.Combo)
@@ -130,6 +131,7 @@ public class OrderQueryService(
         var summary = await paymentLedger.GetSummaryAsync(orderId, cancellationToken);
         var tierNames = await LoadTierNamesAsync(order.PriceAdjustments, cancellationToken);
         var promotions = await LoadPromotionsAsync(order.PriceAdjustments, cancellationToken);
+        var bundleNames = await LoadBundleNamesAsync(order.PriceAdjustments, cancellationToken);
 
         var exchanges = await LoadExchangesAsync(orderId, cancellationToken);
 
@@ -138,6 +140,7 @@ public class OrderQueryService(
             summary,
             tierNames,
             promotions,
+            bundleNames,
             ownerUserId is null,
             exchanges
         );
@@ -239,6 +242,27 @@ public class OrderQueryService(
                 p => new OrderPromotionInfo(p.Code, p.Name, p.Type != PromotionType.AutoApply),
                 cancellationToken
             );
+    }
+
+    private async Task<Dictionary<int, string>> LoadBundleNamesAsync(
+        IEnumerable<OrderPriceAdjustment> adjustments,
+        CancellationToken cancellationToken
+    )
+    {
+        var bundleIds = adjustments
+            .Where(a => a.ReferenceType == nameof(Bundle) && a.ReferenceId is not null)
+            .Select(a => a.ReferenceId!.Value)
+            .Distinct()
+            .ToList();
+
+        if (bundleIds.Count == 0)
+            return [];
+
+        return await db
+            .Bundles.IgnoreQueryFilters()
+            .AsNoTracking()
+            .Where(b => bundleIds.Contains(b.BundleId))
+            .ToDictionaryAsync(b => b.BundleId, b => b.Name, cancellationToken);
     }
 
     private async Task<Dictionary<int, string>> LoadTierNamesAsync(

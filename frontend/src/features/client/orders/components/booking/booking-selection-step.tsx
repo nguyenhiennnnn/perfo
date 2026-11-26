@@ -7,6 +7,8 @@ import { SelectableSeatMap } from "@/components/common/seat-map/selectable-seat-
 import { formatSeatCodes } from "@/components/common/seat-map/seat-map-utils";
 import { ComboPicker } from "@/components/common/combo-picker/combo-picker";
 import { useActiveCombos, useComboSuggestions } from "@/features/client/combos/hooks/use-combos";
+import { BundlePicker } from "@/features/client/bundles/components/bundle-picker";
+import type { BundleSelection } from "@/features/client/bundles/hooks/use-bundles";
 import { formatCurrency } from "@/lib/formatters";
 import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings";
 import { ShowtimeSeatStatus } from "@/types/enum";
@@ -15,7 +17,7 @@ import type { SeatTicketTypes } from "@/features/client/showtimes/hooks/use-seat
 
 import { BookingCustomerForm } from "./booking-customer-form";
 import { BookingPendingOrderNotice } from "./booking-pending-order-notice";
-import { BookingPriceSummary, calcBookingEstimate } from "./booking-price-summary";
+import { BookingPriceSummary, calcBookingEstimate, type BookingBundleSelection } from "./booking-price-summary";
 import { SeatSuggestionPanel } from "./seat-suggestion-panel";
 import { BOOKING_COMBO_SECTION_ID, HOLDING_SEATS_LABEL } from "@/config/default-constants";
 
@@ -28,6 +30,9 @@ interface BookingSelectionStepProps {
   onToggleSeat: (showtimeSeatId: number) => void;
   onSelectSeats: (showtimeSeatIds: number[]) => void;
   seatTicketTypes: SeatTicketTypes;
+  bundle: BundleSelection;
+  onBundleSelect: (bundleId: number) => void;
+  onBundleQuantityChange: (quantity: number) => void;
   comboQuantities: Record<number, number>;
   onComboChange: (comboId: number, quantity: number) => void;
   customerName: string;
@@ -48,6 +53,9 @@ export const BookingSelectionStep = ({
   onToggleSeat,
   onSelectSeats,
   seatTicketTypes,
+  bundle,
+  onBundleSelect,
+  onBundleQuantityChange,
   comboQuantities,
   onComboChange,
   customerName,
@@ -74,7 +82,10 @@ export const BookingSelectionStep = ({
     price: s.unitPrice,
     ticketTypeName: s.ticketType?.name ?? null,
   }));
-  const { total } = calcBookingEstimate(selectedSeats, activeCombos.data, comboQuantities);
+  const bundleSelection: BookingBundleSelection | null = bundle.selectedBundle
+    ? { bundle: bundle.selectedBundle, quantity: bundle.quantity }
+    : null;
+  const { total } = calcBookingEstimate(selectedSeats, activeCombos.data, comboQuantities, bundleSelection);
   const seatCodes = formatSeatCodes(selectedSeats);
   const suggestions = comboSuggestions.data ?? [];
   const comboRank = new Map(suggestions.map((s, i) => [s.comboId, i]));
@@ -91,12 +102,22 @@ export const BookingSelectionStep = ({
       <div className="flex flex-col gap-4">
         {data.myHold && <BookingPendingOrderNotice showtimeId={data.showtimeId} hold={data.myHold} />}
 
+        <BundlePicker
+          selection={bundle}
+          onSelect={onBundleSelect}
+          onQuantityChange={onBundleQuantityChange}
+          seats={data.seats}
+          selectedSeatCount={selectedIds.size}
+          disabled={isHolding}
+        />
+
         <SeatSuggestionPanel
           showtimeId={data.showtimeId}
           statusMap={statusMap}
           selectedIds={selectedIds}
           onSelect={onSelectSeats}
           onHighlight={(ids) => setHighlightedIds(new Set(ids))}
+          lockedCount={bundle.selectedBundle ? bundle.requiredSeats : undefined}
         />
 
         <SelectableSeatMap
@@ -111,11 +132,13 @@ export const BookingSelectionStep = ({
           fitWidth
         />
 
-        <SeatTicketList
-          seats={seatTicketTypes.pricedSeats}
-          ticketTypes={seatTicketTypes.ticketTypes}
-          onChange={seatTicketTypes.setTicketType}
-        />
+        {!bundle.selectedBundle && (
+          <SeatTicketList
+            seats={seatTicketTypes.pricedSeats}
+            ticketTypes={seatTicketTypes.ticketTypes}
+            onChange={seatTicketTypes.setTicketType}
+          />
+        )}
 
         <div id={BOOKING_COMBO_SECTION_ID} className="scroll-mt-24 bg-card p-4">
           <h3 className="t-h3 mb-3 text-foreground">Chọn combo (tuỳ chọn)</h3>
@@ -155,7 +178,12 @@ export const BookingSelectionStep = ({
       </div>
 
       <div className="flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start">
-        <BookingPriceSummary seats={selectedSeats} combos={activeCombos.data} comboQuantities={comboQuantities} />
+        <BookingPriceSummary
+          seats={selectedSeats}
+          combos={activeCombos.data}
+          comboQuantities={comboQuantities}
+          bundle={bundleSelection}
+        />
         <Button className="max-lg:hidden" disabled={!canHold || isHolding} onClick={onContinue}>
           {isHolding ? HOLDING_SEATS_LABEL : "Giữ ghế & tiếp tục thanh toán"}
         </Button>
@@ -170,8 +198,16 @@ export const BookingSelectionStep = ({
             Không thể để trống ghế lẻ {loneSeats.join(", ")}. Vui lòng chọn lại để không bỏ lẻ ghế.
           </p>
         )}
-        {selectedSeats.length === 0 && (
-          <p className="text-center text-xs text-muted-foreground">Vui lòng chọn ít nhất 1 ghế.</p>
+        {bundle.selectedBundle ? (
+          selectedSeats.length !== bundle.requiredSeats && (
+            <p className="text-center text-xs text-muted-foreground">
+              Vui lòng chọn đủ {bundle.requiredSeats} ghế cho gói.
+            </p>
+          )
+        ) : (
+          selectedSeats.length === 0 && (
+            <p className="text-center text-xs text-muted-foreground">Vui lòng chọn ít nhất 1 ghế.</p>
+          )
         )}
       </div>
 
@@ -187,7 +223,8 @@ export const BookingSelectionStep = ({
             <p className="truncate text-xs text-muted-foreground" title={seatCodes.join(", ")}>
               {seatCodes.length > 0 ? (
                 <>
-                  {seatCodes.length} ghế:{" "}
+                  {seatCodes.length}
+                  {bundle.selectedBundle ? `/${bundle.requiredSeats}` : ""} ghế:{" "}
                   <span className="t-code text-sm text-foreground">{seatCodes.join(", ")}</span>
                 </>
               ) : (

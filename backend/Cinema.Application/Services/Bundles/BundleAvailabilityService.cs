@@ -174,7 +174,8 @@ public class BundleAvailabilityService(
             savings,
             decimal.Round(savings / retail * 100m, 1),
             bundle.ExcludesPromotions,
-            remaining
+            remaining,
+            bundle.SeatTypeIds
         );
     }
 

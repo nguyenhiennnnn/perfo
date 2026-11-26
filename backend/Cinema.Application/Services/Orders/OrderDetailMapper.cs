@@ -17,6 +17,7 @@ internal static class OrderDetailMapper
         OrderPaymentSummary summary,
         IReadOnlyDictionary<int, string> tierNames,
         IReadOnlyDictionary<int, OrderPromotionInfo> promotions,
+        IReadOnlyDictionary<int, string> bundleNames,
         bool includeStaffInfo,
         List<OrderExchangeHistoryDto>? exchanges = null
     ) =>
@@ -49,7 +50,7 @@ internal static class OrderDetailMapper
                 .ToList(),
             order
                 .PriceAdjustments.OrderBy(a => a.AdjustmentId)
-                .Select(a => ToAdjustment(a, tierNames, promotions))
+                .Select(a => ToAdjustment(a, tierNames, promotions, bundleNames))
                 .ToList(),
             order
                 .PaymentTransactions.OrderBy(t => t.CreatedAt)
@@ -133,7 +134,8 @@ internal static class OrderDetailMapper
     private static OrderPriceAdjustmentDto ToAdjustment(
         OrderPriceAdjustment adjustment,
         IReadOnlyDictionary<int, string> tierNames,
-        IReadOnlyDictionary<int, OrderPromotionInfo> promotions
+        IReadOnlyDictionary<int, OrderPromotionInfo> promotions,
+        IReadOnlyDictionary<int, string> bundleNames
     )
     {
         var promotion =
@@ -148,7 +150,11 @@ internal static class OrderDetailMapper
             && adjustment.ReferenceId is { } tierId
             && tierNames.TryGetValue(tierId, out var tierName)
                 ? tierName
-                : promotion?.Name;
+                : adjustment.ReferenceType == nameof(Bundle)
+                && adjustment.ReferenceId is { } bundleId
+                && bundleNames.TryGetValue(bundleId, out var bundleName)
+                    ? bundleName
+                    : promotion?.Name;
 
         return new OrderPriceAdjustmentDto(
             adjustment.AdjustmentId,
@@ -157,7 +163,14 @@ internal static class OrderDetailMapper
             adjustment.ReferenceType,
             adjustment.ReferenceId,
             referenceName,
-            promotion is { IsCodeBased: true } ? promotion.Code : null
+            promotion is { IsCodeBased: true } ? promotion.Code : null,
+            adjustment.Type == PriceAdjustmentType.PackagePrice
+                ? [
+                    .. adjustment
+                        .Allocations.OrderBy(x => x.OrderLineId)
+                        .Select(x => new OrderPriceAllocationDto(x.OrderLineId, x.Amount)),
+                ]
+                : null
         );
     }
 

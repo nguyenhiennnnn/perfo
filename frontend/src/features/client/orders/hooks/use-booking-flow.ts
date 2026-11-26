@@ -21,6 +21,8 @@ import {
 } from "@/components/common/seat-map/seat-map-utils";
 import { useCinemaSettings } from "@/features/client/settings/hooks/use-settings";
 import { useActiveCombos } from "@/features/client/combos/hooks/use-combos";
+import { useBundleSelection } from "@/features/client/bundles/hooks/use-bundles";
+import { trimSeatSelection } from "@/features/client/bundles/utils/bundle-selection";
 import { useShowtimeSeats } from "@/features/client/showtimes/hooks/use-showtimes";
 import { useSeatTicketTypes } from "@/features/client/showtimes/hooks/use-seat-ticket-types";
 import { usePriceChangeConfirm } from "@/hooks/use-price-change-confirm";
@@ -214,7 +216,17 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
     },
   });
 
-  const seatTicketTypes = useSeatTicketTypes(showtimeSeats.data, selectedSeatIds);
+  const bundle = useBundleSelection(isResumeMode ? 0 : showtimeId);
+  const assignBundleTicketTypes = bundle.assignTicketTypes;
+  const forcedTicketTypes = useMemo(
+    () => assignBundleTicketTypes(Array.from(selectedSeatIds)),
+    [assignBundleTicketTypes, selectedSeatIds],
+  );
+  const seatTicketTypes = useSeatTicketTypes(
+    showtimeSeats.data,
+    selectedSeatIds,
+    forcedTicketTypes,
+  );
   const confirmPriceChange = usePriceChangeConfirm();
 
   const holdSeatsMutation = useHoldSeats();
@@ -252,12 +264,42 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
 
   const toggleSeat = (showtimeSeatId: number) => {
     const allSeats = showtimeSeats.data?.seats ?? [];
-    setSelectedSeatIds((prev) =>
-      toggleSeatSelection(prev, allSeats, seatStatusMap, showtimeSeatId),
+    const next = toggleSeatSelection(
+      selectedSeatIds,
+      allSeats,
+      seatStatusMap,
+      showtimeSeatId,
     );
+    if (!bundle.guardSeatChange(selectedSeatIds, next, allSeats)) return;
+    setSelectedSeatIds(next);
   };
 
-  const selectSeats = (ids: number[]) => setSelectedSeatIds(new Set(ids));
+  const selectSeats = (ids: number[]) => {
+    const allSeats = showtimeSeats.data?.seats ?? [];
+    const next = new Set(ids);
+    if (!bundle.guardSeatChange(new Set(), next, allSeats)) return;
+    setSelectedSeatIds(next);
+  };
+
+  const selectBundle = (bundleId: number) => {
+    const target = bundle.bundles.data?.find((b) => b.bundleId === bundleId);
+    if (target && target.bundleId !== bundle.selectedBundle?.bundleId) {
+      setSelectedSeatIds((prev) =>
+        trimSeatSelection(prev, showtimeSeats.data?.seats ?? [], target, 1),
+      );
+    }
+    bundle.select(bundleId);
+  };
+
+  const setBundleQuantity = (quantity: number) => {
+    const selected = bundle.selectedBundle;
+    if (selected) {
+      setSelectedSeatIds((prev) =>
+        trimSeatSelection(prev, showtimeSeats.data?.seats ?? [], selected, quantity),
+      );
+    }
+    bundle.setQuantity(quantity);
+  };
 
   const setComboQuantity = (comboId: number, quantity: number) => {
     updateComboQuantities((prev) => ({ ...prev, [comboId]: quantity }));
@@ -267,6 +309,7 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
 
   const canHold =
     selectedSeatIds.size > 0 &&
+    (!bundle.selectedBundle || selectedSeatIds.size === bundle.requiredSeats) &&
     loneSeats.length === 0 &&
     (!isAuthenticated || effectiveCustomerName.length > 0) &&
     (customerPhone.trim() === "" || isValidVnPhone(customerPhone.trim()));
@@ -288,12 +331,14 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
         customerPhone: customerPhone.trim(),
         tickets: seatTicketTypes.tickets,
         acceptPriceChange,
+        bundles: bundle.payload,
       });
       setFreshHoldResult(res.data);
       setStep("payment");
     };
 
-    const recoverFromComboConflict = async (error: unknown) => {
+    const recoverFromHoldConflict = async (error: unknown) => {
+      if (bundle.selectedBundle) void bundle.bundles.refetch();
       if (
         combosPayload.length === 0 ||
         !(isGenericConflictError(error) || isComboOutOfStockError(error))
@@ -311,7 +356,7 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
     } catch (error) {
       const change = getPriceChangeRequired(error);
       if (!change) {
-        await recoverFromComboConflict(error);
+        await recoverFromHoldConflict(error);
         return;
       }
       const accepted = await confirmPriceChange(
@@ -326,7 +371,7 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
       try {
         await submitHold(true);
       } catch (retryError) {
-        await recoverFromComboConflict(retryError);
+        await recoverFromHoldConflict(retryError);
         return;
       }
     }
@@ -429,6 +474,9 @@ export function useBookingFlow(showtimeId: number, resumeOrderId?: number) {
     selectedSeatIds,
     toggleSeat,
     selectSeats,
+    bundle,
+    selectBundle,
+    setBundleQuantity,
     seatTicketTypes,
     loneSeats,
     comboQuantities,

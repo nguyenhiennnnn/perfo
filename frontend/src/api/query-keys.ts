@@ -77,6 +77,11 @@ export const queryKeys = {
     detail: (requestId: number) => ["support", "detail", requestId] as const,
   },
 
+  bundles: {
+    all: () => ["bundles"] as const,
+    forShowtime: (showtimeId: number) => ["bundles", "showtime", showtimeId] as const,
+  },
+
   combos: {
     all: () => ["combos"] as const,
     active: () => ["combos", "active"] as const,

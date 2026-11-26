@@ -1,5 +1,6 @@
 import type { ApiResponse } from "@/types/api";
 import type { CancelReason, OrderStatus } from "@/types/enum";
+import type { BundleSelectionRequest } from "@/features/client/bundles/types";
 
 export interface ComboSelectionRequest {
   comboId: number;
@@ -20,6 +21,7 @@ export interface HoldSeatsRequest {
   combos?: ComboSelectionRequest[] | null;
   tickets?: SeatTicketSelectionRequest[] | null;
   acceptPriceChange?: boolean;
+  bundles?: BundleSelectionRequest[] | null;
 }
 
 export interface HoldOrderResponse {
@@ -152,6 +154,11 @@ export interface OrderLineDto {
   combo?: OrderComboDto | null;
 }
 
+export interface OrderPriceAllocationDto {
+  orderLineId: number;
+  amount: number;
+}
+
 export interface OrderPriceAdjustmentDto {
   adjustmentId: number;
   type: string;
@@ -160,6 +167,7 @@ export interface OrderPriceAdjustmentDto {
   referenceId?: number | null;
   referenceName?: string | null;
   promotionCode?: string | null;
+  allocations?: OrderPriceAllocationDto[] | null;
 }
 
 export interface ApplyPromotionRequest {

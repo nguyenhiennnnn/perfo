@@ -4,17 +4,18 @@ import { cn } from "@/lib/utils";
 interface ComboQuantityStepperProps {
   value: number;
   onChange: (value: number) => void;
+  min?: number;
   max?: number;
   className?: string;
 }
 
-export const ComboQuantityStepper = ({ value, onChange, max = 20, className }: ComboQuantityStepperProps) => {
+export const ComboQuantityStepper = ({ value, onChange, min = 0, max = 20, className }: ComboQuantityStepperProps) => {
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <button
         type="button"
-        disabled={value <= 0}
-        onClick={() => onChange(Math.max(0, value - 1))}
+        disabled={value <= min}
+        onClick={() => onChange(Math.max(min, value - 1))}
         className="flex size-7 items-center justify-center border border-border bg-card text-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
       >
         <Minus className="size-3.5" />

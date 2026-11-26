@@ -13,6 +13,7 @@ import {
 export function useSeatTicketTypes(
   data: ShowtimeSeatsResponseDto | undefined,
   selectedSeatIds: Set<number>,
+  forcedTicketTypes?: Record<number, number> | null,
 ) {
   const [chosen, setChosen] = useState<Record<number, number | null>>({});
 
@@ -28,8 +29,14 @@ export function useSeatTicketTypes(
   );
 
   const pricedSeats = useMemo(
-    () => priceSelectedSeats(selectedSeats, data?.ticketTypes, chosen, defaultTicketTypeId),
-    [selectedSeats, data?.ticketTypes, chosen, defaultTicketTypeId],
+    () =>
+      priceSelectedSeats(
+        selectedSeats,
+        data?.ticketTypes,
+        forcedTicketTypes ? { ...chosen, ...forcedTicketTypes } : chosen,
+        defaultTicketTypeId,
+      ),
+    [selectedSeats, data?.ticketTypes, chosen, forcedTicketTypes, defaultTicketTypeId],
   );
 
   const setTicketType = useCallback((showtimeSeatId: number, ticketTypeId: number | null) => {

@@ -7,11 +7,11 @@ import type {
 
 export type OrderTicketLine = OrderLineDto & { ticket: OrderTicketDto };
 
+export const isTicketLine = (line: OrderLineDto): line is OrderTicketLine =>
+  line.lineType === OrderLineType.Ticket && line.ticket != null;
+
 export const getTicketLines = (order: OrderDetailDto): OrderTicketLine[] =>
-  order.lines.filter(
-    (line): line is OrderTicketLine =>
-      line.lineType === OrderLineType.Ticket && line.ticket != null,
-  );
+  order.lines.filter(isTicketLine);
 
 export const isTicketRefunded = (line: OrderLineDto) =>
   line.refundedQuantity >= line.quantity;

@@ -60,6 +60,7 @@ export const invalidations = {
     k.adminInventory.all(),
     k.adminComboPickups.all(),
     k.combos.all(),
+    k.bundles.all(),
     k.giftCards.all(),
     k.loyalty.all(),
     k.waitlist.all(),

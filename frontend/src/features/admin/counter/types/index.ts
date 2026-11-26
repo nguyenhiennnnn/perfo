@@ -1,4 +1,5 @@
 import type { SeatTicketSelectionRequest } from "@/features/client/orders/types";
+import type { BundleSelectionRequest } from "@/features/client/bundles/types";
 
 export const CounterPaymentMethod = {
   Cash: "Cash",
@@ -21,6 +22,7 @@ export interface CounterHoldRequest {
   customerPhone?: string;
   tickets?: SeatTicketSelectionRequest[];
   acceptPriceChange?: boolean;
+  bundles?: BundleSelectionRequest[];
 }
 
 export interface CounterComboOrderRequest {

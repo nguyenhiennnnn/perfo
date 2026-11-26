@@ -40,7 +40,6 @@ public interface IRoomRentalTrackingPaymentService
     Task<OrderGiftCardResponse> ApplyGiftCardAsync(
         string token,
         RoomRentalPaymentStage stage,
-        int userId,
         string code,
         CancellationToken cancellationToken
     );

@@ -120,7 +120,7 @@ public class OrderGiftCardService(
             );
             if (confirmation == OrderConfirmationResult.NotPayable)
                 throw new BusinessRuleException(
-                    caller.CustomerUserId is null
+                    caller.CustomerUserId is null && !caller.IsRoomRental
                         ? Messages.Rule_CounterOrderNotPendingOrExpired
                         : Messages.Rule_BookingNotPendingOrExpired
                 );
@@ -182,7 +182,14 @@ public class OrderGiftCardService(
                 .FirstOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(Messages.NotFound_Order);
 
-        if (caller.CustomerUserId is { } customerId)
+        if (caller.IsRoomRental)
+        {
+            if (order.Type != OrderType.RoomRental)
+                throw new ForbiddenAppException(Messages.Forbidden_NotBookingOwner);
+        }
+        else if (order.Type == OrderType.RoomRental)
+            throw new ForbiddenAppException(Messages.Forbidden_NotBookingOwner);
+        else if (caller.CustomerUserId is { } customerId)
         {
             if (order.UserId != customerId)
                 throw new ForbiddenAppException(Messages.Forbidden_NotBookingOwner);
@@ -192,7 +199,7 @@ public class OrderGiftCardService(
 
         if (order.Status != OrderStatus.Pending || order.ExpiresAt <= DateTime.UtcNow)
             throw new BusinessRuleException(
-                caller.CustomerUserId is null
+                caller.CustomerUserId is null && !caller.IsRoomRental
                     ? Messages.Rule_CounterOrderNotPendingOrExpired
                     : Messages.Rule_BookingNotPendingOrExpired
             );

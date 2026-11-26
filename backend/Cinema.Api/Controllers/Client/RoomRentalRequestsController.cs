@@ -1,6 +1,9 @@
 using Cinema.Api.Filters;
+using Cinema.Application.DTOs.GiftCards;
+using Cinema.Application.DTOs.Orders;
 using Cinema.Application.DTOs.RoomRentals;
 using Cinema.Application.Interfaces.RoomRentals;
+using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +17,8 @@ namespace Cinema.Api.Controllers.Client;
 public class RoomRentalRequestsController(
     IRoomRentalRequestService roomRentalRequestService,
     IRoomRentalTrackingService roomRentalTrackingService,
-    IRoomRentalTrackingQuoteService roomRentalTrackingQuoteService
+    IRoomRentalTrackingQuoteService roomRentalTrackingQuoteService,
+    IRoomRentalTrackingPaymentService roomRentalTrackingPaymentService
 ) : AppControllerBase
 {
     public const string RateLimitForm = "room-rental-request";
@@ -85,6 +89,43 @@ public class RoomRentalRequestsController(
                 request.Token,
                 version,
                 request.Reason,
+                cancellationToken
+            )
+        );
+
+    [HttpPost("tracking/payments")]
+    public async Task<ActionResult<RoomRentalPaymentsDto>> TrackPayments(
+        [FromBody] RoomRentalTrackingRequest request,
+        CancellationToken cancellationToken
+    ) => Ok(await roomRentalTrackingPaymentService.GetAsync(request.Token, cancellationToken));
+
+    [HttpPost("tracking/payments/{stage}/checkout")]
+    public async Task<ActionResult<CheckoutResponse>> CheckoutPayment(
+        RoomRentalPaymentStage stage,
+        [FromBody] RoomRentalTrackingCheckoutRequest request,
+        CancellationToken cancellationToken
+    ) =>
+        Ok(
+            await roomRentalTrackingPaymentService.CheckoutAsync(
+                request.Token,
+                stage,
+                request.PaymentMethod,
+                cancellationToken
+            )
+        );
+
+    [HttpPost("tracking/payments/{stage}/gift-card")]
+    [SuccessMessage(nameof(Messages.Success_OrderGiftCardApplied))]
+    public async Task<ActionResult<OrderGiftCardResponse>> ApplyPaymentGiftCard(
+        RoomRentalPaymentStage stage,
+        [FromBody] RoomRentalTrackingGiftCardRequest request,
+        CancellationToken cancellationToken
+    ) =>
+        Ok(
+            await roomRentalTrackingPaymentService.ApplyGiftCardAsync(
+                request.Token,
+                stage,
+                request.Code,
                 cancellationToken
             )
         );

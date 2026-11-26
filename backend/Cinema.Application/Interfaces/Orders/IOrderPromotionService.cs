@@ -2,9 +2,11 @@
 
 namespace Cinema.Application.Interfaces.Orders;
 
-public sealed record OrderPromotionCaller(int? CustomerUserId)
+public sealed record OrderPromotionCaller(int? CustomerUserId, bool IsRoomRental = false)
 {
     public static readonly OrderPromotionCaller Counter = new((int?)null);
+
+    public static readonly OrderPromotionCaller RoomRental = new((int?)null, true);
 
     public static OrderPromotionCaller Customer(int userId) => new(userId);
 }

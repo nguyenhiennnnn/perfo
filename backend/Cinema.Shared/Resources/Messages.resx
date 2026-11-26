@@ -5907,4 +5907,10 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_RoomRentalOrderCreated" xml:space="preserve">
     <value>Đã tạo đợt thanh toán.</value>
   </data>
+  <data name="Validation_RoomRentalPayment_ReferenceRequired" xml:space="preserve">
+    <value>Vui lòng nhập mã giao dịch hoặc nội dung chuyển khoản.</value>
+  </data>
+  <data name="Validation_RoomRentalPayment_ReferenceMaxLength" xml:space="preserve">
+    <value>Mã giao dịch chuyển khoản không được vượt quá 100 ký tự.</value>
+  </data>
 </root>

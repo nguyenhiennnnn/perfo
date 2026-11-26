@@ -38,7 +38,6 @@ import {
   SlidersHorizontal,
   TicketPercent,
   FileClock,
-  BarChart3,
   Users,
   UserX,
   ShieldAlert,

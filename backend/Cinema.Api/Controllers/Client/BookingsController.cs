@@ -2,8 +2,10 @@
 using Cinema.Api.Filters;
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.GiftCards;
+using Cinema.Application.DTOs.Memberships;
 using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces.Combos;
+using Cinema.Application.Interfaces.Memberships;
 using Cinema.Application.Interfaces.Orders;
 using Cinema.Application.Utils;
 using Cinema.Shared.Constants;
@@ -25,6 +27,7 @@ public class BookingsController(
     IOrderTicketPdfService orderTicketPdfService,
     IOrderPromotionService orderPromotionService,
     IOrderGiftCardService orderGiftCardService,
+    IOrderFreeTicketService orderFreeTicketService,
     IOrderExchangePreviewService orderExchangePreviewService,
     IOrderExchangeService orderExchangeService,
     IComboSupplementService comboSupplementService,
@@ -195,6 +198,41 @@ public class BookingsController(
             orderId,
             OrderPromotionCaller.Customer(CurrentUserId),
             giftCardId,
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpPost("{orderId:int}/free-ticket")]
+    [EnableRateLimiting(RateLimitingExtensions.BookingHoldPolicy)]
+    [SuccessMessage(nameof(Messages.Success_OrderFreeTicketApplied))]
+    public async Task<ActionResult<OrderFreeTicketResponse>> ApplyFreeTicket(
+        int orderId,
+        [FromBody] ApplyFreeTicketRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderFreeTicketService.ApplyAsync(
+            orderId,
+            CurrentUserId,
+            request.OrderLineId,
+            cancellationToken
+        );
+        return Ok(result);
+    }
+
+    [HttpDelete("{orderId:int}/free-ticket/{orderLineId:int}")]
+    [SuccessMessage(nameof(Messages.Success_OrderFreeTicketRemoved))]
+    public async Task<ActionResult<OrderFreeTicketResponse>> RemoveFreeTicket(
+        int orderId,
+        int orderLineId,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await orderFreeTicketService.RemoveAsync(
+            orderId,
+            CurrentUserId,
+            orderLineId,
             cancellationToken
         );
         return Ok(result);

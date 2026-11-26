@@ -176,6 +176,8 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int RoomRentalPartialRefundDays { get; init; }
 
     public int RoomRentalPartialRefundPercent { get; init; }
+
+    public int MembershipFreeTicketsPerShowtime { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -270,5 +272,6 @@ public record UpdateSettingsRequest(
     int? RoomRentalBalanceDueDaysBeforeEvent = null,
     int? RoomRentalFullRefundDays = null,
     int? RoomRentalPartialRefundDays = null,
-    int? RoomRentalPartialRefundPercent = null
+    int? RoomRentalPartialRefundPercent = null,
+    int? MembershipFreeTicketsPerShowtime = null
 );

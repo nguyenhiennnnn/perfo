@@ -6,4 +6,5 @@ public enum PriceAdjustmentType
     MembershipBenefit,
     Promotion,
     PackagePrice,
+    FreeTicket,
 }

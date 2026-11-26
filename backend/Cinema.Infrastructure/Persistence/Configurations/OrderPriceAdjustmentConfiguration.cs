@@ -15,7 +15,7 @@ public class OrderPriceAdjustmentConfiguration : IEntityTypeConfiguration<OrderP
             {
                 t.HasCheckConstraint(
                     "CK_OrderPriceAdjustments_Type",
-                    "\"Type\" IN ('TierDiscount','MembershipBenefit','Promotion','PackagePrice')"
+                    "\"Type\" IN ('TierDiscount','MembershipBenefit','Promotion','PackagePrice','FreeTicket')"
                 );
                 t.HasCheckConstraint("CK_OrderPriceAdjustments_Amount", "\"Amount\" >= 0");
                 t.HasCheckConstraint(

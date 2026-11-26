@@ -6103,4 +6103,28 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_MembershipExpiryReminderOptOutNote" xml:space="preserve">
     <value>Bạn nhận email này vì đang bật nhận nhắc nhở. Có thể tắt trong phần thông tin liên lạc của tài khoản.</value>
   </data>
+  <data name="Rule_FreeTicketNoneAvailable" xml:space="preserve">
+    <value>Bạn không còn vé miễn phí khả dụng trong kỳ này.</value>
+  </data>
+  <data name="Rule_FreeTicketShowtimeLimitReached" xml:space="preserve">
+    <value>Bạn đã dùng đủ số vé miễn phí cho phép trên một suất chiếu.</value>
+  </data>
+  <data name="Rule_FreeTicketNotForShowtime" xml:space="preserve">
+    <value>Suất chiếu này không áp dụng vé miễn phí.</value>
+  </data>
+  <data name="Rule_FreeTicketLineNotEligible" xml:space="preserve">
+    <value>Vé này không thể dùng vé miễn phí.</value>
+  </data>
+  <data name="Rule_FreeTicketAlreadyApplied" xml:space="preserve">
+    <value>Vé này đã được dùng vé miễn phí.</value>
+  </data>
+  <data name="Rule_FreeTicketNotApplied" xml:space="preserve">
+    <value>Vé này chưa dùng vé miễn phí.</value>
+  </data>
+  <data name="Success_OrderFreeTicketApplied" xml:space="preserve">
+    <value>Đã dùng vé miễn phí cho vé trong đơn hàng.</value>
+  </data>
+  <data name="Success_OrderFreeTicketRemoved" xml:space="preserve">
+    <value>Đã gỡ vé miễn phí khỏi đơn hàng.</value>
+  </data>
 </root>

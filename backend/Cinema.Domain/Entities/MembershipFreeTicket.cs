@@ -13,9 +13,12 @@ public class MembershipFreeTicket
     public DateTime? UsedAt { get; set; }
     public int? OrderId { get; set; }
     public int? OrderLineId { get; set; }
+    public int? ShowtimeId { get; set; }
+    public decimal? ConvertedAmount { get; set; }
 
     public MembershipSubscription MembershipSubscription { get; set; } = null!;
     public User User { get; set; } = null!;
     public Order? Order { get; set; }
     public OrderLine? OrderLine { get; set; }
+    public Showtime? Showtime { get; set; }
 }

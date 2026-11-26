@@ -11787,6 +11787,60 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vé này đã được dùng vé miễn phí..
+        /// </summary>
+        public static string Rule_FreeTicketAlreadyApplied {
+            get {
+                return ResourceManager.GetString("Rule_FreeTicketAlreadyApplied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vé này không thể dùng vé miễn phí..
+        /// </summary>
+        public static string Rule_FreeTicketLineNotEligible {
+            get {
+                return ResourceManager.GetString("Rule_FreeTicketLineNotEligible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bạn không còn vé miễn phí khả dụng trong kỳ này..
+        /// </summary>
+        public static string Rule_FreeTicketNoneAvailable {
+            get {
+                return ResourceManager.GetString("Rule_FreeTicketNoneAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vé này chưa dùng vé miễn phí..
+        /// </summary>
+        public static string Rule_FreeTicketNotApplied {
+            get {
+                return ResourceManager.GetString("Rule_FreeTicketNotApplied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suất chiếu này không áp dụng vé miễn phí..
+        /// </summary>
+        public static string Rule_FreeTicketNotForShowtime {
+            get {
+                return ResourceManager.GetString("Rule_FreeTicketNotForShowtime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bạn đã dùng đủ số vé miễn phí cho phép trên một suất chiếu..
+        /// </summary>
+        public static string Rule_FreeTicketShowtimeLimitReached {
+            get {
+                return ResourceManager.GetString("Rule_FreeTicketShowtimeLimitReached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thẻ quà tặng này đã được áp cho đơn..
         /// </summary>
         public static string Rule_GiftCardAlreadyApplied {
@@ -14060,6 +14114,24 @@ namespace Cinema.Shared.Resources {
         public static string Success_OrderExchangeStarted {
             get {
                 return ResourceManager.GetString("Success_OrderExchangeStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã dùng vé miễn phí cho vé trong đơn hàng..
+        /// </summary>
+        public static string Success_OrderFreeTicketApplied {
+            get {
+                return ResourceManager.GetString("Success_OrderFreeTicketApplied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã gỡ vé miễn phí khỏi đơn hàng..
+        /// </summary>
+        public static string Success_OrderFreeTicketRemoved {
+            get {
+                return ResourceManager.GetString("Success_OrderFreeTicketRemoved", resourceCulture);
             }
         }
         

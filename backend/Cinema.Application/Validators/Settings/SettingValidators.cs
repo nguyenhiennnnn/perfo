@@ -186,6 +186,12 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         IntRange(x => x.RoomRentalFullRefundDays, "roomRentalFullRefundDays", 1, 365);
         IntRange(x => x.RoomRentalPartialRefundDays, "roomRentalPartialRefundDays", 0, 365);
         IntRange(x => x.RoomRentalPartialRefundPercent, "roomRentalPartialRefundPercent", 0, 100);
+        IntRange(
+            x => x.MembershipFreeTicketsPerShowtime,
+            "membershipFreeTicketsPerShowtime",
+            1,
+            20
+        );
         WholeDecimalRange(
             x => x.ExceptionalRefundApprovalThreshold,
             "exceptionalRefundApprovalThreshold",

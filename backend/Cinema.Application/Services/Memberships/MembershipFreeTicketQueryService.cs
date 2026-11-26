@@ -32,6 +32,7 @@ public class MembershipFreeTicketQueryService(IAppDbContext db) : IMembershipFre
                 g.Key.PeriodEnd,
                 Granted = g.Count(),
                 Used = g.Count(t => t.UsedAt != null),
+                Held = g.Count(t => t.OrderId != null),
             })
             .OrderBy(p => p.PeriodEnd)
             .ToListAsync(cancellationToken);
@@ -44,7 +45,7 @@ public class MembershipFreeTicketQueryService(IAppDbContext db) : IMembershipFre
                 p.PeriodEnd,
                 p.Granted,
                 p.Used,
-                p.Granted - p.Used
+                p.Granted - p.Held
             ))
             .ToList();
         return new MembershipFreeTicketBalanceDto(items.Sum(i => i.Remaining), items);

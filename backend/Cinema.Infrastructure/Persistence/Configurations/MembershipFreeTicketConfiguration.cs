@@ -18,8 +18,8 @@ public class MembershipFreeTicketConfiguration : IEntityTypeConfiguration<Member
                 );
                 t.HasCheckConstraint(
                     "CK_MembershipFreeTickets_Usage",
-                    "(\"UsedAt\" IS NULL AND \"OrderId\" IS NULL AND \"OrderLineId\" IS NULL) "
-                        + "OR (\"UsedAt\" IS NOT NULL AND \"OrderId\" IS NOT NULL AND \"OrderLineId\" IS NOT NULL)"
+                    "(\"UsedAt\" IS NULL AND \"OrderId\" IS NULL AND \"OrderLineId\" IS NULL AND \"ShowtimeId\" IS NULL AND \"ConvertedAmount\" IS NULL) "
+                        + "OR (\"OrderId\" IS NOT NULL AND \"OrderLineId\" IS NOT NULL AND \"ShowtimeId\" IS NOT NULL AND \"ConvertedAmount\" >= 0)"
                 );
             }
         );
@@ -28,6 +28,7 @@ public class MembershipFreeTicketConfiguration : IEntityTypeConfiguration<Member
         builder.Property(x => x.PeriodEnd).HasColumnType("timestamp without time zone");
         builder.Property(x => x.GrantedAt).HasColumnType("timestamp without time zone");
         builder.Property(x => x.UsedAt).HasColumnType("timestamp without time zone");
+        builder.Property(x => x.ConvertedAmount).HasColumnType("decimal(18,2)");
 
         builder
             .HasOne(x => x.MembershipSubscription)
@@ -49,6 +50,11 @@ public class MembershipFreeTicketConfiguration : IEntityTypeConfiguration<Member
             .WithMany()
             .HasForeignKey(x => x.OrderLineId)
             .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasOne(x => x.Showtime)
+            .WithMany()
+            .HasForeignKey(x => x.ShowtimeId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .HasIndex(x => new
@@ -68,5 +74,9 @@ public class MembershipFreeTicketConfiguration : IEntityTypeConfiguration<Member
             .HasIndex(x => new { x.UserId, x.PeriodEnd })
             .HasDatabaseName("IX_MembershipFreeTickets_UserPeriodEnd");
         builder.HasIndex(x => x.OrderId).HasDatabaseName("IX_MembershipFreeTickets_Order");
+        builder
+            .HasIndex(x => new { x.UserId, x.ShowtimeId })
+            .HasFilter("\"ShowtimeId\" IS NOT NULL")
+            .HasDatabaseName("IX_MembershipFreeTickets_UserShowtime");
     }
 }

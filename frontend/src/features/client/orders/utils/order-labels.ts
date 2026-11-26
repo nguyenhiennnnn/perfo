@@ -43,6 +43,7 @@ const ADJUSTMENT_LABELS: Record<string, string> = {
   [PriceAdjustmentType.MembershipBenefit]: "Quyền lợi gói thành viên",
   [PriceAdjustmentType.Promotion]: "Mã khuyến mãi",
   [PriceAdjustmentType.PackagePrice]: "Giá gói sản phẩm",
+  [PriceAdjustmentType.FreeTicket]: "Vé miễn phí của gói thành viên",
 };
 
 export const getOrderTypeLabel = (type: string) => ORDER_TYPE_LABELS[type] ?? type;

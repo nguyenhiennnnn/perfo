@@ -188,6 +188,7 @@ export const PriceAdjustmentType = {
   MembershipBenefit: "MembershipBenefit",
   Promotion: "Promotion",
   PackagePrice: "PackagePrice",
+  FreeTicket: "FreeTicket",
 } as const;
 export type PriceAdjustmentType =
   (typeof PriceAdjustmentType)[keyof typeof PriceAdjustmentType];

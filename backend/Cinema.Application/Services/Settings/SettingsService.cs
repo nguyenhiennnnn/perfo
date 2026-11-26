@@ -230,6 +230,8 @@ public class SettingsService(
             settings.RoomRentalPartialRefundDays = vRoomRentalPartialRefundDays;
         if (request.RoomRentalPartialRefundPercent is { } vRoomRentalPartialRefundPercent)
             settings.RoomRentalPartialRefundPercent = vRoomRentalPartialRefundPercent;
+        if (request.MembershipFreeTicketsPerShowtime is { } vMembershipFreeTicketsPerShowtime)
+            settings.MembershipFreeTicketsPerShowtime = vMembershipFreeTicketsPerShowtime;
         if (settings.RoomRentalFullRefundDays <= settings.RoomRentalPartialRefundDays)
             throw new BusinessRuleException(Messages.Validation_RoomRentalRefundWindow_Invalid);
         if (settings.ReviewInviteMinHours >= settings.ReviewInviteMaxHours)
@@ -332,6 +334,7 @@ public class SettingsService(
             RoomRentalFullRefundDays = settings.RoomRentalFullRefundDays,
             RoomRentalPartialRefundDays = settings.RoomRentalPartialRefundDays,
             RoomRentalPartialRefundPercent = settings.RoomRentalPartialRefundPercent,
+            MembershipFreeTicketsPerShowtime = settings.MembershipFreeTicketsPerShowtime,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

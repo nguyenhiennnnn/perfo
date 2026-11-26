@@ -325,6 +325,12 @@ public static class DependencyInjection
         services.AddScoped<IMembershipExpiryService, MembershipExpiryService>();
         services.AddScoped<IMembershipFreeTicketGrantService, MembershipFreeTicketGrantService>();
         services.AddScoped<IMembershipFreeTicketQueryService, MembershipFreeTicketQueryService>();
+        services.AddScoped<MembershipFreeTicketResourceHold>();
+        services.AddScoped<IMembershipFreeTicketHoldService>(sp =>
+            sp.GetRequiredService<MembershipFreeTicketResourceHold>()
+        );
+        services.AddResourceHold<MembershipFreeTicketResourceHold>();
+        services.AddScoped<IOrderFreeTicketService, OrderFreeTicketService>();
         services.AddInTransactionEventHandler<OrderConfirmed, MembershipSubscriptionHandler>();
         services.AddResourceHold<BundleResourceHold>();
         services.AddScoped<IPromotionService, PromotionService>();

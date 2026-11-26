@@ -61,7 +61,9 @@ public class OrderPriceCalculator(
         var remaining = lines.Select(l => l.LockedUnitPrice * l.Quantity).ToArray();
         foreach (
             var allocation in order
-                .PriceAdjustments.Where(a => a.Type == PriceAdjustmentType.PackagePrice)
+                .PriceAdjustments.Where(a =>
+                    a.Type is PriceAdjustmentType.PackagePrice or PriceAdjustmentType.FreeTicket
+                )
                 .SelectMany(a => a.Allocations)
         )
         {

@@ -447,6 +447,21 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject CustomerRestrictionState(CustomerRestriction r) =>
+        AuditJson.ToObject(
+            new
+            {
+                r.UserId,
+                r.Reason,
+                r.Status,
+                r.ExpiredOrderCount,
+                r.StartedAt,
+                r.ExpiresAt,
+                r.LiftedAt,
+                r.LiftedByUserId,
+            }
+        );
+
     public static JsonObject RoomClosureState(RoomClosure c) =>
         AuditJson.ToObject(
             new

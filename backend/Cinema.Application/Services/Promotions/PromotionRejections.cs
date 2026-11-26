@@ -31,6 +31,8 @@ public static class PromotionRejections
             PromotionRejectionReason.DayNotEligible => "PROMOTION_DAY_NOT_ELIGIBLE",
             PromotionRejectionReason.TierNotEligible => "PROMOTION_TIER_NOT_ELIGIBLE",
             PromotionRejectionReason.NewCustomersOnly => "PROMOTION_NEW_CUSTOMERS_ONLY",
+            PromotionRejectionReason.NewCustomerSharedIdentity =>
+                "PROMOTION_NEW_CUSTOMER_SHARED_IDENTITY",
             PromotionRejectionReason.NotAssignedToCustomer => "PROMOTION_NOT_ASSIGNED",
             PromotionRejectionReason.MinOrderNotMet => "PROMOTION_MIN_ORDER_NOT_MET",
             PromotionRejectionReason.NothingToDiscount => "PROMOTION_NOTHING_TO_DISCOUNT",
@@ -54,6 +56,8 @@ public static class PromotionRejections
             PromotionRejectionReason.DayNotEligible => Messages.Promotion_Rejected_DayNotEligible,
             PromotionRejectionReason.TierNotEligible => Messages.Promotion_Rejected_TierNotEligible,
             PromotionRejectionReason.NewCustomersOnly => Messages.Promotion_Rejected_NewCustomersOnly,
+            PromotionRejectionReason.NewCustomerSharedIdentity =>
+                Messages.Promotion_Rejected_NewCustomerSharedIdentity,
             PromotionRejectionReason.NotAssignedToCustomer =>
                 Messages.Promotion_Rejected_NotAssignedToCustomer,
             PromotionRejectionReason.MinOrderNotMet => string.Format(

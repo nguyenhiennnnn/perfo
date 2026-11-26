@@ -5496,4 +5496,16 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_VerificationCodeExpiry" xml:space="preserve">
     <value>Mã hết hạn sau &lt;strong&gt;{0}&lt;/strong&gt;. Nếu bạn không thực hiện thao tác này, hãy bỏ qua email và cân nhắc đổi mật khẩu.</value>
   </data>
+  <data name="Promotion_Rejected_NewCustomerSharedIdentity" xml:space="preserve">
+    <value>Ưu đãi khách mới đã được sử dụng bởi một tài khoản khác dùng chung số điện thoại hoặc thiết bị với bạn.</value>
+  </data>
+  <data name="NotFound_CustomerRestriction" xml:space="preserve">
+    <value>Không tìm thấy hạn chế khách hàng.</value>
+  </data>
+  <data name="Rule_CustomerRestrictionNotActive" xml:space="preserve">
+    <value>Hạn chế này đã được gỡ hoặc đã hết hạn.</value>
+  </data>
+  <data name="Success_CustomerRestrictionLifted" xml:space="preserve">
+    <value>Đã gỡ hạn chế khách hàng.</value>
+  </data>
 </root>

@@ -14,6 +14,7 @@ public enum PromotionRejectionReason
     DayNotEligible,
     TierNotEligible,
     NewCustomersOnly,
+    NewCustomerSharedIdentity,
     NotAssignedToCustomer,
     MinOrderNotMet,
     NothingToDiscount,

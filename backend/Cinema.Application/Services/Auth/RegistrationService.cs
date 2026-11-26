@@ -1,4 +1,5 @@
 ﻿using Cinema.Application.DTOs.Auth;
+using Cinema.Application.Interfaces.Abuse;
 using Cinema.Application.Interfaces.Auth;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Loyalty;
@@ -24,6 +25,7 @@ public class RegistrationService(
     IVerificationTokenSender verificationTokenSender,
     IReferralCodeService referralCodeService,
     IReferralService referralService,
+    ICustomerDeviceRecorder deviceRecorder,
     ILogger<RegistrationService> logger
 ) : IRegistrationService
 {
@@ -73,6 +75,7 @@ public class RegistrationService(
             await referralService.AttachAsync(user, request.ReferralCode, cancellationToken);
 
         await db.SaveChangesAsync(cancellationToken);
+        await deviceRecorder.RecordAsync(user.UserId, cancellationToken);
         logger.LogInformation("UserRegistered UserId {UserId}", user.UserId);
 
         await verificationTokenSender.IssueVerificationTokenAndSendEmailAsync(

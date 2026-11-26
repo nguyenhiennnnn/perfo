@@ -1,4 +1,5 @@
 ﻿using Cinema.Application.Caching;
+using Cinema.Application.Interfaces.Abuse;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Promotions;
 using Cinema.Domain.Enums;
@@ -6,7 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Services.Promotions;
 
-public class PromotionEngine(IAppDbContext db, IAppCache cache) : IPromotionEngine
+public class PromotionEngine(
+    IAppDbContext db,
+    IAppCache cache,
+    ICustomerIdentityLinkService identityLinks
+) : IPromotionEngine
 {
     public async Task<PromotionCheckResult> ValidateAsync(
         string code,
@@ -134,17 +139,52 @@ public class PromotionEngine(IAppDbContext db, IAppCache cache) : IPromotionEngi
                 && (o.Type == OrderType.Ticket || o.Type == OrderType.Combo),
             cancellationToken
         );
-        if (!hasPurchased)
+        var sharedIdentityUsed = !hasPurchased
+            && await SharedIdentityUsedNewCustomerOfferAsync(userId, context, cancellationToken);
+        if (!hasPurchased && !sharedIdentityUsed)
             return;
 
+        var reason = hasPurchased
+            ? PromotionRejectionReason.NewCustomersOnly
+            : PromotionRejectionReason.NewCustomerSharedIdentity;
         foreach (var promotion in passed.Where(p => p.NewCustomersOnly).ToList())
         {
-            failures[promotion.PromotionId] = PromotionRejections.Invalid(
-                PromotionRejectionReason.NewCustomersOnly,
-                promotion
-            );
+            failures[promotion.PromotionId] = PromotionRejections.Invalid(reason, promotion);
             passed.Remove(promotion);
         }
+    }
+
+    private async Task<bool> SharedIdentityUsedNewCustomerOfferAsync(
+        int userId,
+        PromotionContext context,
+        CancellationToken cancellationToken
+    )
+    {
+        var linkedIds = (await identityLinks.FindLinkedUserIdsAsync(userId, cancellationToken))
+            .ToList();
+        if (linkedIds.Count == 0)
+            return false;
+
+        var hasPurchased = await db.Orders.AnyAsync(
+            o =>
+                o.UserId != null
+                && linkedIds.Contains(o.UserId.Value)
+                && o.Status == OrderStatus.Confirmed
+                && (o.Type == OrderType.Ticket || o.Type == OrderType.Combo),
+            cancellationToken
+        );
+        if (hasPurchased)
+            return true;
+
+        return await db.PromotionRedemptions.AnyAsync(
+            r =>
+                r.UserId != null
+                && linkedIds.Contains(r.UserId.Value)
+                && r.Status != PromotionRedemptionStatus.Released
+                && r.Promotion.NewCustomersOnly
+                && (context.OrderId == null || r.OrderId != context.OrderId),
+            cancellationToken
+        );
     }
 
     private async Task<Dictionary<int, PromotionUsage>> LoadUsageAsync(

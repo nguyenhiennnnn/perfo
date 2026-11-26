@@ -88,6 +88,8 @@ public interface IAppDbContext
     DbSet<PublicFormAttemptLimit> PublicFormAttemptLimits { get; }
     DbSet<RiskSignal> RiskSignals { get; }
     DbSet<CustomerVerification> CustomerVerifications { get; }
+    DbSet<CustomerRestriction> CustomerRestrictions { get; }
+    DbSet<CustomerDevice> CustomerDevices { get; }
     DbSet<OrderResourceHold> OrderResourceHolds { get; }
     DbSet<OutboxMessage> OutboxMessages { get; }
     DbSet<OutboxDelivery> OutboxDeliveries { get; }

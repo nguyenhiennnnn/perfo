@@ -18,6 +18,7 @@ public class OrderReleaseService(
     IBusinessEventDispatcher eventDispatcher,
     IRealtimeNotifier realtimeNotifier,
     IAbuseSignalService abuseSignals,
+    ICustomerRestrictionService restrictions,
     ILogger<OrderReleaseService> logger
 ) : IOrderReleaseService
 {
@@ -80,11 +81,15 @@ public class OrderReleaseService(
                         .Select(o => o.UserId)
                         .FirstOrDefaultAsync(cancellationToken);
                     if (abandonedBy is { } abandonedUserId)
+                    {
                         await abuseSignals.RecordHoldAbandonedAsync(
                             abandonedUserId,
                             orderId,
                             cancellationToken
                         );
+                        if (target == OrderStatus.Expired)
+                            await restrictions.SyncAsync(abandonedUserId, cancellationToken);
+                    }
                 }
 
                 var seats = await db

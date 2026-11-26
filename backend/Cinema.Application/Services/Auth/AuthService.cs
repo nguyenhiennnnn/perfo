@@ -1,4 +1,5 @@
 ﻿using Cinema.Application.DTOs.Auth;
+using Cinema.Application.Interfaces.Abuse;
 using Cinema.Application.Interfaces.Auth;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Users;
@@ -21,6 +22,7 @@ public class AuthService(
     ITokenService tokenService,
     IGoogleAuthService googleAuthService,
     IReferralCodeService referralCodeService,
+    ICustomerDeviceRecorder deviceRecorder,
     IPasswordHasher<User> passwordHasher,
     IOptions<JwtOptions> jwtOptions,
     ILogger<AuthService> logger
@@ -95,6 +97,9 @@ public class AuthService(
             user.PasswordHash = passwordHasher.HashPassword(user, request.Password);
             await db.SaveChangesAsync(cancellationToken);
         }
+
+        if (isCustomer)
+            await deviceRecorder.RecordAsync(user.UserId, cancellationToken);
 
         var accessToken = tokenService.GenerateAccessToken(user);
         var refreshToken = await IssueRefreshTokenAsync(user.UserId, cancellationToken);
@@ -213,6 +218,8 @@ public class AuthService(
                 await db.SaveChangesAsync(cancellationToken);
             }
         }
+
+        await deviceRecorder.RecordAsync(user.UserId, cancellationToken);
 
         var accessToken = tokenService.GenerateAccessToken(user);
         var refreshToken = await IssueRefreshTokenAsync(user.UserId, cancellationToken);

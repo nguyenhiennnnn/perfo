@@ -111,6 +111,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<PublicFormAttemptLimit> PublicFormAttemptLimits => Set<PublicFormAttemptLimit>();
     public DbSet<RiskSignal> RiskSignals => Set<RiskSignal>();
     public DbSet<CustomerVerification> CustomerVerifications => Set<CustomerVerification>();
+    public DbSet<CustomerRestriction> CustomerRestrictions => Set<CustomerRestriction>();
+    public DbSet<CustomerDevice> CustomerDevices => Set<CustomerDevice>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {

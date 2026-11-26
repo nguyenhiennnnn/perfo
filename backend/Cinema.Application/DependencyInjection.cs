@@ -172,7 +172,7 @@ public static class DependencyInjection
         services.AddScoped<ILoyaltyChallengeQueryService, LoyaltyChallengeQueryService>();
         services.AddScoped<IReferralService, ReferralService>();
         services.AddScoped<IReferralRewardService, ReferralRewardService>();
-        services.AddScoped<IReferralDeviceCheck, NullReferralDeviceCheck>();
+        services.AddScoped<IReferralDeviceCheck, ReferralDeviceCheck>();
         services.AddBackgroundEventHandler<OrderConfirmed, ReferralRewardHandler>();
         services.AddScoped<ILoyaltyChallengeProgressService, LoyaltyChallengeProgressService>();
         services.AddScoped<LoyaltyChallengeCompletionNotifier>();
@@ -248,6 +248,9 @@ public static class DependencyInjection
         services.AddScoped<IPublicFormRateLimiter, PublicFormRateLimiter>();
         services.AddScoped<IAbuseSignalService, AbuseSignalService>();
         services.AddScoped<ICustomerVerificationService, CustomerVerificationService>();
+        services.AddScoped<ICustomerRestrictionService, CustomerRestrictionService>();
+        services.AddScoped<ICustomerDeviceRecorder, CustomerDeviceRecorder>();
+        services.AddScoped<ICustomerIdentityLinkService, CustomerIdentityLinkService>();
         services.AddScoped<IGiftCardLookupService, GiftCardLookupService>();
         services.AddScoped<IGiftCardCancellationService, GiftCardCancellationService>();
         services.AddScoped<IGiftCardPurchaseService, GiftCardPurchaseService>();

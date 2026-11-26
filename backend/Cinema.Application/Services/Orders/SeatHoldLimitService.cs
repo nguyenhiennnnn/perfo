@@ -1,8 +1,8 @@
 using Cinema.Application.Caching;
+using Cinema.Application.Interfaces.Abuse;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Orders;
 using Cinema.Application.Utils;
-using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
@@ -11,7 +11,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Services.Orders;
 
-public class SeatHoldLimitService(IAppDbContext db, IAppCache cache) : ISeatHoldLimitService
+public class SeatHoldLimitService(
+    IAppDbContext db,
+    IAppCache cache,
+    ICustomerRestrictionService restrictions
+) : ISeatHoldLimitService
 {
     public const string PendingOrdersLimitErrorCode = "PENDING_ORDERS_LIMIT_EXCEEDED";
     public const string HeldSeatsLimitErrorCode = "HELD_SEATS_LIMIT_EXCEEDED";
@@ -32,20 +36,8 @@ public class SeatHoldLimitService(IAppDbContext db, IAppCache cache) : ISeatHold
             cancellationToken
         );
 
-        var streak = await ExpiredStreakQuery(userId).CountAsync(cancellationToken);
-        DateTime? restrictedUntil = null;
-        if (streak >= settings.ExpiredOrderStreakThreshold)
-        {
-            var lastExpiredAt = await ExpiredStreakQuery(userId)
-                .MaxAsync(o => o.ExpiresAt, cancellationToken);
-            if (lastExpiredAt is { } last)
-            {
-                var until = last.AddMinutes(settings.ExpiredOrderRestrictionMinutes);
-                if (until > now)
-                    restrictedUntil = until;
-            }
-        }
-        var restricted = restrictedUntil is not null;
+        var restriction = await restrictions.SyncAsync(userId, cancellationToken);
+        var restricted = restriction is not null;
 
         var pending = await db
             .Orders.AsNoTracking()
@@ -72,9 +64,9 @@ public class SeatHoldLimitService(IAppDbContext db, IAppCache cache) : ISeatHold
             var message = restricted
                 ? string.Format(
                     Messages.Rule_HoldRestrictedPendingLimit,
-                    streak,
+                    restriction!.ExpiredOrderCount,
                     maxPending,
-                    Format(restrictedUntil!.Value),
+                    Format(restriction.ExpiresAt),
                     Format(earliest)
                 )
                 : string.Format(
@@ -82,11 +74,15 @@ public class SeatHoldLimitService(IAppDbContext db, IAppCache cache) : ISeatHold
                     maxPending,
                     Format(earliest)
                 );
-            throw new TooManyAttemptsException(
-                message,
-                PendingOrdersLimitErrorCode,
-                new { retryAfterSeconds = RetryAfterSeconds(earliest, now) }
-            );
+            object details = restriction is null
+                ? new { retryAfterSeconds = RetryAfterSeconds(earliest, now) }
+                : new
+                {
+                    retryAfterSeconds = RetryAfterSeconds(earliest, now),
+                    restrictionReason = restriction.Reason.ToString(),
+                    restrictedUntil = restriction.ExpiresAt,
+                };
+            throw new TooManyAttemptsException(message, PendingOrdersLimitErrorCode, details);
         }
 
         var heldSeats = pending.Sum(p => p.Seats);
@@ -110,21 +106,6 @@ public class SeatHoldLimitService(IAppDbContext db, IAppCache cache) : ISeatHold
             ? Math.Min(settings.RestrictedHoldMinutes, settings.HoldDurationMinutes)
             : settings.HoldDurationMinutes;
     }
-
-    private IQueryable<Order> ExpiredStreakQuery(int userId) =>
-        db.Orders.AsNoTracking()
-            .Where(o =>
-                o.UserId == userId
-                && o.Channel == SalesChannel.Online
-                && o.Type == OrderType.Ticket
-                && o.Status == OrderStatus.Expired
-                && !db.Orders.Any(c =>
-                    c.UserId == userId
-                    && c.Type == OrderType.Ticket
-                    && c.Status == OrderStatus.Confirmed
-                    && c.CreatedAt >= o.CreatedAt
-                )
-            );
 
     private static int RetryAfterSeconds(DateTime until, DateTime now) =>
         Math.Max(1, (int)Math.Ceiling((until - now).TotalSeconds));

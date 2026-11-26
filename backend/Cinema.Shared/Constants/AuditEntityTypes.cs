@@ -31,4 +31,5 @@ public static class AuditEntityTypes
     public const string LoyaltyChallenge = "LoyaltyChallenge";
     public const string SupportRequest = "SupportRequest";
     public const string ExceptionalRefundProposal = "ExceptionalRefundProposal";
+    public const string CustomerRestriction = "CustomerRestriction";
 }

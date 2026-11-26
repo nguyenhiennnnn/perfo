@@ -158,7 +158,7 @@ public class RoomRentalPaymentOrderService(
         }
         catch (DbUpdateException)
         {
-            db.Entry(order).State = EntityState.Detached;
+            db.Orders.Entry(order).State = EntityState.Detached;
             var raced = await FindActiveAsync(requestId, stage, cancellationToken);
             if (raced is null)
                 throw;

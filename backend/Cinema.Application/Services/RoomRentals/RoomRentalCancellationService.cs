@@ -54,7 +54,7 @@ public class RoomRentalCancellationService(
                 .Select(r => (RoomRentalRequestStatus?)r.Status)
                 .FirstOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(Messages.NotFound_RoomRentalRequest);
-        if (!RoomRentalCancellationRules.IsPaymentStage(status.Value))
+        if (!RoomRentalCancellationRules.IsPaymentStage(status))
             throw new BusinessRuleException(Messages.Rule_RoomRentalCancelStatusInvalid);
 
         var quote = await RoomRentalPaymentPlan.LoadLatestSentQuoteAsync(

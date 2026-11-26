@@ -353,6 +353,25 @@ export const ENDPOINTS = {
       seatLayoutExport: (id: number) => `/admin/rooms/${id}/seat-layout/export`,
       seatLayoutImport: (id: number) => `/admin/rooms/${id}/seat-layout/import`,
     },
+    roomRentalRequests: {
+      root: "/admin/room-rental-requests",
+      byId: (id: number) => `/admin/room-rental-requests/${id}`,
+      status: (id: number) => `/admin/room-rental-requests/${id}/status`,
+      quotes: (id: number) => `/admin/room-rental-requests/${id}/quotes`,
+      quoteByVersion: (id: number, version: number) =>
+        `/admin/room-rental-requests/${id}/quotes/${version}`,
+      quotePdf: (id: number, version: number) =>
+        `/admin/room-rental-requests/${id}/quotes/${version}/pdf`,
+      quoteSend: (id: number, version: number) =>
+        `/admin/room-rental-requests/${id}/quotes/${version}/send`,
+    },
+    roomRentalRates: {
+      root: "/admin/room-rental-rates",
+      byId: (id: number) => `/admin/room-rental-rates/${id}`,
+    },
+    roomRentalQuotes: {
+      calculate: "/admin/room-rental-quotes/calculate",
+    },
     roomClosures: {
       root: "/admin/room-closures",
       byId: (id: number) => `/admin/room-closures/${id}`,

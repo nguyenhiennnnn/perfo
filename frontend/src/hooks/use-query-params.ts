@@ -578,3 +578,26 @@ const adminReconciliationParsers = {
 export const useAdminReconciliationParams = (
   options?: Parameters<typeof useQueryStates<typeof adminReconciliationParsers>>[1],
 ) => useQueryStates(adminReconciliationParsers, options);
+
+const adminRoomRentalParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  status: parseAsStringLiteral([
+    "New",
+    "Processing",
+    "Quoted",
+    "Accepted",
+    "Declined",
+    "DepositPaid",
+    "FullyPaid",
+    "Completed",
+    "Cancelled",
+    "QuoteExpired",
+  ] as const),
+  view: parseAsStringLiteral(["table", "board"] as const).withDefault("board"),
+  search: searchParser,
+};
+
+export const useAdminRoomRentalParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminRoomRentalParsers>>[1],
+) => useQueryStates(adminRoomRentalParsers, options);

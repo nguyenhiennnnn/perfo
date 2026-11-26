@@ -10,6 +10,8 @@ import {
   CalendarClock,
   Tv,
   DoorClosed,
+  Presentation,
+  BadgeDollarSign,
   Popcorn,
   Warehouse,
   Package,
@@ -126,6 +128,18 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         to: ROUTES.admin.roomClosures,
         label: "Đóng phòng",
         icon: DoorClosed,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.roomRentals,
+        label: "Yêu cầu thuê phòng",
+        icon: Presentation,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.roomRentalRates,
+        label: "Bảng giá thuê phòng",
+        icon: BadgeDollarSign,
         roles: [Role.Admin],
       },
       {

@@ -270,6 +270,13 @@ export const invalidations = {
     k.adminDashboard.all(),
   ],
 
+  roomRentalChanged: (): KeyList => [k.adminRoomRentals.all(), k.adminAuditLogs.all()],
+  roomRentalRateChanged: (): KeyList => [
+    k.adminRoomRentalRates.all(),
+    k.adminRoomRentals.all(),
+    k.adminAuditLogs.all(),
+  ],
+
   settingsChanged: (): KeyList => [
     k.adminSettings.get(),
     k.settings.get(),

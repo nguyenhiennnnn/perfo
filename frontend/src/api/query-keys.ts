@@ -266,6 +266,21 @@ export const queryKeys = {
     seats: (roomId: number) => ["admin", "rooms", "seats", roomId] as const,
   },
 
+  adminRoomRentals: {
+    all: () => ["admin", "room-rentals"] as const,
+    list: (params?: object) => ["admin", "room-rentals", "list", params] as const,
+    detail: (id: number) => ["admin", "room-rentals", "detail", id] as const,
+    quotes: (id: number) => ["admin", "room-rentals", "quotes", id] as const,
+    quote: (id: number, version: number) =>
+      ["admin", "room-rentals", "quote", id, version] as const,
+    calculate: (params: object) => ["admin", "room-rentals", "calculate", params] as const,
+  },
+
+  adminRoomRentalRates: {
+    all: () => ["admin", "room-rental-rates"] as const,
+    list: (params?: object) => ["admin", "room-rental-rates", "list", params] as const,
+  },
+
   adminRoomClosures: {
     all: () => ["admin", "room-closures"] as const,
     list: (params?: object) =>

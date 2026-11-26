@@ -1,5 +1,7 @@
 ﻿using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Showtimes;
+using Cinema.Application.Events;
+using Cinema.Application.Interfaces.Events;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Showtimes;
 using Cinema.Application.Utils;
@@ -13,7 +15,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Cinema.Application.Services.Showtimes;
 
-public class ShowtimeService(IAppDbContext db, ILogger<ShowtimeService> logger) : IShowtimeService
+public class ShowtimeService(
+    IAppDbContext db,
+    IBusinessEventDispatcher eventDispatcher,
+    ILogger<ShowtimeService> logger
+) : IShowtimeService
 {
     public async Task<OffsetPageResult<AdminShowtimeDto>> GetShowtimesAdminAsync(
         AdminShowtimeListFilter filter,
@@ -114,7 +120,17 @@ public class ShowtimeService(IAppDbContext db, ILogger<ShowtimeService> logger) 
             cancellationToken
         );
 
-        await db.SaveChangesAsync(cancellationToken);
+        await db.InTransactionAsync(
+            async () =>
+            {
+                await db.SaveChangesAsync(cancellationToken);
+                await eventDispatcher.PublishAsync(
+                    new ShowtimeOpened(showtime.ShowtimeId, showtime.MovieId, DateTime.UtcNow),
+                    cancellationToken
+                );
+            },
+            cancellationToken
+        );
 
         logger.LogInformation(
             "ShowtimeCreated ShowtimeId {ShowtimeId} MovieId {MovieId} RoomId {RoomId} SeatsGenerated {Count}",

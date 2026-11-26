@@ -777,6 +777,36 @@ public static class EmailTemplates
         );
     }
 
+    public static string MovieOpenedForSale(BrandOptions brand, MovieOpenedForSaleEmailData data)
+    {
+        var startText = BusinessTime
+            .ToLocal(data.FirstShowtimeStartUtc)
+            .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture);
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeMovieOpened, Success, SymbolCheck)}
+            {Heading(Messages.Email_MovieOpenedHeading)}
+            {Paragraph(
+                string.Format(Messages.Email_MovieOpenedBody, Enc(data.CustomerName), Enc(data.MovieTitle))
+            )}
+            {DetailCard(
+                [
+                    DetailRow(Messages.Email_MovieLabel, Enc(data.MovieTitle)),
+                    DetailRow(Messages.Email_MovieOpenedFirstShowtimeLabel, Enc(startText), isLast: true),
+                ]
+            )}
+            {Button(Messages.Email_MovieOpenedButton, data.MovieLink)}
+            <div style="height:12px; line-height:12px; font-size:0;">&nbsp;</div>
+            {MutedParagraph(Messages.Email_MovieOpenedNote)}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_MovieOpenedPreheader, data.MovieTitle),
+            body
+        );
+    }
+
     public static string PointsExpiryReminder(BrandOptions brand, PointsExpiryReminderEmailData data)
     {
         var rows = data

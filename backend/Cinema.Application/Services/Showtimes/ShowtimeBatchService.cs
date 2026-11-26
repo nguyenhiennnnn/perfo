@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 using Cinema.Application.DTOs.Showtimes;
+using Cinema.Application.Events;
+using Cinema.Application.Interfaces.Events;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Showtimes;
 using Cinema.Application.Services.Rooms;
@@ -17,6 +19,7 @@ namespace Cinema.Application.Services.Showtimes;
 public class ShowtimeBatchService(
     IAppDbContext db,
     IShowtimeCancellationService showtimeCancellationService,
+    IBusinessEventDispatcher eventDispatcher,
     ILogger<ShowtimeBatchService> logger
 ) : IShowtimeBatchService
 {
@@ -377,7 +380,22 @@ public class ShowtimeBatchService(
         }
 
         if (planned.Count > 0)
-            await db.SaveChangesAsync(cancellationToken);
+            await db.InTransactionAsync(
+                async () =>
+                {
+                    await db.SaveChangesAsync(cancellationToken);
+                    foreach (var movieShowtimes in planned.GroupBy(s => s.MovieId))
+                        await eventDispatcher.PublishAsync(
+                            new ShowtimeOpened(
+                                movieShowtimes.First().ShowtimeId,
+                                movieShowtimes.Key,
+                                DateTime.UtcNow
+                            ),
+                            cancellationToken
+                        );
+                },
+                cancellationToken
+            );
 
         foreach (var showtime in planned)
             created.Add(

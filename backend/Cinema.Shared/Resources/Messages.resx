@@ -5376,4 +5376,28 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_MovieInterestNotComingSoon" xml:space="preserve">
     <value>Chỉ có thể đánh dấu quan tâm phim sắp chiếu.</value>
   </data>
+  <data name="Email_MovieOpenedSubject" xml:space="preserve">
+    <value>{0} đã mở bán vé</value>
+  </data>
+  <data name="Email_BadgeMovieOpened" xml:space="preserve">
+    <value>Mở bán vé</value>
+  </data>
+  <data name="Email_MovieOpenedHeading" xml:space="preserve">
+    <value>Phim bạn quan tâm đã mở bán</value>
+  </data>
+  <data name="Email_MovieOpenedBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, phim &lt;strong&gt;{1}&lt;/strong&gt; mà bạn quan tâm vừa có suất chiếu đầu tiên mở bán.</value>
+  </data>
+  <data name="Email_MovieOpenedFirstShowtimeLabel" xml:space="preserve">
+    <value>Suất chiếu sớm nhất</value>
+  </data>
+  <data name="Email_MovieOpenedButton" xml:space="preserve">
+    <value>Đặt vé ngay</value>
+  </data>
+  <data name="Email_MovieOpenedPreheader" xml:space="preserve">
+    <value>Phim {0} đã có suất chiếu mở bán.</value>
+  </data>
+  <data name="Email_MovieOpenedNote" xml:space="preserve">
+    <value>Bạn nhận email này vì đã đánh dấu quan tâm phim. Chúng tôi chỉ báo một lần khi phim mở bán.</value>
+  </data>
 </root>

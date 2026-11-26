@@ -104,6 +104,13 @@ public sealed record WaitlistSeatsAvailableEmailData(
     DateTime PriorityUntilUtc
 );
 
+public sealed record MovieOpenedForSaleEmailData(
+    string CustomerName,
+    string MovieTitle,
+    DateTime FirstShowtimeStartUtc,
+    string MovieLink
+);
+
 public sealed record LowStockEmailLine(
     string Code,
     string Name,
@@ -259,6 +266,8 @@ public interface INotificationService
     void SendReviewInvite(string toEmail, ReviewInviteEmailData data);
 
     void SendWaitlistSeatsAvailable(string toEmail, WaitlistSeatsAvailableEmailData data);
+
+    void SendMovieOpenedForSale(string toEmail, MovieOpenedForSaleEmailData data);
 
     void SendInvoiceRequestProcessed(
         string toEmail,

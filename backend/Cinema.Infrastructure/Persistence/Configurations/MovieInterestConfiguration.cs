@@ -14,6 +14,7 @@ public class MovieInterestConfiguration : IEntityTypeConfiguration<MovieInterest
             .Property(x => x.CreatedAt)
             .HasColumnType("timestamp without time zone")
             .HasDefaultValueSql("NOW()");
+        builder.Property(x => x.NotifiedAt).HasColumnType("timestamp without time zone");
 
         builder
             .HasOne(x => x.User)

@@ -148,6 +148,13 @@ public class NotificationService(
             EmailTemplates.WaitlistSeatsAvailable(_brand, data)
         );
 
+    public void SendMovieOpenedForSale(string toEmail, MovieOpenedForSaleEmailData data) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_MovieOpenedSubject, data.MovieTitle),
+            EmailTemplates.MovieOpenedForSale(_brand, data)
+        );
+
     public void SendInvoiceRequestProcessed(
         string toEmail,
         string customerName,

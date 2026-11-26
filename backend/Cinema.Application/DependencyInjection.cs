@@ -297,6 +297,8 @@ public static class DependencyInjection
         services.AddScoped<IPaymentExportService, PaymentExportService>();
         services.AddScoped<IReviewService, ReviewService>();
         services.AddScoped<IMovieInterestService, MovieInterestService>();
+        services.AddScoped<IMovieInterestNotificationService, MovieInterestNotificationService>();
+        services.AddBackgroundEventHandler<ShowtimeOpened, MovieInterestShowtimeOpenedHandler>();
         services.AddScoped<IExperienceSurveyService, ExperienceSurveyService>();
         services.AddScoped<IRoomQualityAlertService, RoomQualityAlertService>();
         services.AddScoped<IRoomQualityAlertQueryService, RoomQualityAlertQueryService>();

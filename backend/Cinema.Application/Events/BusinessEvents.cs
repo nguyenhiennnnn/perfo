@@ -35,6 +35,9 @@ public sealed record ShowtimeSeatsReleased(int ShowtimeId, DateTime OccurredAt) 
 
 public sealed record ShowtimeEnded(int ShowtimeId, DateTime OccurredAt) : IBusinessEvent;
 
+public sealed record ShowtimeOpened(int ShowtimeId, int MovieId, DateTime OccurredAt)
+    : IBusinessEvent;
+
 public sealed record ShowtimeRoomChanged(
     int ShowtimeRoomChangeId,
     int ShowtimeId,

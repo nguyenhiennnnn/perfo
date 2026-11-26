@@ -248,6 +248,8 @@ public interface INotificationService
         TimeSpan validFor
     );
 
+    void SendVerificationCode(string toEmail, string fullName, string code, TimeSpan validFor);
+
     void SendBookingConfirmed(
         string toEmail,
         string customerName,

@@ -33,6 +33,7 @@ public static class CurrentActorExtensions
     {
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentActorAccessor, HttpCurrentActorAccessor>();
+        services.AddScoped<IClientContextAccessor, HttpClientContextAccessor>();
         return services;
     }
 }

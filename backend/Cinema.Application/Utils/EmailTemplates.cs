@@ -293,6 +293,26 @@ public static class EmailTemplates
         return Layout(brand, title, body);
     }
 
+    public static string VerificationCode(
+        BrandOptions brand,
+        string fullName,
+        string title,
+        string introText,
+        string code,
+        string expiresIn
+    )
+    {
+        var body = $"""
+            {Heading(title)}
+            {Paragraph(string.Format(Messages.Email_Greeting, Enc(fullName)))}
+            {Paragraph(introText)}
+            <p class="tx" style="margin:0 0 20px 0; font-size:32px; font-weight:700; letter-spacing:8px; color:{ColorForeground};">{Enc(code)}</p>
+            {MutedParagraph(string.Format(Messages.Email_VerificationCodeExpiry, expiresIn))}
+            """;
+
+        return Layout(brand, title, body);
+    }
+
     public static string BookingConfirmed(
         BrandOptions brand,
         string customerName,

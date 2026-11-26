@@ -194,6 +194,22 @@ public class SettingsService(
             settings.MaxPendingOrdersPerUser = maxPendingOrdersPerUser;
         if (request.MaxHeldSeatsPerUser is { } maxHeldSeatsPerUser)
             settings.MaxHeldSeatsPerUser = maxHeldSeatsPerUser;
+        if (request.PublicFormMaxRequests is { } publicFormMaxRequests)
+            settings.PublicFormMaxRequests = publicFormMaxRequests;
+        if (request.PublicFormWindowMinutes is { } publicFormWindowMinutes)
+            settings.PublicFormWindowMinutes = publicFormWindowMinutes;
+        if (request.AbuseHoldAbandonThreshold is { } abuseHoldAbandonThreshold)
+            settings.AbuseHoldAbandonThreshold = abuseHoldAbandonThreshold;
+        if (request.AbuseHoldAbandonWindowMinutes is { } abuseHoldAbandonWindowMinutes)
+            settings.AbuseHoldAbandonWindowMinutes = abuseHoldAbandonWindowMinutes;
+        if (request.AbusePaymentFailureThreshold is { } abusePaymentFailureThreshold)
+            settings.AbusePaymentFailureThreshold = abusePaymentFailureThreshold;
+        if (request.AbusePaymentFailureWindowMinutes is { } abusePaymentFailureWindowMinutes)
+            settings.AbusePaymentFailureWindowMinutes = abusePaymentFailureWindowMinutes;
+        if (request.VerificationCodeMinutes is { } verificationCodeMinutes)
+            settings.VerificationCodeMinutes = verificationCodeMinutes;
+        if (request.VerificationMaxAttempts is { } verificationMaxAttempts)
+            settings.VerificationMaxAttempts = verificationMaxAttempts;
         if (settings.ReviewInviteMinHours >= settings.ReviewInviteMaxHours)
             throw new BusinessRuleException(Messages.Validation_ReviewInviteWindow_Invalid);
         if (settings.GiftCardMinAmount > settings.GiftCardMaxAmount)
@@ -276,6 +292,14 @@ public class SettingsService(
             RestrictedMaxPendingOrders = settings.RestrictedMaxPendingOrders,
             MaxPendingOrdersPerUser = settings.MaxPendingOrdersPerUser,
             MaxHeldSeatsPerUser = settings.MaxHeldSeatsPerUser,
+            PublicFormMaxRequests = settings.PublicFormMaxRequests,
+            PublicFormWindowMinutes = settings.PublicFormWindowMinutes,
+            AbuseHoldAbandonThreshold = settings.AbuseHoldAbandonThreshold,
+            AbuseHoldAbandonWindowMinutes = settings.AbuseHoldAbandonWindowMinutes,
+            AbusePaymentFailureThreshold = settings.AbusePaymentFailureThreshold,
+            AbusePaymentFailureWindowMinutes = settings.AbusePaymentFailureWindowMinutes,
+            VerificationCodeMinutes = settings.VerificationCodeMinutes,
+            VerificationMaxAttempts = settings.VerificationMaxAttempts,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

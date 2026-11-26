@@ -1,5 +1,6 @@
 ﻿using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Orders;
+using Cinema.Application.Interfaces.Abuse;
 using Cinema.Application.Interfaces.Combos;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Notifications;
@@ -27,6 +28,7 @@ public class OrderHoldService(
     IOrderPriceCalculator priceCalculator,
     IWaitlistPriorityService waitlistPriority,
     ISeatHoldLimitService holdLimits,
+    ICustomerVerificationService verification,
     IOptions<BookingOptions> bookingOptions,
     ILogger<OrderHoldService> logger,
     IAppCache cache
@@ -104,6 +106,9 @@ public class OrderHoldService(
 
         var policy = holdPolicies.First(p => p.Channel == channel);
         policy.EnsureSalesOpen(showtime, holdSettings.StopSellingMinutesBefore);
+
+        if (channel == SalesChannel.Online)
+            await verification.EnsureVerifiedAsync(holderUserId, cancellationToken);
 
         if (string.IsNullOrWhiteSpace(customerName))
         {

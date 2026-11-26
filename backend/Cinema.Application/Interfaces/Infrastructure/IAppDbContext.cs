@@ -85,6 +85,9 @@ public interface IAppDbContext
     DbSet<GiftCardLedger> GiftCardLedgers { get; }
     DbSet<GiftCardRevenueEntry> GiftCardRevenueEntries { get; }
     DbSet<GiftCardAttemptLimit> GiftCardAttemptLimits { get; }
+    DbSet<PublicFormAttemptLimit> PublicFormAttemptLimits { get; }
+    DbSet<RiskSignal> RiskSignals { get; }
+    DbSet<CustomerVerification> CustomerVerifications { get; }
     DbSet<OrderResourceHold> OrderResourceHolds { get; }
     DbSet<OutboxMessage> OutboxMessages { get; }
     DbSet<OutboxDelivery> OutboxDeliveries { get; }

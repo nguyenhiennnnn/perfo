@@ -104,6 +104,14 @@ public class CinemaSettings
     public const int DefaultRestrictedMaxPendingOrders = 1;
     public const int DefaultMaxPendingOrdersPerUser = 3;
     public const int DefaultMaxHeldSeatsPerUser = 20;
+    public const int DefaultPublicFormMaxRequests = 5;
+    public const int DefaultPublicFormWindowMinutes = 10;
+    public const int DefaultAbuseHoldAbandonThreshold = 5;
+    public const int DefaultAbuseHoldAbandonWindowMinutes = 15;
+    public const int DefaultAbusePaymentFailureThreshold = 3;
+    public const int DefaultAbusePaymentFailureWindowMinutes = 15;
+    public const int DefaultVerificationCodeMinutes = 10;
+    public const int DefaultVerificationMaxAttempts = 5;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -219,4 +227,20 @@ public class CinemaSettings
     public int MaxPendingOrdersPerUser { get; set; } = DefaultMaxPendingOrdersPerUser;
 
     public int MaxHeldSeatsPerUser { get; set; } = DefaultMaxHeldSeatsPerUser;
+
+    public int PublicFormMaxRequests { get; set; } = DefaultPublicFormMaxRequests;
+
+    public int PublicFormWindowMinutes { get; set; } = DefaultPublicFormWindowMinutes;
+
+    public int AbuseHoldAbandonThreshold { get; set; } = DefaultAbuseHoldAbandonThreshold;
+
+    public int AbuseHoldAbandonWindowMinutes { get; set; } = DefaultAbuseHoldAbandonWindowMinutes;
+
+    public int AbusePaymentFailureThreshold { get; set; } = DefaultAbusePaymentFailureThreshold;
+
+    public int AbusePaymentFailureWindowMinutes { get; set; } = DefaultAbusePaymentFailureWindowMinutes;
+
+    public int VerificationCodeMinutes { get; set; } = DefaultVerificationCodeMinutes;
+
+    public int VerificationMaxAttempts { get; set; } = DefaultVerificationMaxAttempts;
 }

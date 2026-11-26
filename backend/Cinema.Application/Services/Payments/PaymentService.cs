@@ -1,4 +1,5 @@
-﻿using Cinema.Application.Interfaces.Infrastructure;
+﻿using Cinema.Application.Interfaces.Abuse;
+using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Ledger;
 using Cinema.Application.Interfaces.Orders;
 using Cinema.Application.Interfaces.Payments;
@@ -21,6 +22,7 @@ public class PaymentService(
     IPaymentRefundService refundService,
     IOrderConfirmationService confirmationService,
     ISupportAutoRequestService supportAutoRequests,
+    IAbuseSignalService abuseSignals,
     IEnumerable<IPaymentGateway> paymentGateways,
     ILogger<PaymentService> logger,
     IOptions<StripeOptions>? stripeOptions = null
@@ -288,6 +290,23 @@ public class PaymentService(
 
             if (!isSuccess)
             {
+                var failedUserId = await db
+                    .Orders.AsNoTracking()
+                    .Where(o =>
+                        o.OrderId == pending.OrderId
+                        && o.Channel == SalesChannel.Online
+                        && o.Type == OrderType.Ticket
+                        && o.UserId != null
+                    )
+                    .Select(o => o.UserId)
+                    .FirstOrDefaultAsync(cancellationToken);
+                if (failedUserId is { } failedUser)
+                    await abuseSignals.RecordPaymentFailedAsync(
+                        failedUser,
+                        pending.OrderId,
+                        cancellationToken
+                    );
+
                 await transaction.CommitAsync(cancellationToken);
                 logger.LogInformation(
                     "PaymentFailed PaymentTransactionId {Id} OrderId {OrderId}",

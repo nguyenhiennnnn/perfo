@@ -75,7 +75,15 @@ public sealed record CinemaSettingsSnapshot(
     int RestrictedHoldMinutes,
     int RestrictedMaxPendingOrders,
     int MaxPendingOrdersPerUser,
-    int MaxHeldSeatsPerUser
+    int MaxHeldSeatsPerUser,
+    int PublicFormMaxRequests,
+    int PublicFormWindowMinutes,
+    int AbuseHoldAbandonThreshold,
+    int AbuseHoldAbandonWindowMinutes,
+    int AbusePaymentFailureThreshold,
+    int AbusePaymentFailureWindowMinutes,
+    int VerificationCodeMinutes,
+    int VerificationMaxAttempts
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -151,6 +159,14 @@ public sealed record CinemaSettingsSnapshot(
             s.RestrictedHoldMinutes,
             s.RestrictedMaxPendingOrders,
             s.MaxPendingOrdersPerUser,
-            s.MaxHeldSeatsPerUser
+            s.MaxHeldSeatsPerUser,
+            s.PublicFormMaxRequests,
+            s.PublicFormWindowMinutes,
+            s.AbuseHoldAbandonThreshold,
+            s.AbuseHoldAbandonWindowMinutes,
+            s.AbusePaymentFailureThreshold,
+            s.AbusePaymentFailureWindowMinutes,
+            s.VerificationCodeMinutes,
+            s.VerificationMaxAttempts
         );
 }

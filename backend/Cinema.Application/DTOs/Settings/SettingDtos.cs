@@ -140,6 +140,22 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int MaxPendingOrdersPerUser { get; init; }
 
     public int MaxHeldSeatsPerUser { get; init; }
+
+    public int PublicFormMaxRequests { get; init; }
+
+    public int PublicFormWindowMinutes { get; init; }
+
+    public int AbuseHoldAbandonThreshold { get; init; }
+
+    public int AbuseHoldAbandonWindowMinutes { get; init; }
+
+    public int AbusePaymentFailureThreshold { get; init; }
+
+    public int AbusePaymentFailureWindowMinutes { get; init; }
+
+    public int VerificationCodeMinutes { get; init; }
+
+    public int VerificationMaxAttempts { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -216,5 +232,13 @@ public record UpdateSettingsRequest(
     int? RestrictedHoldMinutes = null,
     int? RestrictedMaxPendingOrders = null,
     int? MaxPendingOrdersPerUser = null,
-    int? MaxHeldSeatsPerUser = null
+    int? MaxHeldSeatsPerUser = null,
+    int? PublicFormMaxRequests = null,
+    int? PublicFormWindowMinutes = null,
+    int? AbuseHoldAbandonThreshold = null,
+    int? AbuseHoldAbandonWindowMinutes = null,
+    int? AbusePaymentFailureThreshold = null,
+    int? AbusePaymentFailureWindowMinutes = null,
+    int? VerificationCodeMinutes = null,
+    int? VerificationMaxAttempts = null
 );

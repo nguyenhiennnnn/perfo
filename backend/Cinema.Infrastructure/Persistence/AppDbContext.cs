@@ -108,6 +108,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<GiftCardLedger> GiftCardLedgers => Set<GiftCardLedger>();
     public DbSet<GiftCardRevenueEntry> GiftCardRevenueEntries => Set<GiftCardRevenueEntry>();
     public DbSet<GiftCardAttemptLimit> GiftCardAttemptLimits => Set<GiftCardAttemptLimit>();
+    public DbSet<PublicFormAttemptLimit> PublicFormAttemptLimits => Set<PublicFormAttemptLimit>();
+    public DbSet<RiskSignal> RiskSignals => Set<RiskSignal>();
+    public DbSet<CustomerVerification> CustomerVerifications => Set<CustomerVerification>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {

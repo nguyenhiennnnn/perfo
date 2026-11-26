@@ -5454,4 +5454,46 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Rule_HeldSeatsLimit" xml:space="preserve">
     <value>Bạn đang giữ {0} ghế, tối đa được giữ {1} ghế cùng lúc nên không thể giữ thêm {2} ghế. Ghế được nhả sớm nhất lúc {3}.</value>
   </data>
+  <data name="Rule_PublicFormRateLimited" xml:space="preserve">
+    <value>Bạn đã gửi quá nhiều yêu cầu trong thời gian ngắn. Vui lòng thử lại sau {0} phút.</value>
+  </data>
+  <data name="Rule_VerificationRequired" xml:space="preserve">
+    <value>Hệ thống phát hiện hoạt động bất thường trên tài khoản của bạn. Vui lòng xác minh bằng mã gửi qua email trước khi tiếp tục đặt vé.</value>
+  </data>
+  <data name="Rule_VerificationNotRequired" xml:space="preserve">
+    <value>Tài khoản của bạn hiện không cần xác minh bổ sung.</value>
+  </data>
+  <data name="Rule_VerificationCodeCooldown" xml:space="preserve">
+    <value>Mã xác minh vừa được gửi. Vui lòng chờ {0} giây trước khi yêu cầu mã mới.</value>
+  </data>
+  <data name="Rule_VerificationCodeNotSent" xml:space="preserve">
+    <value>Bạn chưa yêu cầu mã xác minh hoặc mã đã hết hạn. Hãy yêu cầu mã mới.</value>
+  </data>
+  <data name="Rule_VerificationCodeInvalid" xml:space="preserve">
+    <value>Mã xác minh không đúng. Bạn còn {0} lần thử.</value>
+  </data>
+  <data name="Rule_VerificationAttemptsExceeded" xml:space="preserve">
+    <value>Bạn đã nhập sai quá nhiều lần. Hãy yêu cầu mã xác minh mới.</value>
+  </data>
+  <data name="Success_VerificationCodeSent" xml:space="preserve">
+    <value>Đã gửi mã xác minh tới email của bạn</value>
+  </data>
+  <data name="Success_VerificationConfirmed" xml:space="preserve">
+    <value>Xác minh thành công, bạn có thể tiếp tục đặt vé</value>
+  </data>
+  <data name="Validation_VerificationCode_Required" xml:space="preserve">
+    <value>Vui lòng nhập mã xác minh</value>
+  </data>
+  <data name="Validation_VerificationCode_Format" xml:space="preserve">
+    <value>Mã xác minh gồm 6 chữ số</value>
+  </data>
+  <data name="Email_VerificationCodeSubject" xml:space="preserve">
+    <value>Mã xác minh đặt vé tại {0}</value>
+  </data>
+  <data name="Email_VerificationCodeIntro" xml:space="preserve">
+    <value>Hệ thống phát hiện hoạt động bất thường trên tài khoản của bạn. Nhập mã dưới đây để tiếp tục đặt vé.</value>
+  </data>
+  <data name="Email_VerificationCodeExpiry" xml:space="preserve">
+    <value>Mã hết hạn sau &lt;strong&gt;{0}&lt;/strong&gt;. Nếu bạn không thực hiện thao tác này, hãy bỏ qua email và cân nhắc đổi mật khẩu.</value>
+  </data>
 </root>

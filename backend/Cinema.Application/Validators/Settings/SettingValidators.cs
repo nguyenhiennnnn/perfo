@@ -158,6 +158,14 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
         IntRange(x => x.RestrictedMaxPendingOrders, "restrictedMaxPendingOrders", 1, 10);
         IntRange(x => x.MaxPendingOrdersPerUser, "maxPendingOrdersPerUser", 1, 20);
         IntRange(x => x.MaxHeldSeatsPerUser, "maxHeldSeatsPerUser", 1, 100);
+        IntRange(x => x.PublicFormMaxRequests, "publicFormMaxRequests", 1, 100);
+        IntRange(x => x.PublicFormWindowMinutes, "publicFormWindowMinutes", 1, 1440);
+        IntRange(x => x.AbuseHoldAbandonThreshold, "abuseHoldAbandonThreshold", 2, 50);
+        IntRange(x => x.AbuseHoldAbandonWindowMinutes, "abuseHoldAbandonWindowMinutes", 1, 1440);
+        IntRange(x => x.AbusePaymentFailureThreshold, "abusePaymentFailureThreshold", 2, 50);
+        IntRange(x => x.AbusePaymentFailureWindowMinutes, "abusePaymentFailureWindowMinutes", 1, 1440);
+        IntRange(x => x.VerificationCodeMinutes, "verificationCodeMinutes", 1, 60);
+        IntRange(x => x.VerificationMaxAttempts, "verificationMaxAttempts", 1, 10);
         WholeDecimalRange(
             x => x.ExceptionalRefundApprovalThreshold,
             "exceptionalRefundApprovalThreshold",

@@ -379,6 +379,28 @@ public class NotificationService(
             EmailTemplates.DailyClosingReport(_brand, report)
         );
 
+    public void SendVerificationCode(
+        string toEmail,
+        string fullName,
+        string code,
+        TimeSpan validFor
+    )
+    {
+        var subject = string.Format(Messages.Email_VerificationCodeSubject, _brand.Name);
+        Enqueue(
+            toEmail,
+            subject,
+            EmailTemplates.VerificationCode(
+                _brand,
+                fullName,
+                subject,
+                Messages.Email_VerificationCodeIntro,
+                code,
+                DateTimeUtils.FormatDuration(validFor)
+            )
+        );
+    }
+
     private void Enqueue(string toEmail, string subject, string html) =>
         backgroundJobClient.Enqueue<SendEmailJob>(j =>
             j.RunAsync(toEmail, subject, html, CancellationToken.None)

@@ -231,6 +231,30 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
             .Property(x => x.MaxHeldSeatsPerUser)
             .HasDefaultValue(CinemaSettings.DefaultMaxHeldSeatsPerUser);
         builder
+            .Property(x => x.PublicFormMaxRequests)
+            .HasDefaultValue(CinemaSettings.DefaultPublicFormMaxRequests);
+        builder
+            .Property(x => x.PublicFormWindowMinutes)
+            .HasDefaultValue(CinemaSettings.DefaultPublicFormWindowMinutes);
+        builder
+            .Property(x => x.AbuseHoldAbandonThreshold)
+            .HasDefaultValue(CinemaSettings.DefaultAbuseHoldAbandonThreshold);
+        builder
+            .Property(x => x.AbuseHoldAbandonWindowMinutes)
+            .HasDefaultValue(CinemaSettings.DefaultAbuseHoldAbandonWindowMinutes);
+        builder
+            .Property(x => x.AbusePaymentFailureThreshold)
+            .HasDefaultValue(CinemaSettings.DefaultAbusePaymentFailureThreshold);
+        builder
+            .Property(x => x.AbusePaymentFailureWindowMinutes)
+            .HasDefaultValue(CinemaSettings.DefaultAbusePaymentFailureWindowMinutes);
+        builder
+            .Property(x => x.VerificationCodeMinutes)
+            .HasDefaultValue(CinemaSettings.DefaultVerificationCodeMinutes);
+        builder
+            .Property(x => x.VerificationMaxAttempts)
+            .HasDefaultValue(CinemaSettings.DefaultVerificationMaxAttempts);
+        builder
             .Property(x => x.SupportRequestDueHours)
             .HasDefaultValue(CinemaSettings.DefaultSupportRequestDueHours);
         builder

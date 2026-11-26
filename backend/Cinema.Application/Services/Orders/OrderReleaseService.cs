@@ -1,4 +1,5 @@
 ﻿using Cinema.Application.Events;
+using Cinema.Application.Interfaces.Abuse;
 using Cinema.Application.Interfaces.Events;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Notifications;
@@ -16,6 +17,7 @@ public class OrderReleaseService(
     IOrderResourceHoldService resourceHolds,
     IBusinessEventDispatcher eventDispatcher,
     IRealtimeNotifier realtimeNotifier,
+    IAbuseSignalService abuseSignals,
     ILogger<OrderReleaseService> logger
 ) : IOrderReleaseService
 {
@@ -60,6 +62,30 @@ public class OrderReleaseService(
                     );
                 if (claimed == 0)
                     return;
+
+                if (target == OrderStatus.Expired || cancelledBy == CancelledBy.Customer)
+                {
+                    var abandonedBy = await db
+                        .Orders.AsNoTracking()
+                        .Where(o =>
+                            o.OrderId == orderId
+                            && o.Channel == SalesChannel.Online
+                            && o.Type == OrderType.Ticket
+                            && o.UserId != null
+                            && !o.PaymentTransactions.Any(t =>
+                                t.Type == PaymentTransactionType.Charge
+                                && t.Status == PaymentStatus.Success
+                            )
+                        )
+                        .Select(o => o.UserId)
+                        .FirstOrDefaultAsync(cancellationToken);
+                    if (abandonedBy is { } abandonedUserId)
+                        await abuseSignals.RecordHoldAbandonedAsync(
+                            abandonedUserId,
+                            orderId,
+                            cancellationToken
+                        );
+                }
 
                 var seats = await db
                     .ShowtimeSeats.HeldFor(orderId)

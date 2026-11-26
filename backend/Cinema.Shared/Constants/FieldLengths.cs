@@ -54,6 +54,8 @@ public static class FieldLengths
     public const int GiftCardMessage = 500;
     public const int GiftCardCancelReason = 500;
     public const int GiftCardAttemptKey = 100;
+    public const int PublicFormAttemptKey = 200;
+    public const int ClientDeviceId = 100;
     public const int SupportRequestSubject = 150;
     public const int SupportMessageContent = 2000;
     public const int RefundProposalReason = 500;

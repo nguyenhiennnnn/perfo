@@ -59,7 +59,8 @@ public record AdminMovieListItemDto(
     string Status,
     DateOnly? ReleaseDate,
     string? DirectorName,
-    string? LanguageName
+    string? LanguageName,
+    int InterestCount = 0
 );
 
 public record MovieCastItemRequest(int ActorId, string? CharacterName);

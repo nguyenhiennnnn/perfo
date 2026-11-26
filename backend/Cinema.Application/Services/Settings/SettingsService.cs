@@ -182,6 +182,18 @@ public class SettingsService(
             settings.RoomQualityAlertDays = roomQualityAlertDays;
         if (request.WaitlistPriorityMinutes is { } waitlistPriorityMinutes)
             settings.WaitlistPriorityMinutes = waitlistPriorityMinutes;
+        if (request.ExpiredOrderStreakThreshold is { } expiredOrderStreakThreshold)
+            settings.ExpiredOrderStreakThreshold = expiredOrderStreakThreshold;
+        if (request.ExpiredOrderRestrictionMinutes is { } expiredOrderRestrictionMinutes)
+            settings.ExpiredOrderRestrictionMinutes = expiredOrderRestrictionMinutes;
+        if (request.RestrictedHoldMinutes is { } restrictedHoldMinutes)
+            settings.RestrictedHoldMinutes = restrictedHoldMinutes;
+        if (request.RestrictedMaxPendingOrders is { } restrictedMaxPendingOrders)
+            settings.RestrictedMaxPendingOrders = restrictedMaxPendingOrders;
+        if (request.MaxPendingOrdersPerUser is { } maxPendingOrdersPerUser)
+            settings.MaxPendingOrdersPerUser = maxPendingOrdersPerUser;
+        if (request.MaxHeldSeatsPerUser is { } maxHeldSeatsPerUser)
+            settings.MaxHeldSeatsPerUser = maxHeldSeatsPerUser;
         if (settings.ReviewInviteMinHours >= settings.ReviewInviteMaxHours)
             throw new BusinessRuleException(Messages.Validation_ReviewInviteWindow_Invalid);
         if (settings.GiftCardMinAmount > settings.GiftCardMaxAmount)
@@ -258,6 +270,12 @@ public class SettingsService(
             RoomQualityAlertThreshold = settings.RoomQualityAlertThreshold,
             RoomQualityAlertDays = settings.RoomQualityAlertDays,
             WaitlistPriorityMinutes = settings.WaitlistPriorityMinutes,
+            ExpiredOrderStreakThreshold = settings.ExpiredOrderStreakThreshold,
+            ExpiredOrderRestrictionMinutes = settings.ExpiredOrderRestrictionMinutes,
+            RestrictedHoldMinutes = settings.RestrictedHoldMinutes,
+            RestrictedMaxPendingOrders = settings.RestrictedMaxPendingOrders,
+            MaxPendingOrdersPerUser = settings.MaxPendingOrdersPerUser,
+            MaxHeldSeatsPerUser = settings.MaxHeldSeatsPerUser,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

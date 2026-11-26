@@ -128,6 +128,18 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int RoomQualityAlertDays { get; init; }
 
     public int WaitlistPriorityMinutes { get; init; }
+
+    public int ExpiredOrderStreakThreshold { get; init; }
+
+    public int ExpiredOrderRestrictionMinutes { get; init; }
+
+    public int RestrictedHoldMinutes { get; init; }
+
+    public int RestrictedMaxPendingOrders { get; init; }
+
+    public int MaxPendingOrdersPerUser { get; init; }
+
+    public int MaxHeldSeatsPerUser { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -198,5 +210,11 @@ public record UpdateSettingsRequest(
     int? ReviewRewardPoints = null,
     decimal? RoomQualityAlertThreshold = null,
     int? RoomQualityAlertDays = null,
-    int? WaitlistPriorityMinutes = null
+    int? WaitlistPriorityMinutes = null,
+    int? ExpiredOrderStreakThreshold = null,
+    int? ExpiredOrderRestrictionMinutes = null,
+    int? RestrictedHoldMinutes = null,
+    int? RestrictedMaxPendingOrders = null,
+    int? MaxPendingOrdersPerUser = null,
+    int? MaxHeldSeatsPerUser = null
 );

@@ -199,6 +199,17 @@ public class MovieService : IMovieService
             .ProjectToType<AdminMovieListItemDto>()
             .ToListAsync(cancellationToken);
 
+        var movieIds = items.Select(i => i.MovieId).ToList();
+        var interestCounts = await db
+            .MovieInterests.AsNoTracking()
+            .Where(i => movieIds.Contains(i.MovieId))
+            .GroupBy(i => i.MovieId)
+            .Select(g => new { MovieId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(x => x.MovieId, x => x.Count, cancellationToken);
+        items = items
+            .Select(i => i with { InterestCount = interestCounts.GetValueOrDefault(i.MovieId) })
+            .ToList();
+
         return OffsetPageResult<AdminMovieListItemDto>.Create(items, page, pageSize, total);
     }
 

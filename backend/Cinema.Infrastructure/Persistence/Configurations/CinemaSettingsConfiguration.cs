@@ -213,6 +213,24 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
             .Property(x => x.WaitlistPriorityMinutes)
             .HasDefaultValue(CinemaSettings.DefaultWaitlistPriorityMinutes);
         builder
+            .Property(x => x.ExpiredOrderStreakThreshold)
+            .HasDefaultValue(CinemaSettings.DefaultExpiredOrderStreakThreshold);
+        builder
+            .Property(x => x.ExpiredOrderRestrictionMinutes)
+            .HasDefaultValue(CinemaSettings.DefaultExpiredOrderRestrictionMinutes);
+        builder
+            .Property(x => x.RestrictedHoldMinutes)
+            .HasDefaultValue(CinemaSettings.DefaultRestrictedHoldMinutes);
+        builder
+            .Property(x => x.RestrictedMaxPendingOrders)
+            .HasDefaultValue(CinemaSettings.DefaultRestrictedMaxPendingOrders);
+        builder
+            .Property(x => x.MaxPendingOrdersPerUser)
+            .HasDefaultValue(CinemaSettings.DefaultMaxPendingOrdersPerUser);
+        builder
+            .Property(x => x.MaxHeldSeatsPerUser)
+            .HasDefaultValue(CinemaSettings.DefaultMaxHeldSeatsPerUser);
+        builder
             .Property(x => x.SupportRequestDueHours)
             .HasDefaultValue(CinemaSettings.DefaultSupportRequestDueHours);
         builder

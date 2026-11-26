@@ -19,6 +19,7 @@ export interface AdminMovieListItemDto {
   releaseDate?: string | null;
   directorName?: string | null;
   languageName?: string | null;
+  interestCount: number;
 }
 
 export interface MovieCastItemRequest {

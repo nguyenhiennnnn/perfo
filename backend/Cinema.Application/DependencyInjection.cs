@@ -208,6 +208,7 @@ public static class DependencyInjection
         services.AddScoped<IOrderTicketPdfService, OrderTicketPdfService>();
         services.AddScoped<IOrderTicketPricer, OrderTicketPricer>();
         services.AddScoped<IOrderHoldService, OrderHoldService>();
+        services.AddScoped<ISeatHoldLimitService, SeatHoldLimitService>();
         services.AddScoped<IOrderCheckoutService, OrderCheckoutService>();
         services.AddScoped<ICounterOrderService, CounterOrderService>();
         services.AddScoped<ICounterPaymentService, CounterPaymentService>();
@@ -357,6 +358,8 @@ public static class DependencyInjection
         services.AddReportBlock<RoomQualityByRoomBlock>();
         services.AddReportBlock<RoomQualityByCriterionBlock>();
         services.AddReportBlock<RoomQualityByTimeBlock>();
+        services.AddReportBlock<WaitlistReportBlock>();
+        services.AddReportBlock<MovieInterestReportBlock>();
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IUserAdminService, UserAdminService>();
         services.AddScoped<AiToolExecutor>();

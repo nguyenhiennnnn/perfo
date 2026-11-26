@@ -98,6 +98,12 @@ public class CinemaSettings
     public const decimal DefaultRoomQualityAlertThreshold = 3m;
     public const int DefaultRoomQualityAlertDays = 3;
     public const int DefaultWaitlistPriorityMinutes = 10;
+    public const int DefaultExpiredOrderStreakThreshold = 3;
+    public const int DefaultExpiredOrderRestrictionMinutes = 60;
+    public const int DefaultRestrictedHoldMinutes = 5;
+    public const int DefaultRestrictedMaxPendingOrders = 1;
+    public const int DefaultMaxPendingOrdersPerUser = 3;
+    public const int DefaultMaxHeldSeatsPerUser = 20;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -201,4 +207,16 @@ public class CinemaSettings
     public int RoomQualityAlertDays { get; set; } = DefaultRoomQualityAlertDays;
 
     public int WaitlistPriorityMinutes { get; set; } = DefaultWaitlistPriorityMinutes;
+
+    public int ExpiredOrderStreakThreshold { get; set; } = DefaultExpiredOrderStreakThreshold;
+
+    public int ExpiredOrderRestrictionMinutes { get; set; } = DefaultExpiredOrderRestrictionMinutes;
+
+    public int RestrictedHoldMinutes { get; set; } = DefaultRestrictedHoldMinutes;
+
+    public int RestrictedMaxPendingOrders { get; set; } = DefaultRestrictedMaxPendingOrders;
+
+    public int MaxPendingOrdersPerUser { get; set; } = DefaultMaxPendingOrdersPerUser;
+
+    public int MaxHeldSeatsPerUser { get; set; } = DefaultMaxHeldSeatsPerUser;
 }

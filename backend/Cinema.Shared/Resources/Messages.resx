@@ -5400,4 +5400,58 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_MovieOpenedNote" xml:space="preserve">
     <value>Bạn nhận email này vì đã đánh dấu quan tâm phim. Chúng tôi chỉ báo một lần khi phim mở bán.</value>
   </data>
+  <data name="Report_Finance_Waitlist_Title" xml:space="preserve">
+    <value>Danh sách chờ theo suất chiếu</value>
+  </data>
+  <data name="Report_Finance_Waitlist_Note" xml:space="preserve">
+    <value>Tính theo suất chiếu bắt đầu trong kỳ. Người chờ được ghế rồi mua là khách đã được báo có ghế và sau đó có đơn vé đã xác nhận cho cùng suất; tỷ lệ = số đó chia số người được báo.</value>
+  </data>
+  <data name="Report_Finance_MovieInterest_Title" xml:space="preserve">
+    <value>Số người quan tâm theo phim</value>
+  </data>
+  <data name="Report_Finance_MovieInterest_Note" xml:space="preserve">
+    <value>Tổng quan tâm là số lượng hiện tại của mỗi phim; quan tâm mới tính theo ngày đánh dấu trong kỳ. Hiển thị tối đa 50 phim đứng đầu.</value>
+  </data>
+  <data name="Report_Finance_Col_Showtime" xml:space="preserve">
+    <value>Suất chiếu</value>
+  </data>
+  <data name="Report_Finance_Col_ReleaseDate" xml:space="preserve">
+    <value>Ngày khởi chiếu</value>
+  </data>
+  <data name="Report_Finance_Col_WaitlistRegistrations" xml:space="preserve">
+    <value>Lượt chờ</value>
+  </data>
+  <data name="Report_Finance_Col_WaitlistSeats" xml:space="preserve">
+    <value>Ghế cần</value>
+  </data>
+  <data name="Report_Finance_Col_WaitlistNotified" xml:space="preserve">
+    <value>Được báo có ghế</value>
+  </data>
+  <data name="Report_Finance_Col_WaitlistPurchased" xml:space="preserve">
+    <value>Đã mua vé</value>
+  </data>
+  <data name="Report_Finance_Col_WaitlistConversion" xml:space="preserve">
+    <value>Tỷ lệ mua sau khi được báo</value>
+  </data>
+  <data name="Report_Finance_Col_WaitlistWithdrawn" xml:space="preserve">
+    <value>Rút đăng ký</value>
+  </data>
+  <data name="Report_Finance_Col_InterestTotal" xml:space="preserve">
+    <value>Tổng quan tâm</value>
+  </data>
+  <data name="Report_Finance_Col_InterestNew" xml:space="preserve">
+    <value>Quan tâm mới trong kỳ</value>
+  </data>
+  <data name="Report_Finance_Col_InterestNotified" xml:space="preserve">
+    <value>Đã báo mở bán</value>
+  </data>
+  <data name="Rule_PendingOrdersLimit" xml:space="preserve">
+    <value>Bạn đang có tối đa {0} đơn chờ thanh toán cùng lúc. Hãy thanh toán hoặc hủy một đơn, hoặc chờ đơn hết hạn sớm nhất lúc {1}.</value>
+  </data>
+  <data name="Rule_HoldRestrictedPendingLimit" xml:space="preserve">
+    <value>Bạn đã có {0} đơn hết hạn liên tiếp nên tạm thời chỉ được giữ tối đa {1} đơn chờ thanh toán, áp dụng đến {2}. Hãy thanh toán hoặc hủy đơn đang chờ (hết hạn sớm nhất lúc {3}).</value>
+  </data>
+  <data name="Rule_HeldSeatsLimit" xml:space="preserve">
+    <value>Bạn đang giữ {0} ghế, tối đa được giữ {1} ghế cùng lúc nên không thể giữ thêm {2} ghế. Ghế được nhả sớm nhất lúc {3}.</value>
+  </data>
 </root>

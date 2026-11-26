@@ -26,6 +26,7 @@ public class OrderHoldService(
     IOrderTicketPricer ticketPricer,
     IOrderPriceCalculator priceCalculator,
     IWaitlistPriorityService waitlistPriority,
+    ISeatHoldLimitService holdLimits,
     IOptions<BookingOptions> bookingOptions,
     ILogger<OrderHoldService> logger,
     IAppCache cache
@@ -136,10 +137,18 @@ public class OrderHoldService(
 
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
         var now = DateTime.UtcNow;
-        var holdUntil = now.AddMinutes(holdSettings.HoldDurationMinutes);
+        var distinctSeatIds = showtimeSeatIds.Distinct().ToList();
+        var holdMinutes =
+            channel == SalesChannel.Online
+                ? await holdLimits.EnsureWithinLimitsAsync(
+                    holderUserId,
+                    distinctSeatIds.Count,
+                    cancellationToken
+                )
+                : holdSettings.HoldDurationMinutes;
+        var holdUntil = now.AddMinutes(holdMinutes);
         if (holdUntil > showtime.StartTime)
             holdUntil = showtime.StartTime;
-        var distinctSeatIds = showtimeSeatIds.Distinct().ToList();
 
         var priorityReleasedSeatIds =
             channel == SalesChannel.Online

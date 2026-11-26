@@ -11,7 +11,7 @@ import {
 import { DataTableColumnHeader } from "@/components/common/data-table/data-table-column-header";
 import type { DataTableFeatures } from "@/components/common/data-table/data-table-features";
 import { MovieStatusBadge } from "@/components/common/status-badge";
-import { formatDate } from "@/lib/formatters";
+import { formatDate, formatNumber } from "@/lib/formatters";
 
 import type { AdminMovieListItemDto } from "@/features/admin/movies/types";
 import { STATUS_LABEL } from "@/config/default-constants";
@@ -75,6 +75,13 @@ export const createMovieColumns = ({ onEdit, onDelete, canManage = true }: Movie
           {row.original.releaseDate ? formatDate(row.original.releaseDate) : "—"}
         </span>
       ),
+    }),
+    columnHelper.accessor("interestCount", {
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Quan tâm" />,
+      cell: ({ row }) => (
+        <span className="text-sm tabular-nums">{formatNumber(row.original.interestCount)}</span>
+      ),
+      enableSorting: false,
     }),
     columnHelper.accessor("status", {
       header: ({ column }) => <DataTableColumnHeader column={column} title={STATUS_LABEL} />,

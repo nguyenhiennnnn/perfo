@@ -169,6 +169,12 @@ public static class BackgroundJobExtensions
             options.WaitlistPriorityExpiryCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<RoomRentalQuoteExpiryJob>(
+            RecurringJobIds.RoomRentalQuoteExpiry,
+            j => j.RunAsync(CancellationToken.None),
+            options.RoomRentalQuoteExpiryCron,
+            jobOptions
+        );
 
         return app;
     }

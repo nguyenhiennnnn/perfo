@@ -37,4 +37,7 @@ public static class AuditActions
     public const string ChangeRoomRentalRequestStatus = "ChangeRoomRentalRequestStatus";
     public const string CreateRoomRentalQuoteVersion = "CreateRoomRentalQuoteVersion";
     public const string SendRoomRentalQuote = "SendRoomRentalQuote";
+    public const string AcceptRoomRentalQuote = "AcceptRoomRentalQuote";
+    public const string DeclineRoomRentalQuote = "DeclineRoomRentalQuote";
+    public const string ExpireRoomRentalQuote = "ExpireRoomRentalQuote";
 }

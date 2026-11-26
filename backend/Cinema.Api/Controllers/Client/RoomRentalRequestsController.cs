@@ -13,7 +13,8 @@ namespace Cinema.Api.Controllers.Client;
 [AllowAnonymous]
 public class RoomRentalRequestsController(
     IRoomRentalRequestService roomRentalRequestService,
-    IRoomRentalTrackingService roomRentalTrackingService
+    IRoomRentalTrackingService roomRentalTrackingService,
+    IRoomRentalTrackingQuoteService roomRentalTrackingQuoteService
 ) : AppControllerBase
 {
     public const string RateLimitForm = "room-rental-request";
@@ -35,4 +36,56 @@ public class RoomRentalRequestsController(
         [FromBody] RoomRentalTrackingRequest request,
         CancellationToken cancellationToken
     ) => Ok(await roomRentalTrackingService.GetByTokenAsync(request.Token, cancellationToken));
+
+    [HttpPost("tracking/quotes")]
+    public async Task<ActionResult<RoomRentalTrackingQuotesDto>> TrackQuotes(
+        [FromBody] RoomRentalTrackingQuoteRequest request,
+        CancellationToken cancellationToken
+    ) => Ok(await roomRentalTrackingQuoteService.ListAsync(request.Token, cancellationToken));
+
+    [HttpPost("tracking/quotes/{version:int}/pdf")]
+    public async Task<IActionResult> DownloadQuotePdf(
+        int version,
+        [FromBody] RoomRentalTrackingQuoteRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var file = await roomRentalTrackingQuoteService.ExportPdfAsync(
+            request.Token,
+            version,
+            cancellationToken
+        );
+        return File(file.Content, file.ContentType, file.FileName);
+    }
+
+    [HttpPost("tracking/quotes/{version:int}/accept")]
+    [SuccessMessage(nameof(Messages.Success_RoomRentalQuoteAccepted))]
+    public async Task<ActionResult<RoomRentalTrackingQuoteDecisionDto>> AcceptQuote(
+        int version,
+        [FromBody] RoomRentalTrackingQuoteRequest request,
+        CancellationToken cancellationToken
+    ) =>
+        Ok(
+            await roomRentalTrackingQuoteService.AcceptAsync(
+                request.Token,
+                version,
+                cancellationToken
+            )
+        );
+
+    [HttpPost("tracking/quotes/{version:int}/decline")]
+    [SuccessMessage(nameof(Messages.Success_RoomRentalQuoteDeclined))]
+    public async Task<ActionResult<RoomRentalTrackingQuoteDecisionDto>> DeclineQuote(
+        int version,
+        [FromBody] RoomRentalTrackingQuoteDeclineRequest request,
+        CancellationToken cancellationToken
+    ) =>
+        Ok(
+            await roomRentalTrackingQuoteService.DeclineAsync(
+                request.Token,
+                version,
+                request.Reason,
+                cancellationToken
+            )
+        );
 }

@@ -278,6 +278,8 @@ public static class DependencyInjection
         services.AddScoped<IRoomRentalRequestService, RoomRentalRequestService>();
         services.AddScoped<IRoomRentalTrackingAttemptGuard, RoomRentalTrackingAttemptGuard>();
         services.AddScoped<IRoomRentalTrackingService, RoomRentalTrackingService>();
+        services.AddScoped<IRoomRentalTrackingQuoteService, RoomRentalTrackingQuoteService>();
+        services.AddScoped<IRoomRentalQuoteExpiryService, RoomRentalQuoteExpiryService>();
         services.AddScoped<IRoomRentalAdminService, RoomRentalAdminService>();
         services.AddScoped<ISupportRequestService, SupportRequestService>();
         services.AddScoped<ISupportRequestStaffService, SupportRequestStaffService>();

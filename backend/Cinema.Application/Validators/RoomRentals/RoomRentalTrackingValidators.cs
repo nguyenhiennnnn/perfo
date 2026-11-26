@@ -30,3 +30,25 @@ public class ChangeRoomRentalRequestStatusRequestValidator
             .WithMessage(Messages.Validation_RoomRental_CancelNoteRequired);
     }
 }
+
+public class RoomRentalTrackingQuoteRequestValidator
+    : AbstractValidator<RoomRentalTrackingQuoteRequest>
+{
+    public RoomRentalTrackingQuoteRequestValidator()
+    {
+        RuleFor(x => x.Token).NotEmpty().MaximumLength(FieldLengths.TokenHash);
+    }
+}
+
+public class RoomRentalTrackingQuoteDeclineRequestValidator
+    : AbstractValidator<RoomRentalTrackingQuoteDeclineRequest>
+{
+    public RoomRentalTrackingQuoteDeclineRequestValidator()
+    {
+        RuleFor(x => x.Token).NotEmpty().MaximumLength(FieldLengths.TokenHash);
+        RuleFor(x => x.Reason!)
+            .MaximumLength(FieldLengths.RoomRentalNote)
+            .NoControlCharacters()
+            .When(x => !string.IsNullOrEmpty(x.Reason));
+    }
+}

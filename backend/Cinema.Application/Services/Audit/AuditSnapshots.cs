@@ -230,6 +230,20 @@ public static class AuditSnapshots
     public static JsonObject RoomRentalRequestState(RoomRentalRequest r) =>
         AuditJson.ToObject(new { r.Status, r.StatusNote, r.UpdatedAt });
 
+    public static JsonObject RoomRentalRequestState(
+        RoomRentalRequestStatus status,
+        string? statusNote,
+        DateTime updatedAt
+    ) =>
+        AuditJson.ToObject(
+            new
+            {
+                Status = status,
+                StatusNote = statusNote,
+                UpdatedAt = updatedAt,
+            }
+        );
+
     public static JsonObject SupportRequestState(SupportRequest r) =>
         AuditJson.ToObject(
             new

@@ -5823,4 +5823,19 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_RoomRentalQuoteButton" xml:space="preserve">
     <value>Xem báo giá</value>
   </data>
+  <data name="Success_RoomRentalQuoteAccepted" xml:space="preserve">
+    <value>Đã ghi nhận bạn chấp nhận báo giá. Chúng tôi sẽ liên hệ để hướng dẫn đặt cọc.</value>
+  </data>
+  <data name="Success_RoomRentalQuoteDeclined" xml:space="preserve">
+    <value>Đã ghi nhận bạn từ chối báo giá.</value>
+  </data>
+  <data name="Rule_RoomRentalQuoteResponseStatusInvalid" xml:space="preserve">
+    <value>Yêu cầu thuê phòng hiện không ở trạng thái chờ phản hồi báo giá.</value>
+  </data>
+  <data name="Rule_RoomRentalQuoteNotLatest" xml:space="preserve">
+    <value>Báo giá này đã được thay bằng phiên bản mới hơn. Vui lòng xem phiên bản mới nhất.</value>
+  </data>
+  <data name="Rule_RoomRentalQuoteResponseExpired" xml:space="preserve">
+    <value>Báo giá đã hết hạn hiệu lực. Vui lòng liên hệ rạp để nhận báo giá mới.</value>
+  </data>
 </root>

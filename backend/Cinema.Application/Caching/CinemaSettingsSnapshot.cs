@@ -86,7 +86,13 @@ public sealed record CinemaSettingsSnapshot(
     int VerificationMaxAttempts,
     int RoomRentalTrackingTokenValidDays,
     int RoomRentalTrackingMaxFailedAttempts,
-    int RoomRentalTrackingLockoutMinutes
+    int RoomRentalTrackingLockoutMinutes,
+    int RoomRentalDepositPercent,
+    int RoomRentalQuoteValidDays,
+    int RoomRentalBalanceDueDaysBeforeEvent,
+    int RoomRentalFullRefundDays,
+    int RoomRentalPartialRefundDays,
+    int RoomRentalPartialRefundPercent
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -173,6 +179,12 @@ public sealed record CinemaSettingsSnapshot(
             s.VerificationMaxAttempts,
             s.RoomRentalTrackingTokenValidDays,
             s.RoomRentalTrackingMaxFailedAttempts,
-            s.RoomRentalTrackingLockoutMinutes
+            s.RoomRentalTrackingLockoutMinutes,
+            s.RoomRentalDepositPercent,
+            s.RoomRentalQuoteValidDays,
+            s.RoomRentalBalanceDueDaysBeforeEvent,
+            s.RoomRentalFullRefundDays,
+            s.RoomRentalPartialRefundDays,
+            s.RoomRentalPartialRefundPercent
         );
 }

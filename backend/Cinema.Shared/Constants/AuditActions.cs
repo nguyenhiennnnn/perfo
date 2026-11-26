@@ -35,4 +35,6 @@ public static class AuditActions
     public const string RestrictCustomer = "RestrictCustomer";
     public const string LiftCustomerRestriction = "LiftCustomerRestriction";
     public const string ChangeRoomRentalRequestStatus = "ChangeRoomRentalRequestStatus";
+    public const string CreateRoomRentalQuoteVersion = "CreateRoomRentalQuoteVersion";
+    public const string SendRoomRentalQuote = "SendRoomRentalQuote";
 }

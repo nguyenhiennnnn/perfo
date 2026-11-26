@@ -162,6 +162,18 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int RoomRentalTrackingMaxFailedAttempts { get; init; }
 
     public int RoomRentalTrackingLockoutMinutes { get; init; }
+
+    public int RoomRentalDepositPercent { get; init; }
+
+    public int RoomRentalQuoteValidDays { get; init; }
+
+    public int RoomRentalBalanceDueDaysBeforeEvent { get; init; }
+
+    public int RoomRentalFullRefundDays { get; init; }
+
+    public int RoomRentalPartialRefundDays { get; init; }
+
+    public int RoomRentalPartialRefundPercent { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -249,5 +261,11 @@ public record UpdateSettingsRequest(
     int? VerificationMaxAttempts = null,
     int? RoomRentalTrackingTokenValidDays = null,
     int? RoomRentalTrackingMaxFailedAttempts = null,
-    int? RoomRentalTrackingLockoutMinutes = null
+    int? RoomRentalTrackingLockoutMinutes = null,
+    int? RoomRentalDepositPercent = null,
+    int? RoomRentalQuoteValidDays = null,
+    int? RoomRentalBalanceDueDaysBeforeEvent = null,
+    int? RoomRentalFullRefundDays = null,
+    int? RoomRentalPartialRefundDays = null,
+    int? RoomRentalPartialRefundPercent = null
 );

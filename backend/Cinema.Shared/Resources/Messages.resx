@@ -5583,4 +5583,244 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_RoomRentalTrackNote" xml:space="preserve">
     <value>Liên kết này là riêng của bạn, có hiệu lực đến {0}. Vui lòng không chia sẻ cho người khác.</value>
   </data>
+  <data name="NotFound_RoomRentalRate" xml:space="preserve">
+    <value>Không tìm thấy bảng giá thuê phòng.</value>
+  </data>
+  <data name="Conflict_RoomRentalRateOverlap" xml:space="preserve">
+    <value>Bảng giá thuê bị trùng khung giờ và thời lượng với một bảng giá đang áp dụng của cùng phòng.</value>
+  </data>
+  <data name="Success_RoomRentalRateCreated" xml:space="preserve">
+    <value>Đã thêm bảng giá thuê phòng.</value>
+  </data>
+  <data name="Success_RoomRentalRateUpdated" xml:space="preserve">
+    <value>Đã cập nhật bảng giá thuê phòng.</value>
+  </data>
+  <data name="Success_RoomRentalRateDeleted" xml:space="preserve">
+    <value>Đã xóa bảng giá thuê phòng.</value>
+  </data>
+  <data name="Validation_RoomRentalRate_RoomIdPositive" xml:space="preserve">
+    <value>roomId phải lớn hơn 0.</value>
+  </data>
+  <data name="Validation_RoomRentalRate_TimeInvalid" xml:space="preserve">
+    <value>Giờ phải theo định dạng HH:mm.</value>
+  </data>
+  <data name="Validation_RoomRentalRate_TimeOrder" xml:space="preserve">
+    <value>Giờ kết thúc phải sau giờ bắt đầu.</value>
+  </data>
+  <data name="Validation_RoomRentalRate_DurationRange" xml:space="preserve">
+    <value>Thời lượng phải từ 1 đến 1440 phút.</value>
+  </data>
+  <data name="Validation_RoomRentalRate_DurationOrder" xml:space="preserve">
+    <value>Thời lượng tối đa phải lớn hơn hoặc bằng thời lượng tối thiểu.</value>
+  </data>
+  <data name="Validation_RoomRentalRate_IncludedAttendeesRange" xml:space="preserve">
+    <value>Số người đã gồm trong giá thuê phải từ 0 đến 500.</value>
+  </data>
+  <data name="Validation_RoomRental_AmountInvalid" xml:space="preserve">
+    <value>Số tiền phải là số nguyên đồng, không âm và không vượt quá giới hạn cho phép.</value>
+  </data>
+  <data name="Validation_RoomRentalQuote_ComboInvalid" xml:space="preserve">
+    <value>Danh sách combo không hợp lệ: không trùng combo, tối đa 20 combo, số lượng từ 1 đến 1000.</value>
+  </data>
+  <data name="Validation_RoomRentalQuote_ExtraInvalid" xml:space="preserve">
+    <value>Khoản phụ không hợp lệ: cần tên (tối đa 150 ký tự), số tiền nguyên đồng lớn hơn 0 và số lượng từ 1 đến 1000, tối đa 20 khoản.</value>
+  </data>
+  <data name="Validation_RoomRentalQuote_DiscountInvalid" xml:space="preserve">
+    <value>Chiết khấu không hợp lệ: số tiền là số nguyên đồng không âm, phần trăm từ 0 đến 100 (tối đa 2 chữ số thập phân).</value>
+  </data>
+  <data name="Validation_RoomRentalQuote_DiscountBoth" xml:space="preserve">
+    <value>Chỉ được chọn chiết khấu theo số tiền hoặc theo phần trăm, không chọn cả hai.</value>
+  </data>
+  <data name="Rule_RoomRentalRateNotFound" xml:space="preserve">
+    <value>Chưa có bảng giá thuê phù hợp với phòng, giờ bắt đầu và thời lượng đã chọn.</value>
+  </data>
+  <data name="Rule_RoomRentalQuoteRoomInactive" xml:space="preserve">
+    <value>Phòng chiếu đang ngừng hoạt động, không thể báo giá thuê.</value>
+  </data>
+  <data name="Rule_RoomRentalQuoteComboInactive" xml:space="preserve">
+    <value>Combo {0} đang ngừng bán, không thể đưa vào báo giá.</value>
+  </data>
+  <data name="Rule_RoomRentalQuoteDiscountExceeds" xml:space="preserve">
+    <value>Chiết khấu không được lớn hơn tổng các khoản trong báo giá.</value>
+  </data>
+  <data name="Quote_Line_RoomRental" xml:space="preserve">
+    <value>Thuê phòng {0} ({1} phút)</value>
+  </data>
+  <data name="Quote_Line_PerPerson" xml:space="preserve">
+    <value>Phí theo đầu người ({0} người)</value>
+  </data>
+  <data name="Quote_Line_DiscountPercent" xml:space="preserve">
+    <value>Chiết khấu {0}%</value>
+  </data>
+  <data name="Quote_Line_Discount" xml:space="preserve">
+    <value>Chiết khấu</value>
+  </data>
+  <data name="Quote_Line_WithNote" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="NotFound_RoomRentalQuote" xml:space="preserve">
+    <value>Không tìm thấy phiên bản báo giá.</value>
+  </data>
+  <data name="Success_RoomRentalQuoteVersionCreated" xml:space="preserve">
+    <value>Đã tạo phiên bản báo giá mới.</value>
+  </data>
+  <data name="Success_RoomRentalQuoteSent" xml:space="preserve">
+    <value>Đã gửi báo giá cho khách.</value>
+  </data>
+  <data name="Validation_RoomRentalRefundWindow_Invalid" xml:space="preserve">
+    <value>Mốc hoàn cọc đầy đủ phải dài hơn mốc hoàn cọc một phần.</value>
+  </data>
+  <data name="Validation_RoomRentalQuote_DepositPercentInvalid" xml:space="preserve">
+    <value>Phần trăm đặt cọc phải lớn hơn 0 và không quá 100 (tối đa 2 chữ số thập phân).</value>
+  </data>
+  <data name="Validation_RoomRentalQuote_CancellationTiersInvalid" xml:space="preserve">
+    <value>Chính sách hủy không hợp lệ: tối đa 5 mốc, số giờ từ 1 đến 8760 và không trùng, phần trăm hoàn từ 0 đến 100 và không tăng khi mốc gần ngày thuê hơn.</value>
+  </data>
+  <data name="Rule_RoomRentalQuoteStatusInvalid" xml:space="preserve">
+    <value>Yêu cầu thuê phòng ở trạng thái hiện tại không thể soạn hoặc gửi báo giá.</value>
+  </data>
+  <data name="Rule_RoomRentalQuoteStartPast" xml:space="preserve">
+    <value>Thời gian bắt đầu thuê phải ở tương lai.</value>
+  </data>
+  <data name="Rule_RoomRentalQuoteValidUntilInvalid" xml:space="preserve">
+    <value>Hạn hiệu lực báo giá phải ở tương lai và không muộn hơn thời gian bắt đầu thuê.</value>
+  </data>
+  <data name="Rule_RoomRentalQuoteBalanceDueInvalid" xml:space="preserve">
+    <value>Hạn thanh toán nốt phải ở tương lai và không muộn hơn thời gian bắt đầu thuê.</value>
+  </data>
+  <data name="Rule_RoomRentalQuoteSuperseded" xml:space="preserve">
+    <value>Phiên bản báo giá này đã được thay bằng phiên bản mới hơn, không thể gửi.</value>
+  </data>
+  <data name="Rule_RoomRentalQuoteExpired" xml:space="preserve">
+    <value>Báo giá đã hết hạn hiệu lực. Hãy tạo phiên bản mới.</value>
+  </data>
+  <data name="Quote_Pdf_Title" xml:space="preserve">
+    <value>Báo giá thuê phòng chiếu</value>
+  </data>
+  <data name="Quote_Pdf_Subtitle" xml:space="preserve">
+    <value>Mã yêu cầu: {0} - Phiên bản {1}</value>
+  </data>
+  <data name="Quote_Pdf_SectionInfo" xml:space="preserve">
+    <value>Thông tin thuê phòng</value>
+  </data>
+  <data name="Quote_Pdf_SectionLines" xml:space="preserve">
+    <value>Chi tiết báo giá</value>
+  </data>
+  <data name="Quote_Pdf_SectionPayment" xml:space="preserve">
+    <value>Thanh toán</value>
+  </data>
+  <data name="Quote_Pdf_SectionCancellation" xml:space="preserve">
+    <value>Chính sách hủy</value>
+  </data>
+  <data name="Quote_Pdf_ColItem" xml:space="preserve">
+    <value>Hạng mục</value>
+  </data>
+  <data name="Quote_Pdf_ColValue" xml:space="preserve">
+    <value>Nội dung</value>
+  </data>
+  <data name="Quote_Pdf_ColContent" xml:space="preserve">
+    <value>Khoản mục</value>
+  </data>
+  <data name="Quote_Pdf_ColQuantity" xml:space="preserve">
+    <value>SL</value>
+  </data>
+  <data name="Quote_Pdf_ColUnitPrice" xml:space="preserve">
+    <value>Đơn giá (VND)</value>
+  </data>
+  <data name="Quote_Pdf_ColAmount" xml:space="preserve">
+    <value>Thành tiền (VND)</value>
+  </data>
+  <data name="Quote_Pdf_Customer" xml:space="preserve">
+    <value>Khách hàng</value>
+  </data>
+  <data name="Quote_Pdf_Organization" xml:space="preserve">
+    <value>Đơn vị</value>
+  </data>
+  <data name="Quote_Pdf_Contact" xml:space="preserve">
+    <value>Liên hệ</value>
+  </data>
+  <data name="Quote_Pdf_Room" xml:space="preserve">
+    <value>Phòng chiếu</value>
+  </data>
+  <data name="Quote_Pdf_StartAt" xml:space="preserve">
+    <value>Thời gian bắt đầu</value>
+  </data>
+  <data name="Quote_Pdf_Duration" xml:space="preserve">
+    <value>Thời lượng</value>
+  </data>
+  <data name="Quote_Pdf_DurationValue" xml:space="preserve">
+    <value>{0} phút</value>
+  </data>
+  <data name="Quote_Pdf_Attendees" xml:space="preserve">
+    <value>Số người tham dự</value>
+  </data>
+  <data name="Quote_Pdf_Total" xml:space="preserve">
+    <value>Tổng cộng</value>
+  </data>
+  <data name="Quote_Pdf_Deposit" xml:space="preserve">
+    <value>Tiền đặt cọc ({0}%)</value>
+  </data>
+  <data name="Quote_Pdf_Balance" xml:space="preserve">
+    <value>Thanh toán nốt</value>
+  </data>
+  <data name="Quote_Pdf_BalanceDueAt" xml:space="preserve">
+    <value>Hạn thanh toán nốt</value>
+  </data>
+  <data name="Quote_Pdf_ValidUntil" xml:space="preserve">
+    <value>Báo giá có hiệu lực đến</value>
+  </data>
+  <data name="Quote_Pdf_CancelTier" xml:space="preserve">
+    <value>Hủy trước tối thiểu {0}</value>
+  </data>
+  <data name="Quote_Pdf_CancelRefund" xml:space="preserve">
+    <value>Hoàn {0}% tiền cọc</value>
+  </data>
+  <data name="Quote_Pdf_CancelLate" xml:space="preserve">
+    <value>Hủy muộn hơn các mốc trên</value>
+  </data>
+  <data name="Quote_Pdf_CancelNoRefund" xml:space="preserve">
+    <value>Không hoàn tiền cọc</value>
+  </data>
+  <data name="Quote_Pdf_Days" xml:space="preserve">
+    <value>{0} ngày</value>
+  </data>
+  <data name="Quote_Pdf_Hours" xml:space="preserve">
+    <value>{0} giờ</value>
+  </data>
+  <data name="Email_RoomRentalQuoteSubject" xml:space="preserve">
+    <value>{0} - Báo giá thuê phòng {1}</value>
+  </data>
+  <data name="Email_RoomRentalQuotePreheader" xml:space="preserve">
+    <value>Báo giá thuê phòng cho yêu cầu {0}.</value>
+  </data>
+  <data name="Email_BadgeRoomRentalQuote" xml:space="preserve">
+    <value>Có báo giá</value>
+  </data>
+  <data name="Email_RoomRentalQuoteHeading" xml:space="preserve">
+    <value>Báo giá thuê phòng chiếu</value>
+  </data>
+  <data name="Email_RoomRentalQuoteBody" xml:space="preserve">
+    <value>Xin chào {0}, chúng tôi đã gửi báo giá cho yêu cầu thuê phòng của bạn. Vui lòng xem chi tiết, chấp nhận hoặc từ chối trên trang theo dõi.</value>
+  </data>
+  <data name="Email_RoomRentalQuoteVersionLabel" xml:space="preserve">
+    <value>Phiên bản báo giá</value>
+  </data>
+  <data name="Email_RoomRentalQuoteStartLabel" xml:space="preserve">
+    <value>Thời gian thuê</value>
+  </data>
+  <data name="Email_RoomRentalQuoteDepositLabel" xml:space="preserve">
+    <value>Tiền đặt cọc ({0}%)</value>
+  </data>
+  <data name="Email_RoomRentalQuoteBalanceDueLabel" xml:space="preserve">
+    <value>Hạn thanh toán nốt</value>
+  </data>
+  <data name="Email_RoomRentalQuoteValidUntilLabel" xml:space="preserve">
+    <value>Báo giá có hiệu lực đến</value>
+  </data>
+  <data name="Email_RoomRentalQuoteTotalLabel" xml:space="preserve">
+    <value>Tổng báo giá</value>
+  </data>
+  <data name="Email_RoomRentalQuoteButton" xml:space="preserve">
+    <value>Xem báo giá</value>
+  </data>
 </root>

@@ -106,6 +106,9 @@ public interface IAppDbContext
     DbSet<InvoiceProfile> InvoiceProfiles { get; }
     DbSet<InvoiceRequest> InvoiceRequests { get; }
     DbSet<RoomRentalRequest> RoomRentalRequests { get; }
+    DbSet<RoomRentalRate> RoomRentalRates { get; }
+    DbSet<RoomRentalQuote> RoomRentalQuotes { get; }
+    DbSet<RoomRentalQuoteLine> RoomRentalQuoteLines { get; }
     DbSet<RoomRentalTrackingAttemptLimit> RoomRentalTrackingAttemptLimits { get; }
     DbSet<SupportRequest> SupportRequests { get; }
     DbSet<SupportMessage> SupportMessages { get; }

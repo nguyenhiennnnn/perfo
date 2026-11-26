@@ -115,6 +115,12 @@ public class CinemaSettings
     public const int DefaultRoomRentalTrackingTokenValidDays = 60;
     public const int DefaultRoomRentalTrackingMaxFailedAttempts = 5;
     public const int DefaultRoomRentalTrackingLockoutMinutes = 15;
+    public const int DefaultRoomRentalDepositPercent = 30;
+    public const int DefaultRoomRentalQuoteValidDays = 7;
+    public const int DefaultRoomRentalBalanceDueDaysBeforeEvent = 3;
+    public const int DefaultRoomRentalFullRefundDays = 7;
+    public const int DefaultRoomRentalPartialRefundDays = 3;
+    public const int DefaultRoomRentalPartialRefundPercent = 50;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -255,4 +261,16 @@ public class CinemaSettings
 
     public int RoomRentalTrackingLockoutMinutes { get; set; } =
         DefaultRoomRentalTrackingLockoutMinutes;
+
+    public int RoomRentalDepositPercent { get; set; } = DefaultRoomRentalDepositPercent;
+
+    public int RoomRentalQuoteValidDays { get; set; } = DefaultRoomRentalQuoteValidDays;
+
+    public int RoomRentalBalanceDueDaysBeforeEvent { get; set; } = DefaultRoomRentalBalanceDueDaysBeforeEvent;
+
+    public int RoomRentalFullRefundDays { get; set; } = DefaultRoomRentalFullRefundDays;
+
+    public int RoomRentalPartialRefundDays { get; set; } = DefaultRoomRentalPartialRefundDays;
+
+    public int RoomRentalPartialRefundPercent { get; set; } = DefaultRoomRentalPartialRefundPercent;
 }

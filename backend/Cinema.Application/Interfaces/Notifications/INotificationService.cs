@@ -235,9 +235,26 @@ public sealed record RoomRentalRequestReceivedEmailData(
     DateTime LinkExpiresAtUtc
 );
 
+public sealed record RoomRentalQuoteEmailData(
+    string CustomerName,
+    string RequestCode,
+    int VersionNumber,
+    DateTime StartUtc,
+    int DurationMinutes,
+    decimal Total,
+    decimal DepositPercent,
+    decimal DepositAmount,
+    DateTime QuoteValidUntilUtc,
+    DateTime BalanceDueUtc,
+    string TrackingLink,
+    DateTime LinkExpiresAtUtc
+);
+
 public interface INotificationService
 {
     void SendRoomRentalRequestReceived(string toEmail, RoomRentalRequestReceivedEmailData data);
+
+    void SendRoomRentalQuote(string toEmail, RoomRentalQuoteEmailData data);
 
     void SendMovieIntro(string toEmail, MovieIntroEmailData data);
 

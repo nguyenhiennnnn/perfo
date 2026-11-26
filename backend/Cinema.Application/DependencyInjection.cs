@@ -237,6 +237,11 @@ public static class DependencyInjection
         services.AddScoped<ITicketTypeService, TicketTypeService>();
         services.AddScoped<IPricingRuleService, PricingRuleService>();
         services.AddScoped<ISpecialDayService, SpecialDayService>();
+        services.AddScoped<IRoomRentalRateService, RoomRentalRateService>();
+        services.AddScoped<IRoomRentalQuoteService, RoomRentalQuoteService>();
+        services.AddScoped<IRoomRentalQuoteVersionService, RoomRentalQuoteVersionService>();
+        services.AddScoped<IRoomRentalQuotePdfService, RoomRentalQuotePdfService>();
+        services.AddScoped<IRoomRentalQuoteDeliveryService, RoomRentalQuoteDeliveryService>();
         services.AddScoped<IOrderExchangeEligibilityService, OrderExchangeEligibilityService>();
         services.AddScoped<IOrderExchangePreviewService, OrderExchangePreviewService>();
         services.AddScoped<IOrderExchangeService, OrderExchangeService>();

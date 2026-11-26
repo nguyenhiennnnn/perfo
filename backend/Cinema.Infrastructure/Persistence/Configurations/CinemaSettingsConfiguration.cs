@@ -264,6 +264,24 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
             .Property(x => x.RoomRentalTrackingLockoutMinutes)
             .HasDefaultValue(CinemaSettings.DefaultRoomRentalTrackingLockoutMinutes);
         builder
+            .Property(x => x.RoomRentalDepositPercent)
+            .HasDefaultValue(CinemaSettings.DefaultRoomRentalDepositPercent);
+        builder
+            .Property(x => x.RoomRentalQuoteValidDays)
+            .HasDefaultValue(CinemaSettings.DefaultRoomRentalQuoteValidDays);
+        builder
+            .Property(x => x.RoomRentalBalanceDueDaysBeforeEvent)
+            .HasDefaultValue(CinemaSettings.DefaultRoomRentalBalanceDueDaysBeforeEvent);
+        builder
+            .Property(x => x.RoomRentalFullRefundDays)
+            .HasDefaultValue(CinemaSettings.DefaultRoomRentalFullRefundDays);
+        builder
+            .Property(x => x.RoomRentalPartialRefundDays)
+            .HasDefaultValue(CinemaSettings.DefaultRoomRentalPartialRefundDays);
+        builder
+            .Property(x => x.RoomRentalPartialRefundPercent)
+            .HasDefaultValue(CinemaSettings.DefaultRoomRentalPartialRefundPercent);
+        builder
             .Property(x => x.SupportRequestDueHours)
             .HasDefaultValue(CinemaSettings.DefaultSupportRequestDueHours);
         builder

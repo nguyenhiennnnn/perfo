@@ -216,6 +216,20 @@ public class SettingsService(
             settings.RoomRentalTrackingMaxFailedAttempts = roomRentalTrackingMaxFailedAttempts;
         if (request.RoomRentalTrackingLockoutMinutes is { } roomRentalTrackingLockoutMinutes)
             settings.RoomRentalTrackingLockoutMinutes = roomRentalTrackingLockoutMinutes;
+        if (request.RoomRentalDepositPercent is { } vRoomRentalDepositPercent)
+            settings.RoomRentalDepositPercent = vRoomRentalDepositPercent;
+        if (request.RoomRentalQuoteValidDays is { } vRoomRentalQuoteValidDays)
+            settings.RoomRentalQuoteValidDays = vRoomRentalQuoteValidDays;
+        if (request.RoomRentalBalanceDueDaysBeforeEvent is { } vRoomRentalBalanceDueDaysBeforeEvent)
+            settings.RoomRentalBalanceDueDaysBeforeEvent = vRoomRentalBalanceDueDaysBeforeEvent;
+        if (request.RoomRentalFullRefundDays is { } vRoomRentalFullRefundDays)
+            settings.RoomRentalFullRefundDays = vRoomRentalFullRefundDays;
+        if (request.RoomRentalPartialRefundDays is { } vRoomRentalPartialRefundDays)
+            settings.RoomRentalPartialRefundDays = vRoomRentalPartialRefundDays;
+        if (request.RoomRentalPartialRefundPercent is { } vRoomRentalPartialRefundPercent)
+            settings.RoomRentalPartialRefundPercent = vRoomRentalPartialRefundPercent;
+        if (settings.RoomRentalFullRefundDays <= settings.RoomRentalPartialRefundDays)
+            throw new BusinessRuleException(Messages.Validation_RoomRentalRefundWindow_Invalid);
         if (settings.ReviewInviteMinHours >= settings.ReviewInviteMaxHours)
             throw new BusinessRuleException(Messages.Validation_ReviewInviteWindow_Invalid);
         if (settings.GiftCardMinAmount > settings.GiftCardMaxAmount)
@@ -309,6 +323,12 @@ public class SettingsService(
             RoomRentalTrackingTokenValidDays = settings.RoomRentalTrackingTokenValidDays,
             RoomRentalTrackingMaxFailedAttempts = settings.RoomRentalTrackingMaxFailedAttempts,
             RoomRentalTrackingLockoutMinutes = settings.RoomRentalTrackingLockoutMinutes,
+            RoomRentalDepositPercent = settings.RoomRentalDepositPercent,
+            RoomRentalQuoteValidDays = settings.RoomRentalQuoteValidDays,
+            RoomRentalBalanceDueDaysBeforeEvent = settings.RoomRentalBalanceDueDaysBeforeEvent,
+            RoomRentalFullRefundDays = settings.RoomRentalFullRefundDays,
+            RoomRentalPartialRefundDays = settings.RoomRentalPartialRefundDays,
+            RoomRentalPartialRefundPercent = settings.RoomRentalPartialRefundPercent,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

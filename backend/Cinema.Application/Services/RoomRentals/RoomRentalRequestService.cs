@@ -89,7 +89,7 @@ public class RoomRentalRequestService(
                 entity.RequestCode,
                 entity.DesiredStartAt,
                 entity.AttendeeCount,
-                $"{appUrlOptions.Value.FrontendBaseUrl.TrimEnd('/')}/room-rental/track?token={Uri.EscapeDataString(rawToken)}",
+                RoomRentalTrackingLink.Build(appUrlOptions.Value.FrontendBaseUrl, rawToken),
                 entity.TrackingTokenExpiresAt
             )
         );

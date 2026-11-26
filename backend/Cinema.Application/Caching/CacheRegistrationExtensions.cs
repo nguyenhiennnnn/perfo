@@ -104,5 +104,21 @@ public static class CacheRegistrationExtensions
                     )
                         .Select(SpecialDaySnapshot.From)
                         .ToList()
+            )
+            .AddCachedData<IReadOnlyList<RoomRentalRateSnapshot>>(
+                CacheKeys.RoomRentalRates,
+                async (db, ct) =>
+                    (
+                        await db
+                            .RoomRentalRates.AsNoTracking()
+                            .Where(r => r.IsActive)
+                            .OrderBy(r => r.RoomId)
+                            .ThenBy(r => r.StartTime)
+                            .ThenBy(r => r.MinDurationMinutes)
+                            .ThenBy(r => r.RoomRentalRateId)
+                            .ToListAsync(ct)
+                    )
+                        .Select(RoomRentalRateSnapshot.From)
+                        .ToList()
             );
 }

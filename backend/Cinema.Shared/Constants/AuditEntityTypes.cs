@@ -33,4 +33,6 @@ public static class AuditEntityTypes
     public const string ExceptionalRefundProposal = "ExceptionalRefundProposal";
     public const string CustomerRestriction = "CustomerRestriction";
     public const string RoomRentalRequest = "RoomRentalRequest";
+    public const string RoomRentalRate = "RoomRentalRate";
+    public const string RoomRentalQuote = "RoomRentalQuote";
 }

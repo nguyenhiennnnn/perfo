@@ -269,6 +269,46 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject RoomRentalQuoteState(RoomRentalQuote q) =>
+        AuditJson.ToObject(
+            new
+            {
+                q.RoomRentalRequestId,
+                q.VersionNumber,
+                q.RoomId,
+                q.RoomRentalRateId,
+                q.StartAt,
+                q.DurationMinutes,
+                q.AttendeeCount,
+                q.Subtotal,
+                q.DiscountTotal,
+                q.Total,
+                q.DepositPercent,
+                q.DepositAmount,
+                q.ValidUntil,
+                q.BalanceDueAt,
+                q.SentAt,
+            }
+        );
+
+    public static JsonObject RoomRentalRateState(RoomRentalRate r) =>
+        AuditJson.ToObject(
+            new
+            {
+                r.Name,
+                r.RoomId,
+                StartTime = PricingMapper.FormatTime(r.StartTime),
+                EndTime = PricingMapper.FormatTime(r.EndTime),
+                r.MinDurationMinutes,
+                r.MaxDurationMinutes,
+                r.BasePrice,
+                r.PerPersonFee,
+                r.IncludedAttendees,
+                r.IsActive,
+                r.IsDeleted,
+            }
+        );
+
     public static JsonObject InventoryItemState(InventoryItem i) =>
         AuditJson.ToObject(
             new

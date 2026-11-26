@@ -92,6 +92,13 @@ public class NotificationService(
             EmailTemplates.RoomRentalRequestReceived(_brand, data)
         );
 
+    public void SendRoomRentalQuote(string toEmail, RoomRentalQuoteEmailData data) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_RoomRentalQuoteSubject, _brand.Name, data.RequestCode),
+            EmailTemplates.RoomRentalQuote(_brand, data)
+        );
+
     public void SendSupportRequestUpdated(string toEmail, SupportRequestUpdateEmailData data) =>
         Enqueue(
             toEmail,

@@ -1161,6 +1161,53 @@ public static class EmailTemplates
         );
     }
 
+    public static string RoomRentalQuote(BrandOptions brand, RoomRentalQuoteEmailData data)
+    {
+        string Local(DateTime utc) =>
+            BusinessTime
+                .ToLocal(utc)
+                .ToString(DateTimePatterns.DateHourMinute, CultureInfo.InvariantCulture);
+
+        var expires = BusinessTime
+            .ToLocal(data.LinkExpiresAtUtc)
+            .ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture);
+        var body = $"""
+            {Badge(Messages.Email_BadgeRoomRentalQuote, Success, SymbolCheck)}
+            {Heading(Messages.Email_RoomRentalQuoteHeading)}
+            {Paragraph(string.Format(Messages.Email_RoomRentalQuoteBody, Enc(data.CustomerName)))}
+            {DetailCard(
+                DetailRow(Messages.Email_RoomRentalRequestCodeLabel, Enc(data.RequestCode), code: true),
+                DetailRow(
+                    Messages.Email_RoomRentalQuoteVersionLabel,
+                    data.VersionNumber.ToString(CultureInfo.InvariantCulture)
+                ),
+                DetailRow(Messages.Email_RoomRentalQuoteStartLabel, Enc(Local(data.StartUtc))),
+                DetailRow(
+                    string.Format(
+                        Messages.Email_RoomRentalQuoteDepositLabel,
+                        data.DepositPercent.ToString("0.##", CultureInfo.InvariantCulture)
+                    ),
+                    Money(data.DepositAmount)
+                ),
+                DetailRow(Messages.Email_RoomRentalQuoteBalanceDueLabel, Enc(Local(data.BalanceDueUtc))),
+                DetailRow(
+                    Messages.Email_RoomRentalQuoteValidUntilLabel,
+                    Enc(Local(data.QuoteValidUntilUtc)),
+                    isLast: true
+                ),
+                DetailRowTotal(Messages.Email_RoomRentalQuoteTotalLabel, data.Total)
+            )}
+            {Button(Messages.Email_RoomRentalQuoteButton, data.TrackingLink)}
+            {MutedParagraph(string.Format(Messages.Email_RoomRentalTrackNote, expires))}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_RoomRentalQuotePreheader, data.RequestCode),
+            body
+        );
+    }
+
     public static string OrderCancelled(
         BrandOptions brand,
         string customerName,

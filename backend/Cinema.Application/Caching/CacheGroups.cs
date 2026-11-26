@@ -8,4 +8,5 @@ public static class CacheGroups
     public const string Promotions = "promotions";
     public const string TicketTypes = "ticket-types";
     public const string HolidayCalendar = "holiday-calendar";
+    public const string RoomRentalRates = "room-rental-rates";
 }

@@ -19,4 +19,7 @@ public static class CacheKeys
 
     public static readonly CacheKey<IReadOnlyList<SpecialDaySnapshot>> HolidayCalendar =
         new("holiday-calendar", CacheGroups.HolidayCalendar);
+
+    public static readonly CacheKey<IReadOnlyList<RoomRentalRateSnapshot>> RoomRentalRates =
+        new("room-rental-rates", CacheGroups.RoomRentalRates);
 }

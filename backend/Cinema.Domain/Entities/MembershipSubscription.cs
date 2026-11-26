@@ -1,3 +1,5 @@
+using Cinema.Domain.Enums;
+
 namespace Cinema.Domain.Entities;
 
 public class MembershipSubscription
@@ -8,6 +10,8 @@ public class MembershipSubscription
     public int OrderId { get; set; }
     public DateTime ValidFrom { get; set; }
     public DateTime ValidTo { get; set; }
+    public MembershipSubscriptionStatus Status { get; set; } = MembershipSubscriptionStatus.Active;
+    public DateTime? ExpiryReminderSentAt { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public User User { get; set; } = null!;

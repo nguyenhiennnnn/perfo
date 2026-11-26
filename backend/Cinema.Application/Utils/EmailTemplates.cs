@@ -875,6 +875,46 @@ public static class EmailTemplates
         );
     }
 
+    public static string MembershipExpiryReminder(
+        BrandOptions brand,
+        MembershipExpiryReminderEmailData data
+    )
+    {
+        var expiryDate = BusinessTime
+            .ToLocal(data.ValidToUtc)
+            .ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture);
+
+        var body = $"""
+            {Badge(Messages.Email_BadgeMembershipExpiry, Warning, SymbolAlert)}
+            {Heading(Messages.Email_MembershipExpiryReminderHeading)}
+            {Paragraph(
+                string.Format(
+                    Messages.Email_MembershipExpiryReminderBody,
+                    Enc(data.CustomerName),
+                    Enc(data.PlanName),
+                    Enc(expiryDate)
+                )
+            )}
+            {DetailCard(
+                DetailRow(Messages.Email_MembershipExpiryReminderPlanLabel, Enc(data.PlanName)),
+                DetailRow(
+                    Messages.Email_MembershipExpiryReminderExpiryLabel,
+                    Enc(expiryDate),
+                    isLast: true
+                )
+            )}
+            {Button(Messages.Email_MembershipExpiryReminderButton, data.RenewLink)}
+            <div style="height:12px; line-height:12px; font-size:0;">&nbsp;</div>
+            {MutedParagraph(Messages.Email_MembershipExpiryReminderOptOutNote)}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_MembershipExpiryReminderPreheader, Enc(expiryDate)),
+            body
+        );
+    }
+
     public static string MovieIntro(BrandOptions brand, MovieIntroEmailData data)
     {
         var sections = data.Movies.Select(movie =>

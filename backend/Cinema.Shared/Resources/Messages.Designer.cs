@@ -1617,6 +1617,15 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gói thành viên sắp hết hạn.
+        /// </summary>
+        public static string Email_BadgeMembershipExpiry {
+            get {
+                return ResourceManager.GetString("Email_BadgeMembershipExpiry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Phim mới dành cho bạn.
         /// </summary>
         public static string Email_BadgeMovieIntro {
@@ -2666,6 +2675,78 @@ namespace Cinema.Shared.Resources {
         public static string Email_LoyaltyChallengeRewardPoints {
             get {
                 return ResourceManager.GetString("Email_LoyaltyChallengeRewardPoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, gói &lt;strong&gt;{1}&lt;/strong&gt; của bạn sẽ hết hạn vào ngày &lt;strong&gt;{2}&lt;/strong&gt;. Sau thời điểm này bạn sẽ không còn quyền lợi của gói. Hãy chủ động gia hạn để tiếp tục hưởng ưu đãi; hệ thống không tự động trừ tiền của bạn..
+        /// </summary>
+        public static string Email_MembershipExpiryReminderBody {
+            get {
+                return ResourceManager.GetString("Email_MembershipExpiryReminderBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gia hạn gói.
+        /// </summary>
+        public static string Email_MembershipExpiryReminderButton {
+            get {
+                return ResourceManager.GetString("Email_MembershipExpiryReminderButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ngày hết hạn.
+        /// </summary>
+        public static string Email_MembershipExpiryReminderExpiryLabel {
+            get {
+                return ResourceManager.GetString("Email_MembershipExpiryReminderExpiryLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gói thành viên sắp hết hạn.
+        /// </summary>
+        public static string Email_MembershipExpiryReminderHeading {
+            get {
+                return ResourceManager.GetString("Email_MembershipExpiryReminderHeading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bạn nhận email này vì đang bật nhận nhắc nhở. Có thể tắt trong phần thông tin liên lạc của tài khoản..
+        /// </summary>
+        public static string Email_MembershipExpiryReminderOptOutNote {
+            get {
+                return ResourceManager.GetString("Email_MembershipExpiryReminderOptOutNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gói thành viên.
+        /// </summary>
+        public static string Email_MembershipExpiryReminderPlanLabel {
+            get {
+                return ResourceManager.GetString("Email_MembershipExpiryReminderPlanLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gói thành viên của bạn hết hạn vào ngày {0}..
+        /// </summary>
+        public static string Email_MembershipExpiryReminderPreheader {
+            get {
+                return ResourceManager.GetString("Email_MembershipExpiryReminderPreheader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}: Gói thành viên của bạn sắp hết hạn.
+        /// </summary>
+        public static string Email_MembershipExpiryReminderSubject {
+            get {
+                return ResourceManager.GetString("Email_MembershipExpiryReminderSubject", resourceCulture);
             }
         }
         

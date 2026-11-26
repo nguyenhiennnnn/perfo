@@ -6076,4 +6076,31 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Validation_MembershipPlan_PriceRange" xml:space="preserve">
     <value>Giá gói thành viên phải là số nguyên đồng, lớn hơn 0 và không vượt quá {0}.</value>
   </data>
+  <data name="Email_MembershipExpiryReminderSubject" xml:space="preserve">
+    <value>{0}: Gói thành viên của bạn sắp hết hạn</value>
+  </data>
+  <data name="Email_BadgeMembershipExpiry" xml:space="preserve">
+    <value>Gói thành viên sắp hết hạn</value>
+  </data>
+  <data name="Email_MembershipExpiryReminderHeading" xml:space="preserve">
+    <value>Gói thành viên sắp hết hạn</value>
+  </data>
+  <data name="Email_MembershipExpiryReminderBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, gói &lt;strong&gt;{1}&lt;/strong&gt; của bạn sẽ hết hạn vào ngày &lt;strong&gt;{2}&lt;/strong&gt;. Sau thời điểm này bạn sẽ không còn quyền lợi của gói. Hãy chủ động gia hạn để tiếp tục hưởng ưu đãi; hệ thống không tự động trừ tiền của bạn.</value>
+  </data>
+  <data name="Email_MembershipExpiryReminderPreheader" xml:space="preserve">
+    <value>Gói thành viên của bạn hết hạn vào ngày {0}.</value>
+  </data>
+  <data name="Email_MembershipExpiryReminderPlanLabel" xml:space="preserve">
+    <value>Gói thành viên</value>
+  </data>
+  <data name="Email_MembershipExpiryReminderExpiryLabel" xml:space="preserve">
+    <value>Ngày hết hạn</value>
+  </data>
+  <data name="Email_MembershipExpiryReminderButton" xml:space="preserve">
+    <value>Gia hạn gói</value>
+  </data>
+  <data name="Email_MembershipExpiryReminderOptOutNote" xml:space="preserve">
+    <value>Bạn nhận email này vì đang bật nhận nhắc nhở. Có thể tắt trong phần thông tin liên lạc của tài khoản.</value>
+  </data>
 </root>

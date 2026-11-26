@@ -107,6 +107,8 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
 
     public int PointsExpiryReminderDays { get; init; }
 
+    public int MembershipExpiryReminderDays { get; init; }
+
     public int ReferralReferrerPoints { get; init; }
 
     public int ReferralReferredPoints { get; init; }
@@ -234,6 +236,7 @@ public record UpdateSettingsRequest(
     int? PreorderComboDiscountPercent = null,
     int? ReminderHoursBefore = null,
     int? PointsExpiryReminderDays = null,
+    int? MembershipExpiryReminderDays = null,
     int? ReferralReferrerPoints = null,
     int? ReferralReferredPoints = null,
     int? ReferralMonthlyRewardLimit = null,

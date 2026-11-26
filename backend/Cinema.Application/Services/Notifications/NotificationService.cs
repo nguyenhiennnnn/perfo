@@ -134,6 +134,16 @@ public class NotificationService(
             EmailTemplates.PointsExpiryReminder(_brand, data)
         );
 
+    public void SendMembershipExpiryReminder(
+        string toEmail,
+        MembershipExpiryReminderEmailData data
+    ) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_MembershipExpiryReminderSubject, _brand.Name),
+            EmailTemplates.MembershipExpiryReminder(_brand, data)
+        );
+
     public void SendLoyaltyChallengeCompleted(
         string toEmail,
         LoyaltyChallengeCompletedEmailData data

@@ -321,6 +321,10 @@ public static class DependencyInjection
         services.AddScoped<IMembershipPlanService, MembershipPlanService>();
         services.AddScoped<IMembershipPurchaseService, MembershipPurchaseService>();
         services.AddScoped<IMembershipSubscriptionQueryService, MembershipSubscriptionQueryService>();
+        services.AddScoped<IMembershipExpiryReminderService, MembershipExpiryReminderService>();
+        services.AddScoped<IMembershipExpiryService, MembershipExpiryService>();
+        services.AddScoped<IMembershipFreeTicketGrantService, MembershipFreeTicketGrantService>();
+        services.AddScoped<IMembershipFreeTicketQueryService, MembershipFreeTicketQueryService>();
         services.AddInTransactionEventHandler<OrderConfirmed, MembershipSubscriptionHandler>();
         services.AddResourceHold<BundleResourceHold>();
         services.AddScoped<IPromotionService, PromotionService>();
@@ -330,7 +334,7 @@ public static class DependencyInjection
         services.AddScoped<IPromotionRedemptionService, PromotionRedemptionService>();
         services.AddScoped<IPromotionRedemptionExportService, PromotionRedemptionExportService>();
         services.AddScoped<IPromotionBulkCodeService, PromotionBulkCodeService>();
-        services.AddScoped<IMembershipBenefitPricer, NullMembershipBenefitPricer>();
+        services.AddScoped<IMembershipBenefitPricer, MembershipBenefitPricer>();
         services.AddScoped<IOrderPriceCalculator, OrderPriceCalculator>();
         services.AddScoped<IVatService, VatService>();
         services.AddSingleton<IShowtimePricingScopeResolver, StandardShowtimePricingScopeResolver>();

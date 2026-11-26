@@ -43,3 +43,18 @@ public record MembershipSubscriptionDto(
     DateTime ValidTo,
     bool IsCurrent
 );
+
+public record MembershipFreeTicketPeriodDto(
+    int MembershipSubscriptionId,
+    string PlanName,
+    DateTime PeriodStart,
+    DateTime PeriodEnd,
+    int Granted,
+    int Used,
+    int Remaining
+);
+
+public record MembershipFreeTicketBalanceDto(
+    int Remaining,
+    IReadOnlyList<MembershipFreeTicketPeriodDto> Periods
+);

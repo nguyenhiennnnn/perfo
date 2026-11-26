@@ -160,6 +160,8 @@ public class SettingsService(
             settings.ReminderHoursBefore = reminderHoursBefore;
         if (request.PointsExpiryReminderDays is { } pointsExpiryReminderDays)
             settings.PointsExpiryReminderDays = pointsExpiryReminderDays;
+        if (request.MembershipExpiryReminderDays is { } membershipExpiryReminderDays)
+            settings.MembershipExpiryReminderDays = membershipExpiryReminderDays;
         if (request.ReferralReferrerPoints is { } referralReferrerPoints)
             settings.ReferralReferrerPoints = referralReferrerPoints;
         if (request.ReferralReferredPoints is { } referralReferredPoints)
@@ -295,6 +297,7 @@ public class SettingsService(
             PreorderComboDiscountPercent = settings.PreorderComboDiscountPercent,
             ReminderHoursBefore = settings.ReminderHoursBefore,
             PointsExpiryReminderDays = settings.PointsExpiryReminderDays,
+            MembershipExpiryReminderDays = settings.MembershipExpiryReminderDays,
             ReferralReferrerPoints = settings.ReferralReferrerPoints,
             ReferralReferredPoints = settings.ReferralReferredPoints,
             ReferralMonthlyRewardLimit = settings.ReferralMonthlyRewardLimit,

@@ -14,7 +14,8 @@ namespace Cinema.Api.Controllers.Client;
 public class MembershipPlansController(
     IMembershipPlanService planService,
     IMembershipPurchaseService purchaseService,
-    IMembershipSubscriptionQueryService subscriptionQueryService
+    IMembershipSubscriptionQueryService subscriptionQueryService,
+    IMembershipFreeTicketQueryService freeTicketQueryService
 ) : AppControllerBase
 {
     [HttpGet]
@@ -40,4 +41,10 @@ public class MembershipPlansController(
     public async Task<ActionResult<IReadOnlyList<MembershipSubscriptionDto>>> GetMine(
         CancellationToken cancellationToken
     ) => Ok(await subscriptionQueryService.GetMineAsync(CurrentUserId, cancellationToken));
+
+    [HttpGet("subscriptions/mine/free-tickets")]
+    [Authorize]
+    public async Task<ActionResult<MembershipFreeTicketBalanceDto>> GetMyFreeTickets(
+        CancellationToken cancellationToken
+    ) => Ok(await freeTicketQueryService.GetMineAsync(CurrentUserId, cancellationToken));
 }

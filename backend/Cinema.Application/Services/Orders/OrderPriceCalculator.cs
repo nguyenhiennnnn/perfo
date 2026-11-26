@@ -100,30 +100,41 @@ public class OrderPriceCalculator(
             new MembershipBenefitContext(order, lines, remaining),
             cancellationToken
         );
+        var benefitExcludesPromotions = false;
         foreach (var benefit in benefits)
         {
             var shares = benefit
                 .LineShares.Select((share, i) => Math.Max(Math.Min(share, remaining[i]), 0m))
                 .ToArray();
-            if (shares.Sum() > 0m)
-                AddAdjustment(
-                    order,
-                    lines,
-                    remaining,
-                    PriceAdjustmentType.MembershipBenefit,
-                    benefit.ReferenceType,
-                    benefit.ReferenceId,
-                    shares
-                );
+            if (shares.Sum() <= 0m)
+                continue;
+
+            AddAdjustment(
+                order,
+                lines,
+                remaining,
+                PriceAdjustmentType.MembershipBenefit,
+                benefit.ReferenceType,
+                benefit.ReferenceId,
+                shares
+            );
+            benefitExcludesPromotions |= benefit.ExcludesPromotions;
         }
 
-        if (wantsPromotions && await HasExcludingBundleAsync(order, cancellationToken))
+        if (
+            wantsPromotions
+            && (benefitExcludesPromotions || await HasExcludingBundleAsync(order, cancellationToken))
+        )
         {
             OrderPricing.ApplyTotals(order);
             return string.IsNullOrWhiteSpace(options.PromotionCode)
                 ? OrderPriceResult.None
                 : new OrderPriceResult(
-                    PromotionRejections.Invalid(PromotionRejectionReason.BundleExcluded),
+                    PromotionRejections.Invalid(
+                        benefitExcludesPromotions
+                            ? PromotionRejectionReason.NotCombinable
+                            : PromotionRejectionReason.BundleExcluded
+                    ),
                     []
                 );
         }

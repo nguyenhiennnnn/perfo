@@ -8,6 +8,9 @@ public class BackgroundJobOptions
     public string ShowtimeLifecycleCron { get; set; } = "* * * * *";
     public string ExpireLoyaltyPointsCron { get; set; } = "5 * * * *";
     public string LoyaltyExpiryReminderCron { get; set; } = "0 9 * * *";
+    public string MembershipExpiryReminderCron { get; set; } = "0 9 * * *";
+    public string MembershipExpiryCron { get; set; } = "*/15 * * * *";
+    public string MembershipFreeTicketGrantCron { get; set; } = "*/5 * * * *";
     public string CleanupImportExportFilesCron { get; set; } = "*/30 * * * *";
     public string CleanupImportSessionsCron { get; set; } = "*/5 * * * *";
     public string ProcessOutboxCron { get; set; } = "* * * * *";

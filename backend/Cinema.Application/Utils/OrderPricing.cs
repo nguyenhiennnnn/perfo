@@ -14,8 +14,11 @@ public static class OrderPricing
     public static decimal TotalAmount(IEnumerable<OrderLine> lines) =>
         lines.Sum(l => l.LockedUnitPrice * l.Quantity);
 
+    public static decimal PercentDiscountAmount(decimal baseAmount, decimal discountPercent) =>
+        Math.Min(RoundToDong(baseAmount * discountPercent / 100m), baseAmount);
+
     public static decimal TierDiscountAmount(decimal ticketAmount, decimal discountPercent) =>
-        Math.Min(RoundToDong(ticketAmount * discountPercent / 100m), ticketAmount);
+        PercentDiscountAmount(ticketAmount, discountPercent);
 
     public static OrderPriceAdjustment BuildAdjustment(
         PriceAdjustmentType type,

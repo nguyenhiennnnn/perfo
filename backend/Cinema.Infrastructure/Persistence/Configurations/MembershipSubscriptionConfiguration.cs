@@ -1,4 +1,6 @@
 using Cinema.Domain.Entities;
+using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,11 +15,23 @@ public class MembershipSubscriptionConfiguration : IEntityTypeConfiguration<Memb
             t =>
             {
                 t.HasCheckConstraint("CK_MembershipSubscriptions_ValidRange", "\"ValidTo\" > \"ValidFrom\"");
+                t.HasCheckConstraint(
+                    "CK_MembershipSubscriptions_Status",
+                    "\"Status\" IN ('Active','Expired')"
+                );
             }
         );
         builder.HasKey(x => x.MembershipSubscriptionId);
         builder.Property(x => x.ValidFrom).HasColumnType("timestamp without time zone");
         builder.Property(x => x.ValidTo).HasColumnType("timestamp without time zone");
+        builder
+            .Property(x => x.Status)
+            .HasConversion<string>()
+            .HasMaxLength(FieldLengths.EnumValue)
+            .HasDefaultValue(MembershipSubscriptionStatus.Active);
+        builder
+            .Property(x => x.ExpiryReminderSentAt)
+            .HasColumnType("timestamp without time zone");
         builder.Property(x => x.CreatedAt).HasColumnType("timestamp without time zone");
 
         builder
@@ -44,6 +58,9 @@ public class MembershipSubscriptionConfiguration : IEntityTypeConfiguration<Memb
         builder
             .HasIndex(x => new { x.UserId, x.ValidTo })
             .HasDatabaseName("IX_MembershipSubscriptions_UserValidTo");
+        builder
+            .HasIndex(x => new { x.Status, x.ValidTo })
+            .HasDatabaseName("IX_MembershipSubscriptions_Status_ValidTo");
         builder.HasIndex(x => x.MembershipPlanId).HasDatabaseName("IX_MembershipSubscriptions_Plan");
     }
 }

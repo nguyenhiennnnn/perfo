@@ -28,5 +28,6 @@ public sealed record MembershipBenefitContext(
 public sealed record MembershipBenefitDiscount(
     IReadOnlyList<decimal> LineShares,
     string? ReferenceType,
-    int? ReferenceId
+    int? ReferenceId,
+    bool ExcludesPromotions = false
 );

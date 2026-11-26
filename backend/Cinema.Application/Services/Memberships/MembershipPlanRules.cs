@@ -17,10 +17,27 @@ public static class MembershipPlanRules
         };
 
     public static DateTime AddPeriod(DateTime fromUtc, MembershipPlanPeriod period) =>
+        AddMonths(fromUtc, DurationMonths(period));
+
+    public static DateTime AddMonths(DateTime fromUtc, int months) =>
         BusinessTime.ToUtc(
             DateTime.SpecifyKind(
-                BusinessTime.ToLocal(fromUtc).AddMonths(DurationMonths(period)),
+                BusinessTime.ToLocal(fromUtc).AddMonths(months),
                 DateTimeKind.Unspecified
             )
         );
+
+    public static (int Index, DateTime Start, DateTime End) MonthPeriodAt(
+        DateTime validFrom,
+        DateTime validTo,
+        DateTime now
+    )
+    {
+        var index = 0;
+        while (AddMonths(validFrom, index + 1) <= now)
+            index++;
+
+        var end = AddMonths(validFrom, index + 1);
+        return (index, AddMonths(validFrom, index), end > validTo ? validTo : end);
+    }
 }

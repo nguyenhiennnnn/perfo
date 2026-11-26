@@ -16,6 +16,16 @@ public class ComboSelectionRequestValidator : AbstractValidator<ComboSelectionRe
     }
 }
 
+public class BundleSelectionRequestValidator : AbstractValidator<BundleSelectionRequest>
+{
+    public BundleSelectionRequestValidator()
+    {
+        RuleFor(x => x.BundleId).GreaterThan(0).WithMessage(Messages.Validation_BundleId_Positive);
+
+        RuleFor(x => x.Quantity).GreaterThan(0).WithMessage(Messages.Validation_Quantity_Positive);
+    }
+}
+
 public class SeatTicketSelectionRequestValidator : AbstractValidator<SeatTicketSelectionRequest>
 {
     public SeatTicketSelectionRequestValidator()
@@ -87,6 +97,12 @@ public class HoldSeatsRequestValidator : AbstractValidator<HoldSeatsRequest>
         RuleForEach(x => x.Tickets).SetValidator(new SeatTicketSelectionRequestValidator());
 
         RuleFor(x => x.Tickets).ApplyTicketRules(x => x.SeatIds);
+
+        RuleForEach(x => x.Bundles).SetValidator(new BundleSelectionRequestValidator());
+
+        RuleFor(x => x.Bundles)
+            .Must(b => b is null || b.Select(x => x.BundleId).Distinct().Count() == b.Count)
+            .WithMessage(Messages.Validation_Bundles_Duplicated);
     }
 }
 

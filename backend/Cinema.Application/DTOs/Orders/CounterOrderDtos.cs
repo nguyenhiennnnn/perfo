@@ -11,7 +11,8 @@ public record CounterHoldRequest(
     string CustomerName,
     string? CustomerPhone,
     List<SeatTicketSelectionRequest>? Tickets = null,
-    bool AcceptPriceChange = false
+    bool AcceptPriceChange = false,
+    List<BundleSelectionRequest>? Bundles = null
 );
 
 public record CounterComboOrderRequest(

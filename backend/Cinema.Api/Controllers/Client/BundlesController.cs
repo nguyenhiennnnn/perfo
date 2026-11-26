@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Cinema.Application.Interfaces.Bundles;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
@@ -8,8 +9,10 @@ namespace Cinema.Api.Controllers.Client;
 
 [ApiController]
 [Route(ApiPaths.ApiVersionPrefix + "/bundles")]
-public class BundlesController(IBundleAvailabilityService bundleAvailabilityService)
-    : ControllerBase
+public class BundlesController(
+    IBundleAvailabilityService bundleAvailabilityService,
+    IBundleViewTracker bundleViewTracker
+) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetForShowtime(
@@ -26,6 +29,21 @@ public class BundlesController(IBundleAvailabilityService bundleAvailabilityServ
                 }
             );
 
-        return Ok(await bundleAvailabilityService.GetForShowtimeAsync(showtimeId, cancellationToken));
+        var bundles = await bundleAvailabilityService.GetForShowtimeAsync(
+            showtimeId,
+            cancellationToken
+        );
+        if (
+            bundles.Count > 0
+            && int.TryParse(User.FindFirstValue(AppClaimTypes.UserId), out var userId)
+        )
+            await bundleViewTracker.RecordAsync(
+                userId,
+                showtimeId,
+                [.. bundles.Select(b => b.BundleId)],
+                cancellationToken
+            );
+
+        return Ok(bundles);
     }
 }

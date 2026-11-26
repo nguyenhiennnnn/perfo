@@ -28,6 +28,12 @@ public class CounterHoldRequestValidator : AbstractValidator<CounterHoldRequest>
 
         RuleFor(x => x.Tickets).ApplyTicketRules(x => x.SeatIds);
 
+        RuleForEach(x => x.Bundles).SetValidator(new BundleSelectionRequestValidator());
+
+        RuleFor(x => x.Bundles)
+            .Must(b => b is null || b.Select(x => x.BundleId).Distinct().Count() == b.Count)
+            .WithMessage(Messages.Validation_Bundles_Duplicated);
+
         RuleFor(x => x.UserId)
             .GreaterThan(0)
             .When(x => x.UserId is not null)

@@ -5995,4 +5995,52 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Invalid_BundleShowtimeIdRequired" xml:space="preserve">
     <value>Cần chọn suất chiếu để xem các gói sản phẩm áp dụng.</value>
   </data>
+  <data name="Validation_BundleId_Positive" xml:space="preserve">
+    <value>Mã gói sản phẩm không hợp lệ.</value>
+  </data>
+  <data name="Validation_Bundles_Duplicated" xml:space="preserve">
+    <value>Mỗi gói sản phẩm chỉ được chọn một lần; hãy tăng số lượng thay vì chọn lặp.</value>
+  </data>
+  <data name="Rule_BundleNotApplicable" xml:space="preserve">
+    <value>Gói sản phẩm không áp dụng được cho suất chiếu này hoặc đã hết hạn mức, hết kho.</value>
+  </data>
+  <data name="Rule_BundleSeatsMismatch" xml:space="preserve">
+    <value>Số ghế và loại vé đã chọn chưa khớp với thành phần của gói sản phẩm.</value>
+  </data>
+  <data name="Promotion_Rejected_BundleExcluded" xml:space="preserve">
+    <value>Đơn có gói sản phẩm không được dùng chung với mã khuyến mãi.</value>
+  </data>
+  <data name="Report_Finance_Bundle_Title" xml:space="preserve">
+    <value>Gói sản phẩm</value>
+  </data>
+  <data name="Report_Finance_Bundle_Note" xml:space="preserve">
+    <value>Tính theo suất chiếu bắt đầu trong kỳ, chỉ đơn đã xác nhận. Giá lẻ và doanh thu gói lấy từ các dòng hàng đã tách giá gói; doanh thu thực là số đã trả trừ hoàn tiền (sau cả ưu đãi hạng và mã khuyến mãi). Tỷ lệ chuyển đổi = số khách đăng nhập đã xem gói ở một suất rồi mua đúng gói đó ở suất ấy chia số khách đã xem.</value>
+  </data>
+  <data name="Report_Finance_Col_Bundle" xml:space="preserve">
+    <value>Gói</value>
+  </data>
+  <data name="Report_Finance_Col_BundleSold" xml:space="preserve">
+    <value>Số gói bán</value>
+  </data>
+  <data name="Report_Finance_Col_BundleRetail" xml:space="preserve">
+    <value>Giá lẻ tương đương</value>
+  </data>
+  <data name="Report_Finance_Col_BundleRevenue" xml:space="preserve">
+    <value>Doanh thu gói</value>
+  </data>
+  <data name="Report_Finance_Col_BundleSavings" xml:space="preserve">
+    <value>Khách tiết kiệm</value>
+  </data>
+  <data name="Report_Finance_Col_BundleNetRevenue" xml:space="preserve">
+    <value>Doanh thu thực</value>
+  </data>
+  <data name="Report_Finance_Col_BundleViewers" xml:space="preserve">
+    <value>Khách đã xem</value>
+  </data>
+  <data name="Report_Finance_Col_BundleBuyers" xml:space="preserve">
+    <value>Xem rồi mua</value>
+  </data>
+  <data name="Report_Finance_Col_BundleConversion" xml:space="preserve">
+    <value>Tỷ lệ chuyển đổi</value>
+  </data>
 </root>

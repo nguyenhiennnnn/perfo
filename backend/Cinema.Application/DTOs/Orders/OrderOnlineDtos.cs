@@ -2,6 +2,8 @@ namespace Cinema.Application.DTOs.Orders;
 
 public record ComboSelectionRequest(int ComboId, int Quantity);
 
+public record BundleSelectionRequest(int BundleId, int Quantity);
+
 public record SeatTicketSelectionRequest(
     int ShowtimeSeatId,
     int? TicketTypeId,
@@ -15,7 +17,8 @@ public record HoldSeatsRequest(
     List<int> SeatIds,
     List<ComboSelectionRequest>? Combos,
     List<SeatTicketSelectionRequest>? Tickets = null,
-    bool AcceptPriceChange = false
+    bool AcceptPriceChange = false,
+    List<BundleSelectionRequest>? Bundles = null
 );
 
 public record HoldOrderResponse(

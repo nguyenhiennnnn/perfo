@@ -314,6 +314,8 @@ public static class DependencyInjection
         services.AddScoped<IBundleService, BundleService>();
         services.AddScoped<IBundleRetailPricer, BundleRetailPricer>();
         services.AddScoped<IBundleAvailabilityService, BundleAvailabilityService>();
+        services.AddScoped<IOrderBundleComposer, OrderBundleComposer>();
+        services.AddScoped<IBundleViewTracker, BundleViewTracker>();
         services.AddResourceHold<BundleResourceHold>();
         services.AddScoped<IPromotionService, PromotionService>();
         services.AddScoped<IPromotionEngine, PromotionEngine>();
@@ -385,6 +387,7 @@ public static class DependencyInjection
         services.AddReportBlock<GatewayFeeBlock>();
         services.AddReportBlock<ComboProfitBlock>();
         services.AddReportBlock<ComboPreorderBlock>();
+        services.AddReportBlock<BundleReportBlock>();
         services.AddReportBlock<MovieProfitBlock>();
         services.AddReportBlock<GiftCardLiabilityBlock>();
         services.AddReportBlock<VatReportBlock>();

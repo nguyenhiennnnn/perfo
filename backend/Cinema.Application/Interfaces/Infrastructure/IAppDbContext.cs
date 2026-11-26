@@ -80,6 +80,7 @@ public interface IAppDbContext
     DbSet<Bundle> Bundles { get; }
     DbSet<BundleItem> BundleItems { get; }
     DbSet<BundleDailyUsage> BundleDailyUsages { get; }
+    DbSet<BundleView> BundleViews { get; }
     DbSet<BundleReservation> BundleReservations { get; }
     DbSet<PaymentTransaction> PaymentTransactions { get; }
     DbSet<CounterShift> CounterShifts { get; }

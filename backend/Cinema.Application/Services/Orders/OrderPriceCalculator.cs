@@ -59,6 +59,16 @@ public class OrderPriceCalculator(
         }
 
         var remaining = lines.Select(l => l.LockedUnitPrice * l.Quantity).ToArray();
+        foreach (
+            var allocation in order
+                .PriceAdjustments.Where(a => a.Type == PriceAdjustmentType.PackagePrice)
+                .SelectMany(a => a.Allocations)
+        )
+        {
+            var index = lines.IndexOf(allocation.OrderLine);
+            if (index >= 0)
+                remaining[index] -= allocation.Amount;
+        }
         var hasTickets = lines.Any(l => l.LineType == OrderLineType.Ticket);
         var wantsPromotions =
             options.ApplyAutoPromotions || !string.IsNullOrWhiteSpace(options.PromotionCode);
@@ -107,6 +117,17 @@ public class OrderPriceCalculator(
                 );
         }
 
+        if (wantsPromotions && await HasExcludingBundleAsync(order, cancellationToken))
+        {
+            OrderPricing.ApplyTotals(order);
+            return string.IsNullOrWhiteSpace(options.PromotionCode)
+                ? OrderPriceResult.None
+                : new OrderPriceResult(
+                    PromotionRejections.Invalid(PromotionRejectionReason.BundleExcluded),
+                    []
+                );
+        }
+
         PromotionResolution? resolution = null;
         if (wantsPromotions)
         {
@@ -139,6 +160,27 @@ public class OrderPriceCalculator(
         return resolution is null
             ? OrderPriceResult.None
             : new OrderPriceResult(resolution.CodeResult, resolution.Applied);
+    }
+
+    private async Task<bool> HasExcludingBundleAsync(
+        Order order,
+        CancellationToken cancellationToken
+    )
+    {
+        var bundleIds = order
+            .PriceAdjustments.Where(a =>
+                a.Type == PriceAdjustmentType.PackagePrice && a.ReferenceId != null
+            )
+            .Select(a => a.ReferenceId!.Value)
+            .Distinct()
+            .ToList();
+        return bundleIds.Count > 0
+            && await db
+                .Bundles.IgnoreQueryFilters()
+                .AnyAsync(
+                    b => bundleIds.Contains(b.BundleId) && b.ExcludesPromotions,
+                    cancellationToken
+                );
     }
 
     private void ClearAdjustments(Order order)

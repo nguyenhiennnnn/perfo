@@ -26,6 +26,7 @@ public class OrderHoldService(
     IComboAvailabilityService comboAvailability,
     IOrderTicketPricer ticketPricer,
     IOrderPriceCalculator priceCalculator,
+    IOrderBundleComposer bundleComposer,
     IWaitlistPriorityService waitlistPriority,
     ISeatHoldLimitService holdLimits,
     ICustomerVerificationService verification,
@@ -62,7 +63,8 @@ public class OrderHoldService(
             customerPhone: request.CustomerPhone,
             cancellationToken,
             ticketSelections: request.Tickets,
-            acceptPriceChange: request.AcceptPriceChange
+            acceptPriceChange: request.AcceptPriceChange,
+            bundleSelections: request.Bundles
         );
 
         return new HoldOrderResponse(
@@ -89,7 +91,8 @@ public class OrderHoldService(
         CancellationToken cancellationToken,
         IReadOnlyList<SeatTicketSelectionRequest>? ticketSelections = null,
         bool acceptPriceChange = false,
-        int? counterShiftId = null
+        int? counterShiftId = null,
+        IReadOnlyList<BundleSelectionRequest>? bundleSelections = null
     )
     {
         var showtime =
@@ -279,6 +282,8 @@ public class OrderHoldService(
         };
         foreach (var line in lines)
             order.Lines.Add(line);
+
+        await bundleComposer.ComposeAsync(order, showtimeId, bundleSelections, cancellationToken);
 
         await priceCalculator.ApplyAsync(
             order,

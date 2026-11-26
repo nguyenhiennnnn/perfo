@@ -85,6 +85,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Bundle> Bundles => Set<Bundle>();
     public DbSet<BundleItem> BundleItems => Set<BundleItem>();
     public DbSet<BundleDailyUsage> BundleDailyUsages => Set<BundleDailyUsage>();
+    public DbSet<BundleView> BundleViews => Set<BundleView>();
     public DbSet<BundleReservation> BundleReservations => Set<BundleReservation>();
     public DbSet<PaymentTransaction> PaymentTransactions => Set<PaymentTransaction>();
     public DbSet<OrderResourceHold> OrderResourceHolds => Set<OrderResourceHold>();

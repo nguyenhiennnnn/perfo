@@ -39,6 +39,7 @@ public static class PromotionRejections
             PromotionRejectionReason.UsageLimitReached => "PROMOTION_USAGE_LIMIT_REACHED",
             PromotionRejectionReason.CustomerLimitReached => "PROMOTION_CUSTOMER_LIMIT_REACHED",
             PromotionRejectionReason.BudgetExhausted => "PROMOTION_BUDGET_EXHAUSTED",
+            PromotionRejectionReason.BundleExcluded => "PROMOTION_BUNDLE_EXCLUDED",
             _ => "PROMOTION_NOT_COMBINABLE",
         };
 
@@ -71,6 +72,7 @@ public static class PromotionRejections
             PromotionRejectionReason.CustomerLimitReached =>
                 Messages.Promotion_Rejected_CustomerLimitReached,
             PromotionRejectionReason.BudgetExhausted => Messages.Promotion_Rejected_BudgetExhausted,
+            PromotionRejectionReason.BundleExcluded => Messages.Promotion_Rejected_BundleExcluded,
             _ => Messages.Promotion_Rejected_NotCombinable,
         };
 

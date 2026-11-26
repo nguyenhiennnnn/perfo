@@ -22,6 +22,7 @@ public enum PromotionRejectionReason
     CustomerLimitReached,
     BudgetExhausted,
     NotCombinable,
+    BundleExcluded,
 }
 
 public sealed record PromotionLine(OrderLineType LineType, decimal Value);

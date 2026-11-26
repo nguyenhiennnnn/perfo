@@ -61,7 +61,8 @@ public class CounterOrderService(
             cancellationToken,
             ticketSelections: request.Tickets,
             acceptPriceChange: request.AcceptPriceChange,
-            counterShiftId: counterShiftId
+            counterShiftId: counterShiftId,
+            bundleSelections: request.Bundles
         );
 
         return CounterOrderResponse.From(order);

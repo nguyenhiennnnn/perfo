@@ -24,7 +24,8 @@ public interface IOrderHoldService
         CancellationToken cancellationToken,
         IReadOnlyList<SeatTicketSelectionRequest>? ticketSelections = null,
         bool acceptPriceChange = false,
-        int? counterShiftId = null
+        int? counterShiftId = null,
+        IReadOnlyList<BundleSelectionRequest>? bundleSelections = null
     );
     Task<Order> CreateComboHoldOrderAsync(
         List<ComboSelectionRequest> comboSelections,

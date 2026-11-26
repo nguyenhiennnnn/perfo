@@ -5,6 +5,7 @@ using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.RoomRentals;
 using Cinema.Application.Services.Audit;
 using Cinema.Domain.Entities;
+using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
@@ -12,8 +13,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cinema.Application.Services.RoomRentals;
 
-public class RoomRentalAdminService(IAppDbContext db, IAuditLogger auditLogger)
-    : IRoomRentalAdminService
+public class RoomRentalAdminService(
+    IAppDbContext db,
+    IAuditLogger auditLogger,
+    IRoomRentalCancellationService cancellationService
+) : IRoomRentalAdminService
 {
     public async Task<OffsetPageResult<RoomRentalAdminListItemDto>> GetAsync(
         RoomRentalAdminListFilter filter,
@@ -96,6 +100,20 @@ public class RoomRentalAdminService(IAppDbContext db, IAuditLogger auditLogger)
             throw new BusinessRuleException(Messages.Rule_RoomRentalStatusUnchanged);
         if (!RoomRentalStatusRules.CanChange(entity.Status, request.Status))
             throw new BusinessRuleException(Messages.Rule_RoomRentalStatusTransitionInvalid);
+
+        if (
+            request.Status == RoomRentalRequestStatus.Cancelled
+            && RoomRentalCancellationRules.IsPaymentStage(entity.Status)
+        )
+        {
+            await cancellationService.CancelAsync(
+                requestId,
+                RoomRentalCancelKind.Customer,
+                request.Note,
+                cancellationToken
+            );
+            return await GetByIdAsync(requestId, cancellationToken);
+        }
 
         var before = AuditSnapshots.RoomRentalRequestState(entity);
         entity.Status = request.Status;

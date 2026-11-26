@@ -31,6 +31,18 @@ public class ChangeRoomRentalRequestStatusRequestValidator
     }
 }
 
+public class CancelRoomRentalRequestValidator : AbstractValidator<CancelRoomRentalRequest>
+{
+    public CancelRoomRentalRequestValidator()
+    {
+        RuleFor(x => x.Note)
+            .NotEmpty()
+            .WithMessage(Messages.Validation_RoomRental_CancelNoteRequired)
+            .MaximumLength(FieldLengths.RoomRentalNote)
+            .NoControlCharacters();
+    }
+}
+
 public class RoomRentalTrackingQuoteRequestValidator
     : AbstractValidator<RoomRentalTrackingQuoteRequest>
 {

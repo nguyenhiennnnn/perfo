@@ -181,6 +181,12 @@ public static class BackgroundJobExtensions
             options.RoomRentalRevenueRecognitionCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<RoomRentalBalanceOverdueJob>(
+            RecurringJobIds.RoomRentalBalanceOverdue,
+            j => j.RunAsync(CancellationToken.None),
+            options.RoomRentalBalanceOverdueCron,
+            jobOptions
+        );
 
         return app;
     }

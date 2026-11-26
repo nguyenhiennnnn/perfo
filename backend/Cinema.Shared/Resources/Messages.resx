@@ -5913,4 +5913,25 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Validation_RoomRentalPayment_ReferenceMaxLength" xml:space="preserve">
     <value>Mã giao dịch chuyển khoản không được vượt quá 100 ký tự.</value>
   </data>
+  <data name="Rule_RoomRentalCancelKindInvalid" xml:space="preserve">
+    <value>Loại hủy không hợp lệ.</value>
+  </data>
+  <data name="Rule_RoomRentalCancelStatusInvalid" xml:space="preserve">
+    <value>Chỉ hủy được yêu cầu thuê phòng đã chấp nhận báo giá, đã đặt cọc hoặc đã thanh toán đủ.</value>
+  </data>
+  <data name="Rule_RoomRentalCancelAfterStart" xml:space="preserve">
+    <value>Không thể hủy yêu cầu thuê phòng sau khi suất đã bắt đầu.</value>
+  </data>
+  <data name="Conflict_RoomRentalCancelBeingProcessed" xml:space="preserve">
+    <value>Yêu cầu thuê phòng đang được xử lý hoặc đã bị hủy.</value>
+  </data>
+  <data name="Refund_RoomRentalCancelDescription" xml:space="preserve">
+    <value>Hoàn tiền hủy thuê phòng {0}</value>
+  </data>
+  <data name="RoomRental_BalanceOverdueNote" xml:space="preserve">
+    <value>Tự động hủy do quá hạn thanh toán nốt.</value>
+  </data>
+  <data name="Success_RoomRentalCancelled" xml:space="preserve">
+    <value>Đã hủy yêu cầu thuê phòng.</value>
+  </data>
 </root>

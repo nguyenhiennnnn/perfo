@@ -286,6 +286,8 @@ public static class DependencyInjection
         services.AddScoped<IRoomRentalBankTransferService, RoomRentalBankTransferService>();
         services.AddScoped<IRoomRentalTrackingPaymentService, RoomRentalTrackingPaymentService>();
         services.AddScoped<IRoomRentalRevenueService, RoomRentalRevenueService>();
+        services.AddScoped<IRoomRentalCancellationService, RoomRentalCancellationService>();
+        services.AddScoped<IRoomRentalBalanceOverdueService, RoomRentalBalanceOverdueService>();
         services.AddInTransactionEventHandler<OrderConfirmed, RoomRentalPaymentStatusHandler>();
         services.AddBackgroundEventHandler<OrderConfirmed, RoomRentalShowtimeProvisionHandler>();
         services.AddScoped<ISupportRequestService, SupportRequestService>();

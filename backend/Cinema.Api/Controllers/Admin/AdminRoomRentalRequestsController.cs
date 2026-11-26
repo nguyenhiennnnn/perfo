@@ -12,8 +12,10 @@ namespace Cinema.Api.Controllers.Admin;
 [ApiController]
 [Route(ApiPaths.AdminRoutePrefix + "/room-rental-requests")]
 [Authorize(Policy = Policies.AdminOnly)]
-public class AdminRoomRentalRequestsController(IRoomRentalAdminService roomRentalAdminService)
-    : ControllerBase
+public class AdminRoomRentalRequestsController(
+    IRoomRentalAdminService roomRentalAdminService,
+    IRoomRentalCancellationService roomRentalCancellationService
+) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetAll(
@@ -46,4 +48,22 @@ public class AdminRoomRentalRequestsController(IRoomRentalAdminService roomRenta
         CancellationToken cancellationToken
     ) =>
         Ok(await roomRentalAdminService.ChangeStatusAsync(requestId, request, cancellationToken));
+
+    [HttpPost("{requestId:int}/cancel")]
+    [SuccessMessage(nameof(Messages.Success_RoomRentalCancelled))]
+    public async Task<ActionResult<RoomRentalCancellationResultDto>> Cancel(
+        int requestId,
+        [FromBody] CancelRoomRentalRequest request,
+        CancellationToken cancellationToken
+    ) =>
+        Ok(
+            await roomRentalCancellationService.CancelAsync(
+                requestId,
+                request.VenueIncident
+                    ? RoomRentalCancelKind.Venue
+                    : RoomRentalCancelKind.Customer,
+                request.Note,
+                cancellationToken
+            )
+        );
 }

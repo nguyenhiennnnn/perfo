@@ -10,4 +10,10 @@ public interface IOrderCheckoutService
         CheckoutRequest request,
         CancellationToken cancellationToken
     );
+
+    Task<CheckoutResponse> CheckoutRoomRentalAsync(
+        int orderId,
+        CheckoutRequest request,
+        CancellationToken cancellationToken
+    );
 }

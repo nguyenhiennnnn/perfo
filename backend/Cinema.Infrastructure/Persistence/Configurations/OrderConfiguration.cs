@@ -61,6 +61,12 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
                     "CK_Orders_Supplement_Original",
                     "(\"Type\" IN ('Supplement','Exchange')) = (\"OriginalOrderId\" IS NOT NULL)"
                 );
+                t.HasCheckConstraint(
+                    "CK_Orders_RoomRental",
+                    "(\"Type\" = 'RoomRental') = (\"RoomRentalRequestId\" IS NOT NULL) "
+                        + "AND (\"RoomRentalRequestId\" IS NULL) = (\"RoomRentalPaymentStage\" IS NULL) "
+                        + "AND (\"RoomRentalPaymentStage\" IS NULL OR \"RoomRentalPaymentStage\" IN ('Deposit','Balance'))"
+                );
             }
         );
         builder.HasKey(x => x.OrderId);
@@ -76,6 +82,10 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasConversion<string>()
             .HasMaxLength(FieldLengths.EnumValue)
             .HasDefaultValue(Domain.Enums.SalesChannel.Online);
+        builder
+            .Property(x => x.RoomRentalPaymentStage)
+            .HasConversion<string>()
+            .HasMaxLength(FieldLengths.EnumValue);
         builder.Property(x => x.CustomerName).HasMaxLength(FieldLengths.FullName);
         builder.Property(x => x.CustomerPhone).HasMaxLength(FieldLengths.Phone);
         builder
@@ -132,6 +142,19 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasIndex(x => x.OriginalOrderId)
             .HasFilter("\"OriginalOrderId\" IS NOT NULL")
             .HasDatabaseName("IX_Orders_OriginalOrder");
+
+        builder
+            .HasOne(x => x.RoomRentalRequest)
+            .WithMany()
+            .HasForeignKey(x => x.RoomRentalRequestId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasIndex(x => new { x.RoomRentalRequestId, x.RoomRentalPaymentStage })
+            .IsUnique()
+            .HasFilter(
+                "\"RoomRentalRequestId\" IS NOT NULL AND \"Status\" IN ('Pending','Confirmed')"
+            )
+            .HasDatabaseName("UX_Orders_RoomRentalStage");
 
         builder
             .HasIndex(x => x.CounterShiftId)

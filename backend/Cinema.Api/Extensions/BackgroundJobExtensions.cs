@@ -175,6 +175,12 @@ public static class BackgroundJobExtensions
             options.RoomRentalQuoteExpiryCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<RoomRentalRevenueRecognitionJob>(
+            RecurringJobIds.RoomRentalRevenueRecognition,
+            j => j.RunAsync(CancellationToken.None),
+            options.RoomRentalRevenueRecognitionCron,
+            jobOptions
+        );
 
         return app;
     }

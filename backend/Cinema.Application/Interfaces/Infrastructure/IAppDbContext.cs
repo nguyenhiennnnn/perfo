@@ -108,6 +108,7 @@ public interface IAppDbContext
     DbSet<RoomRentalRequest> RoomRentalRequests { get; }
     DbSet<RoomRentalRate> RoomRentalRates { get; }
     DbSet<RoomRentalQuote> RoomRentalQuotes { get; }
+    DbSet<RoomRentalRevenueEntry> RoomRentalRevenueEntries { get; }
     DbSet<RoomRentalQuoteLine> RoomRentalQuoteLines { get; }
     DbSet<RoomRentalTrackingAttemptLimit> RoomRentalTrackingAttemptLimits { get; }
     DbSet<SupportRequest> SupportRequests { get; }

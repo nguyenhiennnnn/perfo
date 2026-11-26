@@ -17,6 +17,8 @@ public class Order
     public int? CreatedByEmployeeId { get; set; }
     public int? CounterShiftId { get; set; }
     public int? OriginalOrderId { get; set; }
+    public int? RoomRentalRequestId { get; set; }
+    public RoomRentalPaymentStage? RoomRentalPaymentStage { get; set; }
     public decimal TotalAmount { get; set; }
     public decimal DiscountAmount { get; set; }
     public decimal FinalAmount { get; set; }
@@ -29,6 +31,7 @@ public class Order
     public User? User { get; set; }
     public Employee? CreatedByEmployee { get; set; }
     public Order? OriginalOrder { get; set; }
+    public RoomRentalRequest? RoomRentalRequest { get; set; }
     public ICollection<Order> SupplementOrders { get; set; } = [];
     public ICollection<OrderLine> Lines { get; set; } = [];
     public ICollection<OrderPriceAdjustment> PriceAdjustments { get; set; } = [];

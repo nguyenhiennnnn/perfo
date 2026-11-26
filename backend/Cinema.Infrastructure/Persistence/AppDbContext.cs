@@ -101,6 +101,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<RoomRentalRequest> RoomRentalRequests => Set<RoomRentalRequest>();
     public DbSet<RoomRentalRate> RoomRentalRates => Set<RoomRentalRate>();
     public DbSet<RoomRentalQuote> RoomRentalQuotes => Set<RoomRentalQuote>();
+    public DbSet<RoomRentalRevenueEntry> RoomRentalRevenueEntries => Set<RoomRentalRevenueEntry>();
     public DbSet<RoomRentalQuoteLine> RoomRentalQuoteLines => Set<RoomRentalQuoteLine>();
     public DbSet<RoomRentalTrackingAttemptLimit> RoomRentalTrackingAttemptLimits =>
         Set<RoomRentalTrackingAttemptLimit>();

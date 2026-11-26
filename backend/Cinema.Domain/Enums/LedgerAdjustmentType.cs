@@ -6,4 +6,5 @@ public enum LedgerAdjustmentType
     Cancellation,
     ShowtimeChange,
     Manual,
+    RevenueRecognition,
 }

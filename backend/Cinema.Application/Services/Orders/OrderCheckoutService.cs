@@ -29,13 +29,38 @@ public class OrderCheckoutService(
         CancellationToken cancellationToken
     )
     {
-        var order =
-            await db
-                .Orders.AsNoTracking()
-                .FirstOrDefaultAsync(o => o.OrderId == orderId, cancellationToken)
-            ?? throw new NotFoundException(Messages.NotFound_Order);
+        var order = await LoadOrderAsync(orderId, cancellationToken);
         if (order.UserId != userId)
             throw new ForbiddenAppException(Messages.Forbidden_NotBookingOwner);
+        return await CheckoutCoreAsync(order, request, userId, cancellationToken);
+    }
+
+    public async Task<CheckoutResponse> CheckoutRoomRentalAsync(
+        int orderId,
+        CheckoutRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        var order = await LoadOrderAsync(orderId, cancellationToken);
+        if (order.Type != OrderType.RoomRental)
+            throw new ForbiddenAppException(Messages.Forbidden_NotBookingOwner);
+        return await CheckoutCoreAsync(order, request, order.UserId, cancellationToken);
+    }
+
+    private async Task<Order> LoadOrderAsync(int orderId, CancellationToken cancellationToken) =>
+        await db
+            .Orders.AsNoTracking()
+            .FirstOrDefaultAsync(o => o.OrderId == orderId, cancellationToken)
+        ?? throw new NotFoundException(Messages.NotFound_Order);
+
+    private async Task<CheckoutResponse> CheckoutCoreAsync(
+        Order order,
+        CheckoutRequest request,
+        int? performedByUserId,
+        CancellationToken cancellationToken
+    )
+    {
+        var orderId = order.OrderId;
         if (order.Status != OrderStatus.Pending || order.ExpiresAt <= DateTime.UtcNow)
             throw new BusinessRuleException(Messages.Rule_BookingNotPendingOrExpired);
 
@@ -100,7 +125,7 @@ public class OrderCheckoutService(
             TransactionCode = transactionCode,
             Status = PaymentStatus.Pending,
             CreatedAt = createdAt,
-            PerformedByUserId = userId,
+            PerformedByUserId = performedByUserId,
         };
         db.PaymentTransactions.Add(charge);
         await db.SaveChangesAsync(cancellationToken);

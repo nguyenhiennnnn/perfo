@@ -5874,4 +5874,37 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Report_Finance_Col_RentalCombo" xml:space="preserve">
     <value>Doanh thu combo</value>
   </data>
+  <data name="Rule_RoomRentalDepositStatusInvalid" xml:space="preserve">
+    <value>Chỉ tạo được đợt cọc khi khách đã chấp nhận báo giá.</value>
+  </data>
+  <data name="Rule_RoomRentalBalanceStatusInvalid" xml:space="preserve">
+    <value>Chỉ tạo được đợt thanh toán nốt khi yêu cầu thuê phòng đã đặt cọc.</value>
+  </data>
+  <data name="Rule_RoomRentalNoBalanceDue" xml:space="preserve">
+    <value>Báo giá không còn khoản phải thanh toán nốt.</value>
+  </data>
+  <data name="Rule_RoomRentalOrderNotPending" xml:space="preserve">
+    <value>Đợt thanh toán này không còn chờ thanh toán.</value>
+  </data>
+  <data name="Rule_RoomRentalPaymentWindowClosed" xml:space="preserve">
+    <value>Đã quá hạn thanh toán cho đợt này.</value>
+  </data>
+  <data name="Rule_RoomRentalBankTransferAmountInvalid" xml:space="preserve">
+    <value>Số tiền chuyển khoản phải lớn hơn 0 và không vượt quá số còn phải thu của đợt thanh toán.</value>
+  </data>
+  <data name="RoomRental_DepositLineDescription" xml:space="preserve">
+    <value>Đặt cọc thuê phòng {0}</value>
+  </data>
+  <data name="RoomRental_BalanceLineDescription" xml:space="preserve">
+    <value>Thanh toán nốt thuê phòng {0}</value>
+  </data>
+  <data name="RoomRental_RevenueLedgerReason" xml:space="preserve">
+    <value>Ghi nhận doanh thu thuê phòng {0} vào ngày sự kiện</value>
+  </data>
+  <data name="Success_RoomRentalPaymentRecorded" xml:space="preserve">
+    <value>Đã ghi nhận khoản chuyển khoản.</value>
+  </data>
+  <data name="Success_RoomRentalOrderCreated" xml:space="preserve">
+    <value>Đã tạo đợt thanh toán.</value>
+  </data>
 </root>

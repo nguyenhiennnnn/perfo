@@ -15,7 +15,7 @@ public class LedgerAdjustmentConfiguration : IEntityTypeConfiguration<LedgerAdju
             {
                 t.HasCheckConstraint(
                     "CK_LedgerAdjustments_Type",
-                    "\"Type\" IN ('Refund','Cancellation','ShowtimeChange','Manual')"
+                    "\"Type\" IN ('Refund','Cancellation','ShowtimeChange','Manual','RevenueRecognition')"
                 );
                 t.HasCheckConstraint(
                     "CK_LedgerAdjustments_Dates",

@@ -138,6 +138,12 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
         var linesByShowtime = (await LoadLinesAsync(found, cancellationToken)).ToLookup(l =>
             l.ShowtimeId
         );
+        var rentalRevenueByShowtime = await db
+            .RoomRentalRevenueEntries.AsNoTracking()
+            .Where(e => found.Contains(e.ShowtimeId))
+            .GroupBy(e => e.ShowtimeId)
+            .Select(g => new { ShowtimeId = g.Key, Amount = g.Sum(e => e.Amount) })
+            .ToDictionaryAsync(x => x.ShowtimeId, x => x.Amount, cancellationToken);
         var existingPaces = await db
             .ShowtimeSalesPaces.AsNoTracking()
             .Where(p => found.Contains(p.ShowtimeId))
@@ -155,7 +161,11 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
                 date,
                 showtime.Kind,
                 sellable,
-                Summarize(lines),
+                AddRentalRevenue(
+                    Summarize(lines),
+                    showtime.Kind,
+                    rentalRevenueByShowtime.GetValueOrDefault(showtime.ShowtimeId)
+                ),
                 now,
                 cancellationToken
             );
@@ -342,6 +352,15 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
                 .Count()
         );
     }
+
+    private static ShowtimeTotals AddRentalRevenue(
+        ShowtimeTotals totals,
+        ShowtimeKind kind,
+        decimal rentalRevenue
+    ) =>
+        kind == ShowtimeKind.Private && rentalRevenue > 0m
+            ? totals with { GrossTicketRevenue = totals.GrossTicketRevenue + rentalRevenue }
+            : totals;
 
     private static int SoldAtMark(IEnumerable<SalesLine> lines, DateTime markTime) =>
         lines

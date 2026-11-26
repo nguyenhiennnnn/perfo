@@ -22,4 +22,5 @@ public class RecurringJobIds
     public const string WaitlistClose = "waitlist-close";
     public const string WaitlistPriorityExpiry = "waitlist-priority-expiry";
     public const string RoomRentalQuoteExpiry = "room-rental-quote-expiry";
+    public const string RoomRentalRevenueRecognition = "room-rental-revenue-recognition";
 }

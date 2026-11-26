@@ -132,6 +132,8 @@ export const invalidations = {
     k.adminAuditLogs.all(),
   ],
 
+  bundleChanged: (): KeyList => [k.adminBundles.all(), k.bundles.all(), k.adminAuditLogs.all()],
+
   loyaltyRewardChanged: (): KeyList => [
     k.adminLoyaltyRewards.all(),
     k.adminLoyaltyChallenges.all(),

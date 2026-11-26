@@ -256,6 +256,10 @@ export const ENDPOINTS = {
       customerTransactions: (userId: number) => `/admin/loyalty/customers/${userId}/transactions`,
       customerAdjustments: (userId: number) => `/admin/loyalty/customers/${userId}/adjustments`,
     },
+    bundles: {
+      root: "/admin/bundles",
+      byId: (id: number) => `/admin/bundles/${id}`,
+    },
     combos: {
       root: "/admin/combos",
       byId: (id: number) => `/admin/combos/${id}`,

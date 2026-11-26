@@ -182,6 +182,11 @@ export const queryKeys = {
       ["admin", "promotions", "report", id, params] as const,
   },
 
+  adminBundles: {
+    all: () => ["admin", "bundles"] as const,
+    list: (params?: object) => ["admin", "bundles", "list", params] as const,
+  },
+
   adminLoyaltyRewards: {
     all: () => ["admin", "loyalty", "rewards"] as const,
     list: (params?: object) => ["admin", "loyalty", "rewards", "list", params] as const,

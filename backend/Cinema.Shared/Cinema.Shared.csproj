@@ -10,7 +10,7 @@
     <ItemGroup>
         <EmbeddedResource Update="Resources\Messages.resx">
             <Generator>MSBuild:Compile</Generator>
-            <StronglyTypedFileName>$(IntermediateOutputPath)Messages.Designer.cs</StronglyTypedFileName>
+            <StronglyTypedFileName>Resources\Messages.Designer.cs</StronglyTypedFileName>
             <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
             <StronglyTypedNamespace>Cinema.Shared.Resources</StronglyTypedNamespace>
             <StronglyTypedClassName>Messages</StronglyTypedClassName>

@@ -103,6 +103,8 @@ export const ROUTES = {
       `/admin/promotions/${promotionId}/redemptions`,
     promotionReport: (promotionId: number | string) =>
       `/admin/promotions/${promotionId}/report`,
+    bundles: "/admin/bundles",
+    bundleReport: "/admin/bundles/report",
     loyaltyRewards: "/admin/loyalty/rewards",
     loyaltyChallenges: "/admin/loyalty/challenges",
     loyaltyAdjustments: "/admin/loyalty/adjustments",

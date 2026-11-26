@@ -118,6 +118,17 @@ export const useAdminPromotionParams = (
   options?: Parameters<typeof useQueryStates<typeof adminPromotionParsers>>[1],
 ) => useQueryStates(adminPromotionParsers, options);
 
+const adminBundleParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  isActive: parseAsString,
+};
+
+export const useAdminBundleParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminBundleParsers>>[1],
+) => useQueryStates(adminBundleParsers, options);
+
 const adminLoyaltyRewardParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),

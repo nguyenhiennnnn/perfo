@@ -65,7 +65,7 @@ public class ComboSupplementService(
             SalesChannel.Online,
             userId,
             null,
-            original.CustomerName,
+            original.CustomerName ?? string.Empty,
             original.CustomerPhone,
             cancellationToken,
             supplement: new ComboSupplementHold(

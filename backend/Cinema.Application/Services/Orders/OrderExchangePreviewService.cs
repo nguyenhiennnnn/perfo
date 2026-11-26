@@ -163,12 +163,12 @@ public class OrderExchangePreviewService(
         foreach (var candidate in eligible)
         {
             var seatIds = new List<int>(oldTickets.Count);
-            var used = new Dictionary<int?, int>();
+            var used = new Dictionary<int, int>();
             var seatShortage = false;
             foreach (var ticket in oldTickets)
             {
                 seatPools.TryGetValue((candidate.ShowtimeId, ticket.SeatTypeId), out var pool);
-                var taken = used.GetValueOrDefault(ticket.SeatTypeId);
+                var taken = used.GetValueOrDefault(ticket.SeatTypeId.GetValueOrDefault());
                 if (pool is null || taken >= pool.Count)
                 {
                     seatShortage = true;
@@ -176,7 +176,7 @@ public class OrderExchangePreviewService(
                 }
 
                 seatIds.Add(pool[taken]);
-                used[ticket.SeatTypeId] = taken + 1;
+                used[ticket.SeatTypeId.GetValueOrDefault()] = taken + 1;
             }
 
             if (seatShortage)

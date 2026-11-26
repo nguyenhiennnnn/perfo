@@ -4,6 +4,7 @@ using Cinema.Application.Interfaces.Abuse;
 using Cinema.Application.Interfaces.Combos;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Notifications;
+using Cinema.Application.Interfaces.Bundles;
 using Cinema.Application.Interfaces.Orders;
 using Cinema.Application.Interfaces.Waitlist;
 using Cinema.Application.Options;

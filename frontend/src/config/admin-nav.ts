@@ -334,6 +334,23 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
     ],
   },
   {
+    label: "Gói sản phẩm",
+    items: [
+      {
+        to: ROUTES.admin.bundles,
+        label: "Quản lý gói",
+        icon: Package,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.bundleReport,
+        label: "Báo cáo gói",
+        icon: Banknote,
+        roles: [Role.Admin],
+      },
+    ],
+  },
+  {
     label: "Tích điểm",
     items: [
       {

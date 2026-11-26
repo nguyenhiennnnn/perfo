@@ -31,6 +31,7 @@ public class OrderLine
     public DateTime? CheckedInAt { get; set; }
     public DateTime? ReminderSentAt { get; set; }
     public int? GiftCardId { get; set; }
+    public int? MembershipPlanId { get; set; }
     public string? GiftRecipientEmail { get; set; }
     public string? GiftRecipientName { get; set; }
     public string? GiftMessage { get; set; }
@@ -44,5 +45,6 @@ public class OrderLine
     public OrderLine? ExchangeFromLine { get; set; }
     public Combo? Combo { get; set; }
     public GiftCard? GiftCard { get; set; }
+    public MembershipPlan? MembershipPlan { get; set; }
     public ICollection<OrderPriceAdjustmentAllocation> AdjustmentAllocations { get; set; } = [];
 }

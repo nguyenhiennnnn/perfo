@@ -1050,6 +1050,15 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tên gói thành viên đã tồn tại..
+        /// </summary>
+        public static string Conflict_MembershipPlanNameExists {
+            get {
+                return ResourceManager.GetString("Conflict_MembershipPlanNameExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hạng thành viên đã tồn tại..
         /// </summary>
         public static string Conflict_MembershipTierExists {
@@ -8061,6 +8070,15 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Không tìm thấy gói thành viên..
+        /// </summary>
+        public static string NotFound_MembershipPlan {
+            get {
+                return ResourceManager.GetString("NotFound_MembershipPlan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Không tìm thấy hạng thành viên..
         /// </summary>
         public static string NotFound_MembershipTier {
@@ -8372,6 +8390,15 @@ namespace Cinema.Shared.Resources {
         public static string Order_GiftCardLineDescription {
             get {
                 return ResourceManager.GetString("Order_GiftCardLineDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gói thành viên {0}.
+        /// </summary>
+        public static string Order_MembershipLineDescription {
+            get {
+                return ResourceManager.GetString("Order_MembershipLineDescription", resourceCulture);
             }
         }
         
@@ -12030,6 +12057,15 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gói thành viên này hiện không được bán..
+        /// </summary>
+        public static string Rule_MembershipPlanNotAvailable {
+            get {
+                return ResourceManager.GetString("Rule_MembershipPlanNotAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MoMo tạo thanh toán thất bại: {0}.
         /// </summary>
         public static string Rule_MomoCreatePaymentFailed {
@@ -13835,6 +13871,33 @@ namespace Cinema.Shared.Resources {
         public static string Success_MarketingUnsubscribed {
             get {
                 return ResourceManager.GetString("Success_MarketingUnsubscribed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã thêm gói thành viên mới..
+        /// </summary>
+        public static string Success_MembershipPlanCreated {
+            get {
+                return ResourceManager.GetString("Success_MembershipPlanCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã xóa gói thành viên..
+        /// </summary>
+        public static string Success_MembershipPlanDeleted {
+            get {
+                return ResourceManager.GetString("Success_MembershipPlanDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã cập nhật gói thành viên..
+        /// </summary>
+        public static string Success_MembershipPlanUpdated {
+            get {
+                return ResourceManager.GetString("Success_MembershipPlanUpdated", resourceCulture);
             }
         }
         
@@ -15923,6 +15986,42 @@ namespace Cinema.Shared.Resources {
         public static string Validation_LoyaltyReward_ValidRangeOrder {
             get {
                 return ResourceManager.GetString("Validation_LoyaltyReward_ValidRangeOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số vé miễn phí mỗi tháng phải từ 0 đến {0}..
+        /// </summary>
+        public static string Validation_MembershipPlan_FreeTicketsRange {
+            get {
+                return ResourceManager.GetString("Validation_MembershipPlan_FreeTicketsRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phần trăm giảm giá phải từ 0 đến 100..
+        /// </summary>
+        public static string Validation_MembershipPlan_PercentRange {
+            get {
+                return ResourceManager.GetString("Validation_MembershipPlan_PercentRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thời hạn gói phải là theo tháng hoặc theo quý..
+        /// </summary>
+        public static string Validation_MembershipPlan_PeriodInvalid {
+            get {
+                return ResourceManager.GetString("Validation_MembershipPlan_PeriodInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giá gói thành viên phải là số nguyên đồng, lớn hơn 0 và không vượt quá {0}..
+        /// </summary>
+        public static string Validation_MembershipPlan_PriceRange {
+            get {
+                return ResourceManager.GetString("Validation_MembershipPlan_PriceRange", resourceCulture);
             }
         }
         

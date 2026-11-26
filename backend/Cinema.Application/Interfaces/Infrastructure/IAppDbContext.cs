@@ -78,6 +78,8 @@ public interface IAppDbContext
     DbSet<PromotionRedemption> PromotionRedemptions { get; }
     DbSet<PromotionCustomerUsage> PromotionCustomerUsages { get; }
     DbSet<Bundle> Bundles { get; }
+    DbSet<MembershipPlan> MembershipPlans { get; }
+    DbSet<MembershipSubscription> MembershipSubscriptions { get; }
     DbSet<BundleItem> BundleItems { get; }
     DbSet<BundleDailyUsage> BundleDailyUsages { get; }
     DbSet<BundleView> BundleViews { get; }

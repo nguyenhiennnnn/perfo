@@ -83,6 +83,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<PromotionRedemption> PromotionRedemptions => Set<PromotionRedemption>();
     public DbSet<PromotionCustomerUsage> PromotionCustomerUsages => Set<PromotionCustomerUsage>();
     public DbSet<Bundle> Bundles => Set<Bundle>();
+    public DbSet<MembershipPlan> MembershipPlans => Set<MembershipPlan>();
+    public DbSet<MembershipSubscription> MembershipSubscriptions => Set<MembershipSubscription>();
     public DbSet<BundleItem> BundleItems => Set<BundleItem>();
     public DbSet<BundleDailyUsage> BundleDailyUsages => Set<BundleDailyUsage>();
     public DbSet<BundleView> BundleViews => Set<BundleView>();

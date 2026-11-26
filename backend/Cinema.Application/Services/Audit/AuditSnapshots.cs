@@ -164,6 +164,24 @@ public static class AuditSnapshots
             }
         );
 
+    public static JsonObject MembershipPlanState(MembershipPlan p) =>
+        AuditJson.ToObject(
+            new
+            {
+                p.Name,
+                p.Description,
+                period = p.Period.ToString(),
+                p.Price,
+                p.TicketDiscountPercent,
+                p.FreeTicketsPerMonth,
+                p.ComboDiscountPercent,
+                p.EarlyAccess,
+                p.StackableWithPromotions,
+                p.IsActive,
+                p.IsDeleted,
+            }
+        );
+
     public static JsonObject GiftCardBeforeCancel(GiftCardStatus status, decimal balance) =>
         AuditJson.ToObject(new { status, balance });
 

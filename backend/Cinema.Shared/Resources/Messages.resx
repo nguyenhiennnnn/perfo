@@ -6043,4 +6043,37 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Report_Finance_Col_BundleConversion" xml:space="preserve">
     <value>Tỷ lệ chuyển đổi</value>
   </data>
+  <data name="Conflict_MembershipPlanNameExists" xml:space="preserve">
+    <value>Tên gói thành viên đã tồn tại.</value>
+  </data>
+  <data name="NotFound_MembershipPlan" xml:space="preserve">
+    <value>Không tìm thấy gói thành viên.</value>
+  </data>
+  <data name="Order_MembershipLineDescription" xml:space="preserve">
+    <value>Gói thành viên {0}</value>
+  </data>
+  <data name="Rule_MembershipPlanNotAvailable" xml:space="preserve">
+    <value>Gói thành viên này hiện không được bán.</value>
+  </data>
+  <data name="Success_MembershipPlanCreated" xml:space="preserve">
+    <value>Đã thêm gói thành viên mới.</value>
+  </data>
+  <data name="Success_MembershipPlanDeleted" xml:space="preserve">
+    <value>Đã xóa gói thành viên.</value>
+  </data>
+  <data name="Success_MembershipPlanUpdated" xml:space="preserve">
+    <value>Đã cập nhật gói thành viên.</value>
+  </data>
+  <data name="Validation_MembershipPlan_FreeTicketsRange" xml:space="preserve">
+    <value>Số vé miễn phí mỗi tháng phải từ 0 đến {0}.</value>
+  </data>
+  <data name="Validation_MembershipPlan_PercentRange" xml:space="preserve">
+    <value>Phần trăm giảm giá phải từ 0 đến 100.</value>
+  </data>
+  <data name="Validation_MembershipPlan_PeriodInvalid" xml:space="preserve">
+    <value>Thời hạn gói phải là theo tháng hoặc theo quý.</value>
+  </data>
+  <data name="Validation_MembershipPlan_PriceRange" xml:space="preserve">
+    <value>Giá gói thành viên phải là số nguyên đồng, lớn hơn 0 và không vượt quá {0}.</value>
+  </data>
 </root>

@@ -83,6 +83,10 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
                         + "AND \"GiftMessage\" IS NULL AND \"GiftSendAt\" IS NULL)"
                 );
                 t.HasCheckConstraint(
+                    "CK_OrderLines_MembershipPlan",
+                    "\"MembershipPlanId\" IS NULL OR \"LineType\" = 'Fee'"
+                );
+                t.HasCheckConstraint(
                     "CK_OrderLines_SupplementedLine",
                     "\"SupplementedLineId\" IS NULL OR \"LineType\" = 'Fee'"
                 );
@@ -173,6 +177,16 @@ public class OrderLineConfiguration : IEntityTypeConfiguration<OrderLine>
             .IsUnique()
             .HasFilter("\"GiftCardId\" IS NOT NULL")
             .HasDatabaseName("UX_OrderLines_GiftCard");
+
+        builder
+            .HasOne(x => x.MembershipPlan)
+            .WithMany()
+            .HasForeignKey(x => x.MembershipPlanId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasIndex(x => x.MembershipPlanId)
+            .HasFilter("\"MembershipPlanId\" IS NOT NULL")
+            .HasDatabaseName("IX_OrderLines_MembershipPlan");
 
         builder
             .HasOne(x => x.TicketType)

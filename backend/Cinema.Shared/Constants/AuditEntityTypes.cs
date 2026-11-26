@@ -9,6 +9,7 @@ public static class AuditEntityTypes
     public const string SpecialDay = "SpecialDay";
     public const string Promotion = "Promotion";
     public const string Bundle = "Bundle";
+    public const string MembershipPlan = "MembershipPlan";
     public const string InventoryItem = "InventoryItem";
     public const string ComboRecipe = "ComboRecipe";
     public const string StockReceipt = "StockReceipt";

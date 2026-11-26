@@ -251,6 +251,12 @@ export const invalidations = {
     k.adminEmployees.all(),
   ],
 
+  customerRestrictionChanged: (): KeyList => [
+    k.adminCustomerRestrictions.all(),
+    k.adminAuditLogs.all(),
+  ],
+  verificationChanged: (): KeyList => [k.verification.all()],
+
   surveyChanged: (): KeyList => [k.surveys.all()],
 
   waitlistChanged: (): KeyList => [k.waitlist.all()],

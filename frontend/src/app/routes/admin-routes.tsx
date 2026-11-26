@@ -56,6 +56,9 @@ const AdminInventoryValuationPage = lazyRoute(() => import("@/features/admin/inv
 const AdminComboPickupPage = lazyRoute(() => import("@/features/admin/combo-pickup/pages/combo-pickup-page"));
 const AdminUnclaimedComboOrdersPage = lazyRoute(() => import("@/features/admin/inventory/pages/unclaimed-combo-orders-page"));
 const AdminReviewsPage = lazyRoute(() => import("@/features/admin/reviews/pages/reviews-page"));
+const AdminCustomerRestrictionsPage = lazyRoute(
+  () => import("@/features/admin/customer-restrictions/pages/customer-restrictions-page"),
+);
 const AdminImportExportHistoryPage = lazyRoute(() => import("@/features/admin/import-export/pages/import-export-history-page"));
 const AdminSettingsPage = lazyRoute(() => import("@/features/admin/settings/pages/settings-page"));
 const CatalogHubPage = lazyRoute(() => import("@/features/admin/catalog/pages/catalog-hub-page"));
@@ -173,6 +176,7 @@ export const adminRoutes: RouteObject[] = [
           { path: "pricing/special-days", lazy: AdminSpecialDaysPage },
           { path: "pricing/preview", lazy: AdminPricePreviewPage },
           { path: "reviews", lazy: AdminReviewsPage },
+          { path: "customer-restrictions", lazy: AdminCustomerRestrictionsPage },
           { path: "import-export", lazy: AdminImportExportHistoryPage },
           { path: "settings", lazy: AdminSettingsPage },
           { path: "catalog", lazy: CatalogHubPage },

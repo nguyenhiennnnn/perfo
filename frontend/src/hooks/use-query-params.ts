@@ -221,6 +221,19 @@ export const useAdminReviewParams = (
   options?: Parameters<typeof useQueryStates<typeof adminReviewParsers>>[1],
 ) => useQueryStates(adminReviewParsers, options);
 
+const adminCustomerRestrictionParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  status: parseAsStringLiteral(["Active", "Lifted", "Expired", "All"] as const).withDefault(
+    "Active",
+  ),
+  search: searchParser,
+};
+
+export const useAdminCustomerRestrictionParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminCustomerRestrictionParsers>>[1],
+) => useQueryStates(adminCustomerRestrictionParsers, options);
+
 const adminCashRefundParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),

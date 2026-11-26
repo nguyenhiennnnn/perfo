@@ -13,6 +13,7 @@ import { PageContainer } from "@/components/common/page-container";
 import { QueryState } from "@/components/common/query-state";
 import { CardSkeleton } from "@/components/common/skeleton-shapes";
 import { WaitlistPanel } from "@/features/client/waitlist/components/waitlist-panel";
+import { CustomerGateBanner } from "@/features/client/restrictions/components/customer-gate-banner";
 import { ROUTES } from "@/config/routes";
 import { getServerNow } from "@/lib/server-clock";
 import { ShowtimeSeatStatus } from "@/types/enum";
@@ -59,6 +60,8 @@ const BookingPageContent = ({
       <BookingShowtimeHeader data={flow.showtimeSeats.data} isLoading={flow.showtimeSeats.isLoading} />
 
       <BookingStepper step={flow.step} />
+
+      <CustomerGateBanner />
 
       {flow.isResumeLoading && (
         <div className="mx-auto w-full max-w-lg space-y-3" aria-busy="true">

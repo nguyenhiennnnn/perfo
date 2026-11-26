@@ -337,3 +337,17 @@ export const ExceptionalRefundStatus = {
 } as const;
 export type ExceptionalRefundStatus =
   (typeof ExceptionalRefundStatus)[keyof typeof ExceptionalRefundStatus];
+
+export const CustomerRestrictionReason = {
+  ExpiredOrderStreak: "ExpiredOrderStreak",
+} as const;
+export type CustomerRestrictionReason =
+  (typeof CustomerRestrictionReason)[keyof typeof CustomerRestrictionReason];
+
+export const CustomerRestrictionStatus = {
+  Active: "Active",
+  Lifted: "Lifted",
+  Expired: "Expired",
+} as const;
+export type CustomerRestrictionStatus =
+  (typeof CustomerRestrictionStatus)[keyof typeof CustomerRestrictionStatus];

@@ -114,6 +114,7 @@ export const ROUTES = {
     users: "/admin/users",
     employees: "/admin/employees",
     reviews: "/admin/reviews",
+    customerRestrictions: "/admin/customer-restrictions",
     catalog: "/admin/catalog",
     catalogGenres: "/admin/catalog/genres",
     catalogLanguages: "/admin/catalog/languages",

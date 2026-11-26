@@ -1,6 +1,8 @@
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ordersApi } from "../api/orders-api";
 import { queryKeys } from "@/api/query-keys";
+import { getCustomerRestrictionNotice, isVerificationRequiredError } from "@/lib/error";
+import { useCustomerGateStore } from "@/stores/customer-gate-store";
 import type {
   ApplyPromotionRequest,
   HoldSeatsRequest,
@@ -52,9 +54,21 @@ export function useOrderDetail(orderId: number, options?: UseOrderDetailOptions)
 }
 
 export function useHoldSeats() {
+  const queryClient = useQueryClient();
   return useMutation({
     meta: { invalidates: "bookingChanged" },
     mutationFn: (body: HoldSeatsRequest) => ordersApi.holdSeats(body),
+    onError: (error) => {
+      const restriction = getCustomerRestrictionNotice(error);
+      if (restriction) {
+        useCustomerGateStore.getState().reportRestriction(restriction);
+        return;
+      }
+      if (isVerificationRequiredError(error)) {
+        useCustomerGateStore.getState().requestVerification();
+        void queryClient.invalidateQueries({ queryKey: queryKeys.verification.all() });
+      }
+    },
   });
 }
 

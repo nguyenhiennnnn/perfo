@@ -38,6 +38,7 @@ import {
   FileClock,
   BarChart3,
   Users,
+  UserX,
   ShieldAlert,
   MessageSquare,
   Layers,
@@ -374,6 +375,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
     label: "Người dùng & đánh giá",
     items: [
       { to: ROUTES.admin.users, label: "Khách hàng", icon: Users, roles: [Role.Admin] },
+      {
+        to: ROUTES.admin.customerRestrictions,
+        label: "Khách bị hạn chế",
+        icon: UserX,
+        roles: [Role.Admin],
+      },
       {
         to: ROUTES.admin.employees,
         label: "Nhân viên",

@@ -1,4 +1,5 @@
 import {
+  CustomerRestrictionReason,
   ImportExportJobStatus,
   ImportExportJobType,
   ImportExportModule,
@@ -83,3 +84,10 @@ export const importExportModuleOptions = toOptions(ImportExportModule, {
   reconciliation: "Đối soát",
   "reconciliation-stripe": "Đối soát Stripe",
 });
+
+export const customerRestrictionReasonLabels: Record<CustomerRestrictionReason, string> = {
+  ExpiredOrderStreak: "Bỏ giữ ghế liên tiếp",
+};
+
+export const getCustomerRestrictionReasonLabel = (reason: string) =>
+  customerRestrictionReasonLabels[reason as CustomerRestrictionReason] ?? reason;

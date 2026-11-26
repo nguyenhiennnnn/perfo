@@ -26,6 +26,11 @@ export const ENDPOINTS = {
   emailPreferences: {
     unsubscribe: "/email-preferences/unsubscribe",
   },
+  verification: {
+    root: "/verification",
+    sendCode: "/verification/send-code",
+    confirm: "/verification/confirm",
+  },
   ai: {
     chat: "/ai/chat",
   },
@@ -295,6 +300,10 @@ export const ENDPOINTS = {
     cashRefunds: {
       root: "/admin/cash-refunds",
       confirm: (id: number) => `/admin/cash-refunds/${id}/confirm`,
+    },
+    customerRestrictions: {
+      root: "/admin/customer-restrictions",
+      lift: (id: number) => `/admin/customer-restrictions/${id}/lift`,
     },
     roomChangeRefunds: {
       root: "/admin/room-change-refunds",

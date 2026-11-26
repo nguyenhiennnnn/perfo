@@ -211,6 +211,16 @@ export const queryKeys = {
     list: (params: object) => ["admin", "cash-refunds", "list", params] as const,
   },
 
+  adminCustomerRestrictions: {
+    all: () => ["admin", "customer-restrictions"] as const,
+    list: (params: object) => ["admin", "customer-restrictions", "list", params] as const,
+  },
+
+  verification: {
+    all: () => ["verification"] as const,
+    status: () => ["verification", "status"] as const,
+  },
+
   adminRoomChangeRefunds: {
     all: () => ["admin", "room-change-refunds"] as const,
     list: (params: object) => ["admin", "room-change-refunds", "list", params] as const,

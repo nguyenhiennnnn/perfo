@@ -228,7 +228,7 @@ export function handleApiError(
   opts: HandleApiErrorOptions = {},
 ): void {
   logDevError(error, opts.context);
-  if (opts.silent) return;
+  if (opts.silent || isCustomerGateError(error)) return;
   showApiErrorToast(error, { title: opts.title });
 }
 
@@ -237,6 +237,41 @@ function toFieldPath(key: string): string {
     /(^|\.)([A-Z])/g,
     (_match, separator: string, char: string) => separator + char.toLowerCase(),
   );
+}
+
+export interface CustomerRestrictionNotice {
+  reason: string;
+  restrictedUntil: string;
+  message: string;
+}
+
+export function getCustomerRestrictionNotice(error: unknown): CustomerRestrictionNotice | null {
+  if (!axios.isAxiosError(error)) return null;
+  const body = error.response?.data as
+    | {
+        message?: unknown;
+        errorCode?: unknown;
+        data?: { restrictionReason?: unknown; restrictedUntil?: unknown } | null;
+      }
+    | undefined;
+  if (body?.errorCode !== API_ERROR_CODES.pendingOrdersLimitExceeded) return null;
+  const reason = body.data?.restrictionReason;
+  const restrictedUntil = body.data?.restrictedUntil;
+  if (typeof reason !== "string" || typeof restrictedUntil !== "string") return null;
+  return {
+    reason,
+    restrictedUntil,
+    message: typeof body.message === "string" ? body.message : "",
+  };
+}
+
+export function isVerificationRequiredError(error: unknown): boolean {
+  const { statusCode, errorCode } = extractApiError(error);
+  return statusCode === HTTP_STATUS.forbidden && errorCode === API_ERROR_CODES.verificationRequired;
+}
+
+export function isCustomerGateError(error: unknown): boolean {
+  return getCustomerRestrictionNotice(error) !== null || isVerificationRequiredError(error);
 }
 
 export function getGiftCardLockSeconds(error: unknown): number | null {

@@ -23,6 +23,7 @@ export const invalidations = {
     k.adminReviews.all(),
     ...dashboard(),
   ],
+  movieInterestChanged: (): KeyList => [k.movieInterests.all()],
   reconciliationChanged: (): KeyList => [k.adminReconciliation.all(), k.adminAuditLogs.all()],
   showtimeChanged: (): KeyList => [
     ...showtimeViews(),

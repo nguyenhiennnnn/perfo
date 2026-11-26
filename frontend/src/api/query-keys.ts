@@ -14,6 +14,11 @@ export const queryKeys = {
     canReview: (movieId: number) => ["movies", movieId, "can-review"] as const,
   },
 
+  movieInterests: {
+    all: () => ["movie-interests"] as const,
+    mine: () => ["movie-interests", "mine"] as const,
+  },
+
   showtimes: {
     all: () => ["showtimes"] as const,
     schedule: (date: string, screenType?: string | null) =>

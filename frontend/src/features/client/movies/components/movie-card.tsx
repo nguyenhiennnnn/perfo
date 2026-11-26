@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import type { MovieListItemDto } from "@/features/client/movies/types";
 import { ROUTES } from "@/config/routes";
 import { usePrefetchMovieDetail } from "@/features/client/movies/hooks/use-movies";
+import { MovieInterestButton } from "@/features/client/movie-interests/components/movie-interest-button";
 import { usePrefetchIntent } from "@/hooks/use-prefetch-intent";
 import { MOVIE_CARD_GENRES_LIMIT } from "@/config/default-constants";
 
@@ -100,6 +101,8 @@ export const MovieCard = ({ movie, reason, className }: MovieCardProps) => {
             Khởi chiếu {formatDate(movie.releaseDate)}
           </p>
         )}
+
+        {isComingSoon && <MovieInterestButton movieId={movie.movieId} status={movie.status} />}
       </div>
     </div>
   );

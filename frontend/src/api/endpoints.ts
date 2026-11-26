@@ -54,6 +54,10 @@ export const ENDPOINTS = {
     root: "/combos",
     suggestions: "/combos/suggestions",
   },
+  movieInterests: {
+    root: "/movie-interests",
+    byMovie: (id: number) => `/movie-interests/movies/${id}`,
+  },
   movies: {
     root: "/movies",
     byId: (id: number) => `/movies/${id}`,

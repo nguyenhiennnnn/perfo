@@ -4,6 +4,7 @@ import { AgeRatingBadge } from "@/components/common/status-badge";
 import { TrailerPlayer } from "@/features/client/movies/components/trailer-player";
 import { formatDuration } from "@/lib/cinema-format";
 import { formatCurrency, formatDate, formatRating } from "@/lib/formatters";
+import { MovieInterestButton } from "@/features/client/movie-interests/components/movie-interest-button";
 import { useDialogOpen } from "@/stores/dialog-store";
 import type { MovieDetailDto } from "@/features/client/movies/types";
 
@@ -96,6 +97,7 @@ export const MovieHero = ({ movie }: MovieHeroProps) => {
                 <span>Xem trailer</span>
               </Button>
             )}
+            <MovieInterestButton movieId={movie.movieId} status={movie.status} variant="hero" />
           </div>
         </div>
       </div>

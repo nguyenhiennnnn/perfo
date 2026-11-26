@@ -374,3 +374,20 @@ export const RoomRentalRequestStatus = {
 } as const;
 export type RoomRentalRequestStatus =
   (typeof RoomRentalRequestStatus)[keyof typeof RoomRentalRequestStatus];
+
+export const RoomRentalPaymentStage = {
+  Deposit: "Deposit",
+  Balance: "Balance",
+} as const;
+export type RoomRentalPaymentStage =
+  (typeof RoomRentalPaymentStage)[keyof typeof RoomRentalPaymentStage];
+
+export const RoomRentalQuoteLineKind = {
+  RoomRental: "RoomRental",
+  PerPerson: "PerPerson",
+  Combo: "Combo",
+  Extra: "Extra",
+  Discount: "Discount",
+} as const;
+export type RoomRentalQuoteLineKind =
+  (typeof RoomRentalQuoteLineKind)[keyof typeof RoomRentalQuoteLineKind];

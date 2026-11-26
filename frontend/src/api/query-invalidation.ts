@@ -101,6 +101,8 @@ export const invalidations = {
     k.adminAuditLogs.all(),
   ],
 
+  roomRentalTrackingChanged: (): KeyList => [k.roomRentals.trackingAll()],
+
   supportRequestChanged: (): KeyList => [k.support.all()],
 
   supportStaffChanged: (): KeyList => [

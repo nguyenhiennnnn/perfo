@@ -58,6 +58,19 @@ export const ENDPOINTS = {
   },
   roomRentalRequests: {
     root: "/room-rental-requests",
+    tracking: "/room-rental-requests/tracking",
+    trackingQuotes: "/room-rental-requests/tracking/quotes",
+    trackingQuotePdf: (version: number) =>
+      `/room-rental-requests/tracking/quotes/${version}/pdf`,
+    trackingQuoteAccept: (version: number) =>
+      `/room-rental-requests/tracking/quotes/${version}/accept`,
+    trackingQuoteDecline: (version: number) =>
+      `/room-rental-requests/tracking/quotes/${version}/decline`,
+    trackingPayments: "/room-rental-requests/tracking/payments",
+    trackingPaymentCheckout: (stage: string) =>
+      `/room-rental-requests/tracking/payments/${stage}/checkout`,
+    trackingPaymentGiftCard: (stage: string) =>
+      `/room-rental-requests/tracking/payments/${stage}/gift-card`,
   },
   combos: {
     root: "/combos",

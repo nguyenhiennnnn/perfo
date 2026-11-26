@@ -14,6 +14,8 @@ export const ROUTES = {
     request: "/room-rental",
     submitted: (requestCode: string) =>
       `/room-rental/submitted?code=${encodeURIComponent(requestCode)}`,
+    track: (token: string, result?: { payment: "returned" | "canceled"; stage?: string }) =>
+      `/room-rental/track?token=${encodeURIComponent(token)}${result ? `&payment=${result.payment}` : ""}${result?.stage ? `&stage=${encodeURIComponent(result.stage)}` : ""}`,
   },
   policy: (slug: string) => `/policies/${slug}`,
   movies: {

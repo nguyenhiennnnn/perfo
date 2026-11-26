@@ -9,7 +9,6 @@ import { lazyRoute } from "./lazy-route";
 import { ROUTES } from "@/config/routes";
 
 const BookingPage = lazyRoute(() => import("@/features/client/orders/pages/booking-page"));
-const BookingResultPage = lazyRoute(() => import("@/features/client/orders/pages/booking-result-page"));
 const SupplementPaymentPage = lazyRoute(() => import("@/features/client/orders/pages/supplement-payment-page"));
 const HomePage = lazyRoute(() => import("@/features/client/home/pages/home-page"));
 const MovieDetailPage = lazyRoute(() => import("@/features/client/movies/pages/movie-detail-page"));
@@ -38,6 +37,8 @@ const AccountChallengesPage = lazyRoute(() => import("@/features/client/loyalty/
 const AccountReferralsPage = lazyRoute(() => import("@/features/client/loyalty/pages/referrals-page"));
 const RoomRentalRequestPage = lazyRoute(() => import("@/features/client/room-rentals/pages/room-rental-request-page"));
 const RoomRentalSubmittedPage = lazyRoute(() => import("@/features/client/room-rentals/pages/room-rental-submitted-page"));
+const RoomRentalTrackingPage = lazyRoute(() => import("@/features/client/room-rentals/pages/room-rental-tracking-page"));
+const BookingResultGatePage = lazyRoute(() => import("@/features/client/room-rentals/pages/booking-result-gate-page"));
 const PolicyPage = lazyRoute(() => import("@/features/client/policies/pages/policy-page"));
 
 export const clientRoutes: RouteObject[] = [
@@ -54,9 +55,10 @@ export const clientRoutes: RouteObject[] = [
       { path: "gift-cards/bulk", lazy: GiftCardBulkPage },
       { path: "room-rental", lazy: RoomRentalRequestPage },
       { path: "room-rental/submitted", lazy: RoomRentalSubmittedPage },
+      { path: "room-rental/track", lazy: RoomRentalTrackingPage },
       { path: "policies/:slug", lazy: PolicyPage },
       { path: "booking/:showtimeId", lazy: BookingPage },
-      { path: "booking/result", lazy: BookingResultPage },
+      { path: "booking/result", lazy: BookingResultGatePage },
       { path: "booking/supplement/:orderId", lazy: SupplementPaymentPage },
       {
         path: "account",

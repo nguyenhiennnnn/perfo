@@ -95,6 +95,11 @@ export const queryKeys = {
 
   roomRentals: {
     movieOptions: () => ["room-rentals", "movie-options"] as const,
+    trackingAll: () => ["room-rentals", "tracking"] as const,
+    tracking: (token: string) => ["room-rentals", "tracking", token, "request"] as const,
+    trackingQuotes: (token: string) => ["room-rentals", "tracking", token, "quotes"] as const,
+    trackingPayments: (token: string) =>
+      ["room-rentals", "tracking", token, "payments"] as const,
   },
 
   settings: {

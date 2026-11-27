@@ -52,6 +52,7 @@ import {
   HandCoins,
   Target,
   Repeat,
+  Megaphone,
   type LucideIcon,
 } from "lucide-react";
 import { ROUTES } from "@/config/routes";
@@ -405,6 +406,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         to: ROUTES.admin.customerSegments,
         label: "Phân khúc khách hàng",
         icon: Target,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.campaigns,
+        label: "Chiến dịch",
+        icon: Megaphone,
         roles: [Role.Admin],
       },
       {

@@ -282,6 +282,12 @@ export const ENDPOINTS = {
       root: "/admin/customer-segments",
       byId: (id: number) => `/admin/customer-segments/${id}`,
     },
+    campaigns: {
+      root: "/admin/campaigns",
+      byId: (id: number) => `/admin/campaigns/${id}`,
+      report: (id: number) => `/admin/campaigns/${id}/report`,
+      testSend: (id: number) => `/admin/campaigns/${id}/test-send`,
+    },
     combos: {
       root: "/admin/combos",
       byId: (id: number) => `/admin/combos/${id}`,

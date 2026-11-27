@@ -151,6 +151,18 @@ export const useAdminCustomerSegmentParams = (
   options?: Parameters<typeof useQueryStates<typeof adminCustomerSegmentParsers>>[1],
 ) => useQueryStates(adminCustomerSegmentParsers, options);
 
+const adminCampaignParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  status: parseAsString,
+  segmentId: parseAsString,
+};
+
+export const useAdminCampaignParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminCampaignParsers>>[1],
+) => useQueryStates(adminCampaignParsers, options);
+
 const adminRetentionParsers = {
   months: parseAsInteger.withDefault(12),
 };

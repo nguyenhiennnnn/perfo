@@ -414,3 +414,17 @@ export const RoomRentalQuoteLineKind = {
 } as const;
 export type RoomRentalQuoteLineKind =
   (typeof RoomRentalQuoteLineKind)[keyof typeof RoomRentalQuoteLineKind];
+
+export const CampaignStatus = {
+  Draft: "Draft",
+  Scheduled: "Scheduled",
+  Sending: "Sending",
+  Completed: "Completed",
+} as const;
+export type CampaignStatus = (typeof CampaignStatus)[keyof typeof CampaignStatus];
+
+export const CampaignChannel = {
+  Email: "Email",
+  InApp: "InApp",
+} as const;
+export type CampaignChannel = (typeof CampaignChannel)[keyof typeof CampaignChannel];

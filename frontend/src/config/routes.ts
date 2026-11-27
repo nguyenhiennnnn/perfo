@@ -111,6 +111,8 @@ export const ROUTES = {
     membershipPlans: "/admin/membership-plans",
     membershipSubscriptions: "/admin/membership-subscriptions",
     customerSegments: "/admin/customer-segments",
+    campaigns: "/admin/campaigns",
+    campaignReport: (campaignId: number | string) => `/admin/campaigns/${campaignId}/report`,
     retentionReport: "/admin/reports/retention",
     loyaltyRewards: "/admin/loyalty/rewards",
     loyaltyChallenges: "/admin/loyalty/challenges",

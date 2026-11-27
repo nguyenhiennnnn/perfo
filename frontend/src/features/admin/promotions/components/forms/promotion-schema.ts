@@ -51,6 +51,7 @@ const sharedFieldsShape = {
   budgetAmount: z.string(),
   priority: z.string(),
   isExclusive: z.boolean(),
+  excludeEventShowtimes: z.boolean(),
 };
 
 export const promotionSharedSchema = z.object(sharedFieldsShape);

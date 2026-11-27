@@ -117,6 +117,9 @@ public interface IAppDbContext
     DbSet<ShowtimeSalesPace> ShowtimeSalesPaces { get; }
     DbSet<ShowtimeEventSetting> ShowtimeEventSettings { get; }
     DbSet<ShowtimeEventTicketQuota> ShowtimeEventTicketQuotas { get; }
+    DbSet<ShowtimeEventGift> ShowtimeEventGifts { get; }
+    DbSet<ShowtimeEventGiftReservation> ShowtimeEventGiftReservations { get; }
+    DbSet<ShowtimeEventGiftHandover> ShowtimeEventGiftHandovers { get; }
     DbSet<ReconciliationSession> ReconciliationSessions { get; }
     DbSet<ReconciliationItem> ReconciliationItems { get; }
     DbSet<SeatHoldEvent> SeatHoldEvents { get; }

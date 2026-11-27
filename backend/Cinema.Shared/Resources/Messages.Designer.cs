@@ -8790,6 +8790,15 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mã khuyến mãi không áp dụng cho suất chiếu sự kiện..
+        /// </summary>
+        public static string Promotion_Rejected_EventShowtimeExcluded {
+            get {
+                return ResourceManager.GetString("Promotion_Rejected_EventShowtimeExcluded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mã khuyến mãi không áp dụng cho kênh bán này..
         /// </summary>
         public static string Promotion_Rejected_ChannelNotAllowed {
@@ -18668,6 +18677,132 @@ namespace Cinema.Shared.Resources {
         public static string Success_ShowtimeEventEarlyAccessRemoved {
             get {
                 return ResourceManager.GetString("Success_ShowtimeEventEarlyAccessRemoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quà tặng kèm "{0}" chỉ còn {1} phần, không đủ cho số vé đã chọn..
+        /// </summary>
+        public static string Rule_ShowtimeEventGiftSoldOut {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventGiftSoldOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quà tặng kèm "{0}" đã hết trong kho..
+        /// </summary>
+        public static string Rule_ShowtimeEventGiftOutOfStock {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventGiftOutOfStock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số lượng quà "{0}" không thể thấp hơn {1} phần đã được giữ hoặc bán..
+        /// </summary>
+        public static string Rule_ShowtimeEventGiftBelowHeld {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventGiftBelowHeld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không đổi được số quà mỗi vé khi đã có vé giữ hoặc bán quà này..
+        /// </summary>
+        public static string Rule_ShowtimeEventGiftPerTicketLocked {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventGiftPerTicketLocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chỉ chỉnh được quà tặng kèm của suất chiếu đã lên lịch và chưa bắt đầu..
+        /// </summary>
+        public static string Rule_ShowtimeEventGiftStatusInvalid {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventGiftStatusInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mỗi sản phẩm kho chỉ được khai báo một lần làm quà tặng kèm..
+        /// </summary>
+        public static string Validation_EventGift_ItemDuplicate {
+            get {
+                return ResourceManager.GetString("Validation_EventGift_ItemDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số lượng quà phải từ 1 đến {0}..
+        /// </summary>
+        public static string Validation_EventGift_QuantityRange {
+            get {
+                return ResourceManager.GetString("Validation_EventGift_QuantityRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số quà mỗi vé phải từ 1 đến {0}..
+        /// </summary>
+        public static string Validation_EventGift_PerTicketRange {
+            get {
+                return ResourceManager.GetString("Validation_EventGift_PerTicketRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã lưu quà tặng kèm của suất sự kiện..
+        /// </summary>
+        public static string Success_ShowtimeEventGiftsSaved {
+            get {
+                return ResourceManager.GetString("Success_ShowtimeEventGiftsSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đơn của vé này chưa thanh toán hoặc đã bị hủy, không thể trao quà..
+        /// </summary>
+        public static string Rule_EventGiftOrderNotConfirmed {
+            get {
+                return ResourceManager.GetString("Rule_EventGiftOrderNotConfirmed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vé này đã được hoàn, hủy hoặc đổi suất, không thể trao quà..
+        /// </summary>
+        public static string Rule_EventGiftTicketInvalid {
+            get {
+                return ResourceManager.GetString("Rule_EventGiftTicketInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vé này không có quà tặng kèm..
+        /// </summary>
+        public static string Rule_EventGiftNoGifts {
+            get {
+                return ResourceManager.GetString("Rule_EventGiftNoGifts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quà tặng kèm của vé này đã được trao..
+        /// </summary>
+        public static string Conflict_EventGiftAlreadyHandedOver {
+            get {
+                return ResourceManager.GetString("Conflict_EventGiftAlreadyHandedOver", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mã QR của vé là bắt buộc..
+        /// </summary>
+        public static string Validation_EventGiftHandover_QrRequired {
+            get {
+                return ResourceManager.GetString("Validation_EventGiftHandover_QrRequired", resourceCulture);
             }
         }
     }

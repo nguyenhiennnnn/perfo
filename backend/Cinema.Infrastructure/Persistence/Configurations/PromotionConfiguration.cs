@@ -114,6 +114,7 @@ public class PromotionConfiguration : IEntityTypeConfiguration<Promotion>
         builder.Property(x => x.ConsumedBudget).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
         builder.Property(x => x.Priority).HasDefaultValue(0);
         builder.Property(x => x.IsExclusive).HasDefaultValue(false);
+        builder.Property(x => x.ExcludeEventShowtimes).HasDefaultValue(false);
         builder.Property(x => x.IsActive).HasDefaultValue(true);
         builder.Property(x => x.IsDeleted).HasDefaultValue(false);
         builder.Property(x => x.DeletedAt).HasColumnType("timestamp without time zone");

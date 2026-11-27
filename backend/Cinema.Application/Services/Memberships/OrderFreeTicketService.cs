@@ -63,12 +63,16 @@ public class OrderFreeTicketService(
                 )
                     throw new BusinessRuleException(Messages.Rule_FreeTicketLineNotEligible);
 
-                var kind = await db
+                var showtimeInfo = await db
                     .Showtimes.AsNoTracking()
                     .Where(s => s.ShowtimeId == showtimeId)
-                    .Select(s => s.Kind)
+                    .Select(s => new
+                    {
+                        s.Kind,
+                        AllowsFree = s.EventSetting != null && s.EventSetting.AllowMembershipFreeTickets,
+                    })
                     .FirstAsync(cancellationToken);
-                if (!MembershipFreeTicketRules.AllowsShowtime(kind))
+                if (!MembershipFreeTicketRules.AllowsShowtime(showtimeInfo.Kind, showtimeInfo.AllowsFree))
                     throw new BusinessRuleException(Messages.Rule_FreeTicketNotForShowtime);
 
                 var value = line.LockedUnitPrice * line.Quantity;

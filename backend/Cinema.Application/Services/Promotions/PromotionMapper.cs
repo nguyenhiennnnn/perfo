@@ -45,7 +45,8 @@ public static class PromotionMapper
             row.UserEmail,
             p.IsActive,
             p.CreatedAt,
-            p.UpdatedAt
+            p.UpdatedAt,
+            p.ExcludeEventShowtimes
         );
     }
 
@@ -86,6 +87,7 @@ public static class PromotionMapper
         entity.BudgetAmount = request.BudgetAmount;
         entity.Priority = request.Priority;
         entity.IsExclusive = request.IsExclusive;
+        entity.ExcludeEventShowtimes = request.ExcludeEventShowtimes;
         entity.AssignedUserId = isPersonal ? request.AssignedUserId : null;
         entity.IsActive = request.IsActive;
     }

@@ -66,6 +66,7 @@ public class ShowtimeEventService(
 
         setting.AdjustmentMode = mode;
         setting.AdjustmentValue = value;
+        setting.AllowMembershipFreeTickets = request.AllowMembershipFreeTickets;
         showtime.Kind = ShowtimeKind.Event;
 
         var after = ToDto(setting);
@@ -145,5 +146,10 @@ public class ShowtimeEventService(
     }
 
     private static ShowtimeEventDto ToDto(ShowtimeEventSetting setting) =>
-        new(setting.ShowtimeId, setting.AdjustmentMode.ToString(), setting.AdjustmentValue);
+        new(
+            setting.ShowtimeId,
+            setting.AdjustmentMode.ToString(),
+            setting.AdjustmentValue,
+            setting.AllowMembershipFreeTickets
+        );
 }

@@ -14,6 +14,7 @@ namespace Cinema.Api.Controllers.Admin;
 public class AdminShowtimeEventsController(
     IShowtimeEventService showtimeEventService,
     IShowtimeEventLimitService showtimeEventLimitService,
+    IShowtimeEventGiftService showtimeEventGiftService,
     IShowtimeEarlyAccessService showtimeEarlyAccessService
 ) : ControllerBase
 {
@@ -42,6 +43,18 @@ public class AdminShowtimeEventsController(
         [FromBody] UpsertShowtimeEventLimitsRequest request,
         CancellationToken cancellationToken
     ) => Ok(await showtimeEventLimitService.UpsertAsync(showtimeId, request, cancellationToken));
+
+    [HttpGet("gifts")]
+    public async Task<IActionResult> GetGifts(int showtimeId, CancellationToken cancellationToken) =>
+        Ok(await showtimeEventGiftService.GetAsync(showtimeId, cancellationToken));
+
+    [HttpPut("gifts")]
+    [SuccessMessage(nameof(Messages.Success_ShowtimeEventGiftsSaved))]
+    public async Task<IActionResult> UpsertGifts(
+        int showtimeId,
+        [FromBody] UpsertShowtimeEventGiftsRequest request,
+        CancellationToken cancellationToken
+    ) => Ok(await showtimeEventGiftService.UpsertAsync(showtimeId, request, cancellationToken));
 
     [HttpGet("early-access")]
     public async Task<IActionResult> GetEarlyAccess(

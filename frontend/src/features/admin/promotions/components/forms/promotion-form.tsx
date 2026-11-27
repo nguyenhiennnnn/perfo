@@ -96,6 +96,7 @@ export const PromotionForm = ({ promotion, onSuccess }: PromotionFormProps) => {
       budgetAmount: toText(promotion?.budgetAmount),
       priority: String(promotion?.priority ?? 0),
       isExclusive: promotion?.isExclusive ?? false,
+      excludeEventShowtimes: promotion?.excludeEventShowtimes ?? false,
       assignedUserId: promotion?.assignedUserId ?? null,
       isActive: promotion?.isActive ?? true,
     },
@@ -151,6 +152,7 @@ export const PromotionForm = ({ promotion, onSuccess }: PromotionFormProps) => {
       budgetAmount: toNumberOrNull(values.budgetAmount),
       priority: Number(values.priority),
       isExclusive: values.isExclusive,
+      excludeEventShowtimes: values.excludeEventShowtimes,
       assignedUserId: personal ? values.assignedUserId : null,
       isActive: values.isActive,
     };

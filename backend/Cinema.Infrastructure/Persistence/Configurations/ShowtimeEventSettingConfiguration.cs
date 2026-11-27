@@ -46,6 +46,7 @@ public class ShowtimeEventSettingConfiguration : IEntityTypeConfiguration<Showti
             .HasDefaultValueSql("'{}'");
         builder.Property(x => x.EarlyAccessPaidMembers).HasDefaultValue(false);
         builder.Property(x => x.EarlyAccessMovieInterest).HasDefaultValue(false);
+        builder.Property(x => x.AllowMembershipFreeTickets).HasDefaultValue(false);
         builder
             .Property(x => x.CreatedAt)
             .HasColumnType("timestamp without time zone")

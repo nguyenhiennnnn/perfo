@@ -28,7 +28,8 @@ public sealed record PromotionSnapshot(
     decimal? BudgetAmount,
     int Priority,
     bool IsExclusive,
-    int? AssignedUserId
+    int? AssignedUserId,
+    bool ExcludeEventShowtimes
 )
 {
     public static PromotionSnapshot From(Promotion p) =>
@@ -57,6 +58,7 @@ public sealed record PromotionSnapshot(
             p.BudgetAmount,
             p.Priority,
             p.IsExclusive,
-            p.AssignedUserId
+            p.AssignedUserId,
+            p.ExcludeEventShowtimes
         );
 }

@@ -30,6 +30,7 @@ public class Promotion
     public decimal ConsumedBudget { get; set; }
     public int Priority { get; set; }
     public bool IsExclusive { get; set; }
+    public bool ExcludeEventShowtimes { get; set; }
     public int? AssignedUserId { get; set; }
     public bool IsActive { get; set; } = true;
     public bool IsDeleted { get; set; }

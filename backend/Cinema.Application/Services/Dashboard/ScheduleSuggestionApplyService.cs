@@ -66,6 +66,7 @@ public class ScheduleSuggestionApplyService(
         var movieIds = applicable.Select(s => s.MovieId).Distinct().ToList();
         var latestPrices = await db
             .Showtimes.AsNoTracking()
+            .WhereRegularKind()
             .Where(s => movieIds.Contains(s.MovieId))
             .GroupBy(s => s.MovieId)
             .Select(g => new

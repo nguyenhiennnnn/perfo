@@ -24,6 +24,8 @@ public static class PromotionConditions
             && (promotion.AssignedUserId is null || promotion.AssignedUserId != context.UserId)
         )
             return PromotionRejectionReason.NotAssignedToCustomer;
+        if (promotion.ExcludeEventShowtimes && context.ShowtimeKind == ShowtimeKind.Event)
+            return PromotionRejectionReason.EventShowtimeExcluded;
         if (
             !Matches(promotion.MovieIds, context.MovieId)
             || !Matches(promotion.ShowtimeIds, context.ShowtimeId)

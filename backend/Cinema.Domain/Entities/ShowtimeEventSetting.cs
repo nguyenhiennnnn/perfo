@@ -12,9 +12,11 @@ public class ShowtimeEventSetting
     public List<int> EarlyAccessTierIds { get; set; } = [];
     public bool EarlyAccessPaidMembers { get; set; }
     public bool EarlyAccessMovieInterest { get; set; }
+    public bool AllowMembershipFreeTickets { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 
     public Showtime Showtime { get; set; } = null!;
     public ICollection<ShowtimeEventTicketQuota> TicketQuotas { get; set; } = [];
+    public ICollection<ShowtimeEventGift> Gifts { get; set; } = [];
 }

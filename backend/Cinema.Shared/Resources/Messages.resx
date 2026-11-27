@@ -6010,6 +6010,9 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Promotion_Rejected_BundleExcluded" xml:space="preserve">
     <value>Đơn có gói sản phẩm không được dùng chung với mã khuyến mãi.</value>
   </data>
+  <data name="Promotion_Rejected_EventShowtimeExcluded" xml:space="preserve">
+    <value>Mã khuyến mãi không áp dụng cho suất chiếu sự kiện.</value>
+  </data>
   <data name="Report_Finance_Bundle_Title" xml:space="preserve">
     <value>Gói sản phẩm</value>
   </data>
@@ -6406,5 +6409,47 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Success_ShowtimeEventEarlyAccessRemoved" xml:space="preserve">
     <value>Đã bỏ mở bán sớm, suất chiếu mở bán chung cho mọi khách.</value>
+  </data>
+  <data name="Rule_ShowtimeEventGiftSoldOut" xml:space="preserve">
+    <value>Quà tặng kèm "{0}" chỉ còn {1} phần, không đủ cho số vé đã chọn.</value>
+  </data>
+  <data name="Rule_ShowtimeEventGiftOutOfStock" xml:space="preserve">
+    <value>Quà tặng kèm "{0}" đã hết trong kho.</value>
+  </data>
+  <data name="Rule_ShowtimeEventGiftBelowHeld" xml:space="preserve">
+    <value>Số lượng quà "{0}" không thể thấp hơn {1} phần đã được giữ hoặc bán.</value>
+  </data>
+  <data name="Rule_ShowtimeEventGiftPerTicketLocked" xml:space="preserve">
+    <value>Không đổi được số quà mỗi vé khi đã có vé giữ hoặc bán quà này.</value>
+  </data>
+  <data name="Rule_ShowtimeEventGiftStatusInvalid" xml:space="preserve">
+    <value>Chỉ chỉnh được quà tặng kèm của suất chiếu đã lên lịch và chưa bắt đầu.</value>
+  </data>
+  <data name="Validation_EventGift_ItemDuplicate" xml:space="preserve">
+    <value>Mỗi sản phẩm kho chỉ được khai báo một lần làm quà tặng kèm.</value>
+  </data>
+  <data name="Validation_EventGift_QuantityRange" xml:space="preserve">
+    <value>Số lượng quà phải từ 1 đến {0}.</value>
+  </data>
+  <data name="Validation_EventGift_PerTicketRange" xml:space="preserve">
+    <value>Số quà mỗi vé phải từ 1 đến {0}.</value>
+  </data>
+  <data name="Success_ShowtimeEventGiftsSaved" xml:space="preserve">
+    <value>Đã lưu quà tặng kèm của suất sự kiện.</value>
+  </data>
+  <data name="Rule_EventGiftOrderNotConfirmed" xml:space="preserve">
+    <value>Đơn của vé này chưa thanh toán hoặc đã bị hủy, không thể trao quà.</value>
+  </data>
+  <data name="Rule_EventGiftTicketInvalid" xml:space="preserve">
+    <value>Vé này đã được hoàn, hủy hoặc đổi suất, không thể trao quà.</value>
+  </data>
+  <data name="Rule_EventGiftNoGifts" xml:space="preserve">
+    <value>Vé này không có quà tặng kèm.</value>
+  </data>
+  <data name="Conflict_EventGiftAlreadyHandedOver" xml:space="preserve">
+    <value>Quà tặng kèm của vé này đã được trao.</value>
+  </data>
+  <data name="Validation_EventGiftHandover_QrRequired" xml:space="preserve">
+    <value>Mã QR của vé là bắt buộc.</value>
   </data>
 </root>

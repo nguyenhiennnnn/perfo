@@ -127,6 +127,7 @@ public static class AuditSnapshots
                 p.BudgetAmount,
                 p.Priority,
                 p.IsExclusive,
+                p.ExcludeEventShowtimes,
                 p.AssignedUserId,
                 p.IsActive,
                 p.IsDeleted,

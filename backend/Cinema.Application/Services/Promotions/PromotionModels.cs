@@ -23,6 +23,7 @@ public enum PromotionRejectionReason
     BudgetExhausted,
     NotCombinable,
     BundleExcluded,
+    EventShowtimeExcluded,
 }
 
 public sealed record PromotionLine(OrderLineType LineType, decimal Value);
@@ -36,6 +37,7 @@ public sealed record PromotionContext(
     int? ShowtimeId,
     int? MovieId,
     int? ScreenTypeId,
+    ShowtimeKind? ShowtimeKind,
     DateTime NowUtc,
     DateOnly BusinessDate,
     IReadOnlyList<PromotionLine> Lines

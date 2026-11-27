@@ -30,7 +30,8 @@ public record PromotionDto(
     string? AssignedUserEmail,
     bool IsActive,
     DateTime CreatedAt,
-    DateTime? UpdatedAt
+    DateTime? UpdatedAt,
+    bool ExcludeEventShowtimes
 );
 
 public record UpsertPromotionRequest(
@@ -58,7 +59,8 @@ public record UpsertPromotionRequest(
     int Priority,
     bool IsExclusive,
     int? AssignedUserId,
-    bool IsActive = true
+    bool IsActive = true,
+    bool ExcludeEventShowtimes = false
 );
 
 public record PromotionListFilter(string? Search, string? Type, bool? IsActive);

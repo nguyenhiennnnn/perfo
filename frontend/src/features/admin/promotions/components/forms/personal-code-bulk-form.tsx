@@ -146,6 +146,7 @@ export const PersonalCodeBulkForm = ({ onClose }: PersonalCodeBulkFormProps) => 
       budgetAmount: "",
       priority: "0",
       isExclusive: false,
+      excludeEventShowtimes: false,
     },
   });
 
@@ -184,6 +185,7 @@ export const PersonalCodeBulkForm = ({ onClose }: PersonalCodeBulkFormProps) => 
       budgetAmount: toNumberOrNull(values.budgetAmount),
       priority: Number(values.priority),
       isExclusive: values.isExclusive,
+      excludeEventShowtimes: values.excludeEventShowtimes,
     };
 
     createCodes.mutate(body, {

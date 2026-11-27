@@ -304,6 +304,12 @@ export const PromotionSharedFields = <T extends PromotionSharedValues>({
         control={form.control}
         label="Không dùng chung với ưu đãi khác"
       />
+
+      <FormSwitchField
+        name="excludeEventShowtimes"
+        control={form.control}
+        label="Không áp dụng cho suất chiếu sự kiện"
+      />
     </>
   );
 };

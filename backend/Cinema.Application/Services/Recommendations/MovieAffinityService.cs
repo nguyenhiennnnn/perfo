@@ -96,7 +96,10 @@ public class MovieAffinityService(IAppDbContext db) : IMovieAffinityService
         var tickets = await db
             .OrderLines.AsNoTracking()
             .CheckedInViewings(db)
-            .Where(l => (l.CheckedInAt ?? l.Showtime!.StartTime) >= since)
+            .Where(l =>
+                l.Showtime!.Kind != ShowtimeKind.Event
+                && (l.CheckedInAt ?? l.Showtime!.StartTime) >= since
+            )
             .Select(l => new PopularityTicket(
                 l.Showtime!.MovieId,
                 l.CheckedInAt ?? l.Showtime!.StartTime,

@@ -31,6 +31,7 @@ export interface PromotionDto {
   budgetAmount?: number | null;
   priority: number;
   isExclusive: boolean;
+  excludeEventShowtimes: boolean;
   assignedUserId?: number | null;
   assignedUserName?: string | null;
   assignedUserEmail?: string | null;
@@ -71,6 +72,7 @@ export interface UpsertPromotionRequest {
   budgetAmount: number | null;
   priority: number;
   isExclusive: boolean;
+  excludeEventShowtimes: boolean;
   assignedUserId: number | null;
   isActive: boolean;
 }
@@ -103,6 +105,7 @@ export interface BulkPersonalCodesRequest {
   budgetAmount: number | null;
   priority: number;
   isExclusive: boolean;
+  excludeEventShowtimes: boolean;
 }
 
 export interface BulkPersonalCodeItemDto {

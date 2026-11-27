@@ -264,6 +264,7 @@ public class OrderPriceCalculator(
         var showtimeId = lines.Select(l => l.ShowtimeId).FirstOrDefault(x => x != null);
         int? movieId = null;
         int? screenTypeId = null;
+        ShowtimeKind? showtimeKind = null;
         var businessDate = BusinessTime.LocalDate(now);
 
         if (showtimeId is { } id)
@@ -276,6 +277,7 @@ public class OrderPriceCalculator(
                     s.MovieId,
                     s.StartTime,
                     s.Room.ScreenTypeId,
+                    s.Kind,
                 })
                 .FirstOrDefaultAsync(cancellationToken);
             if (showtime is not null)
@@ -283,6 +285,7 @@ public class OrderPriceCalculator(
                 var settings = await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken);
                 movieId = showtime.MovieId;
                 screenTypeId = showtime.ScreenTypeId;
+                showtimeKind = showtime.Kind;
                 businessDate = PricingCalendar.BusinessDate(
                     BusinessTime.ToLocal(showtime.StartTime),
                     settings.OpeningTime,
@@ -300,6 +303,7 @@ public class OrderPriceCalculator(
             showtimeId,
             movieId,
             screenTypeId,
+            showtimeKind,
             now,
             businessDate,
             lines.Select((l, i) => new PromotionLine(l.LineType, remaining[i])).ToList()

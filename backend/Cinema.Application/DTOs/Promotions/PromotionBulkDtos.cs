@@ -22,7 +22,8 @@ public record BulkPersonalCodesRequest(
     bool NewCustomersOnly,
     decimal? BudgetAmount,
     int Priority,
-    bool IsExclusive
+    bool IsExclusive,
+    bool ExcludeEventShowtimes = false
 );
 
 public record BulkPersonalCodeItemDto(

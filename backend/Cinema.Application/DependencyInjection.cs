@@ -160,6 +160,13 @@ public static class DependencyInjection
         services.AddScoped<IShowtimeEventLimitService, ShowtimeEventLimitService>();
         services.AddScoped<IShowtimeEarlyAccessService, ShowtimeEarlyAccessService>();
         services.AddResourceHold<ShowtimeEventLimitHold>();
+        services.AddScoped<IShowtimeEventGiftService, ShowtimeEventGiftService>();
+        services.AddScoped<IShowtimeEventGiftHandoverService, ShowtimeEventGiftHandoverService>();
+        services.AddResourceHold<ShowtimeEventGiftHold>();
+        services.AddInTransactionEventHandler<OrderConfirmed, ShowtimeEventGiftStockHandler>();
+        services.AddInTransactionEventHandler<OrderRefunded, ShowtimeEventGiftStockHandler>();
+        services.AddInTransactionEventHandler<OrderCancelled, ShowtimeEventGiftStockHandler>();
+        services.AddInTransactionEventHandler<OrderExchanged, ShowtimeEventGiftStockHandler>();
         services.AddScoped<IBusinessEventDispatcher, BusinessEventDispatcher>();
         services.AddScoped<IOutboxProcessor, OutboxProcessor>();
         services.AddScoped<IOrderHoldPolicy, OnlineHoldPolicy>();

@@ -35,6 +35,7 @@ public static class PromotionBulkMapper
             request.BudgetAmount,
             request.Priority,
             request.IsExclusive,
-            userId
+            userId,
+            ExcludeEventShowtimes: request.ExcludeEventShowtimes
         );
 }

@@ -112,6 +112,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<ShowtimeEventSetting> ShowtimeEventSettings => Set<ShowtimeEventSetting>();
     public DbSet<ShowtimeEventTicketQuota> ShowtimeEventTicketQuotas =>
         Set<ShowtimeEventTicketQuota>();
+    public DbSet<ShowtimeEventGift> ShowtimeEventGifts => Set<ShowtimeEventGift>();
+    public DbSet<ShowtimeEventGiftReservation> ShowtimeEventGiftReservations =>
+        Set<ShowtimeEventGiftReservation>();
+    public DbSet<ShowtimeEventGiftHandover> ShowtimeEventGiftHandovers =>
+        Set<ShowtimeEventGiftHandover>();
     public DbSet<ReconciliationSession> ReconciliationSessions => Set<ReconciliationSession>();
     public DbSet<ReconciliationItem> ReconciliationItems => Set<ReconciliationItem>();
     public DbSet<SeatHoldEvent> SeatHoldEvents => Set<SeatHoldEvent>();

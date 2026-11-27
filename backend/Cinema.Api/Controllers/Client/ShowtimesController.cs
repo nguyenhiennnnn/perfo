@@ -26,6 +26,7 @@ public class ShowtimesController(IShowtimeQueryService showtimeQueryService) : A
         var result = await showtimeQueryService.GetWholeCinemaScheduleAsync(
             date.Value,
             screenType,
+            CurrentUserIdOrNull,
             cancellationToken
         );
         return Ok(result);

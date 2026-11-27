@@ -25,6 +25,7 @@ public interface IShowtimeQueryService
     Task<WholeCinemaScheduleDto> GetWholeCinemaScheduleAsync(
         DateOnly date,
         string? screenType,
+        int? viewerUserId,
         CancellationToken cancellationToken
     );
     Task<ShowtimeCalendarResponseDto> GetShowtimesCalendarAsync(

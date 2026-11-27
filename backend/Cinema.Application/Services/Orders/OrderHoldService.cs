@@ -6,6 +6,7 @@ using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Notifications;
 using Cinema.Application.Interfaces.Bundles;
 using Cinema.Application.Interfaces.Orders;
+using Cinema.Application.Interfaces.Showtimes;
 using Cinema.Application.Interfaces.Waitlist;
 using Cinema.Application.Options;
 using Cinema.Application.Utils;
@@ -31,6 +32,7 @@ public class OrderHoldService(
     IWaitlistPriorityService waitlistPriority,
     ISeatHoldLimitService holdLimits,
     ICustomerVerificationService verification,
+    IShowtimeEarlyAccessService earlyAccess,
     IOptions<BookingOptions> bookingOptions,
     ILogger<OrderHoldService> logger,
     IAppCache cache
@@ -112,7 +114,10 @@ public class OrderHoldService(
         policy.EnsureSalesOpen(showtime, holdSettings.StopSellingMinutesBefore);
 
         if (channel == SalesChannel.Online)
+        {
             await verification.EnsureVerifiedAsync(holderUserId, cancellationToken);
+            await earlyAccess.EnsureCanHoldAsync(showtimeId, holderUserId, cancellationToken);
+        }
 
         if (string.IsNullOrWhiteSpace(customerName))
         {

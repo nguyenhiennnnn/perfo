@@ -18589,5 +18589,86 @@ namespace Cinema.Shared.Resources {
                 return ResourceManager.GetString("Success_ShowtimeEventLimitsSaved", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giờ mở bán chung là bắt buộc..
+        /// </summary>
+        public static string Validation_EventEarlyAccess_TimeRequired {
+            get {
+                return ResourceManager.GetString("Validation_EventEarlyAccess_TimeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chọn ít nhất một nhóm được mở bán sớm..
+        /// </summary>
+        public static string Validation_EventEarlyAccess_GroupRequired {
+            get {
+                return ResourceManager.GetString("Validation_EventEarlyAccess_GroupRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mã hạng thành viên không hợp lệ..
+        /// </summary>
+        public static string Validation_EventEarlyAccess_TierIdPositive {
+            get {
+                return ResourceManager.GetString("Validation_EventEarlyAccess_TierIdPositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giờ mở bán chung phải sau thời điểm hiện tại và trước giờ chiếu..
+        /// </summary>
+        public static string Rule_EventGeneralSaleTimeInvalid {
+            get {
+                return ResourceManager.GetString("Rule_EventGeneralSaleTimeInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chỉ chỉnh được mở bán sớm của suất chiếu đã lên lịch và chưa bắt đầu..
+        /// </summary>
+        public static string Rule_ShowtimeEventEarlyAccessStatusInvalid {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventEarlyAccessStatusInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suất sự kiện này chưa thiết lập mở bán sớm..
+        /// </summary>
+        public static string NotFound_ShowtimeEventEarlyAccess {
+            get {
+                return ResourceManager.GetString("NotFound_ShowtimeEventEarlyAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suất sự kiện này đang mở bán sớm cho nhóm khách được chọn. Mở bán chung từ {0}..
+        /// </summary>
+        public static string Rule_EventEarlyAccessOnly {
+            get {
+                return ResourceManager.GetString("Rule_EventEarlyAccessOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã lưu thiết lập mở bán sớm..
+        /// </summary>
+        public static string Success_ShowtimeEventEarlyAccessSaved {
+            get {
+                return ResourceManager.GetString("Success_ShowtimeEventEarlyAccessSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã bỏ mở bán sớm, suất chiếu mở bán chung cho mọi khách..
+        /// </summary>
+        public static string Success_ShowtimeEventEarlyAccessRemoved {
+            get {
+                return ResourceManager.GetString("Success_ShowtimeEventEarlyAccessRemoved", resourceCulture);
+            }
+        }
     }
 }

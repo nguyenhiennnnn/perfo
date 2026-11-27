@@ -158,6 +158,7 @@ public static class DependencyInjection
         services.AddScoped<IShowtimeLifecycleService, ShowtimeLifecycleService>();
         services.AddScoped<IShowtimeEventService, ShowtimeEventService>();
         services.AddScoped<IShowtimeEventLimitService, ShowtimeEventLimitService>();
+        services.AddScoped<IShowtimeEarlyAccessService, ShowtimeEarlyAccessService>();
         services.AddResourceHold<ShowtimeEventLimitHold>();
         services.AddScoped<IBusinessEventDispatcher, BusinessEventDispatcher>();
         services.AddScoped<IOutboxProcessor, OutboxProcessor>();

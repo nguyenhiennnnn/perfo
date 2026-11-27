@@ -13,7 +13,8 @@ namespace Cinema.Api.Controllers.Admin;
 [Authorize(Policy = Policies.AdminOnly)]
 public class AdminShowtimeEventsController(
     IShowtimeEventService showtimeEventService,
-    IShowtimeEventLimitService showtimeEventLimitService
+    IShowtimeEventLimitService showtimeEventLimitService,
+    IShowtimeEarlyAccessService showtimeEarlyAccessService
 ) : ControllerBase
 {
     [HttpGet]
@@ -41,6 +42,27 @@ public class AdminShowtimeEventsController(
         [FromBody] UpsertShowtimeEventLimitsRequest request,
         CancellationToken cancellationToken
     ) => Ok(await showtimeEventLimitService.UpsertAsync(showtimeId, request, cancellationToken));
+
+    [HttpGet("early-access")]
+    public async Task<IActionResult> GetEarlyAccess(
+        int showtimeId,
+        CancellationToken cancellationToken
+    ) => Ok(await showtimeEarlyAccessService.GetAsync(showtimeId, cancellationToken));
+
+    [HttpPut("early-access")]
+    [SuccessMessage(nameof(Messages.Success_ShowtimeEventEarlyAccessSaved))]
+    public async Task<IActionResult> UpsertEarlyAccess(
+        int showtimeId,
+        [FromBody] UpsertShowtimeEarlyAccessRequest request,
+        CancellationToken cancellationToken
+    ) => Ok(await showtimeEarlyAccessService.UpsertAsync(showtimeId, request, cancellationToken));
+
+    [HttpDelete("early-access")]
+    [SuccessMessage(nameof(Messages.Success_ShowtimeEventEarlyAccessRemoved))]
+    public async Task<IActionResult> RemoveEarlyAccess(
+        int showtimeId,
+        CancellationToken cancellationToken
+    ) => Ok(await showtimeEarlyAccessService.RemoveAsync(showtimeId, cancellationToken));
 
     [HttpDelete]
     [SuccessMessage(nameof(Messages.Success_ShowtimeEventRemoved))]

@@ -6380,4 +6380,31 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_ShowtimeEventLimitsSaved" xml:space="preserve">
     <value>Đã lưu hạn mức vé của suất sự kiện.</value>
   </data>
+  <data name="Validation_EventEarlyAccess_TimeRequired" xml:space="preserve">
+    <value>Giờ mở bán chung là bắt buộc.</value>
+  </data>
+  <data name="Validation_EventEarlyAccess_GroupRequired" xml:space="preserve">
+    <value>Chọn ít nhất một nhóm được mở bán sớm.</value>
+  </data>
+  <data name="Validation_EventEarlyAccess_TierIdPositive" xml:space="preserve">
+    <value>Mã hạng thành viên không hợp lệ.</value>
+  </data>
+  <data name="Rule_EventGeneralSaleTimeInvalid" xml:space="preserve">
+    <value>Giờ mở bán chung phải sau thời điểm hiện tại và trước giờ chiếu.</value>
+  </data>
+  <data name="Rule_ShowtimeEventEarlyAccessStatusInvalid" xml:space="preserve">
+    <value>Chỉ chỉnh được mở bán sớm của suất chiếu đã lên lịch và chưa bắt đầu.</value>
+  </data>
+  <data name="NotFound_ShowtimeEventEarlyAccess" xml:space="preserve">
+    <value>Suất sự kiện này chưa thiết lập mở bán sớm.</value>
+  </data>
+  <data name="Rule_EventEarlyAccessOnly" xml:space="preserve">
+    <value>Suất sự kiện này đang mở bán sớm cho nhóm khách được chọn. Mở bán chung từ {0}.</value>
+  </data>
+  <data name="Success_ShowtimeEventEarlyAccessSaved" xml:space="preserve">
+    <value>Đã lưu thiết lập mở bán sớm.</value>
+  </data>
+  <data name="Success_ShowtimeEventEarlyAccessRemoved" xml:space="preserve">
+    <value>Đã bỏ mở bán sớm, suất chiếu mở bán chung cho mọi khách.</value>
+  </data>
 </root>

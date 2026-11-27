@@ -1,6 +1,7 @@
 ﻿using Cinema.Application.Caching;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Orders;
+using Cinema.Application.Interfaces.Showtimes;
 using Cinema.Application.Utils;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;
@@ -12,7 +13,8 @@ namespace Cinema.Application.Services.Orders;
 public class OrderExchangeEligibilityService(
     IAppDbContext db,
     IAppCache cache,
-    IEnumerable<IOrderHoldPolicy> holdPolicies
+    IEnumerable<IOrderHoldPolicy> holdPolicies,
+    IShowtimeEarlyAccessService earlyAccess
 ) : IOrderExchangeEligibilityService
 {
     public async Task<OrderExchangeEligibility> EnsureEligibleAsync(
@@ -124,6 +126,20 @@ public class OrderExchangeEligibilityService(
         holdPolicies
             .First(p => p.Channel == request.Channel)
             .EnsureSalesOpen(newShowtime, settings.StopSellingMinutesBefore);
+
+        if (request.Channel == SalesChannel.Online)
+        {
+            var orderUserId = await db
+                .Orders.AsNoTracking()
+                .Where(o => o.OrderId == request.OrderId)
+                .Select(o => o.UserId)
+                .FirstAsync(cancellationToken);
+            await earlyAccess.EnsureCanHoldAsync(
+                newShowtime.ShowtimeId,
+                orderUserId,
+                cancellationToken
+            );
+        }
 
         return new OrderExchangeEligibility(
             request.OrderId,

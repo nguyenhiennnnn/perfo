@@ -17,6 +17,7 @@ namespace Cinema.Application.Services.Showtimes;
 public class ShowtimeQueryService(
     IAppDbContext db,
     IPricingService pricingService,
+    IShowtimeEarlyAccessService earlyAccessService,
     IAppCache cache
 ) : IShowtimeQueryService
 {
@@ -57,6 +58,11 @@ public class ShowtimeQueryService(
             .ToListAsync(cancellationToken);
 
         var myOrder = await FindViewerHoldOrderAsync(showtimeId, viewerUserId, cancellationToken);
+        var earlyAccess = await earlyAccessService.GetForViewerAsync(
+            [showtimeId],
+            viewerUserId,
+            cancellationToken
+        );
 
         var ticketTypes = await cache.GetAsync(CacheKeys.TicketTypes, cancellationToken);
         var pricedAt = DateTime.UtcNow;
@@ -170,7 +176,8 @@ public class ShowtimeQueryService(
             showtime.Room.ScreenType?.Name,
             myHold is { ShowtimeSeatIds.Count: > 0 } ? myHold : null,
             ticketTypeItems,
-            pricedAt
+            pricedAt,
+            earlyAccess.GetValueOrDefault(showtimeId)
         );
     }
 
@@ -249,6 +256,7 @@ public class ShowtimeQueryService(
     public async Task<WholeCinemaScheduleDto> GetWholeCinemaScheduleAsync(
         DateOnly date,
         string? screenType,
+        int? viewerUserId,
         CancellationToken cancellationToken
     )
     {
@@ -307,6 +315,12 @@ public class ShowtimeQueryService(
             cancellationToken
         );
 
+        var earlyAccess = await earlyAccessService.GetForViewerAsync(
+            showtimeIds,
+            viewerUserId,
+            cancellationToken
+        );
+
         var movies = showtimes
             .GroupBy(s => s.Movie)
             .Select(g => new WholeCinemaMovieDto(
@@ -324,6 +338,7 @@ public class ShowtimeQueryService(
                             AvailableSeats = counts?.Available ?? 0,
                             TotalSeats = counts?.Total ?? 0,
                             FromPrice = fromPrices.GetValueOrDefault(s.ShowtimeId)?.FromPrice,
+                            EarlyAccess = earlyAccess.GetValueOrDefault(s.ShowtimeId),
                         };
                     })
                     .ToList()

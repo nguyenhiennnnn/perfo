@@ -25,6 +25,10 @@ public class ShowtimeEventSettingConfiguration : IEntityTypeConfiguration<Showti
                     "CK_ShowtimeEventSettings_MaxTicketsPerCustomer",
                     "\"MaxTicketsPerCustomer\" IS NULL OR \"MaxTicketsPerCustomer\" > 0"
                 );
+                t.HasCheckConstraint(
+                    "CK_ShowtimeEventSettings_EarlyAccess",
+                    "\"GeneralSaleStartTime\" IS NOT NULL OR (cardinality(\"EarlyAccessTierIds\") = 0 AND NOT \"EarlyAccessPaidMembers\" AND NOT \"EarlyAccessMovieInterest\")"
+                );
             }
         );
         builder.HasKey(x => x.ShowtimeId);
@@ -33,6 +37,15 @@ public class ShowtimeEventSettingConfiguration : IEntityTypeConfiguration<Showti
             .HasConversion<string>()
             .HasMaxLength(FieldLengths.EnumValue);
         builder.Property(x => x.AdjustmentValue).HasColumnType("decimal(18,4)");
+        builder
+            .Property(x => x.GeneralSaleStartTime)
+            .HasColumnType("timestamp without time zone");
+        builder
+            .Property(x => x.EarlyAccessTierIds)
+            .HasColumnType("integer[]")
+            .HasDefaultValueSql("'{}'");
+        builder.Property(x => x.EarlyAccessPaidMembers).HasDefaultValue(false);
+        builder.Property(x => x.EarlyAccessMovieInterest).HasDefaultValue(false);
         builder
             .Property(x => x.CreatedAt)
             .HasColumnType("timestamp without time zone")

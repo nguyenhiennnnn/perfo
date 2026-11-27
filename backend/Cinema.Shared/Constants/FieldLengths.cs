@@ -18,6 +18,7 @@ public static class FieldLengths
     public const int CampaignName = 150;
     public const int CampaignSubject = 200;
     public const int CampaignBody = 5000;
+    public const int CampaignRecipientError = 500;
     public const int ComboDescription = 500;
     public const int CinemaName = 150;
     public const int CinemaAddress = 255;

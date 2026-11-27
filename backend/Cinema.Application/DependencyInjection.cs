@@ -195,6 +195,8 @@ public static class DependencyInjection
         services.AddScoped<ICampaignAudienceService, CampaignAudienceService>();
         services.AddScoped<ICampaignAdminService, CampaignAdminService>();
         services.AddScoped<ICampaignTestSendService, CampaignTestSendService>();
+        services.AddScoped<ICampaignRecipientSender, CampaignRecipientSender>();
+        services.AddScoped<ICampaignDispatchService, CampaignDispatchService>();
         services.AddScoped<IMovieRecommendationService, MovieRecommendationService>();
         services.AddScoped<IMovieIntroEmailService, MovieIntroEmailService>();
         services.AddScoped<IReviewInviteService, ReviewInviteService>();

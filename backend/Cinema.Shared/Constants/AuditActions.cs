@@ -50,4 +50,7 @@ public static class AuditActions
     public const string RevealSegmentCustomers = "RevealSegmentCustomers";
     public const string RevealCampaignRecipients = "RevealCampaignRecipients";
     public const string SendCampaignTest = "SendCampaignTest";
+    public const string StartCampaign = "StartCampaign";
+    public const string CompleteCampaign = "CompleteCampaign";
+    public const string ReturnCampaignToDraft = "ReturnCampaignToDraft";
 }

@@ -15,7 +15,11 @@ public class CampaignRecipientConfiguration : IEntityTypeConfiguration<CampaignR
             {
                 t.HasCheckConstraint(
                     "CK_CampaignRecipients_Status",
-                    "\"Status\" IN ('Pending','Sent','Failed')"
+                    "\"Status\" IN ('Pending','Sent','Failed','Skipped')"
+                );
+                t.HasCheckConstraint(
+                    "CK_CampaignRecipients_AttemptCount",
+                    "\"AttemptCount\" >= 0"
                 );
             }
         );
@@ -25,6 +29,9 @@ public class CampaignRecipientConfiguration : IEntityTypeConfiguration<CampaignR
             .HasConversion<string>()
             .HasMaxLength(FieldLengths.EnumValue)
             .IsRequired();
+        builder.Property(x => x.AttemptCount).HasDefaultValue(0);
+        builder.Property(x => x.NextAttemptAt).HasColumnType("timestamp without time zone");
+        builder.Property(x => x.LastError).HasMaxLength(FieldLengths.CampaignRecipientError);
         builder.Property(x => x.SentAt).HasColumnType("timestamp without time zone");
         builder.Property(x => x.CreatedAt).HasColumnType("timestamp without time zone");
 

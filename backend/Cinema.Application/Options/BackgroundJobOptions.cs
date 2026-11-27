@@ -31,6 +31,11 @@ public class BackgroundJobOptions
     public string RoomRentalQuoteExpiryCron { get; set; } = "*/5 * * * *";
     public string RoomRentalRevenueRecognitionCron { get; set; } = "*/10 * * * *";
     public string RoomRentalBalanceOverdueCron { get; set; } = "*/10 * * * *";
+    public string CampaignDispatchCron { get; set; } = "* * * * *";
+    public int CampaignBatchSize { get; set; } = 100;
+    public int CampaignMaxAttempts { get; set; } = 3;
+    public int[] CampaignRetryDelaysSeconds { get; set; } = [300, 1800];
+    public int CampaignLeaseSeconds { get; set; } = 600;
     public int OutboxBatchSize { get; set; } = 50;
     public int OutboxMaxAttempts { get; set; } = 5;
     public int[] OutboxRetryDelaysSeconds { get; set; } = [30, 120, 600, 1800];

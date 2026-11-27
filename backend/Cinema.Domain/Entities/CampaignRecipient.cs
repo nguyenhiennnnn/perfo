@@ -8,6 +8,9 @@ public class CampaignRecipient
     public int UserId { get; set; }
     public CampaignRecipientStatus Status { get; set; } = CampaignRecipientStatus.Pending;
     public int? PromotionId { get; set; }
+    public int AttemptCount { get; set; }
+    public DateTime? NextAttemptAt { get; set; }
+    public string? LastError { get; set; }
     public DateTime? SentAt { get; set; }
     public DateTime CreatedAt { get; set; }
 

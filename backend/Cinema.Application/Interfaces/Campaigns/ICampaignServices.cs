@@ -50,6 +50,38 @@ public interface ICampaignAudienceService
     );
 }
 
+public interface ICampaignDispatchService
+{
+    Task<int> DispatchDueAsync(CancellationToken cancellationToken);
+}
+
+public sealed record CampaignRecipientTarget(
+    int UserId,
+    string FullName,
+    string? Email,
+    bool IsActive,
+    bool MarketingOptIn,
+    int? PromotionId,
+    int AttemptCount
+);
+
+public enum CampaignSendOutcome
+{
+    Busy,
+    Sent,
+    Skipped,
+    Failed,
+}
+
+public interface ICampaignRecipientSender
+{
+    Task<CampaignSendOutcome> SendAsync(
+        Campaign campaign,
+        CampaignRecipientTarget target,
+        CancellationToken cancellationToken
+    );
+}
+
 public interface ICampaignTestSendService
 {
     Task<CampaignTestSendResponse> SendAsync(

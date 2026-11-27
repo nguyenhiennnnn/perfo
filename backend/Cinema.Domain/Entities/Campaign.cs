@@ -16,6 +16,7 @@ public class Campaign
     public int? PromoValidityDays { get; set; }
     public DateTime? ScheduledAt { get; set; }
     public CampaignStatus Status { get; set; } = CampaignStatus.Draft;
+    public DateTime? RecipientsPreparedAt { get; set; }
     public bool IsDeleted { get; set; }
     public DateTime? DeletedAt { get; set; }
     public DateTime CreatedAt { get; set; }

@@ -151,6 +151,7 @@ public class CampaignAudienceService(
             .CampaignRecipients.AsNoTracking()
             .Where(r =>
                 r.Status != CampaignRecipientStatus.Failed
+                && r.Status != CampaignRecipientStatus.Skipped
                 && (r.CampaignId == campaignId || r.CreatedAt >= cutoff)
             );
         var eligible = reachable.Where(p => !contacted.Any(r => r.UserId == p.UserId));

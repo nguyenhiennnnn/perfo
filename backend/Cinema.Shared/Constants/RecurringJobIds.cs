@@ -29,4 +29,5 @@ public class RecurringJobIds
     public const string RoomRentalQuoteExpiry = "room-rental-quote-expiry";
     public const string RoomRentalRevenueRecognition = "room-rental-revenue-recognition";
     public const string RoomRentalBalanceOverdue = "room-rental-balance-overdue";
+    public const string CampaignDispatch = "campaign-dispatch";
 }

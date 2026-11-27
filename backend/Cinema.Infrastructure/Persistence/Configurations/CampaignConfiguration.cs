@@ -50,6 +50,7 @@ public class CampaignConfiguration : IEntityTypeConfiguration<Campaign>
         builder.Property(x => x.PromoDiscountValue).HasColumnType("decimal(18,2)");
         builder.Property(x => x.PromoMaxDiscountAmount).HasColumnType("decimal(18,2)");
         builder.Property(x => x.ScheduledAt).HasColumnType("timestamp without time zone");
+        builder.Property(x => x.RecipientsPreparedAt).HasColumnType("timestamp without time zone");
         builder
             .Property(x => x.Status)
             .HasConversion<string>()

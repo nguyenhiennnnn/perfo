@@ -299,6 +299,10 @@ export function getPublicFormRetrySeconds(error: unknown): number | null {
   return typeof seconds === "number" && seconds > 0 ? seconds : 0;
 }
 
+export function isFreeTicketShowtimeLimitError(error: unknown): boolean {
+  return extractApiError(error).errorCode === API_ERROR_CODES.freeTicketShowtimeLimitReached;
+}
+
 export function getFieldErrors(error: unknown): Record<string, string> {
   const { errors } = extractApiError(error);
   if (!errors) return {};

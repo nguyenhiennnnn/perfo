@@ -5,6 +5,7 @@ using Cinema.Application.Interfaces.Orders;
 using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
+using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +42,10 @@ public class MembershipFreeTicketResourceHold(IAppDbContext db, IAppCache cache)
             .MembershipFreeTickets.IgnoreQueryFilters()
             .CountAsync(t => t.UserId == userId && t.ShowtimeId == showtimeId, cancellationToken);
         if (onShowtime >= settings.MembershipFreeTicketsPerShowtime)
-            throw new BusinessRuleException(Messages.Rule_FreeTicketShowtimeLimitReached);
+            throw new BusinessRuleException(
+                Messages.Rule_FreeTicketShowtimeLimitReached,
+                ApiErrorCodes.FreeTicketShowtimeLimitReached
+            );
 
         var now = DateTime.UtcNow;
         var ticketId = await db

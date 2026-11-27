@@ -11,8 +11,10 @@ import { formatCurrency } from "@/lib/formatters";
 import { OrderStatus, OrderType, PaymentMethod } from "@/types/enum";
 import type { OrderGiftCardResponse } from "@/features/client/gift-cards/types";
 import type { OrderDetailDto } from "@/features/client/orders/types";
+import { canUseMembershipBenefits } from "../../utils/order-membership";
 import { canPayOutstanding } from "../../utils/order-payment";
 import { BookingHoldTimer } from "./booking-hold-timer";
+import { BookingMembershipSection } from "./booking-membership-section";
 import { BookingGiftCardSection } from "./booking-gift-card-section";
 import { BookingOrderSummary } from "./booking-order-summary";
 import { BookingPaymentMethod } from "./booking-payment-method";
@@ -73,6 +75,13 @@ export const BookingPaymentStep = ({
                 </p>
               )}
               <BookingOrderSummary order={loadedOrder} />
+              {canUseMembershipBenefits(loadedOrder) && (
+                <BookingMembershipSection
+                  order={loadedOrder}
+                  disabled={hasGiftCards}
+                  onFullyCovered={() => navigate(ROUTES.booking.result(loadedOrder.orderId))}
+                />
+              )}
               {canUsePromotion(loadedOrder) && (
                 <BookingPromotionSection order={loadedOrder} disabled={hasGiftCards} />
               )}

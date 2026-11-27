@@ -44,4 +44,24 @@ export interface MembershipFreeTicketBalanceDto {
   periods: MembershipFreeTicketPeriodDto[];
 }
 
+export interface OrderFreeTicketItemDto {
+  orderLineId: number;
+  membershipFreeTicketId: number;
+  convertedAmount: number;
+}
+
+export interface OrderFreeTicketResponse {
+  orderId: number;
+  orderCode: string;
+  status: string;
+  totalAmount: number;
+  discountAmount: number;
+  finalAmount: number;
+  freeTicketAmount: number;
+  payableAmount: number;
+  isFullyCovered: boolean;
+  remainingFreeTickets: number;
+  tickets: OrderFreeTicketItemDto[];
+}
+
 export type MembershipSubscriptionState = "current" | "upcoming" | "expired" | "refunded";

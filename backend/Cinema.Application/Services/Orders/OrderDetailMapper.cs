@@ -164,7 +164,7 @@ internal static class OrderDetailMapper
             adjustment.ReferenceId,
             referenceName,
             promotion is { IsCodeBased: true } ? promotion.Code : null,
-            adjustment.Type == PriceAdjustmentType.PackagePrice
+            adjustment.Type is PriceAdjustmentType.PackagePrice or PriceAdjustmentType.FreeTicket
                 ? [
                     .. adjustment
                         .Allocations.OrderBy(x => x.OrderLineId)

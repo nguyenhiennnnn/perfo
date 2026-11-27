@@ -6,6 +6,7 @@ export const API_ERROR_CODES = {
   pendingOrdersLimitExceeded: "PENDING_ORDERS_LIMIT_EXCEEDED",
   verificationRequired: "VERIFICATION_REQUIRED",
   publicFormRateLimited: "PUBLIC_FORM_RATE_LIMITED",
+  freeTicketShowtimeLimitReached: "FREE_TICKET_SHOWTIME_LIMIT_REACHED",
 } as const;
 
 export const SEAT_CONFLICT_ERROR_KEY = "conflictSeatIds";

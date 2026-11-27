@@ -60,6 +60,17 @@ export const getPlanBenefits = (plan: MembershipPlanDto): PlanBenefit[] => {
   return benefits;
 };
 
+export const describePlanDiscounts = (plan: MembershipPlanDto): string | null => {
+  const parts: string[] = [];
+  if (plan.ticketDiscountPercent > 0) {
+    parts.push(`giảm ${formatPercentValue(plan.ticketDiscountPercent)} tiền vé`);
+  }
+  if (plan.comboDiscountPercent > 0) {
+    parts.push(`giảm ${formatPercentValue(plan.comboDiscountPercent)} combo`);
+  }
+  return parts.length > 0 ? parts.join(", ") : null;
+};
+
 export const getMonthlyPrice = (plan: MembershipPlanDto) =>
   plan.durationMonths > 0 ? Math.round(plan.price / plan.durationMonths) : plan.price;
 

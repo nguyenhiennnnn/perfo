@@ -37,3 +37,19 @@ export function usePurchaseMembershipPlan() {
     mutationFn: (planId: number) => membershipPlansApi.purchase(planId),
   });
 }
+
+export function useApplyFreeTicket(orderId: number) {
+  return useMutation({
+    meta: { invalidates: "orderFreeTicketChanged", skipErrorToast: true },
+    mutationFn: (orderLineId: number) =>
+      membershipPlansApi.applyFreeTicketToOrder(orderId, orderLineId),
+  });
+}
+
+export function useRemoveFreeTicket(orderId: number) {
+  return useMutation({
+    meta: { invalidates: "orderFreeTicketChanged", skipErrorToast: true },
+    mutationFn: (orderLineId: number) =>
+      membershipPlansApi.removeFreeTicketFromOrder(orderId, orderLineId),
+  });
+}

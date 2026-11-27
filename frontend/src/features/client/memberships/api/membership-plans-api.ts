@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "@/api/axios";
+import { apiDelete, apiGet, apiPost } from "@/api/axios";
 import { ENDPOINTS } from "@/api/endpoints";
 import type { ApiResponse } from "@/types/api";
 import type { HoldOrderResponse } from "@/features/client/orders/types";
@@ -6,6 +6,7 @@ import type {
   MembershipFreeTicketBalanceDto,
   MembershipPlanDto,
   MembershipSubscriptionDto,
+  OrderFreeTicketResponse,
 } from "../types";
 
 export const membershipPlansApi = {
@@ -19,4 +20,14 @@ export const membershipPlansApi = {
 
   getMyFreeTickets: () =>
     apiGet<ApiResponse<MembershipFreeTicketBalanceDto>>(ENDPOINTS.membershipPlans.myFreeTickets),
+
+  applyFreeTicketToOrder: (orderId: number, orderLineId: number) =>
+    apiPost<ApiResponse<OrderFreeTicketResponse>>(ENDPOINTS.orders.freeTicket(orderId), {
+      orderLineId,
+    }),
+
+  removeFreeTicketFromOrder: (orderId: number, orderLineId: number) =>
+    apiDelete<ApiResponse<OrderFreeTicketResponse>>(
+      ENDPOINTS.orders.freeTicketByLine(orderId, orderLineId),
+    ),
 };

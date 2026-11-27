@@ -117,6 +117,9 @@ export const ENDPOINTS = {
     promotion: (id: number) => `/bookings/${id}/promotion`,
     giftCard: (id: number) => `/bookings/${id}/gift-card`,
     giftCardById: (id: number, giftCardId: number) => `/bookings/${id}/gift-card/${giftCardId}`,
+    freeTicket: (id: number) => `/bookings/${id}/free-ticket`,
+    freeTicketByLine: (id: number, orderLineId: number) =>
+      `/bookings/${id}/free-ticket/${orderLineId}`,
     cancel: (id: number) => `/bookings/${id}/cancel`,
     comboSuggestions: (id: number) => `/bookings/${id}/combo-suggestions`,
     comboSupplement: (id: number) => `/bookings/${id}/combo-supplement`,

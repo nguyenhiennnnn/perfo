@@ -16,6 +16,7 @@ import type { ShowtimeSeatsResponseDto } from "@/features/client/showtimes/types
 import type { SeatTicketTypes } from "@/features/client/showtimes/hooks/use-seat-ticket-types";
 
 import { BookingCustomerForm } from "./booking-customer-form";
+import { BookingMembershipHint } from "./booking-membership-hint";
 import { BookingPendingOrderNotice } from "./booking-pending-order-notice";
 import { BookingPriceSummary, calcBookingEstimate, type BookingBundleSelection } from "./booking-price-summary";
 import { SeatSuggestionPanel } from "./seat-suggestion-panel";
@@ -183,6 +184,11 @@ export const BookingSelectionStep = ({
           combos={activeCombos.data}
           comboQuantities={comboQuantities}
           bundle={bundleSelection}
+        />
+        <BookingMembershipHint
+          enabled={isAuthenticated}
+          selectedSeatCount={selectedSeats.length}
+          hasBundle={bundleSelection !== null}
         />
         <Button className="max-lg:hidden" disabled={!canHold || isHolding} onClick={onContinue}>
           {isHolding ? HOLDING_SEATS_LABEL : "Giữ ghế & tiếp tục thanh toán"}

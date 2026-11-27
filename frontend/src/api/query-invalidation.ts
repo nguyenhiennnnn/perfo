@@ -126,6 +126,7 @@ export const invalidations = {
 
   orderGiftCardChanged: (): KeyList => [...orderViews(), k.giftCards.all()],
   orderPromotionChanged: (): KeyList => [...orderViews(), k.promotions.mine()],
+  orderFreeTicketChanged: (): KeyList => [...orderViews(), k.membership.freeTickets()],
 
   promotionChanged: (): KeyList => [
     k.adminPromotions.all(),

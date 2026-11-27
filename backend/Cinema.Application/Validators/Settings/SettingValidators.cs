@@ -192,6 +192,20 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
             1,
             20
         );
+        IntRange(x => x.SegmentNewCustomerDays, "segmentNewCustomerDays", 1, 365);
+        IntRange(x => x.SegmentLapsedDays, "segmentLapsedDays", 7, 730);
+        IntRange(x => x.SegmentRegularMinOrders, "segmentRegularMinOrders", 2, 100);
+        IntRange(x => x.SegmentLookbackDays, "segmentLookbackDays", 30, 730);
+        IntRange(x => x.SegmentHighValueMinScore, "segmentHighValueMinScore", 2, 5);
+        IntRange(x => x.SegmentLtvProjectionMonths, "segmentLtvProjectionMonths", 0, 60);
+        IntRange(x => x.SegmentTierUpgradePercent, "segmentTierUpgradePercent", 1, 100);
+        IntRange(x => x.SegmentPreferenceMinViewings, "segmentPreferenceMinViewings", 1, 50);
+        IntRange(
+            x => x.SegmentPreferenceMinSharePercent,
+            "segmentPreferenceMinSharePercent",
+            1,
+            100
+        );
         WholeDecimalRange(
             x => x.ExceptionalRefundApprovalThreshold,
             "exceptionalRefundApprovalThreshold",

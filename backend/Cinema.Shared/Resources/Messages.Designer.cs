@@ -8151,6 +8151,69 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Không tìm thấy phân khúc khách hàng..
+        /// </summary>
+        public static string NotFound_CustomerSegment {
+            get {
+                return ResourceManager.GetString("NotFound_CustomerSegment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã tạo phân khúc khách hàng..
+        /// </summary>
+        public static string Success_CustomerSegmentCreated {
+            get {
+                return ResourceManager.GetString("Success_CustomerSegmentCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã cập nhật phân khúc khách hàng..
+        /// </summary>
+        public static string Success_CustomerSegmentUpdated {
+            get {
+                return ResourceManager.GetString("Success_CustomerSegmentUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã xóa phân khúc khách hàng..
+        /// </summary>
+        public static string Success_CustomerSegmentDeleted {
+            get {
+                return ResourceManager.GetString("Success_CustomerSegmentDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tên phân khúc đã tồn tại..
+        /// </summary>
+        public static string Rule_CustomerSegmentNameExists {
+            get {
+                return ResourceManager.GetString("Rule_CustomerSegmentNameExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Điều kiện phân khúc không hợp lệ..
+        /// </summary>
+        public static string Validation_CustomerSegment_ConditionInvalid {
+            get {
+                return ResourceManager.GetString("Validation_CustomerSegment_ConditionInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Điều kiện phân khúc vượt giới hạn: tối đa 3 cấp lồng nhau và 20 điều kiện..
+        /// </summary>
+        public static string Validation_CustomerSegment_ConditionTooComplex {
+            get {
+                return ResourceManager.GetString("Validation_CustomerSegment_ConditionTooComplex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Không tìm thấy quà đổi điểm..
         /// </summary>
         public static string NotFound_LoyaltyReward {

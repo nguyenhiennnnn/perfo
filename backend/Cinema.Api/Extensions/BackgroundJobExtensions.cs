@@ -163,6 +163,12 @@ public static class BackgroundJobExtensions
             options.MovieAffinityRefreshCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<CustomerSegmentRefreshJob>(
+            RecurringJobIds.RefreshCustomerSegments,
+            j => j.RunAsync(CancellationToken.None),
+            options.CustomerSegmentRefreshCron,
+            jobOptions
+        );
         RecurringJob.AddOrUpdate<ReviewInviteJob>(
             RecurringJobIds.ReviewInvite,
             j => j.RunAsync(CancellationToken.None),

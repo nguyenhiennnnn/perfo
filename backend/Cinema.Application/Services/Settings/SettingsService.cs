@@ -234,6 +234,24 @@ public class SettingsService(
             settings.MembershipFreeTicketsPerShowtime = vMembershipFreeTicketsPerShowtime;
         if (request.MembershipRefundStartedEnabled is { } vMembershipRefundStartedEnabled)
             settings.MembershipRefundStartedEnabled = vMembershipRefundStartedEnabled;
+        if (request.SegmentNewCustomerDays is { } vSegmentNewCustomerDays)
+            settings.SegmentNewCustomerDays = vSegmentNewCustomerDays;
+        if (request.SegmentLapsedDays is { } vSegmentLapsedDays)
+            settings.SegmentLapsedDays = vSegmentLapsedDays;
+        if (request.SegmentRegularMinOrders is { } vSegmentRegularMinOrders)
+            settings.SegmentRegularMinOrders = vSegmentRegularMinOrders;
+        if (request.SegmentLookbackDays is { } vSegmentLookbackDays)
+            settings.SegmentLookbackDays = vSegmentLookbackDays;
+        if (request.SegmentHighValueMinScore is { } vSegmentHighValueMinScore)
+            settings.SegmentHighValueMinScore = vSegmentHighValueMinScore;
+        if (request.SegmentLtvProjectionMonths is { } vSegmentLtvProjectionMonths)
+            settings.SegmentLtvProjectionMonths = vSegmentLtvProjectionMonths;
+        if (request.SegmentTierUpgradePercent is { } vSegmentTierUpgradePercent)
+            settings.SegmentTierUpgradePercent = vSegmentTierUpgradePercent;
+        if (request.SegmentPreferenceMinViewings is { } vSegmentPreferenceMinViewings)
+            settings.SegmentPreferenceMinViewings = vSegmentPreferenceMinViewings;
+        if (request.SegmentPreferenceMinSharePercent is { } vSegmentPreferenceMinSharePercent)
+            settings.SegmentPreferenceMinSharePercent = vSegmentPreferenceMinSharePercent;
         if (settings.RoomRentalFullRefundDays <= settings.RoomRentalPartialRefundDays)
             throw new BusinessRuleException(Messages.Validation_RoomRentalRefundWindow_Invalid);
         if (settings.ReviewInviteMinHours >= settings.ReviewInviteMaxHours)
@@ -338,6 +356,15 @@ public class SettingsService(
             RoomRentalPartialRefundPercent = settings.RoomRentalPartialRefundPercent,
             MembershipFreeTicketsPerShowtime = settings.MembershipFreeTicketsPerShowtime,
             MembershipRefundStartedEnabled = settings.MembershipRefundStartedEnabled,
+            SegmentNewCustomerDays = settings.SegmentNewCustomerDays,
+            SegmentLapsedDays = settings.SegmentLapsedDays,
+            SegmentRegularMinOrders = settings.SegmentRegularMinOrders,
+            SegmentLookbackDays = settings.SegmentLookbackDays,
+            SegmentHighValueMinScore = settings.SegmentHighValueMinScore,
+            SegmentLtvProjectionMonths = settings.SegmentLtvProjectionMonths,
+            SegmentTierUpgradePercent = settings.SegmentTierUpgradePercent,
+            SegmentPreferenceMinViewings = settings.SegmentPreferenceMinViewings,
+            SegmentPreferenceMinSharePercent = settings.SegmentPreferenceMinSharePercent,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

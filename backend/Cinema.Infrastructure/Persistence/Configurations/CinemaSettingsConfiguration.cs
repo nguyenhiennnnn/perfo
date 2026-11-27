@@ -297,5 +297,32 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
             .Property(x => x.ExceptionalRefundApprovalThreshold)
             .HasColumnType("decimal(18,2)")
             .HasDefaultValue(CinemaSettings.DefaultExceptionalRefundApprovalThreshold);
+        builder
+            .Property(x => x.SegmentNewCustomerDays)
+            .HasDefaultValue(CinemaSettings.DefaultSegmentNewCustomerDays);
+        builder
+            .Property(x => x.SegmentLapsedDays)
+            .HasDefaultValue(CinemaSettings.DefaultSegmentLapsedDays);
+        builder
+            .Property(x => x.SegmentRegularMinOrders)
+            .HasDefaultValue(CinemaSettings.DefaultSegmentRegularMinOrders);
+        builder
+            .Property(x => x.SegmentLookbackDays)
+            .HasDefaultValue(CinemaSettings.DefaultSegmentLookbackDays);
+        builder
+            .Property(x => x.SegmentHighValueMinScore)
+            .HasDefaultValue(CinemaSettings.DefaultSegmentHighValueMinScore);
+        builder
+            .Property(x => x.SegmentLtvProjectionMonths)
+            .HasDefaultValue(CinemaSettings.DefaultSegmentLtvProjectionMonths);
+        builder
+            .Property(x => x.SegmentTierUpgradePercent)
+            .HasDefaultValue(CinemaSettings.DefaultSegmentTierUpgradePercent);
+        builder
+            .Property(x => x.SegmentPreferenceMinViewings)
+            .HasDefaultValue(CinemaSettings.DefaultSegmentPreferenceMinViewings);
+        builder
+            .Property(x => x.SegmentPreferenceMinSharePercent)
+            .HasDefaultValue(CinemaSettings.DefaultSegmentPreferenceMinSharePercent);
     }
 }

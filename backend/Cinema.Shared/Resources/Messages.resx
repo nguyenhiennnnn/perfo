@@ -6233,4 +6233,25 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Report_Finance_MembershipSummary_Note" xml:space="preserve">
     <value>Hội viên đang hoạt động tính theo người dùng có gói còn hiệu lực và chưa hoàn tại cuối kỳ (hoặc tại thời điểm hiện tại nếu kỳ chưa kết thúc). Tỷ lệ gia hạn là phần gói hết hạn trong kỳ mà khách đã có gói nối tiếp hoặc mua lại sau đó. Tiền gói đã ghi nhận và chưa ghi nhận lấy cùng nguồn với khối doanh thu gói thành viên, nên khớp các bút toán ghi nhận hằng tháng. Quyền lợi đã dùng gồm giảm giá vé, combo theo gói (đơn đã xác nhận, tính theo ngày tạo đơn) và giá trị niêm yết của vé miễn phí đã dùng trong kỳ. Lợi nhuận so với bán vé lẻ bằng tiền gói đã ghi nhận trừ quyền lợi đã dùng: phần khách mua lẻ sẽ phải trả thêm nếu không có gói.</value>
   </data>
+  <data name="NotFound_CustomerSegment" xml:space="preserve">
+    <value>Không tìm thấy phân khúc khách hàng.</value>
+  </data>
+  <data name="Success_CustomerSegmentCreated" xml:space="preserve">
+    <value>Đã tạo phân khúc khách hàng.</value>
+  </data>
+  <data name="Success_CustomerSegmentUpdated" xml:space="preserve">
+    <value>Đã cập nhật phân khúc khách hàng.</value>
+  </data>
+  <data name="Success_CustomerSegmentDeleted" xml:space="preserve">
+    <value>Đã xóa phân khúc khách hàng.</value>
+  </data>
+  <data name="Rule_CustomerSegmentNameExists" xml:space="preserve">
+    <value>Tên phân khúc đã tồn tại.</value>
+  </data>
+  <data name="Validation_CustomerSegment_ConditionInvalid" xml:space="preserve">
+    <value>Điều kiện phân khúc không hợp lệ.</value>
+  </data>
+  <data name="Validation_CustomerSegment_ConditionTooComplex" xml:space="preserve">
+    <value>Điều kiện phân khúc vượt giới hạn: tối đa 3 cấp lồng nhau và 20 điều kiện.</value>
+  </data>
 </root>

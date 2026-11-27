@@ -180,6 +180,24 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int MembershipFreeTicketsPerShowtime { get; init; }
 
     public bool MembershipRefundStartedEnabled { get; init; }
+
+    public int SegmentNewCustomerDays { get; init; }
+
+    public int SegmentLapsedDays { get; init; }
+
+    public int SegmentRegularMinOrders { get; init; }
+
+    public int SegmentLookbackDays { get; init; }
+
+    public int SegmentHighValueMinScore { get; init; }
+
+    public int SegmentLtvProjectionMonths { get; init; }
+
+    public int SegmentTierUpgradePercent { get; init; }
+
+    public int SegmentPreferenceMinViewings { get; init; }
+
+    public int SegmentPreferenceMinSharePercent { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -276,5 +294,14 @@ public record UpdateSettingsRequest(
     int? RoomRentalPartialRefundDays = null,
     int? RoomRentalPartialRefundPercent = null,
     int? MembershipFreeTicketsPerShowtime = null,
-    bool? MembershipRefundStartedEnabled = null
+    bool? MembershipRefundStartedEnabled = null,
+    int? SegmentNewCustomerDays = null,
+    int? SegmentLapsedDays = null,
+    int? SegmentRegularMinOrders = null,
+    int? SegmentLookbackDays = null,
+    int? SegmentHighValueMinScore = null,
+    int? SegmentLtvProjectionMonths = null,
+    int? SegmentTierUpgradePercent = null,
+    int? SegmentPreferenceMinViewings = null,
+    int? SegmentPreferenceMinSharePercent = null
 );

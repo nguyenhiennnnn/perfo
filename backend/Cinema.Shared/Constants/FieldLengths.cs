@@ -14,6 +14,7 @@ public static class FieldLengths
     public const int MovieTitle = 200;
     public const int SeatRow = 5;
     public const int ComboName = 150;
+    public const int CustomerSegmentName = 150;
     public const int ComboDescription = 500;
     public const int CinemaName = 150;
     public const int CinemaAddress = 255;

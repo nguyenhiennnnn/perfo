@@ -3,6 +3,7 @@ using Cinema.Application.Caching;
 using Cinema.Application.DTOs.Inventory;
 using Cinema.Application.DTOs.Showtimes;
 using Cinema.Application.Services.Pricing;
+using Cinema.Application.Services.Segments;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 using Cinema.Application.Interfaces.Orders;
@@ -655,6 +656,18 @@ public static class AuditSnapshots
                     r.Method,
                     r.Amount,
                 }),
+            }
+        );
+
+    public static JsonObject CustomerSegmentState(CustomerSegment s) =>
+        AuditJson.ToObject(
+            new
+            {
+                s.Name,
+                s.Description,
+                conditions = SegmentConditionCompiler.Deserialize(s.ConditionJson),
+                s.IsActive,
+                s.IsDeleted,
             }
         );
 }

@@ -124,6 +124,15 @@ public class CinemaSettings
     public const int DefaultRoomRentalPartialRefundPercent = 50;
     public const int DefaultMembershipFreeTicketsPerShowtime = 2;
     public const bool DefaultMembershipRefundStartedEnabled = false;
+    public const int DefaultSegmentNewCustomerDays = 30;
+    public const int DefaultSegmentLapsedDays = 60;
+    public const int DefaultSegmentRegularMinOrders = 3;
+    public const int DefaultSegmentLookbackDays = 180;
+    public const int DefaultSegmentHighValueMinScore = 4;
+    public const int DefaultSegmentLtvProjectionMonths = 12;
+    public const int DefaultSegmentTierUpgradePercent = 20;
+    public const int DefaultSegmentPreferenceMinViewings = 3;
+    public const int DefaultSegmentPreferenceMinSharePercent = 40;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -284,4 +293,23 @@ public class CinemaSettings
 
     public bool MembershipRefundStartedEnabled { get; set; } =
         DefaultMembershipRefundStartedEnabled;
+
+    public int SegmentNewCustomerDays { get; set; } = DefaultSegmentNewCustomerDays;
+
+    public int SegmentLapsedDays { get; set; } = DefaultSegmentLapsedDays;
+
+    public int SegmentRegularMinOrders { get; set; } = DefaultSegmentRegularMinOrders;
+
+    public int SegmentLookbackDays { get; set; } = DefaultSegmentLookbackDays;
+
+    public int SegmentHighValueMinScore { get; set; } = DefaultSegmentHighValueMinScore;
+
+    public int SegmentLtvProjectionMonths { get; set; } = DefaultSegmentLtvProjectionMonths;
+
+    public int SegmentTierUpgradePercent { get; set; } = DefaultSegmentTierUpgradePercent;
+
+    public int SegmentPreferenceMinViewings { get; set; } = DefaultSegmentPreferenceMinViewings;
+
+    public int SegmentPreferenceMinSharePercent { get; set; } =
+        DefaultSegmentPreferenceMinSharePercent;
 }

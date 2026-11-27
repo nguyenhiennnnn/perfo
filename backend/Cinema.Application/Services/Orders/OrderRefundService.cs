@@ -131,8 +131,14 @@ public class OrderRefundService(
         return reservations;
     }
 
+    public Task<IReadOnlyList<PaymentRefundResult>> ExecuteAsync(
+        IReadOnlyList<OrderRefundReservation> reservations,
+        CancellationToken cancellationToken
+    ) => ExecuteAsync(reservations, true, cancellationToken);
+
     public async Task<IReadOnlyList<PaymentRefundResult>> ExecuteAsync(
         IReadOnlyList<OrderRefundReservation> reservations,
+        bool failOnError,
         CancellationToken cancellationToken
     )
     {
@@ -144,6 +150,7 @@ public class OrderRefundService(
                 results.Add(
                     await refundService.ExecuteAsync(
                         reservation.RefundTransactionId,
+                        failOnError,
                         cancellationToken
                     )
                 );

@@ -64,4 +64,10 @@ public interface IOrderRefundService
         IReadOnlyList<OrderRefundReservation> reservations,
         CancellationToken cancellationToken
     );
+
+    Task<IReadOnlyList<PaymentRefundResult>> ExecuteAsync(
+        IReadOnlyList<OrderRefundReservation> reservations,
+        bool failOnError,
+        CancellationToken cancellationToken
+    );
 }

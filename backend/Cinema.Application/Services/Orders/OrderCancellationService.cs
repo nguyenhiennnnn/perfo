@@ -120,64 +120,42 @@ public class OrderCancellationService(
     {
         var settings = await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken);
 
-        await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
-        await db.LockOrderAsync(orderId, cancellationToken);
+        IReadOnlyList<OrderRefundReservation> reservations = [];
+        IReadOnlyList<ReleasedSeat> releasedSeats = [];
 
-        var status = await db
-            .Orders.AsNoTracking()
-            .Where(o => o.OrderId == orderId)
-            .Select(o => o.Status)
-            .FirstAsync(cancellationToken);
-        if (status != OrderStatus.Confirmed)
-            throw new ConflictAppException(Messages.Conflict_BookingBeingProcessedOrCancelled);
-
-        await EnsureCancellableAsync(orderId, actor, reason, settings, cancellationToken);
-
-        var isRoomChangeCancel = reason == CancelReason.RoomClosed;
-        var plan = await orderRefunds.BuildPlanAsync(
-            orderId,
-            isRoomChangeCancel
-                ? RefundScope.Full(true)
-                : RefundScope.ByPercent(settings.CancelRefundPercent),
-            cancellationToken
-        );
-        var reservations = await orderRefunds.ReserveAsync(
-            plan,
-            actor.UserId,
-            string.Format(
-                isRoomChangeCancel
-                    ? Messages.Refund_RoomChangeCancelDescription
-                    : Messages.Refund_CancelOrderDescription,
-                orderCode
-            ),
-            cancellationToken
-        );
-        var results = await orderRefunds.ExecuteAsync(reservations, cancellationToken);
-
-        var gatewayIds = reservations
-            .Where(r => r.Method.IsGatewayMethod())
-            .Select(r => r.RefundTransactionId)
-            .ToHashSet();
-        var gatewayResults = results.Where(r => gatewayIds.Contains(r.RefundTransactionId)).ToList();
-        if (gatewayResults.Count > 0 && gatewayResults.All(r => r.IsFailed))
+        await using (var transaction = await db.Database.BeginTransactionAsync(cancellationToken))
         {
-            var message =
-                gatewayResults.Select(r => r.Message).FirstOrDefault(m => !string.IsNullOrWhiteSpace(m))
-                ?? Messages.Refund_ExecutionError;
-            logger.LogWarning(
-                "OrderRefundFailed OrderId {OrderId} Message {Message}",
+            await db.LockOrderAsync(orderId, cancellationToken);
+
+            var status = await db
+                .Orders.AsNoTracking()
+                .Where(o => o.OrderId == orderId)
+                .Select(o => o.Status)
+                .FirstAsync(cancellationToken);
+            if (status != OrderStatus.Confirmed)
+                throw new ConflictAppException(Messages.Conflict_BookingBeingProcessedOrCancelled);
+
+            await EnsureCancellableAsync(orderId, actor, reason, settings, cancellationToken);
+
+            var isRoomChangeCancel = reason == CancelReason.RoomClosed;
+            var plan = await orderRefunds.BuildPlanAsync(
                 orderId,
-                message
+                isRoomChangeCancel
+                    ? RefundScope.Full(true)
+                    : RefundScope.ByPercent(settings.CancelRefundPercent),
+                cancellationToken
             );
-            throw new BusinessRuleException(string.Format(Messages.Rule_RefundFailed, message));
-        }
-
-        var gatewayRefunded = gatewayResults.Where(r => r.Success).ToList();
-        IReadOnlyList<ReleasedSeat> releasedSeats;
-        try
-        {
-            var failedIds = results.Where(r => r.IsFailed).Select(r => r.RefundTransactionId).ToList();
-            await MarkManualRefundsAsync(orderId, reservations, failedIds, cancellationToken);
+            reservations = await orderRefunds.ReserveAsync(
+                plan,
+                actor.UserId,
+                string.Format(
+                    isRoomChangeCancel
+                        ? Messages.Refund_RoomChangeCancelDescription
+                        : Messages.Refund_CancelOrderDescription,
+                    orderCode
+                ),
+                cancellationToken
+            );
 
             var voidedDues = ShouldAudit(actor, reason)
                 ? await db
@@ -197,16 +175,14 @@ public class OrderCancellationService(
                 cancellationToken
             );
 
-            var refunded = results.Where(r => r.Success).Sum(r => r.Amount);
-            var manual = results.Where(r => !r.Success).Sum(r => r.Amount);
             if (ShouldAudit(actor, reason))
                 RecordAudit(
                     actor,
                     orderId,
                     OrderStatus.Confirmed,
                     reason,
-                    refunded,
-                    manual,
+                    reservations.Where(r => r.Status == PaymentStatus.Success).Sum(r => r.Amount),
+                    reservations.Where(r => r.Status != PaymentStatus.Success).Sum(r => r.Amount),
                     voidedDues.Count,
                     voidedDues.Sum()
                 );
@@ -214,40 +190,23 @@ public class OrderCancellationService(
             await db.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }
-        catch (Exception ex) when (gatewayRefunded.Count > 0)
-        {
-            logger.LogCritical(
-                ex,
-                "RefundCommitFailed OrderId {OrderId} RefundTransactionIds {RefundIds} — đã hoàn tiền ở cổng nhưng DB chưa ghi nhận.",
-                orderId,
-                string.Join(",", gatewayRefunded.Select(r => r.RefundTransactionId))
-            );
-            throw;
-        }
 
-        foreach (var group in releasedSeats.GroupBy(s => s.ShowtimeId))
-            await realtimeNotifier.NotifySeatReleasedAsync(
-                group.Key,
-                [.. group.Select(s => s.ShowtimeSeatId)],
-                cancellationToken
-            );
+        await NotifySeatsReleasedAsync(orderId, releasedSeats);
+
+        var gatewayStatuses = await ExecuteGatewayRefundsAsync(orderId, reservations);
 
         var refunds = reservations
-            .Select(r =>
-            {
-                var result = results.First(x => x.RefundTransactionId == r.RefundTransactionId);
-                return new OrderCancellationRefund(
-                    r.RefundTransactionId,
-                    r.Method,
-                    result.Amount,
-                    result.Status
-                );
-            })
+            .Select(r => new OrderCancellationRefund(
+                r.RefundTransactionId,
+                r.Method,
+                r.Amount,
+                gatewayStatuses.GetValueOrDefault(r.RefundTransactionId, r.Status)
+            ))
             .ToList();
         var totalRefunded = refunds.Where(r => r.Status == PaymentStatus.Success).Sum(r => r.Amount);
 
         logger.LogInformation(
-            "OrderCancelled(Confirmed) OrderId {OrderId} ActorKind {Kind} ActorUserId {UserId} Refunded {Refunded} Failed {Failed}",
+            "OrderCancelled(Confirmed) OrderId {OrderId} ActorKind {Kind} ActorUserId {UserId} Refunded {Refunded} Pending {Pending}",
             orderId,
             actor.Kind,
             actor.UserId,
@@ -261,6 +220,54 @@ public class OrderCancellationService(
             totalRefunded,
             refunds
         );
+    }
+
+    private async Task NotifySeatsReleasedAsync(
+        int orderId,
+        IReadOnlyList<ReleasedSeat> releasedSeats
+    )
+    {
+        try
+        {
+            foreach (var group in releasedSeats.GroupBy(s => s.ShowtimeId))
+                await realtimeNotifier.NotifySeatReleasedAsync(
+                    group.Key,
+                    [.. group.Select(s => s.ShowtimeSeatId)],
+                    CancellationToken.None
+                );
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "OrderCancelSeatNotifyFailed OrderId {OrderId}", orderId);
+        }
+    }
+
+    private async Task<Dictionary<int, PaymentStatus>> ExecuteGatewayRefundsAsync(
+        int orderId,
+        IReadOnlyList<OrderRefundReservation> reservations
+    )
+    {
+        var pending = reservations
+            .Where(r => r.Method.IsGatewayMethod() && r.Status == PaymentStatus.Pending)
+            .ToList();
+        if (pending.Count == 0)
+            return new Dictionary<int, PaymentStatus>();
+
+        try
+        {
+            var results = await orderRefunds.ExecuteAsync(pending, false, CancellationToken.None);
+            return results.ToDictionary(r => r.RefundTransactionId, r => r.Status);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(
+                ex,
+                "OrderRefundExecuteAfterCancelFailed OrderId {OrderId} RefundTransactionIds {RefundIds}",
+                orderId,
+                string.Join(",", pending.Select(r => r.RefundTransactionId))
+            );
+            return new Dictionary<int, PaymentStatus>();
+        }
     }
 
     private async Task EnsureCancellableAsync(
@@ -358,34 +365,6 @@ public class OrderCancellationService(
 
     private static bool ShouldAudit(CancelActor actor, CancelReason reason) =>
         !actor.IsCustomer || reason == CancelReason.RoomClosed;
-
-    private async Task MarkManualRefundsAsync(
-        int orderId,
-        IReadOnlyList<OrderRefundReservation> reservations,
-        IReadOnlyList<int> failedRefundIds,
-        CancellationToken cancellationToken
-    )
-    {
-        var chargeIds = reservations
-            .Where(r => failedRefundIds.Contains(r.RefundTransactionId))
-            .Select(r => r.ChargeTransactionId)
-            .Distinct()
-            .ToList();
-        if (chargeIds.Count == 0)
-            return;
-
-        await db
-            .PaymentTransactions.Where(t => chargeIds.Contains(t.PaymentTransactionId))
-            .ExecuteUpdateAsync(
-                setters => setters.SetProperty(t => t.NeedsManualRefund, true),
-                cancellationToken
-            );
-        logger.LogCritical(
-            "OrderRefundNeedsManual OrderId {OrderId} ChargeTransactionIds {ChargeIds} — cần hoàn tiền thủ công.",
-            orderId,
-            string.Join(",", chargeIds)
-        );
-    }
 
     private void RecordAudit(
         CancelActor actor,

@@ -50,6 +50,7 @@ public class MembershipFreeTicketResourceHold(IAppDbContext db, IAppCache cache)
             .Where(t =>
                 t.UserId == userId
                 && t.OrderId == null
+                && t.RevokedAt == null
                 && t.PeriodStart <= now
                 && t.PeriodEnd > now
                 && t.MembershipSubscription.Status == MembershipSubscriptionStatus.Active

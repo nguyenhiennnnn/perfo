@@ -123,6 +123,7 @@ public class CinemaSettings
     public const int DefaultRoomRentalPartialRefundDays = 3;
     public const int DefaultRoomRentalPartialRefundPercent = 50;
     public const int DefaultMembershipFreeTicketsPerShowtime = 2;
+    public const bool DefaultMembershipRefundStartedEnabled = false;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -280,4 +281,7 @@ public class CinemaSettings
 
     public int MembershipFreeTicketsPerShowtime { get; set; } =
         DefaultMembershipFreeTicketsPerShowtime;
+
+    public bool MembershipRefundStartedEnabled { get; set; } =
+        DefaultMembershipRefundStartedEnabled;
 }

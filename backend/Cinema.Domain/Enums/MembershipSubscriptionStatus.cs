@@ -4,4 +4,5 @@ public enum MembershipSubscriptionStatus
 {
     Active,
     Expired,
+    Refunded,
 }

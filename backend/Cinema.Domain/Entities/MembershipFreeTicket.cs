@@ -10,6 +10,7 @@ public class MembershipFreeTicket
     public DateTime PeriodStart { get; set; }
     public DateTime PeriodEnd { get; set; }
     public DateTime GrantedAt { get; set; }
+    public DateTime? RevokedAt { get; set; }
     public DateTime? UsedAt { get; set; }
     public int? OrderId { get; set; }
     public int? OrderLineId { get; set; }

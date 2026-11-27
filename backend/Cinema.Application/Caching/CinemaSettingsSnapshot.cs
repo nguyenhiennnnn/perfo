@@ -94,7 +94,8 @@ public sealed record CinemaSettingsSnapshot(
     int RoomRentalFullRefundDays,
     int RoomRentalPartialRefundDays,
     int RoomRentalPartialRefundPercent,
-    int MembershipFreeTicketsPerShowtime
+    int MembershipFreeTicketsPerShowtime,
+    bool MembershipRefundStartedEnabled
 )
 {
     public static CinemaSettingsSnapshot From(CinemaSettings s) =>
@@ -189,6 +190,7 @@ public sealed record CinemaSettingsSnapshot(
             s.RoomRentalFullRefundDays,
             s.RoomRentalPartialRefundDays,
             s.RoomRentalPartialRefundPercent,
-            s.MembershipFreeTicketsPerShowtime
+            s.MembershipFreeTicketsPerShowtime,
+            s.MembershipRefundStartedEnabled
         );
 }

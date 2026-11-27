@@ -44,12 +44,16 @@ public class OrderCancellationService(
                     o.OrderCode,
                     o.UserId,
                     o.Status,
+                    o.Type,
                 })
                 .FirstOrDefaultAsync(o => o.OrderId == orderId, cancellationToken)
             ?? throw new NotFoundException(Messages.NotFound_Order);
 
         if (actor.IsCustomer && order.UserId != actor.UserId)
             throw new ForbiddenAppException(Messages.Forbidden_NotBookingOwner);
+
+        if (order.Type == OrderType.Membership && order.Status == OrderStatus.Confirmed)
+            throw new BusinessRuleException(Messages.Rule_MembershipOrderCancelViaSubscription);
 
         return order.Status switch
         {

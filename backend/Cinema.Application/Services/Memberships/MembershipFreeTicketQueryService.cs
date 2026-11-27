@@ -16,7 +16,12 @@ public class MembershipFreeTicketQueryService(IAppDbContext db) : IMembershipFre
         var periods = await db
             .MembershipFreeTickets.AsNoTracking()
             .IgnoreQueryFilters()
-            .Where(t => t.UserId == userId && t.PeriodStart <= now && t.PeriodEnd > now)
+            .Where(t =>
+                t.UserId == userId
+                && t.RevokedAt == null
+                && t.PeriodStart <= now
+                && t.PeriodEnd > now
+            )
             .GroupBy(t => new
             {
                 t.MembershipSubscriptionId,

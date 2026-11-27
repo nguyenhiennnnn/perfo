@@ -50,7 +50,11 @@ public class MembershipSubscriptionHandler(IAppDbContext db)
 
         var occurredAt = businessEvent.OccurredAt;
         var latestEnd = await db
-            .MembershipSubscriptions.Where(s => s.UserId == userId && s.ValidTo > occurredAt)
+            .MembershipSubscriptions.Where(s =>
+                s.UserId == userId
+                && s.Status == MembershipSubscriptionStatus.Active
+                && s.ValidTo > occurredAt
+            )
             .MaxAsync(s => (DateTime?)s.ValidTo, cancellationToken);
         var validFrom = latestEnd ?? occurredAt;
 

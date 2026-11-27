@@ -6149,7 +6149,7 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
     <value>Chưa ghi nhận cuối kỳ</value>
   </data>
   <data name="Report_Finance_MembershipRevenue_Note" xml:space="preserve">
-    <value>Tiền bán gói là khoản nhận trước, được ghi nhận thành doanh thu chia đều theo từng tháng hiệu lực của đăng ký. Phần chưa ghi nhận là các tháng chưa đến kỳ ghi nhận. Khi vé miễn phí được dùng, giá trị quy đổi của vé được chuyển từ doanh thu gói sang doanh thu vé của suất chiếu (ghi theo ngày chiếu trong bảng tổng hợp suất chiếu), nên doanh thu gói thực bằng đã ghi nhận trừ phần chuyển.</value>
+    <value>Tiền bán gói là khoản nhận trước, được ghi nhận thành doanh thu chia đều theo từng tháng hiệu lực của đăng ký. Phần chưa ghi nhận là các tháng chưa đến kỳ ghi nhận. Khi vé miễn phí được dùng, giá trị quy đổi của vé được chuyển từ doanh thu gói sang doanh thu vé của suất chiếu (ghi theo ngày chiếu trong bảng tổng hợp suất chiếu), nên doanh thu gói thực bằng đã ghi nhận trừ phần chuyển. Khi gói được hoàn, các tháng chưa ghi nhận bị dừng và phần doanh thu nhận trước tương ứng được giải phóng, thể hiện ở cột dừng do hoàn.</value>
   </data>
   <data name="Validation_MembershipPlan_ConversionRange" xml:space="preserve">
     <value>Giá trị quy đổi của một vé miễn phí phải là số nguyên đồng, từ 0 đến {0}.</value>
@@ -6162,5 +6162,42 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   </data>
   <data name="Report_Finance_Col_MembershipNetRevenue" xml:space="preserve">
     <value>Doanh thu gói thực trong kỳ</value>
+  </data>
+  <data name="NotFound_MembershipSubscription" xml:space="preserve">
+    <value>Không tìm thấy đăng ký gói thành viên.</value>
+  </data>
+  <data name="Forbidden_MembershipRefundAdminOnly" xml:space="preserve">
+    <value>Chỉ quản trị mới được hoàn gói thành viên theo lý do ngoại lệ.</value>
+  </data>
+  <data name="Rule_MembershipSubscriptionNotRefundable" xml:space="preserve">
+    <value>Đăng ký gói không còn hiệu lực hoặc đã được hoàn nên không thể hoàn.</value>
+  </data>
+  <data name="Rule_MembershipStartedNotRefundable" xml:space="preserve">
+    <value>Gói đã bắt đầu hiệu lực nên không được hoàn. Chỉ hoàn khi do lỗi hệ thống hoặc quản trị cho phép ngoại lệ.</value>
+  </data>
+  <data name="Rule_MembershipRefundFreeTicketHeld" xml:space="preserve">
+    <value>Có vé miễn phí của gói đang được giữ cho đơn chờ thanh toán. Hãy thử lại sau khi đơn đó được thanh toán hoặc hết hạn.</value>
+  </data>
+  <data name="Rule_MembershipRefundNothingLeft" xml:space="preserve">
+    <value>Gói không còn phần doanh thu chưa ghi nhận để hoàn.</value>
+  </data>
+  <data name="Rule_MembershipOrderCancelViaSubscription" xml:space="preserve">
+    <value>Đơn mua gói thành viên đã xác nhận không hủy trực tiếp được. Hãy dùng chức năng hoàn gói thành viên.</value>
+  </data>
+  <data name="Refund_MembershipDescription" xml:space="preserve">
+    <value>Hoàn gói thành viên, đơn {0}</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Refund_MembershipDescription, ...)</comment>
+  </data>
+  <data name="Success_MembershipSubscriptionRefunded" xml:space="preserve">
+    <value>Đã hoàn gói thành viên.</value>
+  </data>
+  <data name="Validation_MembershipRefund_ReasonInvalid" xml:space="preserve">
+    <value>Lý do hoàn gói không hợp lệ.</value>
+  </data>
+  <data name="Validation_MembershipRefund_NoteRequired" xml:space="preserve">
+    <value>Cần nhập ghi chú khi hoàn gói theo lỗi hệ thống hoặc ngoại lệ.</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipStopped" xml:space="preserve">
+    <value>Doanh thu gói dừng do hoàn</value>
   </data>
 </root>

@@ -288,6 +288,9 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
             .Property(x => x.MembershipFreeTicketsPerShowtime)
             .HasDefaultValue(CinemaSettings.DefaultMembershipFreeTicketsPerShowtime);
         builder
+            .Property(x => x.MembershipRefundStartedEnabled)
+            .HasDefaultValue(CinemaSettings.DefaultMembershipRefundStartedEnabled);
+        builder
             .Property(x => x.SupportRequestDueHours)
             .HasDefaultValue(CinemaSettings.DefaultSupportRequestDueHours);
         builder

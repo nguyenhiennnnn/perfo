@@ -12,6 +12,9 @@ public class MembershipSubscription
     public DateTime ValidTo { get; set; }
     public MembershipSubscriptionStatus Status { get; set; } = MembershipSubscriptionStatus.Active;
     public DateTime? ExpiryReminderSentAt { get; set; }
+    public DateTime? RefundedAt { get; set; }
+    public MembershipRefundReason? RefundReason { get; set; }
+    public decimal StoppedRevenueAmount { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public User User { get; set; } = null!;

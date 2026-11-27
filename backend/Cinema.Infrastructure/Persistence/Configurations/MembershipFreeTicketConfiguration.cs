@@ -21,6 +21,10 @@ public class MembershipFreeTicketConfiguration : IEntityTypeConfiguration<Member
                     "(\"UsedAt\" IS NULL AND \"OrderId\" IS NULL AND \"OrderLineId\" IS NULL AND \"ShowtimeId\" IS NULL AND \"ConvertedAmount\" IS NULL) "
                         + "OR (\"OrderId\" IS NOT NULL AND \"OrderLineId\" IS NOT NULL AND \"ShowtimeId\" IS NOT NULL AND \"ConvertedAmount\" >= 0)"
                 );
+                t.HasCheckConstraint(
+                    "CK_MembershipFreeTickets_Revoked",
+                    "\"RevokedAt\" IS NULL OR (\"UsedAt\" IS NULL AND \"OrderId\" IS NULL)"
+                );
             }
         );
         builder.HasKey(x => x.MembershipFreeTicketId);
@@ -28,6 +32,7 @@ public class MembershipFreeTicketConfiguration : IEntityTypeConfiguration<Member
         builder.Property(x => x.PeriodEnd).HasColumnType("timestamp without time zone");
         builder.Property(x => x.GrantedAt).HasColumnType("timestamp without time zone");
         builder.Property(x => x.UsedAt).HasColumnType("timestamp without time zone");
+        builder.Property(x => x.RevokedAt).HasColumnType("timestamp without time zone");
         builder.Property(x => x.ConvertedAmount).HasColumnType("decimal(18,2)");
 
         builder

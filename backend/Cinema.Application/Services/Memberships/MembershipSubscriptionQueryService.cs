@@ -1,6 +1,7 @@
 using Cinema.Application.DTOs.Memberships;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Memberships;
+using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +29,7 @@ public class MembershipSubscriptionQueryService(IAppDbContext db)
                 s.OrderId,
                 s.ValidFrom,
                 s.ValidTo,
-                s.ValidFrom <= now && s.ValidTo > now
+                s.Status == MembershipSubscriptionStatus.Active && s.ValidFrom <= now && s.ValidTo > now
             ))
             .ToListAsync(cancellationToken);
     }

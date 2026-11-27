@@ -20,7 +20,9 @@ public class MembershipRevenueBlock(IAppDbContext db, IAppCache cache) : IReport
         int SubscriptionId,
         int PlanId,
         DateTime CreatedAt,
-        decimal Price
+        decimal Price,
+        DateTime? RefundedAt,
+        decimal Stopped
     );
 
     private sealed record EntryRow(int SubscriptionId, decimal Before, decimal InPeriod);
@@ -32,6 +34,7 @@ public class MembershipRevenueBlock(IAppDbContext db, IAppCache cache) : IReport
         decimal Opening,
         decimal Recognized,
         decimal Converted,
+        decimal Stopped,
         decimal Closing
     );
 
@@ -63,7 +66,9 @@ public class MembershipRevenueBlock(IAppDbContext db, IAppCache cache) : IReport
                 s.Order.Lines.Where(l =>
                         l.LineType == OrderLineType.Fee && l.MembershipPlanId != null
                     )
-                    .Sum(l => l.LockedUnitPrice * l.Quantity)
+                    .Sum(l => l.LockedUnitPrice * l.Quantity),
+                s.RefundedAt,
+                s.StoppedRevenueAmount
             ))
             .ToListAsync(cancellationToken);
 
@@ -105,8 +110,14 @@ public class MembershipRevenueBlock(IAppDbContext db, IAppCache cache) : IReport
                 var g = bySubscriptionPlan[planId].ToList();
                 var sold = g.Where(s => s.CreatedAt >= fromUtc).ToList();
                 var opening = g.Where(s => s.CreatedAt < fromUtc)
-                    .Sum(s => s.Price - Entry(entryBySubscription, s.SubscriptionId).Before);
+                    .Sum(s =>
+                        s.Price
+                        - Entry(entryBySubscription, s.SubscriptionId).Before
+                        - (s.RefundedAt < fromUtc ? s.Stopped : 0m)
+                    );
                 var recognized = g.Sum(s => Entry(entryBySubscription, s.SubscriptionId).InPeriod);
+                var stopped = g.Where(s => s.RefundedAt >= fromUtc && s.RefundedAt < toUtc)
+                    .Sum(s => s.Stopped);
                 var soldAmount = sold.Sum(s => s.Price);
                 return new Line(
                     planNames.GetValueOrDefault(planId) ?? string.Empty,
@@ -115,7 +126,8 @@ public class MembershipRevenueBlock(IAppDbContext db, IAppCache cache) : IReport
                     opening,
                     recognized,
                     converted.GetValueOrDefault(planId),
-                    opening + soldAmount - recognized
+                    stopped,
+                    opening + soldAmount - recognized - stopped
                 );
             })
             .Where(l =>
@@ -123,6 +135,7 @@ public class MembershipRevenueBlock(IAppDbContext db, IAppCache cache) : IReport
                 || l.Opening != 0m
                 || l.Recognized != 0m
                 || l.Converted != 0m
+                || l.Stopped != 0m
                 || l.Closing != 0m
             )
             .OrderBy(l => l.Plan, StringComparer.CurrentCultureIgnoreCase)
@@ -137,6 +150,7 @@ public class MembershipRevenueBlock(IAppDbContext db, IAppCache cache) : IReport
             new("recognized", Messages.Report_Finance_Col_MembershipRecognized, ReportColumnType.Money),
             new("converted", Messages.Report_Finance_Col_MembershipConverted, ReportColumnType.Money),
             new("net", Messages.Report_Finance_Col_MembershipNetRevenue, ReportColumnType.Money),
+            new("stopped", Messages.Report_Finance_Col_MembershipStopped, ReportColumnType.Money),
             new("closing", Messages.Report_Finance_Col_MembershipDeferredClosing, ReportColumnType.Money),
         ];
 
@@ -152,6 +166,7 @@ public class MembershipRevenueBlock(IAppDbContext db, IAppCache cache) : IReport
                         ["recognized"] = l.Recognized,
                         ["converted"] = l.Converted,
                         ["net"] = l.Recognized - l.Converted,
+                        ["stopped"] = l.Stopped,
                         ["closing"] = l.Closing,
                     }
             )
@@ -166,6 +181,7 @@ public class MembershipRevenueBlock(IAppDbContext db, IAppCache cache) : IReport
             ["recognized"] = lines.Sum(l => l.Recognized),
             ["converted"] = lines.Sum(l => l.Converted),
             ["net"] = lines.Sum(l => l.Recognized - l.Converted),
+            ["stopped"] = lines.Sum(l => l.Stopped),
             ["closing"] = lines.Sum(l => l.Closing),
         };
 
@@ -189,10 +205,13 @@ public class MembershipRevenueBlock(IAppDbContext db, IAppCache cache) : IReport
                 s.CreatedAt < toUtc
                 && (
                     s.CreatedAt >= fromUtc
-                    || !db.MembershipRevenueEntries.Any(e =>
-                        e.MembershipSubscriptionId == s.MembershipSubscriptionId
-                        && e.PeriodEnd == s.ValidTo
-                        && e.BusinessDate < period.From
+                    || (
+                        (s.RefundedAt == null || s.RefundedAt >= fromUtc)
+                        && !db.MembershipRevenueEntries.Any(e =>
+                            e.MembershipSubscriptionId == s.MembershipSubscriptionId
+                            && e.PeriodEnd == s.ValidTo
+                            && e.BusinessDate < period.From
+                        )
                     )
                 )
             );

@@ -17,7 +17,12 @@ public class MembershipSubscriptionConfiguration : IEntityTypeConfiguration<Memb
                 t.HasCheckConstraint("CK_MembershipSubscriptions_ValidRange", "\"ValidTo\" > \"ValidFrom\"");
                 t.HasCheckConstraint(
                     "CK_MembershipSubscriptions_Status",
-                    "\"Status\" IN ('Active','Expired')"
+                    "\"Status\" IN ('Active','Expired','Refunded')"
+                );
+                t.HasCheckConstraint(
+                    "CK_MembershipSubscriptions_Refund",
+                    "(\"Status\" = 'Refunded' AND \"RefundedAt\" IS NOT NULL AND \"RefundReason\" IS NOT NULL) "
+                        + "OR (\"Status\" <> 'Refunded' AND \"RefundedAt\" IS NULL AND \"RefundReason\" IS NULL AND \"StoppedRevenueAmount\" = 0)"
                 );
             }
         );
@@ -32,6 +37,15 @@ public class MembershipSubscriptionConfiguration : IEntityTypeConfiguration<Memb
         builder
             .Property(x => x.ExpiryReminderSentAt)
             .HasColumnType("timestamp without time zone");
+        builder.Property(x => x.RefundedAt).HasColumnType("timestamp without time zone");
+        builder
+            .Property(x => x.RefundReason)
+            .HasConversion<string>()
+            .HasMaxLength(FieldLengths.EnumValue);
+        builder
+            .Property(x => x.StoppedRevenueAmount)
+            .HasColumnType("decimal(18,2)")
+            .HasDefaultValue(0m);
         builder.Property(x => x.CreatedAt).HasColumnType("timestamp without time zone");
 
         builder

@@ -2,7 +2,11 @@ using Cinema.Api.Extensions;
 using Cinema.Application.DTOs.Memberships;
 using Cinema.Application.DTOs.Orders;
 using Cinema.Application.Interfaces.Memberships;
+using Cinema.Application.Interfaces.Orders;
+using Cinema.Domain.Enums;
+using Cinema.Api.Filters;
 using Cinema.Shared.Constants;
+using Cinema.Shared.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -15,7 +19,8 @@ public class MembershipPlansController(
     IMembershipPlanService planService,
     IMembershipPurchaseService purchaseService,
     IMembershipSubscriptionQueryService subscriptionQueryService,
-    IMembershipFreeTicketQueryService freeTicketQueryService
+    IMembershipFreeTicketQueryService freeTicketQueryService,
+    IMembershipRefundService refundService
 ) : AppControllerBase
 {
     [HttpGet]
@@ -47,4 +52,21 @@ public class MembershipPlansController(
     public async Task<ActionResult<MembershipFreeTicketBalanceDto>> GetMyFreeTickets(
         CancellationToken cancellationToken
     ) => Ok(await freeTicketQueryService.GetMineAsync(CurrentUserId, cancellationToken));
+
+    [HttpPost("subscriptions/{id:int}/cancel")]
+    [Authorize]
+    [SuccessMessage(nameof(Messages.Success_MembershipSubscriptionRefunded))]
+    public async Task<ActionResult<MembershipRefundResultDto>> Cancel(
+        int id,
+        CancellationToken cancellationToken
+    ) =>
+        Ok(
+            await refundService.RefundAsync(
+                id,
+                new CancelActor(CancelActorKind.Customer, CurrentUserId),
+                MembershipRefundReason.CustomerRequest,
+                null,
+                cancellationToken
+            )
+        );
 }

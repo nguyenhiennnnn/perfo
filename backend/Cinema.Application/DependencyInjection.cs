@@ -325,6 +325,7 @@ public static class DependencyInjection
         services.AddScoped<IMembershipExpiryService, MembershipExpiryService>();
         services.AddScoped<IMembershipFreeTicketGrantService, MembershipFreeTicketGrantService>();
         services.AddScoped<IMembershipRevenueService, MembershipRevenueService>();
+        services.AddScoped<IMembershipRefundService, MembershipRefundService>();
         services.AddScoped<IMembershipFreeTicketQueryService, MembershipFreeTicketQueryService>();
         services.AddScoped<MembershipFreeTicketResourceHold>();
         services.AddScoped<IMembershipFreeTicketHoldService>(sp =>

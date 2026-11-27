@@ -6,6 +6,8 @@ using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Constants;
+using Cinema.Shared.Exceptions;
+using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -53,28 +55,21 @@ public class MembershipRevenueService(
         var afterId = 0;
         while (true)
         {
-            var due = await db
-                .MembershipSubscriptions.AsNoTracking()
-                .Where(s =>
-                    s.MembershipSubscriptionId > afterId
-                    && s.ValidFrom <= now
-                    && s.Order.Status == OrderStatus.Confirmed
-                    && !db.MembershipRevenueEntries.Any(e =>
-                        e.MembershipSubscriptionId == s.MembershipSubscriptionId
-                        && e.PeriodEnd == s.ValidTo
-                    )
-                )
-                .OrderBy(s => s.MembershipSubscriptionId)
-                .Take(BatchSize)
-                .Select(s => new DueSubscription(
-                    s.MembershipSubscriptionId,
-                    s.ValidFrom,
-                    s.ValidTo,
-                    s.Order.Lines.Where(l =>
-                            l.LineType == OrderLineType.Fee && l.MembershipPlanId != null
+            var due = await ProjectDue(
+                    db.MembershipSubscriptions.AsNoTracking()
+                        .Where(s =>
+                            s.MembershipSubscriptionId > afterId
+                            && s.ValidFrom <= now
+                            && s.Status != MembershipSubscriptionStatus.Refunded
+                            && s.Order.Status == OrderStatus.Confirmed
+                            && !db.MembershipRevenueEntries.Any(e =>
+                                e.MembershipSubscriptionId == s.MembershipSubscriptionId
+                                && e.PeriodEnd == s.ValidTo
+                            )
                         )
-                        .Sum(l => l.LockedUnitPrice * l.Quantity)
-                ))
+                        .OrderBy(s => s.MembershipSubscriptionId)
+                        .Take(BatchSize)
+                )
                 .ToListAsync(cancellationToken);
             if (due.Count == 0)
                 break;
@@ -101,6 +96,61 @@ public class MembershipRevenueService(
             logger.LogInformation("MembershipRevenueRecognized Count {Count}", total);
         return total;
     }
+
+    public async Task<MembershipRevenueSettlement> SettleForRefundAsync(
+        int subscriptionId,
+        CancellationToken cancellationToken
+    )
+    {
+        await db.Database.ExecuteSqlInterpolatedAsync(
+            $"SELECT pg_advisory_xact_lock({LockClassId}, {subscriptionId})",
+            cancellationToken
+        );
+
+        var subscription =
+            await ProjectDue(
+                    db.MembershipSubscriptions.AsNoTracking()
+                        .IgnoreQueryFilters()
+                        .Where(s => s.MembershipSubscriptionId == subscriptionId)
+                )
+                .FirstOrDefaultAsync(cancellationToken)
+            ?? throw new NotFoundException(Messages.NotFound_MembershipSubscription);
+
+        var settings = await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken);
+        var now = DateTime.UtcNow;
+        var businessDate = BusinessDay.Of(now, settings.OpeningTime, settings.ClosingTime);
+        var closed = await db
+            .DailyClosings.AsNoTracking()
+            .AnyAsync(
+                c => c.BusinessDate == businessDate && c.Status == DailyClosingStatus.Closed,
+                cancellationToken
+            );
+        if (!closed && subscription.ValidFrom <= now)
+            await RecognizeAsync(subscription, businessDate, now, cancellationToken);
+
+        var months = MembershipRevenueSchedule.Months(subscription.ValidFrom, subscription.ValidTo);
+        var amounts = MembershipRevenueSchedule.Split(subscription.Price, months);
+        var recorded = await db
+            .MembershipRevenueEntries.AsNoTracking()
+            .Where(e => e.MembershipSubscriptionId == subscriptionId)
+            .Select(e => e.MonthIndex)
+            .ToListAsync(cancellationToken);
+        var remaining = Enumerable.Range(0, months).Where(i => !recorded.Contains(i)).ToList();
+        return new MembershipRevenueSettlement(
+            months,
+            remaining.Count,
+            remaining.Sum(i => amounts[i])
+        );
+    }
+
+    private static IQueryable<DueSubscription> ProjectDue(IQueryable<MembershipSubscription> query) =>
+        query.Select(s => new DueSubscription(
+            s.MembershipSubscriptionId,
+            s.ValidFrom,
+            s.ValidTo,
+            s.Order.Lines.Where(l => l.LineType == OrderLineType.Fee && l.MembershipPlanId != null)
+                .Sum(l => l.LockedUnitPrice * l.Quantity)
+        ));
 
     private async Task<int> RecognizeAsync(
         DueSubscription subscription,

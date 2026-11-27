@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Net;
+using System.Text.RegularExpressions;
 using Cinema.Application.Interfaces;
 using Cinema.Application.Options;
 using Cinema.Domain.Enums;
@@ -509,15 +510,87 @@ public static class EmailTemplates
             _ => Messages.Email_SupportStatusResolved,
         };
 
-    private static string DescribeApologyDiscount(SupportApologyCodeEmailData code)
-    {
-        if (code.DiscountType != PromotionDiscountType.Percent)
-            return string.Format(Messages.Email_SupportCodeDiscountFixed, Money(code.DiscountValue));
+    private static string DescribeApologyDiscount(SupportApologyCodeEmailData code) =>
+        DescribeDiscount(code.DiscountType, code.DiscountValue, code.MaxDiscountAmount);
 
-        var percent = code.DiscountValue.ToString("0.##", CultureInfo.InvariantCulture);
-        return code.MaxDiscountAmount is { } cap
+    private static string DescribeDiscount(
+        PromotionDiscountType discountType,
+        decimal discountValue,
+        decimal? maxDiscountAmount
+    )
+    {
+        if (discountType != PromotionDiscountType.Percent)
+            return string.Format(Messages.Email_SupportCodeDiscountFixed, Money(discountValue));
+
+        var percent = discountValue.ToString("0.##", CultureInfo.InvariantCulture);
+        return maxDiscountAmount is { } cap
             ? string.Format(Messages.Email_SupportCodeDiscountPercentCapped, percent, Money(cap))
             : string.Format(Messages.Email_SupportCodeDiscountPercent, percent);
+    }
+
+    public static string Campaign(BrandOptions brand, CampaignEmailData data)
+    {
+        var paragraphs = Regex
+            .Split(data.Body.Replace("\r\n", "\n").Trim(), @"\n[ \t]*\n")
+            .Select(block =>
+                block.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            )
+            .Where(lines => lines.Length > 0)
+            .Select(lines => Paragraph(string.Join("<br>", lines.Select(Enc))));
+
+        var promo = string.Empty;
+        if (data.Promo is { } code)
+        {
+            var rows = new[]
+            {
+                DetailRow(Enc(Messages.Email_CampaignCodeLabel), Enc(code.Code), code: true),
+                DetailRow(
+                    Enc(Messages.Email_CampaignDiscountLabel),
+                    Enc(DescribeDiscount(code.DiscountType, code.DiscountValue, code.MaxDiscountAmount))
+                ),
+                DetailRow(
+                    Enc(Messages.Email_CampaignExpiryLabel),
+                    Enc(
+                        BusinessTime
+                            .ToLocal(code.ExpiresAtUtc)
+                            .ToString(DateTimePatterns.Date, CultureInfo.InvariantCulture)
+                    ),
+                    isLast: true
+                ),
+            };
+            promo = $"""
+                {DetailCard(rows)}
+                {MutedParagraph(Enc(Messages.Email_CampaignCodeNote))}
+                <div style="height:12px; line-height:12px; font-size:0;">&nbsp;</div>
+                """;
+        }
+
+        var notes = new List<string>();
+        if (data.IsTest)
+            notes.Add(Enc(Messages.Email_CampaignTestNote));
+        if (!string.IsNullOrEmpty(data.UnsubscribeLink))
+            notes.Add(
+                string.Format(
+                    Messages.Email_CampaignOptOutNote,
+                    $"<a href=\"{Enc(data.UnsubscribeLink)}\" class=\"tx\" style=\"color:{ColorForeground}; text-decoration:underline;\">{Messages.Email_CampaignUnsubscribeLabel}</a>"
+                )
+            );
+
+        var badge = data.IsTest
+            ? Badge(Messages.Email_BadgeCampaignTest, Warning, SymbolCheck)
+            : Badge(Messages.Email_BadgeCampaign, Success, SymbolCheck);
+        var footer = notes.Count == 0 ? string.Empty : MutedParagraph(string.Join("<br><br>", notes));
+
+        var body = $"""
+            {badge}
+            {Heading(Enc(data.Subject))}
+            {Paragraph(string.Format(Messages.Email_CampaignGreeting, Enc(data.CustomerName)))}
+            {string.Concat(paragraphs)}
+            {promo}
+            {footer}
+            """;
+
+        return Layout(brand, data.Subject, body);
     }
 
     public static string OrderExchanged(BrandOptions brand, OrderExchangeEmailData data)

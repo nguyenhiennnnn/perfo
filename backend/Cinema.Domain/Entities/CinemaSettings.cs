@@ -133,6 +133,7 @@ public class CinemaSettings
     public const int DefaultSegmentTierUpgradePercent = 20;
     public const int DefaultSegmentPreferenceMinViewings = 3;
     public const int DefaultSegmentPreferenceMinSharePercent = 40;
+    public const int DefaultCampaignMinIntervalDays = 7;
 
     public static readonly decimal[] DefaultGiftCardDenominations =
     [
@@ -312,4 +313,6 @@ public class CinemaSettings
 
     public int SegmentPreferenceMinSharePercent { get; set; } =
         DefaultSegmentPreferenceMinSharePercent;
+
+    public int CampaignMinIntervalDays { get; set; } = DefaultCampaignMinIntervalDays;
 }

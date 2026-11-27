@@ -6254,4 +6254,82 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Validation_CustomerSegment_ConditionTooComplex" xml:space="preserve">
     <value>Điều kiện phân khúc vượt giới hạn: tối đa 3 cấp lồng nhau và 20 điều kiện.</value>
   </data>
+  <data name="NotFound_Campaign" xml:space="preserve">
+    <value>Không tìm thấy chiến dịch.</value>
+  </data>
+  <data name="Success_CampaignCreated" xml:space="preserve">
+    <value>Đã tạo chiến dịch.</value>
+  </data>
+  <data name="Success_CampaignUpdated" xml:space="preserve">
+    <value>Đã cập nhật chiến dịch.</value>
+  </data>
+  <data name="Success_CampaignDeleted" xml:space="preserve">
+    <value>Đã xóa chiến dịch.</value>
+  </data>
+  <data name="Success_CampaignTestSent" xml:space="preserve">
+    <value>Đã gửi thử đến email quản trị của bạn.</value>
+  </data>
+  <data name="Rule_Campaign_NotEditable" xml:space="preserve">
+    <value>Chiến dịch đang gửi hoặc đã hoàn tất, không thể chỉnh sửa.</value>
+  </data>
+  <data name="Rule_Campaign_NotDeletable" xml:space="preserve">
+    <value>Chiến dịch đang gửi, không thể xóa.</value>
+  </data>
+  <data name="Rule_Campaign_SegmentInactive" xml:space="preserve">
+    <value>Phân khúc đang tạm dừng, không thể hẹn gửi chiến dịch.</value>
+  </data>
+  <data name="Rule_Campaign_TestNoEmail" xml:space="preserve">
+    <value>Tài khoản quản trị chưa có email để nhận thư gửi thử.</value>
+  </data>
+  <data name="Validation_Campaign_SegmentRequired" xml:space="preserve">
+    <value>Vui lòng chọn phân khúc khách hàng.</value>
+  </data>
+  <data name="Validation_Campaign_ChannelInvalid" xml:space="preserve">
+    <value>Kênh gửi không hợp lệ.</value>
+  </data>
+  <data name="Validation_Campaign_SubjectSingleLine" xml:space="preserve">
+    <value>Tiêu đề không được xuống dòng.</value>
+  </data>
+  <data name="Validation_Campaign_ScheduledAtPast" xml:space="preserve">
+    <value>Thời điểm hẹn gửi phải ở tương lai.</value>
+  </data>
+  <data name="Validation_Campaign_PromoValidityRange" xml:space="preserve">
+    <value>Số ngày hiệu lực của mã phải từ 1 đến 365.</value>
+  </data>
+  <data name="Campaign_TestSampleCode" xml:space="preserve">
+    <value>MAU-XXXXXXXX</value>
+  </data>
+  <data name="Email_CampaignTestSubject" xml:space="preserve">
+    <value>[Gửi thử] {0}</value>
+  </data>
+  <data name="Email_BadgeCampaign" xml:space="preserve">
+    <value>Ưu đãi dành cho bạn</value>
+  </data>
+  <data name="Email_BadgeCampaignTest" xml:space="preserve">
+    <value>Thư gửi thử</value>
+  </data>
+  <data name="Email_CampaignGreeting" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;,</value>
+  </data>
+  <data name="Email_CampaignCodeLabel" xml:space="preserve">
+    <value>Mã ưu đãi</value>
+  </data>
+  <data name="Email_CampaignDiscountLabel" xml:space="preserve">
+    <value>Mức giảm</value>
+  </data>
+  <data name="Email_CampaignExpiryLabel" xml:space="preserve">
+    <value>Hạn sử dụng</value>
+  </data>
+  <data name="Email_CampaignCodeNote" xml:space="preserve">
+    <value>Mã dành riêng cho tài khoản của bạn, dùng một lần ở bước thanh toán.</value>
+  </data>
+  <data name="Email_CampaignTestNote" xml:space="preserve">
+    <value>Đây là thư gửi thử, chỉ gửi đến quản trị. Mã trong thư là mã mẫu và không dùng được.</value>
+  </data>
+  <data name="Email_CampaignOptOutNote" xml:space="preserve">
+    <value>Bạn nhận email này vì đã đồng ý nhận tin ưu đãi. {0}.</value>
+  </data>
+  <data name="Email_CampaignUnsubscribeLabel" xml:space="preserve">
+    <value>Hủy đăng ký nhận tin</value>
+  </data>
 </root>

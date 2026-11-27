@@ -324,5 +324,8 @@ public class CinemaSettingsConfiguration : IEntityTypeConfiguration<CinemaSettin
         builder
             .Property(x => x.SegmentPreferenceMinSharePercent)
             .HasDefaultValue(CinemaSettings.DefaultSegmentPreferenceMinSharePercent);
+        builder
+            .Property(x => x.CampaignMinIntervalDays)
+            .HasDefaultValue(CinemaSettings.DefaultCampaignMinIntervalDays);
     }
 }

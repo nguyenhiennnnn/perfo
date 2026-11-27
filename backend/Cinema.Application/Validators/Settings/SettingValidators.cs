@@ -206,6 +206,7 @@ public class UpdateSettingsRequestValidator : AbstractValidator<UpdateSettingsRe
             1,
             100
         );
+        IntRange(x => x.CampaignMinIntervalDays, "campaignMinIntervalDays", 1, 365);
         WholeDecimalRange(
             x => x.ExceptionalRefundApprovalThreshold,
             "exceptionalRefundApprovalThreshold",

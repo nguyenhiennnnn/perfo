@@ -198,6 +198,8 @@ public record AdminCinemaSettingsDto : CinemaSettingsDto
     public int SegmentPreferenceMinViewings { get; init; }
 
     public int SegmentPreferenceMinSharePercent { get; init; }
+
+    public int CampaignMinIntervalDays { get; init; }
 }
 
 public record UpdateSettingsRequest(
@@ -303,5 +305,6 @@ public record UpdateSettingsRequest(
     int? SegmentLtvProjectionMonths = null,
     int? SegmentTierUpgradePercent = null,
     int? SegmentPreferenceMinViewings = null,
-    int? SegmentPreferenceMinSharePercent = null
+    int? SegmentPreferenceMinSharePercent = null,
+    int? CampaignMinIntervalDays = null
 );

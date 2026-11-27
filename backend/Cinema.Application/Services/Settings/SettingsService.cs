@@ -252,6 +252,8 @@ public class SettingsService(
             settings.SegmentPreferenceMinViewings = vSegmentPreferenceMinViewings;
         if (request.SegmentPreferenceMinSharePercent is { } vSegmentPreferenceMinSharePercent)
             settings.SegmentPreferenceMinSharePercent = vSegmentPreferenceMinSharePercent;
+        if (request.CampaignMinIntervalDays is { } vCampaignMinIntervalDays)
+            settings.CampaignMinIntervalDays = vCampaignMinIntervalDays;
         if (settings.RoomRentalFullRefundDays <= settings.RoomRentalPartialRefundDays)
             throw new BusinessRuleException(Messages.Validation_RoomRentalRefundWindow_Invalid);
         if (settings.ReviewInviteMinHours >= settings.ReviewInviteMaxHours)
@@ -365,6 +367,7 @@ public class SettingsService(
             SegmentTierUpgradePercent = settings.SegmentTierUpgradePercent,
             SegmentPreferenceMinViewings = settings.SegmentPreferenceMinViewings,
             SegmentPreferenceMinSharePercent = settings.SegmentPreferenceMinSharePercent,
+            CampaignMinIntervalDays = settings.CampaignMinIntervalDays,
         };
 
     private CinemaSettingsDto ToDto(object settings) =>

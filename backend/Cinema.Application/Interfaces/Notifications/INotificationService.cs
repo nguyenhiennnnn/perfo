@@ -233,6 +233,23 @@ public sealed record MovieIntroEmailData(
     string PreferencesLink
 );
 
+public sealed record CampaignEmailPromo(
+    string Code,
+    PromotionDiscountType DiscountType,
+    decimal DiscountValue,
+    decimal? MaxDiscountAmount,
+    DateTime ExpiresAtUtc
+);
+
+public sealed record CampaignEmailData(
+    string CustomerName,
+    string Subject,
+    string Body,
+    CampaignEmailPromo? Promo,
+    string? UnsubscribeLink,
+    bool IsTest
+);
+
 public sealed record RoomRentalRequestReceivedEmailData(
     string CustomerName,
     string RequestCode,
@@ -264,6 +281,8 @@ public interface INotificationService
     void SendRoomRentalQuote(string toEmail, RoomRentalQuoteEmailData data);
 
     void SendMovieIntro(string toEmail, MovieIntroEmailData data);
+
+    void SendCampaign(string toEmail, CampaignEmailData data);
 
     void SendSupportRequestUpdated(string toEmail, SupportRequestUpdateEmailData data);
 

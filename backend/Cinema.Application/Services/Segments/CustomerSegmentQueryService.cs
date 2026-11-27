@@ -125,6 +125,9 @@ public class CustomerSegmentQueryService(IAppDbContext db, IAuditLogger auditLog
         );
     }
 
+    public IQueryable<CustomerSegmentProfile> MarketingMembers(SegmentConditionNode conditions) =>
+        Members(conditions).Where(CanReceiveMarketing);
+
     private IQueryable<CustomerSegmentProfile> Members(SegmentConditionNode conditions) =>
         db
             .CustomerSegmentProfiles.AsNoTracking()

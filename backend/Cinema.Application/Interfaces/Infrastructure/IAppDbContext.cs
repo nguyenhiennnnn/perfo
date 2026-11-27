@@ -18,6 +18,8 @@ public interface IAppDbContext
     DbSet<CustomerTasteSignal> CustomerTasteSignals { get; }
     DbSet<CustomerSegmentProfile> CustomerSegmentProfiles { get; }
     DbSet<CustomerSegment> CustomerSegments { get; }
+    DbSet<Campaign> Campaigns { get; }
+    DbSet<CampaignRecipient> CampaignRecipients { get; }
     DbSet<MovieSimilarity> MovieSimilarities { get; }
     DbSet<MoviePopularity> MoviePopularities { get; }
     DbSet<MovieIntroEmailNotice> MovieIntroEmailNotices { get; }

@@ -670,4 +670,23 @@ public static class AuditSnapshots
                 s.IsDeleted,
             }
         );
+
+    public static JsonObject CampaignState(Campaign c) =>
+        AuditJson.ToObject(
+            new
+            {
+                c.Name,
+                c.SegmentId,
+                c.Channel,
+                c.Subject,
+                c.Body,
+                c.PromoDiscountType,
+                c.PromoDiscountValue,
+                c.PromoMaxDiscountAmount,
+                c.PromoValidityDays,
+                c.ScheduledAt,
+                c.Status,
+                c.IsDeleted,
+            }
+        );
 }

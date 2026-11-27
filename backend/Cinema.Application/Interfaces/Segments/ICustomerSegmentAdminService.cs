@@ -1,6 +1,7 @@
 using Cinema.Application.DTOs.Common;
 using Cinema.Application.DTOs.Segments;
 using Cinema.Application.Services.Segments;
+using Cinema.Domain.Entities;
 
 namespace Cinema.Application.Interfaces.Segments;
 
@@ -31,6 +32,8 @@ public interface ICustomerSegmentAdminService
 
 public interface ICustomerSegmentQueryService
 {
+    IQueryable<CustomerSegmentProfile> MarketingMembers(SegmentConditionNode conditions);
+
     Task<(int CustomerCount, int EligibleCount)> CountAsync(
         SegmentConditionNode conditions,
         CancellationToken cancellationToken

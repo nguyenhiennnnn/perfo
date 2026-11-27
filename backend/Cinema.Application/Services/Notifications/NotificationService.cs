@@ -127,6 +127,15 @@ public class NotificationService(
             EmailTemplates.MovieIntro(_brand, data)
         );
 
+    public void SendCampaign(string toEmail, CampaignEmailData data) =>
+        Enqueue(
+            toEmail,
+            data.IsTest
+                ? string.Format(Messages.Email_CampaignTestSubject, data.Subject)
+                : data.Subject,
+            EmailTemplates.Campaign(_brand, data)
+        );
+
     public void SendPointsExpiryReminder(string toEmail, PointsExpiryReminderEmailData data) =>
         Enqueue(
             toEmail,

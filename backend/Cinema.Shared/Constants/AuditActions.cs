@@ -48,4 +48,6 @@ public static class AuditActions
     public const string RefundMembershipSubscription = "RefundMembershipSubscription";
     public const string CancelRoomRentalRequest = "CancelRoomRentalRequest";
     public const string RevealSegmentCustomers = "RevealSegmentCustomers";
+    public const string RevealCampaignRecipients = "RevealCampaignRecipients";
+    public const string SendCampaignTest = "SendCampaignTest";
 }

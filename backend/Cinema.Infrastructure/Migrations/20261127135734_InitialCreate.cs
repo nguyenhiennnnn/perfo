@@ -194,7 +194,18 @@ namespace Cinema.Infrastructure.Migrations
                     RoomRentalFullRefundDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 7),
                     RoomRentalPartialRefundDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 3),
                     RoomRentalPartialRefundPercent = table.Column<int>(type: "integer", nullable: false, defaultValue: 50),
-                    MembershipFreeTicketsPerShowtime = table.Column<int>(type: "integer", nullable: false, defaultValue: 2)
+                    MembershipFreeTicketsPerShowtime = table.Column<int>(type: "integer", nullable: false, defaultValue: 2),
+                    MembershipRefundStartedEnabled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    SegmentNewCustomerDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 30),
+                    SegmentLapsedDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 60),
+                    SegmentRegularMinOrders = table.Column<int>(type: "integer", nullable: false, defaultValue: 3),
+                    SegmentLookbackDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 180),
+                    SegmentHighValueMinScore = table.Column<int>(type: "integer", nullable: false, defaultValue: 4),
+                    SegmentLtvProjectionMonths = table.Column<int>(type: "integer", nullable: false, defaultValue: 12),
+                    SegmentTierUpgradePercent = table.Column<int>(type: "integer", nullable: false, defaultValue: 20),
+                    SegmentPreferenceMinViewings = table.Column<int>(type: "integer", nullable: false, defaultValue: 3),
+                    SegmentPreferenceMinSharePercent = table.Column<int>(type: "integer", nullable: false, defaultValue: 40),
+                    CampaignMinIntervalDays = table.Column<int>(type: "integer", nullable: false, defaultValue: 7)
                 },
                 constraints: table =>
                 {
@@ -219,6 +230,42 @@ namespace Cinema.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Combos", x => x.ComboId);
                     table.CheckConstraint("CK_Combos_Price", "\"Price\" >= 0");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomerRetentionStats",
+                columns: table => new
+                {
+                    CohortMonth = table.Column<DateOnly>(type: "date", nullable: false),
+                    MonthOffset = table.Column<int>(type: "integer", nullable: false),
+                    CohortSize = table.Column<int>(type: "integer", nullable: false),
+                    ReturnedCustomers = table.Column<int>(type: "integer", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomerRetentionStats", x => new { x.CohortMonth, x.MonthOffset });
+                    table.CheckConstraint("CK_CustomerRetentionStats_Values", "\"MonthOffset\" >= 1 AND \"CohortSize\" >= 0 AND \"ReturnedCustomers\" >= 0 AND \"ReturnedCustomers\" <= \"CohortSize\"");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CustomerSegments",
+                columns: table => new
+                {
+                    SegmentId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    ConditionJson = table.Column<string>(type: "jsonb", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomerSegments", x => x.SegmentId);
                 });
 
             migrationBuilder.CreateTable(
@@ -316,6 +363,7 @@ namespace Cinema.Infrastructure.Migrations
                     Price = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     TicketDiscountPercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false, defaultValue: 0m),
                     FreeTicketsPerMonth = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    FreeTicketConversionValue = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
                     ComboDiscountPercent = table.Column<decimal>(type: "numeric(5,2)", nullable: false, defaultValue: 0m),
                     EarlyAccess = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     StackableWithPromotions = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
@@ -329,6 +377,7 @@ namespace Cinema.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_MembershipPlans", x => x.MembershipPlanId);
                     table.CheckConstraint("CK_MembershipPlans_ComboDiscountPercent", "\"ComboDiscountPercent\" >= 0 AND \"ComboDiscountPercent\" <= 100");
+                    table.CheckConstraint("CK_MembershipPlans_FreeTicketConversionValue", "\"FreeTicketConversionValue\" >= 0");
                     table.CheckConstraint("CK_MembershipPlans_FreeTicketsPerMonth", "\"FreeTicketsPerMonth\" >= 0");
                     table.CheckConstraint("CK_MembershipPlans_Period", "\"Period\" IN ('Monthly','Quarterly')");
                     table.CheckConstraint("CK_MembershipPlans_Price", "\"Price\" > 0");
@@ -698,6 +747,45 @@ namespace Cinema.Infrastructure.Migrations
                         column: x => x.ComboId,
                         principalTable: "Combos",
                         principalColumn: "ComboId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Campaigns",
+                columns: table => new
+                {
+                    CampaignId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    SegmentId = table.Column<int>(type: "integer", nullable: false),
+                    Channel = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Subject = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Body = table.Column<string>(type: "character varying(5000)", maxLength: 5000, nullable: false),
+                    PromoDiscountType = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    PromoDiscountValue = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    PromoMaxDiscountAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: true),
+                    PromoValidityDays = table.Column<int>(type: "integer", nullable: true),
+                    ScheduledAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    RecipientsPreparedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    DeletedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Campaigns", x => x.CampaignId);
+                    table.CheckConstraint("CK_Campaigns_Channel", "\"Channel\" IN ('Email','InApp')");
+                    table.CheckConstraint("CK_Campaigns_Promo", "(\"PromoDiscountType\" IS NULL AND \"PromoDiscountValue\" IS NULL AND \"PromoMaxDiscountAmount\" IS NULL AND \"PromoValidityDays\" IS NULL) OR (\"PromoDiscountType\" = 'Percent' AND \"PromoDiscountValue\" > 0 AND \"PromoDiscountValue\" <= 100 AND (\"PromoMaxDiscountAmount\" IS NULL OR \"PromoMaxDiscountAmount\" > 0) AND \"PromoValidityDays\" > 0) OR (\"PromoDiscountType\" = 'FixedAmount' AND \"PromoDiscountValue\" > 0 AND \"PromoMaxDiscountAmount\" IS NULL AND \"PromoValidityDays\" > 0)");
+                    table.CheckConstraint("CK_Campaigns_PromoDiscountType", "\"PromoDiscountType\" IS NULL OR \"PromoDiscountType\" IN ('Percent','FixedAmount')");
+                    table.CheckConstraint("CK_Campaigns_Status", "\"Status\" IN ('Draft','Scheduled','Sending','Completed')");
+                    table.ForeignKey(
+                        name: "FK_Campaigns_CustomerSegments_SegmentId",
+                        column: x => x.SegmentId,
+                        principalTable: "CustomerSegments",
+                        principalColumn: "SegmentId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -1292,6 +1380,64 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CustomerSegmentProfiles",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    ActivityStage = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    FirstOrderAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastOrderAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DaysSinceLastOrder = table.Column<int>(type: "integer", nullable: true),
+                    LookbackOrderCount = table.Column<int>(type: "integer", nullable: false),
+                    LookbackSpent = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    TotalSpent = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    RecencyScore = table.Column<int>(type: "integer", nullable: false),
+                    FrequencyScore = table.Column<int>(type: "integer", nullable: false),
+                    MonetaryScore = table.Column<int>(type: "integer", nullable: false),
+                    IsHighSpender = table.Column<bool>(type: "boolean", nullable: false),
+                    IsHighFrequency = table.Column<bool>(type: "boolean", nullable: false),
+                    EstimatedLifetimeValue = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    PreferredGenreId = table.Column<int>(type: "integer", nullable: true),
+                    PreferredScreenTypeId = table.Column<int>(type: "integer", nullable: true),
+                    ExpiringPoints = table.Column<int>(type: "integer", nullable: false),
+                    PointsExpireAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    NextTierId = table.Column<int>(type: "integer", nullable: true),
+                    PointsToNextTier = table.Column<int>(type: "integer", nullable: true),
+                    IsNearTierUpgrade = table.Column<bool>(type: "boolean", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomerSegmentProfiles", x => x.UserId);
+                    table.CheckConstraint("CK_CustomerSegmentProfiles_Amounts", "\"LookbackOrderCount\" >= 0 AND \"LookbackSpent\" >= 0 AND \"TotalSpent\" >= 0 AND \"EstimatedLifetimeValue\" >= 0 AND \"ExpiringPoints\" >= 0");
+                    table.CheckConstraint("CK_CustomerSegmentProfiles_Scores", "\"RecencyScore\" BETWEEN 1 AND 5 AND \"FrequencyScore\" BETWEEN 1 AND 5 AND \"MonetaryScore\" BETWEEN 1 AND 5");
+                    table.ForeignKey(
+                        name: "FK_CustomerSegmentProfiles_Genres_PreferredGenreId",
+                        column: x => x.PreferredGenreId,
+                        principalTable: "Genres",
+                        principalColumn: "GenreId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_CustomerSegmentProfiles_MembershipTiers_NextTierId",
+                        column: x => x.NextTierId,
+                        principalTable: "MembershipTiers",
+                        principalColumn: "TierId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_CustomerSegmentProfiles_ScreenTypes_PreferredScreenTypeId",
+                        column: x => x.PreferredScreenTypeId,
+                        principalTable: "ScreenTypes",
+                        principalColumn: "ScreenTypeId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_CustomerSegmentProfiles_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CustomerTasteProfiles",
                 columns: table => new
                 {
@@ -1588,6 +1734,7 @@ namespace Cinema.Infrastructure.Migrations
                     ConsumedBudget = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
                     Priority = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     IsExclusive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    ExcludeEventShowtimes = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     AssignedUserId = table.Column<int>(type: "integer", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
@@ -2148,6 +2295,46 @@ namespace Cinema.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CampaignRecipients",
+                columns: table => new
+                {
+                    CampaignId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    PromotionId = table.Column<int>(type: "integer", nullable: true),
+                    AttemptCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    NextAttemptAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastError = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    SentAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    FirstOpenedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CampaignRecipients", x => new { x.CampaignId, x.UserId });
+                    table.CheckConstraint("CK_CampaignRecipients_AttemptCount", "\"AttemptCount\" >= 0");
+                    table.CheckConstraint("CK_CampaignRecipients_Status", "\"Status\" IN ('Pending','Sent','Failed','Skipped')");
+                    table.ForeignKey(
+                        name: "FK_CampaignRecipients_Campaigns_CampaignId",
+                        column: x => x.CampaignId,
+                        principalTable: "Campaigns",
+                        principalColumn: "CampaignId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CampaignRecipients_Promotions_PromotionId",
+                        column: x => x.PromotionId,
+                        principalTable: "Promotions",
+                        principalColumn: "PromotionId",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_CampaignRecipients_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PromotionCustomerUsages",
                 columns: table => new
                 {
@@ -2286,6 +2473,37 @@ namespace Cinema.Infrastructure.Migrations
                     table.CheckConstraint("CK_ShowtimeDailyStats_Kind", "\"Kind\" IN ('Regular','Private','Event')");
                     table.ForeignKey(
                         name: "FK_ShowtimeDailyStats_Showtimes_ShowtimeId",
+                        column: x => x.ShowtimeId,
+                        principalTable: "Showtimes",
+                        principalColumn: "ShowtimeId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShowtimeEventSettings",
+                columns: table => new
+                {
+                    ShowtimeId = table.Column<int>(type: "integer", nullable: false),
+                    AdjustmentMode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    AdjustmentValue = table.Column<decimal>(type: "numeric(18,4)", nullable: false),
+                    MaxTicketsPerCustomer = table.Column<int>(type: "integer", nullable: true),
+                    GeneralSaleStartTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    EarlyAccessTierIds = table.Column<List<int>>(type: "integer[]", nullable: false, defaultValueSql: "'{}'"),
+                    EarlyAccessPaidMembers = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    EarlyAccessMovieInterest = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    AllowMembershipFreeTickets = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()"),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShowtimeEventSettings", x => x.ShowtimeId);
+                    table.CheckConstraint("CK_ShowtimeEventSettings_AdjustmentMode", "\"AdjustmentMode\" IN ('Multiplier','Amount')");
+                    table.CheckConstraint("CK_ShowtimeEventSettings_AdjustmentValue", "(\"AdjustmentMode\" = 'Multiplier' AND \"AdjustmentValue\" > 0) OR (\"AdjustmentMode\" = 'Amount' AND \"AdjustmentValue\" <> 0)");
+                    table.CheckConstraint("CK_ShowtimeEventSettings_EarlyAccess", "\"GeneralSaleStartTime\" IS NOT NULL OR (cardinality(\"EarlyAccessTierIds\") = 0 AND NOT \"EarlyAccessPaidMembers\" AND NOT \"EarlyAccessMovieInterest\")");
+                    table.CheckConstraint("CK_ShowtimeEventSettings_MaxTicketsPerCustomer", "\"MaxTicketsPerCustomer\" IS NULL OR \"MaxTicketsPerCustomer\" > 0");
+                    table.ForeignKey(
+                        name: "FK_ShowtimeEventSettings_Showtimes_ShowtimeId",
                         column: x => x.ShowtimeId,
                         principalTable: "Showtimes",
                         principalColumn: "ShowtimeId",
@@ -2467,6 +2685,60 @@ namespace Cinema.Infrastructure.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShowtimeEventGifts",
+                columns: table => new
+                {
+                    ShowtimeId = table.Column<int>(type: "integer", nullable: false),
+                    InventoryItemId = table.Column<int>(type: "integer", nullable: false),
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    QuantityPerTicket = table.Column<int>(type: "integer", nullable: false, defaultValue: 1)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShowtimeEventGifts", x => new { x.ShowtimeId, x.InventoryItemId });
+                    table.CheckConstraint("CK_ShowtimeEventGifts_Quantity", "\"Quantity\" > 0");
+                    table.CheckConstraint("CK_ShowtimeEventGifts_QuantityPerTicket", "\"QuantityPerTicket\" > 0");
+                    table.ForeignKey(
+                        name: "FK_ShowtimeEventGifts_InventoryItems_InventoryItemId",
+                        column: x => x.InventoryItemId,
+                        principalTable: "InventoryItems",
+                        principalColumn: "InventoryItemId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShowtimeEventGifts_ShowtimeEventSettings_ShowtimeId",
+                        column: x => x.ShowtimeId,
+                        principalTable: "ShowtimeEventSettings",
+                        principalColumn: "ShowtimeId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShowtimeEventTicketQuotas",
+                columns: table => new
+                {
+                    ShowtimeId = table.Column<int>(type: "integer", nullable: false),
+                    TicketTypeId = table.Column<int>(type: "integer", nullable: false),
+                    MaxTickets = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShowtimeEventTicketQuotas", x => new { x.ShowtimeId, x.TicketTypeId });
+                    table.CheckConstraint("CK_ShowtimeEventTicketQuotas_MaxTickets", "\"MaxTickets\" > 0");
+                    table.ForeignKey(
+                        name: "FK_ShowtimeEventTicketQuotas_ShowtimeEventSettings_ShowtimeId",
+                        column: x => x.ShowtimeId,
+                        principalTable: "ShowtimeEventSettings",
+                        principalColumn: "ShowtimeId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShowtimeEventTicketQuotas_TicketTypes_TicketTypeId",
+                        column: x => x.TicketTypeId,
+                        principalTable: "TicketTypes",
+                        principalColumn: "TicketTypeId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -2691,12 +2963,16 @@ namespace Cinema.Infrastructure.Migrations
                     ValidTo = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Active"),
                     ExpiryReminderSentAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    RefundedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    RefundReason = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    StoppedRevenueAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MembershipSubscriptions", x => x.MembershipSubscriptionId);
-                    table.CheckConstraint("CK_MembershipSubscriptions_Status", "\"Status\" IN ('Active','Expired')");
+                    table.CheckConstraint("CK_MembershipSubscriptions_Refund", "(\"Status\" = 'Refunded' AND \"RefundedAt\" IS NOT NULL AND \"RefundReason\" IS NOT NULL) OR (\"Status\" <> 'Refunded' AND \"RefundedAt\" IS NULL AND \"RefundReason\" IS NULL AND \"StoppedRevenueAmount\" = 0)");
+                    table.CheckConstraint("CK_MembershipSubscriptions_Status", "\"Status\" IN ('Active','Expired','Refunded')");
                     table.CheckConstraint("CK_MembershipSubscriptions_ValidRange", "\"ValidTo\" > \"ValidFrom\"");
                     table.ForeignKey(
                         name: "FK_MembershipSubscriptions_MembershipPlans_MembershipPlanId",
@@ -2796,6 +3072,8 @@ namespace Cinema.Infrastructure.Migrations
                     CounterShiftId = table.Column<int>(type: "integer", nullable: true),
                     GiftCardId = table.Column<int>(type: "integer", nullable: true),
                     NeedsManualRefund = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    RefundAttemptCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    LastRefundAttemptAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     Note = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true)
                 },
                 constraints: table =>
@@ -2987,6 +3265,32 @@ namespace Cinema.Infrastructure.Migrations
                         principalTable: "Users",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MembershipRevenueEntries",
+                columns: table => new
+                {
+                    MembershipRevenueEntryId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MembershipSubscriptionId = table.Column<int>(type: "integer", nullable: false),
+                    MonthIndex = table.Column<int>(type: "integer", nullable: false),
+                    PeriodStart = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    PeriodEnd = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    BusinessDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    OccurredAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MembershipRevenueEntries", x => x.MembershipRevenueEntryId);
+                    table.CheckConstraint("CK_MembershipRevenueEntries_Range", "\"PeriodEnd\" > \"PeriodStart\" AND \"MonthIndex\" >= 0 AND \"Amount\" >= 0");
+                    table.ForeignKey(
+                        name: "FK_MembershipRevenueEntries_MembershipSubscriptions_Membership~",
+                        column: x => x.MembershipSubscriptionId,
+                        principalTable: "MembershipSubscriptions",
+                        principalColumn: "MembershipSubscriptionId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -3527,6 +3831,7 @@ namespace Cinema.Infrastructure.Migrations
                     PeriodStart = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     PeriodEnd = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     GrantedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    RevokedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     UsedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     OrderId = table.Column<int>(type: "integer", nullable: true),
                     OrderLineId = table.Column<int>(type: "integer", nullable: true),
@@ -3537,6 +3842,7 @@ namespace Cinema.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_MembershipFreeTickets", x => x.MembershipFreeTicketId);
                     table.CheckConstraint("CK_MembershipFreeTickets_PeriodRange", "\"PeriodEnd\" > \"PeriodStart\" AND \"PeriodIndex\" >= 0 AND \"Sequence\" >= 1");
+                    table.CheckConstraint("CK_MembershipFreeTickets_Revoked", "\"RevokedAt\" IS NULL OR (\"UsedAt\" IS NULL AND \"OrderId\" IS NULL)");
                     table.CheckConstraint("CK_MembershipFreeTickets_Usage", "(\"UsedAt\" IS NULL AND \"OrderId\" IS NULL AND \"OrderLineId\" IS NULL AND \"ShowtimeId\" IS NULL AND \"ConvertedAmount\" IS NULL) OR (\"OrderId\" IS NOT NULL AND \"OrderLineId\" IS NOT NULL AND \"ShowtimeId\" IS NOT NULL AND \"ConvertedAmount\" >= 0)");
                     table.ForeignKey(
                         name: "FK_MembershipFreeTickets_MembershipSubscriptions_MembershipSub~",
@@ -3710,6 +4016,111 @@ namespace Cinema.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ShowtimeEventGiftReservations",
+                columns: table => new
+                {
+                    ShowtimeEventGiftReservationId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    OrderId = table.Column<int>(type: "integer", nullable: false),
+                    OrderLineId = table.Column<int>(type: "integer", nullable: false),
+                    ShowtimeId = table.Column<int>(type: "integer", nullable: false),
+                    InventoryItemId = table.Column<int>(type: "integer", nullable: false),
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    QuantityGiven = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    QuantityReturned = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    Status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false, defaultValue: "Reserved"),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "NOW()"),
+                    ResolvedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShowtimeEventGiftReservations", x => x.ShowtimeEventGiftReservationId);
+                    table.CheckConstraint("CK_ShowtimeEventGiftReservations_Counts", "\"QuantityGiven\" >= 0 AND \"QuantityReturned\" >= 0 AND \"QuantityGiven\" + \"QuantityReturned\" <= \"Quantity\"");
+                    table.CheckConstraint("CK_ShowtimeEventGiftReservations_Quantity", "\"Quantity\" > 0");
+                    table.CheckConstraint("CK_ShowtimeEventGiftReservations_Resolved", "(\"Status\" = 'Reserved') = (\"ResolvedAt\" IS NULL)");
+                    table.CheckConstraint("CK_ShowtimeEventGiftReservations_Status", "\"Status\" IN ('Reserved','Committed','Released')");
+                    table.ForeignKey(
+                        name: "FK_ShowtimeEventGiftReservations_InventoryItems_InventoryItemId",
+                        column: x => x.InventoryItemId,
+                        principalTable: "InventoryItems",
+                        principalColumn: "InventoryItemId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ShowtimeEventGiftReservations_OrderLines_OrderLineId",
+                        column: x => x.OrderLineId,
+                        principalTable: "OrderLines",
+                        principalColumn: "OrderLineId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShowtimeEventGiftReservations_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MembershipRevenueConversions",
+                columns: table => new
+                {
+                    MembershipRevenueConversionId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MembershipFreeTicketId = table.Column<int>(type: "integer", nullable: false),
+                    MembershipSubscriptionId = table.Column<int>(type: "integer", nullable: false),
+                    MembershipPlanId = table.Column<int>(type: "integer", nullable: false),
+                    ShowtimeId = table.Column<int>(type: "integer", nullable: false),
+                    BusinessDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    OccurredAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MembershipRevenueConversions", x => x.MembershipRevenueConversionId);
+                    table.CheckConstraint("CK_MembershipRevenueConversions_Amount", "\"Amount\" > 0");
+                    table.ForeignKey(
+                        name: "FK_MembershipRevenueConversions_MembershipFreeTickets_Membersh~",
+                        column: x => x.MembershipFreeTicketId,
+                        principalTable: "MembershipFreeTickets",
+                        principalColumn: "MembershipFreeTicketId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MembershipRevenueConversions_Showtimes_ShowtimeId",
+                        column: x => x.ShowtimeId,
+                        principalTable: "Showtimes",
+                        principalColumn: "ShowtimeId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShowtimeEventGiftHandovers",
+                columns: table => new
+                {
+                    ShowtimeEventGiftHandoverId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ShowtimeEventGiftReservationId = table.Column<int>(type: "integer", nullable: false),
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    HandedByUserId = table.Column<int>(type: "integer", nullable: false),
+                    HandedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShowtimeEventGiftHandovers", x => x.ShowtimeEventGiftHandoverId);
+                    table.CheckConstraint("CK_ShowtimeEventGiftHandovers_Quantity", "\"Quantity\" > 0");
+                    table.ForeignKey(
+                        name: "FK_ShowtimeEventGiftHandovers_ShowtimeEventGiftReservations_Sh~",
+                        column: x => x.ShowtimeEventGiftReservationId,
+                        principalTable: "ShowtimeEventGiftReservations",
+                        principalColumn: "ShowtimeEventGiftReservationId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ShowtimeEventGiftHandovers_Users_HandedByUserId",
+                        column: x => x.HandedByUserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "Positions",
                 columns: new[] { "PositionId", "Name" },
@@ -3814,6 +4225,32 @@ namespace Cinema.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CampaignRecipients_Campaign_Status",
+                table: "CampaignRecipients",
+                columns: new[] { "CampaignId", "Status" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CampaignRecipients_PromotionId",
+                table: "CampaignRecipients",
+                column: "PromotionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CampaignRecipients_User_CreatedAt",
+                table: "CampaignRecipients",
+                columns: new[] { "UserId", "CreatedAt" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Campaigns_Segment",
+                table: "Campaigns",
+                column: "SegmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Campaigns_Status_ScheduledAt",
+                table: "Campaigns",
+                columns: new[] { "Status", "ScheduledAt" },
+                filter: "\"IsDeleted\" = FALSE");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CinemaRooms_RoomName",
                 table: "CinemaRooms",
                 column: "RoomName",
@@ -3912,6 +4349,33 @@ namespace Cinema.Infrastructure.Migrations
                 column: "UserId",
                 unique: true,
                 filter: "\"Status\" = 'Active'");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomerSegmentProfiles_Genre",
+                table: "CustomerSegmentProfiles",
+                column: "PreferredGenreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomerSegmentProfiles_NextTier",
+                table: "CustomerSegmentProfiles",
+                column: "NextTierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomerSegmentProfiles_ScreenType",
+                table: "CustomerSegmentProfiles",
+                column: "PreferredScreenTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomerSegmentProfiles_Stage",
+                table: "CustomerSegmentProfiles",
+                column: "ActivityStage");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_CustomerSegments_Name",
+                table: "CustomerSegments",
+                column: "Name",
+                unique: true,
+                filter: "\"IsDeleted\" = false");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CustomerTasteSignals_Kind_Ref",
@@ -4286,6 +4750,33 @@ namespace Cinema.Infrastructure.Migrations
                 column: "Name",
                 unique: true,
                 filter: "\"IsDeleted\" = FALSE");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MembershipRevenueConversions_Date",
+                table: "MembershipRevenueConversions",
+                column: "BusinessDate");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MembershipRevenueConversions_Showtime",
+                table: "MembershipRevenueConversions",
+                column: "ShowtimeId");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_MembershipRevenueConversions_FreeTicket",
+                table: "MembershipRevenueConversions",
+                column: "MembershipFreeTicketId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MembershipRevenueEntries_Date",
+                table: "MembershipRevenueEntries",
+                column: "BusinessDate");
+
+            migrationBuilder.CreateIndex(
+                name: "UX_MembershipRevenueEntries_SubscriptionMonth",
+                table: "MembershipRevenueEntries",
+                columns: new[] { "MembershipSubscriptionId", "MonthIndex" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MembershipSubscriptions_Plan",
@@ -4989,6 +5480,47 @@ namespace Cinema.Infrastructure.Migrations
                 columns: new[] { "BusinessDate", "Kind" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ShowtimeEventGiftHandovers_HandedByUserId",
+                table: "ShowtimeEventGiftHandovers",
+                column: "HandedByUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShowtimeEventGiftHandovers_Reservation",
+                table: "ShowtimeEventGiftHandovers",
+                column: "ShowtimeEventGiftReservationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShowtimeEventGiftReservations_Gift",
+                table: "ShowtimeEventGiftReservations",
+                columns: new[] { "ShowtimeId", "InventoryItemId", "Status" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShowtimeEventGiftReservations_InventoryItemId",
+                table: "ShowtimeEventGiftReservations",
+                column: "InventoryItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShowtimeEventGiftReservations_Order",
+                table: "ShowtimeEventGiftReservations",
+                columns: new[] { "OrderId", "Status" });
+
+            migrationBuilder.CreateIndex(
+                name: "UX_ShowtimeEventGiftReservations_Line_Item",
+                table: "ShowtimeEventGiftReservations",
+                columns: new[] { "OrderLineId", "InventoryItemId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShowtimeEventGifts_InventoryItemId",
+                table: "ShowtimeEventGifts",
+                column: "InventoryItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShowtimeEventTicketQuotas_TicketTypeId",
+                table: "ShowtimeEventTicketQuotas",
+                column: "TicketTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ShowtimeRoomChangeNotices_Order",
                 table: "ShowtimeRoomChangeNotices",
                 column: "OrderId");
@@ -5253,6 +5785,9 @@ namespace Cinema.Infrastructure.Migrations
                 name: "BundleViews");
 
             migrationBuilder.DropTable(
+                name: "CampaignRecipients");
+
+            migrationBuilder.DropTable(
                 name: "CinemaSettings");
 
             migrationBuilder.DropTable(
@@ -5269,6 +5804,12 @@ namespace Cinema.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "CustomerRestrictions");
+
+            migrationBuilder.DropTable(
+                name: "CustomerRetentionStats");
+
+            migrationBuilder.DropTable(
+                name: "CustomerSegmentProfiles");
 
             migrationBuilder.DropTable(
                 name: "CustomerTasteSignals");
@@ -5313,7 +5854,10 @@ namespace Cinema.Infrastructure.Migrations
                 name: "LoyaltyPointTransactions");
 
             migrationBuilder.DropTable(
-                name: "MembershipFreeTickets");
+                name: "MembershipRevenueConversions");
+
+            migrationBuilder.DropTable(
+                name: "MembershipRevenueEntries");
 
             migrationBuilder.DropTable(
                 name: "MovieCast");
@@ -5412,6 +5956,15 @@ namespace Cinema.Infrastructure.Migrations
                 name: "ShowtimeDailyStats");
 
             migrationBuilder.DropTable(
+                name: "ShowtimeEventGiftHandovers");
+
+            migrationBuilder.DropTable(
+                name: "ShowtimeEventGifts");
+
+            migrationBuilder.DropTable(
+                name: "ShowtimeEventTicketQuotas");
+
+            migrationBuilder.DropTable(
                 name: "ShowtimeRoomChangeNotices");
 
             migrationBuilder.DropTable(
@@ -5442,6 +5995,9 @@ namespace Cinema.Infrastructure.Migrations
                 name: "Bundles");
 
             migrationBuilder.DropTable(
+                name: "Campaigns");
+
+            migrationBuilder.DropTable(
                 name: "ComboRecipes");
 
             migrationBuilder.DropTable(
@@ -5460,7 +6016,7 @@ namespace Cinema.Infrastructure.Migrations
                 name: "LoyaltyPointEntries");
 
             migrationBuilder.DropTable(
-                name: "MembershipSubscriptions");
+                name: "MembershipFreeTickets");
 
             migrationBuilder.DropTable(
                 name: "Actors");
@@ -5478,13 +6034,16 @@ namespace Cinema.Infrastructure.Migrations
                 name: "ReconciliationSessions");
 
             migrationBuilder.DropTable(
-                name: "OrderLines");
-
-            migrationBuilder.DropTable(
                 name: "RoomRentalQuotes");
 
             migrationBuilder.DropTable(
                 name: "WaitlistEntries");
+
+            migrationBuilder.DropTable(
+                name: "ShowtimeEventGiftReservations");
+
+            migrationBuilder.DropTable(
+                name: "ShowtimeEventSettings");
 
             migrationBuilder.DropTable(
                 name: "ShowtimeRoomChanges");
@@ -5499,22 +6058,22 @@ namespace Cinema.Infrastructure.Migrations
                 name: "SupportRequests");
 
             migrationBuilder.DropTable(
-                name: "InventoryItems");
+                name: "WasteSheets");
 
             migrationBuilder.DropTable(
-                name: "WasteSheets");
+                name: "CustomerSegments");
 
             migrationBuilder.DropTable(
                 name: "LoyaltyRewards");
 
             migrationBuilder.DropTable(
-                name: "MembershipPlans");
+                name: "MembershipSubscriptions");
 
             migrationBuilder.DropTable(
-                name: "ShowtimeSeats");
+                name: "InventoryItems");
 
             migrationBuilder.DropTable(
-                name: "TicketTypes");
+                name: "OrderLines");
 
             migrationBuilder.DropTable(
                 name: "PaymentTransactions");
@@ -5526,10 +6085,13 @@ namespace Cinema.Infrastructure.Migrations
                 name: "Combos");
 
             migrationBuilder.DropTable(
-                name: "Seats");
+                name: "MembershipPlans");
 
             migrationBuilder.DropTable(
-                name: "Showtimes");
+                name: "ShowtimeSeats");
+
+            migrationBuilder.DropTable(
+                name: "TicketTypes");
 
             migrationBuilder.DropTable(
                 name: "GiftCards");
@@ -5538,13 +6100,19 @@ namespace Cinema.Infrastructure.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
+                name: "Seats");
+
+            migrationBuilder.DropTable(
+                name: "Showtimes");
+
+            migrationBuilder.DropTable(
+                name: "CounterShifts");
+
+            migrationBuilder.DropTable(
                 name: "SeatTypes");
 
             migrationBuilder.DropTable(
                 name: "CinemaRooms");
-
-            migrationBuilder.DropTable(
-                name: "CounterShifts");
 
             migrationBuilder.DropTable(
                 name: "RoomRentalRequests");

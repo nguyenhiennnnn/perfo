@@ -580,6 +580,9 @@ public static class EmailTemplates
             ? Badge(Messages.Email_BadgeCampaignTest, Warning, SymbolCheck)
             : Badge(Messages.Email_BadgeCampaign, Success, SymbolCheck);
         var footer = notes.Count == 0 ? string.Empty : MutedParagraph(string.Join("<br><br>", notes));
+        var pixel = string.IsNullOrEmpty(data.OpenTrackingUrl)
+            ? string.Empty
+            : $"<img src=\"{Enc(data.OpenTrackingUrl)}\" width=\"1\" height=\"1\" alt=\"\" style=\"display:block; border:0; width:1px; height:1px;\" />";
 
         var body = $"""
             {badge}
@@ -588,6 +591,7 @@ public static class EmailTemplates
             {string.Concat(paragraphs)}
             {promo}
             {footer}
+            {pixel}
             """;
 
         return Layout(brand, data.Subject, body);

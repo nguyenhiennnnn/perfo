@@ -57,3 +57,22 @@ public record CampaignRecipientListFilter(string? Search, bool RevealPersonalDat
 public record CampaignRecipientDto(int UserId, string FullName, string? Email, bool PersonalDataMasked);
 
 public record CampaignTestSendResponse(string? SentTo);
+
+public record CampaignReportDto(
+    int CampaignId,
+    string Name,
+    string Status,
+    int Recipients,
+    int Sent,
+    int Failed,
+    int Skipped,
+    int Pending,
+    int Opened,
+    decimal OpenRate,
+    int CodesIssued,
+    int CodeUsers,
+    decimal CodeUseRate,
+    int Orders,
+    decimal DiscountAmount,
+    decimal Revenue
+);

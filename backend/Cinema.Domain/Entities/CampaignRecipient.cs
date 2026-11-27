@@ -12,6 +12,7 @@ public class CampaignRecipient
     public DateTime? NextAttemptAt { get; set; }
     public string? LastError { get; set; }
     public DateTime? SentAt { get; set; }
+    public DateTime? FirstOpenedAt { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public Campaign Campaign { get; set; } = null!;

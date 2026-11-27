@@ -33,6 +33,7 @@ public class CampaignRecipientConfiguration : IEntityTypeConfiguration<CampaignR
         builder.Property(x => x.NextAttemptAt).HasColumnType("timestamp without time zone");
         builder.Property(x => x.LastError).HasMaxLength(FieldLengths.CampaignRecipientError);
         builder.Property(x => x.SentAt).HasColumnType("timestamp without time zone");
+        builder.Property(x => x.FirstOpenedAt).HasColumnType("timestamp without time zone");
         builder.Property(x => x.CreatedAt).HasColumnType("timestamp without time zone");
 
         builder

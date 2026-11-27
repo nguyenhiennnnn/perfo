@@ -247,7 +247,8 @@ public sealed record CampaignEmailData(
     string Body,
     CampaignEmailPromo? Promo,
     string? UnsubscribeLink,
-    bool IsTest
+    bool IsTest,
+    string? OpenTrackingUrl = null
 );
 
 public sealed record RoomRentalRequestReceivedEmailData(

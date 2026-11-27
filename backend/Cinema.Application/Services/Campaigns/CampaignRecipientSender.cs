@@ -17,6 +17,7 @@ public class CampaignRecipientSender(
     IAppDbContext db,
     INotificationService notificationService,
     IUnsubscribeTokenService unsubscribeTokens,
+    ICampaignOpenTokenService openTokens,
     IOptions<BackgroundJobOptions> jobOptions,
     ILogger<CampaignRecipientSender> logger
 ) : ICampaignRecipientSender
@@ -64,7 +65,8 @@ public class CampaignRecipientSender(
                         campaign.Body,
                         promo,
                         unsubscribeLink,
-                        false
+                        false,
+                        openTokens.CreateOpenUrl(campaign.CampaignId, target.UserId)
                     )
                 );
 

@@ -23,6 +23,7 @@ public class BackgroundJobOptions
     public string ShowtimeReminderCron { get; set; } = "* * * * *";
     public string MovieAffinityRefreshCron { get; set; } = "20 * * * *";
     public string CustomerSegmentRefreshCron { get; set; } = "40 */6 * * *";
+    public string CustomerRetentionRefreshCron { get; set; } = "30 3 * * *";
     public string ReviewInviteCron { get; set; } = "*/5 * * * *";
     public string MovieIntroEmailCron { get; set; } = "0 10 * * *";
     public string RoomQualityAlertCron { get; set; } = "*/30 * * * *";

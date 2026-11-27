@@ -14,7 +14,8 @@ namespace Cinema.Api.Controllers.Admin;
 public class AdminCampaignsController(
     ICampaignAdminService campaignService,
     ICampaignAudienceService audienceService,
-    ICampaignTestSendService testSendService
+    ICampaignTestSendService testSendService,
+    ICampaignReportService reportService
 ) : AppControllerBase
 {
     [HttpGet]
@@ -38,6 +39,10 @@ public class AdminCampaignsController(
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken) =>
         Ok(await campaignService.GetByIdAsync(id, cancellationToken));
+
+    [HttpGet("{id:int}/report")]
+    public async Task<IActionResult> GetReport(int id, CancellationToken cancellationToken) =>
+        Ok(await reportService.GetAsync(id, cancellationToken));
 
     [HttpGet("{id:int}/recipients")]
     public async Task<IActionResult> GetRecipients(

@@ -169,6 +169,12 @@ public static class BackgroundJobExtensions
             options.CustomerSegmentRefreshCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<CustomerRetentionRefreshJob>(
+            RecurringJobIds.RefreshCustomerRetention,
+            j => j.RunAsync(CancellationToken.None),
+            options.CustomerRetentionRefreshCron,
+            jobOptions
+        );
         RecurringJob.AddOrUpdate<ReviewInviteJob>(
             RecurringJobIds.ReviewInvite,
             j => j.RunAsync(CancellationToken.None),

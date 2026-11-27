@@ -90,3 +90,20 @@ public interface ICampaignTestSendService
         CancellationToken cancellationToken
     );
 }
+
+public interface ICampaignOpenTokenService
+{
+    string CreateOpenUrl(int campaignId, int userId);
+
+    (int CampaignId, int UserId)? TryRead(string token);
+}
+
+public interface ICampaignOpenTracker
+{
+    Task RecordAsync(string token, CancellationToken cancellationToken);
+}
+
+public interface ICampaignReportService
+{
+    Task<CampaignReportDto> GetAsync(int campaignId, CancellationToken cancellationToken);
+}

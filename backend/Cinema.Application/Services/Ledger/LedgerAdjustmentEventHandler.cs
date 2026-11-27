@@ -194,6 +194,7 @@ public class LedgerAdjustmentEventHandler(
                 o.OrderCode,
                 o.CreatedAt,
                 o.Type,
+                o.Status,
                 PaidAt = o
                     .PaymentTransactions.Where(t =>
                         t.Type == PaymentTransactionType.Charge
@@ -204,6 +205,11 @@ public class LedgerAdjustmentEventHandler(
             })
             .FirstOrDefaultAsync(cancellationToken);
         if (order is null)
+            return null;
+
+        // Đơn hết hạn chưa từng ghi nhận doanh thu (RecognizedRevenueLoader chỉ lấy đơn Confirmed
+        // hoặc Cancelled có thu), nên khoản hoàn của nó không có gì để điều chỉnh ở ngày đã chốt.
+        if (order.Status == OrderStatus.Expired)
             return null;
 
         var lines = await db

@@ -197,7 +197,7 @@ public class RoomRentalCancellationService(
                 if (status == OrderStatus.Pending)
                 {
                     if (
-                        !await releaseService.CancelPendingAsync(
+                        !await releaseService.CancelPendingWithoutRefundAsync(
                             order.OrderId,
                             reason,
                             cancelledBy,

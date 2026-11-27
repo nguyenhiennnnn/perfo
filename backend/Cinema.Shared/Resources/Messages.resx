@@ -1831,6 +1831,10 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Refund_MomoInvalidTransId" xml:space="preserve">
     <value>Thiếu hoặc sai MoMo transId</value>
   </data>
+  <data name="Refund_OrderExpiredDescription" xml:space="preserve">
+    <value>Hoàn tiền đơn {0} hết hạn thanh toán</value>
+    <comment>Có 1 tham số: dùng string.Format(Messages.Refund_OrderExpiredDescription, ...)</comment>
+  </data>
   <data name="Refund_OrderNotPayableNote" xml:space="preserve">
     <value>Hoàn tiền tự động - đơn hàng đã hết hạn hoặc không còn giữ được chỗ khi nhận thanh toán</value>
   </data>

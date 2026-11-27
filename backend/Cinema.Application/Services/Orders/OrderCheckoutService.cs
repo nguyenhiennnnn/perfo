@@ -70,31 +70,10 @@ public class OrderCheckoutService(
                 string.Format(Messages.Rule_PaymentGatewayNotConfigured, request.PaymentMethod)
             );
 
-        var giftCardReserved = await giftCardHolds.GetReservedAmountAsync(
-            orderId,
-            cancellationToken
+        var method = EnumConverters.ParseEnum<PaymentMethod>(
+            request.PaymentMethod,
+            "paymentMethod"
         );
-        var outstanding =
-            (await ledger.GetSummaryAsync(orderId, cancellationToken)).OutstandingAmount
-            - giftCardReserved;
-        if (outstanding <= 0m)
-            throw new BusinessRuleException(
-                giftCardReserved > 0m
-                    ? Messages.Rule_GiftCardOrderFullyCovered
-                    : Messages.Rule_BookingNotPendingOrExpired
-            );
-
-        await db
-            .PaymentTransactions.Where(t =>
-                t.OrderId == orderId
-                && t.Type == PaymentTransactionType.Charge
-                && t.Status == PaymentStatus.Pending
-            )
-            .ExecuteUpdateAsync(
-                setters => setters.SetProperty(t => t.Status, PaymentStatus.Failed),
-                cancellationToken
-            );
-
         var transactionCode = CodeGenerator.GeneratePaymentTransactionId(order.OrderCode);
         var nowUtc = DateTime.UtcNow;
         var createdAt = new DateTime(
@@ -102,41 +81,116 @@ public class OrderCheckoutService(
             DateTimeKind.Utc
         );
 
-        var gatewayResult = await gateway.CreatePaymentAsync(
-            new CreatePaymentRequest(
-                order.OrderId,
-                outstanding,
-                string.Format(Messages.Payment_BookingDescription, order.OrderCode),
-                transactionCode,
-                createdAt
-            ),
+        // Pha 1: giao dịch ngắn, giữ khóa đơn. Số cần thu, việc vô hiệu charge Pending cũ và việc tạo
+        // charge Pending mới phải cùng một khóa, nếu không RecalculateAsync (đổi mã khuyến mãi) hay
+        // một lần checkout khác có thể chen giữa và để lại charge lệch số với FinalAmount.
+        PaymentTransaction charge = null!;
+        await db.InTransactionAsync(
+            async () =>
+            {
+                await db.LockOrderAsync(orderId, cancellationToken);
+
+                var current =
+                    await db
+                        .Orders.AsNoTracking()
+                        .Where(o => o.OrderId == orderId)
+                        .Select(o => new { o.Status, o.ExpiresAt })
+                        .FirstOrDefaultAsync(cancellationToken)
+                    ?? throw new NotFoundException(Messages.NotFound_Order);
+                if (current.Status != OrderStatus.Pending || current.ExpiresAt <= DateTime.UtcNow)
+                    throw new BusinessRuleException(Messages.Rule_BookingNotPendingOrExpired);
+
+                var giftCardReserved = await giftCardHolds.GetReservedAmountAsync(
+                    orderId,
+                    cancellationToken
+                );
+                var outstanding =
+                    (await ledger.GetSummaryAsync(orderId, cancellationToken)).OutstandingAmount
+                    - giftCardReserved;
+                if (outstanding <= 0m)
+                    throw new BusinessRuleException(
+                        giftCardReserved > 0m
+                            ? Messages.Rule_GiftCardOrderFullyCovered
+                            : Messages.Rule_BookingNotPendingOrExpired
+                    );
+
+                await db
+                    .PaymentTransactions.Where(t =>
+                        t.OrderId == orderId
+                        && t.Type == PaymentTransactionType.Charge
+                        && t.Status == PaymentStatus.Pending
+                    )
+                    .ExecuteUpdateAsync(
+                        setters => setters.SetProperty(t => t.Status, PaymentStatus.Failed),
+                        cancellationToken
+                    );
+
+                charge = new PaymentTransaction
+                {
+                    OrderId = orderId,
+                    Type = PaymentTransactionType.Charge,
+                    Method = method,
+                    Amount = outstanding,
+                    TransactionCode = transactionCode,
+                    Status = PaymentStatus.Pending,
+                    CreatedAt = createdAt,
+                    PerformedByUserId = performedByUserId,
+                };
+                db.PaymentTransactions.Add(charge);
+                await db.SaveChangesAsync(cancellationToken);
+            },
             cancellationToken
         );
 
-        var charge = new PaymentTransaction
+        // Pha 2: gọi cổng ngoài giao dịch (có thể chậm, không được giữ khóa DB). Charge Pending đã có
+        // trên sổ trước khi khách nhận link nên IPN đến sớm vẫn khớp được. Cổng lỗi thì đánh Failed
+        // ngay để không để lại charge Pending không có link.
+        CreatePaymentResult gatewayResult;
+        try
         {
-            OrderId = order.OrderId,
-            Type = PaymentTransactionType.Charge,
-            Method = EnumConverters.ParseEnum<PaymentMethod>(
-                request.PaymentMethod,
-                "paymentMethod"
-            ),
-            Amount = outstanding,
-            TransactionCode = transactionCode,
-            Status = PaymentStatus.Pending,
-            CreatedAt = createdAt,
-            PerformedByUserId = performedByUserId,
-        };
-        db.PaymentTransactions.Add(charge);
-        await db.SaveChangesAsync(cancellationToken);
+            gatewayResult = await gateway.CreatePaymentAsync(
+                new CreatePaymentRequest(
+                    orderId,
+                    charge.Amount,
+                    string.Format(Messages.Payment_BookingDescription, order.OrderCode),
+                    transactionCode,
+                    createdAt
+                ),
+                cancellationToken
+            );
+        }
+        catch
+        {
+            await FailChargeAsync(charge.PaymentTransactionId);
+            throw;
+        }
 
         logger.LogInformation(
             "PaymentCreated PaymentTransactionId {PaymentTransactionId} OrderId {OrderId} Method {Method}",
             charge.PaymentTransactionId,
-            order.OrderId,
+            orderId,
             request.PaymentMethod
         );
 
         return new CheckoutResponse(gatewayResult.PaymentUrl, charge.PaymentTransactionId);
+    }
+
+    private async Task FailChargeAsync(int chargeId)
+    {
+        try
+        {
+            await db
+                .PaymentTransactions.Where(t =>
+                    t.PaymentTransactionId == chargeId && t.Status == PaymentStatus.Pending
+                )
+                .ExecuteUpdateAsync(
+                    setters => setters.SetProperty(t => t.Status, PaymentStatus.Failed),
+                    CancellationToken.None
+                );
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "CheckoutFailChargeError PaymentTransactionId {Id}", chargeId);
+        }
     }
 }

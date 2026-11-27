@@ -106,11 +106,17 @@ public class OrderLoyaltyService(
             {
                 o.UserId,
                 o.Type,
+                o.Status,
                 o.FinalAmount,
                 o.LoyaltyReversedAmount,
             })
             .FirstOrDefaultAsync(cancellationToken);
         if (order?.UserId is not { } userId || !EarningTypes.Contains(order.Type))
+            return;
+
+        // Đơn hết hạn chưa từng được xác nhận nên chưa cộng điểm/TotalSpent: khoản thu rồi hoàn của
+        // nó không được trừ lại.
+        if (order.Status == OrderStatus.Expired)
             return;
 
         var earnedBase =

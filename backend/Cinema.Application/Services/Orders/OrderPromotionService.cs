@@ -68,6 +68,7 @@ public class OrderPromotionService(
                 )
                     throw new BusinessRuleException(Messages.Promotion_Rejected_OrderTypeNotAllowed);
 
+                var previousFinalAmount = order.FinalAmount;
                 await promotionHold.ReleaseAsync(orderId, cancellationToken);
 
                 var result = await priceCalculator.ApplyAsync(
@@ -80,6 +81,22 @@ public class OrderPromotionService(
 
                 await promotionHold.ReserveAsync(new ResourceHoldRequest(order), cancellationToken);
                 await db.SaveChangesAsync(cancellationToken);
+
+                // Link thanh toán đang chờ được tạo với số tiền cũ: đánh Failed để khách phải bấm thanh
+                // toán lại với số mới. Charge Failed vẫn nhận được IPN Success muộn (PaymentService
+                // xử lý thu thừa/thu thiếu), nên không mất tiền khách nếu họ đã trả theo link cũ.
+                if (order.FinalAmount != previousFinalAmount)
+                    await db
+                        .PaymentTransactions.Where(t =>
+                            t.OrderId == orderId
+                            && t.Type == PaymentTransactionType.Charge
+                            && t.Status == PaymentStatus.Pending
+                        )
+                        .ExecuteUpdateAsync(
+                            setters => setters.SetProperty(t => t.Status, PaymentStatus.Failed),
+                            cancellationToken
+                        );
+
                 await giftCardHolds.TrimAsync(
                     orderId,
                     order.FinalAmount - await ledger.GetNetPaidAmountAsync(orderId, cancellationToken),

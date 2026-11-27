@@ -205,6 +205,11 @@ export const queryKeys = {
     list: (params?: object) => ["admin", "membership-subscriptions", "list", params] as const,
   },
 
+  adminCustomerSegments: {
+    all: () => ["admin", "customer-segments"] as const,
+    list: (params?: object) => ["admin", "customer-segments", "list", params] as const,
+  },
+
   adminLoyaltyRewards: {
     all: () => ["admin", "loyalty", "rewards"] as const,
     list: (params?: object) => ["admin", "loyalty", "rewards", "list", params] as const,
@@ -415,6 +420,7 @@ export const queryKeys = {
       ["admin", "reports", "finance", params] as const,
     roomQualityAlerts: (activeOnly: boolean) =>
       ["admin", "reports", "room-quality-alerts", activeOnly] as const,
+    retention: (months: number) => ["admin", "reports", "retention", months] as const,
   },
 
   adminImportExport: {

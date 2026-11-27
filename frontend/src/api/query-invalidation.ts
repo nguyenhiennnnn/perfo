@@ -143,6 +143,8 @@ export const invalidations = {
     k.adminAuditLogs.all(),
   ],
 
+  customerSegmentChanged: (): KeyList => [k.adminCustomerSegments.all(), k.adminAuditLogs.all()],
+
   membershipSubscriptionRefunded: (): KeyList => [
     k.adminMembershipSubscriptions.all(),
     ...orderViews(),

@@ -80,6 +80,8 @@ const AdminMoviesPage = lazyRoute(() => import("@/features/admin/movies/pages/mo
 const AdminBundlesPage = lazyRoute(() => import("@/features/admin/bundles/pages/bundles-page"));
 const AdminMembershipPlansPage = lazyRoute(() => import("@/features/admin/membership-plans/pages/membership-plans-page"));
 const AdminMembershipSubscriptionsPage = lazyRoute(() => import("@/features/admin/membership-plans/pages/membership-subscriptions-page"));
+const AdminCustomerSegmentsPage = lazyRoute(() => import("@/features/admin/customer-segments/pages/customer-segments-page"));
+const AdminRetentionReportPage = lazyRoute(() => import("@/features/admin/reports/pages/retention-report-page"));
 const AdminBundleReportPage = lazyRoute(() => import("@/features/admin/bundles/pages/bundle-report-page"));
 const AdminPromotionsPage = lazyRoute(() => import("@/features/admin/promotions/pages/promotions-page"));
 const AdminPromotionReportsPage = lazyRoute(() => import("@/features/admin/promotions/pages/promotion-reports-page"));
@@ -184,6 +186,8 @@ export const adminRoutes: RouteObject[] = [
           { path: "bundles/report", lazy: AdminBundleReportPage },
           { path: "membership-plans", lazy: AdminMembershipPlansPage },
           { path: "membership-subscriptions", lazy: AdminMembershipSubscriptionsPage },
+          { path: "customer-segments", lazy: AdminCustomerSegmentsPage },
+          { path: "reports/retention", lazy: AdminRetentionReportPage },
           { path: "loyalty/rewards", lazy: AdminLoyaltyRewardsPage },
           { path: "loyalty/challenges", lazy: AdminLoyaltyChallengesPage },
           { path: "loyalty/adjustments", lazy: AdminLoyaltyAdjustmentsPage },

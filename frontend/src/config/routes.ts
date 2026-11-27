@@ -110,6 +110,8 @@ export const ROUTES = {
     bundleReport: "/admin/bundles/report",
     membershipPlans: "/admin/membership-plans",
     membershipSubscriptions: "/admin/membership-subscriptions",
+    customerSegments: "/admin/customer-segments",
+    retentionReport: "/admin/reports/retention",
     loyaltyRewards: "/admin/loyalty/rewards",
     loyaltyChallenges: "/admin/loyalty/challenges",
     loyaltyAdjustments: "/admin/loyalty/adjustments",

@@ -177,6 +177,7 @@ export const ENDPOINTS = {
       financeExport: "/admin/reports/finance/export",
       financeExportJobs: "/admin/reports/finance/export-jobs",
       roomQualityAlerts: "/admin/room-quality-alerts",
+      retention: "/admin/reports/retention",
     },
     invoiceRequests: {
       root: "/admin/invoice-requests",
@@ -276,6 +277,10 @@ export const ENDPOINTS = {
     membershipSubscriptions: {
       root: "/admin/membership-subscriptions",
       refund: (id: number) => `/admin/membership-subscriptions/${id}/refund`,
+    },
+    customerSegments: {
+      root: "/admin/customer-segments",
+      byId: (id: number) => `/admin/customer-segments/${id}`,
     },
     combos: {
       root: "/admin/combos",

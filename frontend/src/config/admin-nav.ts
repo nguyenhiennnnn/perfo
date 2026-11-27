@@ -50,6 +50,8 @@ import {
   Crown,
   LifeBuoy,
   HandCoins,
+  Target,
+  Repeat,
   type LucideIcon,
 } from "lucide-react";
 import { ROUTES } from "@/config/routes";
@@ -392,6 +394,23 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         to: ROUTES.admin.loyaltyReport,
         label: "Báo cáo điểm",
         icon: Banknote,
+        roles: [Role.Admin],
+      },
+    ],
+  },
+  {
+    label: "Khách hàng",
+    items: [
+      {
+        to: ROUTES.admin.customerSegments,
+        label: "Phân khúc khách hàng",
+        icon: Target,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.retentionReport,
+        label: "Báo cáo giữ chân",
+        icon: Repeat,
         roles: [Role.Admin],
       },
     ],

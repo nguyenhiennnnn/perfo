@@ -140,6 +140,25 @@ export const useAdminMembershipPlanParams = (
   options?: Parameters<typeof useQueryStates<typeof adminMembershipPlanParsers>>[1],
 ) => useQueryStates(adminMembershipPlanParsers, options);
 
+const adminCustomerSegmentParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  isActive: parseAsString,
+};
+
+export const useAdminCustomerSegmentParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminCustomerSegmentParsers>>[1],
+) => useQueryStates(adminCustomerSegmentParsers, options);
+
+const adminRetentionParsers = {
+  months: parseAsInteger.withDefault(12),
+};
+
+export const useAdminRetentionParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminRetentionParsers>>[1],
+) => useQueryStates(adminRetentionParsers, options);
+
 const adminMembershipSubscriptionParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),

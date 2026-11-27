@@ -156,6 +156,9 @@ public static class DependencyInjection
         services.AddScoped<IShowtimeQueryService, ShowtimeQueryService>();
         services.AddScoped<IShowtimeExportService, ShowtimeExportService>();
         services.AddScoped<IShowtimeLifecycleService, ShowtimeLifecycleService>();
+        services.AddScoped<IShowtimeEventService, ShowtimeEventService>();
+        services.AddScoped<IShowtimeEventLimitService, ShowtimeEventLimitService>();
+        services.AddResourceHold<ShowtimeEventLimitHold>();
         services.AddScoped<IBusinessEventDispatcher, BusinessEventDispatcher>();
         services.AddScoped<IOutboxProcessor, OutboxProcessor>();
         services.AddScoped<IOrderHoldPolicy, OnlineHoldPolicy>();
@@ -363,7 +366,7 @@ public static class DependencyInjection
         services.AddScoped<IMembershipBenefitPricer, MembershipBenefitPricer>();
         services.AddScoped<IOrderPriceCalculator, OrderPriceCalculator>();
         services.AddScoped<IVatService, VatService>();
-        services.AddSingleton<IShowtimePricingScopeResolver, StandardShowtimePricingScopeResolver>();
+        services.AddSingleton<IShowtimePricingScopeResolver, ShowtimePricingScopeResolver>();
         services.AddScoped<ISalesVelocityProvider, PaceSalesVelocityProvider>();
         services.AddScoped<IPaymentLedgerService, PaymentLedgerService>();
         services.AddScoped<IPaymentRefundService, PaymentRefundService>();

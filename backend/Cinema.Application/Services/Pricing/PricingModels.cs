@@ -1,4 +1,5 @@
 using Cinema.Application.Caching;
+using Cinema.Domain.Enums;
 
 namespace Cinema.Application.Services.Pricing;
 
@@ -9,12 +10,11 @@ public enum ShowtimePricingMode
     Event,
 }
 
-public sealed record PricingScope(
-    ShowtimePricingMode Mode,
-    IReadOnlyList<PricingRuleSnapshot> EventRules
-)
+public sealed record EventPricing(PricingAdjustmentMode Mode, decimal Value);
+
+public sealed record PricingScope(ShowtimePricingMode Mode, EventPricing? Event)
 {
-    public static PricingScope Standard { get; } = new(ShowtimePricingMode.Standard, []);
+    public static PricingScope Standard { get; } = new(ShowtimePricingMode.Standard, null);
 }
 
 public sealed record AppliedRule(PricingRuleSnapshot Rule, decimal Value, string Reason);

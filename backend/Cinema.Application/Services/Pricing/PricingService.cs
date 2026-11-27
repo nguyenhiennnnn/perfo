@@ -188,7 +188,8 @@ public class PricingService(
                 s.Movie.Title,
                 s.Movie.AgeRatingId,
                 s.Room.RoomName,
-                s.Room.ScreenTypeId
+                s.Room.ScreenTypeId,
+                s.EventSetting
             ))
             .ToListAsync(cancellationToken);
         if (rows.Count == 0)
@@ -212,7 +213,7 @@ public class PricingService(
         var resolved = rows.Where(r => seatTypesByShowtime.ContainsKey(r.Showtime.ShowtimeId))
             .Select(r =>
             {
-                var scope = scopeResolver.Resolve(r.Showtime);
+                var scope = scopeResolver.Resolve(r.Showtime, r.EventSetting);
                 return (Row: r, Scope: scope, Candidates: ResolveCandidates(scope, shared));
             })
             .ToList();
@@ -294,7 +295,6 @@ public class PricingService(
         scope.Mode switch
         {
             ShowtimePricingMode.Standard => shared.StandardRules,
-            ShowtimePricingMode.Event => scope.EventRules,
             _ => [],
         };
 
@@ -314,13 +314,14 @@ public class PricingService(
                     s.Movie.Title,
                     s.Movie.AgeRatingId,
                     s.Room.RoomName,
-                    s.Room.ScreenTypeId
+                    s.Room.ScreenTypeId,
+                    s.EventSetting
                 ))
                 .FirstOrDefaultAsync(cancellationToken)
             ?? throw new NotFoundException(Messages.NotFound_Showtime);
 
         var shared = await LoadSharedAsync(cancellationToken);
-        var scope = scopeResolver.Resolve(row.Showtime);
+        var scope = scopeResolver.Resolve(row.Showtime, row.EventSetting);
         var candidates = ResolveCandidates(scope, shared);
 
         var occupancy =
@@ -392,7 +393,8 @@ public class PricingService(
             PricingParameters.From(shared.Settings),
             rules,
             occupancy,
-            shared.TicketTypes
+            shared.TicketTypes,
+            scope.Event
         );
     }
 
@@ -471,7 +473,8 @@ public class PricingService(
             seatMultiplier,
             ticketMultiplier,
             context.Rules,
-            context.Parameters
+            context.Parameters,
+            context.Event
         );
         var ineligibleReason =
             ticketType is null
@@ -505,7 +508,8 @@ public class PricingService(
         string MovieTitle,
         int? AgeRatingId,
         string RoomName,
-        int? ScreenTypeId
+        int? ScreenTypeId,
+        ShowtimeEventSetting? EventSetting
     );
 
     private static readonly OccupancySnapshot EmptyOccupancy = new(0, 0, 0, null);
@@ -530,6 +534,7 @@ public class PricingService(
         PricingParameters Parameters,
         IReadOnlyList<AppliedRule> Rules,
         OccupancySnapshot Occupancy,
-        IReadOnlyList<TicketTypeSnapshot> TicketTypes
+        IReadOnlyList<TicketTypeSnapshot> TicketTypes,
+        EventPricing? Event
     );
 }

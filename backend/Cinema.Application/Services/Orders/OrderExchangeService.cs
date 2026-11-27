@@ -4,6 +4,7 @@ using Cinema.Application.Interfaces.Audit;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Notifications;
 using Cinema.Application.Interfaces.Orders;
+using Cinema.Application.Interfaces.Showtimes;
 using Cinema.Application.Options;
 using Cinema.Application.Services.CounterShifts;
 using Cinema.Application.Services.Payments;
@@ -29,6 +30,7 @@ public class OrderExchangeService(
     IRealtimeNotifier realtimeNotifier,
     IAuditLogger auditLogger,
     IAppCache cache,
+    IShowtimeEventLimitService eventLimits,
     IOptions<BookingOptions> bookingOptions,
     ILogger<OrderExchangeService> logger
 ) : IOrderExchangeService
@@ -343,6 +345,7 @@ public class OrderExchangeService(
 
                 db.Orders.Add(order);
                 await db.SaveChangesAsync(cancellationToken);
+                await eventLimits.EnsureWithinLimitsAsync(order, cancellationToken);
 
                 await db
                     .ShowtimeSeats.Where(ss =>

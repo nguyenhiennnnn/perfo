@@ -6332,4 +6332,52 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Email_CampaignUnsubscribeLabel" xml:space="preserve">
     <value>Hủy đăng ký nhận tin</value>
   </data>
+  <data name="Pricing_Event_RuleName" xml:space="preserve">
+    <value>Giá suất sự kiện</value>
+  </data>
+  <data name="Pricing_Reason_EventSurcharge" xml:space="preserve">
+    <value>Phụ thu suất sự kiện {0:N0} VNĐ mỗi vé.</value>
+  </data>
+  <data name="Pricing_Reason_EventMultiplier" xml:space="preserve">
+    <value>Suất sự kiện áp hệ số giá riêng {0}.</value>
+  </data>
+  <data name="NotFound_ShowtimeEvent" xml:space="preserve">
+    <value>Suất chiếu này chưa được thiết lập là suất sự kiện.</value>
+  </data>
+  <data name="Rule_ShowtimeEventKindInvalid" xml:space="preserve">
+    <value>Suất chiếu riêng (thuê phòng) không thể chuyển thành suất sự kiện.</value>
+  </data>
+  <data name="Rule_ShowtimeEventStatusInvalid" xml:space="preserve">
+    <value>Chỉ đổi được loại suất với suất chiếu đã lên lịch và chưa bắt đầu.</value>
+  </data>
+  <data name="Rule_ShowtimeEventHasOrders" xml:space="preserve">
+    <value>Suất chiếu đã có đơn đang giữ chỗ hoặc đã xác nhận nên không thể đổi loại suất.</value>
+  </data>
+  <data name="Success_ShowtimeEventSaved" xml:space="preserve">
+    <value>Đã lưu thiết lập suất sự kiện.</value>
+  </data>
+  <data name="Success_ShowtimeEventRemoved" xml:space="preserve">
+    <value>Đã chuyển suất chiếu về suất thường.</value>
+  </data>
+  <data name="Rule_EventTicketTypeQuotaExceeded" xml:space="preserve">
+    <value>Vé loại {0} của suất sự kiện này chỉ còn {1} vé.</value>
+  </data>
+  <data name="Rule_EventCustomerLimitExceeded" xml:space="preserve">
+    <value>Mỗi khách chỉ được mua tối đa {0} vé cho suất sự kiện này, bạn đã có {1} vé.</value>
+  </data>
+  <data name="Rule_EventLimitQuotaBelowUsed" xml:space="preserve">
+    <value>Hạn mức vé loại {0} không được thấp hơn số vé đã bán và đang giữ ({1} vé).</value>
+  </data>
+  <data name="Rule_ShowtimeEventLimitStatusInvalid" xml:space="preserve">
+    <value>Chỉ chỉnh được hạn mức vé của suất chiếu đã lên lịch và chưa bắt đầu.</value>
+  </data>
+  <data name="Validation_EventLimit_Range" xml:space="preserve">
+    <value>Hạn mức vé phải từ 1 đến {0}.</value>
+  </data>
+  <data name="Validation_EventLimit_TicketTypeDuplicate" xml:space="preserve">
+    <value>Loại vé bị trùng trong danh sách hạn mức.</value>
+  </data>
+  <data name="Success_ShowtimeEventLimitsSaved" xml:space="preserve">
+    <value>Đã lưu hạn mức vé của suất sự kiện.</value>
+  </data>
 </root>

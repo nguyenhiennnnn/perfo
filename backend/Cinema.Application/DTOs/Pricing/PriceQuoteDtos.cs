@@ -6,6 +6,7 @@ public static class PriceAdjustmentKinds
     public const string DynamicCap = "DynamicCap";
     public const string DynamicFloor = "DynamicFloor";
     public const string MinPrice = "MinPrice";
+    public const string EventPricing = "EventPricing";
 }
 
 public record SeatPriceRequest(int SeatId, int? TicketTypeId);

@@ -19,6 +19,7 @@ public static class AuditEntityTypes
     public const string Order = "Order";
     public const string OrderLine = "OrderLine";
     public const string Showtime = "Showtime";
+    public const string ShowtimeEvent = "ShowtimeEvent";
     public const string RoomClosure = "RoomClosure";
     public const string SeatBlock = "SeatBlock";
     public const string PaymentTransaction = "PaymentTransaction";

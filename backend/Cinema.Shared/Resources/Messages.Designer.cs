@@ -18445,5 +18445,149 @@ namespace Cinema.Shared.Resources {
                 return ResourceManager.GetString("Validation_WasteSheet_ReasonInvalid", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giá suất sự kiện.
+        /// </summary>
+        public static string Pricing_Event_RuleName {
+            get {
+                return ResourceManager.GetString("Pricing_Event_RuleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phụ thu suất sự kiện {0:N0} VNĐ mỗi vé..
+        /// </summary>
+        public static string Pricing_Reason_EventSurcharge {
+            get {
+                return ResourceManager.GetString("Pricing_Reason_EventSurcharge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suất sự kiện áp hệ số giá riêng {0}..
+        /// </summary>
+        public static string Pricing_Reason_EventMultiplier {
+            get {
+                return ResourceManager.GetString("Pricing_Reason_EventMultiplier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suất chiếu này chưa được thiết lập là suất sự kiện..
+        /// </summary>
+        public static string NotFound_ShowtimeEvent {
+            get {
+                return ResourceManager.GetString("NotFound_ShowtimeEvent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suất chiếu riêng (thuê phòng) không thể chuyển thành suất sự kiện..
+        /// </summary>
+        public static string Rule_ShowtimeEventKindInvalid {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventKindInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chỉ đổi được loại suất với suất chiếu đã lên lịch và chưa bắt đầu..
+        /// </summary>
+        public static string Rule_ShowtimeEventStatusInvalid {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventStatusInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suất chiếu đã có đơn đang giữ chỗ hoặc đã xác nhận nên không thể đổi loại suất..
+        /// </summary>
+        public static string Rule_ShowtimeEventHasOrders {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventHasOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã lưu thiết lập suất sự kiện..
+        /// </summary>
+        public static string Success_ShowtimeEventSaved {
+            get {
+                return ResourceManager.GetString("Success_ShowtimeEventSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã chuyển suất chiếu về suất thường..
+        /// </summary>
+        public static string Success_ShowtimeEventRemoved {
+            get {
+                return ResourceManager.GetString("Success_ShowtimeEventRemoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vé loại {0} của suất sự kiện này chỉ còn {1} vé..
+        /// </summary>
+        public static string Rule_EventTicketTypeQuotaExceeded {
+            get {
+                return ResourceManager.GetString("Rule_EventTicketTypeQuotaExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mỗi khách chỉ được mua tối đa {0} vé cho suất sự kiện này, bạn đã có {1} vé..
+        /// </summary>
+        public static string Rule_EventCustomerLimitExceeded {
+            get {
+                return ResourceManager.GetString("Rule_EventCustomerLimitExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hạn mức vé loại {0} không được thấp hơn số vé đã bán và đang giữ ({1} vé)..
+        /// </summary>
+        public static string Rule_EventLimitQuotaBelowUsed {
+            get {
+                return ResourceManager.GetString("Rule_EventLimitQuotaBelowUsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chỉ chỉnh được hạn mức vé của suất chiếu đã lên lịch và chưa bắt đầu..
+        /// </summary>
+        public static string Rule_ShowtimeEventLimitStatusInvalid {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventLimitStatusInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hạn mức vé phải từ 1 đến {0}..
+        /// </summary>
+        public static string Validation_EventLimit_Range {
+            get {
+                return ResourceManager.GetString("Validation_EventLimit_Range", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loại vé bị trùng trong danh sách hạn mức..
+        /// </summary>
+        public static string Validation_EventLimit_TicketTypeDuplicate {
+            get {
+                return ResourceManager.GetString("Validation_EventLimit_TicketTypeDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã lưu hạn mức vé của suất sự kiện..
+        /// </summary>
+        public static string Success_ShowtimeEventLimitsSaved {
+            get {
+                return ResourceManager.GetString("Success_ShowtimeEventLimitsSaved", resourceCulture);
+            }
+        }
     }
 }

@@ -21,9 +21,19 @@ public static class PriceCalculator
         decimal seatMultiplier,
         decimal ticketTypeMultiplier,
         IReadOnlyList<AppliedRule> rules,
-        PricingParameters parameters
+        PricingParameters parameters,
+        EventPricing? eventPricing = null
     )
     {
+        if (eventPricing is not null)
+            return CalculateEvent(
+                basePrice,
+                seatMultiplier,
+                ticketTypeMultiplier,
+                eventPricing,
+                parameters
+            );
+
         var reference = basePrice * seatMultiplier;
         var maxIncrease = reference * parameters.MaxIncreasePercent / 100m;
         var maxDecrease = reference * parameters.MaxDecreasePercent / 100m;
@@ -95,27 +105,7 @@ public static class PriceCalculator
         else if (price < lower)
             price = CeilToStep(lower, step);
 
-        if (price < parameters.MinTicketPrice)
-        {
-            var minPrice = CeilToStep(parameters.MinTicketPrice, step);
-            adjustments.Add(
-                new PriceAdjustmentDto(
-                    PriceAdjustmentKinds.MinPrice,
-                    null,
-                    null,
-                    null,
-                    null,
-                    parameters.MinTicketPrice,
-                    OrderPricing.RoundToDong(minPrice - price),
-                    string.Format(
-                        CultureInfo.GetCultureInfo(RegionalDefaults.Locale),
-                        Messages.Pricing_Limit_MinPrice,
-                        parameters.MinTicketPrice
-                    )
-                )
-            );
-            price = minPrice;
-        }
+        price = ApplyMinPrice(price, step, parameters, adjustments);
 
         return new PriceBreakdown(
             OrderPricing.RoundToDong(reference),
@@ -123,6 +113,94 @@ public static class PriceCalculator
             price,
             adjustments
         );
+    }
+
+    private static PriceBreakdown CalculateEvent(
+        decimal basePrice,
+        decimal seatMultiplier,
+        decimal ticketTypeMultiplier,
+        EventPricing eventPricing,
+        PricingParameters parameters
+    )
+    {
+        var reference = basePrice * seatMultiplier;
+        var step = parameters.RoundingStep > 0m ? parameters.RoundingStep : 1m;
+        var adjustments = new List<PriceAdjustmentDto>(2);
+        decimal price;
+        if (eventPricing.Mode == PricingAdjustmentMode.Multiplier)
+        {
+            price = RoundToStep(reference * eventPricing.Value * ticketTypeMultiplier, step);
+            adjustments.Add(
+                new PriceAdjustmentDto(
+                    PriceAdjustmentKinds.EventPricing,
+                    null,
+                    Messages.Pricing_Event_RuleName,
+                    null,
+                    nameof(PricingAdjustmentMode.Multiplier),
+                    eventPricing.Value,
+                    OrderPricing.RoundToDong(reference * (eventPricing.Value - 1m)),
+                    string.Format(
+                        Messages.Pricing_Reason_EventMultiplier,
+                        eventPricing.Value.ToString("0.####", CultureInfo.InvariantCulture)
+                    )
+                )
+            );
+        }
+        else
+        {
+            var surcharge = OrderPricing.RoundToDong(eventPricing.Value);
+            price = RoundToStep(reference * ticketTypeMultiplier, step) + surcharge;
+            adjustments.Add(
+                new PriceAdjustmentDto(
+                    PriceAdjustmentKinds.EventPricing,
+                    null,
+                    Messages.Pricing_Event_RuleName,
+                    null,
+                    nameof(PricingAdjustmentMode.Amount),
+                    eventPricing.Value,
+                    surcharge,
+                    string.Format(
+                        CultureInfo.GetCultureInfo(RegionalDefaults.Locale),
+                        Messages.Pricing_Reason_EventSurcharge,
+                        surcharge
+                    )
+                )
+            );
+        }
+
+        price = ApplyMinPrice(price, step, parameters, adjustments);
+
+        return new PriceBreakdown(OrderPricing.RoundToDong(reference), 0m, price, adjustments);
+    }
+
+    private static decimal ApplyMinPrice(
+        decimal price,
+        decimal step,
+        PricingParameters parameters,
+        List<PriceAdjustmentDto> adjustments
+    )
+    {
+        if (price >= parameters.MinTicketPrice)
+            return price;
+
+        var minPrice = CeilToStep(parameters.MinTicketPrice, step);
+        adjustments.Add(
+            new PriceAdjustmentDto(
+                PriceAdjustmentKinds.MinPrice,
+                null,
+                null,
+                null,
+                null,
+                parameters.MinTicketPrice,
+                OrderPricing.RoundToDong(minPrice - price),
+                string.Format(
+                    CultureInfo.GetCultureInfo(RegionalDefaults.Locale),
+                    Messages.Pricing_Limit_MinPrice,
+                    parameters.MinTicketPrice
+                )
+            )
+        );
+        return minPrice;
     }
 
     private static decimal RoundToStep(decimal value, decimal step) =>

@@ -5,5 +5,5 @@ namespace Cinema.Application.Interfaces.Pricing;
 
 public interface IShowtimePricingScopeResolver
 {
-    PricingScope Resolve(Showtime showtime);
+    PricingScope Resolve(Showtime showtime, ShowtimeEventSetting? eventSetting);
 }

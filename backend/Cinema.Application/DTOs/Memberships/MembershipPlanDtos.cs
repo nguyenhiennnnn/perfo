@@ -43,7 +43,8 @@ public record MembershipSubscriptionDto(
     int OrderId,
     DateTime ValidFrom,
     DateTime ValidTo,
-    bool IsCurrent
+    bool IsCurrent,
+    string Status
 );
 
 public record MembershipFreeTicketPeriodDto(

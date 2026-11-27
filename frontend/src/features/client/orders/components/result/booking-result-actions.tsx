@@ -10,7 +10,31 @@ interface BookingResultActionsProps {
   state: PaymentResultState;
 }
 
+const MembershipResultActions = ({ order, state }: BookingResultActionsProps) => (
+  <div className="flex w-full flex-wrap gap-3">
+    {state === "confirmed" && (
+      <ButtonLink to={ROUTES.account.membership}>Xem gói của tôi</ButtonLink>
+    )}
+    {(state === "outstanding" || state === "failed") && (
+      <ButtonLink to={ROUTES.membershipPlanResume(order.orderId)}>Thanh toán phần còn lại</ButtonLink>
+    )}
+    {(state === "expired" || state === "cancelled") && (
+      <ButtonLink to={ROUTES.membershipPlans}>Mua lại gói</ButtonLink>
+    )}
+    <ButtonLink to={ROUTES.membershipPlans} variant="outline">
+      Xem các gói
+    </ButtonLink>
+    <ButtonLink to={ROUTES.home} variant="outline">
+      Về trang chủ
+    </ButtonLink>
+  </div>
+);
+
 export const BookingResultActions = ({ order, state }: BookingResultActionsProps) => {
+  if (order.type === OrderType.Membership) {
+    return <MembershipResultActions order={order} state={state} />;
+  }
+
   const showtimeId = getOrderShowing(order)?.showtimeId;
   const isSupplement = order.type === OrderType.Supplement;
   const resumeTo = isSupplement

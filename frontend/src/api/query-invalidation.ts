@@ -62,6 +62,7 @@ export const invalidations = {
     k.combos.all(),
     k.bundles.all(),
     k.giftCards.all(),
+    k.membership.all(),
     k.loyalty.all(),
     k.waitlist.all(),
   ],

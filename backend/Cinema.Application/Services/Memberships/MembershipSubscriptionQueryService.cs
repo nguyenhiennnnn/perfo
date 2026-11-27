@@ -16,21 +16,36 @@ public class MembershipSubscriptionQueryService(IAppDbContext db)
     )
     {
         var now = DateTime.UtcNow;
-        return await db
+        var rows = await db
             .MembershipSubscriptions.AsNoTracking()
             .IgnoreQueryFilters()
             .Where(s => s.UserId == userId)
             .OrderByDescending(s => s.ValidFrom)
             .Take(Pagination.MaxPageSize)
-            .Select(s => new MembershipSubscriptionDto(
+            .Select(s => new
+            {
                 s.MembershipSubscriptionId,
                 s.MembershipPlanId,
-                s.MembershipPlan.Name,
+                PlanName = s.MembershipPlan.Name,
                 s.OrderId,
                 s.ValidFrom,
                 s.ValidTo,
-                s.Status == MembershipSubscriptionStatus.Active && s.ValidFrom <= now && s.ValidTo > now
-            ))
+                s.Status,
+            })
             .ToListAsync(cancellationToken);
+
+        return rows.Select(s => new MembershipSubscriptionDto(
+                s.MembershipSubscriptionId,
+                s.MembershipPlanId,
+                s.PlanName,
+                s.OrderId,
+                s.ValidFrom,
+                s.ValidTo,
+                s.Status == MembershipSubscriptionStatus.Active
+                    && s.ValidFrom <= now
+                    && s.ValidTo > now,
+                s.Status.ToString()
+            ))
+            .ToList();
     }
 }

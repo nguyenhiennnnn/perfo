@@ -122,6 +122,20 @@ export const GiftCardStatus = {
 } as const;
 export type GiftCardStatus = (typeof GiftCardStatus)[keyof typeof GiftCardStatus];
 
+export const MembershipPlanPeriod = {
+  Monthly: "Monthly",
+  Quarterly: "Quarterly",
+} as const;
+export type MembershipPlanPeriod = (typeof MembershipPlanPeriod)[keyof typeof MembershipPlanPeriod];
+
+export const MembershipSubscriptionStatus = {
+  Active: "Active",
+  Expired: "Expired",
+  Refunded: "Refunded",
+} as const;
+export type MembershipSubscriptionStatus =
+  (typeof MembershipSubscriptionStatus)[keyof typeof MembershipSubscriptionStatus];
+
 export const LoyaltyRewardType = {
   FreeTicket: "FreeTicket",
   FreeCombo: "FreeCombo",

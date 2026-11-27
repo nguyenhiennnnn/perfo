@@ -56,6 +56,13 @@ export const queryKeys = {
     purchased: (params?: object) => ["gift-cards", "purchased", params] as const,
   },
 
+  membership: {
+    all: () => ["membership"] as const,
+    plans: () => ["membership", "plans"] as const,
+    subscriptions: () => ["membership", "subscriptions"] as const,
+    freeTickets: () => ["membership", "free-tickets"] as const,
+  },
+
   loyalty: {
     all: () => ["loyalty"] as const,
     summary: () => ["loyalty", "summary"] as const,

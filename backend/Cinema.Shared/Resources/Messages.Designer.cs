@@ -5595,6 +5595,15 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chỉ quản trị mới được hoàn gói thành viên theo lý do ngoại lệ..
+        /// </summary>
+        public static string Forbidden_MembershipRefundAdminOnly {
+            get {
+                return ResourceManager.GetString("Forbidden_MembershipRefundAdminOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bạn không phải chủ booking này..
         /// </summary>
         public static string Forbidden_NotBookingOwner {
@@ -8160,6 +8169,15 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Không tìm thấy đăng ký gói thành viên..
+        /// </summary>
+        public static string NotFound_MembershipSubscription {
+            get {
+                return ResourceManager.GetString("NotFound_MembershipSubscription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Không tìm thấy hạng thành viên..
         /// </summary>
         public static string NotFound_MembershipTier {
@@ -9294,6 +9312,15 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hoàn gói thành viên, đơn {0}.
+        /// </summary>
+        public static string Refund_MembershipDescription {
+            get {
+                return ResourceManager.GetString("Refund_MembershipDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Phương thức thanh toán này chưa hỗ trợ hoàn tiền..
         /// </summary>
         public static string Refund_MethodUnsupported {
@@ -9915,6 +9942,15 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chuyển sang doanh thu vé.
+        /// </summary>
+        public static string Report_Finance_Col_MembershipConverted {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_MembershipConverted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chưa ghi nhận cuối kỳ.
         /// </summary>
         public static string Report_Finance_Col_MembershipDeferredClosing {
@@ -9929,6 +9965,15 @@ namespace Cinema.Shared.Resources {
         public static string Report_Finance_Col_MembershipDeferredOpening {
             get {
                 return ResourceManager.GetString("Report_Finance_Col_MembershipDeferredOpening", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doanh thu gói thực trong kỳ.
+        /// </summary>
+        public static string Report_Finance_Col_MembershipNetRevenue {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_MembershipNetRevenue", resourceCulture);
             }
         }
         
@@ -9965,6 +10010,15 @@ namespace Cinema.Shared.Resources {
         public static string Report_Finance_Col_MembershipSoldCount {
             get {
                 return ResourceManager.GetString("Report_Finance_Col_MembershipSoldCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doanh thu gói dừng do hoàn.
+        /// </summary>
+        public static string Report_Finance_Col_MembershipStopped {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_MembershipStopped", resourceCulture);
             }
         }
         
@@ -10716,7 +10770,7 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tiền bán gói là khoản nhận trước, được ghi nhận thành doanh thu chia đều theo từng tháng hiệu lực của đăng ký. Phần chưa ghi nhận là các tháng chưa đến kỳ ghi nhận; doanh thu gói không nằm trong doanh thu vé và combo..
+        ///   Looks up a localized string similar to Tiền bán gói là khoản nhận trước, được ghi nhận thành doanh thu chia đều theo từng tháng hiệu lực của đăng ký. Phần chưa ghi nhận là các tháng chưa đến kỳ ghi nhận. Khi vé miễn phí được dùng, giá trị quy đổi của vé được chuyển từ doanh thu gói sang doanh thu vé của suất chiếu (ghi theo ngày chiếu trong bảng tổng hợp suất chiếu), nên doanh thu gói thực bằng đã ghi nhận trừ phần chuyển. Khi gói được hoàn, các tháng chưa ghi nhận bị dừng và phần doanh thu nhận trước tương ứng được giải phóng, thể hiện ở cột dừ [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Report_Finance_MembershipRevenue_Note {
             get {
@@ -12264,11 +12318,56 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Đơn mua gói thành viên đã xác nhận không hủy trực tiếp được. Hãy dùng chức năng hoàn gói thành viên..
+        /// </summary>
+        public static string Rule_MembershipOrderCancelViaSubscription {
+            get {
+                return ResourceManager.GetString("Rule_MembershipOrderCancelViaSubscription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gói thành viên này hiện không được bán..
         /// </summary>
         public static string Rule_MembershipPlanNotAvailable {
             get {
                 return ResourceManager.GetString("Rule_MembershipPlanNotAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Có vé miễn phí của gói đang được giữ cho đơn chờ thanh toán. Hãy thử lại sau khi đơn đó được thanh toán hoặc hết hạn..
+        /// </summary>
+        public static string Rule_MembershipRefundFreeTicketHeld {
+            get {
+                return ResourceManager.GetString("Rule_MembershipRefundFreeTicketHeld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gói không còn phần doanh thu chưa ghi nhận để hoàn..
+        /// </summary>
+        public static string Rule_MembershipRefundNothingLeft {
+            get {
+                return ResourceManager.GetString("Rule_MembershipRefundNothingLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gói đã bắt đầu hiệu lực nên không được hoàn. Chỉ hoàn khi do lỗi hệ thống hoặc quản trị cho phép ngoại lệ..
+        /// </summary>
+        public static string Rule_MembershipStartedNotRefundable {
+            get {
+                return ResourceManager.GetString("Rule_MembershipStartedNotRefundable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đăng ký gói không còn hiệu lực hoặc đã được hoàn nên không thể hoàn..
+        /// </summary>
+        public static string Rule_MembershipSubscriptionNotRefundable {
+            get {
+                return ResourceManager.GetString("Rule_MembershipSubscriptionNotRefundable", resourceCulture);
             }
         }
         
@@ -14105,6 +14204,15 @@ namespace Cinema.Shared.Resources {
         public static string Success_MembershipPlanUpdated {
             get {
                 return ResourceManager.GetString("Success_MembershipPlanUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã hoàn gói thành viên..
+        /// </summary>
+        public static string Success_MembershipSubscriptionRefunded {
+            get {
+                return ResourceManager.GetString("Success_MembershipSubscriptionRefunded", resourceCulture);
             }
         }
         
@@ -16215,6 +16323,24 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tổng giá trị quy đổi của các vé miễn phí trong thời hạn gói không được vượt quá giá gói..
+        /// </summary>
+        public static string Validation_MembershipPlan_ConversionExceedsPrice {
+            get {
+                return ResourceManager.GetString("Validation_MembershipPlan_ConversionExceedsPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giá trị quy đổi của một vé miễn phí phải là số nguyên đồng, từ 0 đến {0}..
+        /// </summary>
+        public static string Validation_MembershipPlan_ConversionRange {
+            get {
+                return ResourceManager.GetString("Validation_MembershipPlan_ConversionRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Số vé miễn phí mỗi tháng phải từ 0 đến {0}..
         /// </summary>
         public static string Validation_MembershipPlan_FreeTicketsRange {
@@ -16247,6 +16373,24 @@ namespace Cinema.Shared.Resources {
         public static string Validation_MembershipPlan_PriceRange {
             get {
                 return ResourceManager.GetString("Validation_MembershipPlan_PriceRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cần nhập ghi chú khi hoàn gói theo lỗi hệ thống hoặc ngoại lệ..
+        /// </summary>
+        public static string Validation_MembershipRefund_NoteRequired {
+            get {
+                return ResourceManager.GetString("Validation_MembershipRefund_NoteRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lý do hoàn gói không hợp lệ..
+        /// </summary>
+        public static string Validation_MembershipRefund_ReasonInvalid {
+            get {
+                return ResourceManager.GetString("Validation_MembershipRefund_ReasonInvalid", resourceCulture);
             }
         }
         
@@ -17903,114 +18047,6 @@ namespace Cinema.Shared.Resources {
         public static string Validation_WasteSheet_ReasonInvalid {
             get {
                 return ResourceManager.GetString("Validation_WasteSheet_ReasonInvalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Không tìm thấy đăng ký gói thành viên..
-        /// </summary>
-        public static string NotFound_MembershipSubscription {
-            get {
-                return ResourceManager.GetString("NotFound_MembershipSubscription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Chỉ quản trị mới được hoàn gói thành viên theo lý do ngoại lệ..
-        /// </summary>
-        public static string Forbidden_MembershipRefundAdminOnly {
-            get {
-                return ResourceManager.GetString("Forbidden_MembershipRefundAdminOnly", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Đăng ký gói không còn hiệu lực hoặc đã được hoàn nên không thể hoàn..
-        /// </summary>
-        public static string Rule_MembershipSubscriptionNotRefundable {
-            get {
-                return ResourceManager.GetString("Rule_MembershipSubscriptionNotRefundable", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Gói đã bắt đầu hiệu lực nên không được hoàn. Chỉ hoàn khi do lỗi hệ thống hoặc quản trị cho phép ngoại lệ..
-        /// </summary>
-        public static string Rule_MembershipStartedNotRefundable {
-            get {
-                return ResourceManager.GetString("Rule_MembershipStartedNotRefundable", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Có vé miễn phí của gói đang được giữ cho đơn chờ thanh toán. Hãy thử lại sau khi đơn đó được thanh toán hoặc hết hạn..
-        /// </summary>
-        public static string Rule_MembershipRefundFreeTicketHeld {
-            get {
-                return ResourceManager.GetString("Rule_MembershipRefundFreeTicketHeld", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Gói không còn phần doanh thu chưa ghi nhận để hoàn..
-        /// </summary>
-        public static string Rule_MembershipRefundNothingLeft {
-            get {
-                return ResourceManager.GetString("Rule_MembershipRefundNothingLeft", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Đơn mua gói thành viên đã xác nhận không hủy trực tiếp được. Hãy dùng chức năng hoàn gói thành viên..
-        /// </summary>
-        public static string Rule_MembershipOrderCancelViaSubscription {
-            get {
-                return ResourceManager.GetString("Rule_MembershipOrderCancelViaSubscription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hoàn gói thành viên, đơn {0}.
-        /// </summary>
-        public static string Refund_MembershipDescription {
-            get {
-                return ResourceManager.GetString("Refund_MembershipDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Đã hoàn gói thành viên..
-        /// </summary>
-        public static string Success_MembershipSubscriptionRefunded {
-            get {
-                return ResourceManager.GetString("Success_MembershipSubscriptionRefunded", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Lý do hoàn gói không hợp lệ..
-        /// </summary>
-        public static string Validation_MembershipRefund_ReasonInvalid {
-            get {
-                return ResourceManager.GetString("Validation_MembershipRefund_ReasonInvalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cần nhập ghi chú khi hoàn gói theo lỗi hệ thống hoặc ngoại lệ..
-        /// </summary>
-        public static string Validation_MembershipRefund_NoteRequired {
-            get {
-                return ResourceManager.GetString("Validation_MembershipRefund_NoteRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Doanh thu gói dừng do hoàn.
-        /// </summary>
-        public static string Report_Finance_Col_MembershipStopped {
-            get {
-                return ResourceManager.GetString("Report_Finance_Col_MembershipStopped", resourceCulture);
             }
         }
     }

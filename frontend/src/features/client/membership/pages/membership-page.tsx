@@ -56,9 +56,12 @@ const MembershipPage = () => {
             ) : (
               <ButtonLink to={ROUTES.auth.register}>Đăng ký thành viên</ButtonLink>
             )}
+            <ButtonLink to={ROUTES.membershipPlans} variant="secondary">
+              Gói thành viên trả phí
+            </ButtonLink>
             <ButtonLink
               to={`${ROUTES.movies.list}?status=${MOVIE_LIST_STATUS_QUERY.nowShowing}`}
-              variant="secondary"
+              variant="outline"
             >
               Xem phim đang chiếu
             </ButtonLink>

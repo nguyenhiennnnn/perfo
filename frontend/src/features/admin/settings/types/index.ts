@@ -40,6 +40,8 @@ export interface CinemaSettingsDto {
   giftCardMinAmount: number;
   giftCardMaxAmount: number;
   giftCardValidityMonths: number;
+  membershipExpiryReminderDays?: number;
+  membershipFreeTicketsPerShowtime?: number;
   timeZoneId?: string;
   locale?: string;
   currencyCode?: string;

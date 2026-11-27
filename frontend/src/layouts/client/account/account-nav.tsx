@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import { User, Ticket, LifeBuoy, Gift, Coins, Trophy, UserPlus, Star, KeyRound, LogOut } from "lucide-react";
+import { User, Ticket, LifeBuoy, Gift, Crown, Coins, Trophy, UserPlus, Star, KeyRound, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/config/routes";
 import { useAuthStore } from "@/stores/auth-store";
@@ -9,6 +9,7 @@ const ACCOUNT_NAV = [
   { to: ROUTES.account.tickets, label: "Lịch sử đơn", icon: Ticket },
   { to: ROUTES.account.supportRequests, label: "Yêu cầu hỗ trợ", icon: LifeBuoy },
   { to: ROUTES.account.giftCards, label: "Thẻ quà đã mua", icon: Gift },
+  { to: ROUTES.account.membership, label: "Gói thành viên của tôi", icon: Crown },
   { to: ROUTES.account.points, label: "Điểm thưởng", icon: Coins },
   { to: ROUTES.account.challenges, label: "Thử thách", icon: Trophy },
   { to: ROUTES.account.referrals, label: "Giới thiệu bạn bè", icon: UserPlus },

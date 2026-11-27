@@ -41,6 +41,12 @@ export const ENDPOINTS = {
     balance: "/gift-cards/balance",
     bulkImport: "/gift-cards/bulk/import",
   },
+  membershipPlans: {
+    root: "/membership-plans",
+    purchase: (id: number) => `/membership-plans/${id}/purchase`,
+    mySubscriptions: "/membership-plans/subscriptions/mine",
+    myFreeTickets: "/membership-plans/subscriptions/mine/free-tickets",
+  },
   loyalty: {
     summary: "/loyalty/summary",
     lots: "/loyalty/lots",

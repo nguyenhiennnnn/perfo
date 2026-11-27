@@ -1,4 +1,4 @@
-import { Gift, Receipt, ShoppingBag, Ticket, type LucideIcon } from "lucide-react";
+import { Crown, Gift, Receipt, ShoppingBag, Ticket, type LucideIcon } from "lucide-react";
 import { ButtonLink } from "@/components/common/button-link";
 import { BookingStatusBadge } from "@/components/common/status-badge";
 import { ROUTES } from "@/config/routes";
@@ -11,6 +11,7 @@ const TYPE_ICONS: Record<string, LucideIcon> = {
   [OrderType.Ticket]: Ticket,
   [OrderType.Combo]: ShoppingBag,
   [OrderType.GiftCard]: Gift,
+  [OrderType.Membership]: Crown,
 };
 
 interface OrderCardProps {

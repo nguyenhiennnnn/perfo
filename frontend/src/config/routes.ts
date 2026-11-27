@@ -6,6 +6,8 @@ export const ROUTES = {
   notFound: "/404",
   schedule: "/schedule",
   membership: "/membership",
+  membershipPlans: "/membership-plans",
+  membershipPlanResume: (orderId: number | string) => `/membership-plans?resume=${orderId}`,
   giftCards: "/gift-cards",
   giftCardBulk: "/gift-cards/bulk",
   giftCardResume: (orderId: number | string) => `/gift-cards?resume=${orderId}`,
@@ -48,6 +50,7 @@ export const ROUTES = {
     supportRequestDetail: (requestId: number | string) =>
       `/account/support-requests/${requestId}`,
     giftCards: "/account/gift-cards",
+    membership: "/account/membership",
     points: "/account/points",
     challenges: "/account/challenges",
     referrals: "/account/referrals",

@@ -127,6 +127,12 @@ public static class BackgroundJobExtensions
             options.ProcessOutboxCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<PendingGatewayRefundJob>(
+            RecurringJobIds.PendingGatewayRefund,
+            j => j.RunAsync(CancellationToken.None),
+            options.PendingGatewayRefundCron,
+            jobOptions
+        );
         RecurringJob.AddOrUpdate<SalesStatsRefreshJob>(
             RecurringJobIds.RefreshSalesStats,
             j => j.RunAsync(CancellationToken.None),

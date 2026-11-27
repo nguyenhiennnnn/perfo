@@ -6473,4 +6473,28 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Report_Finance_Col_EventGiftsGiven" xml:space="preserve">
     <value>Số quà đã trao</value>
   </data>
+  <data name="Refund_OutcomeUnknown" xml:space="preserve">
+    <value>Chưa xác định được kết quả hoàn tiền từ cổng thanh toán, giao dịch được giữ ở trạng thái chờ.</value>
+  </data>
+  <data name="Support_AutoMessage_GatewayRefundUnresolved" xml:space="preserve">
+    <value>Giao dịch {0} qua {1} đã thu {2} VND cho đơn {3} nhưng hệ thống chưa nhận được xác nhận hoàn tiền từ cổng thanh toán sau nhiều lần thử. Chúng tôi sẽ kiểm tra và xử lý hoàn tiền cho bạn.</value>
+  </data>
+  <data name="Email_BadgeRefundManual" xml:space="preserve">
+    <value>Hoàn tiền thủ công</value>
+  </data>
+  <data name="Email_RefundManualHeading" xml:space="preserve">
+    <value>Khoản hoàn tiền của bạn đang được xử lý thủ công</value>
+  </data>
+  <data name="Email_RefundManualBody" xml:space="preserve">
+    <value>Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, khoản hoàn tiền qua cổng thanh toán cho đơn hàng &lt;strong&gt;{1}&lt;/strong&gt; chưa thực hiện tự động được, cần nhân viên rạp xử lý thủ công.</value>
+  </data>
+  <data name="Email_RefundManualNote" xml:space="preserve">
+    <value>Mang mã đơn hàng đến quầy hoặc liên hệ rạp để được hoàn tiền sớm nhất.</value>
+  </data>
+  <data name="Email_RefundManualPreheader" xml:space="preserve">
+    <value>Đơn {0} cần xử lý hoàn tiền thủ công, số tiền {1}</value>
+  </data>
+  <data name="Email_RefundManualSubject" xml:space="preserve">
+    <value>Hoàn tiền đơn hàng {0} cần xử lý thủ công</value>
+  </data>
 </root>

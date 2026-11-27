@@ -15,6 +15,7 @@ public class BackgroundJobOptions
     public string CleanupImportExportFilesCron { get; set; } = "*/30 * * * *";
     public string CleanupImportSessionsCron { get; set; } = "*/5 * * * *";
     public string ProcessOutboxCron { get; set; } = "* * * * *";
+    public string PendingGatewayRefundCron { get; set; } = "*/5 * * * *";
     public string LowStockAlertCron { get; set; } = "*/15 * * * *";
     public string SalesStatsRefreshCron { get; set; } = "*/5 * * * *";
     public string UnclosedShiftAlertCron { get; set; } = "*/15 * * * *";

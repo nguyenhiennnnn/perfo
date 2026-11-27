@@ -25,6 +25,7 @@ public class MomoGateway(
     public string MethodName => PaymentMethodNames.Momo;
 
     private const int OrderInfoMaxLength = 255;
+    private static readonly HashSet<int> RefundUnknownResultCodes = [10, 40, 41, 99, 1000, 7000, 7002, 9000];
 
     public async Task<CreatePaymentResult> CreatePaymentAsync(
         CreatePaymentRequest request,
@@ -140,11 +141,15 @@ public class MomoGateway(
             return new RefundResult(
                 false,
                 null,
-                string.Format(Messages.Refund_MomoApiError, Messages.Refund_MomoInvalidTransId)
+                string.Format(Messages.Refund_MomoApiError, Messages.Refund_MomoInvalidTransId),
+                Rejected: true
             );
 
-        var requestId = Guid.NewGuid().ToString("N");
-        var orderId = $"RF{Guid.NewGuid():N}";
+        var refundKey = string.IsNullOrWhiteSpace(request.IdempotencyKey)
+            ? Guid.NewGuid().ToString("N")
+            : request.IdempotencyKey;
+        var requestId = refundKey;
+        var orderId = $"RF{refundKey}";
         var amount = (long)request.Amount;
         var description = request.OrderInfo ?? string.Empty;
 
@@ -186,7 +191,8 @@ public class MomoGateway(
                 : new RefundResult(
                     false,
                     null,
-                    string.Format(Messages.Refund_MomoFailed, result.ResultCode, result.Message)
+                    string.Format(Messages.Refund_MomoFailed, result.ResultCode, result.Message),
+                    Rejected: !RefundUnknownResultCodes.Contains(result.ResultCode)
                 );
         }
         catch (Exception ex)

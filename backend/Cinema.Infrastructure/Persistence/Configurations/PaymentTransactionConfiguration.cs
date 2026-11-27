@@ -75,6 +75,8 @@ public class PaymentTransactionConfiguration : IEntityTypeConfiguration<PaymentT
         builder.Property(x => x.AmountReceived).HasColumnType("decimal(18,2)");
         builder.Property(x => x.ChangeGiven).HasColumnType("decimal(18,2)");
         builder.Property(x => x.NeedsManualRefund).HasDefaultValue(false);
+        builder.Property(x => x.RefundAttemptCount).HasDefaultValue(0);
+        builder.Property(x => x.LastRefundAttemptAt).HasColumnType("timestamp without time zone");
         builder.Property(x => x.Note).HasMaxLength(FieldLengths.ErrorMessage);
 
         builder

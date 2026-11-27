@@ -389,6 +389,13 @@ public interface INotificationService
         decimal amountDue
     );
 
+    void SendRefundManualNotice(
+        string toEmail,
+        string customerName,
+        string orderCode,
+        decimal amountDue
+    );
+
     void SendShowtimeRoomChangedNotice(
         string toEmail,
         string customerName,

@@ -32,6 +32,7 @@ public class VnPayGateway(
     private const string DateFormat = "yyyyMMddHHmmss";
     private const string SuccessResponseCode = "00";
     private const string RefundRejectedStatus = "09";
+    private static readonly HashSet<string> RefundUnknownResponseCodes = ["94", "99"];
     private const string FullRefundType = "02";
     private const string PartialRefundType = "03";
     private const int OrderInfoMaxLength = 255;
@@ -220,7 +221,8 @@ public class VnPayGateway(
                         Messages.Refund_VnPayFailed,
                         result.vnp_ResponseCode,
                         result.vnp_Message
-                    )
+                    ),
+                    Rejected: !RefundUnknownResponseCodes.Contains(result.vnp_ResponseCode ?? string.Empty)
                 );
         }
         catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested)

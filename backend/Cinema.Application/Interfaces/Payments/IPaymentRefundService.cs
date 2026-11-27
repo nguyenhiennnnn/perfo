@@ -11,6 +11,8 @@ public record PaymentRefundResult(
 )
 {
     public bool Success => Status == PaymentStatus.Success;
+    public bool IsFailed => Status == PaymentStatus.Failed;
+    public bool IsPending => Status == PaymentStatus.Pending;
 }
 
 public interface IPaymentRefundService
@@ -54,6 +56,12 @@ public interface IPaymentRefundService
     Task<PaymentRefundResult> ExecuteAsync(
         int refundTransactionId,
         bool failOnError,
+        CancellationToken cancellationToken
+    );
+
+    Task<PaymentRefundResult> RetryPendingAsync(
+        int refundTransactionId,
+        DateTime notAttemptedSinceUtc,
         CancellationToken cancellationToken
     );
 

@@ -23,6 +23,8 @@ public class PaymentTransaction
     public int? CounterShiftId { get; set; }
     public int? GiftCardId { get; set; }
     public bool NeedsManualRefund { get; set; }
+    public int RefundAttemptCount { get; set; }
+    public DateTime? LastRefundAttemptAt { get; set; }
     public string? Note { get; set; }
 
     public Order Order { get; set; } = null!;

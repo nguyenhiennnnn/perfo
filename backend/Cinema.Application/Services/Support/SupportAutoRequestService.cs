@@ -85,9 +85,14 @@ public class SupportAutoRequestService(IAppDbContext db, IAppCache cache) : ISup
                 {
                     AuthorType = SupportMessageAuthorType.System,
                     Content = string.Format(
-                        reconciliation
-                            ? Messages.Support_AutoMessage_ChargedNotConfirmed
-                            : Messages.Support_AutoMessage_OverpaymentRefundFailed,
+                        reason switch
+                        {
+                            SupportAutoRequestReason.ChargedOrderNotConfirmed =>
+                                Messages.Support_AutoMessage_ChargedNotConfirmed,
+                            SupportAutoRequestReason.GatewayRefundUnresolved =>
+                                Messages.Support_AutoMessage_GatewayRefundUnresolved,
+                            _ => Messages.Support_AutoMessage_OverpaymentRefundFailed,
+                        },
                         code,
                         source.Method,
                         source.Amount.ToString("N0", MoneyFormat),

@@ -339,6 +339,18 @@ public class NotificationService(
             )
         );
 
+    public void SendRefundManualNotice(
+        string toEmail,
+        string customerName,
+        string orderCode,
+        decimal amountDue
+    ) =>
+        Enqueue(
+            toEmail,
+            string.Format(Messages.Email_RefundManualSubject, orderCode),
+            EmailTemplates.RefundManualNotice(_brand, customerName, orderCode, amountDue)
+        );
+
     public void SendShowtimeRoomChangedNotice(
         string toEmail,
         string customerName,

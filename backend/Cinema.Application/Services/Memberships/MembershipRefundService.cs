@@ -171,7 +171,7 @@ public class MembershipRefundService(
             .Select(r => r.RefundTransactionId)
             .ToHashSet();
         var gatewayResults = results.Where(r => gatewayIds.Contains(r.RefundTransactionId)).ToList();
-        if (gatewayResults.Count > 0 && gatewayResults.All(r => !r.Success))
+        if (gatewayResults.Count > 0 && gatewayResults.All(r => r.IsFailed))
         {
             var message =
                 gatewayResults.Select(r => r.Message).FirstOrDefault(m => !string.IsNullOrWhiteSpace(m))
@@ -187,7 +187,7 @@ public class MembershipRefundService(
         var gatewayRefunded = gatewayResults.Where(r => r.Success).ToList();
         try
         {
-            var failedIds = results.Where(r => !r.Success).Select(r => r.RefundTransactionId).ToList();
+            var failedIds = results.Where(r => r.IsFailed).Select(r => r.RefundTransactionId).ToList();
             await MarkManualRefundsAsync(owner.OrderId, reservations, failedIds, cancellationToken);
 
             revoked = await db

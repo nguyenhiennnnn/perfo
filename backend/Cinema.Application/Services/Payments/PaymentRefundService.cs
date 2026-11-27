@@ -14,6 +14,8 @@ using Cinema.Shared.Exceptions;
 using Cinema.Shared.Resources;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Cinema.Application.Services.Payments;
 
@@ -162,6 +164,29 @@ public class PaymentRefundService(
                 result = await ExecuteLockedAsync(
                     refundTransactionId,
                     failOnError,
+                    null,
+                    cancellationToken
+                );
+            },
+            cancellationToken
+        );
+        return result!;
+    }
+
+    public async Task<PaymentRefundResult> RetryPendingAsync(
+        int refundTransactionId,
+        DateTime notAttemptedSinceUtc,
+        CancellationToken cancellationToken
+    )
+    {
+        PaymentRefundResult? result = null;
+        await db.InTransactionAsync(
+            async () =>
+            {
+                result = await ExecuteLockedAsync(
+                    refundTransactionId,
+                    false,
+                    notAttemptedSinceUtc,
                     cancellationToken
                 );
             },
@@ -261,6 +286,7 @@ public class PaymentRefundService(
     private async Task<PaymentRefundResult> ExecuteLockedAsync(
         int refundTransactionId,
         bool failOnError,
+        DateTime? notAttemptedSinceUtc,
         CancellationToken cancellationToken
     )
     {
@@ -279,7 +305,15 @@ public class PaymentRefundService(
         if (refund.Status != PaymentStatus.Pending || refund.Method == PaymentMethod.Cash)
             return ToResult(refund, refund.Note);
 
+        if (
+            notAttemptedSinceUtc is { } attemptedBefore
+            && refund.LastRefundAttemptAt is { } lastAttempt
+            && lastAttempt >= attemptedBefore
+        )
+            return ToResult(refund, refund.Note);
+
         var charge = refund.OriginalTransaction!;
+        var baseNote = BaseNote(refund.Note);
         var gateway = FindGateway(refund.Method);
         RefundResult? gatewayResult = null;
         string? message = null;
@@ -296,15 +330,16 @@ public class PaymentRefundService(
                     new RefundRequest(
                         charge.TransactionCode,
                         refund.Amount,
-                        string.IsNullOrWhiteSpace(refund.Note)
+                        string.IsNullOrWhiteSpace(baseNote)
                             ? string.Format(
                                 Messages.Refund_TransactionDescription,
                                 charge.TransactionCode
                             )
-                            : refund.Note,
+                            : baseNote,
                         charge.CreatedAt,
                         GatewayTransactionId: charge.GatewayTransactionId,
-                        OriginalAmount: charge.Amount
+                        OriginalAmount: charge.Amount,
+                        IdempotencyKey: IdempotencyKeyFor(refund)
                     ),
                     cancellationToken
                 );
@@ -323,9 +358,10 @@ public class PaymentRefundService(
 
         var completedAt = DateTime.UtcNow;
         var success = gatewayResult is { Success: true };
+        var definitiveFailure = gateway is null || gatewayResult is { Success: false, Rejected: true };
         var status = success
             ? PaymentStatus.Success
-            : failOnError
+            : failOnError && definitiveFailure
                 ? PaymentStatus.Failed
                 : PaymentStatus.Pending;
         DateTime? completedValue = status == PaymentStatus.Pending ? null : completedAt;
@@ -333,11 +369,17 @@ public class PaymentRefundService(
             ? gatewayResult!.RefundTransactionId
             : refund.GatewayTransactionId;
         var note = success
-            ? refund.Note
+            ? baseNote
             : Truncate(
                 string.Join(
-                    " | ",
-                    new[] { refund.Note, gatewayResult?.Message, message }.Where(s =>
+                    NoteSeparator,
+                    new[]
+                    {
+                        baseNote,
+                        definitiveFailure ? null : Messages.Refund_OutcomeUnknown,
+                        gatewayResult?.Message,
+                        message,
+                    }.Where(s =>
                         !string.IsNullOrWhiteSpace(s)
                     )
                 )
@@ -345,11 +387,16 @@ public class PaymentRefundService(
 
         if (!success)
             logger.LogWarning(
-                "RefundFailed RefundTransactionId {RefundId} ChargeTransactionId {ChargeId} Amount {Amount}",
+                "RefundNotCompleted RefundTransactionId {RefundId} ChargeTransactionId {ChargeId} Amount {Amount} Status {Status} Definitive {Definitive}",
                 refund.PaymentTransactionId,
                 charge.PaymentTransactionId,
-                refund.Amount
+                refund.Amount,
+                status,
+                definitiveFailure
             );
+
+        var attemptCount = refund.RefundAttemptCount + 1;
+        DateTime? lastAttemptAt = completedAt;
 
         var updated = await db
             .PaymentTransactions.Where(t =>
@@ -360,7 +407,9 @@ public class PaymentRefundService(
                     s.SetProperty(t => t.Status, status)
                         .SetProperty(t => t.CompletedAt, completedValue)
                         .SetProperty(t => t.GatewayTransactionId, gatewayTransactionId)
-                        .SetProperty(t => t.Note, note),
+                        .SetProperty(t => t.Note, note)
+                        .SetProperty(t => t.RefundAttemptCount, attemptCount)
+                        .SetProperty(t => t.LastRefundAttemptAt, lastAttemptAt),
                 cancellationToken
             );
 
@@ -393,6 +442,21 @@ public class PaymentRefundService(
 
     private static PaymentRefundResult ToResult(PaymentTransaction refund, string? message) =>
         new(refund.PaymentTransactionId, refund.Status, refund.Amount, message);
+
+    private const string NoteSeparator = " | ";
+
+    private static string? BaseNote(string? note)
+    {
+        if (string.IsNullOrWhiteSpace(note))
+            return note;
+        var index = note.IndexOf(NoteSeparator, StringComparison.Ordinal);
+        return index < 0 ? note : note[..index];
+    }
+
+    private static string IdempotencyKeyFor(PaymentTransaction refund) =>
+        Convert
+            .ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(refund.TransactionCode)))[..32]
+            .ToLowerInvariant();
 
     private static string? Truncate(string? value) =>
         value is { Length: > FieldLengths.ErrorMessage } ? value[..FieldLengths.ErrorMessage] : value;

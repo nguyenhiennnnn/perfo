@@ -1602,6 +1602,35 @@ public static class EmailTemplates
         );
     }
 
+    public static string RefundManualNotice(
+        BrandOptions brand,
+        string customerName,
+        string orderCode,
+        decimal amountDue
+    )
+    {
+        var body = $"""
+            {Badge(Messages.Email_BadgeRefundManual, Warning, SymbolAlert)}
+            {Heading(Messages.Email_RefundManualHeading)}
+            {Paragraph(
+                string.Format(Messages.Email_RefundManualBody, Enc(customerName), Enc(orderCode))
+            )}
+            {DetailCard(
+                DetailRow(Messages.Email_OrderCodeLabel, Enc(orderCode), code: true),
+                DetailRowTotal(Messages.Email_AmountDueLabel, amountDue)
+            )}
+            {MutedParagraph(
+                Messages.Email_RefundManualNote
+            )}
+            """;
+
+        return Layout(
+            brand,
+            string.Format(Messages.Email_RefundManualPreheader, orderCode, Money(amountDue)),
+            body
+        );
+    }
+
     public static string SeatsExpiredAfterPaymentCustomer(
         BrandOptions brand,
         string customerName,

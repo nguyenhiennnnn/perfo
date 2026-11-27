@@ -13,6 +13,7 @@ public class RecurringJobIds
     public const string CleanupImportExportFiles = "cleanup-import-export-files";
     public const string CleanupImportSessions = "cleanup-import-sessions";
     public const string ProcessOutbox = "process-outbox";
+    public const string PendingGatewayRefund = "pending-gateway-refund";
     public const string LowStockAlert = "low-stock-alert";
     public const string RefreshSalesStats = "refresh-sales-stats";
     public const string UnclosedShiftAlert = "unclosed-shift-alert";

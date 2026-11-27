@@ -4,6 +4,7 @@ public enum SupportAutoRequestReason
 {
     ChargedOrderNotConfirmed,
     OverpaymentRefundFailed,
+    GatewayRefundUnresolved,
 }
 
 public interface ISupportAutoRequestService

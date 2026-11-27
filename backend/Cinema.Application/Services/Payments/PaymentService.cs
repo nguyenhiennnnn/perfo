@@ -406,6 +406,18 @@ public class PaymentService(
             return;
         }
 
+        if (result.IsPending)
+        {
+            logger.LogWarning(
+                "ChargeRefundPending PaymentTransactionId {Id} RefundTransactionId {RefundId} OrderId {OrderId} Amount {Amount} — chờ job quét thử lại.",
+                chargeId,
+                result.RefundTransactionId,
+                orderId,
+                result.Amount
+            );
+            return;
+        }
+
         await db
             .PaymentTransactions.Where(t => t.PaymentTransactionId == chargeId)
             .ExecuteUpdateAsync(

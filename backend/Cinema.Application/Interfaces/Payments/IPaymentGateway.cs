@@ -18,10 +18,16 @@ public record RefundRequest(
     string OrderInfo,
     DateTime OriginalPaymentDate,
     string? GatewayTransactionId = null,
-    decimal? OriginalAmount = null
+    decimal? OriginalAmount = null,
+    string? IdempotencyKey = null
 );
 
-public record RefundResult(bool Success, string? RefundTransactionId, string? Message);
+public record RefundResult(
+    bool Success,
+    string? RefundTransactionId,
+    string? Message,
+    bool Rejected = false
+);
 
 public record GatewayCallbackResult(
     bool SignatureValid,

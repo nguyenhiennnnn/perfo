@@ -378,6 +378,7 @@ public static class DependencyInjection
         services.AddScoped<ISalesVelocityProvider, PaceSalesVelocityProvider>();
         services.AddScoped<IPaymentLedgerService, PaymentLedgerService>();
         services.AddScoped<IPaymentRefundService, PaymentRefundService>();
+        services.AddScoped<IRefundManualHandoffService, RefundManualHandoffService>();
         services.AddScoped<ICashRefundService, CashRefundService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IPaymentAdminService, PaymentAdminService>();

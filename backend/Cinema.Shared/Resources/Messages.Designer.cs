@@ -18868,5 +18868,77 @@ namespace Cinema.Shared.Resources {
                 return ResourceManager.GetString("Validation_WasteSheet_ReasonInvalid", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chưa xác định được kết quả hoàn tiền từ cổng thanh toán, giao dịch được giữ ở trạng thái chờ..
+        /// </summary>
+        public static string Refund_OutcomeUnknown {
+            get {
+                return ResourceManager.GetString("Refund_OutcomeUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giao dịch {0} qua {1} đã thu {2} VND cho đơn {3} nhưng hệ thống chưa nhận được xác nhận hoàn tiền từ cổng thanh toán sau nhiều lần thử. Chúng tôi sẽ kiểm tra và xử lý hoàn tiền cho bạn..
+        /// </summary>
+        public static string Support_AutoMessage_GatewayRefundUnresolved {
+            get {
+                return ResourceManager.GetString("Support_AutoMessage_GatewayRefundUnresolved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hoàn tiền thủ công.
+        /// </summary>
+        public static string Email_BadgeRefundManual {
+            get {
+                return ResourceManager.GetString("Email_BadgeRefundManual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Khoản hoàn tiền của bạn đang được xử lý thủ công.
+        /// </summary>
+        public static string Email_RefundManualHeading {
+            get {
+                return ResourceManager.GetString("Email_RefundManualHeading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Xin chào &lt;strong&gt;{0}&lt;/strong&gt;, khoản hoàn tiền qua cổng thanh toán cho đơn hàng &lt;strong&gt;{1}&lt;/strong&gt; chưa thực hiện tự động được, cần nhân viên rạp xử lý thủ công..
+        /// </summary>
+        public static string Email_RefundManualBody {
+            get {
+                return ResourceManager.GetString("Email_RefundManualBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mang mã đơn hàng đến quầy hoặc liên hệ rạp để được hoàn tiền sớm nhất..
+        /// </summary>
+        public static string Email_RefundManualNote {
+            get {
+                return ResourceManager.GetString("Email_RefundManualNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đơn {0} cần xử lý hoàn tiền thủ công, số tiền {1}.
+        /// </summary>
+        public static string Email_RefundManualPreheader {
+            get {
+                return ResourceManager.GetString("Email_RefundManualPreheader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hoàn tiền đơn hàng {0} cần xử lý thủ công.
+        /// </summary>
+        public static string Email_RefundManualSubject {
+            get {
+                return ResourceManager.GetString("Email_RefundManualSubject", resourceCulture);
+            }
+        }
     }
 }

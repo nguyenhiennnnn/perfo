@@ -1,4 +1,5 @@
-﻿using Cinema.Application.Interfaces.Payments;
+﻿using System.Net;
+using Cinema.Application.Interfaces.Payments;
 using Cinema.Application.Options;
 using Cinema.Shared.Constants;
 using Cinema.Shared.Exceptions;
@@ -206,7 +207,7 @@ public class StripeGateway(IOptions<StripeOptions> options, ILogger<StripeGatewa
     )
     {
         if (string.IsNullOrWhiteSpace(_options.SecretKey))
-            return new RefundResult(false, null, Messages.Refund_StripeNotConfigured);
+            return new RefundResult(false, null, Messages.Refund_StripeNotConfigured, Rejected: true);
 
         try
         {
@@ -235,7 +236,8 @@ public class StripeGateway(IOptions<StripeOptions> options, ILogger<StripeGatewa
                 return new RefundResult(
                     false,
                     null,
-                    Messages.Refund_StripeMissingGatewayTransactionId
+                    Messages.Refund_StripeMissingGatewayTransactionId,
+                    Rejected: true
                 );
             }
 
@@ -252,9 +254,13 @@ public class StripeGateway(IOptions<StripeOptions> options, ILogger<StripeGatewa
                 refundOptions.PaymentIntent = request.GatewayTransactionId;
             }
 
+            var requestOptions = string.IsNullOrWhiteSpace(request.IdempotencyKey)
+                ? null
+                : new RequestOptions { IdempotencyKey = request.IdempotencyKey };
             var refund = await refundService.CreateAsync(
                 refundOptions,
-                cancellationToken: cancellationToken
+                requestOptions,
+                cancellationToken
             );
 
             return refund.Status == "succeeded" || refund.Status == "pending"
@@ -262,7 +268,8 @@ public class StripeGateway(IOptions<StripeOptions> options, ILogger<StripeGatewa
                 : new RefundResult(
                     false,
                     refund.Id,
-                    string.Format(Messages.Refund_StripeStatus, refund.Status)
+                    string.Format(Messages.Refund_StripeStatus, refund.Status),
+                    Rejected: true
                 );
         }
         catch (StripeException ex)
@@ -270,7 +277,14 @@ public class StripeGateway(IOptions<StripeOptions> options, ILogger<StripeGatewa
             return new RefundResult(
                 false,
                 null,
-                string.Format(Messages.Refund_StripeApiError, ex.StripeError?.Message ?? ex.Message)
+                string.Format(Messages.Refund_StripeApiError, ex.StripeError?.Message ?? ex.Message),
+                Rejected: ex.StripeError is not null
+                    && ex.HttpStatusCode
+                        is HttpStatusCode.BadRequest
+                            or HttpStatusCode.Unauthorized
+                            or HttpStatusCode.PaymentRequired
+                            or HttpStatusCode.Forbidden
+                            or HttpStatusCode.NotFound
             );
         }
         catch (Exception ex)

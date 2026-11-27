@@ -49,6 +49,10 @@ public class EmailTemplatesTests
             EmailTemplates.ShowtimeCancelledManualRefund(brand, customerName, "BK001", 120_000m)
         );
         yield return (
+            nameof(EmailTemplates.RefundManualNotice),
+            EmailTemplates.RefundManualNotice(brand, customerName, "BK001", 120_000m)
+        );
+        yield return (
             $"{nameof(EmailTemplates.SeatsExpiredAfterPaymentCustomer)}:auto",
             EmailTemplates.SeatsExpiredAfterPaymentCustomer(
                 brand,

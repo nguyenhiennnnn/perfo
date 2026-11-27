@@ -6200,4 +6200,37 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Report_Finance_Col_MembershipStopped" xml:space="preserve">
     <value>Doanh thu gói dừng do hoàn</value>
   </data>
+  <data name="Report_Finance_MembershipSummary_Title" xml:space="preserve">
+    <value>Hiệu quả gói thành viên</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipActiveMembers" xml:space="preserve">
+    <value>Hội viên đang hoạt động</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipRenewalDue" xml:space="preserve">
+    <value>Gói hết hạn trong kỳ</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipRenewed" xml:space="preserve">
+    <value>Đã gia hạn</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipRenewalRate" xml:space="preserve">
+    <value>Tỷ lệ gia hạn</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipBenefitDiscount" xml:space="preserve">
+    <value>Giảm giá vé, combo đã dùng</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipBenefitFreeTickets" xml:space="preserve">
+    <value>Giá trị vé miễn phí đã dùng</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipBenefitUsed" xml:space="preserve">
+    <value>Quyền lợi đã dùng</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipBenefitRatio" xml:space="preserve">
+    <value>Quyền lợi / tiền gói đã ghi nhận</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipVsRetail" xml:space="preserve">
+    <value>Lợi nhuận so với bán vé lẻ</value>
+  </data>
+  <data name="Report_Finance_MembershipSummary_Note" xml:space="preserve">
+    <value>Hội viên đang hoạt động tính theo người dùng có gói còn hiệu lực và chưa hoàn tại cuối kỳ (hoặc tại thời điểm hiện tại nếu kỳ chưa kết thúc). Tỷ lệ gia hạn là phần gói hết hạn trong kỳ mà khách đã có gói nối tiếp hoặc mua lại sau đó. Tiền gói đã ghi nhận và chưa ghi nhận lấy cùng nguồn với khối doanh thu gói thành viên, nên khớp các bút toán ghi nhận hằng tháng. Quyền lợi đã dùng gồm giảm giá vé, combo theo gói (đơn đã xác nhận, tính theo ngày tạo đơn) và giá trị niêm yết của vé miễn phí đã dùng trong kỳ. Lợi nhuận so với bán vé lẻ bằng tiền gói đã ghi nhận trừ quyền lợi đã dùng: phần khách mua lẻ sẽ phải trả thêm nếu không có gói.</value>
+  </data>
 </root>

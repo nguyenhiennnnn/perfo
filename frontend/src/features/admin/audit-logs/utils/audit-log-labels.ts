@@ -5,6 +5,7 @@ const ACTION_LABELS: Record<string, string> = {
   Update: "Cập nhật",
   Delete: "Xóa",
   AdjustLoyaltyPoints: "Điều chỉnh điểm",
+  RefundMembershipSubscription: "Hoàn gói thành viên",
 };
 
 const ACTION_VARIANTS: Record<string, BadgeVariant> = {
@@ -12,11 +13,14 @@ const ACTION_VARIANTS: Record<string, BadgeVariant> = {
   Update: "secondary",
   Delete: "destructive",
   AdjustLoyaltyPoints: "secondary",
+  RefundMembershipSubscription: "secondary",
 };
 
 const ENTITY_TYPE_LABELS: Record<string, string> = {
   CinemaSettings: "Cấu hình rạp",
   MembershipTier: "Hạng thành viên",
+  MembershipPlan: "Gói thành viên",
+  MembershipSubscription: "Đăng ký gói thành viên",
   TicketType: "Loại vé",
   PricingRule: "Quy tắc giá",
   SpecialDay: "Ngày đặc biệt",

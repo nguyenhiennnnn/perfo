@@ -108,6 +108,8 @@ export const ROUTES = {
       `/admin/promotions/${promotionId}/report`,
     bundles: "/admin/bundles",
     bundleReport: "/admin/bundles/report",
+    membershipPlans: "/admin/membership-plans",
+    membershipSubscriptions: "/admin/membership-subscriptions",
     loyaltyRewards: "/admin/loyalty/rewards",
     loyaltyChallenges: "/admin/loyalty/challenges",
     loyaltyAdjustments: "/admin/loyalty/adjustments",

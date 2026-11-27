@@ -75,7 +75,7 @@ export const getMonthlyPrice = (plan: MembershipPlanDto) =>
   plan.durationMonths > 0 ? Math.round(plan.price / plan.durationMonths) : plan.price;
 
 export const getSubscriptionState = (
-  subscription: MembershipSubscriptionDto,
+  subscription: Pick<MembershipSubscriptionDto, "status" | "validFrom" | "validTo" | "isCurrent">,
   now: number,
 ): MembershipSubscriptionState => {
   if (subscription.status === MembershipSubscriptionStatus.Refunded) return "refunded";

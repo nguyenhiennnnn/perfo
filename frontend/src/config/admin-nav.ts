@@ -47,6 +47,7 @@ import {
   ScrollText,
   Settings,
   Trophy,
+  Crown,
   LifeBuoy,
   HandCoins,
   type LucideIcon,
@@ -345,6 +346,23 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         to: ROUTES.admin.bundleReport,
         label: "Báo cáo gói",
         icon: Banknote,
+        roles: [Role.Admin],
+      },
+    ],
+  },
+  {
+    label: "Gói thành viên",
+    items: [
+      {
+        to: ROUTES.admin.membershipPlans,
+        label: "Quản lý gói",
+        icon: Crown,
+        roles: [Role.Admin],
+      },
+      {
+        to: ROUTES.admin.membershipSubscriptions,
+        label: "Hội viên",
+        icon: Users,
         roles: [Role.Admin],
       },
     ],

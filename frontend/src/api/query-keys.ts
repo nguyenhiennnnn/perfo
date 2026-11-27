@@ -194,6 +194,17 @@ export const queryKeys = {
     list: (params?: object) => ["admin", "bundles", "list", params] as const,
   },
 
+  adminMembershipPlans: {
+    all: () => ["admin", "membership-plans"] as const,
+    list: (params?: object) => ["admin", "membership-plans", "list", params] as const,
+    lookup: () => ["admin", "membership-plans", "lookup"] as const,
+  },
+
+  adminMembershipSubscriptions: {
+    all: () => ["admin", "membership-subscriptions"] as const,
+    list: (params?: object) => ["admin", "membership-subscriptions", "list", params] as const,
+  },
+
   adminLoyaltyRewards: {
     all: () => ["admin", "loyalty", "rewards"] as const,
     list: (params?: object) => ["admin", "loyalty", "rewards", "list", params] as const,

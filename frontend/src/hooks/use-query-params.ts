@@ -129,6 +129,29 @@ export const useAdminBundleParams = (
   options?: Parameters<typeof useQueryStates<typeof adminBundleParsers>>[1],
 ) => useQueryStates(adminBundleParsers, options);
 
+const adminMembershipPlanParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  isActive: parseAsString,
+};
+
+export const useAdminMembershipPlanParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminMembershipPlanParsers>>[1],
+) => useQueryStates(adminMembershipPlanParsers, options);
+
+const adminMembershipSubscriptionParsers = {
+  page: parseAsInteger.withDefault(DEFAULT_PAGE),
+  pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),
+  search: searchParser,
+  status: parseAsString,
+  planId: parseAsString,
+};
+
+export const useAdminMembershipSubscriptionParams = (
+  options?: Parameters<typeof useQueryStates<typeof adminMembershipSubscriptionParsers>>[1],
+) => useQueryStates(adminMembershipSubscriptionParsers, options);
+
 const adminLoyaltyRewardParsers = {
   page: parseAsInteger.withDefault(DEFAULT_PAGE),
   pageSize: parseAsInteger.withDefault(DEFAULT_PAGE_SIZE),

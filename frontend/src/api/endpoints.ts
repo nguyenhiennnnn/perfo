@@ -269,6 +269,14 @@ export const ENDPOINTS = {
       root: "/admin/bundles",
       byId: (id: number) => `/admin/bundles/${id}`,
     },
+    membershipPlans: {
+      root: "/admin/membership-plans",
+      byId: (id: number) => `/admin/membership-plans/${id}`,
+    },
+    membershipSubscriptions: {
+      root: "/admin/membership-subscriptions",
+      refund: (id: number) => `/admin/membership-subscriptions/${id}/refund`,
+    },
     combos: {
       root: "/admin/combos",
       byId: (id: number) => `/admin/combos/${id}`,

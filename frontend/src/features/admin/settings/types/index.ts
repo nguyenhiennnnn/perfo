@@ -51,6 +51,7 @@ export interface CinemaSettingsDto {
 export interface AdminCinemaSettingsDto extends CinemaSettingsDto {
   defaultEmployeePassword: string;
   dailyClosingAllowOverride?: boolean;
+  membershipRefundStartedEnabled?: boolean;
 }
 
 export interface UpdateSettingsRequest {

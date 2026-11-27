@@ -136,6 +136,14 @@ export const MembershipSubscriptionStatus = {
 export type MembershipSubscriptionStatus =
   (typeof MembershipSubscriptionStatus)[keyof typeof MembershipSubscriptionStatus];
 
+export const MembershipRefundReason = {
+  CustomerRequest: "CustomerRequest",
+  SystemError: "SystemError",
+  AdminException: "AdminException",
+} as const;
+export type MembershipRefundReason =
+  (typeof MembershipRefundReason)[keyof typeof MembershipRefundReason];
+
 export const LoyaltyRewardType = {
   FreeTicket: "FreeTicket",
   FreeCombo: "FreeCombo",

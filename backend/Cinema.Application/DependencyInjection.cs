@@ -409,6 +409,7 @@ public static class DependencyInjection
         services.AddReportBlock<MovieProfitBlock>();
         services.AddReportBlock<GiftCardLiabilityBlock>();
         services.AddReportBlock<MembershipRevenueBlock>();
+        services.AddReportBlock<MembershipSummaryBlock>();
         services.AddReportBlock<VatReportBlock>();
         services.AddReportBlock<LoyaltyPointsBlock>();
         services.AddReportBlock<SupportRequestReportBlock>();

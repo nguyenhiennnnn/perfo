@@ -136,6 +136,21 @@ export const invalidations = {
 
   bundleChanged: (): KeyList => [k.adminBundles.all(), k.bundles.all(), k.adminAuditLogs.all()],
 
+  membershipPlanChanged: (): KeyList => [
+    k.adminMembershipPlans.all(),
+    k.adminMembershipSubscriptions.all(),
+    k.membership.all(),
+    k.adminAuditLogs.all(),
+  ],
+
+  membershipSubscriptionRefunded: (): KeyList => [
+    k.adminMembershipSubscriptions.all(),
+    ...orderViews(),
+    k.membership.all(),
+    k.adminAuditLogs.all(),
+    ...dashboard(),
+  ],
+
   loyaltyRewardChanged: (): KeyList => [
     k.adminLoyaltyRewards.all(),
     k.adminLoyaltyChallenges.all(),

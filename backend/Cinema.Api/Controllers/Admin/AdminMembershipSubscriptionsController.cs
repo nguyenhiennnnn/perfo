@@ -13,9 +13,29 @@ namespace Cinema.Api.Controllers.Admin;
 [ApiController]
 [Route(ApiPaths.AdminRoutePrefix + "/membership-subscriptions")]
 [Authorize(Policy = Policies.AdminOnly)]
-public class AdminMembershipSubscriptionsController(IMembershipRefundService refundService)
-    : AppControllerBase
+public class AdminMembershipSubscriptionsController(
+    IMembershipRefundService refundService,
+    IMembershipSubscriptionQueryService queryService
+) : AppControllerBase
 {
+    [HttpGet]
+    public async Task<IActionResult> GetAll(
+        [FromQuery] string? search,
+        [FromQuery] string? status,
+        [FromQuery] int? planId,
+        [FromQuery] int page = Pagination.DefaultPage,
+        [FromQuery] int pageSize = Pagination.DefaultPageSize,
+        CancellationToken cancellationToken = default
+    ) =>
+        Ok(
+            await queryService.GetAdminAsync(
+                page,
+                pageSize,
+                new MembershipSubscriptionListFilter(search, status, planId),
+                cancellationToken
+            )
+        );
+
     [HttpPost("{id:int}/refund")]
     [SuccessMessage(nameof(Messages.Success_MembershipSubscriptionRefunded))]
     public async Task<ActionResult<MembershipRefundResultDto>> Refund(

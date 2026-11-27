@@ -87,6 +87,7 @@ export const ROUTES = {
       `/admin/inventory/ledger?itemId=${inventoryItemId}`,
     inventoryValuation: "/admin/inventory/valuation",
     comboPickup: "/admin/combo-pickups",
+    eventGiftHandover: "/admin/event-gift-handovers",
     unclaimedComboOrders: "/admin/combo-pickups/unclaimed",
     orders: "/admin/orders",
     cashRefunds: "/admin/cash-refunds",

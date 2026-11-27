@@ -1,3 +1,12 @@
+export interface ShowtimeEarlyAccessDto {
+  generalSaleStartTime: string;
+  canBook: boolean;
+  ineligibleReason?: string | null;
+  membershipTierNames: string[];
+  paidMembers: boolean;
+  movieInterest: boolean;
+}
+
 export interface WholeCinemaShowtimeSlotDto {
   showtimeId: number;
   roomId: number;
@@ -10,6 +19,8 @@ export interface WholeCinemaShowtimeSlotDto {
   totalSeats: number;
   status: string;
   fromPrice?: number | null;
+  earlyAccess?: ShowtimeEarlyAccessDto | null;
+  isEvent?: boolean;
 }
 
 export interface WholeCinemaMovieDto {
@@ -82,6 +93,8 @@ export interface ShowtimeSeatsResponseDto {
   myHold?: ShowtimeMyHoldDto | null;
   ticketTypes?: ShowtimeTicketTypeDto[] | null;
   pricedAt?: string | null;
+  earlyAccess?: ShowtimeEarlyAccessDto | null;
+  isEvent?: boolean;
 }
 
 export interface SeatSuggestionDto {

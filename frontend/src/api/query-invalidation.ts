@@ -36,6 +36,11 @@ export const invalidations = {
     k.adminAuditLogs.all(),
     ...dashboard(),
   ],
+  showtimeEventChanged: (): KeyList => [
+    ...showtimeViews(),
+    k.adminAuditLogs.all(),
+    ...dashboard(),
+  ],
   showtimeRoomChanged: (): KeyList => [
     ...invalidations.showtimeChanged(),
     ...orderViews(),

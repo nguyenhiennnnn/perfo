@@ -177,7 +177,8 @@ public class ShowtimeQueryService(
             myHold is { ShowtimeSeatIds.Count: > 0 } ? myHold : null,
             ticketTypeItems,
             pricedAt,
-            earlyAccess.GetValueOrDefault(showtimeId)
+            earlyAccess.GetValueOrDefault(showtimeId),
+            showtime.Kind == ShowtimeKind.Event
         );
     }
 
@@ -339,6 +340,7 @@ public class ShowtimeQueryService(
                             TotalSeats = counts?.Total ?? 0,
                             FromPrice = fromPrices.GetValueOrDefault(s.ShowtimeId)?.FromPrice,
                             EarlyAccess = earlyAccess.GetValueOrDefault(s.ShowtimeId),
+                            IsEvent = s.Kind == ShowtimeKind.Event,
                         };
                     })
                     .ToList()

@@ -19,6 +19,8 @@ import { BookingCustomerForm } from "./booking-customer-form";
 import { BookingMembershipHint } from "./booking-membership-hint";
 import { BookingPendingOrderNotice } from "./booking-pending-order-notice";
 import { BookingPriceSummary, calcBookingEstimate, type BookingBundleSelection } from "./booking-price-summary";
+import { ShowtimeEarlyAccessNotice } from "@/features/client/showtimes/components/showtime-early-access-notice";
+import { useEarlyAccessGate } from "@/features/client/showtimes/hooks/use-early-access-gate";
 import { SeatSuggestionPanel } from "./seat-suggestion-panel";
 import { BOOKING_COMBO_SECTION_ID, HOLDING_SEATS_LABEL } from "@/config/default-constants";
 
@@ -64,7 +66,7 @@ export const BookingSelectionStep = ({
   customerPhone,
   onCustomerPhoneChange,
   isAuthenticated,
-  canHold,
+  canHold: canHoldSelection,
   loneSeats,
   isHolding,
   onContinue,
@@ -73,8 +75,11 @@ export const BookingSelectionStep = ({
   const holdDurationMinutes = useCinemaSettings().data?.holdDurationMinutes;
   const comboSuggestions = useComboSuggestions(data?.showtimeId ?? 0, selectedIds.size);
   const [highlightedIds, setHighlightedIds] = useState<Set<number>>(new Set());
+  const earlyAccessGate = useEarlyAccessGate(data?.earlyAccess);
 
   if (!data) return null;
+
+  const canHold = canHoldSelection && !earlyAccessGate.isBlocked;
 
   const selectedSeats = seatTicketTypes.pricedSeats.map((s) => ({
     seatRow: s.seatRow,
@@ -101,6 +106,8 @@ export const BookingSelectionStep = ({
   return (
     <div className={BOOKING_SELECTION_GRID_CLASS}>
       <div className="flex flex-col gap-4">
+        {data.earlyAccess && <ShowtimeEarlyAccessNotice earlyAccess={data.earlyAccess} />}
+
         {data.myHold && <BookingPendingOrderNotice showtimeId={data.showtimeId} hold={data.myHold} />}
 
         <BundlePicker

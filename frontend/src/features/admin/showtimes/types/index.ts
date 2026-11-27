@@ -300,3 +300,83 @@ export interface UnblockSeatsResponse {
   showtimeId: number;
   showtimeSeatIds: number[];
 }
+
+
+export type ShowtimeEventAdjustmentMode = "Multiplier" | "Amount";
+
+export interface ShowtimeEventDto {
+  showtimeId: number;
+  adjustmentMode: ShowtimeEventAdjustmentMode;
+  adjustmentValue: number;
+  allowMembershipFreeTickets: boolean;
+}
+
+export interface UpsertShowtimeEventRequest {
+  adjustmentMode: ShowtimeEventAdjustmentMode;
+  adjustmentValue: number;
+  allowMembershipFreeTickets: boolean;
+}
+
+export interface ShowtimeEventTicketQuotaRequest {
+  ticketTypeId: number;
+  maxTickets: number;
+}
+
+export interface UpsertShowtimeEventLimitsRequest {
+  maxTicketsPerCustomer: number | null;
+  ticketQuotas: ShowtimeEventTicketQuotaRequest[];
+}
+
+export interface ShowtimeEventTicketQuotaDto {
+  ticketTypeId: number;
+  ticketTypeName: string;
+  maxTickets: number;
+  usedTickets: number;
+}
+
+export interface ShowtimeEventLimitsDto {
+  showtimeId: number;
+  maxTicketsPerCustomer: number | null;
+  ticketQuotas: ShowtimeEventTicketQuotaDto[];
+}
+
+export interface ShowtimeEventGiftRequest {
+  inventoryItemId: number;
+  quantity: number;
+  quantityPerTicket: number;
+}
+
+export interface UpsertShowtimeEventGiftsRequest {
+  gifts: ShowtimeEventGiftRequest[];
+}
+
+export interface ShowtimeEventGiftDto {
+  inventoryItemId: number;
+  code: string;
+  name: string;
+  unit: string;
+  quantity: number;
+  quantityPerTicket: number;
+  held: number;
+  given: number;
+}
+
+export interface ShowtimeEventGiftsDto {
+  showtimeId: number;
+  gifts: ShowtimeEventGiftDto[];
+}
+
+export interface UpsertShowtimeEarlyAccessRequest {
+  generalSaleStartTime: string;
+  membershipTierIds: number[];
+  paidMembers: boolean;
+  movieInterest: boolean;
+}
+
+export interface ShowtimeEarlyAccessSettingDto {
+  showtimeId: number;
+  generalSaleStartTime: string | null;
+  membershipTierIds: number[];
+  paidMembers: boolean;
+  movieInterest: boolean;
+}

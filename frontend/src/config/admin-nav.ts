@@ -103,6 +103,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         icon: PackageCheck,
         roles: [Role.Admin, Role.Employee],
       },
+      {
+        to: ROUTES.admin.eventGiftHandover,
+        label: "Trao quà sự kiện",
+        icon: Gift,
+        roles: [Role.Admin, Role.Employee],
+      },
     ],
   },
   {

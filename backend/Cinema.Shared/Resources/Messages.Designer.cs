@@ -906,6 +906,15 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Quà tặng kèm của vé này đã được trao..
+        /// </summary>
+        public static string Conflict_EventGiftAlreadyHandedOver {
+            get {
+                return ResourceManager.GetString("Conflict_EventGiftAlreadyHandedOver", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Không thể hoàn tất đổi suất vì vé hoặc ghế không còn hợp lệ. Vé cũ của bạn vẫn giữ nguyên..
         /// </summary>
         public static string Conflict_ExchangeCompletionFailed {
@@ -8529,6 +8538,24 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Suất chiếu này chưa được thiết lập là suất sự kiện..
+        /// </summary>
+        public static string NotFound_ShowtimeEvent {
+            get {
+                return ResourceManager.GetString("NotFound_ShowtimeEvent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suất sự kiện này chưa thiết lập mở bán sớm..
+        /// </summary>
+        public static string NotFound_ShowtimeEventEarlyAccess {
+            get {
+                return ResourceManager.GetString("NotFound_ShowtimeEventEarlyAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Không tìm thấy ngày đặc biệt..
         /// </summary>
         public static string NotFound_SpecialDay {
@@ -8655,6 +8682,15 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Giá suất sự kiện.
+        /// </summary>
+        public static string Pricing_Event_RuleName {
+            get {
+                return ResourceManager.GetString("Pricing_Event_RuleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Loại vé này không áp dụng cho độ tuổi của phim..
         /// </summary>
         public static string Pricing_Ineligible_AgeRating {
@@ -8705,6 +8741,24 @@ namespace Cinema.Shared.Resources {
         public static string Pricing_Limit_MinPrice {
             get {
                 return ResourceManager.GetString("Pricing_Limit_MinPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suất sự kiện áp hệ số giá riêng {0}..
+        /// </summary>
+        public static string Pricing_Reason_EventMultiplier {
+            get {
+                return ResourceManager.GetString("Pricing_Reason_EventMultiplier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phụ thu suất sự kiện {0:N0} VNĐ mỗi vé..
+        /// </summary>
+        public static string Pricing_Reason_EventSurcharge {
+            get {
+                return ResourceManager.GetString("Pricing_Reason_EventSurcharge", resourceCulture);
             }
         }
         
@@ -8790,15 +8844,6 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mã khuyến mãi không áp dụng cho suất chiếu sự kiện..
-        /// </summary>
-        public static string Promotion_Rejected_EventShowtimeExcluded {
-            get {
-                return ResourceManager.GetString("Promotion_Rejected_EventShowtimeExcluded", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Mã khuyến mãi không áp dụng cho kênh bán này..
         /// </summary>
         public static string Promotion_Rejected_ChannelNotAllowed {
@@ -8822,6 +8867,15 @@ namespace Cinema.Shared.Resources {
         public static string Promotion_Rejected_DayNotEligible {
             get {
                 return ResourceManager.GetString("Promotion_Rejected_DayNotEligible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mã khuyến mãi không áp dụng cho suất chiếu sự kiện..
+        /// </summary>
+        public static string Promotion_Rejected_EventShowtimeExcluded {
+            get {
+                return ResourceManager.GetString("Promotion_Rejected_EventShowtimeExcluded", resourceCulture);
             }
         }
         
@@ -9834,6 +9888,51 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Số quà đã trao.
+        /// </summary>
+        public static string Report_Finance_Col_EventGiftsGiven {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_EventGiftsGiven", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lấp đầy (%).
+        /// </summary>
+        public static string Report_Finance_Col_EventOccupancy {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_EventOccupancy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doanh thu vé (VND).
+        /// </summary>
+        public static string Report_Finance_Col_EventRevenue {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_EventRevenue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phòng.
+        /// </summary>
+        public static string Report_Finance_Col_EventRoom {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_EventRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số vé.
+        /// </summary>
+        public static string Report_Finance_Col_EventTickets {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_EventTickets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tiền hoàn ngoại lệ.
         /// </summary>
         public static string Report_Finance_Col_ExceptionalRefundAmount {
@@ -10784,6 +10883,24 @@ namespace Cinema.Shared.Resources {
         public static string Report_Finance_Discount_Title {
             get {
                 return ResourceManager.GetString("Report_Finance_Discount_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tính theo suất sự kiện có ngày chiếu trong kỳ, không gồm suất đã hủy. Doanh thu là doanh thu vé sau giảm giá và hoàn tiền, không gồm combo. Lấp đầy là số vé trên sức chứa bán được. Số quà đã trao là tổng số lượng quà đã giao tại quầy..
+        /// </summary>
+        public static string Report_Finance_Event_Note {
+            get {
+                return ResourceManager.GetString("Report_Finance_Event_Note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suất chiếu sự kiện.
+        /// </summary>
+        public static string Report_Finance_Event_Title {
+            get {
+                return ResourceManager.GetString("Report_Finance_Event_Title", resourceCulture);
             }
         }
         
@@ -11981,6 +12098,78 @@ namespace Cinema.Shared.Resources {
         public static string Rule_EmployeeRoleNotSeeded {
             get {
                 return ResourceManager.GetString("Rule_EmployeeRoleNotSeeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mỗi khách chỉ được mua tối đa {0} vé cho suất sự kiện này, bạn đã có {1} vé..
+        /// </summary>
+        public static string Rule_EventCustomerLimitExceeded {
+            get {
+                return ResourceManager.GetString("Rule_EventCustomerLimitExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suất sự kiện này đang mở bán sớm cho nhóm khách được chọn. Mở bán chung từ {0}..
+        /// </summary>
+        public static string Rule_EventEarlyAccessOnly {
+            get {
+                return ResourceManager.GetString("Rule_EventEarlyAccessOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giờ mở bán chung phải sau thời điểm hiện tại và trước giờ chiếu..
+        /// </summary>
+        public static string Rule_EventGeneralSaleTimeInvalid {
+            get {
+                return ResourceManager.GetString("Rule_EventGeneralSaleTimeInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vé này không có quà tặng kèm..
+        /// </summary>
+        public static string Rule_EventGiftNoGifts {
+            get {
+                return ResourceManager.GetString("Rule_EventGiftNoGifts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đơn của vé này chưa thanh toán hoặc đã bị hủy, không thể trao quà..
+        /// </summary>
+        public static string Rule_EventGiftOrderNotConfirmed {
+            get {
+                return ResourceManager.GetString("Rule_EventGiftOrderNotConfirmed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vé này đã được hoàn, hủy hoặc đổi suất, không thể trao quà..
+        /// </summary>
+        public static string Rule_EventGiftTicketInvalid {
+            get {
+                return ResourceManager.GetString("Rule_EventGiftTicketInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hạn mức vé loại {0} không được thấp hơn số vé đã bán và đang giữ ({1} vé)..
+        /// </summary>
+        public static string Rule_EventLimitQuotaBelowUsed {
+            get {
+                return ResourceManager.GetString("Rule_EventLimitQuotaBelowUsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vé loại {0} của suất sự kiện này chỉ còn {1} vé..
+        /// </summary>
+        public static string Rule_EventTicketTypeQuotaExceeded {
+            get {
+                return ResourceManager.GetString("Rule_EventTicketTypeQuotaExceeded", resourceCulture);
             }
         }
         
@@ -13385,6 +13574,96 @@ namespace Cinema.Shared.Resources {
         public static string Rule_ShowtimeEnded {
             get {
                 return ResourceManager.GetString("Rule_ShowtimeEnded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chỉ chỉnh được mở bán sớm của suất chiếu đã lên lịch và chưa bắt đầu..
+        /// </summary>
+        public static string Rule_ShowtimeEventEarlyAccessStatusInvalid {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventEarlyAccessStatusInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số lượng quà &quot;{0}&quot; không thể thấp hơn {1} phần đã được giữ hoặc bán..
+        /// </summary>
+        public static string Rule_ShowtimeEventGiftBelowHeld {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventGiftBelowHeld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quà tặng kèm &quot;{0}&quot; đã hết trong kho..
+        /// </summary>
+        public static string Rule_ShowtimeEventGiftOutOfStock {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventGiftOutOfStock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không đổi được số quà mỗi vé khi đã có vé giữ hoặc bán quà này..
+        /// </summary>
+        public static string Rule_ShowtimeEventGiftPerTicketLocked {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventGiftPerTicketLocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quà tặng kèm &quot;{0}&quot; chỉ còn {1} phần, không đủ cho số vé đã chọn..
+        /// </summary>
+        public static string Rule_ShowtimeEventGiftSoldOut {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventGiftSoldOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chỉ chỉnh được quà tặng kèm của suất chiếu đã lên lịch và chưa bắt đầu..
+        /// </summary>
+        public static string Rule_ShowtimeEventGiftStatusInvalid {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventGiftStatusInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suất chiếu đã có đơn đang giữ chỗ hoặc đã xác nhận nên không thể đổi loại suất..
+        /// </summary>
+        public static string Rule_ShowtimeEventHasOrders {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventHasOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suất chiếu riêng (thuê phòng) không thể chuyển thành suất sự kiện..
+        /// </summary>
+        public static string Rule_ShowtimeEventKindInvalid {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventKindInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chỉ chỉnh được hạn mức vé của suất chiếu đã lên lịch và chưa bắt đầu..
+        /// </summary>
+        public static string Rule_ShowtimeEventLimitStatusInvalid {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventLimitStatusInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chỉ đổi được loại suất với suất chiếu đã lên lịch và chưa bắt đầu..
+        /// </summary>
+        public static string Rule_ShowtimeEventStatusInvalid {
+            get {
+                return ResourceManager.GetString("Rule_ShowtimeEventStatusInvalid", resourceCulture);
             }
         }
         
@@ -15153,6 +15432,60 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Đã bỏ mở bán sớm, suất chiếu mở bán chung cho mọi khách..
+        /// </summary>
+        public static string Success_ShowtimeEventEarlyAccessRemoved {
+            get {
+                return ResourceManager.GetString("Success_ShowtimeEventEarlyAccessRemoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã lưu thiết lập mở bán sớm..
+        /// </summary>
+        public static string Success_ShowtimeEventEarlyAccessSaved {
+            get {
+                return ResourceManager.GetString("Success_ShowtimeEventEarlyAccessSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã lưu quà tặng kèm của suất sự kiện..
+        /// </summary>
+        public static string Success_ShowtimeEventGiftsSaved {
+            get {
+                return ResourceManager.GetString("Success_ShowtimeEventGiftsSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã lưu hạn mức vé của suất sự kiện..
+        /// </summary>
+        public static string Success_ShowtimeEventLimitsSaved {
+            get {
+                return ResourceManager.GetString("Success_ShowtimeEventLimitsSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã chuyển suất chiếu về suất thường..
+        /// </summary>
+        public static string Success_ShowtimeEventRemoved {
+            get {
+                return ResourceManager.GetString("Success_ShowtimeEventRemoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã lưu thiết lập suất sự kiện..
+        /// </summary>
+        public static string Success_ShowtimeEventSaved {
+            get {
+                return ResourceManager.GetString("Success_ShowtimeEventSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Đã chuyển suất chiếu sang phòng mới..
         /// </summary>
         public static string Success_ShowtimeRoomChanged {
@@ -16166,6 +16499,87 @@ namespace Cinema.Shared.Resources {
         public static string Validation_Email_Required {
             get {
                 return ResourceManager.GetString("Validation_Email_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chọn ít nhất một nhóm được mở bán sớm..
+        /// </summary>
+        public static string Validation_EventEarlyAccess_GroupRequired {
+            get {
+                return ResourceManager.GetString("Validation_EventEarlyAccess_GroupRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mã hạng thành viên không hợp lệ..
+        /// </summary>
+        public static string Validation_EventEarlyAccess_TierIdPositive {
+            get {
+                return ResourceManager.GetString("Validation_EventEarlyAccess_TierIdPositive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giờ mở bán chung là bắt buộc..
+        /// </summary>
+        public static string Validation_EventEarlyAccess_TimeRequired {
+            get {
+                return ResourceManager.GetString("Validation_EventEarlyAccess_TimeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mỗi sản phẩm kho chỉ được khai báo một lần làm quà tặng kèm..
+        /// </summary>
+        public static string Validation_EventGift_ItemDuplicate {
+            get {
+                return ResourceManager.GetString("Validation_EventGift_ItemDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số quà mỗi vé phải từ 1 đến {0}..
+        /// </summary>
+        public static string Validation_EventGift_PerTicketRange {
+            get {
+                return ResourceManager.GetString("Validation_EventGift_PerTicketRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số lượng quà phải từ 1 đến {0}..
+        /// </summary>
+        public static string Validation_EventGift_QuantityRange {
+            get {
+                return ResourceManager.GetString("Validation_EventGift_QuantityRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mã QR của vé là bắt buộc..
+        /// </summary>
+        public static string Validation_EventGiftHandover_QrRequired {
+            get {
+                return ResourceManager.GetString("Validation_EventGiftHandover_QrRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hạn mức vé phải từ 1 đến {0}..
+        /// </summary>
+        public static string Validation_EventLimit_Range {
+            get {
+                return ResourceManager.GetString("Validation_EventLimit_Range", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loại vé bị trùng trong danh sách hạn mức..
+        /// </summary>
+        public static string Validation_EventLimit_TicketTypeDuplicate {
+            get {
+                return ResourceManager.GetString("Validation_EventLimit_TicketTypeDuplicate", resourceCulture);
             }
         }
         
@@ -18452,357 +18866,6 @@ namespace Cinema.Shared.Resources {
         public static string Validation_WasteSheet_ReasonInvalid {
             get {
                 return ResourceManager.GetString("Validation_WasteSheet_ReasonInvalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Giá suất sự kiện.
-        /// </summary>
-        public static string Pricing_Event_RuleName {
-            get {
-                return ResourceManager.GetString("Pricing_Event_RuleName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Phụ thu suất sự kiện {0:N0} VNĐ mỗi vé..
-        /// </summary>
-        public static string Pricing_Reason_EventSurcharge {
-            get {
-                return ResourceManager.GetString("Pricing_Reason_EventSurcharge", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Suất sự kiện áp hệ số giá riêng {0}..
-        /// </summary>
-        public static string Pricing_Reason_EventMultiplier {
-            get {
-                return ResourceManager.GetString("Pricing_Reason_EventMultiplier", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Suất chiếu này chưa được thiết lập là suất sự kiện..
-        /// </summary>
-        public static string NotFound_ShowtimeEvent {
-            get {
-                return ResourceManager.GetString("NotFound_ShowtimeEvent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Suất chiếu riêng (thuê phòng) không thể chuyển thành suất sự kiện..
-        /// </summary>
-        public static string Rule_ShowtimeEventKindInvalid {
-            get {
-                return ResourceManager.GetString("Rule_ShowtimeEventKindInvalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Chỉ đổi được loại suất với suất chiếu đã lên lịch và chưa bắt đầu..
-        /// </summary>
-        public static string Rule_ShowtimeEventStatusInvalid {
-            get {
-                return ResourceManager.GetString("Rule_ShowtimeEventStatusInvalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Suất chiếu đã có đơn đang giữ chỗ hoặc đã xác nhận nên không thể đổi loại suất..
-        /// </summary>
-        public static string Rule_ShowtimeEventHasOrders {
-            get {
-                return ResourceManager.GetString("Rule_ShowtimeEventHasOrders", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Đã lưu thiết lập suất sự kiện..
-        /// </summary>
-        public static string Success_ShowtimeEventSaved {
-            get {
-                return ResourceManager.GetString("Success_ShowtimeEventSaved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Đã chuyển suất chiếu về suất thường..
-        /// </summary>
-        public static string Success_ShowtimeEventRemoved {
-            get {
-                return ResourceManager.GetString("Success_ShowtimeEventRemoved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Vé loại {0} của suất sự kiện này chỉ còn {1} vé..
-        /// </summary>
-        public static string Rule_EventTicketTypeQuotaExceeded {
-            get {
-                return ResourceManager.GetString("Rule_EventTicketTypeQuotaExceeded", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mỗi khách chỉ được mua tối đa {0} vé cho suất sự kiện này, bạn đã có {1} vé..
-        /// </summary>
-        public static string Rule_EventCustomerLimitExceeded {
-            get {
-                return ResourceManager.GetString("Rule_EventCustomerLimitExceeded", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hạn mức vé loại {0} không được thấp hơn số vé đã bán và đang giữ ({1} vé)..
-        /// </summary>
-        public static string Rule_EventLimitQuotaBelowUsed {
-            get {
-                return ResourceManager.GetString("Rule_EventLimitQuotaBelowUsed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Chỉ chỉnh được hạn mức vé của suất chiếu đã lên lịch và chưa bắt đầu..
-        /// </summary>
-        public static string Rule_ShowtimeEventLimitStatusInvalid {
-            get {
-                return ResourceManager.GetString("Rule_ShowtimeEventLimitStatusInvalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hạn mức vé phải từ 1 đến {0}..
-        /// </summary>
-        public static string Validation_EventLimit_Range {
-            get {
-                return ResourceManager.GetString("Validation_EventLimit_Range", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Loại vé bị trùng trong danh sách hạn mức..
-        /// </summary>
-        public static string Validation_EventLimit_TicketTypeDuplicate {
-            get {
-                return ResourceManager.GetString("Validation_EventLimit_TicketTypeDuplicate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Đã lưu hạn mức vé của suất sự kiện..
-        /// </summary>
-        public static string Success_ShowtimeEventLimitsSaved {
-            get {
-                return ResourceManager.GetString("Success_ShowtimeEventLimitsSaved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Giờ mở bán chung là bắt buộc..
-        /// </summary>
-        public static string Validation_EventEarlyAccess_TimeRequired {
-            get {
-                return ResourceManager.GetString("Validation_EventEarlyAccess_TimeRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Chọn ít nhất một nhóm được mở bán sớm..
-        /// </summary>
-        public static string Validation_EventEarlyAccess_GroupRequired {
-            get {
-                return ResourceManager.GetString("Validation_EventEarlyAccess_GroupRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mã hạng thành viên không hợp lệ..
-        /// </summary>
-        public static string Validation_EventEarlyAccess_TierIdPositive {
-            get {
-                return ResourceManager.GetString("Validation_EventEarlyAccess_TierIdPositive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Giờ mở bán chung phải sau thời điểm hiện tại và trước giờ chiếu..
-        /// </summary>
-        public static string Rule_EventGeneralSaleTimeInvalid {
-            get {
-                return ResourceManager.GetString("Rule_EventGeneralSaleTimeInvalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Chỉ chỉnh được mở bán sớm của suất chiếu đã lên lịch và chưa bắt đầu..
-        /// </summary>
-        public static string Rule_ShowtimeEventEarlyAccessStatusInvalid {
-            get {
-                return ResourceManager.GetString("Rule_ShowtimeEventEarlyAccessStatusInvalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Suất sự kiện này chưa thiết lập mở bán sớm..
-        /// </summary>
-        public static string NotFound_ShowtimeEventEarlyAccess {
-            get {
-                return ResourceManager.GetString("NotFound_ShowtimeEventEarlyAccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Suất sự kiện này đang mở bán sớm cho nhóm khách được chọn. Mở bán chung từ {0}..
-        /// </summary>
-        public static string Rule_EventEarlyAccessOnly {
-            get {
-                return ResourceManager.GetString("Rule_EventEarlyAccessOnly", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Đã lưu thiết lập mở bán sớm..
-        /// </summary>
-        public static string Success_ShowtimeEventEarlyAccessSaved {
-            get {
-                return ResourceManager.GetString("Success_ShowtimeEventEarlyAccessSaved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Đã bỏ mở bán sớm, suất chiếu mở bán chung cho mọi khách..
-        /// </summary>
-        public static string Success_ShowtimeEventEarlyAccessRemoved {
-            get {
-                return ResourceManager.GetString("Success_ShowtimeEventEarlyAccessRemoved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Quà tặng kèm "{0}" chỉ còn {1} phần, không đủ cho số vé đã chọn..
-        /// </summary>
-        public static string Rule_ShowtimeEventGiftSoldOut {
-            get {
-                return ResourceManager.GetString("Rule_ShowtimeEventGiftSoldOut", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Quà tặng kèm "{0}" đã hết trong kho..
-        /// </summary>
-        public static string Rule_ShowtimeEventGiftOutOfStock {
-            get {
-                return ResourceManager.GetString("Rule_ShowtimeEventGiftOutOfStock", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Số lượng quà "{0}" không thể thấp hơn {1} phần đã được giữ hoặc bán..
-        /// </summary>
-        public static string Rule_ShowtimeEventGiftBelowHeld {
-            get {
-                return ResourceManager.GetString("Rule_ShowtimeEventGiftBelowHeld", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Không đổi được số quà mỗi vé khi đã có vé giữ hoặc bán quà này..
-        /// </summary>
-        public static string Rule_ShowtimeEventGiftPerTicketLocked {
-            get {
-                return ResourceManager.GetString("Rule_ShowtimeEventGiftPerTicketLocked", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Chỉ chỉnh được quà tặng kèm của suất chiếu đã lên lịch và chưa bắt đầu..
-        /// </summary>
-        public static string Rule_ShowtimeEventGiftStatusInvalid {
-            get {
-                return ResourceManager.GetString("Rule_ShowtimeEventGiftStatusInvalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mỗi sản phẩm kho chỉ được khai báo một lần làm quà tặng kèm..
-        /// </summary>
-        public static string Validation_EventGift_ItemDuplicate {
-            get {
-                return ResourceManager.GetString("Validation_EventGift_ItemDuplicate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Số lượng quà phải từ 1 đến {0}..
-        /// </summary>
-        public static string Validation_EventGift_QuantityRange {
-            get {
-                return ResourceManager.GetString("Validation_EventGift_QuantityRange", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Số quà mỗi vé phải từ 1 đến {0}..
-        /// </summary>
-        public static string Validation_EventGift_PerTicketRange {
-            get {
-                return ResourceManager.GetString("Validation_EventGift_PerTicketRange", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Đã lưu quà tặng kèm của suất sự kiện..
-        /// </summary>
-        public static string Success_ShowtimeEventGiftsSaved {
-            get {
-                return ResourceManager.GetString("Success_ShowtimeEventGiftsSaved", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Đơn của vé này chưa thanh toán hoặc đã bị hủy, không thể trao quà..
-        /// </summary>
-        public static string Rule_EventGiftOrderNotConfirmed {
-            get {
-                return ResourceManager.GetString("Rule_EventGiftOrderNotConfirmed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Vé này đã được hoàn, hủy hoặc đổi suất, không thể trao quà..
-        /// </summary>
-        public static string Rule_EventGiftTicketInvalid {
-            get {
-                return ResourceManager.GetString("Rule_EventGiftTicketInvalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Vé này không có quà tặng kèm..
-        /// </summary>
-        public static string Rule_EventGiftNoGifts {
-            get {
-                return ResourceManager.GetString("Rule_EventGiftNoGifts", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Quà tặng kèm của vé này đã được trao..
-        /// </summary>
-        public static string Conflict_EventGiftAlreadyHandedOver {
-            get {
-                return ResourceManager.GetString("Conflict_EventGiftAlreadyHandedOver", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Mã QR của vé là bắt buộc..
-        /// </summary>
-        public static string Validation_EventGiftHandover_QrRequired {
-            get {
-                return ResourceManager.GetString("Validation_EventGiftHandover_QrRequired", resourceCulture);
             }
         }
     }

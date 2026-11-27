@@ -142,6 +142,14 @@ export const queryKeys = {
       ["admin", "showtimes", "calendar", params] as const,
     seatBlocks: (showtimeId: number) =>
       ["admin", "showtimes", "seat-blocks", showtimeId] as const,
+    event: (showtimeId: number) =>
+      ["admin", "showtimes", "event", showtimeId] as const,
+    eventLimits: (showtimeId: number) =>
+      ["admin", "showtimes", "event", showtimeId, "limits"] as const,
+    eventGifts: (showtimeId: number) =>
+      ["admin", "showtimes", "event", showtimeId, "gifts"] as const,
+    eventEarlyAccess: (showtimeId: number) =>
+      ["admin", "showtimes", "event", showtimeId, "early-access"] as const,
   },
 
   adminCounterShifts: {

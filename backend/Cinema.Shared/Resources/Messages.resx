@@ -6452,4 +6452,25 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Validation_EventGiftHandover_QrRequired" xml:space="preserve">
     <value>Mã QR của vé là bắt buộc.</value>
   </data>
+  <data name="Report_Finance_Event_Title" xml:space="preserve">
+    <value>Suất chiếu sự kiện</value>
+  </data>
+  <data name="Report_Finance_Event_Note" xml:space="preserve">
+    <value>Tính theo suất sự kiện có ngày chiếu trong kỳ, không gồm suất đã hủy. Doanh thu là doanh thu vé sau giảm giá và hoàn tiền, không gồm combo. Lấp đầy là số vé trên sức chứa bán được. Số quà đã trao là tổng số lượng quà đã giao tại quầy.</value>
+  </data>
+  <data name="Report_Finance_Col_EventRoom" xml:space="preserve">
+    <value>Phòng</value>
+  </data>
+  <data name="Report_Finance_Col_EventTickets" xml:space="preserve">
+    <value>Số vé</value>
+  </data>
+  <data name="Report_Finance_Col_EventRevenue" xml:space="preserve">
+    <value>Doanh thu vé (VND)</value>
+  </data>
+  <data name="Report_Finance_Col_EventOccupancy" xml:space="preserve">
+    <value>Lấp đầy (%)</value>
+  </data>
+  <data name="Report_Finance_Col_EventGiftsGiven" xml:space="preserve">
+    <value>Số quà đã trao</value>
+  </data>
 </root>

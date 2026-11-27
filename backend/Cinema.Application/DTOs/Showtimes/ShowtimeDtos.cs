@@ -49,7 +49,8 @@ public record ShowtimeSeatsResponseDto(
     ShowtimeMyHoldDto? MyHold = null,
     IReadOnlyList<ShowtimeTicketTypeDto>? TicketTypes = null,
     DateTime? PricedAt = null,
-    ShowtimeEarlyAccessDto? EarlyAccess = null
+    ShowtimeEarlyAccessDto? EarlyAccess = null,
+    bool IsEvent = false
 );
 
 public record SeatSuggestionDto(
@@ -112,7 +113,8 @@ public record WholeCinemaShowtimeSlotDto(
     int TotalSeats,
     string Status,
     decimal? FromPrice = null,
-    ShowtimeEarlyAccessDto? EarlyAccess = null
+    ShowtimeEarlyAccessDto? EarlyAccess = null,
+    bool IsEvent = false
 );
 
 public record WholeCinemaMovieDto(

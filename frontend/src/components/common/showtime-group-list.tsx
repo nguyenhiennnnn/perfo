@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { ShowtimeRow } from "@/components/common/showtime-row";
 import { useBookShowtime } from "@/features/client/orders/hooks/use-book-showtime";
 import { DEFAULT_SCREEN_TYPE } from "@/config/default-constants";
+import type { ShowtimeEarlyAccessDto } from "@/features/client/showtimes/types";
 
 export interface ShowtimeSlotItem {
   showtimeId: number;
@@ -14,6 +15,8 @@ export interface ShowtimeSlotItem {
   totalSeats: number;
   basePrice: number;
   fromPrice?: number | null;
+  earlyAccess?: ShowtimeEarlyAccessDto | null;
+  isEvent?: boolean;
 }
 
 interface ShowtimeGroupListProps {

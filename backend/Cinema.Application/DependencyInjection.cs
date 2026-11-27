@@ -449,6 +449,7 @@ public static class DependencyInjection
         services.AddReportBlock<RoomQualityByTimeBlock>();
         services.AddReportBlock<WaitlistReportBlock>();
         services.AddReportBlock<RoomRentalReportBlock>();
+        services.AddReportBlock<EventReportBlock>();
         services.AddReportBlock<MovieInterestReportBlock>();
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IUserAdminService, UserAdminService>();

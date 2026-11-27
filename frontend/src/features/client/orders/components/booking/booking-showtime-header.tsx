@@ -2,6 +2,7 @@ import { Ticket } from "lucide-react";
 import { AgeRatingBadge } from "@/components/common/status-badge";
 import { LineSkeleton, PosterSkeleton } from "@/components/common/skeleton-shapes";
 import type { ShowtimeSeatsResponseDto } from "@/features/client/showtimes/types";
+import { ShowtimeEventBadge } from "@/features/client/showtimes/components/showtime-event-badge";
 import { formatDateTime } from "@/lib/formatters";
 
 export const BookingShowtimeHeader = ({
@@ -38,6 +39,7 @@ export const BookingShowtimeHeader = ({
       </div>
       <div className="min-w-0">
         <h1 className="t-h1 text-foreground">{data.movieTitle}</h1>
+        {data.isEvent && <ShowtimeEventBadge className="mt-2" />}
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
           {data.ageRatingCode && <AgeRatingBadge code={data.ageRatingCode} />}
           {data.screenType && <span className="font-medium text-foreground">{data.screenType}</span>}

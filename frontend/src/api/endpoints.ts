@@ -310,6 +310,10 @@ export const ENDPOINTS = {
       ledger: "/admin/inventory/ledger",
       valuation: "/admin/inventory/valuation",
     },
+    eventGiftHandovers: {
+      root: "/admin/event-gift-handovers",
+      lookup: "/admin/event-gift-handovers/lookup",
+    },
     comboPickups: {
       root: "/admin/combo-pickups",
       lookup: "/admin/combo-pickups/lookup",
@@ -432,6 +436,11 @@ export const ENDPOINTS = {
       seatBlocks: (id: number) => `/admin/showtimes/${id}/seat-blocks`,
       seatBlocksUnblock: (id: number) =>
         `/admin/showtimes/${id}/seat-blocks/unblock`,
+      event: (id: number) => `/admin/showtimes/${id}/event`,
+      eventLimits: (id: number) => `/admin/showtimes/${id}/event/limits`,
+      eventGifts: (id: number) => `/admin/showtimes/${id}/event/gifts`,
+      eventEarlyAccess: (id: number) =>
+        `/admin/showtimes/${id}/event/early-access`,
       bulk: "/admin/showtimes/bulk",
       autoSchedulePreview: "/admin/showtimes/auto-schedule/preview",
       autoScheduleApply: "/admin/showtimes/auto-schedule/apply",

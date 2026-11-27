@@ -2,6 +2,9 @@ import { formatShowtimeTime } from "@/lib/cinema-format";
 import { formatCurrency } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { getServerNow } from "@/lib/server-clock";
+import { ShowtimeEventBadge } from "@/features/client/showtimes/components/showtime-event-badge";
+import { useEarlyAccessGate } from "@/features/client/showtimes/hooks/use-early-access-gate";
+import { formatSaleCountdown } from "@/features/client/showtimes/utils/early-access";
 import { WaitlistRowAction } from "@/features/client/waitlist/components/waitlist-row-action";
 import type { ShowtimeSlotItem } from "@/components/common/showtime-group-list";
 
@@ -15,6 +18,7 @@ export const ShowtimeRow = ({ item, disabled = false, onBook }: ShowtimeRowProps
   const soldOut = item.availableSeats === 0;
   const canWaitlist = soldOut && new Date(item.startTime).getTime() > getServerNow();
   const startLabel = formatShowtimeTime(item.startTime);
+  const gate = useEarlyAccessGate(item.earlyAccess);
 
   return (
     <div className="@container">
@@ -33,6 +37,13 @@ export const ShowtimeRow = ({ item, disabled = false, onBook }: ShowtimeRowProps
               {soldOut ? "Hết ghế" : `Còn ${item.availableSeats}/${item.totalSeats} ghế`}
             </p>
             <p className="text-muted-foreground">Kết thúc {formatShowtimeTime(item.endTime)}</p>
+            {item.isEvent && <ShowtimeEventBadge className="mt-1" />}
+            {gate.isRestricted && (
+              <p className="mt-1 text-xs text-warning-text">
+                {gate.isBlocked ? "Mở bán chung sau " : "Bạn được mở bán sớm, bán chung sau "}
+                <span className="t-code tabular-nums">{formatSaleCountdown(gate.remainingMs)}</span>
+              </p>
+            )}
           </div>
         </div>
 
@@ -69,12 +80,12 @@ export const ShowtimeRow = ({ item, disabled = false, onBook }: ShowtimeRowProps
               </p>
               <button
                 type="button"
-                disabled={disabled}
+                disabled={disabled || gate.isBlocked}
                 aria-label={`Đặt vé suất ${startLabel}, phòng ${item.roomName}`}
                 onClick={() => onBook(item.showtimeId)}
                 className="h-11 cursor-pointer cut-sm bg-primary-foreground px-5 text-sm font-medium text-primary transition-colors hover:bg-primary-foreground/90 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Đặt vé
+                {gate.isBlocked ? "Chưa mở bán" : "Đặt vé"}
               </button>
             </>
           )}

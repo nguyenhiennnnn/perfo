@@ -58,6 +58,7 @@ const AdminStocktakesPage = lazyRoute(() => import("@/features/admin/inventory/p
 const AdminWasteSheetsPage = lazyRoute(() => import("@/features/admin/inventory/pages/waste-sheets-page"));
 const AdminInventoryLedgerPage = lazyRoute(() => import("@/features/admin/inventory/pages/inventory-ledger-page"));
 const AdminInventoryValuationPage = lazyRoute(() => import("@/features/admin/inventory/pages/inventory-valuation-page"));
+const AdminEventGiftHandoverPage = lazyRoute(() => import("@/features/admin/event-gift-handover/pages/event-gift-handover-page"));
 const AdminComboPickupPage = lazyRoute(() => import("@/features/admin/combo-pickup/pages/combo-pickup-page"));
 const AdminUnclaimedComboOrdersPage = lazyRoute(() => import("@/features/admin/inventory/pages/unclaimed-combo-orders-page"));
 const AdminReviewsPage = lazyRoute(() => import("@/features/admin/reviews/pages/reviews-page"));
@@ -179,6 +180,7 @@ export const adminRoutes: RouteObject[] = [
           { path: "inventory/ledger", lazy: AdminInventoryLedgerPage },
           { path: "inventory/valuation", lazy: AdminInventoryValuationPage },
           { path: "combo-pickups", lazy: AdminComboPickupPage },
+          { path: "event-gift-handovers", lazy: AdminEventGiftHandoverPage },
           { path: "combo-pickups/unclaimed", lazy: AdminUnclaimedComboOrdersPage },
           { path: "promotions", lazy: AdminPromotionsPage },
           { path: "promotions/reports", lazy: AdminPromotionReportsPage },

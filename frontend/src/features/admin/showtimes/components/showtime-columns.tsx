@@ -1,5 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { Armchair, MoreHorizontal, Pencil, XCircle } from "lucide-react";
+import { Armchair, MoreHorizontal, Pencil, Sparkles, XCircle } from "lucide-react";
 
 import { ShowtimeStatusBadge } from "@/components/common/status-badge";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,7 @@ interface ShowtimeColumnsOptions {
   onEdit?: (showtime: AdminShowtimeDto) => void;
   onDelete?: (showtime: AdminShowtimeDto) => void;
   onManageSeats?: (showtime: AdminShowtimeDto) => void;
+  onManageEvent?: (showtime: AdminShowtimeDto) => void;
   canManage?: boolean;
 }
 
@@ -31,6 +32,7 @@ export const createShowtimeColumns = ({
   onEdit,
   onDelete,
   onManageSeats,
+  onManageEvent,
   canManage = true,
 }: ShowtimeColumnsOptions) =>
   columnHelper.columns([
@@ -109,6 +111,11 @@ export const createShowtimeColumns = ({
                   {onManageSeats && canManageShowtimeSeats(row.original) && (
                     <DropdownMenuItem onClick={() => onManageSeats(row.original)}>
                       <Armchair /> Quản lý ghế
+                    </DropdownMenuItem>
+                  )}
+                  {onManageEvent && (
+                    <DropdownMenuItem onClick={() => onManageEvent(row.original)}>
+                      <Sparkles /> Suất sự kiện
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuItem

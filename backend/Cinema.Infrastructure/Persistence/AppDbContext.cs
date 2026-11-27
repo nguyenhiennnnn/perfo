@@ -86,6 +86,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<MembershipPlan> MembershipPlans => Set<MembershipPlan>();
     public DbSet<MembershipSubscription> MembershipSubscriptions => Set<MembershipSubscription>();
     public DbSet<MembershipFreeTicket> MembershipFreeTickets => Set<MembershipFreeTicket>();
+    public DbSet<MembershipRevenueEntry> MembershipRevenueEntries => Set<MembershipRevenueEntry>();
+    public DbSet<MembershipRevenueConversion> MembershipRevenueConversions =>
+        Set<MembershipRevenueConversion>();
     public DbSet<BundleItem> BundleItems => Set<BundleItem>();
     public DbSet<BundleDailyUsage> BundleDailyUsages => Set<BundleDailyUsage>();
     public DbSet<BundleView> BundleViews => Set<BundleView>();

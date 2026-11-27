@@ -324,6 +324,7 @@ public static class DependencyInjection
         services.AddScoped<IMembershipExpiryReminderService, MembershipExpiryReminderService>();
         services.AddScoped<IMembershipExpiryService, MembershipExpiryService>();
         services.AddScoped<IMembershipFreeTicketGrantService, MembershipFreeTicketGrantService>();
+        services.AddScoped<IMembershipRevenueService, MembershipRevenueService>();
         services.AddScoped<IMembershipFreeTicketQueryService, MembershipFreeTicketQueryService>();
         services.AddScoped<MembershipFreeTicketResourceHold>();
         services.AddScoped<IMembershipFreeTicketHoldService>(sp =>
@@ -406,6 +407,7 @@ public static class DependencyInjection
         services.AddReportBlock<BundleReportBlock>();
         services.AddReportBlock<MovieProfitBlock>();
         services.AddReportBlock<GiftCardLiabilityBlock>();
+        services.AddReportBlock<MembershipRevenueBlock>();
         services.AddReportBlock<VatReportBlock>();
         services.AddReportBlock<LoyaltyPointsBlock>();
         services.AddReportBlock<SupportRequestReportBlock>();

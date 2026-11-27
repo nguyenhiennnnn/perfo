@@ -9,6 +9,7 @@ public class RecurringJobIds
     public const string MembershipExpiryReminder = "membership-expiry-reminder";
     public const string MembershipExpiry = "membership-expiry";
     public const string MembershipFreeTicketGrant = "membership-free-ticket-grant";
+    public const string MembershipRevenueRecognition = "membership-revenue-recognition";
     public const string CleanupImportExportFiles = "cleanup-import-export-files";
     public const string CleanupImportSessions = "cleanup-import-sessions";
     public const string ProcessOutbox = "process-outbox";

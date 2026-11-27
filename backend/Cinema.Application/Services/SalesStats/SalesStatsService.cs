@@ -144,6 +144,12 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
             .GroupBy(e => e.ShowtimeId)
             .Select(g => new { ShowtimeId = g.Key, Amount = g.Sum(e => e.Amount) })
             .ToDictionaryAsync(x => x.ShowtimeId, x => x.Amount, cancellationToken);
+        var membershipConversionByShowtime = await db
+            .MembershipRevenueConversions.AsNoTracking()
+            .Where(c => found.Contains(c.ShowtimeId))
+            .GroupBy(c => c.ShowtimeId)
+            .Select(g => new { ShowtimeId = g.Key, Amount = g.Sum(c => c.Amount) })
+            .ToDictionaryAsync(x => x.ShowtimeId, x => x.Amount, cancellationToken);
         var existingPaces = await db
             .ShowtimeSalesPaces.AsNoTracking()
             .Where(p => found.Contains(p.ShowtimeId))
@@ -161,10 +167,14 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
                 date,
                 showtime.Kind,
                 sellable,
-                AddRentalRevenue(
-                    Summarize(lines),
+                AddMembershipConversion(
+                    AddRentalRevenue(
+                        Summarize(lines),
+                        showtime.Kind,
+                        rentalRevenueByShowtime.GetValueOrDefault(showtime.ShowtimeId)
+                    ),
                     showtime.Kind,
-                    rentalRevenueByShowtime.GetValueOrDefault(showtime.ShowtimeId)
+                    membershipConversionByShowtime.GetValueOrDefault(showtime.ShowtimeId)
                 ),
                 now,
                 cancellationToken
@@ -360,6 +370,15 @@ public class SalesStatsService(IAppDbContext db, IAppCache cache) : ISalesStatsS
     ) =>
         kind == ShowtimeKind.Private && rentalRevenue > 0m
             ? totals with { GrossTicketRevenue = totals.GrossTicketRevenue + rentalRevenue }
+            : totals;
+
+    private static ShowtimeTotals AddMembershipConversion(
+        ShowtimeTotals totals,
+        ShowtimeKind kind,
+        decimal conversion
+    ) =>
+        kind != ShowtimeKind.Private && conversion > 0m
+            ? totals with { GrossTicketRevenue = totals.GrossTicketRevenue + conversion }
             : totals;
 
     private static int SoldAtMark(IEnumerable<SalesLine> lines, DateTime markTime) =>

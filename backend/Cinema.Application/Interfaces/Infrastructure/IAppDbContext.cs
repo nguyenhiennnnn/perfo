@@ -81,6 +81,8 @@ public interface IAppDbContext
     DbSet<MembershipPlan> MembershipPlans { get; }
     DbSet<MembershipSubscription> MembershipSubscriptions { get; }
     DbSet<MembershipFreeTicket> MembershipFreeTickets { get; }
+    DbSet<MembershipRevenueEntry> MembershipRevenueEntries { get; }
+    DbSet<MembershipRevenueConversion> MembershipRevenueConversions { get; }
     DbSet<BundleItem> BundleItems { get; }
     DbSet<BundleDailyUsage> BundleDailyUsages { get; }
     DbSet<BundleView> BundleViews { get; }

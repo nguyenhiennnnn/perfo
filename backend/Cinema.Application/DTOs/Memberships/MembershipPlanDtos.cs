@@ -14,7 +14,8 @@ public record MembershipPlanDto(
     bool StackableWithPromotions,
     bool IsActive,
     DateTime CreatedAt,
-    DateTime? UpdatedAt
+    DateTime? UpdatedAt,
+    decimal FreeTicketConversionValue
 );
 
 public record UpsertMembershipPlanRequest(
@@ -27,7 +28,8 @@ public record UpsertMembershipPlanRequest(
     decimal ComboDiscountPercent,
     bool EarlyAccess,
     bool StackableWithPromotions,
-    bool IsActive
+    bool IsActive,
+    decimal FreeTicketConversionValue = 0m
 );
 
 public record MembershipPlanListFilter(string? Search, bool? IsActive);

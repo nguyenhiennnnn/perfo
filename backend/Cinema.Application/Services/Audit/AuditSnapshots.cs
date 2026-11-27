@@ -174,6 +174,7 @@ public static class AuditSnapshots
                 p.Price,
                 p.TicketDiscountPercent,
                 p.FreeTicketsPerMonth,
+                p.FreeTicketConversionValue,
                 p.ComboDiscountPercent,
                 p.EarlyAccess,
                 p.StackableWithPromotions,

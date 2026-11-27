@@ -22,7 +22,8 @@ public static class MembershipPlanMapper
             p.StackableWithPromotions,
             p.IsActive,
             p.CreatedAt,
-            p.UpdatedAt
+            p.UpdatedAt,
+            p.FreeTicketConversionValue
         );
 
     public static void Apply(MembershipPlan entity, string name, UpsertMembershipPlanRequest request)
@@ -35,6 +36,7 @@ public static class MembershipPlanMapper
         entity.Price = request.Price;
         entity.TicketDiscountPercent = request.TicketDiscountPercent;
         entity.FreeTicketsPerMonth = request.FreeTicketsPerMonth;
+        entity.FreeTicketConversionValue = request.FreeTicketConversionValue;
         entity.ComboDiscountPercent = request.ComboDiscountPercent;
         entity.EarlyAccess = request.EarlyAccess;
         entity.StackableWithPromotions = request.StackableWithPromotions;

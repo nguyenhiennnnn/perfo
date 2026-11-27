@@ -27,6 +27,10 @@ public class MembershipPlanConfiguration : IEntityTypeConfiguration<MembershipPl
                     "CK_MembershipPlans_FreeTicketsPerMonth",
                     "\"FreeTicketsPerMonth\" >= 0"
                 );
+                t.HasCheckConstraint(
+                    "CK_MembershipPlans_FreeTicketConversionValue",
+                    "\"FreeTicketConversionValue\" >= 0"
+                );
             }
         );
         builder.HasKey(x => x.MembershipPlanId);
@@ -44,6 +48,7 @@ public class MembershipPlanConfiguration : IEntityTypeConfiguration<MembershipPl
         builder.Property(x => x.Price).HasColumnType("decimal(18,2)");
         builder.Property(x => x.TicketDiscountPercent).HasColumnType("decimal(5,2)").HasDefaultValue(0m);
         builder.Property(x => x.FreeTicketsPerMonth).HasDefaultValue(0);
+        builder.Property(x => x.FreeTicketConversionValue).HasColumnType("decimal(18,2)").HasDefaultValue(0m);
         builder.Property(x => x.ComboDiscountPercent).HasColumnType("decimal(5,2)").HasDefaultValue(0m);
         builder.Property(x => x.EarlyAccess).HasDefaultValue(false);
         builder.Property(x => x.StackableWithPromotions).HasDefaultValue(false);

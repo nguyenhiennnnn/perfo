@@ -6127,4 +6127,40 @@ QUY TẮC DÙNG HÀM (FUNCTION CALLING):
   <data name="Success_OrderFreeTicketRemoved" xml:space="preserve">
     <value>Đã gỡ vé miễn phí khỏi đơn hàng.</value>
   </data>
+  <data name="Report_Finance_MembershipRevenue_Title" xml:space="preserve">
+    <value>Doanh thu gói thành viên</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipPlan" xml:space="preserve">
+    <value>Gói thành viên</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipSoldCount" xml:space="preserve">
+    <value>Số gói bán trong kỳ</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipSoldAmount" xml:space="preserve">
+    <value>Tiền gói bán trong kỳ</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipDeferredOpening" xml:space="preserve">
+    <value>Chưa ghi nhận đầu kỳ</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipRecognized" xml:space="preserve">
+    <value>Đã ghi nhận trong kỳ</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipDeferredClosing" xml:space="preserve">
+    <value>Chưa ghi nhận cuối kỳ</value>
+  </data>
+  <data name="Report_Finance_MembershipRevenue_Note" xml:space="preserve">
+    <value>Tiền bán gói là khoản nhận trước, được ghi nhận thành doanh thu chia đều theo từng tháng hiệu lực của đăng ký. Phần chưa ghi nhận là các tháng chưa đến kỳ ghi nhận. Khi vé miễn phí được dùng, giá trị quy đổi của vé được chuyển từ doanh thu gói sang doanh thu vé của suất chiếu (ghi theo ngày chiếu trong bảng tổng hợp suất chiếu), nên doanh thu gói thực bằng đã ghi nhận trừ phần chuyển.</value>
+  </data>
+  <data name="Validation_MembershipPlan_ConversionRange" xml:space="preserve">
+    <value>Giá trị quy đổi của một vé miễn phí phải là số nguyên đồng, từ 0 đến {0}.</value>
+  </data>
+  <data name="Validation_MembershipPlan_ConversionExceedsPrice" xml:space="preserve">
+    <value>Tổng giá trị quy đổi của các vé miễn phí trong thời hạn gói không được vượt quá giá gói.</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipConverted" xml:space="preserve">
+    <value>Chuyển sang doanh thu vé</value>
+  </data>
+  <data name="Report_Finance_Col_MembershipNetRevenue" xml:space="preserve">
+    <value>Doanh thu gói thực trong kỳ</value>
+  </data>
 </root>

@@ -11,6 +11,7 @@ public class MembershipPlan
     public decimal Price { get; set; }
     public decimal TicketDiscountPercent { get; set; }
     public int FreeTicketsPerMonth { get; set; }
+    public decimal FreeTicketConversionValue { get; set; }
     public decimal ComboDiscountPercent { get; set; }
     public bool EarlyAccess { get; set; }
     public bool StackableWithPromotions { get; set; }

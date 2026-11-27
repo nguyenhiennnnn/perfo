@@ -38,6 +38,22 @@ public class UpsertMembershipPlanRequestValidator : AbstractValidator<UpsertMemb
         RuleFor(x => x.ComboDiscountPercent)
             .InclusiveBetween(0m, 100m)
             .WithMessage(Messages.Validation_MembershipPlan_PercentRange);
+        RuleFor(x => x.FreeTicketConversionValue)
+            .Must(v => v is >= 0m and <= MembershipPlanRules.MaxPrice && v == decimal.Truncate(v))
+            .WithMessage(
+                string.Format(
+                    Messages.Validation_MembershipPlan_ConversionRange,
+                    MembershipPlanRules.MaxPrice.ToString("N0")
+                )
+            )
+            .Must(
+                (request, v) =>
+                    !EnumConverters.TryParseEnum<MembershipPlanPeriod>(request.Period, out var period)
+                    || !Enum.IsDefined(period)
+                    || v * request.FreeTicketsPerMonth * MembershipPlanRules.DurationMonths(period)
+                        <= request.Price
+            )
+            .WithMessage(Messages.Validation_MembershipPlan_ConversionExceedsPrice);
         RuleFor(x => x.FreeTicketsPerMonth)
             .InclusiveBetween(0, MembershipPlanRules.MaxFreeTicketsPerMonth)
             .WithMessage(

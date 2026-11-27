@@ -2,6 +2,7 @@ using Cinema.Application.Caching;
 using Cinema.Application.Interfaces.Infrastructure;
 using Cinema.Application.Interfaces.Memberships;
 using Cinema.Application.Interfaces.Orders;
+using Cinema.Application.Utils;
 using Cinema.Domain.Entities;
 using Cinema.Domain.Enums;
 using Cinema.Shared.Exceptions;
@@ -79,16 +80,53 @@ public class MembershipFreeTicketResourceHold(IAppDbContext db, IAppCache cache)
         return ticketId.Value;
     }
 
-    public Task CommitAsync(int orderId, CancellationToken cancellationToken)
+    public async Task CommitAsync(int orderId, CancellationToken cancellationToken)
     {
         var now = DateTime.UtcNow;
-        return db
+        var pending = await db
+            .MembershipFreeTickets.IgnoreQueryFilters()
+            .AsNoTracking()
+            .Where(t => t.OrderId == orderId && t.UsedAt == null && t.ShowtimeId != null)
+            .Select(t => new
+            {
+                t.MembershipFreeTicketId,
+                t.MembershipSubscriptionId,
+                t.MembershipSubscription.MembershipPlanId,
+                ShowtimeId = t.ShowtimeId!.Value,
+                Value = t.MembershipSubscription.MembershipPlan.FreeTicketConversionValue,
+            })
+            .ToListAsync(cancellationToken);
+        if (pending.Count == 0)
+            return;
+
+        await db
             .MembershipFreeTickets.IgnoreQueryFilters()
             .Where(t => t.OrderId == orderId && t.UsedAt == null)
             .ExecuteUpdateAsync(
                 setters => setters.SetProperty(t => t.UsedAt, (DateTime?)now),
                 cancellationToken
             );
+
+        var converting = pending.Where(p => p.Value > 0m).ToList();
+        if (converting.Count == 0)
+            return;
+
+        var settings = await cache.GetAsync(CacheKeys.CinemaSettings, cancellationToken);
+        var businessDate = BusinessDay.Of(now, settings.OpeningTime, settings.ClosingTime);
+        foreach (var item in converting)
+            db.MembershipRevenueConversions.Add(
+                new MembershipRevenueConversion
+                {
+                    MembershipFreeTicketId = item.MembershipFreeTicketId,
+                    MembershipSubscriptionId = item.MembershipSubscriptionId,
+                    MembershipPlanId = item.MembershipPlanId,
+                    ShowtimeId = item.ShowtimeId,
+                    BusinessDate = businessDate,
+                    Amount = item.Value,
+                    OccurredAt = now,
+                }
+            );
+        await db.SaveChangesAsync(cancellationToken);
     }
 
     public Task ReleaseAsync(int orderId, CancellationToken cancellationToken) =>

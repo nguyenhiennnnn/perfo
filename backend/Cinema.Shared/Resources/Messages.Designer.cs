@@ -9915,6 +9915,60 @@ namespace Cinema.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chưa ghi nhận cuối kỳ.
+        /// </summary>
+        public static string Report_Finance_Col_MembershipDeferredClosing {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_MembershipDeferredClosing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chưa ghi nhận đầu kỳ.
+        /// </summary>
+        public static string Report_Finance_Col_MembershipDeferredOpening {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_MembershipDeferredOpening", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gói thành viên.
+        /// </summary>
+        public static string Report_Finance_Col_MembershipPlan {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_MembershipPlan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đã ghi nhận trong kỳ.
+        /// </summary>
+        public static string Report_Finance_Col_MembershipRecognized {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_MembershipRecognized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tiền gói bán trong kỳ.
+        /// </summary>
+        public static string Report_Finance_Col_MembershipSoldAmount {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_MembershipSoldAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số gói bán trong kỳ.
+        /// </summary>
+        public static string Report_Finance_Col_MembershipSoldCount {
+            get {
+                return ResourceManager.GetString("Report_Finance_Col_MembershipSoldCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dòng thiếu giá vốn.
         /// </summary>
         public static string Report_Finance_Col_MissingCostLines {
@@ -10658,6 +10712,24 @@ namespace Cinema.Shared.Resources {
         public static string Report_Finance_LoyaltyPoints_Title {
             get {
                 return ResourceManager.GetString("Report_Finance_LoyaltyPoints_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tiền bán gói là khoản nhận trước, được ghi nhận thành doanh thu chia đều theo từng tháng hiệu lực của đăng ký. Phần chưa ghi nhận là các tháng chưa đến kỳ ghi nhận; doanh thu gói không nằm trong doanh thu vé và combo..
+        /// </summary>
+        public static string Report_Finance_MembershipRevenue_Note {
+            get {
+                return ResourceManager.GetString("Report_Finance_MembershipRevenue_Note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doanh thu gói thành viên.
+        /// </summary>
+        public static string Report_Finance_MembershipRevenue_Title {
+            get {
+                return ResourceManager.GetString("Report_Finance_MembershipRevenue_Title", resourceCulture);
             }
         }
         

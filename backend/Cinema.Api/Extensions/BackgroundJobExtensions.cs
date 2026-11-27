@@ -97,6 +97,12 @@ public static class BackgroundJobExtensions
             options.MembershipFreeTicketGrantCron,
             jobOptions
         );
+        RecurringJob.AddOrUpdate<MembershipRevenueRecognitionJob>(
+            RecurringJobIds.MembershipRevenueRecognition,
+            j => j.RunAsync(CancellationToken.None),
+            options.MembershipRevenueRecognitionCron,
+            jobOptions
+        );
         RecurringJob.AddOrUpdate<CleanupImportExportFilesJob>(
             RecurringJobIds.CleanupImportExportFiles,
             j => j.RunAsync(CancellationToken.None),
